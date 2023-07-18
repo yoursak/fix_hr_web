@@ -27,7 +27,7 @@
             </div>
             <div class="d-lg-flex d-block">
                 <div class="btn-list">
-                    <button type="button"  class="btn btn-primary"  data-bs-toggle="modal"   data-bs-target="#clockinmodal">Report</button>
+                    <button type="button"  class="btn btn-primary"  data-bs-toggle="modal"   data-bs-target="#clockinmodal">Attendance Report</button>
                 </div>
             </div>
         </div>
