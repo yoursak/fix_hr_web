@@ -3,14 +3,12 @@
 /*------------------------------------------------------------------
 [Master Stylesheet]
 
-Project        :   Dayone - Multipurpose Admin & Dashboard Template
+Project        :   FixHr
 Version        :   V.1
-Create Date    :   23/04/2021
-Copyright      :   Spruko Technologies Private Limited
-Author         :   Spruko
-Author URL     :   https://themeforest.net/user/spruko
+Create Date    :   18 july 2023
+Copyright      :   Fixing Dots
+Author         :   Aman
 Support	       :   support@spruko.com
-License        :   Licensed under ThemeForest License
 
 -------------------------------------------------------------------*/
 /*Transparent variables*/
@@ -111,6 +109,28 @@ License        :   Licensed under ThemeForest License
 /* ###### Fonts ####### */
 /* ###### bootstrap ####### */
 /*------ Accordion -------*/
+
+/* curve border */
+#curved-corner-bottomleft, #curved-corner-bottomright, #curved-corner-topleft, #curved-corner-topright {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  position: relative;
+}
+#curved-corner-bottomleft:before, #curved-corner-bottomright:before, #curved-corner-topleft:before, #curved-corner-topright:before {
+  content: "";
+  width: 200%;
+  height: 200%;
+  position: absolute; 
+  border-radius: 200%;
+}
+#curved-corner-bottomleft:before {
+  bottom: 0;
+  left: 0;
+  box-shadow: -50px 50px 0 0 #0000ff;
+}
+/* curve border */
+
 .accordion .card:not(:first-of-type):not(:last-of-type) {
   border-bottom: 0;
   border-radius: 0;
@@ -51295,7 +51315,7 @@ select [aria-selected=true]:focus {
 }
 
 .app-sidebar .side-item.side-item-category {
-  color: #9ba5ca;
+  color: #ffffff;
   font-size: 11px;
   text-transform: uppercase;
   font-weight: 700;
