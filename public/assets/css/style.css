@@ -121,7 +121,7 @@ Support	       :   support@spruko.com
   content: "";
   width: 200%;
   height: 200%;
-  position: absolute; 
+  position: absolute;
   border-radius: 200%;
 }
 #curved-corner-bottomleft:before {
@@ -26458,7 +26458,7 @@ footer.footer {
 .page-header {
   display: flex;
   align-items: center;
-  margin: 2rem 0 2rem;
+  margin: 1rem 0 1rem;
   -ms-flex-wrap: wrap;
   justify-content: space-between;
   padding: 0;

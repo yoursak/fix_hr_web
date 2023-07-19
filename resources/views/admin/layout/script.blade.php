@@ -71,3 +71,26 @@
 
     <!-- SWITCHER JS -->
     <script src="assets/switcher/js/switcher.js"></script>
+
+
+    <!-- INTERNAL  DATEPICKER JS -->
+    <script src="assets/plugins/date-picker/jquery-ui.js"></script>
+    <!-- INTERNAL DATA TABLES  -->
+    <script src="assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
+    <script src="assets/plugins/datatable/js/dataTables.bootstrap5.js"></script>
+    <script src="assets/plugins/datatable/js/dataTables.buttons.min.js"></script>
+    <script src="assets/plugins/datatable/js/buttons.bootstrap5.min.js"></script>
+    <script src="assets/plugins/datatable/dataTables.responsive.min.js"></script>
+    <script src="assets/plugins/datatable/responsive.bootstrap5.min.js"></script>
+
+
+    <!-- INTERNAL INDEX JS -->
+    <script src="assets/js/hr/hr-attview.js"></script>
+
+
+    <script>
+        $("#calenderbtn").click(function() {
+            $("#calendertbl").fadeToggle();
+            $("#calendertbl").removeClass("d-none");
+        });
+    </script>
