@@ -133,6 +133,25 @@
         <div class="col-xl-4">
             <div class="row">
                 <div class="col-xl-12 col-md-6 col-lg-12">
+                    <div class="card">
+                        <div class="card-header border-bottom-0">
+                            <div class="card-title">
+                                Thinks To Do
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group list-group-transparent mb-0 mail-inbox">
+                                <a  href="#" class="list-group-item list-group-item-action d-flex align-items-center px-0 py-2">
+                                    <span class="w-3 h-3 brround bg-primary me-3 m-2"></span> <b>Pending Approvals</b> <span class="ms-auto badge bg-primary">12</span>
+                                </a>
+                                <a  href="#" class="list-group-item list-group-item-action d-flex align-items-center px-0 py-2">
+                                    <span class="w-3 h-3 brround bg-success me-3 m-2"></span> <b>Pending Approvals</b> <span class="ms-auto badge bg-success">12</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-12 col-md-6 col-lg-12">
                     <div class="card overflow-hidden">
                         <div class="card-header border-bottom-0">
                             <h3 class="card-title">Wish Birthday</h3>
@@ -141,24 +160,8 @@
                                 <a  href="javascript:void(0);" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
                             </div>
                         </div>
-                        <div class="card-body">
-                            Today is <b>User's</b> Birthday.
-                        </div>
-                        <div class="card-footer bg-info ">
-                            <div class="text-white"><b>Happy Birthday User</b></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-12 col-md-6 col-lg-12">
-                    <div class="card">
-                        <div class="card-header border-bottom-0">
-                            <div class="card-title">
-                                Featured
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p><a class="btn btn-primary"  href="javascript:void(0);">Go somewhere</a>
+                        <div class="card-body ">
+                            <p>Today is <b>User's</b> Birthday.</p>
                         </div>
                     </div>
                 </div>
@@ -167,6 +170,11 @@
     </div>
     <div class="row">
         <div class="card">
+            <div class="card-header border-bottom-0">
+                <div class="card-title">
+                    Employee Summary
+                </div>
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table  table-vcenter text-nowrap table-bordered border-bottom table-striped"
@@ -217,6 +225,13 @@
                 <div class="table-responsive hr-attlist d-none" id="calendertbl">
                     <table class="table  table-vcenter text-nowrap table-bordered border-bottom" id="hr-attendance">
                         <thead>
+                            <tr>
+                                <div class="text-center d-flex justify-content-around">
+                                    <span><b><</b></span>
+                                    <span><b>July 2023</b></span>
+                                    <span><b>></b></span>
+                                </div>
+                            </tr>
                             <tr>
                                 <th class="text-DARK">DAYS</th>
                                 <th class="text-muted font-weight-normal">

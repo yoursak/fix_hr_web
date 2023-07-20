@@ -86,6 +86,9 @@
 
     <!-- INTERNAL INDEX JS -->
     <script src="assets/js/hr/hr-attview.js"></script>
+    <!-- INTERNAL INDEX JS -->
+    <script src="assets/js/employee/emp-attendance.js"></script>
+    <script src="assets/js/hr/hr-attmark.js"></script>
 
 
     <script>

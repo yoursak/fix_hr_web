@@ -46,37 +46,37 @@
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" href="chat-livechat.html">
-                            <i class="feather feather-message-square sidemenu_icon"></i>
+                            <i class="feather feather-users sidemenu_icon"></i>
                             <span class="side-menu__label">Employee</span>
                         </a>
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" href="chat-livechat.html">
-                            <i class="feather feather-message-square sidemenu_icon"></i>
+                            <i class="feather feather-user-check sidemenu_icon"></i>
                             <span class="side-menu__label">Attendance</span>
                         </a>
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" href="chat-livechat.html">
-                            <i class="feather feather-message-square sidemenu_icon"></i>
+                            <i class="feather feather-flag sidemenu_icon"></i>
                             <span class="side-menu__label">Report</span>
                         </a>
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" href="chat-livechat.html">
-                            <i class="feather feather-message-square sidemenu_icon"></i>
+                            <i class="feather feather-credit-card sidemenu_icon"></i>
                             <span class="side-menu__label">Payroll</span>
                         </a>
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" href="chat-livechat.html">
-                            <i class="feather feather-message-square sidemenu_icon"></i>
+                            <i class="feather feather-dollar-sign sidemenu_icon"></i>
                             <span class="side-menu__label">Online Pay</span>
                         </a>
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" href="chat-livechat.html">
-                            <i class="feather feather-message-square sidemenu_icon"></i>
+                            <i class="feather feather-settings sidemenu_icon"></i>
                             <span class="side-menu__label">Setting</span>
                         </a>
                     </li>

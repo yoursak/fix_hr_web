@@ -362,7 +362,7 @@
 
 
                     {{-- MAIN CONTENT --}}
-                    @include('admin.dashboard.dashboard')
+                    @include('admin.attendance.attendance')
                     {{-- END MAIN CONTENT --}}
                 </div>
             </div><!-- end app-content-->
