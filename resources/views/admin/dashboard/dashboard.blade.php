@@ -1,123 +1,257 @@
 <div class="container-fluid">
     <div class="row">
-        <div class="card">
-            <div class="card-body">
-                <div class="page-header d-md-flex d-block">
-                    <div class="page-leftheader">
-                        <div class="page-title">Attendance</div>
-                    </div>
-                    <div class="page-rightheader ms-md-auto">
-                        <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-                            <div class="d-flex">
-                                <div class="header-datepicker me-3">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend ">
-                                            <div class="input-group-text d-none d-xl-block">
-                                                <i class="feather feather-calendar"></i>
-                                            </div>
-                                        </div><input class="form-control fc-datepicker" placeholder="19 Feb 2020"
-                                            type="text">
+        <div class="col-xl-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="page-header d-md-flex d-block">
+                        <div class="page-leftheader">
+                            <div class="page-title">Attendance</div>
+                        </div>
+                        <div class="page-rightheader ms-md-auto">
+                            <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
+                                <div class="d-flex">
+                                    <div class="header-datepicker me-3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend ">
+                                                <div class="input-group-text d-none d-xl-block">
+                                                    <i class="feather feather-calendar"></i>
+                                                </div>
+                                            </div><input class="form-control fc-datepicker" placeholder="19 Feb 2020"
+                                                type="text">
+                                        </div>
+                                    </div>
+                                    <div class="header-datepicker me-3 d-none d-md-block">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text d-none d-xl-block">
+                                                    <i class="feather feather-clock"></i>
+                                                </div>
+                                            </div><!-- input-group-prepend -->
+                                            <input id="tpBasic" type="text" placeholder="09:30am"
+                                                class="form-control input-small">
+                                        </div>
+                                    </div><!-- wd-150 -->
+                                </div>
+                                <div class="d-lg-flex d-block">
+                                    <div class="btn-list">
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#clockinmodal">Attendance Report</button>
                                     </div>
                                 </div>
-                                <div class="header-datepicker me-3 d-none d-md-block">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text d-none d-xl-block">
-                                                <i class="feather feather-clock"></i>
-                                            </div>
-                                        </div><!-- input-group-prepend -->
-                                        <input id="tpBasic" type="text" placeholder="09:30am"
-                                            class="form-control input-small">
-                                    </div>
-                                </div><!-- wd-150 -->
                             </div>
-                            <div class="d-lg-flex d-block">
-                                <div class="btn-list">
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#clockinmodal">Attendance Report</button>
+                        </div>
+                    </div>
+                    <div class="col-xl-12 col-md-12 col-lg-12">
+                        <div class="row">
+                            <div class="col-xl-3 col-lg-3 col-md-6">
+                                <div class="card att">
+                                    <div class="card-body">
+                                        <div class="mt-0 text-center"> <span
+                                                class="fs-18 font-weight-semibold">Present</span>
+                                            <h3 class="mb-0 mt-1 mb-2">78</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-6">
+                                <div class="card att">
+                                    <div class="card-body">
+                                        <div class="mt-0 text-center"> <span
+                                                class="fs-18 font-weight-semibold">Absent</span>
+                                            <h3 class="mb-0 mt-1 mb-2">4</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-6">
+                                <div class="card att">
+                                    <div class="card-body">
+                                        <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Half
+                                                Day</span>
+                                            <h3 class="mb-0 mt-1  mb-2">2</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-6">
+                                <div class="card att">
+                                    <div class="card-body">
+                                        <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Weekly
+                                                Off</span>
+                                            <h3 class="mb-0 mt-1 mb-2">8</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-3 col-lg-3 col-md-6">
+                                <div class="card att">
+                                    <div class="card-body">
+                                        <div class="mt-0 text-center"> <span
+                                                class="fs-18 font-weight-semibold">Leaves</span>
+                                            <h3 class="mb-0 mt-1 mb-2">6</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-6">
+                                <div class="card att">
+                                    <div class="card-body">
+                                        <div class="mt-0 text-center"> <span
+                                                class="fs-18 font-weight-semibold">Holiday</span>
+                                            <h3 class="mb-0 mt-1 mb-2">4</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-6">
+                                <div class="card att">
+                                    <div class="card-body">
+                                        <div class="mt-0 text-center"> <span
+                                                class="fs-18 font-weight-semibold">Overtime</span>
+                                            <h3 class="mb-0 mt-1  mb-2">53</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-6">
+                                <div class="card att">
+                                    <div class="card-body">
+                                        <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Miss
+                                                Punch</span>
+                                            <h3 class="mb-0 mt-1 mb-2">8</h3>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-12 col-md-12 col-lg-12">
-                    <div class="row">
-                        <div class="col-xl-3 col-lg-3 col-md-6">
-                            <div class="card att">
-                                <div class="card-body">
-                                    <div class="mt-0 text-center"> <span
-                                            class="fs-18 font-weight-semibold">Present</span>
-                                        <h3 class="mb-0 mt-1 mb-2">78</h3>
-                                    </div>
-                                </div>
-                            </div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="page-header d-md-flex d-block">
+                        <div class="page-leftheader">
+                            <div class="page-title">Attendance</div>
                         </div>
-                        <div class="col-xl-3 col-lg-3 col-md-6">
-                            <div class="card att">
-                                <div class="card-body">
-                                    <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Absent</span>
-                                        <h3 class="mb-0 mt-1 mb-2">4</h3>
+                        <div class="page-rightheader ms-md-auto">
+                            <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
+                                <div class="d-flex">
+                                    <div class="header-datepicker me-3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend ">
+                                                <div class="input-group-text d-none d-xl-block">
+                                                    <i class="feather feather-calendar"></i>
+                                                </div>
+                                            </div><input class="form-control fc-datepicker" placeholder="19 Feb 2020"
+                                                type="text">
+                                        </div>
                                     </div>
+                                    <div class="header-datepicker me-3 d-none d-md-block">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text d-none d-xl-block">
+                                                    <i class="feather feather-clock"></i>
+                                                </div>
+                                            </div><!-- input-group-prepend -->
+                                            <input id="tpBasic" type="text" placeholder="09:30am"
+                                                class="form-control input-small">
+                                        </div>
+                                    </div><!-- wd-150 -->
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-3 col-md-6">
-                            <div class="card att">
-                                <div class="card-body">
-                                    <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Half
-                                            Day</span>
-                                        <h3 class="mb-0 mt-1  mb-2">2</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-3 col-md-6">
-                            <div class="card att">
-                                <div class="card-body">
-                                    <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Weekly
-                                            Off</span>
-                                        <h3 class="mb-0 mt-1 mb-2">8</h3>
+                                <div class="d-lg-flex d-block">
+                                    <div class="btn-list">
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#clockinmodal">Attendance Report</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-xl-3 col-lg-3 col-md-6">
-                            <div class="card att">
-                                <div class="card-body">
-                                    <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Leaves</span>
-                                        <h3 class="mb-0 mt-1 mb-2">6</h3>
+                    <div class="col-xl-12 col-md-12 col-lg-12">
+                        <div class="row">
+                            <div class="col-xl-3 col-lg-3 col-md-6">
+                                <div class="card att">
+                                    <div class="card-body">
+                                        <div class="mt-0 text-center"> <span
+                                                class="fs-18 font-weight-semibold">Present</span>
+                                            <h3 class="mb-0 mt-1 mb-2">78</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-6">
+                                <div class="card att">
+                                    <div class="card-body">
+                                        <div class="mt-0 text-center"> <span
+                                                class="fs-18 font-weight-semibold">Absent</span>
+                                            <h3 class="mb-0 mt-1 mb-2">4</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-6">
+                                <div class="card att">
+                                    <div class="card-body">
+                                        <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Half
+                                                Day</span>
+                                            <h3 class="mb-0 mt-1  mb-2">2</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-6">
+                                <div class="card att">
+                                    <div class="card-body">
+                                        <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Weekly
+                                                Off</span>
+                                            <h3 class="mb-0 mt-1 mb-2">8</h3>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-lg-3 col-md-6">
-                            <div class="card att">
-                                <div class="card-body">
-                                    <div class="mt-0 text-center"> <span
-                                            class="fs-18 font-weight-semibold">Holiday</span>
-                                        <h3 class="mb-0 mt-1 mb-2">4</h3>
+                        <div class="row">
+                            <div class="col-xl-3 col-lg-3 col-md-6">
+                                <div class="card att">
+                                    <div class="card-body">
+                                        <div class="mt-0 text-center"> <span
+                                                class="fs-18 font-weight-semibold">Leaves</span>
+                                            <h3 class="mb-0 mt-1 mb-2">6</h3>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-3 col-md-6">
-                            <div class="card att">
-                                <div class="card-body">
-                                    <div class="mt-0 text-center"> <span
-                                            class="fs-18 font-weight-semibold">Overtime</span>
-                                        <h3 class="mb-0 mt-1  mb-2">53</h3>
+                            <div class="col-xl-3 col-lg-3 col-md-6">
+                                <div class="card att">
+                                    <div class="card-body">
+                                        <div class="mt-0 text-center"> <span
+                                                class="fs-18 font-weight-semibold">Holiday</span>
+                                            <h3 class="mb-0 mt-1 mb-2">4</h3>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-3 col-md-6">
-                            <div class="card att">
-                                <div class="card-body">
-                                    <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Miss
-                                            Punch</span>
-                                        <h3 class="mb-0 mt-1 mb-2">8</h3>
+                            <div class="col-xl-3 col-lg-3 col-md-6">
+                                <div class="card att">
+                                    <div class="card-body">
+                                        <div class="mt-0 text-center"> <span
+                                                class="fs-18 font-weight-semibold">Overtime</span>
+                                            <h3 class="mb-0 mt-1  mb-2">53</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-6">
+                                <div class="card att">
+                                    <div class="card-body">
+                                        <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Miss
+                                                Punch</span>
+                                            <h3 class="mb-0 mt-1 mb-2">8</h3>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -131,7 +265,8 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table  table-vcenter text-nowrap table-bordered border-bottom table-striped" id="hr-attendance1">
+                    <table class="table  table-vcenter text-nowrap table-bordered border-bottom table-striped"
+                        id="hr-attendance1">
                         <thead>
                             <tr>
                                 <th rowspan="2" class="text-center border-bottom-0">Action</th>
@@ -374,37 +509,99 @@
                         <tbody>
                             <tr>
                                 <td><span></span></td>
-                                <td><p class="fs-12 font-weight-bold">P</p></td>
-                                <td><p class="fs-12 font-weight-bold">WO</p></td>
-                                <td><p class="fs-12 font-weight-bold">P</p></td>
-                                <td><p class="fs-12 font-weight-bold">P</p></td>
-                                <td><p class="fs-12 font-weight-bold">A</p></td>
-                                <td><p class="fs-12 font-weight-bold">A</p></td>
-                                <td><p class="fs-12 font-weight-bold">A</p></td>
-                                <td><p class="fs-12 font-weight-bold">P</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
-                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">P</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">WO</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">P</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">P</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">A</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">A</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">A</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">P</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
+                                <td>
+                                    <p class="fs-12 font-weight-bold">-</p>
+                                </td>
                             </tr>
                         </tbody>
                         <tfoot>

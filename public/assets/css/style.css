@@ -747,7 +747,7 @@ body {
   line-height: 1.5;
   color: #263871;
   text-align: left;
-  background: aqua;
+  background: #f1f4fb;
   min-height: 100vh;
   flex-direction: column;
   justify-content: flex-start;
