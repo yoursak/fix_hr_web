@@ -7,7 +7,7 @@ Project        :   FixHr
 Version        :   V.1
 Create Date    :   18 july 2023
 Copyright      :   Fixing Dots
-Author         :   Aman
+Author         :   Aman Sahu
 Support	       :   support@spruko.com
 
 -------------------------------------------------------------------*/
@@ -109,6 +109,22 @@ Support	       :   support@spruko.com
 /* ###### Fonts ####### */
 /* ###### bootstrap ####### */
 /*------ Accordion -------*/
+
+/* card-border */
+.card .att{
+    border: solid 0.5px #e9ebfa;
+    color: #313e6a;
+    cursor: pointer;
+    transition: 0.8s;
+    /* box-shadow: 0px 0px 5px 0px #0000ff; */
+}
+
+.card .att:hover{
+    border: solid 1px #fff;
+    color: #130f0f;
+    background-color: #e9ebfa;
+}
+/* card-border */
 
 /* curve border */
 #curved-corner-bottomleft, #curved-corner-bottomright, #curved-corner-topleft, #curved-corner-topright {
@@ -731,7 +747,7 @@ body {
   line-height: 1.5;
   color: #263871;
   text-align: left;
-  background: #f1f4fb;
+  background: aqua;
   min-height: 100vh;
   flex-direction: column;
   justify-content: flex-start;
@@ -1561,13 +1577,13 @@ a.btn.disabled, fieldset:disabled a.btn {
 
 .btn-primary {
   color: #fff !important;
-  background-color: var(--primary-bg-color);
+  background-color: #0000ff;
   border-color: var(--primary-bg-color);
 }
 .btn-primary:hover {
-  color: #fff !important;
-  background-color: var(--primary-bg-color);
-  border-color: #295cf5;
+  color: #0000ff !important;
+  background-color: #fff;
+  border-color: #0000ff;
   opacity: 0.9;
 }
 .btn-primary:focus, .btn-primary.focus {
@@ -41234,7 +41250,7 @@ body.rtl {
   background: #f1f4fb;
 }
 .dark-mode.light-header .app-sidebar__toggle a {
-  color: #555b95;
+  /* color: #555b95; */
 }
 
 @media (max-width: 575.98px) {
@@ -51216,7 +51232,7 @@ select [aria-selected=true]:focus {
   position: relative;
   border-radius: 8px;
   line-height: 2;
-  background: #f1f4fb;
+  background: #fff;
   justify-content: center;
   height: 45px;
   width: 45px;

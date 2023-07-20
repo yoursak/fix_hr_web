@@ -43,70 +43,40 @@
                 <div class="col-xl-12 col-md-12 col-lg-12">
                     <div class="row">
                         <div class="col-xl-3 col-lg-3 col-md-6">
-                            <div class="card">
+                            <div class="card att">
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-8">
-                                            <div class="mt-0 text-start"> <span
-                                                    class="fs-14 font-weight-semibold">Present</span>
-                                                <h3 class="mb-0 mt-1 mb-2">78</h3>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="icon1 bg-success my-auto  float-end"> <i class="feather feather-check-circle"></i> </div>
-                                        </div>
+                                    <div class="mt-0 text-center"> <span
+                                            class="fs-18 font-weight-semibold">Present</span>
+                                        <h3 class="mb-0 mt-1 mb-2">78</h3>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6">
-                            <div class="card">
+                            <div class="card att">
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-8">
-                                            <div class="mt-0 text-start"> <span
-                                                    class="fs-14 font-weight-semibold">Absent</span>
-                                                <h3 class="mb-0 mt-1 mb-2">4</h3>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="icon1 bg-danger my-auto  float-end"><i class="feather feather-x-circle"></i></div>
-                                        </div>
+                                    <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Absent</span>
+                                        <h3 class="mb-0 mt-1 mb-2">4</h3>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6">
-                            <div class="card">
+                            <div class="card att">
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-8">
-                                            <div class="mt-0 text-start"> <span class="fs-14 font-weight-semibold">Half
-                                                    Day</span>
-                                                <h3 class="mb-0 mt-1  mb-2">2</h3>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="icon1 bg-orange brround my-auto  float-end"> <i class="fa fa-adjust"></i> </div>
-                                        </div>
+                                    <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Half
+                                            Day</span>
+                                        <h3 class="mb-0 mt-1  mb-2">2</h3>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6">
-                            <div class="card">
+                            <div class="card att">
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-8">
-                                            <div class="mt-0 text-start"> <span
-                                                    class="fs-14 font-weight-semibold">Weekly Off</span>
-                                                <h3 class="mb-0 mt-1 mb-2">8</h3>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="icon1 bg-success my-auto  float-end"> <i
-                                                    class="feather feather-users"></i> </div>
-                                        </div>
+                                    <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Weekly
+                                            Off</span>
+                                        <h3 class="mb-0 mt-1 mb-2">8</h3>
                                     </div>
                                 </div>
                             </div>
@@ -114,72 +84,40 @@
                     </div>
                     <div class="row">
                         <div class="col-xl-3 col-lg-3 col-md-6">
-                            <div class="card">
+                            <div class="card att">
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-8">
-                                            <div class="mt-0 text-start"> <span
-                                                    class="fs-14 font-weight-semibold">Leaves</span>
-                                                <h3 class="mb-0 mt-1 mb-2">6</h3>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="icon1 bg-success my-auto  float-end"> <i
-                                                    class="feather feather-users"></i> </div>
-                                        </div>
+                                    <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Leaves</span>
+                                        <h3 class="mb-0 mt-1 mb-2">6</h3>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6">
-                            <div class="card">
+                            <div class="card att">
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-8">
-                                            <div class="mt-0 text-start"> <span
-                                                    class="fs-14 font-weight-semibold">Holiday</span>
-                                                <h3 class="mb-0 mt-1 mb-2">4</h3>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="icon1 bg-warning my-auto  float-end"> <i class="fa fa-star"></i> </div>
-                                        </div>
+                                    <div class="mt-0 text-center"> <span
+                                            class="fs-18 font-weight-semibold">Holiday</span>
+                                        <h3 class="mb-0 mt-1 mb-2">4</h3>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6">
-                            <div class="card">
+                            <div class="card att">
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-8">
-                                            <div class="mt-0 text-start"> <span
-                                                    class="fs-14 font-weight-semibold">Overtime</span>
-                                                <h3 class="mb-0 mt-1  mb-2">53</h3>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="icon1 bg-secondary brround my-auto  float-end"> <i
-                                                    class="feather feather-dollar-sign"></i> </div>
-                                        </div>
+                                    <div class="mt-0 text-center"> <span
+                                            class="fs-18 font-weight-semibold">Overtime</span>
+                                        <h3 class="mb-0 mt-1  mb-2">53</h3>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6">
-                            <div class="card">
+                            <div class="card att">
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-8">
-                                            <div class="mt-0 text-start"> <span
-                                                    class="fs-14 font-weight-semibold">Miss Punch</span>
-                                                <h3 class="mb-0 mt-1 mb-2">8</h3>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="icon1 bg-success my-auto  float-end"> <i
-                                                    class="feather feather-users"></i> </div>
-                                        </div>
+                                    <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Miss
+                                            Punch</span>
+                                        <h3 class="mb-0 mt-1 mb-2">8</h3>
                                     </div>
                                 </div>
                             </div>
@@ -193,8 +131,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table  table-vcenter text-nowrap table-bordered border-bottom table-striped"
-                        id="hr-attendance1">
+                    <table class="table  table-vcenter text-nowrap table-bordered border-bottom table-striped" id="hr-attendance1">
                         <thead>
                             <tr>
                                 <th rowspan="2" class="text-center border-bottom-0">Action</th>
@@ -212,7 +149,8 @@
                         <tbody>
                             <tr>
                                 <td class="text-center">
-                                    <div class="btn btn-light btn-icon btn-sm" id="calenderbtn"  data-bs-toggle="tooltip" data-original-title="View">
+                                    <div class="btn btn-light btn-icon btn-sm" id="calenderbtn"
+                                        data-bs-toggle="tooltip" data-original-title="View">
                                         <i class="feather feather-eye"></i>
                                     </div>
                                 </td>
@@ -242,77 +180,410 @@
                         <thead>
                             <tr>
                                 <th class="text-DARK">DAYS</th>
-                                <th class="text-muted font-weight-normal"><div><div>S</div><div>1</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>S</div><div>2</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>M</div><div>3</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>T</div><div>4</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>W</div><div>5</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>T</div><div>6</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>F</div><div>7</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>S</div><div>8</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>S</div><div>9</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>M</div><div>10</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>T</div><div>11</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>W</div><div>12</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>T</div><div>13</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>F</div><div>14</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>S</div><div>15</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>S</div><div>16</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>M</div><div>17</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>T</div><div>18</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>W</div><div>19</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>T</div><div>20</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>F</div><div>21</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>S</div><div>22</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>S</div><div>23</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>M</div><div>24</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>T</div><div>25</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>W</div><div>26</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>T</div><div>27</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>F</div><div>28</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>S</div><div>29</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>S</div><div>30</div></div></th>
-                                <th class="text-muted font-weight-normal"><div><div>M</div><div>31</div></div></th>
-                                <th class="text-dark"><div></div>Total</th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>S</p>
+                                        <p class='fs-12'>1</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>S</p>
+                                        <p class='fs-12'>2</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>M</p>
+                                        <p class='fs-12'>3</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>T</p>
+                                        <p class='fs-12'>4</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>W</p>
+                                        <p class='fs-12'>5</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>T</p>
+                                        <p class='fs-12'>6</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>F</p>
+                                        <p class='fs-12'>7</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>S</p>
+                                        <p class='fs-12'>8</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>S</p>
+                                        <p class='fs-12'>9</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>M</p>
+                                        <p class='fs-12'>10</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>T</p>
+                                        <p class='fs-12'>11</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>W</p>
+                                        <p class='fs-12'>12</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>T</p>
+                                        <p class='fs-12'>13</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>F</p>
+                                        <p class='fs-12'>14</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>S</p>
+                                        <p class='fs-12'>15</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>S</p>
+                                        <p class='fs-12'>16</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>M</p>
+                                        <p class='fs-12'>17</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>T</p>
+                                        <p class='fs-12'>18</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>W</p>
+                                        <p class='fs-12'>19</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>T</p>
+                                        <p class='fs-12'>20</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>F</p>
+                                        <p class='fs-12'>21</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>S</p>
+                                        <p class='fs-12'>22</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>S</p>
+                                        <p class='fs-12'>23</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>M</p>
+                                        <p class='fs-12'>24</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>T</p>
+                                        <p class='fs-12'>25</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>W</p>
+                                        <p class='fs-12'>26</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>T</p>
+                                        <p class='fs-12'>27</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>F</p>
+                                        <p class='fs-12'>28</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>S</p>
+                                        <p class='fs-12'>29</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>S</p>
+                                        <p class='fs-12'>30</p>
+                                    </div>
+                                </th>
+                                <th class="text-muted font-weight-normal">
+                                    <div>
+                                        <p class='fs-12'>M</p>
+                                        <p class='fs-12'>31</p>
+                                    </div>
+                                </th>
+                                <th class="text-dark">
+                                    Total
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td><span></span></td>
-                                <td><span class="font-weight-bold">P</span></td>
-                                <td><span class="font-weight-bold">WO</span></td>
-                                <td><span class="font-weight-bold">P</span></td>
-                                <td><span class="font-weight-bold">P</span></td>
-                                <td><span class="font-weight-bold">A</span></td>
-                                <td><span class="font-weight-bold">A</span></td>
-                                <td><span class="font-weight-bold">A</span></td>
-                                <td><span class="font-weight-bold">P</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
-                                <td><span class="font-weight-bold">-</span></td>
+                                <td><p class="fs-12 font-weight-bold">P</p></td>
+                                <td><p class="fs-12 font-weight-bold">WO</p></td>
+                                <td><p class="fs-12 font-weight-bold">P</p></td>
+                                <td><p class="fs-12 font-weight-bold">P</p></td>
+                                <td><p class="fs-12 font-weight-bold">A</p></td>
+                                <td><p class="fs-12 font-weight-bold">A</p></td>
+                                <td><p class="fs-12 font-weight-bold">A</p></td>
+                                <td><p class="fs-12 font-weight-bold">P</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
+                                <td><p class="fs-12 font-weight-bold">-</p></td>
                             </tr>
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th class="text-DARK">WH</th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">08:49</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">08:39</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">09:19</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">10:00</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">10:19</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-muted font-weight-light">
+                                    <p class="fs-12">-</p>
+                                </th>
+                                <th class="text-dark">
+                                    <b>45:50</b>
+                                </th>
+                            </tr>
+                        </tfoot>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row row-sm">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header border-bottom-0">
+                    <h3 class="card-title">Staff Payment Summary</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="file-datatable" class="table key-buttons">
+                            <tbody>
+                                <tr class="d-flex justify-content-between">
+                                    <td>Actual Salary</td>
+                                    <td>$125,250</td>
+                                </tr>
+                                <tr class="d-flex justify-content-between">
+                                    <td>Adjustments</td>
+                                    <td>$125,250</td>
+                                </tr>
+                                <tr class="d-flex justify-content-between">
+                                    <td>Net Pay</td>
+                                    <td>$125,250</td>
+                                </tr>
+                                <tr class="d-flex justify-content-between">
+                                    <td>Gross Salary</td>
+                                    <td>$125,250</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header border-bottom-0">
+                    <h3 class="card-title">Statutory Expenses</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="file-datatable" class="table text-nowrap key-buttons">
+                            <thead>
+                                <tr>
+                                    <th class="border-bottom-1">Type</th>
+                                    <th class="border-bottom-1">Employee</th>
+                                    <th class="border-bottom-1">Employer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>PF</td>
+                                    <td>Zenaida Frank</td>
+                                    <td>Fixing Dots</td>
+                                </tr>
+                                <tr>
+                                    <td>ESIC</td>
+                                    <td>Zenaida Frank</td>
+                                    <td>Fixing Dots</td>
+                                </tr>
+                                <tr>
+                                    <td>LWF</td>
+                                    <td>Zenaida Frank</td>
+                                    <td>Fixing Dots</td>
+                                </tr>
+                                <tr>
+                                    <td>Professional Taxes</td>
+                                    <td>Zenaida Frank</td>
+                                    <td>Fixing Dots</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
