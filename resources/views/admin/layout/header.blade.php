@@ -2,13 +2,13 @@
     <div class="container-fluid main-container">
         <div class="d-flex">
             <a class="header-brand" href="index.html">
-                <img src="assets/images/brand/logo.png" class="header-brand-img desktop-lgo"
+                <img src={{ asset("assets/images/brand/logo.png")}} class="header-brand-img desktop-lgo"
                     alt="Dayonelogo">
-                <img src="assets/images/brand/logo-white.png" class="header-brand-img dark-logo"
+                <img src={{ asset("assets/images/brand/logo-white.png")}} class="header-brand-img dark-logo"
                     alt="Dayonelogo">
-                <img src="assets/images/brand/favicon.png" class="header-brand-img mobile-logo"
+                <img src={{ asset("assets/images/brand/favicon.png")}} class="header-brand-img mobile-logo"
                     alt="Dayonelogo">
-                <img src="assets/images/brand/favicon1.png" class="header-brand-img darkmobile-logo"
+                <img src={{ asset("assets/images/brand/favicon1.png")}} class="header-brand-img darkmobile-logo"
                     alt="Dayonelogo">
             </a>
             <div class="app-sidebar__toggle" data-bs-toggle="sidebar">
@@ -53,37 +53,37 @@
                             </div>
                             <div class="dropdown header-flags">
                                 <a class="nav-link icon" data-bs-toggle="dropdown">
-                                    <img src="assets/images/flags/flag-png/united-kingdom.png"
+                                    <img src={{ asset("assets/images/flags/flag-png/united-kingdom.png")}}
                                         class="h-24" alt="img">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated">
                                     <a href="javascript:void(0);" class="dropdown-item d-flex "> <span
                                             class="avatar  me-3 align-self-center bg-transparent"><img
-                                                src="assets/images/flags/flag-png/india.png"
+                                                src={{ asset("assets/images/flags/flag-png/india.png")}}
                                                 alt="img" class="h-24"></span>
                                         <div class="d-flex"> <span class="my-auto">India</span> </div>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item d-flex"> <span
                                             class="avatar  me-3 align-self-center bg-transparent"><img
-                                                src="assets/images/flags/flag-png/united-kingdom.png"
+                                                src={{ asset("assets/images/flags/flag-png/united-kingdom.png")}}
                                                 alt="img" class="h-24"></span>
                                         <div class="d-flex"> <span class="my-auto">UK</span> </div>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item d-flex"> <span
                                             class="avatar me-3 align-self-center bg-transparent"><img
-                                                src="assets/images/flags/flag-png/italy.png"
+                                                src={{ asset("assets/images/flags/flag-png/italy.png")}}
                                                 alt="img" class="h-24"></span>
                                         <div class="d-flex"> <span class="my-auto">Italy</span> </div>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item d-flex"> <span
                                             class="avatar me-3 align-self-center bg-transparent"><img
-                                                src="assets/images/flags/flag-png/united-states-of-america.png"
+                                                src={{ asset("assets/images/flags/flag-png/united-states-of-america.png")}}
                                                 class="h-24" alt="img"></span>
                                         <div class="d-flex"> <span class="my-auto">US</span> </div>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item d-flex"> <span
                                             class="avatar  me-3 align-self-center bg-transparent"><img
-                                                src="assets/images/flags/flag-png/spain.png"
+                                                src={{ asset("assets/images/flags/flag-png/spain.png")}}
                                                 alt="img" class="h-24"></span>
                                         <div class="d-flex"> <span class="my-auto">Spain</span> </div>
                                     </a>
@@ -109,7 +109,7 @@
                                                 <div class="">
                                                     <span
                                                         class="avatar avatar-md brround align-self-center cover-image"
-                                                        data-bs-image-src="assets/images/users/1.jpg"></span>
+                                                        data-bs-image-src={{ asset("assets/images/users/1.jpg")}}></span>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div class="ps-3 text-wrap text-break">
@@ -128,7 +128,7 @@
                                                 <div class="">
                                                     <span
                                                         class="avatar avatar-md brround align-self-center cover-image"
-                                                        data-bs-image-src="assets/images/users/2.jpg"></span>
+                                                        data-bs-image-src={{ asset("assets/images/users/2.jpg")}}></span>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div class="ps-3 text-wrap text-break">
@@ -146,7 +146,7 @@
                                                 <div class="">
                                                     <span
                                                         class="avatar avatar-md brround align-self-center cover-image"
-                                                        data-bs-image-src="assets/images/users/3.jpg"></span>
+                                                        data-bs-image-src={{ asset("assets/images/users/3.jpg")}}></span>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div class="ps-3 text-wrap text-break">
@@ -165,7 +165,7 @@
                                                 <div class="">
                                                     <span
                                                         class="avatar avatar-md brround align-self-center cover-image"
-                                                        data-bs-image-src="assets/images/users/4.jpg"></span>
+                                                        data-bs-image-src={{ asset("assets/images/users/4.jpg")}}></span>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div class="ps-3 text-wrap text-break">
@@ -184,7 +184,7 @@
                                                 <div class="">
                                                     <span
                                                         class="avatar avatar-md brround align-self-center cover-image"
-                                                        data-bs-image-src="assets/images/users/6.jpg"></span>
+                                                        data-bs-image-src={{ asset("assets/images/users/6.jpg")}}></span>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div class="ps-3 text-wrap text-break">
@@ -215,7 +215,7 @@
                                 <a href="javascript:void(0);" class="nav-link pe-1 ps-0 leading-none"
                                     data-bs-toggle="dropdown">
                                     <span>
-                                        <img src="assets/images/users/16.jpg" alt="img"
+                                        <img src={{ asset("assets/images/users/16.jpg")}} alt="img"
                                             class="avatar avatar-md bradius">
                                     </span>
                                 </a>

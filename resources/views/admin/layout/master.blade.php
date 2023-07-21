@@ -171,13 +171,13 @@
                                 </div>
                                 <div class="switch-toggle d-flex mt-2">
                                     <a class="bg-img1" href="javascript:void(0);"><img
-                                            src="assets/images/photos/bg-img1.jpg" alt="Bg-Image" id="bgimage1"></a>
+                                            src={{ asset("assets/images/photos/bg-img1.jpg")}} alt="Bg-Image" id="bgimage1"></a>
                                     <a class="bg-img2" href="javascript:void(0);"><img
-                                            src="assets/images/photos/bg-img2.jpg" alt="Bg-Image" id="bgimage2"></a>
+                                            src={{ asset("assets/images/photos/bg-img2.jpg")}} alt="Bg-Image" id="bgimage2"></a>
                                     <a class="bg-img3" href="javascript:void(0);"><img
-                                            src="assets/images/photos/bg-img3.jpg" alt="Bg-Image" id="bgimage3"></a>
+                                            src={{ asset("assets/images/photos/bg-img3.jpg")}} alt="Bg-Image" id="bgimage3"></a>
                                     <a class="bg-img4" href="javascript:void(0);"><img
-                                            src="assets/images/photos/bg-img4.jpg" alt="Bg-Image" id="bgimage4"></a>
+                                            src={{ asset("assets/images/photos/bg-img4.jpg")}} alt="Bg-Image" id="bgimage4"></a>
                                 </div>
                             </div>
                         </div>
@@ -338,7 +338,7 @@
     <!-- END SWITCHER -->
     <!--- GLOBAL-LOADER -->
     <div id="global-loader">
-        <img src="assets/images/svgs/loader.svg" alt="loader">
+        <img src={{ asset("assets/images/svgs/loader.svg")}} alt="loader">
     </div>
     <!--- END GLOBAL-LOADER -->
 
@@ -362,7 +362,7 @@
 
 
                     {{-- MAIN CONTENT --}}
-                    @include('admin.attendance.attendance')
+                    @yield('contents')
                     {{-- END MAIN CONTENT --}}
                 </div>
             </div><!-- end app-content-->

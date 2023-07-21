@@ -1,3 +1,9 @@
+@extends('admin.layout.master')
+@section('title')
+Attendance
+@endsection
+
+@section('contents')
 <!-- ROW -->
 <div class="row">
     <div class="col-xl-3 col-md-12 col-lg-12">
@@ -933,3 +939,4 @@
     </div>
 </div>
 <!-- END HALFDAY EDIT MODAL  -->
+@endsection

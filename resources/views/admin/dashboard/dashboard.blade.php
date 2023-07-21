@@ -1,6 +1,11 @@
+@extends('admin.layout.master')
+@section('title')
+Dashboard
+@endsection
+@section('contents')
 <div class="container-fluid">
     <div class="row">
-        <div class="col-xl-8">
+        <div class="col-xl-9">
             <div class="card">
                 <div class="card-body">
                     <div class="page-header d-md-flex d-block">
@@ -48,7 +53,7 @@
                                     <div class="card-body">
                                         <div class="mt-0 text-center"> <span
                                                 class="fs-18 font-weight-semibold">Present</span>
-                                            <h3 class="mb-0 mt-1 mb-2">78</h3>
+                                            <h5 class="mb-0 mt-1 mb-2">78</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -58,7 +63,7 @@
                                     <div class="card-body">
                                         <div class="mt-0 text-center"> <span
                                                 class="fs-18 font-weight-semibold">Absent</span>
-                                            <h3 class="mb-0 mt-1 mb-2">4</h3>
+                                            <h5 class="mb-0 mt-1 mb-2">4</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -68,7 +73,7 @@
                                     <div class="card-body">
                                         <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Half
                                                 Day</span>
-                                            <h3 class="mb-0 mt-1  mb-2">2</h3>
+                                            <h5 class="mb-0 mt-1  mb-2">2</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -78,7 +83,7 @@
                                     <div class="card-body">
                                         <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Weekly
                                                 Off</span>
-                                            <h3 class="mb-0 mt-1 mb-2">8</h3>
+                                            <h5 class="mb-0 mt-1 mb-2">8</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -90,7 +95,7 @@
                                     <div class="card-body">
                                         <div class="mt-0 text-center"> <span
                                                 class="fs-18 font-weight-semibold">Leaves</span>
-                                            <h3 class="mb-0 mt-1 mb-2">6</h3>
+                                            <h5 class="mb-0 mt-1 mb-2">6</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -100,7 +105,7 @@
                                     <div class="card-body">
                                         <div class="mt-0 text-center"> <span
                                                 class="fs-18 font-weight-semibold">Holiday</span>
-                                            <h3 class="mb-0 mt-1 mb-2">4</h3>
+                                            <h5 class="mb-0 mt-1 mb-2">4</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -110,7 +115,7 @@
                                     <div class="card-body">
                                         <div class="mt-0 text-center"> <span
                                                 class="fs-18 font-weight-semibold">Overtime</span>
-                                            <h3 class="mb-0 mt-1  mb-2">53</h3>
+                                            <h5 class="mb-0 mt-1  mb-2">53</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -120,7 +125,7 @@
                                     <div class="card-body">
                                         <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Miss
                                                 Punch</span>
-                                            <h3 class="mb-0 mt-1 mb-2">8</h3>
+                                            <h5 class="mb-0 mt-1 mb-2">8</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -130,7 +135,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-4">
+        <div class="col-xl-3">
             <div class="row">
                 <div class="col-xl-12 col-md-6 col-lg-12">
                     <div class="card">
@@ -142,10 +147,18 @@
                         <div class="card-body">
                             <div class="list-group list-group-transparent mb-0 mail-inbox">
                                 <a  href="#" class="list-group-item list-group-item-action d-flex align-items-center px-0 py-2">
-                                    <span class="w-3 h-3 brround bg-primary me-3 m-2"></span> <b>Pending Approvals</b> <span class="ms-auto badge bg-primary">12</span>
+                                    <div class="spinner1">
+                                        <div class="double-bounce1 bg-danger"></div>
+                                        <div class="double-bounce2 bg-danger"></div>
+                                    </div>
+                                      <b>Pending Approvals</b> <span class="ms-auto badge bg-primary">12</span>
                                 </a>
                                 <a  href="#" class="list-group-item list-group-item-action d-flex align-items-center px-0 py-2">
-                                    <span class="w-3 h-3 brround bg-success me-3 m-2"></span> <b>Pending Approvals</b> <span class="ms-auto badge bg-success">12</span>
+                                    <div class="spinner1">
+                                        <div class="double-bounce1 bg-success"></div>
+                                        <div class="double-bounce2 bg-success"></div>
+                                    </div>
+                                    </span> <b>Pending Miss Punch</b> <span class="ms-auto badge bg-success">12</span>
                                 </a>
                             </div>
                         </div>
@@ -705,3 +718,5 @@
         </div>
     </div>
 </div>
+
+@endsection
