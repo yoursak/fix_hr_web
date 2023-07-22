@@ -283,7 +283,7 @@ $(function () {
     storke: ['#fe7f00', '#3366ff', '#3bb001'],
     resize: true,
     backgroundColor: 'rgba(119, 119, 142, 0.2)',
-    labelColor: '#424e79'
+    labelColor: '#fff'
   });
 });
 /******/ })()

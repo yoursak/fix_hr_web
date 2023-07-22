@@ -39,12 +39,6 @@
                         </a>
                     </li>
                     <li class="slide">
-                        <a class="side-menu__item" href="{{url('/help')}}">
-                            <i class="feather feather-headphones sidemenu_icon"></i>
-                            <span class="side-menu__label">Help & Support</span>
-                        </a>
-                    </li>
-                    <li class="slide">
                         <a class="side-menu__item" href="{{url('/employee')}}">
                             <i class="feather feather-users sidemenu_icon"></i>
                             <span class="side-menu__label">Employee</span>
@@ -57,12 +51,6 @@
                         </a>
                     </li>
                     <li class="slide">
-                        <a class="side-menu__item" href="{{url('/report')}}">
-                            <i class="feather feather-flag sidemenu_icon"></i>
-                            <span class="side-menu__label">Report</span>
-                        </a>
-                    </li>
-                    <li class="slide">
                         <a class="side-menu__item" href="{{url('/payroll')}}">
                             <i class="feather feather-credit-card sidemenu_icon"></i>
                             <span class="side-menu__label">Payroll</span>
@@ -72,6 +60,18 @@
                         <a class="side-menu__item" href="{{url('/onlinepay')}}">
                             <i class="feather feather-dollar-sign sidemenu_icon"></i>
                             <span class="side-menu__label">Online Pay</span>
+                        </a>
+                    </li>
+                    <li class="slide">
+                        <a class="side-menu__item" href="{{url('/report')}}">
+                            <i class="feather feather-flag sidemenu_icon"></i>
+                            <span class="side-menu__label">Report</span>
+                        </a>
+                    </li>
+                    <li class="slide">
+                        <a class="side-menu__item" href="{{url('/help')}}">
+                            <i class="feather feather-headphones sidemenu_icon"></i>
+                            <span class="side-menu__label">Help & Support</span>
                         </a>
                     </li>
                     <li class="slide">

@@ -338,7 +338,7 @@
     <!-- END SWITCHER -->
     <!--- GLOBAL-LOADER -->
     <div id="global-loader">
-        <img src={{ asset("assets/images/svgs/loader.svg")}} alt="loader">
+        <img src={{ asset('imgs/loader.gif')}} alt="loader">
     </div>
     <!--- END GLOBAL-LOADER -->
 

@@ -48,4 +48,13 @@ Route::get('/report', function () {
 Route::get('/setting', function () {
     return view('admin.setting.setting');
 });
+Route::get('/misspunch', function () {
+    return view('admin.request.misspunch');
+});
+Route::get('/leave', function () {
+    return view('admin.request.leave');
+});
+Route::get('/gatepass', function () {
+    return view('admin.request.gatepass');
+});
 

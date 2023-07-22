@@ -6,7 +6,7 @@
 Project        :   Dayone - Multipurpose Admin & Dashboard Template
 Version        :   V.1
 Create Date    :   23/04/2021
-Copyright      :   Spruko Technologies Private Limited 
+Copyright      :   Spruko Technologies Private Limited
 Author         :   Spruko
 Author URL     :   https://themeforest.net/user/spruko
 Support	       :   support@spruko.com
@@ -9069,7 +9069,7 @@ A VERTICAL event
   height: 34px;
   line-height: 34px;
   border-radius: 3px;
-  color: #424e79;
+  color: #fff;
   background: #eaeefa;
   border: 1px solid #e9ebfa;
   cursor: pointer;
@@ -11427,7 +11427,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   cursor: pointer;
   display: block;
   padding: 0px 15px;
-  color: #424e79;
+  color: #fff;
   text-decoration: none;
   font-size: 13px;
   height: 35px;
@@ -11958,7 +11958,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 }
 #ui_notifIt.default {
   background-color: #e9ebfa;
-  color: #424e79;
+  color: #fff;
 }
 
 /* notifit confirm */
@@ -17275,7 +17275,7 @@ See https://bgrins.github.io/spectrum/themes/ for instructions.
 .SumoSelect > .CaptionCont {
   position: relative;
   border: 1px solid #d3dfea;
-  color: #424e79;
+  color: #fff;
   min-height: 14px;
   background-color: #fff;
   border-radius: 0.25rem;
@@ -18841,7 +18841,7 @@ li.ui-timepicker-selected .ui-timepicker-duration {
 
 .tree li a {
   text-decoration: none;
-  color: #424e79;
+  color: #fff;
   font-size: 15px;
 }
 .tree li button {
