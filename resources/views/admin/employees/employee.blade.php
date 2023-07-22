@@ -204,7 +204,7 @@
                                             <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal" data-bs-target="#deletemodal">
                                                 <i class="feather feather-edit primary text-primary" data-bs-toggle="tooltip" data-original-title="View"></i>
                                             </a>
-                                            <a class="modal-effect btn" data-effect="effect-super-scaled" data-bs-toggle="modal" href="#deletemodal">
+                                            <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal" data-bs-target="#deletemodal">
                                                 <i class="feather feather-trash primary text-primary" data-bs-toggle="tooltip" data-original-title="View"></i>
                                             </a>
                                         </td>
@@ -271,9 +271,12 @@
         <div class="modal-dialog modal-dialog-centered text-center" role="document">
             <div class="modal-content modal-content-demo">
                 <div class="modal-body text-center p-4">
+                    {{-- <div id="pay-loader">
+                        <img src={{ asset('imgs/loader.gif')}} alt="loader">
+                    </div> --}}
                     <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
                             aria-hidden="true">&times;</span></button>
-                    <i class="fe fe-check-circle fs-80 text-success lh-1 mb-4 d-inline-block"></i>
+                    <img src="{{asset('imgs/check.gif')}}" alt="">
                     <h4 class="text-success mb-4">Payment Successful!</h4>
                     <p class="mb-4 mx-4">There are many variations of passages of Lorem Ipsum available, but the majority
                         have suffered alteration.</p><button class="btn btn-success pd-x-25" data-bs-dismiss="modal">Print

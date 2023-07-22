@@ -9,7 +9,7 @@ Copyright      :   Fixing Dots
 Author         :   Aman Sahu
 Support	       :   support@spruko.com
 
--------------------------------------------------------------------*/*/
+-------------------------------------------------------------------*/
 $(function (e) {
   'use strict';
   /* Data Table */

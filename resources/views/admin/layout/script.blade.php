@@ -91,26 +91,26 @@
     <script src={{ asset('assets/js/hr/hr-attmark.js') }}></script>
 
     <!-- P-SCROLL JS -->
-    <script src={{ asset("assets/plugins/p-scrollbar/p-scrollbar.js") }}></script>
-    <script src={{ asset("assets/plugins/p-scrollbar/p-scroll1.js") }}></script>
+    <script src={{ asset('assets/plugins/p-scrollbar/p-scrollbar.js') }}></script>
+    <script src={{ asset('assets/plugins/p-scrollbar/p-scroll1.js') }}></script>
 
     <!--SIDEBAR JS -->
-    <script src={{ asset("assets/plugins/sidebar/sidebar.js") }}></script>
+    <script src={{ asset('assets/plugins/sidebar/sidebar.js') }}></script>
 
     <!-- SELECT2 JS -->
-    <script src={{ asset("assets/plugins/select2/select2.full.min.js") }}></script>
+    <script src={{ asset('assets/plugins/select2/select2.full.min.js') }}></script>
 
     <!-- INTERNAl JQUERY STEPS JS -->
-    <script src={{ asset("assets/plugins/jquery-steps/jquery.steps.min.js") }}></script>
-    <script src={{ asset("assets/plugins/parsleyjs/parsley.min.js") }}></script>
+    <script src={{ asset('assets/plugins/jquery-steps/jquery.steps.min.js') }}></script>
+    <script src={{ asset('assets/plugins/parsleyjs/parsley.min.js') }}></script>
 
     <!-- INTERNAL FORM-WIZARD JS -->
-    <script src={{ asset("assets/plugins/formwizard/jquery.smartWizard.js") }}></script>
-    <script src={{ asset("assets/plugins/formwizard/fromwizard.js") }}></script>
+    <script src={{ asset('assets/plugins/formwizard/jquery.smartWizard.js') }}></script>
+    <script src={{ asset('assets/plugins/formwizard/fromwizard.js') }}></script>
 
     <!-- INTERNAL ACCORDION-WIZARD JS -->
-    <script src={{ asset("assets/plugins/accordion-Wizard-Form/jquery.accordion-wizard.min.js") }}></script>
-    <script src={{ asset("assets/js/form-wizard.js") }}></script>
+    <script src={{ asset('assets/plugins/accordion-Wizard-Form/jquery.accordion-wizard.min.js') }}></script>
+    <script src={{ asset('assets/js/form-wizard.js') }}></script>
 
 
     <script>

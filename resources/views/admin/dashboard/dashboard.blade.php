@@ -151,14 +151,22 @@ Dashboard
                                         <div class="double-bounce1 bg-danger"></div>
                                         <div class="double-bounce2 bg-danger"></div>
                                     </div>
-                                      <b>Pending Approvals</b> <span class="ms-auto badge bg-primary">12</span>
+                                      <b>Manage Attendance</b>
+                                      <span class="ms-auto badge bg-primary">12</span>
                                 </a>
                                 <a  href="#" class="list-group-item list-group-item-action d-flex align-items-center px-0 py-2">
                                     <div class="spinner1">
                                         <div class="double-bounce1 bg-success"></div>
                                         <div class="double-bounce2 bg-success"></div>
                                     </div>
-                                    </span> <b>Pending Miss Punch</b> <span class="ms-auto badge bg-success">12</span>
+                                    </span> <b>Manage Miss Punch</b> <span class="ms-auto badge bg-success">12</span>
+                                </a>
+                                <a  href="#" class="list-group-item list-group-item-action d-flex align-items-center px-0 py-2">
+                                    <div class="spinner1">
+                                        <div class="double-bounce1 bg-success"></div>
+                                        <div class="double-bounce2 bg-success"></div>
+                                    </div>
+                                    </span> <b>Manage Leaves</b> <span class="ms-auto badge bg-secondary">2</span>
                                 </a>
                             </div>
                         </div>

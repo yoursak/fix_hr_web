@@ -543,7 +543,7 @@
                 var $inner = $('<div />', {style: 'position:relative;margin:60px auto;padding:20px;background-color:#FAFAFA;width:70%;font-family:Calibri,Verdana,Helvetica,sans-serif;font-size:small;'});
                 var $content = $('<div />', {html: '<span id="closeHelp" style="display:block;position:absolute;top:0;right:0;padding:10px;cursor:pointer;" title="' + settings.translations.close + '"><span class="fa fa-times"></span></span>'});
                 $content.append('<h3 style="margin:0;">RichText</h3>');
-                $content.append('<hr><br>Powered by <a href="https://themeforest.net/user/sprukotechnologies" target="_blank">Dayone</a>');
+                $content.append('<hr><br>Powered by <a href="https://themeforest.net/user/sprukotechnologies" target="_blank">amansahu</a>');
 
                 $outer.append($inner.append($content));
                 $editor.append($outer);

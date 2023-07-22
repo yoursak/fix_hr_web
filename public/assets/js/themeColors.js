@@ -1658,10 +1658,10 @@ function dynamicPrimaryColor(primaryColor) {
     (_document$querySelect4 = document.querySelector('body')) === null || _document$querySelect4 === void 0 ? void 0 : _document$querySelect4.classList.remove('bg-img2');
     (_document$querySelect5 = document.querySelector('body')) === null || _document$querySelect5 === void 0 ? void 0 : _document$querySelect5.classList.remove('bg-img3');
     (_document$querySelect6 = document.querySelector('body')) === null || _document$querySelect6 === void 0 ? void 0 : _document$querySelect6.classList.remove('bg-img4');
-    localStorage.removeItem('dayoneBgImage');
+    localStorage.removeItem('amansahuBgImage');
     $('#myonoffswitch1').prop('checked', true);
-    localStorage.removeItem('dayonedarkMode');
-    localStorage.removeItem('dayonetransparentMode');
+    localStorage.removeItem('amansahudarkMode');
+    localStorage.removeItem('amansahutransparentMode');
   });
   $('#myonoffswitch2').on('click', function () {
     var _document$querySelect7, _document$querySelect8, _document$querySelect9, _document$querySelect10, _document$querySelect11, _document$querySelect12;
@@ -1672,11 +1672,11 @@ function dynamicPrimaryColor(primaryColor) {
     (_document$querySelect10 = document.querySelector('body')) === null || _document$querySelect10 === void 0 ? void 0 : _document$querySelect10.classList.remove('bg-img2');
     (_document$querySelect11 = document.querySelector('body')) === null || _document$querySelect11 === void 0 ? void 0 : _document$querySelect11.classList.remove('bg-img3');
     (_document$querySelect12 = document.querySelector('body')) === null || _document$querySelect12 === void 0 ? void 0 : _document$querySelect12.classList.remove('bg-img4');
-    localStorage.removeItem('dayoneBgImage');
+    localStorage.removeItem('amansahuBgImage');
     $('#myonoffswitch2').prop('checked', true);
-    localStorage.setItem('dayonedarkMode', true);
-    localStorage.removeItem('dayonelightMode');
-    localStorage.removeItem('dayonetransparentMode');
+    localStorage.setItem('amansahudarkMode', true);
+    localStorage.removeItem('amansahulightMode');
+    localStorage.removeItem('amansahutransparentMode');
   });
   $('#myonoffswitchTransparent').on('click', function () {
     var _document$querySelect13, _document$querySelect14, _document$querySelect15, _document$querySelect16, _document$querySelect17, _document$querySelect18;
@@ -1687,23 +1687,23 @@ function dynamicPrimaryColor(primaryColor) {
     (_document$querySelect16 = document.querySelector('body')) === null || _document$querySelect16 === void 0 ? void 0 : _document$querySelect16.classList.remove('bg-img2');
     (_document$querySelect17 = document.querySelector('body')) === null || _document$querySelect17 === void 0 ? void 0 : _document$querySelect17.classList.remove('bg-img3');
     (_document$querySelect18 = document.querySelector('body')) === null || _document$querySelect18 === void 0 ? void 0 : _document$querySelect18.classList.remove('bg-img4');
-    localStorage.removeItem('dayoneBgImage');
+    localStorage.removeItem('amansahuBgImage');
     $('#myonoffswitchTransparent').prop('checked', true);
-    localStorage.setItem('dayonetransparentMode', true);
-    localStorage.removeItem('dayonelightMode');
-    localStorage.removeItem('dayonedarkMode');
+    localStorage.setItem('amansahutransparentMode', true);
+    localStorage.removeItem('amansahulightMode');
+    localStorage.removeItem('amansahudarkMode');
   });
 })();
 
 function localStorageBackup() {
   // if there is a value stored, update color picker and background color
   // Used to retrive the data from local storage
-  if (localStorage.dayoneprimaryColor) {
-    document.getElementById('colorID').value = localStorage.dayoneprimaryColor;
-    document.querySelector('html').style.setProperty('--primary-bg-color', localStorage.dayoneprimaryColor);
-    document.querySelector('html').style.setProperty('--primary-bg-hover', localStorage.dayoneprimaryHoverColor);
-    document.querySelector('html').style.setProperty('--primary-bg-border', localStorage.dayoneprimaryBorderColor);
-    document.querySelector('html').style.setProperty('--primary-transparentcolor', localStorage.dayoneprimaryTransparent); // document.querySelector('body').setAttribute('class', 'app sidebar-mini light-mode');
+  if (localStorage.amansahuprimaryColor) {
+    document.getElementById('colorID').value = localStorage.amansahuprimaryColor;
+    document.querySelector('html').style.setProperty('--primary-bg-color', localStorage.amansahuprimaryColor);
+    document.querySelector('html').style.setProperty('--primary-bg-hover', localStorage.amansahuprimaryHoverColor);
+    document.querySelector('html').style.setProperty('--primary-bg-border', localStorage.amansahuprimaryBorderColor);
+    document.querySelector('html').style.setProperty('--primary-transparentcolor', localStorage.amansahuprimaryTransparent); // document.querySelector('body').setAttribute('class', 'app sidebar-mini light-mode');
 
     document.querySelector('body').classList.add("light-mode");
     document.querySelector('body').classList.remove("dark-mode");
@@ -1713,13 +1713,13 @@ function localStorageBackup() {
     $('#myonoffswitch1').prop('checked', true);
   }
 
-  if (localStorage.dayonedarkPrimary) {
-    document.getElementById('darkPrimaryColorID').value = localStorage.dayonedarkPrimary;
-    document.querySelector('html').style.setProperty('--primary-bg-color', localStorage.dayonedarkPrimary);
-    document.querySelector('html').style.setProperty('--primary-bg-hover', localStorage.dayonedarkPrimary);
-    document.querySelector('html').style.setProperty('--primary-bg-border', localStorage.dayonedarkPrimary);
+  if (localStorage.amansahudarkPrimary) {
+    document.getElementById('darkPrimaryColorID').value = localStorage.amansahudarkPrimary;
+    document.querySelector('html').style.setProperty('--primary-bg-color', localStorage.amansahudarkPrimary);
+    document.querySelector('html').style.setProperty('--primary-bg-hover', localStorage.amansahudarkPrimary);
+    document.querySelector('html').style.setProperty('--primary-bg-border', localStorage.amansahudarkPrimary);
     document.querySelector('html').style.setProperty('--dark-primary', localStorage.darkPrimary);
-    document.querySelector('html').style.setProperty('--darkprimary-transparentcolor', localStorage.dayonedarkprimaryTransparent); // document.querySelector('body').setAttribute('class', 'app sidebar-mini dark-mode');
+    document.querySelector('html').style.setProperty('--darkprimary-transparentcolor', localStorage.amansahudarkprimaryTransparent); // document.querySelector('body').setAttribute('class', 'app sidebar-mini dark-mode');
 
     document.querySelector('body').classList.remove("light-mode");
     document.querySelector('body').classList.add("dark-mode");
@@ -1727,13 +1727,13 @@ function localStorageBackup() {
     $('#myonoffswitch2').prop('checked', true);
   }
 
-  if (localStorage.dayonetransparentPrimary) {
-    document.getElementById('transparentPrimaryColorID').value = localStorage.dayonetransparentPrimary;
-    document.querySelector('html').style.setProperty('--primary-bg-color', localStorage.dayonetransparentPrimary);
-    document.querySelector('html').style.setProperty('--primary-bg-hover', localStorage.dayonetransparentPrimary);
-    document.querySelector('html').style.setProperty('--primary-bg-border', localStorage.dayonetransparentPrimary);
-    document.querySelector('html').style.setProperty('--transparent-primary', localStorage.dayonetransparentPrimary);
-    document.querySelector('html').style.setProperty('--transparentprimary-transparentcolor', localStorage.dayonetransparentprimaryTransparent); // document.querySelector('body').setAttribute('class', 'app sidebar-mini transparent-mode');
+  if (localStorage.amansahutransparentPrimary) {
+    document.getElementById('transparentPrimaryColorID').value = localStorage.amansahutransparentPrimary;
+    document.querySelector('html').style.setProperty('--primary-bg-color', localStorage.amansahutransparentPrimary);
+    document.querySelector('html').style.setProperty('--primary-bg-hover', localStorage.amansahutransparentPrimary);
+    document.querySelector('html').style.setProperty('--primary-bg-border', localStorage.amansahutransparentPrimary);
+    document.querySelector('html').style.setProperty('--transparent-primary', localStorage.amansahutransparentPrimary);
+    document.querySelector('html').style.setProperty('--transparentprimary-transparentcolor', localStorage.amansahutransparentprimaryTransparent); // document.querySelector('body').setAttribute('class', 'app sidebar-mini transparent-mode');
 
     document.querySelector('body').classList.remove("light-mode");
     document.querySelector('body').classList.remove("dark-mode");
@@ -1741,44 +1741,44 @@ function localStorageBackup() {
     $('#myonoffswitchTransparent').prop('checked', true);
   }
 
-  if (localStorage.dayonetransparentBgImgPrimary) {
+  if (localStorage.amansahutransparentBgImgPrimary) {
     var _document$querySelect19, _document$querySelect20, _document$querySelect21;
 
-    document.getElementById('transparentBgImgPrimaryColorID').value = localStorage.dayonetransparentBgImgPrimary;
-    document.querySelector('html').style.setProperty('--primary-bg-color', localStorage.dayonetransparentBgImgPrimary);
-    document.querySelector('html').style.setProperty('--primary-bg-hover', localStorage.dayonetransparentBgImgPrimary);
-    document.querySelector('html').style.setProperty('--primary-bg-border', localStorage.dayonetransparentBgImgPrimary);
-    document.querySelector('html').style.setProperty('--transparent-primary', localStorage.dayonetransparentBgImgPrimary);
-    document.querySelector('html').style.setProperty('--transparentprimary-transparentcolor', localStorage.dayonetransparentBgImgprimaryTransparent);
+    document.getElementById('transparentBgImgPrimaryColorID').value = localStorage.amansahutransparentBgImgPrimary;
+    document.querySelector('html').style.setProperty('--primary-bg-color', localStorage.amansahutransparentBgImgPrimary);
+    document.querySelector('html').style.setProperty('--primary-bg-hover', localStorage.amansahutransparentBgImgPrimary);
+    document.querySelector('html').style.setProperty('--primary-bg-border', localStorage.amansahutransparentBgImgPrimary);
+    document.querySelector('html').style.setProperty('--transparent-primary', localStorage.amansahutransparentBgImgPrimary);
+    document.querySelector('html').style.setProperty('--transparentprimary-transparentcolor', localStorage.amansahutransparentBgImgprimaryTransparent);
     (_document$querySelect19 = document.querySelector('body')) === null || _document$querySelect19 === void 0 ? void 0 : _document$querySelect19.classList.add('transparent-mode');
     (_document$querySelect20 = document.querySelector('body')) === null || _document$querySelect20 === void 0 ? void 0 : _document$querySelect20.classList.remove('dark-mode');
     (_document$querySelect21 = document.querySelector('body')) === null || _document$querySelect21 === void 0 ? void 0 : _document$querySelect21.classList.remove('light-mode');
     $('#myonoffswitchTransparent').prop('checked', true);
   }
 
-  if (localStorage.dayonetransparentBgColor) {
-    document.getElementById('transparentBgColorID').value = localStorage.dayonetransparentBgColor;
-    document.querySelector('html').style.setProperty('--transparent-body', localStorage.dayonetransparentBgColor);
-    document.querySelector('html').style.setProperty('--transparent-mode', localStorage.dayonetransparentThemeColor);
-    document.querySelector('html').style.setProperty('--transparentprimary-transparentcolor', localStorage.dayonetransparentprimaryTransparent);
+  if (localStorage.amansahutransparentBgColor) {
+    document.getElementById('transparentBgColorID').value = localStorage.amansahutransparentBgColor;
+    document.querySelector('html').style.setProperty('--transparent-body', localStorage.amansahutransparentBgColor);
+    document.querySelector('html').style.setProperty('--transparent-mode', localStorage.amansahutransparentThemeColor);
+    document.querySelector('html').style.setProperty('--transparentprimary-transparentcolor', localStorage.amansahutransparentprimaryTransparent);
     document.querySelector('body').classList.add('transparent-mode');
     document.querySelector('body').classList.remove('dark-mode');
     document.querySelector('body').classList.remove('light-mode');
     $('#myonoffswitchTransparent').prop('checked', true);
   }
 
-  if (localStorage.dayoneBgImage) {
+  if (localStorage.amansahuBgImage) {
     var _document$querySelect22, _document$querySelect23, _document$querySelect24, _document$querySelect25;
 
     (_document$querySelect22 = document.querySelector('body')) === null || _document$querySelect22 === void 0 ? void 0 : _document$querySelect22.classList.add('transparent-mode');
-    var bgImg = localStorage.dayoneBgImage.split(' ')[0];
+    var bgImg = localStorage.amansahuBgImage.split(' ')[0];
     (_document$querySelect23 = document.querySelector('body')) === null || _document$querySelect23 === void 0 ? void 0 : _document$querySelect23.classList.add(bgImg);
     (_document$querySelect24 = document.querySelector('body')) === null || _document$querySelect24 === void 0 ? void 0 : _document$querySelect24.classList.remove('dark-mode');
     (_document$querySelect25 = document.querySelector('body')) === null || _document$querySelect25 === void 0 ? void 0 : _document$querySelect25.classList.remove('light-mode');
     $('#myonoffswitchTransparent').prop('checked', true);
   }
 
-  if (localStorage.dayonelightMode) {
+  if (localStorage.amansahulightMode) {
     var _document$querySelect26, _document$querySelect27, _document$querySelect28;
 
     (_document$querySelect26 = document.querySelector('body')) === null || _document$querySelect26 === void 0 ? void 0 : _document$querySelect26.classList.add('light-mode');
@@ -1786,7 +1786,7 @@ function localStorageBackup() {
     (_document$querySelect28 = document.querySelector('body')) === null || _document$querySelect28 === void 0 ? void 0 : _document$querySelect28.classList.remove('transparent-mode');
   }
 
-  if (localStorage.dayonedarkMode) {
+  if (localStorage.amansahudarkMode) {
     var _document$querySelect29, _document$querySelect30, _document$querySelect31;
 
     (_document$querySelect29 = document.querySelector('body')) === null || _document$querySelect29 === void 0 ? void 0 : _document$querySelect29.classList.remove('light-mode');
@@ -1795,7 +1795,7 @@ function localStorageBackup() {
     $('#myonoffswitch7').prop('checked', true);
   }
 
-  if (localStorage.dayonetransparentMode) {
+  if (localStorage.amansahutransparentMode) {
     var _document$querySelect32, _document$querySelect33, _document$querySelect34;
 
     (_document$querySelect32 = document.querySelector('body')) === null || _document$querySelect32 === void 0 ? void 0 : _document$querySelect32.classList.remove('light-mode');
@@ -1804,104 +1804,104 @@ function localStorageBackup() {
     $('#myonoffswitchTransparent').prop('checked', true);
   }
 
-  if (localStorage.dayonehorizontal) {
+  if (localStorage.amansahuhorizontal) {
     document.querySelector('body').classList.add('horizontal');
   }
 
-  if (localStorage.dayonehorizontalHover) {
+  if (localStorage.amansahuhorizontalHover) {
     document.querySelector('body').classList.add('horizontal-hover');
   }
 
-  if (localStorage.dayonertl) {
+  if (localStorage.amansahurtl) {
     document.querySelector('body').classList.add('rtl');
   }
 
-  if (localStorage.dayonebgimage1) {
+  if (localStorage.amansahubgimage1) {
     document.querySelector('body').classList.add('bg-img1');
     document.querySelector('body').classList.add('transparent-mode');
     $('#myonoffswitchTransparent').prop('checked', true);
   }
 
-  if (localStorage.dayonebgimage2) {
+  if (localStorage.amansahubgimage2) {
     document.querySelector('body').classList.add('bg-img2');
     document.querySelector('body').classList.add('transparent-mode');
     $('#myonoffswitchTransparent').prop('checked', true);
   }
 
-  if (localStorage.dayonebgimage3) {
+  if (localStorage.amansahubgimage3) {
     document.querySelector('body').classList.add('bg-img3');
     document.querySelector('body').classList.add('transparent-mode');
     $('#myonoffswitchTransparent').prop('checked', true);
   }
 
-  if (localStorage.dayonebgimage4) {
+  if (localStorage.amansahubgimage4) {
     document.querySelector('body').classList.add('bg-img4');
     document.querySelector('body').classList.add('transparent-mode');
     $('#myonoffswitchTransparent').prop('checked', true);
   }
 
-  if (localStorage.dayonebodystyle) {
+  if (localStorage.amansahubodystyle) {
     document.querySelector('body').classList.add('body-style1');
   }
 
-  if (localStorage.dayoneboxed) {
+  if (localStorage.amansahuboxed) {
     document.querySelector('body').classList.add('boxed');
     $('#myonoffswitch19').prop('checked', true);
   }
 
-  if (localStorage.dayonescrollable) {
+  if (localStorage.amansahuscrollable) {
     document.querySelector('body').classList.add('scrollable-layout');
   }
 
-  if (localStorage.dayonelightmenu) {
+  if (localStorage.amansahulightmenu) {
     document.querySelector('body').classList.add('light-menu');
   }
 
-  if (localStorage.dayonecolormenu) {
+  if (localStorage.amansahucolormenu) {
     document.querySelector('body').classList.add('color-menu');
   }
 
-  if (localStorage.dayonegradientmenu) {
+  if (localStorage.amansahugradientmenu) {
     document.querySelector('body').classList.add('gradient-menu');
   }
 
-  if (localStorage.dayonedarkmenu) {
+  if (localStorage.amansahudarkmenu) {
     document.querySelector('body').classList.add('dark-menu');
   }
 
-  if (localStorage.dayonelightheader) {
+  if (localStorage.amansahulightheader) {
     document.querySelector('body').classList.add('light-header');
   }
 
-  if (localStorage.dayonegradientheader) {
+  if (localStorage.amansahugradientheader) {
     document.querySelector('body').classList.add('gradient-header');
   }
 
-  if (localStorage.dayonecolorheader) {
+  if (localStorage.amansahucolorheader) {
     document.querySelector('body').classList.add('color-header');
   }
 
-  if (localStorage.dayonedarkheader) {
+  if (localStorage.amansahudarkheader) {
     document.querySelector('body').classList.add('dark-header');
   }
 
-  if (localStorage.dayoneicontextmenu) {
+  if (localStorage.amansahuicontextmenu) {
     document.querySelector('body').classList.add('icon-text');
   }
 
-  if (localStorage.dayoneclosed) {
+  if (localStorage.amansahuclosed) {
     document.querySelector('body').classList.add('closed');
   }
 
-  if (localStorage.dayonehoversubmenu) {
+  if (localStorage.amansahuhoversubmenu) {
     document.querySelector('body').classList.add('hover-submenu');
   }
 
-  if (localStorage.dayonehoversubmenu1) {
+  if (localStorage.amansahuhoversubmenu1) {
     document.querySelector('body').classList.add('hover-submenu1');
   }
 
-  if (localStorage.dayoneiconover) {
+  if (localStorage.amansahuiconover) {
     document.querySelector('body').classList.add('icon-overlay');
   } // Boxed style
 
@@ -1947,56 +1947,56 @@ function changePrimaryColor() {
   $('#myonoffswitch6').prop('checked', true);
   checkOptions();
   var userColor = document.getElementById('colorID').value;
-  localStorage.setItem('dayoneprimaryColor', userColor); // to store value as opacity 0.95 we use 95
+  localStorage.setItem('amansahuprimaryColor', userColor); // to store value as opacity 0.95 we use 95
 
-  localStorage.setItem('dayoneprimaryHoverColor', userColor + 95);
-  localStorage.setItem('dayoneprimaryBorderColor', userColor);
-  localStorage.setItem('dayoneprimaryTransparent', userColor + 20); // removing dark theme properties
+  localStorage.setItem('amansahuprimaryHoverColor', userColor + 95);
+  localStorage.setItem('amansahuprimaryBorderColor', userColor);
+  localStorage.setItem('amansahuprimaryTransparent', userColor + 20); // removing dark theme properties
 
-  localStorage.removeItem('dayonedarkPrimary');
-  localStorage.removeItem('dayonetransparentBgColor');
-  localStorage.removeItem('dayonetransparentThemeColor');
-  localStorage.removeItem('dayonetransparentPrimary');
-  localStorage.removeItem('dayonetransparentBgImgPrimary');
-  localStorage.removeItem('dayonetransparentBgImgprimaryTransparent');
-  localStorage.removeItem('dayonedarkprimaryTransparent');
+  localStorage.removeItem('amansahudarkPrimary');
+  localStorage.removeItem('amansahutransparentBgColor');
+  localStorage.removeItem('amansahutransparentThemeColor');
+  localStorage.removeItem('amansahutransparentPrimary');
+  localStorage.removeItem('amansahutransparentBgImgPrimary');
+  localStorage.removeItem('amansahutransparentBgImgprimaryTransparent');
+  localStorage.removeItem('amansahudarkprimaryTransparent');
   document.querySelector('body').classList.add('light-mode');
   document.querySelector('body').classList.remove('transparent-mode');
   document.querySelector('body').classList.remove('dark-mode');
-  localStorage.removeItem('dayoneBgImage');
+  localStorage.removeItem('amansahuBgImage');
   $('#myonoffswitch1').prop('checked', true);
   names();
-  localStorage.setItem('dayonelightMode', true);
-  localStorage.removeItem('dayonedarkMode');
-  localStorage.removeItem('dayonetransparentMode');
+  localStorage.setItem('amansahulightMode', true);
+  localStorage.removeItem('amansahudarkMode');
+  localStorage.removeItem('amansahutransparentMode');
 }
 
 function darkPrimaryColor() {
   var userColor = document.getElementById('darkPrimaryColorID').value;
-  localStorage.setItem('dayonedarkPrimary', userColor);
-  localStorage.setItem('dayonedarkprimaryTransparent', userColor + 20);
+  localStorage.setItem('amansahudarkPrimary', userColor);
+  localStorage.setItem('amansahudarkprimaryTransparent', userColor + 20);
   $('#myonoffswitch5').prop('checked', true);
   $('#myonoffswitch8').prop('checked', true);
   checkOptions(); // removing light theme data
 
-  localStorage.removeItem('dayoneprimaryColor');
-  localStorage.removeItem('dayoneprimaryHoverColor');
-  localStorage.removeItem('dayoneprimaryBorderColor');
-  localStorage.removeItem('dayoneprimaryTransparent');
-  localStorage.removeItem('dayonetransparentBgImgPrimary');
-  localStorage.removeItem('dayonetransparentBgImgprimaryTransparent');
-  localStorage.removeItem('dayonetransparentBgColor');
-  localStorage.removeItem('dayonetransparentThemeColor');
-  localStorage.removeItem('dayonetransparentPrimary');
-  localStorage.removeItem('dayoneBgImage');
+  localStorage.removeItem('amansahuprimaryColor');
+  localStorage.removeItem('amansahuprimaryHoverColor');
+  localStorage.removeItem('amansahuprimaryBorderColor');
+  localStorage.removeItem('amansahuprimaryTransparent');
+  localStorage.removeItem('amansahutransparentBgImgPrimary');
+  localStorage.removeItem('amansahutransparentBgImgprimaryTransparent');
+  localStorage.removeItem('amansahutransparentBgColor');
+  localStorage.removeItem('amansahutransparentThemeColor');
+  localStorage.removeItem('amansahutransparentPrimary');
+  localStorage.removeItem('amansahuBgImage');
   document.querySelector('body').classList.add('dark-mode');
   document.querySelector('body').classList.remove('light-mode');
   document.querySelector('body').classList.remove('transparent-mode');
   $('#myonoffswitch2').prop('checked', true);
   names();
-  localStorage.setItem('dayonedarkMode', true);
-  localStorage.removeItem('dayonelightMode');
-  localStorage.removeItem('dayonetransparentMode');
+  localStorage.setItem('amansahudarkMode', true);
+  localStorage.removeItem('amansahulightMode');
+  localStorage.removeItem('amansahutransparentMode');
 }
 
 function transparentPrimaryColor() {
@@ -2007,23 +2007,23 @@ function transparentPrimaryColor() {
   $('#myonoffswitch5').prop('checked', false);
   $('#myonoffswitch8').prop('checked', false);
   var userColor = document.getElementById('transparentPrimaryColorID').value;
-  localStorage.setItem('dayonetransparentPrimary', userColor);
-  localStorage.setItem('dayonetransparentprimaryTransparent', userColor + 20);
+  localStorage.setItem('amansahutransparentPrimary', userColor);
+  localStorage.setItem('amansahutransparentprimaryTransparent', userColor + 20);
   document.querySelector('body').classList.remove("light-menu");
   document.querySelector('body').classList.remove("light-header"); // removing light theme data
 
-  localStorage.removeItem('dayonedarkPrimary');
-  localStorage.removeItem('dayoneprimaryColor');
-  localStorage.removeItem('dayoneprimaryHoverColor');
-  localStorage.removeItem('dayoneBgImage');
-  localStorage.removeItem('dayoneprimaryBorderColor');
-  localStorage.removeItem('dayoneprimaryTransparent');
-  localStorage.removeItem('dayonetransparentBgImgPrimary');
-  localStorage.removeItem('dayonetransparentBgImgprimaryTransparent');
-  localStorage.removeItem('dayonebgimage1');
-  localStorage.removeItem('dayonebgimage2');
-  localStorage.removeItem('dayonebgimage3');
-  localStorage.removeItem('dayonebgimage4');
+  localStorage.removeItem('amansahudarkPrimary');
+  localStorage.removeItem('amansahuprimaryColor');
+  localStorage.removeItem('amansahuprimaryHoverColor');
+  localStorage.removeItem('amansahuBgImage');
+  localStorage.removeItem('amansahuprimaryBorderColor');
+  localStorage.removeItem('amansahuprimaryTransparent');
+  localStorage.removeItem('amansahutransparentBgImgPrimary');
+  localStorage.removeItem('amansahutransparentBgImgprimaryTransparent');
+  localStorage.removeItem('amansahubgimage1');
+  localStorage.removeItem('amansahubgimage2');
+  localStorage.removeItem('amansahubgimage3');
+  localStorage.removeItem('amansahubgimage4');
   document.querySelector('body').classList.add('transparent-mode');
   document.querySelector('body').classList.remove('light-mode');
   document.querySelector('body').classList.remove('dark-mode');
@@ -2034,9 +2034,9 @@ function transparentPrimaryColor() {
   $('#myonoffswitchTransparent').prop('checked', true);
   checkOptions();
   names();
-  localStorage.setItem('dayonetransparentMode', true);
-  localStorage.removeItem('dayonelightMode');
-  localStorage.removeItem('dayonedarkMode');
+  localStorage.setItem('amansahutransparentMode', true);
+  localStorage.removeItem('amansahulightMode');
+  localStorage.removeItem('amansahudarkMode');
 }
 
 function transparentBgImgPrimaryColor() {
@@ -2047,24 +2047,24 @@ function transparentBgImgPrimaryColor() {
   $('#myonoffswitch5').prop('checked', false);
   $('#myonoffswitch8').prop('checked', false);
   var userColor = document.getElementById('transparentBgImgPrimaryColorID').value;
-  localStorage.setItem('dayonetransparentBgImgPrimary', userColor);
-  localStorage.setItem('dayonetransparentBgImgprimaryTransparent', userColor + 20);
+  localStorage.setItem('amansahutransparentBgImgPrimary', userColor);
+  localStorage.setItem('amansahutransparentBgImgprimaryTransparent', userColor + 20);
 
   if (((_document$querySelect39 = document.querySelector('body')) === null || _document$querySelect39 === void 0 ? void 0 : _document$querySelect39.classList.contains('bg-img1')) == false && ((_document$querySelect40 = document.querySelector('body')) === null || _document$querySelect40 === void 0 ? void 0 : _document$querySelect40.classList.contains('bg-img2')) == false && ((_document$querySelect41 = document.querySelector('body')) === null || _document$querySelect41 === void 0 ? void 0 : _document$querySelect41.classList.contains('bg-img3')) == false && ((_document$querySelect42 = document.querySelector('body')) === null || _document$querySelect42 === void 0 ? void 0 : _document$querySelect42.classList.contains('bg-img4')) == false) {
     var _document$querySelect43;
 
     (_document$querySelect43 = document.querySelector('body')) === null || _document$querySelect43 === void 0 ? void 0 : _document$querySelect43.classList.add('bg-img1');
-    localStorage.setItem('dayoneBgImage', 'bg-img1');
+    localStorage.setItem('amansahuBgImage', 'bg-img1');
   } // removing light theme data
 
 
-  localStorage.removeItem('dayonedarkPrimary');
-  localStorage.removeItem('dayoneprimaryColor');
-  localStorage.removeItem('dayoneprimaryHoverColor');
-  localStorage.removeItem('dayoneprimaryBorderColor');
-  localStorage.removeItem('dayoneprimaryTransparent');
-  localStorage.removeItem('dayonedarkprimaryTransparent');
-  localStorage.removeItem('dayonetransparentPrimary');
+  localStorage.removeItem('amansahudarkPrimary');
+  localStorage.removeItem('amansahuprimaryColor');
+  localStorage.removeItem('amansahuprimaryHoverColor');
+  localStorage.removeItem('amansahuprimaryBorderColor');
+  localStorage.removeItem('amansahuprimaryTransparent');
+  localStorage.removeItem('amansahudarkprimaryTransparent');
+  localStorage.removeItem('amansahutransparentPrimary');
   localStorage.removeItem('transparentprimaryTransparent');
   document.querySelector('body').classList.add('transparent-mode');
   (_document$querySelect44 = document.querySelector('body')) === null || _document$querySelect44 === void 0 ? void 0 : _document$querySelect44.classList.remove('light-mode');
@@ -2074,9 +2074,9 @@ function transparentBgImgPrimaryColor() {
   $('#myonoffswitchTransparent').prop('checked', true);
   checkOptions();
   names();
-  localStorage.setItem('dayonetransparentMode', true);
-  localStorage.removeItem('dayonelightMode');
-  localStorage.removeItem('dayonedarkMode');
+  localStorage.setItem('amansahutransparentMode', true);
+  localStorage.removeItem('amansahulightMode');
+  localStorage.removeItem('amansahudarkMode');
 }
 
 function transparentBgColor() {
@@ -2087,25 +2087,25 @@ function transparentBgColor() {
   $('#myonoffswitch5').prop('checked', false);
   $('#myonoffswitch8').prop('checked', false);
   var userColor = document.getElementById('transparentBgColorID').value;
-  localStorage.setItem('dayonetransparentBgColor', userColor);
-  localStorage.setItem('dayonetransparentThemeColor', userColor + 95);
-  localStorage.setItem('dayonetransparentprimaryTransparent', userColor + 20);
-  localStorage.removeItem('dayonetransparentBgImgPrimary');
-  localStorage.removeItem('dayonetransparentBgImgprimaryTransparent');
+  localStorage.setItem('amansahutransparentBgColor', userColor);
+  localStorage.setItem('amansahutransparentThemeColor', userColor + 95);
+  localStorage.setItem('amansahutransparentprimaryTransparent', userColor + 20);
+  localStorage.removeItem('amansahutransparentBgImgPrimary');
+  localStorage.removeItem('amansahutransparentBgImgprimaryTransparent');
   document.querySelector('body').classList.remove('light-menu');
   document.querySelector('body').classList.remove('light-header'); // removing light theme data
 
-  localStorage.removeItem('dayoneBgImage');
-  localStorage.removeItem('dayonedarkPrimary');
-  localStorage.removeItem('dayoneprimaryColor');
-  localStorage.removeItem('dayoneprimaryHoverColor');
-  localStorage.removeItem('dayoneprimaryBorderColor');
-  localStorage.removeItem('dayoneprimaryTransparent');
-  localStorage.removeItem('dayoneBgImage');
-  localStorage.removeItem('dayonebgimage1');
-  localStorage.removeItem('dayonebgimage2');
-  localStorage.removeItem('dayonebgimage3');
-  localStorage.removeItem('dayonebgimage4');
+  localStorage.removeItem('amansahuBgImage');
+  localStorage.removeItem('amansahudarkPrimary');
+  localStorage.removeItem('amansahuprimaryColor');
+  localStorage.removeItem('amansahuprimaryHoverColor');
+  localStorage.removeItem('amansahuprimaryBorderColor');
+  localStorage.removeItem('amansahuprimaryTransparent');
+  localStorage.removeItem('amansahuBgImage');
+  localStorage.removeItem('amansahubgimage1');
+  localStorage.removeItem('amansahubgimage2');
+  localStorage.removeItem('amansahubgimage3');
+  localStorage.removeItem('amansahubgimage4');
   document.querySelector('body').classList.add('transparent-mode');
   document.querySelector('body').classList.remove('light-mode');
   document.querySelector('body').classList.remove('dark-mode');
@@ -2115,9 +2115,9 @@ function transparentBgColor() {
   (_document$querySelect51 = document.querySelector('body')) === null || _document$querySelect51 === void 0 ? void 0 : _document$querySelect51.classList.remove('bg-img4');
   $('#myonoffswitchTransparent').prop('checked', true);
   checkOptions();
-  localStorage.setItem('dayonetransparentMode', true);
-  localStorage.removeItem('dayonelightMode');
-  localStorage.removeItem('dayonedarkMode');
+  localStorage.setItem('amansahutransparentMode', true);
+  localStorage.removeItem('amansahulightMode');
+  localStorage.removeItem('amansahudarkMode');
 }
 
 function bgImage(e) {
@@ -2128,14 +2128,14 @@ function bgImage(e) {
   $('#myonoffswitch5').prop('checked', false);
   $('#myonoffswitch8').prop('checked', false);
   var imgID = e.getAttribute('class');
-  localStorage.setItem('dayoneBgImage', imgID);
-  localStorage.setItem('dayonetransparentMode', true); // removing light theme data
+  localStorage.setItem('amansahuBgImage', imgID);
+  localStorage.setItem('amansahutransparentMode', true); // removing light theme data
 
-  localStorage.removeItem('dayonedarkPrimary');
-  localStorage.removeItem('dayoneprimaryColor');
-  localStorage.removeItem('dayonetransparentBgColor');
-  localStorage.removeItem('dayonetransparentThemeColor');
-  localStorage.removeItem('dayonetransparentprimaryTransparent');
+  localStorage.removeItem('amansahudarkPrimary');
+  localStorage.removeItem('amansahuprimaryColor');
+  localStorage.removeItem('amansahutransparentBgColor');
+  localStorage.removeItem('amansahutransparentThemeColor');
+  localStorage.removeItem('amansahutransparentprimaryTransparent');
   document.querySelector('body').classList.add('transparent-mode');
   (_document$querySelect52 = document.querySelector('body')) === null || _document$querySelect52 === void 0 ? void 0 : _document$querySelect52.classList.remove('light-mode');
   (_document$querySelect53 = document.querySelector('body')) === null || _document$querySelect53 === void 0 ? void 0 : _document$querySelect53.classList.remove('dark-mode');
@@ -2194,7 +2194,7 @@ function names() {
   // let docStyle = getComputedStyle(document.documentElement);
   var primaryColorVal = getComputedStyle(document.documentElement).getPropertyValue('--primary-bg-color').trim(); //get variable
 
-  myVarVal = localStorage.getItem("dayoneprimaryColor") || localStorage.getItem("dayonedarkPrimary") || localStorage.getItem("dayonetransparentPrimary") || localStorage.getItem("dayonetransparentBgImgPrimary") || primaryColorVal;
+  myVarVal = localStorage.getItem("amansahuprimaryColor") || localStorage.getItem("amansahudarkPrimary") || localStorage.getItem("amansahutransparentPrimary") || localStorage.getItem("amansahutransparentBgImgPrimary") || primaryColorVal;
 
   if (document.querySelector('#chartLine') !== null) {
     (0,_index__WEBPACK_IMPORTED_MODULE_0__.index)(myVarVal, hexToRgba);
@@ -2427,7 +2427,7 @@ function resetData() {
   $(".app-sidebar").removeClass("hor-menu ");
   $('#slide-left').removeClass('d-none');
   $('#slide-right').removeClass('d-none');
-  localStorage.setItem("dayonesidebar-mini", "True");
+  localStorage.setItem("amansahusidebar-mini", "True");
   menuClick();
   responsive();
   $('body').addClass('ltr');
@@ -2435,7 +2435,7 @@ function resetData() {
   $("html[lang=en]").attr("dir", "ltr");
   localStorage.setItem("ltr", "True");
   $("head link#style").attr("href", $(this));
-  (_document$getElementB = document.getElementById("style")) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.setAttribute("href", "https://laravelui.spruko.com/dayone/assets/plugins/bootstrap/css/bootstrap.css");
+  (_document$getElementB = document.getElementById("style")) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.setAttribute("href", "https://laravelui.spruko.com/amansahu/assets/plugins/bootstrap/css/bootstrap.css");
   var carousel = $('.owl-carousel');
   $.each(carousel, function (index, element) {
     // element == this
@@ -2472,7 +2472,7 @@ function customresetData() {
   $("html[lang=en]").attr("dir", "ltr");
   localStorage.setItem("ltr", "True");
   $("head link#style").attr("href", $(this));
-  (_document$getElementB2 = document.getElementById("style")) === null || _document$getElementB2 === void 0 ? void 0 : _document$getElementB2.setAttribute("href", "https://laravelui.spruko.com/dayone/assets/plugins/bootstrap/css/bootstrap.css");
+  (_document$getElementB2 = document.getElementById("style")) === null || _document$getElementB2 === void 0 ? void 0 : _document$getElementB2.setAttribute("href", "https://laravelui.spruko.com/amansahu/assets/plugins/bootstrap/css/bootstrap.css");
   var carousel = $('.owl-carousel');
   $.each(carousel, function (index, element) {
     // element == this

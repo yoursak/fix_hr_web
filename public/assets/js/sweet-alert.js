@@ -17,7 +17,7 @@ $(function () {
     var message = $("#message").val();
 
     if (message == "") {
-      message = "New Notification from Dayone";
+      message = "New Notification from amansahu";
     }
 
     swal(message);
@@ -28,7 +28,7 @@ $(function () {
     var title = $("#title").val();
 
     if (message == "") {
-      message = "New Notification from Dayone";
+      message = "New Notification from amansahu";
     }
 
     if (title == "") {
@@ -43,7 +43,7 @@ $(function () {
     var title = $("#title").val();
 
     if (message == "") {
-      message = "New Notification from Dayone";
+      message = "New Notification from amansahu";
     }
 
     if (title == "") {
@@ -53,7 +53,7 @@ $(function () {
     swal({
       title: title,
       text: message,
-      icon: 'https://laravelui.spruko.com/dayone/public/assets/images/brand/favicon.png'
+      icon: 'https://laravelui.spruko.com/amansahu/public/assets/images/brand/favicon.png'
     });
   }); // Timer
 
@@ -62,7 +62,7 @@ $(function () {
     var title = $("#title").val();
 
     if (message == "") {
-      message = "New Notification from Dayone";
+      message = "New Notification from amansahu";
     }
 
     if (title == "") {
@@ -82,7 +82,7 @@ $(function () {
     var type = $("#type").val();
     swal({
       title: "Notifiaction Styles",
-      text: "New Notification from Dayone",
+      text: "New Notification from amansahu",
       type: type
     });
   });

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
-<!-- Mirrored from laravelui.spruko.com/dayone/index2 by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Jul 2023 06:20:41 GMT -->
+<!-- Mirrored from laravelui.spruko.com/amansahu/index2 by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Jul 2023 06:20:41 GMT -->
 <!-- Added by HTTrack -->
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
 
@@ -21,7 +21,7 @@
                             <div class="p-3">
                                 <a href="index-2.html" class="btn ripple btn-primary btn-block mt-0" target="blank">View
                                     Demo</a>
-                                <a href="https://themeforest.net/item/dayone-laravel-admin-dashboard-template/33043521"
+                                <a href="https://themeforest.net/item/amansahu-laravel-admin-dashboard-template/33043521"
                                     class="btn ripple btn-secondary btn-block">Buy Now</a>
                                 <a href="https://themeforest.net/user/spruko/portfolio"
                                     class="btn ripple btn-red btn-block">Our Portfolio</a>
@@ -380,6 +380,6 @@
     @include('admin.layout.script')
 </body>
 
-<!-- Mirrored from laravelui.spruko.com/dayone/index2 by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Jul 2023 06:20:43 GMT -->
+<!-- Mirrored from laravelui.spruko.com/amansahu/index2 by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Jul 2023 06:20:43 GMT -->
 
 </html>
