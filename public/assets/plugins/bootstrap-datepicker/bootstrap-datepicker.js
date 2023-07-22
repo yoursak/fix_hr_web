@@ -1,8 +1,13 @@
-/*!
- * Datepicker for Bootstrap v1.8.0 (https://github.com/uxsolutions/bootstrap-datepicker)
- *
- * Licensed under the Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0)
- */
+/*------------------------------------------------------------------
+
+Project        :   FixHr
+Version        :   V.1
+Create Date    :   18 july 2023
+Copyright      :   Fixing Dots
+Author         :   Aman Sahu
+Support	       :   support@spruko.com
+
+-------------------------------------------------------------------*/
 
 (function(factory){
     if (typeof define === 'function' && define.amd) {

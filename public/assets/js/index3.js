@@ -1,8 +1,15 @@
 /******/ (() => { // webpackBootstrap
 var __webpack_exports__ = {};
-/*!***************************************!*\
-  !*** ./resources/assets/js/index3.js ***!
-  \***************************************/
+/*------------------------------------------------------------------
+
+Project        :   FixHr
+Version        :   V.1
+Create Date    :   18 july 2023
+Copyright      :   Fixing Dots
+Author         :   Aman Sahu
+Support	       :   support@spruko.com
+
+-------------------------------------------------------------------*/
 function balance() {
   /*-----Balance Statistics-----*/
   var myCanvas = document.getElementById("balance");

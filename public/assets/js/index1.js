@@ -1,8 +1,15 @@
 /******/ (() => { // webpackBootstrap
 var __webpack_exports__ = {};
-/*!***************************************!*\
-  !*** ./resources/assets/js/index1.js ***!
-  \***************************************/
+/*------------------------------------------------------------------
+
+Project        :   FixHr
+Version        :   V.1
+Create Date    :   18 july 2023
+Copyright      :   Fixing Dots
+Author         :   Aman Sahu
+Support	       :   support@spruko.com
+
+-------------------------------------------------------------------*/
 $(function (e) {
   'use strict'; // Datepicker
 
@@ -24,7 +31,7 @@ $(function (e) {
 });
 
 function index2() {
-  "use strict"; // Chartjs (#sales-summary) 
+  "use strict"; // Chartjs (#sales-summary)
 
   var myCanvas = document.getElementById("sales-summary");
   myCanvas.height = "300";
@@ -198,7 +205,7 @@ function index1() {
 }
 
 function index() {
-  // LIne-Chart 
+  // LIne-Chart
   var ctx = document.getElementById("chartLine").getContext('2d');
   var myChart = new Chart(ctx, {
     data: {

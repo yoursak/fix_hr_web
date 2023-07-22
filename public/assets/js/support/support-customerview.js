@@ -1,8 +1,15 @@
 /******/ (() => { // webpackBootstrap
 var __webpack_exports__ = {};
-/*!*************************************************************!*\
-  !*** ./resources/assets/js/support/support-customerview.js ***!
-  \*************************************************************/
+/*------------------------------------------------------------------
+
+Project        :   FixHr
+Version        :   V.1
+Create Date    :   18 july 2023
+Copyright      :   Fixing Dots
+Author         :   Aman Sahu
+Support	       :   support@spruko.com
+
+-------------------------------------------------------------------*/
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 $(function (e) {

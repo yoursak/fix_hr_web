@@ -3,9 +3,16 @@
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./resources/assets/js/index.js":
-/*!**************************************!*\
-  !*** ./resources/assets/js/index.js ***!
-  \**************************************/
+/*------------------------------------------------------------------
+
+Project        :   FixHr
+Version        :   V.1
+Create Date    :   18 july 2023
+Copyright      :   Fixing Dots
+Author         :   Aman Sahu
+Support	       :   support@spruko.com
+
+-------------------------------------------------------------------*/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -29,7 +36,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "ticketoverview": () => (/* binding */ ticketoverview)
 /* harmony export */ });
 function index2(myVarVal, hexToRgba) {
-  "use strict"; // Chartjs (#sales-summary) 
+  "use strict"; // Chartjs (#sales-summary)
 
   var myCanvas = document.getElementById("sales-summary");
   myCanvas.height = "300";
@@ -201,7 +208,7 @@ function index1(myVarVal) {
   chart.render();
 }
 function index(myVarVal, hexToRgba) {
-  // LIne-Chart 
+  // LIne-Chart
   var ctx = document.getElementById("chartLine").getContext('2d');
   var myChart = new Chart(ctx, {
     data: {
@@ -283,7 +290,7 @@ function index(myVarVal, hexToRgba) {
   });
 }
 function chartbar(myVarVal, hexToRgba) {
-  'use strict'; // Bar-Chart 
+  'use strict'; // Bar-Chart
 
   var ctx = document.getElementById("chartbar").getContext('2d');
   var myChart = new Chart(ctx, {
@@ -1398,7 +1405,7 @@ function ticketoverview(myVarVal, hexToRgba) {
   });
 }
 function chartLine3(myVarVal, hexToRgba) {
-  'use strict'; // LIne-Chart 
+  'use strict'; // LIne-Chart
 
   var ctx = document.getElementById("chartLine3").getContext('2d');
   var myChart = new Chart(ctx, {
@@ -1495,7 +1502,7 @@ function chartLine3(myVarVal, hexToRgba) {
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -1509,14 +1516,14 @@ function chartLine3(myVarVal, hexToRgba) {
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
@@ -1529,12 +1536,12 @@ function chartLine3(myVarVal, hexToRgba) {
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -1545,7 +1552,7 @@ function chartLine3(myVarVal, hexToRgba) {
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
@@ -1970,7 +1977,7 @@ function darkPrimaryColor() {
   localStorage.setItem('dayonedarkprimaryTransparent', userColor + 20);
   $('#myonoffswitch5').prop('checked', true);
   $('#myonoffswitch8').prop('checked', true);
-  checkOptions(); // removing light theme data 
+  checkOptions(); // removing light theme data
 
   localStorage.removeItem('dayoneprimaryColor');
   localStorage.removeItem('dayoneprimaryHoverColor');
@@ -2003,7 +2010,7 @@ function transparentPrimaryColor() {
   localStorage.setItem('dayonetransparentPrimary', userColor);
   localStorage.setItem('dayonetransparentprimaryTransparent', userColor + 20);
   document.querySelector('body').classList.remove("light-menu");
-  document.querySelector('body').classList.remove("light-header"); // removing light theme data 
+  document.querySelector('body').classList.remove("light-header"); // removing light theme data
 
   localStorage.removeItem('dayonedarkPrimary');
   localStorage.removeItem('dayoneprimaryColor');
@@ -2048,7 +2055,7 @@ function transparentBgImgPrimaryColor() {
 
     (_document$querySelect43 = document.querySelector('body')) === null || _document$querySelect43 === void 0 ? void 0 : _document$querySelect43.classList.add('bg-img1');
     localStorage.setItem('dayoneBgImage', 'bg-img1');
-  } // removing light theme data 
+  } // removing light theme data
 
 
   localStorage.removeItem('dayonedarkPrimary');
@@ -2086,7 +2093,7 @@ function transparentBgColor() {
   localStorage.removeItem('dayonetransparentBgImgPrimary');
   localStorage.removeItem('dayonetransparentBgImgprimaryTransparent');
   document.querySelector('body').classList.remove('light-menu');
-  document.querySelector('body').classList.remove('light-header'); // removing light theme data 
+  document.querySelector('body').classList.remove('light-header'); // removing light theme data
 
   localStorage.removeItem('dayoneBgImage');
   localStorage.removeItem('dayonedarkPrimary');
@@ -2122,7 +2129,7 @@ function bgImage(e) {
   $('#myonoffswitch8').prop('checked', false);
   var imgID = e.getAttribute('class');
   localStorage.setItem('dayoneBgImage', imgID);
-  localStorage.setItem('dayonetransparentMode', true); // removing light theme data 
+  localStorage.setItem('dayonetransparentMode', true); // removing light theme data
 
   localStorage.removeItem('dayonedarkPrimary');
   localStorage.removeItem('dayoneprimaryColor');
@@ -2161,7 +2168,7 @@ var getAlphafloat = function getAlphafloat(a, alpha) {
   }
 
   return alpha;
-}; // convertion of hex code to rgba code 
+}; // convertion of hex code to rgba code
 
 
 function hexToRgba(hexValue, alpha) {
@@ -2291,42 +2298,42 @@ function checkOptions() {
 
   if (document.querySelector('body').classList.contains('horizontal-hover')) {
     $('#myonoffswitch111').prop('checked', true);
-  } // light header 	
+  } // light header
 
 
   if (document.querySelector('body').classList.contains('light-header')) {
     $('#background1').prop('checked', true);
-  } // color header 	
+  } // color header
 
 
   if (document.querySelector('body').classList.contains('color-header')) {
     $('#background2').prop('checked', true);
-  } // gradient header 	
+  } // gradient header
 
 
   if (document.querySelector('body').classList.contains('gradient-header')) {
     $('#background3').prop('checked', true);
-  } // dark header 	
+  } // dark header
 
 
   if (document.querySelector('body').classList.contains('dark-header')) {
     $('#background11').prop('checked', true);
-  } // light menu	
+  } // light menu
 
 
   if (document.querySelector('body').classList.contains('light-menu')) {
     $('#background4').prop('checked', true);
-  } // color menu	
+  } // color menu
 
 
   if (document.querySelector('body').classList.contains('color-menu')) {
     $('#background5').prop('checked', true);
-  } // gradient menu	
+  } // gradient menu
 
 
   if (document.querySelector('body').classList.contains('gradient-menu')) {
     $('#background10').prop('checked', true);
-  } // dark menu	
+  } // dark menu
 
 
   if (document.querySelector('body').classList.contains('dark-menu')) {

@@ -1,49 +1,57 @@
 /******/ (() => { // webpackBootstrap
-var __webpack_exports__ = {};
-/*!*************************************************!*\
-  !*** ./resources/assets/js/admin/admin-role.js ***!
-  \*************************************************/
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+    var __webpack_exports__ = {};
+/*------------------------------------------------------------------
 
-$(function (e) {
-  'use strict'; //________ Data Table
+Project        :   FixHr
+Version        :   V.1
+Create Date    :   18 july 2023
+Copyright      :   Fixing Dots
+Author         :   Aman Sahu
+Support	       :   support@spruko.com
 
-  var _$$DataTable;
+-------------------------------------------------------------------*/
+    function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-  $('#role-list').DataTable((_$$DataTable = {
-    "order": [[0, "desc"]]
-  }, _defineProperty(_$$DataTable, "order", []), _defineProperty(_$$DataTable, "columnDefs", [{
-    orderable: false,
-    targets: [0]
-  }]), _defineProperty(_$$DataTable, "language", {
-    searchPlaceholder: 'Search...',
-    sSearch: ''
-  }), _$$DataTable)); //________ Select2
+    $(function (e) {
+        'use strict'; //________ Data Table
 
-  $('.select2').select2({
-    minimumResultsForSearch: Infinity,
-    width: '100%'
-  }); //______________
+        var _$$DataTable;
 
-  $(".role").on("click", function (e) {
-    swal({
-      title: "Are you sure?",
-      text: "Once deleted, you will not be able to recover this file!",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true
-    }).then(function (willDelete) {
-      if (willDelete) {
-        swal({
-          title: "Success",
-          text: "Successfully Updated",
-          icon: "success"
+        $('#role-list').DataTable((_$$DataTable = {
+            "order": [[0, "desc"]]
+        }, _defineProperty(_$$DataTable, "order", []), _defineProperty(_$$DataTable, "columnDefs", [{
+            orderable: false,
+            targets: [0]
+        }]), _defineProperty(_$$DataTable, "language", {
+            searchPlaceholder: 'Search...',
+            sSearch: ''
+        }), _$$DataTable)); //________ Select2
+
+        $('.select2').select2({
+            minimumResultsForSearch: Infinity,
+            width: '100%'
+        }); //______________
+
+        $(".role").on("click", function (e) {
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this file!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true
+            }).then(function (willDelete) {
+                if (willDelete) {
+                    swal({
+                        title: "Success",
+                        text: "Successfully Updated",
+                        icon: "success"
+                    });
+                } else {
+                    swal("Your  file is safe!");
+                }
+            });
         });
-      } else {
-        swal("Your  file is safe!");
-      }
     });
-  });
-});
-/******/ })()
-;
+    /******/
+})()
+    ;

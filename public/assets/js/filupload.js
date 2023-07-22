@@ -1,8 +1,15 @@
 /******/ (() => { // webpackBootstrap
 var __webpack_exports__ = {};
-/*!******************************************!*\
-  !*** ./resources/assets/js/filupload.js ***!
-  \******************************************/
+/*------------------------------------------------------------------
+
+Project        :   FixHr
+Version        :   V.1
+Create Date    :   18 july 2023
+Copyright      :   Fixing Dots
+Author         :   Aman Sahu
+Support	       :   support@spruko.com
+
+-------------------------------------------------------------------*/
 $('.dropify').dropify({
   messages: {
     'default': 'Drag and drop a file here or click',

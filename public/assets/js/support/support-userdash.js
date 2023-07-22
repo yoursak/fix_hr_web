@@ -1,12 +1,19 @@
 /******/ (() => { // webpackBootstrap
 var __webpack_exports__ = {};
-/*!*********************************************************!*\
-  !*** ./resources/assets/js/support/support-userdash.js ***!
-  \*********************************************************/
+/*------------------------------------------------------------------
+
+Project        :   FixHr
+Version        :   V.1
+Create Date    :   18 july 2023
+Copyright      :   Fixing Dots
+Author         :   Aman Sahu
+Support	       :   support@spruko.com
+
+-------------------------------------------------------------------*/
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function chartLine3() {
-  'use strict'; // LIne-Chart 
+  'use strict'; // LIne-Chart
 
   var ctx = document.getElementById("chartLine3").getContext('2d');
   var myChart = new Chart(ctx, {

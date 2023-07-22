@@ -1,8 +1,15 @@
 /******/ (() => { // webpackBootstrap
 var __webpack_exports__ = {};
-/*!****************************************************!*\
-  !*** ./resources/assets/js/employee/emp-leaves.js ***!
-  \****************************************************/
+/*------------------------------------------------------------------
+
+Project        :   FixHr
+Version        :   V.1
+Create Date    :   18 july 2023
+Copyright      :   Fixing Dots
+Author         :   Aman Sahu
+Support	       :   support@spruko.com
+
+-------------------------------------------------------------------*/
 $(function (e) {
   'use strict';
   /*----- Overview ------*/
@@ -84,7 +91,7 @@ $(function (e) {
   $('#daterange-categories').on('change', function () {
     $('.leave-content').hide();
     $('#' + $(this).val()).show();
-  }); // Select2 
+  }); // Select2
 
   $('.select2').select2({
     minimumResultsForSearch: Infinity,

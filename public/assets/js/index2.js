@@ -1,10 +1,17 @@
 /******/ (() => { // webpackBootstrap
 var __webpack_exports__ = {};
-/*!***************************************!*\
-  !*** ./resources/assets/js/index2.js ***!
-  \***************************************/
+/*------------------------------------------------------------------
+
+Project        :   FixHr
+Version        :   V.1
+Create Date    :   18 july 2023
+Copyright      :   Fixing Dots
+Author         :   Aman Sahu
+Support	       :   support@spruko.com
+
+-------------------------------------------------------------------*/
 function chartbar() {
-  'use strict'; // Bar-Chart 
+  'use strict'; // Bar-Chart
 
   var ctx = document.getElementById("chartbar").getContext('2d');
   var myChart = new Chart(ctx, {
@@ -96,7 +103,7 @@ function chartbar() {
 $(function (e) {
   'use strict'; // calendar
 
-  $('.calendar').pignoseCalendar(); // Data Table 
+  $('.calendar').pignoseCalendar(); // Data Table
 
   $('#assigntask').DataTable({
     order: [],
@@ -137,7 +144,7 @@ $(function (e) {
   $('#daterange-categories').change(function () {
     $('.leave-content').hide();
     $('#' + $(this).val()).show();
-  }); // Select2 
+  }); // Select2
 
   $('.select2').select2({
     minimumResultsForSearch: Infinity
