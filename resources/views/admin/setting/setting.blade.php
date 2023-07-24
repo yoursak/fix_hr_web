@@ -6,7 +6,7 @@
 @section('contents')
     <!-- ROW -->
     <div class="row ">
-        <div class="col-lg-6 col-xl-3">
+        <div class="col-lg-3 col-xl-3">
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="list-group list-group-transparent mb-0 file-manager file-manager-border">
@@ -34,7 +34,7 @@
                         </div>
                         <div>
                             <a href="{{url('settings/businessinfosetting')}}" class="list-group-item  d-flex align-items-center px-0">
-                                <i class="fe fe-database fs-18 me-2 text-pink p-2"></i> Business Info
+                                <i class="fa fa-drivers-license-o fs-18 me-2 text-pink p-2"></i> Business Info
                             </a>
                         </div>
                         <div>
@@ -50,7 +50,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 col-xl-9">
+        <div class="col-lg-9 col-xl-9">
             @yield('settings')
         </div>
     </div>

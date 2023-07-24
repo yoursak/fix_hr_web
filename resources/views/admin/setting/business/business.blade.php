@@ -11,7 +11,7 @@ Business
                     <div class="col-xl-2 col-sm-2 col-md-12">
                         <div class="mt-2 mb-4">
                             <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
-                                    class="fe fe-settings"></i></span>
+                                    class="fe fe-umbrella"></i></span>
                         </div>
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
@@ -34,7 +34,7 @@ Business
                         <div class="mt-2 mb-4">
                             <span
                                 class="settings-icon bg-secondary-transparent text-secondary border-secondary"><i
-                                    class="fe fe-home"></i></span>
+                                    class="fe fe-user-minus"></i></span>
                         </div>
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
@@ -56,7 +56,7 @@ Business
                     <div class="col-xl-2 col-sm-2 col-md-12">
                         <div class="mt-2 mb-4">
                             <span class="settings-icon bg-danger-transparent text-danger border-danger"><i
-                                    class="fe fe-bell"></i></span>
+                                    class="fe fe-award"></i></span>
                         </div>
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
@@ -122,7 +122,7 @@ Business
                     <div class="col-xl-2 col-sm-2 col-md-12">
                         <div class="mt-2 mb-4">
                             <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
-                                    class="fe fe-cast"></i></span>
+                                    class="fe fe-database"></i></span>
                         </div>
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
@@ -144,7 +144,7 @@ Business
                     <div class="col-xl-2 col-sm-2 col-md-12">
                         <div class="mt-2 mb-4">
                             <span class="settings-icon bg-info-transparent text-info border-info"><i
-                                    class="fe fe-search"></i></span>
+                                    class="fe fe-calendar"></i></span>
                         </div>
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">

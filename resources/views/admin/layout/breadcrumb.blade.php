@@ -8,7 +8,7 @@
             </div>
             <div class="d-lg-flex d-block">
                 <div class="btn-list">
-                    <h6><span>/@yield('title')</span><span>/@yield('subtitle')</h6>
+                    <h6><span>/@yield('title')</span><span>/@yield('subtitle')</span></h6>
                 </div>
             </div>
         </div>

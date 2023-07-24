@@ -1,6 +1,6 @@
 @extends('admin.setting.setting')
 @section('subtitle')
-Attendance
+Salary
 @endsection
 @section('settings')
 <div class="row row-sm">
@@ -10,13 +10,12 @@ Attendance
                 <div class="row">
                     <div class="col-xl-2 col-sm-2 col-md-12">
                         <div class="mt-2 mb-4">
-                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
-                                    class="fe fe-settings"></i></span>
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i class="fa fa-calculator"></i></span>
                         </div>
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
                         <a href="#">
-                            <h5 class="mb-1 text-dark">Attendance Mode</h5>
+                            <h5 class="mb-1 text-dark">Salary Calculation Logic</h5>
                         </a>
                         <p>General settings such as, site title, logo, other general and
                             advanced settings.</p>
@@ -34,12 +33,12 @@ Attendance
                         <div class="mt-2 mb-4">
                             <span
                                 class="settings-icon bg-secondary-transparent text-secondary border-secondary"><i
-                                    class="fe fe-home"></i></span>
+                                    class="fa fa-money"></i></span>
                         </div>
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
                         <a href="#">
-                            <h5 class="mb-1 text-dark">Attendance Staff Access</h5>
+                            <h5 class="mb-1 text-dark">Manage Salary Templates</h5>
                         </a>
                         <p>In this settings we can change sidemenu and main page can be
                             Controlled System.</p>
@@ -56,12 +55,12 @@ Attendance
                     <div class="col-xl-2 col-sm-2 col-md-12">
                         <div class="mt-2 mb-4">
                             <span class="settings-icon bg-danger-transparent text-danger border-danger"><i
-                                    class="fe fe-bell"></i></span>
+                                    class="fa fa-newspaper-o"></i></span>
                         </div>
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
                         <a href="#">
-                            <h5 class="mb-1 text-dark">Shift Settings</h5>
+                            <h5 class="mb-1 text-dark">Staff Bank Account Details</h5>
                         </a>
                         <p>Notifications settings we can control the notifications privacy and
                             security settings.</p>
@@ -78,12 +77,12 @@ Attendance
                     <div class="col-xl-2 col-sm-2 col-md-12">
                         <div class="mt-2 mb-4">
                             <span class="settings-icon bg-warning-transparent text-warning border-warning"><i
-                                    class="fe fe-grid"></i></span>
+                                    class="fa fa-bank"></i></span>
                         </div>
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
                         <a href="#">
-                            <h5 class="mb-1 text-dark">Automation Rules</h5>
+                            <h5 class="mb-1 text-dark">Business Name in Bank Statement</h5>
                         </a>
                         <p>Web apps settings such as Apps,Elements & Mail related to web apps
                             can be Controlled.</p>
@@ -100,12 +99,12 @@ Attendance
                     <div class="col-xl-2 col-sm-2 col-md-12">
                         <div class="mt-2 mb-4">
                             <span class="settings-icon bg-success-transparent text-success border-success"><i
-                                    class="fe fe-flag"></i></span>
+                                    class="fa fa-key"></i></span>
                         </div>
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
                         <a href="#">
-                            <h5 class="mb-1 text-dark">Daily Work Entry</h5>
+                            <h5 class="mb-1 text-dark">Salary Details Access to Staff</h5>
                         </a>
                         <p>Region & language settings we can Add, Delete and edit your Region &
                             language.</p>
@@ -122,59 +121,15 @@ Attendance
                     <div class="col-xl-2 col-sm-2 col-md-12">
                         <div class="mt-2 mb-4">
                             <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
-                                    class="fe fe-cast"></i></span>
+                                    class="fa fa-sort-numeric-desc"></i></span>
                         </div>
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
                         <a href="#">
-                            <h5 class="mb-1 text-dark">Track In&Out Time</h5>
+                            <h5 class="mb-1 text-dark">Custom Deduction Plan</h5>
                         </a>
                         <p>Blog settings such as, enable blog, max mosts in page and more can be
                             controlled.</p>
-                        <a href="#">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-6">
-        <div class="card custom-card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-2 col-sm-2 col-md-12">
-                        <div class="mt-2 mb-4">
-                            <span class="settings-icon bg-info-transparent text-info border-info"><i
-                                    class="fe fe-search"></i></span>
-                        </div>
-                    </div>
-                    <div class="col-xl-10 col-sm-10 col-md-12">
-                        <a href="#">
-                            <h5 class="mb-1 text-dark">Attendance On Holiday</h5>
-                        </a>
-                        <p>Search Engine Optimization settings such as, meta tags and social
-                            media can be controlled..</p>
-                        <a href="#">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-6">
-        <div class="card custom-card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-2 col-sm-2 col-md-12">
-                        <div class="mt-2 mb-4">
-                            <span class="settings-icon bg-success-transparent text-success border-success"><i
-                                    class="fe fe-mail"></i></span>
-                        </div>
-                    </div>
-                    <div class="col-xl-10 col-sm-10 col-md-12">
-                        <a href="#">
-                            <h5 class="mb-1 text-dark">Mark Absent on Previous Day</h5>
-                        </a>
-                        <p>Email SMTP settings such as, contact us and others related to email
-                            can be controlled.</p>
                         <a href="#">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                     </div>
                 </div>

@@ -34,7 +34,7 @@ Business Info
                         <div class="mt-2 mb-4">
                             <span
                                 class="settings-icon bg-secondary-transparent text-secondary border-secondary"><i
-                                    class="fe fe-home"></i></span>
+                                    class="fa fa-bank"></i></span>
                         </div>
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
@@ -56,7 +56,7 @@ Business Info
                     <div class="col-xl-2 col-sm-2 col-md-12">
                         <div class="mt-2 mb-4">
                             <span class="settings-icon bg-danger-transparent text-danger border-danger"><i
-                                    class="fe fe-bell"></i></span>
+                                    class="fa fa-briefcase"></i></span>
                         </div>
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
@@ -78,7 +78,7 @@ Business Info
                     <div class="col-xl-2 col-sm-2 col-md-12">
                         <div class="mt-2 mb-4">
                             <span class="settings-icon bg-warning-transparent text-warning border-warning"><i
-                                    class="fe fe-grid"></i></span>
+                                    class="fa fa-address-card-o"></i></span>
                         </div>
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">

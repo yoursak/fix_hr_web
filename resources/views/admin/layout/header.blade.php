@@ -3,13 +3,13 @@
         <div class="d-flex">
             <a class="header-brand" href="index.html">
                 <img src={{ asset("assets/images/brand/logo.png")}} class="header-brand-img desktop-lgo"
-                    alt="amansahulogo">
+                    alt="FixingDotslogo">
                 <img src={{ asset("assets/images/brand/logo-white.png")}} class="header-brand-img dark-logo"
-                    alt="amansahulogo">
+                    alt="FixingDotslogo">
                 <img src={{ asset("assets/images/brand/favicon.png")}} class="header-brand-img mobile-logo"
-                    alt="amansahulogo">
+                    alt="FixingDotslogo">
                 <img src={{ asset("assets/images/brand/favicon1.png")}} class="header-brand-img darkmobile-logo"
-                    alt="amansahulogo">
+                    alt="FixingDotslogo">
             </a>
             <div class="app-sidebar__toggle" data-bs-toggle="sidebar">
                 <a class="open-toggle" href="javascript:void(0);">

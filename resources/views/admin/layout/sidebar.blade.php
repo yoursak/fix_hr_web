@@ -3,29 +3,17 @@
         <div class="app-sidebar__logo">
             <a class="header-brand" href="index.html">
                 <img src={{ asset('assets/images/brand/logo.png') }} class="header-brand-img desktop-lgo"
-                    alt="amansahulogo">
+                    alt="FixingDotslogo">
                 <img src={{ asset('assets/images/brand/logo-white.png') }} class="header-brand-img dark-logo"
-                    alt="amansahulogo">
+                    alt="FixingDotslogo">
                 <img src={{ asset('assets/images/brand/favicon.png') }} class="header-brand-img mobile-logo"
-                    alt="amansahulogo">
+                    alt="FixingDotslogo">
                 <img src={{ asset('assets/images/brand/favicon1.png') }} class="header-brand-img darkmobile-logo"
-                    alt="amansahulogo">
+                    alt="FixingDotslogo">
             </a>
         </div>
         <div class="app-sidebar3">
             <div class="main-menu">
-                <div class="app-sidebar__user">
-                    <div class="dropdown user-pro-body text-center">
-                        <div class="user-pic">
-                            <img src={{ asset('assets/images/users/16.jpg') }} alt="user-img"
-                                class="avatar-xxl rounded-circle mb-1">
-                        </div>
-                        <div class="user-info">
-                            <h5 class=" mb-2">Aman Kumar</h5>
-                            <span class="text-muted app-sidebar__user-name text-sm">Laravel Developer</span>
-                        </div>
-                    </div>
-                </div>
                 <div class="slide-left disabled" id="slide-left"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191"
                         width="24" height="24" viewBox="0 0 24 24">
                         <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z" />

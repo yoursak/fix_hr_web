@@ -60,24 +60,29 @@ Route::get('/gatepass', function () {
 
 
 Route::get('/setting', function () {
-    return view('admin.setting.account');
+    return view('admin.setting.account.account');
 });
 Route::get('settings/businesssetting', function () {
-    return view('admin.setting.business');
+    return view('admin.setting.business.business');
 });
 Route::get('settings/businessinfosetting', function () {
-    return view('admin.setting.businessinfo');
+    return view('admin.setting.businessinfo.businessinfo');
 });
 Route::get('settings/attendancesetting', function () {
-    return view('admin.setting.attandance');
+    return view('admin.setting.attendance.attendance');
 });
 Route::get('settings/salarysetting', function () {
-    return view('admin.setting.salary');
+    return view('admin.setting.salary.salary');
 });
 Route::get('settings/helpsetting', function () {
-    return view('admin.setting.helps');
+    return view('admin.setting.help.helps');
 });
 Route::get('settings/aboutsetting', function () {
-    return view('admin.setting.about');
+    return view('admin.setting.about.about');
+});
+
+
+Route::get('settings/attendancesetting/createshift', function () {
+    return view('admin.setting.attendance.createshift');
 });
 
