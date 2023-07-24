@@ -58,3 +58,26 @@ Route::get('/gatepass', function () {
     return view('admin.request.gatepass');
 });
 
+
+Route::get('/setting', function () {
+    return view('admin.setting.account');
+});
+Route::get('settings/businesssetting', function () {
+    return view('admin.setting.business');
+});
+Route::get('settings/businessinfosetting', function () {
+    return view('admin.setting.businessinfo');
+});
+Route::get('settings/attendancesetting', function () {
+    return view('admin.setting.attandance');
+});
+Route::get('settings/salarysetting', function () {
+    return view('admin.setting.salary');
+});
+Route::get('settings/helpsetting', function () {
+    return view('admin.setting.helps');
+});
+Route::get('settings/aboutsetting', function () {
+    return view('admin.setting.about');
+});
+
