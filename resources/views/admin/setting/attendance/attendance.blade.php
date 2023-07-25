@@ -88,7 +88,7 @@
                             </a>
                             <p>Web apps settings such as Apps,Elements & Mail related to web apps
                                 can be Controlled.</p>
-                            <a href="#">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                            <a href="{{url('settings/attendancesetting/automationrule')}}">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
                     </div>
                 </div>

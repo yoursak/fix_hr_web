@@ -119,3 +119,45 @@
             $("#calendertbl").removeClass("d-none");
         });
     </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#unpaidbreak').click(function(e) {
+                $('#unpaidbreak').addClass('d-none');
+                $('#unpaidbreaktbl').addClass('d-block');
+            })
+
+            $('#unpaiddelete').click(function(e) {
+                $('#unpaidbreak').removeClass('d-none');
+                $('#unpaidbreaktbl').removeClass('d-block');
+            })
+
+            $('#addtime').click(function(e) {
+                $('#addtime').addClass('d-none');
+                $('#breaktime').addClass('d-block');
+            })
+
+            $('#shifttype').change(function(e) {
+                $val = $('#shifttype').val();
+                if ($val == 'fs') {
+                    $('#shifttime').removeClass('d-none');
+                    $('#unpaidbreaklabel').removeClass('d-none');
+                    $('#unpaidbreak').removeClass('d-none');
+                    $('#workhour').addClass('d-none');
+                    $('#additionaltbl').addClass('d-none');
+                } else if ($val == 'rs') {
+                    $('#shifttime').addClass('d-none');
+                    $('#unpaidbreaklabel').addClass('d-none');
+                    $('#unpaidbreak').addClass('d-none');
+                    $('#workhour').addClass('d-none');
+                    $('#additionaltbl').removeClass('d-none');
+                } else {
+                    $('#shifttime').addClass('d-none');
+                    $('#unpaidbreaklabel').addClass('d-none');
+                    $('#unpaidbreak').addClass('d-none');
+                    $('#workhour').removeClass('d-none');
+                    $('#additionaltbl').addClass('d-none');
+                }
+            });
+        });
+    </script>

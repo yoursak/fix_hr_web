@@ -86,3 +86,7 @@ Route::get('settings/attendancesetting/createshift', function () {
     return view('admin.setting.attendance.createshift');
 });
 
+Route::get('settings/attendancesetting/automationrule', function () {
+    return view('admin.setting.attendance.automation');
+});
+
