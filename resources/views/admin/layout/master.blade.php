@@ -7,6 +7,7 @@
 
 <head>
     @include('admin.layout.head')
+    @yield('css')
 </head>
 
 <body class="app sidebar-mini ltr">
@@ -377,6 +378,7 @@
     <!-- BACK TO TOP -->
     <a href="#top" id="back-to-top"><span class="feather feather-chevrons-up"></span></a>
 
+    @yield('script')
     @include('admin.layout.script')
 </body>
 

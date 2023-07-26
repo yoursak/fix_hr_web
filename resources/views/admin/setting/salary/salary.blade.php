@@ -60,7 +60,7 @@ Salary
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
                         <a href="#">
-                            <h5 class="mb-1 text-dark">Staff Bank Account Details</h5>
+                            <h5 class="mb-1 text-dark">Employee Bank Account Details</h5>
                         </a>
                         <p>Notifications settings we can control the notifications privacy and
                             security settings.</p>
@@ -104,7 +104,7 @@ Salary
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
                         <a href="#">
-                            <h5 class="mb-1 text-dark">Salary Details Access to Staff</h5>
+                            <h5 class="mb-1 text-dark">Salary Details Access to Employee</h5>
                         </a>
                         <p>Region & language settings we can Add, Delete and edit your Region &
                             language.</p>

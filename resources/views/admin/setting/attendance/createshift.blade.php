@@ -151,7 +151,7 @@
                 <div class="modal-body">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Add Additional Details</h3>
+                            <h3 class="card-title">Add Ne Shift</h3>
                         </div>
                         <div class="card-body">
                             <div class="form-group">
@@ -242,7 +242,7 @@
                                                     <span>09:00 hrs</span>
                                                 </td>
                                                 <td>
-                                                    <span><b class="text-primary" id="unpaiddelete">Delete</b></span><br/>
+                                                    <span><b class="text-primary btn" id="unpaiddelete">Delete</b></span><br/>
                                                 </td>
                                             </tr>
                                         </tbody>

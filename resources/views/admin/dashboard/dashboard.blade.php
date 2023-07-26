@@ -49,9 +49,9 @@ Dashboard
                     <div class="col-xl-12 col-md-12 col-lg-12">
                         <div class="row">
                             <div class="col-xl-3 col-lg-3 col-md-3">
-                                <div class="card att">
+                                <div class="card att bg-primary-transparent">
                                     <div class="card-body">
-                                        <div class="mt-0 text-center"> <span
+                                        <div class="mt-0 text-center text-primary"> <span
                                                 class="fs-18 font-weight-semibold">Present</span>
                                             <h5 class="mb-0 mt-1 mb-2">78</h5>
                                         </div>
@@ -59,19 +59,19 @@ Dashboard
                                 </div>
                             </div>
                             <div class="col-xl-3 col-lg-3 col-md-3">
-                                <div class="card att">
+                                <div class="card att bg-secondary-transparent">
                                     <div class="card-body">
-                                        <div class="mt-0 text-center"> <span
+                                        <div class="mt-0 text-center text-secondary"> <span
                                                 class="fs-18 font-weight-semibold">Absent</span>
                                             <h5 class="mb-0 mt-1 mb-2">4</h5>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-lg-3 col-md-3">
+                            <div class="col-xl-3 col-lg-3 col-md-3 bg-success-transparent">
                                 <div class="card att">
                                     <div class="card-body">
-                                        <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Half
+                                        <div class="mt-0 text-center text-success"> <span class="fs-18 font-weight-semibold">Half
                                                 Day</span>
                                             <h5 class="mb-0 mt-1  mb-2">2</h5>
                                         </div>
@@ -654,7 +654,7 @@ Dashboard
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header border-bottom-0">
-                    <h3 class="card-title">Staff Payment Summary</h3>
+                    <h3 class="card-title">Employee Payment Summary</h3>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

@@ -127,7 +127,7 @@ Business
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
                         <a href="#">
-                            <h5 class="mb-1 text-dark">Manage Staff Data</h5>
+                            <h5 class="mb-1 text-dark">Manage Employee Data</h5>
                         </a>
                         <p>Blog settings such as, enable blog, max mosts in page and more can be
                             controlled.</p>
@@ -171,7 +171,7 @@ Business
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
                         <a href="#">
-                            <h5 class="mb-1 text-dark">Invite Staff</h5>
+                            <h5 class="mb-1 text-dark">Invite Employee</h5>
                         </a>
                         <p>Email SMTP settings such as, contact us and others related to email
                             can be controlled.</p>

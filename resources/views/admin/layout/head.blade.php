@@ -32,3 +32,4 @@
 <!-- INTERNAL SWITCHER CSS -->
 <link href={{ asset("assets/switcher/css/switcher.css") }} rel="stylesheet" />
 <link href={{ asset("assets/switcher/demo.css") }} rel="stylesheet" />
+

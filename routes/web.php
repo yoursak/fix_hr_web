@@ -90,3 +90,25 @@ Route::get('settings/attendancesetting/automationrule', function () {
     return view('admin.setting.attendance.automation');
 });
 
+
+Route::get('settings/attendancesetting/attendanceonholiday', function () {
+    return view('admin.setting.attendance.attendance_on_holiday');
+});
+Route::get('settings/attendancesetting/automationrule/asignemp', function () {
+    return view('admin.setting.attendance.rules.add_emp');
+});
+Route::get('settings/attendancesetting/automationrule/break', function () {
+    return view('admin.setting.attendance.rules.break_rule');
+});
+Route::get('settings/attendancesetting/automationrule/earlyexit', function () {
+    return view('admin.setting.attendance.rules.early_exit');
+});
+Route::get('settings/attendancesetting/automationrule/lateentry', function () {
+    return view('admin.setting.attendance.rules.late_entry');
+});
+Route::get('settings/attendancesetting/automationrule/overtime', function () {
+    return view('admin.setting.attendance.rules.overtime_rule');
+});
+Route::get('settings/attendancesetting/automationrule/earlyovertime', function () {
+    return view('admin.setting.attendance.rules.early_overtimes');
+});
