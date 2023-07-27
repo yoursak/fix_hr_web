@@ -158,7 +158,7 @@
                             </a>
                             <p>Search Engine Optimization settings such as, meta tags and social
                                 media can be controlled..</p>
-                            <a href="{{url('settings/attendancesetting/attendanceonholiday')}}">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                            <a href="#" data-bs-target="#ioModal" data-bs-toggle="modal">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
                     </div>
                 </div>
@@ -537,4 +537,6 @@
             </div>
         </div>
     </div>
+
+    {{--Mark Absent on Previous Day modal --}}
 @endsection

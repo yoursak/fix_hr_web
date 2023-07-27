@@ -15,8 +15,8 @@
                     <div class="tabs-menu1">
                         <!-- Tabs -->
                         <ul class="nav panel-tabs">
-                            <li><a href="#tab6" class="active" data-bs-toggle="tab">Job Opening</a></li>
-                            <li><a href="#tab7" data-bs-toggle="tab">Hired Candidates</a></li>
+                            <li><a href="#tab6" class="active" data-bs-toggle="tab">Rules</a></li>
+                            <li><a href="#tab7" data-bs-toggle="tab">Employee Selections</a></li>
                         </ul>
                     </div>
                 </div>

@@ -112,6 +112,17 @@
 <script src={{ asset('assets/plugins/accordion-Wizard-Form/jquery.accordion-wizard.min.js') }}></script>
 <script src={{ asset('assets/js/form-wizard.js') }}></script>
 
+<!-- INTERNAL FILE-UPLOADS JS -->
+<script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js')}}"></script>
+<script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js')}}"></script>
+<script src="{{ asset('assets/plugins/fancyuploder/jquery.iframe-transport.js')}}"></script>
+<script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js')}}"></script>
+<script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js')}}"></script>
+
+<!-- INTERNAL FILE-UPLOADS JS -->
+<script src="{{ asset('assets/plugins/fileupload/js/dropify.js')}}"></script>
+<script src="{{ asset('assets/js/filupload.js')}}"></script>
+
 
 <script>
     $("#calenderbtn").click(function() {
@@ -169,42 +180,61 @@
     });
 
     //Late Entry Rule Page
-    $(document).ready(function(){
-        $('#occurence').change(function () {
+    $(document).ready(function() {
+        $('#occurence').change(function() {
             $val = $('#occurence').val();
-            if($val == 'count'){
+            if ($val == 'count') {
                 $('#o_time').addClass('d-none');
                 $('#o_count').removeClass('d-none');
-            }else{
+            } else {
                 $('#o_time').removeClass('d-none');
                 $('#o_count').addClass('d-none');
             }
         });
 
-        $('#o_check').change(function () {
-            if(this.checked){
+        $('#o_check').change(function() {
+            if (this.checked) {
                 $('#rowMx').removeClass('d-none');
-            }else{
+            } else {
                 $('#rowMx').addClass('d-none');
             }
         });
 
-        $('#add_elem').click(function (e) {
+        $('#add_elem').click(function(e) {
             $("#more_time_range").clone().appendTo("#elem");
         });
 
-        $('#remove_elem').click(function (e) {
+        $('#remove_elem').click(function(e) {
             $("#more_time_range").remove();
         });
 
-        $('#rule1').change(function () {
-            if(this.checked){
+        $('#rule1').change(function() {
+            if (this.checked) {
                 $('#main_elem').removeClass('d-none');
                 $('#next_btn').removeClass('d-none');
-            }else{
+            } else {
                 $('#main_elem').addClass('d-none');
                 $('#next_btn').addClass('d-none');
             }
+        });
+    });
+
+
+    //Add Delete Bussiness Section in setting
+
+    $(document).ready(function() {
+        $('#anbbtn2').click(function (e) {
+           $('#anbbtns1').removeClass('d-none');
+           $('#anbbtns').addClass('d-none');
+           $('#anbc').removeClass('d-none');
+           $('#anbc1').addClass('d-none');
+        });
+
+        $('#anbbtn3').click(function (e) {
+           $('#anbbtns1').addClass('d-none');
+           $('#anbbtns').removeClass('d-none');
+           $('#anbc').addClass('d-none');
+           $('#anbc1').removeClass('d-none');
         });
     });
 </script>

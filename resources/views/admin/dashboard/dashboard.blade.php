@@ -68,8 +68,8 @@ Dashboard
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-lg-3 col-md-3 bg-success-transparent">
-                                <div class="card att">
+                            <div class="col-xl-3 col-lg-3 col-md-3 ">
+                                <div class="card att bg-success-transparent">
                                     <div class="card-body">
                                         <div class="mt-0 text-center text-success"> <span class="fs-18 font-weight-semibold">Half
                                                 Day</span>

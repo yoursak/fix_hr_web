@@ -15,8 +15,8 @@
                     <div class="tabs-menu1">
                         <!-- Tabs -->
                         <ul class="nav panel-tabs">
-                            <li><a href="#tab6" class="active" data-bs-toggle="tab">Job Opening</a></li>
-                            <li><a href="#tab7" data-bs-toggle="tab">Hired Candidates</a></li>
+                            <li><a href="#tab6" class="active" data-bs-toggle="tab">Rules</a></li>
+                            <li><a href="#tab7" data-bs-toggle="tab">Employee Selections</a></li>
                         </ul>
                     </div>
                 </div>
@@ -41,15 +41,19 @@
                                                                 <span class="feather feather-clock"></span>
                                                             </div>
                                                         </div>
-                                                        <input class="form-control" id="tpBasic" placeholder="Set time" type="text">
+                                                        <input class="form-control" id="tpBasic" placeholder="Set time"
+                                                            type="text">
                                                     </div>
                                                 </div>
                                                 <div class="col-xl-5">
                                                     <div class="form-group row">
                                                         <div class="col-md-12">
-                                                            <select name="somename" class="form-control SlectBox" onclick="console.log($(this).val())" onchange="console.log('change is firing')">
+                                                            <select name="somename" class="form-control SlectBox"
+                                                                onclick="console.log($(this).val())"
+                                                                onchange="console.log('change is firing')">
                                                                 <!--placeholder-->
-                                                                <option title="Volvo is a car"  value="volvo">Per Minute Salary</option>
+                                                                <option title="Volvo is a car" value="volvo">Per Minute
+                                                                    Salary</option>
                                                                 <option value="saab">Saab</option>
                                                                 <option value="mercedes">Mercedes</option>
                                                                 <option value="audi">Audi</option>
@@ -58,8 +62,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-xl-2">
-                                                    <a href="javascript:void(0);" class="action-btns" id="remove_elem" data-bs-toggle="tooltip"
-                                                        data-bs-placement="top" title="Delete"><i
+                                                    <a href="javascript:void(0);" class="action-btns" id="remove_elem"
+                                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i
                                                             class="feather feather-trash-2 text-danger"></i></a>
                                                 </div>
                                             </div>
@@ -69,16 +73,18 @@
                                             <label class="custom-control custom-checkbox mx-5">
                                                 <input type="checkbox" class="custom-control-input" name="example-checkbox1"
                                                     value="option1" id="o_check">
-                                                <span class="custom-control-label" id="rule1"><b style="color: #473441">Set Ocurence</b></span>
+                                                <span class="custom-control-label" id="rule1"><b
+                                                        style="color: #473441">Set Ocurence</b></span>
                                             </label>
                                         </div>
                                         <div class="row mx-5 d-none" id="rowMx">
                                             <div class="col-xl-5">
                                                 <div class="form-group row">
                                                     <div class="col-md-12">
-                                                        <select name="somename" class="form-control SlectBox" id="occurence">
+                                                        <select name="somename" class="form-control SlectBox"
+                                                            id="occurence">
                                                             <!--placeholder-->
-                                                            <option title="Volvo is a car"  value="count">Count</option>
+                                                            <option title="Volvo is a car" value="count">Count</option>
                                                             <option value="hour">Hour</option>
                                                         </select>
                                                     </div>
@@ -86,16 +92,19 @@
                                             </div>
                                             <div class="col-xl-5" id="o_count">
                                                 <div class="input-group">
-                                                    <input class="form-control" id="tpBasic" placeholder="Set Count" type="number">
+                                                    <input class="form-control" id="tpBasic" placeholder="Set Count"
+                                                        type="number">
                                                 </div>
                                             </div>
                                             <div class="col-xl-5 d-none" id="o_time">
                                                 <div class="input-group">
-                                                    <input class="form-control" id="tpBasic" placeholder="Set time" type="time">
+                                                    <input class="form-control" id="tpBasic" placeholder="Set time"
+                                                        type="time">
                                                 </div>
                                             </div>
                                         </div>
-                                    </div><a  href="{{url('settings/attendancesetting/automationrule/asignemp')}}" class="btn btn-primary btn-sm m-3 d-none" id="next_btn">Save and Continoue</a>
+                                    </div><a href="{{ url('settings/attendancesetting/automationrule/asignemp') }}"
+                                        class="btn btn-primary btn-sm m-3 d-none" id="next_btn">Save and Continoue</a>
                                 </div>
                             </div>
                         </div>
@@ -105,9 +114,14 @@
                                     <tbody>
                                         <tr class="border-bottom">
                                             <td>
+                                                <label class="custom-switch">
+                                                    <input type="checkbox" name="custom-switch-checkbox"
+                                                        class="custom-switch-input">
+                                                    <span class="custom-switch-indicator"></span>
+                                                </label>
+                                            </td>
+                                            <td>
                                                 <div class="d-flex">
-                                                    <img src="{{ asset('assets/images/users/16.jpg') }}" alt="img"
-                                                        class="avatar avatar-md brround me-3">
                                                     <div class="me-3 mt-0 mt-sm-1 d-block">
                                                         <h6 class="mb-0">Faith Harris</h6>
                                                         <div class="clearfix"></div>
@@ -115,16 +129,11 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="text-start fs-13">5 years</td>
-                                            <td class="text-start fs-13"><i
-                                                    class="feather feather-map-pin text-muted me-2"></i>USA</td>
+                                            <td class="text-start fs-13">+91 1234567890</td>
                                             <td class="text-end">
-                                                <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                                    data-bs-placement="top" title="Contact"><i
-                                                        class="feather feather-phone-call text-primary"></i></a>
-                                                <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                                    data-bs-placement="top" title="Mail"><i
-                                                        class="feather feather-mail  text-primary"></i></a>
+                                                <a href="javascript:void(0);" class="action-btns"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Mail"><i
+                                                        class="feather feather-edit  text-primary"></i></a>
                                                 <a href="javascript:void(0);" class="action-btns"
                                                     data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i
                                                         class="feather feather-trash-2 text-danger"></i></a>

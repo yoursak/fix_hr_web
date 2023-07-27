@@ -53,10 +53,10 @@
                             </div>
                             <div class="dropdown header-flags">
                                 <a class="nav-link icon" data-bs-toggle="dropdown">
-                                    <img src={{ asset("assets/images/flags/flag-png/united-kingdom.png")}}
+                                    <img src={{ asset("assets/images/flags/flag-png/india.png")}}
                                         class="h-24" alt="img">
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated">
+                                {{-- <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated">
                                     <a href="javascript:void(0);" class="dropdown-item d-flex "> <span
                                             class="avatar  me-3 align-self-center bg-transparent"><img
                                                 src={{ asset("assets/images/flags/flag-png/india.png")}}
@@ -87,7 +87,7 @@
                                                 alt="img" class="h-24"></span>
                                         <div class="d-flex"> <span class="my-auto">Spain</span> </div>
                                     </a>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="dropdown header-fullscreen">
                                 <a class="nav-link icon full-screen-link">
@@ -98,7 +98,6 @@
                                 </a>
                             </div>
 
-                            
                             <div class="dropdown header-notify">
                                 <a class="nav-link icon" data-bs-toggle="sidebar-right"
                                     data-bs-target=".sidebar-right">
@@ -106,20 +105,18 @@
                                     <span class="bg-dot"></span>
                                 </a>
                             </div>
+                            <div class="dropdown header-notify my-auto">
+                                <h6 class="mx-2">Admin</h6>
+                            </div>
                             <div class="dropdown profile-dropdown">
                                 <a href="javascript:void(0);" class="nav-link pe-1 ps-0 leading-none"
                                     data-bs-toggle="dropdown">
                                     <span>
                                         <img src={{ asset("assets/images/users/16.jpg")}} alt="img"
-                                            class="avatar avatar-md bradius">
+                                            class="avatar avatar-md rounded-circle">
                                     </span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated">
-                                    <div class="p-3 text-center border-bottom">
-                                        <a href="profile1.html"
-                                            class="text-center user pb-0 font-weight-bold">John Thomson</a>
-                                        <p class="text-center user-semi-title">App Developer</p>
-                                    </div>
                                     <a class="dropdown-item d-flex" href="profile1.html">
                                         <i class="feather feather-user me-3 fs-16 my-auto"></i>
                                         <div class="mt-1">Profile</div>
@@ -128,14 +125,6 @@
                                         <i class="feather feather-settings me-3 fs-16 my-auto"></i>
                                         <div class="mt-1">Settings</div>
                                     </a>
-                                    <a class="dropdown-item d-flex" href="chat.html">
-                                        <i class="feather feather-mail me-3 fs-16 my-auto"></i>
-                                        <div class="mt-1">Messages</div>
-                                    </a>
-                                    <a class="dropdown-item d-flex" href="javascript:void(0);"
-                                        data-bs-toggle="modal" data-bs-target="#changepasswordnmodal">
-                                        <i class="feather feather-edit-2 me-3 fs-16 my-auto"></i>
-                                        <div class="mt-1">Change Password</div>
                                     </a>
                                     <a class="dropdown-item d-flex" href="login1.html">
                                         <i class="feather feather-power me-3 fs-16 my-auto"></i>
