@@ -5699,8 +5699,8 @@ ul.dropdown-menu li.dropdown ul.dropdown-menu .dropdown-plus-title {
   z-index: 0;
 }
 .list-group-item-action:active {
-  color: #263871;
-  background-color: #ebeff8;
+  color: #0063dc;
+  background-color: #8b9fcc;
   z-index: 0;
 }
 

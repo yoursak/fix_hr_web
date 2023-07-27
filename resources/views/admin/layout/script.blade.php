@@ -237,4 +237,27 @@
            $('#anbc1').removeClass('d-none');
         });
     });
+
+
+    //Salary Calculation Logic
+
+    $(document).ready(function() {
+        $('#logic1').click(function (e) {
+           $('#logic3').removeClass('active');
+           $('#logic2').removeClass('active');
+           $('#logic1').addClass('active');
+        });
+
+        $('#logic2').click(function (e) {
+           $('#logic3').removeClass('active');
+           $('#logic1').removeClass('active');
+           $('#logic2').addClass('active');
+        });
+
+        $('#logic3').click(function (e) {
+           $('#logic1').removeClass('active');
+           $('#logic2').removeClass('active');
+           $('#logic3').addClass('active');
+        });
+    });
 </script>
