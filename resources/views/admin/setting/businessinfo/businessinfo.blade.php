@@ -106,7 +106,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="col-lg">
-                        <p class="mb-0 pb-0 text-dark fs-12 mt-1 ">Business Name</p>
+                        <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Business Name</p>
                         <input class="form-control" placeholder="Business Name" type="text">
                         <p class="mb-0 pb-0 text-muted fs-12 mt-5 ">By continuing you agree to <a href="#"
                                 class="text-primary">Terms & Conditions</a></p>
@@ -197,20 +197,20 @@
                 </div>
                 <div class="modal-body">
                     <div class="col-lg">
-                        <p class="mb-0 pb-0 text-dark fs-12 mt-1 ">Address Line 1</p>
+                        <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Address Line 1</p>
                         <textarea class="form-control mb-4" placeholder="Address Line 1" rows="3" maxlength="100"></textarea>
 
-                        <p class="mb-0 pb-0 text-dark fs-12 mt-1 ">Address Line 1</p>
+                        <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Address Line 1</p>
                         <textarea class="form-control mb-4" placeholder="Address Line 2" rows="3" maxlength="100"></textarea>
 
-                        <p class="mb-0 pb-0 text-dark fs-12 mt-1 ">State</p>
+                        <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">State</p>
                         <input class="form-control" placeholder="Confirm Bank Account Number" type="text">
 
-                        <p class="mb-0 pb-0 text-dark fs-12 mt-1 ">City</p>
+                        <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">City</p>
                         <input class="form-control" placeholder="City Name" type="text">
 
 
-                        <p class="mb-0 pb-0 text-dark fs-12 mt-1 ">Pin Code</p>
+                        <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Pin Code</p>
                         <input class="form-control" placeholder="Pin Code" type="text">
                     </div>
                 </div>

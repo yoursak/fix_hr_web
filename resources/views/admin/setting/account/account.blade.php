@@ -158,7 +158,7 @@ Account
             </div>
             <div class="modal-body">
                 <div class="col-lg">
-                    <p class="mb-0 pb-0 text-dark fs-12 mt-1 ">Name</p>
+                    <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Name</p>
                     <input class="form-control" placeholder="Enter Name" type="text">
 
                 </div>
@@ -179,7 +179,7 @@ Account
             </div>
             <div class="modal-body">
                 <div class="col-lg">
-                    <p class="mb-0 pb-0 text-dark fs-12 mt-1 ">Email</p>
+                    <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Email</p>
                     <input class="form-control" placeholder="Enter Email" type="email">
 
                 </div>
@@ -201,14 +201,14 @@ Account
             <div class="modal-body">
                 <div class="col-lg">
                     <div class="form-group co-lg">
-                        <p class="mb-0 pb-0 text-dark fs-12 mt-1 ">Choose Industrial Sector</p>
+                        <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Choose Industrial Sector</p>
                         <select class="form-control custom-select select2" data-placeholder="Select Department">
                             <option label="Select Employee"></option>
                             <option value="1">Faith Harris</option>
                             <option value="2">Austin Bell</option>
                         </select>
                     </div>
-                    <p class="mb-0 pb-0 text-dark fs-12 mt-1 ">Name</p>
+                    <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Name</p>
                     <input class="form-control" placeholder="Software Industry" type="email">
                 </div>
             </div>
@@ -229,7 +229,7 @@ Account
             </div>
             <div class="modal-body">
                 <div class="col-lg d-none" id="anbc">
-                    <p class="mb-0 pb-0 text-dark fs-12 mt-1 ">Business Name</p>
+                    <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Business Name</p>
                     <input class="form-control" placeholder="Enter business Name" type="text">
                     <p class="mb-0 pb-0 text-muted fs-12 mt-5 ">By continuing you agree to <a href="#"
                         class="text-primary">Terms & Conditions</a></p>

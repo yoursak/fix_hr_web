@@ -51,7 +51,7 @@
                             </a>
                             <p>In this settings we can change sidemenu and main page can be
                                 Controlled System.</p>
-                            <a href="#">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                            <a href="{{url('settings/salary/salaryTemp')}}">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
                     </div>
                 </div>
@@ -140,7 +140,7 @@
                             </a>
                             <p>Blog settings such as, enable blog, max mosts in page and more can be
                                 controlled.</p>
-                            <a href="#">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                            <a href="#" data-bs-target="#deductionPlan" data-bs-toggle="modal">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
                     </div>
                 </div>
@@ -162,7 +162,6 @@
                             class="list-group-item list-group-item-action flex-column align-items-start active">
                             <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1">Calendar Month</h5>
-                                <small>3 days ago</small>
                             </div>
                             <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget
                                 risus varius blandit.</p>
@@ -172,7 +171,6 @@
                             class="list-group-item list-group-item-action flex-column align-items-start">
                             <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1">Every Month 30 Days</h5>
-                                <small class="text-muted">3 days ago</small>
                             </div>
                             <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget
                                 risus varius blandit.</p>
@@ -182,7 +180,6 @@
                             class="list-group-item list-group-item-action flex-column align-items-start">
                             <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1">Exclude Weekly Offs</h5>
-                                <small class="text-muted">3 days ago</small>
                             </div>
                             <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget
                                 risus varius blandit.</p>
@@ -211,7 +208,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="col-lg">
-                        <p class="mb-0 pb-0 text-dark fs-12 mt-1 ">Business Name</p>
+                        <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Business Name</p>
                         <input class="form-control" placeholder="Business Name" type="text">
                         <p class="mb-0 pb-0 text-muted fs-12 mt-5 mt-1">By continuing you agree to <a href="#"
                                 class="text-primary">Terms & Conditions</a></p>
@@ -244,7 +241,20 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
-                                <div class="">Checkboxes</div>
+                                <div class="">
+                                    <label class="custom-control custom-radio">
+                                        <input type="radio" id="NotselectedEmployees1" class="custom-control-input" name="example-radios" value="option1" checked>
+                                        <span class="custom-control-label">All Employee</span>
+                                    </label>
+                                    <label class="custom-control custom-radio">
+                                        <input type="radio" id="NotselectedEmployees" class="custom-control-input" name="example-radios" value="option1" >
+                                        <span class="custom-control-label">No access</span>
+                                    </label>
+                                    <label class="custom-control custom-radio">
+                                        <input type="radio" id="selectedEmployees" class="custom-control-input" name="example-radios" value="option1" >
+                                        <span class="custom-control-label">Only Selected Employee</span>
+                                    </label>
+                                </div>
                                 <div class="">
                                     <label for="abc" class="my-auto text-primary">Allaw current salary Access</label>
                                     <label class="custom-switch">
@@ -255,6 +265,96 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="d-none" style="height: 250px; overflow:scroll;" id="selectEmployee">
+                        <table class="table mb-0 text-nowrap">
+                            <thead>
+                                <h6 class="modal-title ms-2">Select Employee</h6>
+                            </thead>
+                            <tbody>
+                                <tr class="border-bottom">
+                                    <td>
+                                        <label class="custom-switch">
+                                            <input type="checkbox" id="checkboxEmp" name="custom-switch-checkbox"
+                                                class="custom-switch-input">
+                                            <span class="custom-switch-indicator"></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <div class="me-3 mt-0 mt-sm-1 d-block">
+                                                <h6 class="mb-0">Faith Harris</h6>
+                                                <div class="clearfix"></div>
+                                                <small class="text-muted">UI designer</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-start fs-13">+91 1234567890</td>
+                                    <td class="text-end">
+                                        <a href="javascript:void(0);" class="action-btns"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Mail"><i
+                                                class="feather feather-edit  text-primary"></i></a>
+                                        <a href="javascript:void(0);" class="action-btns"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i
+                                                class="feather feather-trash-2 text-danger"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button class="btn btn-outline-primary cancel" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary savebtn">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Custom Deduction Plan --}}
+    <div class="modal fade" id="deductionPlan">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content tx-size-sm">
+                <div class="modal-header border-0">
+                    <div>
+                        <h4 class="modal-title ms-2">Custom Deduction Plan</h4>
+                        <p class="mb-0 pb-0 text-muted fs-12 ms-2">Entered amount will be deducted on first day of every month from selected Employee.</p>
+                    </div>
+
+                </div>
+                <div class="modal-body">
+                    <div class="col-lg">
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <h5 class="mb-0 pb-0 text-dark fs-14 mt-1 ">Plan Name</h5>
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control" placeholder="Name will be shown in salary slip" type="text">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <h5 class="mb-0 pb-0 text-dark fs-14 mt-1 ">Amount to be deduce from Employee</h5>
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control" placeholder="RS 0.00" type="text">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <h5 class="mb-0 pb-0 text-dark fs-14 mt-1 ">Assign Employee</h5>
+                            </div>
+                            <div class="col-6">
+                                <label for="abc" class="my-auto text-primary">For all employees</label>
+                                <label class="custom-switch">
+                                    <input type="checkbox" name="custom-switch-checkbox"
+                                        class="custom-switch-input">
+                                    <span class="custom-switch-indicator"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <p class="mb-0 pb-0 text-muted fs-12 mt-5 mt-1">By continuing you agree to <a href="#"
+                            class="text-primary">Terms & Conditions</a></p>
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">

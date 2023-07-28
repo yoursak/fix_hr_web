@@ -113,15 +113,15 @@
 <script src={{ asset('assets/js/form-wizard.js') }}></script>
 
 <!-- INTERNAL FILE-UPLOADS JS -->
-<script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js')}}"></script>
-<script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js')}}"></script>
-<script src="{{ asset('assets/plugins/fancyuploder/jquery.iframe-transport.js')}}"></script>
-<script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js')}}"></script>
-<script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js')}}"></script>
+<script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
+<script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
+<script src="{{ asset('assets/plugins/fancyuploder/jquery.iframe-transport.js') }}"></script>
+<script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
+<script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
 
 <!-- INTERNAL FILE-UPLOADS JS -->
-<script src="{{ asset('assets/plugins/fileupload/js/dropify.js')}}"></script>
-<script src="{{ asset('assets/js/filupload.js')}}"></script>
+<script src="{{ asset('assets/plugins/fileupload/js/dropify.js') }}"></script>
+<script src="{{ asset('assets/js/filupload.js') }}"></script>
 
 
 <script>
@@ -223,18 +223,18 @@
     //Add Delete Bussiness Section in setting
 
     $(document).ready(function() {
-        $('#anbbtn2').click(function (e) {
-           $('#anbbtns1').removeClass('d-none');
-           $('#anbbtns').addClass('d-none');
-           $('#anbc').removeClass('d-none');
-           $('#anbc1').addClass('d-none');
+        $('#anbbtn2').click(function(e) {
+            $('#anbbtns1').removeClass('d-none');
+            $('#anbbtns').addClass('d-none');
+            $('#anbc').removeClass('d-none');
+            $('#anbc1').addClass('d-none');
         });
 
-        $('#anbbtn3').click(function (e) {
-           $('#anbbtns1').addClass('d-none');
-           $('#anbbtns').removeClass('d-none');
-           $('#anbc').addClass('d-none');
-           $('#anbc1').removeClass('d-none');
+        $('#anbbtn3').click(function(e) {
+            $('#anbbtns1').addClass('d-none');
+            $('#anbbtns').removeClass('d-none');
+            $('#anbc').addClass('d-none');
+            $('#anbc1').removeClass('d-none');
         });
     });
 
@@ -242,22 +242,43 @@
     //Salary Calculation Logic
 
     $(document).ready(function() {
-        $('#logic1').click(function (e) {
-           $('#logic3').removeClass('active');
-           $('#logic2').removeClass('active');
-           $('#logic1').addClass('active');
+        $('#logic1').click(function(e) {
+            $('#logic3').removeClass('active');
+            $('#logic2').removeClass('active');
+            $('#logic1').addClass('active');
         });
 
-        $('#logic2').click(function (e) {
-           $('#logic3').removeClass('active');
-           $('#logic1').removeClass('active');
-           $('#logic2').addClass('active');
+        $('#logic2').click(function(e) {
+            $('#logic3').removeClass('active');
+            $('#logic1').removeClass('active');
+            $('#logic2').addClass('active');
         });
 
-        $('#logic3').click(function (e) {
-           $('#logic1').removeClass('active');
-           $('#logic2').removeClass('active');
-           $('#logic3').addClass('active');
+        $('#logic3').click(function(e) {
+            $('#logic1').removeClass('active');
+            $('#logic2').removeClass('active');
+            $('#logic3').addClass('active');
         });
+    });
+
+    //Salary Details Access to Employee
+
+    $(document).ready(function() {
+        $('#selectedEmployees').change(function(e) {
+            if ($("#selectedEmployees").prop("checked", true)) {
+                $('#selectEmployee').removeClass('d-none');
+            }
+        });
+        $('#NotselectedEmployees1').change(function(e) {
+            if ($("#NotselectedEmployees1").prop("checked", true)) {
+                $('#selectEmployee').addClass('d-none');
+            }
+        });
+        $('#NotselectedEmployees').change(function(e) {
+            if ($("#NotselectedEmployees").prop("checked", true)) {
+                $('#selectEmployee').addClass('d-none');
+            }
+        });
+
     });
 </script>
