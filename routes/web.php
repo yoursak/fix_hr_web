@@ -74,6 +74,9 @@ Route::get('settings/attendancesetting', function () {
 Route::get('settings/salarysetting', function () {
     return view('admin.setting.salary.salary');
 });
+Route::get('settings/salary/salaryTemp/create', function () {
+    return view('admin.setting.salary.new_template');
+});
 Route::get('settings/salary/salaryTemp', function () {
     return view('admin.setting.salary.salary_structure_temp');
 });

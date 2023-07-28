@@ -6,50 +6,7 @@
 @section('css')
 @endsection
 @section('settings')
-    <div class="row" id="departmentCard">
-        <div class="card">
-            <div class="card-header">
-                <div class="page-leftheader ">
-                    <p class="mb-0 fs-18 text-dark"><b>Department</b></p>
-                </div>
-                <div class="page-rightheader ms-md-auto">
-                    <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
-                        <div class="btn-list">
-                            <a href="{{url('settings/salary/salaryTemp/create')}}" class="btn btn-primary btn-sm">Create Template</a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="card-body border-bottum-0">
-                <table class="table mb-0 text-nowrap">
-                    <tbody>
-                        <tr class="border-bottom-0">
-                            <td>
-                                <div class="d-flex">
-                                    <div class="me-3 mt-0 mt-sm-1 d-block">
-                                        <span class="avatar avatar-md bradius fs-20 bg-primary-transparent">2</span>
-                                    </div>
-                                    <div class="me-3 mt-0 mt-sm-1 d-block">
-                                        <p class="mb-0 fs-16 text-dark">Default-Copy</p>
-                                        <div class="clearfix"></div>
-                                        <small class="text-muted">UI designer</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-start fs-12"><span class="bg-success p-1 rounded">Default</span></td>
-                            <td class="text-end">
-                                <a href="javascript:void(0);" class="action-btns" id="edittemp" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Edit"><i
-                                        class="feather feather-edit  text-primary"></i></a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="row d-none" id="editform">
+    <div class="row" id="editform">
         <div class="card">
             <div class="card-body border-bottum-0">
                 <div class="d-flex justify-content-between my-auto">
@@ -220,7 +177,7 @@
             </div>
         </div>
         <div class=" text-end">
-            <a href="#" class="btn btn-success" id="formsave" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">Save</a>
+            <a href="{{url('settings/salary/salaryTemp')}}" class="btn btn-success" id="formsave" data-bs-toggle="tooltip" data-bs-placement="top" title="Save">Save</a>
         </div>
     </div>
 

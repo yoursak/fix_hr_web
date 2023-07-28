@@ -123,6 +123,15 @@
 <script src="{{ asset('assets/plugins/fileupload/js/dropify.js') }}"></script>
 <script src="{{ asset('assets/js/filupload.js') }}"></script>
 
+<!-- INTERNAL FORM ADVANCED ELEMENT JS -->
+<script src="{{asset('assets/js/formelementadvnced.js')}}"></script>
+<script src="{{asset('assets/js/form-elements.js')}}"></script>
+<script src="{{asset('assets/js/select2.js')}}"></script>
+
+<!-- INTERNAL MULTIPLE SELECT JS -->
+<script src="{{asset('assets/plugins/multipleselect/multiple-select.js')}}"></script>
+<script src="{{asset('assets/plugins/multipleselect/multi-select.js')}}"></script>
+
 
 <script>
     $("#calenderbtn").click(function() {
@@ -280,5 +289,19 @@
             }
         });
 
+    });
+
+    // Manage Salary Template
+
+    $(document).ready(function() {
+       $('#edittemp').click(function (e) {
+        $('#departmentCard').addClass('d-none');
+        $('#editform').removeClass('d-none');
+       });
+
+       $('#formsave').click(function (e) {
+        $('#departmentCard').removeClass('d-none');
+        $('#editform').addClass('d-none');
+       });
     });
 </script>
