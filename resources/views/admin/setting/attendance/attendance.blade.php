@@ -18,8 +18,7 @@
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Attendance Mode</h5>
                             </a>
-                            <p>General settings such as, site title, logo, other general and
-                                advanced settings.</p>
+                            <p>Face Id, QR Code and Location.</p>
                             <a href="#" data-bs-target="#attMode" data-bs-toggle="modal">Change Settings <i
                                     class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
@@ -41,8 +40,7 @@
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Attendance Employee Access</h5>
                             </a>
-                            <p>In this settings we can change sidemenu and main page can be
-                                Controlled System.</p>
+                            <p>20 Employees</p>
                             <a href="#" data-bs-target="#EmployeeAccess" data-bs-toggle="modal">Change Settings <i
                                     class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
@@ -64,8 +62,7 @@
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Shift Settings</h5>
                             </a>
-                            <p>Notifications settings we can control the notifications privacy and
-                                security settings.</p>
+                            <p>One Fixed Shift</p>
                             <a href="{{ url('settings/attendancesetting/createshift') }}">Change Settings <i
                                     class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
@@ -87,8 +84,7 @@
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Automation Rules</h5>
                             </a>
-                            <p>Web apps settings such as Apps,Elements & Mail related to web apps
-                                can be Controlled.</p>
+                            <p>Track Late Entry, Early Out, Overtime, and Breaks.</p>
                             <a href="{{ url('settings/attendancesetting/automationrule') }}">Change Settings <i
                                     class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
@@ -110,8 +106,7 @@
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Daily Work Entry</h5>
                             </a>
-                            <p>Region & language settings we can Add, Delete and edit your Region &
-                                language.</p>
+                            <p>Assign to Employee</p>
                             <a href="#" data-bs-target="#workAccess" data-bs-toggle="modal">Change Settings <i
                                     class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
@@ -133,8 +128,7 @@
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Track In & Out Time</h5>
                             </a>
-                            <p>Blog settings such as, enable blog, max mosts in page and more can be
-                                controlled.</p>
+                            <p>Punch Out Required</p>
                                 <a href="#" data-bs-target="#ioModal" data-bs-toggle="modal">Change Settings <i
                                     class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
@@ -156,8 +150,7 @@
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Attendance On Holiday</h5>
                             </a>
-                            <p>Search Engine Optimization settings such as, meta tags and social
-                                media can be controlled..</p>
+                            <p>Attendance on Holidays, Comoff.</p>
                             <a href="#" data-bs-target="#ioModal" data-bs-toggle="modal">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
                     </div>
@@ -178,8 +171,7 @@
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Mark Absent on Previous Day</h5>
                             </a>
-                            <p>Email SMTP settings such as, contact us and others related to email
-                                can be controlled.</p>
+                            <p>Not Activated.</p>
                             <a href="#">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
                     </div>

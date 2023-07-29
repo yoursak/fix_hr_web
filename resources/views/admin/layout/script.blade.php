@@ -124,13 +124,13 @@
 <script src="{{ asset('assets/js/filupload.js') }}"></script>
 
 <!-- INTERNAL FORM ADVANCED ELEMENT JS -->
-<script src="{{asset('assets/js/formelementadvnced.js')}}"></script>
-<script src="{{asset('assets/js/form-elements.js')}}"></script>
-<script src="{{asset('assets/js/select2.js')}}"></script>
+<script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
+<script src="{{ asset('assets/js/form-elements.js') }}"></script>
+<script src="{{ asset('assets/js/select2.js') }}"></script>
 
 <!-- INTERNAL MULTIPLE SELECT JS -->
-<script src="{{asset('assets/plugins/multipleselect/multiple-select.js')}}"></script>
-<script src="{{asset('assets/plugins/multipleselect/multi-select.js')}}"></script>
+<script src="{{ asset('assets/plugins/multipleselect/multiple-select.js') }}"></script>
+<script src="{{ asset('assets/plugins/multipleselect/multi-select.js') }}"></script>
 
 
 <script>
@@ -294,14 +294,50 @@
     // Manage Salary Template
 
     $(document).ready(function() {
-       $('#edittemp').click(function (e) {
-        $('#departmentCard').addClass('d-none');
-        $('#editform').removeClass('d-none');
-       });
+        $('#edittemp').click(function(e) {
+            $('#departmentCard').addClass('d-none');
+            $('#editform').removeClass('d-none');
+        });
 
-       $('#formsave').click(function (e) {
-        $('#departmentCard').removeClass('d-none');
-        $('#editform').addClass('d-none');
-       });
+        $('#formsave').click(function(e) {
+            $('#departmentCard').removeClass('d-none');
+            $('#editform').addClass('d-none');
+        });
+    });
+
+    // script for Holiday Template
+    $(document).ready(function() {
+        $('#manageemp1').click(function(e) {
+            $('#emplist1').fadeIn();
+            $('#manageemp2').removeClass('d-none');
+            $('#manageemp1').addClass('d-none');
+            $('#emplist1').removeClass('d-none');
+        })
+        $('#manageemp2').click(function(e) {
+            $('#emplist1').fadeOut();
+            $('#manageemp1').removeClass('d-none');
+            $('#manageemp2').addClass('d-none');
+            $('#emplist1').addClass('d-none');
+        })
+        $('#editTempBtn').click(function(e) {
+            $('#editTempForm').fadeIn();
+            $('#applyTempBtn').removeClass('d-none');
+            $('#searchTemp').removeClass('d-none');
+            $('#editTempForm').removeClass('d-none');
+            $('#editTempBtn').addClass('d-none');
+        })
+        $('#applyTempBtn').click(function(e) {
+            $('#editTempForm').fadeOut();
+            $('#applyTempBtn').addClass('d-none');
+            $('#searchTemp').addClass('d-none');
+            $('#editTempForm').addClass('d-none');
+            $('#editTempBtn').removeClass('d-none');
+        })
+        $('#newTempFormBtn').click(function(e) {
+            $('#newTemplate').removeClass('d-none');
+        });
+        $('#tempSave').click(function(e) {
+            $('#newTemplate').addClass('d-none');
+        });
     });
 </script>

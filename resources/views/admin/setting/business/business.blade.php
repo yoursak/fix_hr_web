@@ -16,11 +16,10 @@ Business
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
                         <a href="#">
-                            <h5 class="mb-1 text-dark">Holyday Policy</h5>
+                            <h5 class="mb-1 text-dark">Holiday Policy</h5>
                         </a>
-                        <p>General settings such as, site title, logo, other general and
-                            advanced settings.</p>
-                        <a href="#">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <p>One Template</p>
+                        <a href="{{url('settings/business/holiday')}}">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                     </div>
                 </div>
             </div>
@@ -41,9 +40,8 @@ Business
                         <a href="#">
                             <h5 class="mb-1 text-dark">Leave Policy</h5>
                         </a>
-                        <p>In this settings we can change sidemenu and main page can be
-                            Controlled System.</p>
-                        <a href="#">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <p>Three Templates</p>
+                        <a href="{{url('settings/business/leave')}}">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                     </div>
                 </div>
             </div>
@@ -63,9 +61,8 @@ Business
                         <a href="#">
                             <h5 class="mb-1 text-dark">Admin Setting</h5>
                         </a>
-                        <p>Notifications settings we can control the notifications privacy and
-                            security settings.</p>
-                        <a href="#">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <p>5 Admins</p>
+                        <a href="{{url('settings/business/adminsetting')}}">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                     </div>
                 </div>
             </div>
@@ -85,9 +82,8 @@ Business
                         <a href="#">
                             <h5 class="mb-1 text-dark">Manager Setting</h5>
                         </a>
-                        <p>Web apps settings such as Apps,Elements & Mail related to web apps
-                            can be Controlled.</p>
-                        <a href="#">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <p>0 Managers Added</p>
+                        <a href="{{url('settings/business/manager')}}">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                     </div>
                 </div>
             </div>
@@ -105,11 +101,31 @@ Business
                     </div>
                     <div class="col-xl-10 col-sm-10 col-md-12">
                         <a href="#">
-                            <h5 class="mb-1 text-dark">Departmentss</h5>
+                            <h5 class="mb-1 text-dark">Branches</h5>
                         </a>
-                        <p>Region & language settings we can Add, Delete and edit your Region &
-                            language.</p>
-                        <a href="#">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <p>2 Branch added | assign to all Employee</p>
+                        <a href="{{url('settings/business/branchesetting')}}">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6">
+        <div class="card custom-card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xl-2 col-sm-2 col-md-12">
+                        <div class="mt-2 mb-4">
+                            <span class="settings-icon bg-success-transparent text-success border-success"><i
+                                    class="fe fe-flag"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-xl-10 col-sm-10 col-md-12">
+                        <a href="#">
+                            <h5 class="mb-1 text-dark">Departments & Designations</h5>
+                        </a>
+                        <p>One Departments | assign to 25/50 employees</p>
+                        <a href="{{url('settings/business/department')}}">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                     </div>
                 </div>
             </div>
@@ -129,9 +145,8 @@ Business
                         <a href="#">
                             <h5 class="mb-1 text-dark">Manage Employee Data</h5>
                         </a>
-                        <p>Blog settings such as, enable blog, max mosts in page and more can be
-                            controlled.</p>
-                        <a href="#">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <p>No data added</p>
+                        <a href="{{url('settings/business/manageEmp')}}">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                     </div>
                 </div>
             </div>
@@ -151,9 +166,8 @@ Business
                         <a href="#">
                             <h5 class="mb-1 text-dark">Weekly Holiday</h5>
                         </a>
-                        <p>Search Engine Optimization settings such as, meta tags and social
-                            media can be controlled..</p>
-                        <a href="#">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <p>Sunday</p>
+                        <a href="{{url('settings/business/weeklyholiday')}}">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                     </div>
                 </div>
             </div>
@@ -173,9 +187,8 @@ Business
                         <a href="#">
                             <h5 class="mb-1 text-dark">Invite Employee</h5>
                         </a>
-                        <p>Email SMTP settings such as, contact us and others related to email
-                            can be controlled.</p>
-                        <a href="#">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <p></p>
+                        <a href="{{url('settings/business/invite')}}">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                     </div>
                 </div>
             </div>

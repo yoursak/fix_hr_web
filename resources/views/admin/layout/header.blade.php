@@ -56,38 +56,6 @@
                                     <img src={{ asset("assets/images/flags/flag-png/india.png")}}
                                         class="h-24" alt="img">
                                 </a>
-                                {{-- <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated">
-                                    <a href="javascript:void(0);" class="dropdown-item d-flex "> <span
-                                            class="avatar  me-3 align-self-center bg-transparent"><img
-                                                src={{ asset("assets/images/flags/flag-png/india.png")}}
-                                                alt="img" class="h-24"></span>
-                                        <div class="d-flex"> <span class="my-auto">India</span> </div>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item d-flex"> <span
-                                            class="avatar  me-3 align-self-center bg-transparent"><img
-                                                src={{ asset("assets/images/flags/flag-png/united-kingdom.png")}}
-                                                alt="img" class="h-24"></span>
-                                        <div class="d-flex"> <span class="my-auto">UK</span> </div>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item d-flex"> <span
-                                            class="avatar me-3 align-self-center bg-transparent"><img
-                                                src={{ asset("assets/images/flags/flag-png/italy.png")}}
-                                                alt="img" class="h-24"></span>
-                                        <div class="d-flex"> <span class="my-auto">Italy</span> </div>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item d-flex"> <span
-                                            class="avatar me-3 align-self-center bg-transparent"><img
-                                                src={{ asset("assets/images/flags/flag-png/united-states-of-america.png")}}
-                                                class="h-24" alt="img"></span>
-                                        <div class="d-flex"> <span class="my-auto">US</span> </div>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item d-flex"> <span
-                                            class="avatar  me-3 align-self-center bg-transparent"><img
-                                                src={{ asset("assets/images/flags/flag-png/spain.png")}}
-                                                alt="img" class="h-24"></span>
-                                        <div class="d-flex"> <span class="my-auto">Spain</span> </div>
-                                    </a>
-                                </div> --}}
                             </div>
                             <div class="dropdown header-fullscreen">
                                 <a class="nav-link icon full-screen-link">

@@ -38,8 +38,8 @@
                             </a>
                         </div>
                         <div>
-                            <a href="{{url('settings/helpsetting')}}" class="list-group-item  d-flex align-items-center px-0">
-                                <i class="fe fe-headphones fs-18 me-2 text-info p-2"></i> Help & Support
+                            <a href="{{url('settings/othersetting')}}" class="list-group-item  d-flex align-items-center px-0">
+                                <i class="fe fe-headphones fs-18 me-2 text-info p-2"></i> Others
                             </a>
                         <div>
                             <a href="{{url('settings/aboutsetting')}}" class="list-group-item  d-flex align-items-center px-0">

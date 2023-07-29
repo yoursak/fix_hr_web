@@ -80,8 +80,11 @@ Route::get('settings/salary/salaryTemp/create', function () {
 Route::get('settings/salary/salaryTemp', function () {
     return view('admin.setting.salary.salary_structure_temp');
 });
-Route::get('settings/helpsetting', function () {
-    return view('admin.setting.help.helps');
+Route::get('settings/salary/employeeAcc', function () {
+    return view('admin.setting.salary.employee_acc_detail');
+});
+Route::get('settings/othersetting', function () {
+    return view('admin.setting.other.other');
 });
 Route::get('settings/aboutsetting', function () {
     return view('admin.setting.about.about');
@@ -117,4 +120,33 @@ Route::get('settings/attendancesetting/automationrule/overtime', function () {
 });
 Route::get('settings/attendancesetting/automationrule/earlyovertime', function () {
     return view('admin.setting.attendance.rules.early_overtimes');
+});
+
+
+Route::get('settings/business/adminsetting',function(){
+    return view('admin.setting.business.admin.admin_setting');
+});
+Route::get('settings/business/branchesetting',function(){
+    return view('admin.setting.business.branches.branches');
+});
+Route::get('settings/business/department',function(){
+    return view('admin.setting.business.department.department');
+});
+Route::get('settings/business/holiday',function(){
+    return view('admin.setting.business.holiday_policy.holiday_policy');
+});
+Route::get('settings/business/invite',function(){
+    return view('admin.setting.business.invite_empl.invite_empl');
+});
+Route::get('settings/business/leave',function(){
+    return view('admin.setting.business.leave_policy.leave_policy');
+});
+Route::get('settings/business/manageEmp',function(){
+    return view('admin.setting.business.manage_emp.manage');
+});
+Route::get('settings/business/manager',function(){
+    return view('admin.setting.business.manager.manager');
+});
+Route::get('settings/business/weeklyholiday',function(){
+    return view('admin.setting.business.weekly_holiday.weekly_holiday');
 });

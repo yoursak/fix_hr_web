@@ -2,7 +2,6 @@
 @section('subtitle')
     Salary
 @endsection
-
 @section('css')
     <style>
         .active {
@@ -26,8 +25,7 @@
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Salary Calculation Logic</h5>
                             </a>
-                            <p>General settings such as, site title, logo, other general and
-                                advanced settings.</p>
+                            <p>Calendar month</p>
                             <a href="#" data-bs-target="#salaryCalLogic" data-bs-toggle="modal">Change Settings <i
                                     class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
@@ -49,8 +47,7 @@
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Manage Salary Templates</h5>
                             </a>
-                            <p>In this settings we can change sidemenu and main page can be
-                                Controlled System.</p>
+                            <p> 2 Templates</p>
                             <a href="{{url('settings/salary/salaryTemp')}}">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
                     </div>
@@ -71,9 +68,8 @@
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Employee Bank Account Details</h5>
                             </a>
-                            <p>Notifications settings we can control the notifications privacy and
-                                security settings.</p>
-                            <a href="#">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                            <p>Add Employee bank account details in bulk</p>
+                            <a href="{{url('settings/salary/employeeAcc')}}">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
                     </div>
                 </div>
@@ -93,8 +89,7 @@
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Business Name in Bank Statement</h5>
                             </a>
-                            <p>Web apps settings such as Apps,Elements & Mail related to web apps
-                                can be Controlled.</p>
+                            <p>Not Added</p>
                             <a href="#" data-bs-target="#bname" data-bs-toggle="modal">Change Settings <i
                                     class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
@@ -116,8 +111,7 @@
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Salary Details Access to Employee</h5>
                             </a>
-                            <p>Region & language settings we can Add, Delete and edit your Region &
-                                language.</p>
+                            <p>All Employees</p>
                             <a href="#" data-bs-target="#salaryDetailAccess" data-bs-toggle="modal">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
                     </div>
@@ -138,8 +132,7 @@
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Custom Deduction Plan</h5>
                             </a>
-                            <p>Blog settings such as, enable blog, max mosts in page and more can be
-                                controlled.</p>
+                            <p>Inactive</p>
                             <a href="#" data-bs-target="#deductionPlan" data-bs-toggle="modal">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
                         </div>
                     </div>
