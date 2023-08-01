@@ -340,4 +340,150 @@
             $('#newTemplate').addClass('d-none');
         });
     });
+
+    //script for Leave Template
+    $(document).ready(function(){
+        // set multi lavel approval
+        $('#lavelofapproval').change(function(e) {
+            $val = $('#lavelofapproval').val();
+            if ($val == '1') {
+                $('#firstlavel').removeClass('d-none');
+                $('#secondlavel').addClass('d-none');
+                $('#thirdlavel').addClass('d-none');
+            } else if ($val == '2') {
+                $('#firstlavel').removeClass('d-none');
+                $('#secondlavel').removeClass('d-none');
+                $('#thirdlavel').addClass('d-none');
+            } else {
+                $('#firstlavel').removeClass('d-none');
+                $('#secondlavel').removeClass('d-none');
+                $('#thirdlavel').removeClass('d-none');
+            }
+        });
+
+        // Edit multi lavel approval
+        $('#Editlavelofapproval').change(function(e) {
+            $val = $('#Editlavelofapproval').val();
+            if ($val == '1') {
+                $('#Editfirstlavel').removeClass('d-none');
+                $('#Editsecondlavel').addClass('d-none');
+                $('#Editthirdlavel').addClass('d-none');
+            } else if ($val == '2') {
+                $('#Editfirstlavel').removeClass('d-none');
+                $('#Editsecondlavel').removeClass('d-none');
+                $('#Editthirdlavel').addClass('d-none');
+            } else {
+                $('#Editfirstlavel').removeClass('d-none');
+                $('#Editsecondlavel').removeClass('d-none');
+                $('#Editthirdlavel').removeClass('d-none');
+            }
+        });
+    });
+
+    //manager setting
+    $(document).ready(function () {
+        $('#MngSavebtn').click(function (e) {
+            $('#editManager4').fadeOut();
+            $('#editManager3').fadeOut(200)
+            $('#editManager2').fadeOut(350)
+            $('#editManager1').fadeOut(400)
+            $('#editManager').fadeOut(450)
+            $('#MngSavebtn').addClass('d-none')
+            $('#MngEditbtn').removeClass('d-none')
+
+        });
+        $('#MngEditbtn').click(function (e) {
+            $('#editManager').removeClass('d-none');
+            $('#editManager').fadeIn(200)
+            $('#editManager1').fadeIn(350)
+            $('#editManager2').fadeIn(400)
+            $('#editManager3').fadeIn(450)
+            $('#MngSavebtn').removeClass('d-none')
+            $('#MngEditbtn').addClass('d-none')
+        });
+        $('#addNewManager').click(function (e) {
+            $('#addManager').fadeIn();
+            $('#addManager').removeClass('d-none');
+            $('#SaveNewManager').removeClass('d-none');
+            $('#addNewManager').addClass('d-none');
+        });
+        $('#SaveNewManager').click(function (e) {
+            $('#addManager').fadeOut();
+            $('#addManager').removeClass('d-none');
+            $('#SaveNewManager').addClass('d-none');
+            $('#addNewManager').removeClass('d-none');
+        });
+    });
+
+    //Branches setting
+    $(document).ready(function () {
+        $('#BranchSavebtn').click(function (e) {
+            $('#editBranch4').fadeOut();
+            $('#editBranch3').fadeOut(200)
+            $('#editBranch2').fadeOut(350)
+            $('#editBranch1').fadeOut(400)
+            $('#editBranch').fadeOut(450)
+            $('#BranchSavebtn').addClass('d-none')
+            $('#BranchEditbtn').removeClass('d-none')
+
+        });
+        $('#BranchEditbtn').click(function (e) {
+            $('#editBranch').removeClass('d-none');
+            $('#editBranch').fadeIn(200)
+            $('#editBranch1').fadeIn(350)
+            $('#editBranch2').fadeIn(400)
+            $('#editBranch3').fadeIn(450)
+            $('#BranchSavebtn').removeClass('d-none')
+            $('#BranchEditbtn').addClass('d-none')
+        });
+        $('#addNewBranch').click(function (e) {
+            $('#addBranch').fadeIn();
+            $('#addBranch').removeClass('d-none');
+            $('#SaveNewBranch').removeClass('d-none');
+            $('#addNewBranch').addClass('d-none');
+        });
+        $('#SaveNewBranch').click(function (e) {
+            $('#addBranch').fadeOut();
+            $('#addBranch').removeClass('d-none');
+            $('#SaveNewBranch').addClass('d-none');
+            $('#addNewBranch').removeClass('d-none');
+        });
+    });
+
+    //Departmentes setting
+    $(document).ready(function () {
+        $('#DepartmentSavebtn').click(function (e) {
+            $('#editDepartment4').fadeOut();
+            $('#editDepartment3').fadeOut(200)
+            $('#editDepartment2').fadeOut(350)
+            $('#editDepartment1').fadeOut(400)
+            $('#editDepartment').fadeOut(450)
+            $('#DepartmentSavebtn').addClass('d-none')
+            $('#DepartmentEditbtn').removeClass('d-none')
+
+        });
+        $('#DepartmentEditbtn').click(function (e) {
+            $('#editDepartment').removeClass('d-none');
+            $('#editDepartment').fadeIn(200)
+            $('#editDepartment1').fadeIn(350)
+            $('#editDepartment2').fadeIn(400)
+            $('#editDepartment3').fadeIn(450)
+            $('#DepartmentSavebtn').removeClass('d-none')
+            $('#DepartmentEditbtn').addClass('d-none')
+        });
+        $('#addNewDepartment').click(function (e) {
+            $('#addDepartment').fadeIn();
+            $('#addDepartment').removeClass('d-none');
+            $('#SaveNewDepartment').removeClass('d-none');
+            $('#addNewDepartment').addClass('d-none');
+        });
+        $('#SaveNewDepartment').click(function (e) {
+            $('#addDepartment').fadeOut();
+            $('#addDepartment').removeClass('d-none');
+            $('#SaveNewDepartment').addClass('d-none');
+            $('#addNewDepartment').removeClass('d-none');
+        });
+    });
+
+
 </script>

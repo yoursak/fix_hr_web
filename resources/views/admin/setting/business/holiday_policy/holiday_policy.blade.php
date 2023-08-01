@@ -1,4 +1,4 @@
-@extends('admin.setting.setting')
+    @extends('admin.setting.setting')
 @section('subtitle')
     Salary / Admin Setting
 @endsection
@@ -247,7 +247,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
         <div class="card-body d-none" id="editTempForm">
             <div class="row">
