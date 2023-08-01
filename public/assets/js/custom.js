@@ -2379,7 +2379,7 @@ function resetData() {
   $("html[lang=en]").attr("dir", "ltr");
   localStorage.setItem("ltr", "True");
   $("head link#style").attr("href", $(this));
-  (_document$getElementB = document.getElementById("style")) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.setAttribute("href", "https://laravelui.spruko.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.css");
+  (_document$getElementB = document.getElementById("style")) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.setAttribute("href", "https://fixingfots.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.css");
   var carousel = $('.owl-carousel');
   $.each(carousel, function (index, element) {
     // element == this
@@ -2416,7 +2416,7 @@ function customresetData() {
   $("html[lang=en]").attr("dir", "ltr");
   localStorage.setItem("ltr", "True");
   $("head link#style").attr("href", $(this));
-  (_document$getElementB2 = document.getElementById("style")) === null || _document$getElementB2 === void 0 ? void 0 : _document$getElementB2.setAttribute("href", "https://laravelui.spruko.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.css");
+  (_document$getElementB2 = document.getElementById("style")) === null || _document$getElementB2 === void 0 ? void 0 : _document$getElementB2.setAttribute("href", "https://fixingfots.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.css");
   var carousel = $('.owl-carousel');
   $.each(carousel, function (index, element) {
     // element == this
@@ -2780,7 +2780,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       $('body').removeClass('ltr');
       $("html[lang=en]").attr("dir", "rtl");
       $("head link#style").attr("href", $(this));
-      (_document$getElementB = document.getElementById("style")) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.setAttribute("href", "https://laravelui.spruko.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.rtl.css");
+      (_document$getElementB = document.getElementById("style")) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.setAttribute("href", "https://fixingfots.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.rtl.css");
       var carousel = $('.owl-carousel');
 
       if (carousel) {
@@ -2810,7 +2810,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     $('body').removeClass('ltr');
     $("html[lang=en]").attr("dir", "rtl");
     $("head link#style").attr("href", $(this));
-    (_document$getElementB2 = document.getElementById("style")) === null || _document$getElementB2 === void 0 ? void 0 : _document$getElementB2.setAttribute("href", "https://laravelui.spruko.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.rtl.css");
+    (_document$getElementB2 = document.getElementById("style")) === null || _document$getElementB2 === void 0 ? void 0 : _document$getElementB2.setAttribute("href", "https://fixingfots.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.rtl.css");
   }
 
   $('#myonoffswitch54').on('click', function () {
@@ -2821,7 +2821,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       $('body').removeClass('rtl');
       $("html[lang=en]").attr("dir", "ltr");
       $("head link#style").attr("href", $(this));
-      (_document$getElementB3 = document.getElementById("style")) === null || _document$getElementB3 === void 0 ? void 0 : _document$getElementB3.setAttribute("href", "https://laravelui.spruko.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.css");
+      (_document$getElementB3 = document.getElementById("style")) === null || _document$getElementB3 === void 0 ? void 0 : _document$getElementB3.setAttribute("href", "https://fixingfots.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.css");
       var carousel = $('.owl-carousel');
 
       if (carousel) {
@@ -2848,7 +2848,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       $("html[lang=en]").attr("dir", "rtl");
       localStorage.setItem("FixingDotsltr", "false");
       $("head link#style").attr("href", $(this));
-      (_document$getElementB4 = document.getElementById("style")) === null || _document$getElementB4 === void 0 ? void 0 : _document$getElementB4.setAttribute("href", "https://laravelui.spruko.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.rtl.css");
+      (_document$getElementB4 = document.getElementById("style")) === null || _document$getElementB4 === void 0 ? void 0 : _document$getElementB4.setAttribute("href", "https://fixingfots.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.rtl.css");
     }
   });
   var bodyltr = $('body').hasClass('ltr');
@@ -2860,7 +2860,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     $('body').removeClass('rtl');
     $("html[lang=en]").attr("dir", "ltr");
     $("head link#style").attr("href", $(this));
-    (_document$getElementB5 = document.getElementById("style")) === null || _document$getElementB5 === void 0 ? void 0 : _document$getElementB5.setAttribute("href", "https://laravelui.spruko.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.css");
+    (_document$getElementB5 = document.getElementById("style")) === null || _document$getElementB5 === void 0 ? void 0 : _document$getElementB5.setAttribute("href", "https://fixingfots.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.css");
     var carousel = $('.owl-carousel');
 
     if (carousel) {

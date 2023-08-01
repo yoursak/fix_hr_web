@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
-<!-- Mirrored from laravelui.spruko.com/dayone/error503 by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Jul 2023 06:22:38 GMT -->
-<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<!-- Developed By fixingfots.com/dayone/error503    /3.x [XR&CO'2014], Tue, 18 Jul 2023 06:22:38 GMT -->
+<!-- Added   --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added   -->
 <head>
 
 		<!-- META DATA -->
@@ -73,5 +73,5 @@
 
 	</body>
 
-<!-- Mirrored from laravelui.spruko.com/dayone/error503 by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Jul 2023 06:22:38 GMT -->
+<!-- Developed By fixingfots.com/dayone/error503    /3.x [XR&CO'2014], Tue, 18 Jul 2023 06:22:38 GMT -->
 </html>

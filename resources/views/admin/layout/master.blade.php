@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
-<!-- Mirrored from laravelui.spruko.com/FixingDots/index2 by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Jul 2023 06:20:41 GMT -->
-<!-- Added by HTTrack -->
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<!-- Developed By fixingfots.com/FixingDots/index2    /3.x [XR&CO'2014], Tue, 18 Jul 2023 06:20:41 GMT -->
+<!-- Added   -->
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added   -->
 
 <head>
     @include('admin.layout.head')
@@ -382,6 +382,6 @@
     @include('admin.layout.script')
 </body>
 
-<!-- Mirrored from laravelui.spruko.com/FixingDots/index2 by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Jul 2023 06:20:43 GMT -->
+<!-- Developed By fixingfots.com/FixingDots/index2    /3.x [XR&CO'2014], Tue, 18 Jul 2023 06:20:43 GMT -->
 
 </html>

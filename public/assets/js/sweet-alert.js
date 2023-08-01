@@ -53,7 +53,7 @@ $(function () {
     swal({
       title: title,
       text: message,
-      icon: 'https://laravelui.spruko.com/FixingDots/public/assets/images/brand/favicon.png'
+      icon: 'https://fixingfots.com/FixingDots/public/assets/images/brand/favicon.png'
     });
   }); // Timer
 

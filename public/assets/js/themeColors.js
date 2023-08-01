@@ -2435,7 +2435,7 @@ function resetData() {
   $("html[lang=en]").attr("dir", "ltr");
   localStorage.setItem("ltr", "True");
   $("head link#style").attr("href", $(this));
-  (_document$getElementB = document.getElementById("style")) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.setAttribute("href", "https://laravelui.spruko.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.css");
+  (_document$getElementB = document.getElementById("style")) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.setAttribute("href", "https://fixingfots.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.css");
   var carousel = $('.owl-carousel');
   $.each(carousel, function (index, element) {
     // element == this
@@ -2472,7 +2472,7 @@ function customresetData() {
   $("html[lang=en]").attr("dir", "ltr");
   localStorage.setItem("ltr", "True");
   $("head link#style").attr("href", $(this));
-  (_document$getElementB2 = document.getElementById("style")) === null || _document$getElementB2 === void 0 ? void 0 : _document$getElementB2.setAttribute("href", "https://laravelui.spruko.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.css");
+  (_document$getElementB2 = document.getElementById("style")) === null || _document$getElementB2 === void 0 ? void 0 : _document$getElementB2.setAttribute("href", "https://fixingfots.com/FixingDots/assets/plugins/bootstrap/css/bootstrap.css");
   var carousel = $('.owl-carousel');
   $.each(carousel, function (index, element) {
     // element == this
