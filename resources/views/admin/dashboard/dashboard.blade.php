@@ -6,130 +6,90 @@ Dashboard
 <div class="container-fluid">
     <div class="row">
         <div class="col-xl-9">
-            <div class="card">
-                <div class="card-body">
-                    <div class="page-header d-md-flex d-block">
-                        <div class="page-leftheader">
-                            <div class="page-title">Attendance</div>
+            <div class="page-header d-md-flex d-block">
+                <div class="page-leftheader">
+                    <div class="page-title">Attendance</div>
+                </div>
+                <div class="page-rightheader ms-md-auto">
+                    <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
+                        <div class="d-flex">
+                            <div class="header-datepicker me-3">
+                                <div class="input-group">
+                                    <div class="input-group-prepend ">
+                                        <div class="input-group-text d-none d-xl-block">
+                                            <i class="feather feather-calendar"></i>
+                                        </div>
+                                    </div><input class="form-control fc-datepicker" placeholder="19 Feb 2020"
+                                        type="text">
+                                </div>
+                            </div>
+                            <div class="header-datepicker me-3 d-none d-md-block">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text d-none d-xl-block">
+                                            <i class="feather feather-clock"></i>
+                                        </div>
+                                    </div><!-- input-group-prepend -->
+                                    <input id="tpBasic" type="text" placeholder="09:30am"
+                                        class="form-control input-small">
+                                </div>
+                            </div><!-- wd-150 -->
                         </div>
-                        <div class="page-rightheader ms-md-auto">
-                            <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-                                <div class="d-flex">
-                                    <div class="header-datepicker me-3">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend ">
-                                                <div class="input-group-text d-none d-xl-block">
-                                                    <i class="feather feather-calendar"></i>
-                                                </div>
-                                            </div><input class="form-control fc-datepicker" placeholder="19 Feb 2020"
-                                                type="text">
-                                        </div>
-                                    </div>
-                                    <div class="header-datepicker me-3 d-none d-md-block">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text d-none d-xl-block">
-                                                    <i class="feather feather-clock"></i>
-                                                </div>
-                                            </div><!-- input-group-prepend -->
-                                            <input id="tpBasic" type="text" placeholder="09:30am"
-                                                class="form-control input-small">
-                                        </div>
-                                    </div><!-- wd-150 -->
-                                </div>
-                                <div class="d-lg-flex d-block">
-                                    <div class="btn-list">
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                            data-bs-target="#clockinmodal">Attendance Report</button>
-                                    </div>
-                                </div>
+                        <div class="d-lg-flex d-block">
+                            <div class="btn-list">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#clockinmodal">Attendance Report</button>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-12 col-md-12 col-lg-12">
-                        <div class="row">
-                            <div class="col-xl-3 col-lg-3 col-md-3">
-                                <div class="card att bg-primary-transparent">
-                                    <div class="card-body">
-                                        <div class="mt-0 text-center text-primary"> <span
-                                                class="fs-18 font-weight-semibold">Present</span>
-                                            <h5 class="mb-0 mt-1 mb-2">78</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-lg-3 col-md-3">
-                                <div class="card att bg-secondary-transparent">
-                                    <div class="card-body">
-                                        <div class="mt-0 text-center text-secondary"> <span
-                                                class="fs-18 font-weight-semibold">Absent</span>
-                                            <h5 class="mb-0 mt-1 mb-2">4</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-lg-3 col-md-3 ">
-                                <div class="card att bg-success-transparent">
-                                    <div class="card-body">
-                                        <div class="mt-0 text-center text-success"> <span class="fs-18 font-weight-semibold">Half
-                                                Day</span>
-                                            <h5 class="mb-0 mt-1  mb-2">2</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-lg-3 col-md-3">
-                                <div class="card att">
-                                    <div class="card-body">
-                                        <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Weekly
-                                                Off</span>
-                                            <h5 class="mb-0 mt-1 mb-2">8</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-xl-4 col-lg-6">
+                    <div class="card text-center">
+                        <div class="card-body"> <span>Total Employee</span>
+                          <h1 class=" mb-1 mt-1 font-weight-bold">6532</h1>
+                          <div class="text-muted"><i class="si si-arrow-up-circle text-danger"></i> <span class="">15%</span> Increase</div>
                         </div>
-                        <div class="row">
-                            <div class="col-xl-3 col-lg-3 col-md-3">
-                                <div class="card att">
-                                    <div class="card-body">
-                                        <div class="mt-0 text-center"> <span
-                                                class="fs-18 font-weight-semibold">Leaves</span>
-                                            <h5 class="mb-0 mt-1 mb-2">6</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-lg-3 col-md-3">
-                                <div class="card att">
-                                    <div class="card-body">
-                                        <div class="mt-0 text-center"> <span
-                                                class="fs-18 font-weight-semibold">Holiday</span>
-                                            <h5 class="mb-0 mt-1 mb-2">4</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-lg-3 col-md-3">
-                                <div class="card att">
-                                    <div class="card-body">
-                                        <div class="mt-0 text-center"> <span
-                                                class="fs-18 font-weight-semibold">Overtime</span>
-                                            <h5 class="mb-0 mt-1  mb-2">53</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-lg-3 col-md-3">
-                                <div class="card att">
-                                    <div class="card-body">
-                                        <div class="mt-0 text-center"> <span class="fs-18 font-weight-semibold">Miss
-                                                Punch</span>
-                                            <h5 class="mb-0 mt-1 mb-2">8</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-xl-4 col-lg-6">
+                    <div class="card text-center">
+                        <div class="card-body"> <span>Present</span>
+                          <h1 class=" mb-1 mt-1 font-weight-bold">6532</h1>
+                          <div class="text-muted"><i class="si si-arrow-up-circle text-danger"></i> <span class="">15%</span> Increase</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-xl-4 col-lg-6">
+                    <div class="card text-center">
+                        <div class="card-body"> <span>Absent</span>
+                          <h1 class=" mb-1 mt-1 font-weight-bold">6532</h1>
+                          <div class="text-muted"><i class="si si-arrow-up-circle text-danger"></i> <span class="">15%</span> Increase</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-xl-4 col-lg-6">
+                    <div class="card text-center">
+                        <div class="card-body"> <span>Half Day</span>
+                          <h1 class=" mb-1 mt-1 font-weight-bold">6532</h1>
+                          <div class="text-muted"><i class="si si-arrow-up-circle text-danger"></i> <span class="">15%</span> Increase</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-xl-4 col-lg-6">
+                    <div class="card text-center">
+                        <div class="card-body"> <span>Miss Punch</span>
+                          <h1 class=" mb-1 mt-1 font-weight-bold">6532</h1>
+                          <div class="text-muted"><i class="si si-arrow-up-circle text-danger"></i> <span class="">15%</span> Increase</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-xl-4 col-lg-6">
+                    <div class="card text-center">
+                        <div class="card-body"> <span>Leave</span>
+                          <h1 class=" mb-1 mt-1 font-weight-bold">6532</h1>
+                          <div class="text-muted"><i class="si si-arrow-up-circle text-danger"></i> <span class="">15%</span> Increase</div>
                         </div>
                     </div>
                 </div>

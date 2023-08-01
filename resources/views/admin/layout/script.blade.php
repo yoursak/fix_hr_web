@@ -131,6 +131,10 @@
 <!-- INTERNAL MULTIPLE SELECT JS -->
 <script src="{{ asset('assets/plugins/multipleselect/multiple-select.js') }}"></script>
 <script src="{{ asset('assets/plugins/multipleselect/multi-select.js') }}"></script>
+<!-- INTERNAL FULLCALENDAR JS -->
+<script src="assets/plugins/fullcalendar/fullcalendar.min.js"></script>
+<!-- INTERNAL INDEX JS -->
+<script src="assets/js/hr/hr-overcldr.js"></script>
 
 
 <script>
@@ -497,7 +501,7 @@
             $('#reportBtn1').toggleClass('rotate');
 
             // Change color of card
-            $('#repoerCard1').toggleClass('bg-inf',300);
+            $('#repoerCard1').toggleClass('bg-inf', 300);
 
             $('#contentCard1').fadeToggle(300);
         });
@@ -511,7 +515,7 @@
             $('#reportBtn2').toggleClass('rotate');
 
             // Change color of card
-            $('#repoerCard2').toggleClass('bg-inf',300);
+            $('#repoerCard2').toggleClass('bg-inf', 300);
 
             $('#contentCard2').fadeToggle(300);
         });
@@ -525,7 +529,7 @@
             $('#reportBtn3').toggleClass('rotate');
 
             // Change color of card
-            $('#repoerCard3').toggleClass('bg-inf',300);
+            $('#repoerCard3').toggleClass('bg-inf', 300);
 
             $('#contentCard3').fadeToggle(300);
         });
@@ -539,7 +543,7 @@
             $('#reportBtn4').toggleClass('rotate');
 
             // Change color of card
-            $('#repoerCard4').toggleClass('bg-inf',300);
+            $('#repoerCard4').toggleClass('bg-inf', 300);
 
             $('#contentCard4').fadeToggle(300);
         });
