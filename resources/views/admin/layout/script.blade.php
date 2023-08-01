@@ -342,7 +342,7 @@
     });
 
     //script for Leave Template
-    $(document).ready(function(){
+    $(document).ready(function() {
         // set multi lavel approval
         $('#lavelofapproval').change(function(e) {
             $val = $('#lavelofapproval').val();
@@ -381,8 +381,8 @@
     });
 
     //manager setting
-    $(document).ready(function () {
-        $('#MngSavebtn').click(function (e) {
+    $(document).ready(function() {
+        $('#MngSavebtn').click(function(e) {
             $('#editManager4').fadeOut();
             $('#editManager3').fadeOut(200)
             $('#editManager2').fadeOut(350)
@@ -392,7 +392,7 @@
             $('#MngEditbtn').removeClass('d-none')
 
         });
-        $('#MngEditbtn').click(function (e) {
+        $('#MngEditbtn').click(function(e) {
             $('#editManager').removeClass('d-none');
             $('#editManager').fadeIn(200)
             $('#editManager1').fadeIn(350)
@@ -401,13 +401,13 @@
             $('#MngSavebtn').removeClass('d-none')
             $('#MngEditbtn').addClass('d-none')
         });
-        $('#addNewManager').click(function (e) {
+        $('#addNewManager').click(function(e) {
             $('#addManager').fadeIn();
             $('#addManager').removeClass('d-none');
             $('#SaveNewManager').removeClass('d-none');
             $('#addNewManager').addClass('d-none');
         });
-        $('#SaveNewManager').click(function (e) {
+        $('#SaveNewManager').click(function(e) {
             $('#addManager').fadeOut();
             $('#addManager').removeClass('d-none');
             $('#SaveNewManager').addClass('d-none');
@@ -416,8 +416,8 @@
     });
 
     //Branches setting
-    $(document).ready(function () {
-        $('#BranchSavebtn').click(function (e) {
+    $(document).ready(function() {
+        $('#BranchSavebtn').click(function(e) {
             $('#editBranch4').fadeOut();
             $('#editBranch3').fadeOut(200)
             $('#editBranch2').fadeOut(350)
@@ -427,7 +427,7 @@
             $('#BranchEditbtn').removeClass('d-none')
 
         });
-        $('#BranchEditbtn').click(function (e) {
+        $('#BranchEditbtn').click(function(e) {
             $('#editBranch').removeClass('d-none');
             $('#editBranch').fadeIn(200)
             $('#editBranch1').fadeIn(350)
@@ -436,13 +436,13 @@
             $('#BranchSavebtn').removeClass('d-none')
             $('#BranchEditbtn').addClass('d-none')
         });
-        $('#addNewBranch').click(function (e) {
+        $('#addNewBranch').click(function(e) {
             $('#addBranch').fadeIn();
             $('#addBranch').removeClass('d-none');
             $('#SaveNewBranch').removeClass('d-none');
             $('#addNewBranch').addClass('d-none');
         });
-        $('#SaveNewBranch').click(function (e) {
+        $('#SaveNewBranch').click(function(e) {
             $('#addBranch').fadeOut();
             $('#addBranch').removeClass('d-none');
             $('#SaveNewBranch').addClass('d-none');
@@ -451,8 +451,8 @@
     });
 
     //Departmentes setting
-    $(document).ready(function () {
-        $('#DepartmentSavebtn').click(function (e) {
+    $(document).ready(function() {
+        $('#DepartmentSavebtn').click(function(e) {
             $('#editDepartment4').fadeOut();
             $('#editDepartment3').fadeOut(200)
             $('#editDepartment2').fadeOut(350)
@@ -462,7 +462,7 @@
             $('#DepartmentEditbtn').removeClass('d-none')
 
         });
-        $('#DepartmentEditbtn').click(function (e) {
+        $('#DepartmentEditbtn').click(function(e) {
             $('#editDepartment').removeClass('d-none');
             $('#editDepartment').fadeIn(200)
             $('#editDepartment1').fadeIn(350)
@@ -471,13 +471,13 @@
             $('#DepartmentSavebtn').removeClass('d-none')
             $('#DepartmentEditbtn').addClass('d-none')
         });
-        $('#addNewDepartment').click(function (e) {
+        $('#addNewDepartment').click(function(e) {
             $('#addDepartment').fadeIn();
             $('#addDepartment').removeClass('d-none');
             $('#SaveNewDepartment').removeClass('d-none');
             $('#addNewDepartment').addClass('d-none');
         });
-        $('#SaveNewDepartment').click(function (e) {
+        $('#SaveNewDepartment').click(function(e) {
             $('#addDepartment').fadeOut();
             $('#addDepartment').removeClass('d-none');
             $('#SaveNewDepartment').addClass('d-none');
@@ -486,4 +486,62 @@
     });
 
 
+    //report script
+
+    $('document').ready(function() {
+        $('#contentCard1').fadeOut();
+        $('#reportBtn1').click(function(e) {
+            e.preventDefault();
+
+            // Toggle rotation
+            $('#reportBtn1').toggleClass('rotate');
+
+            // Change color of card
+            $('#repoerCard1').toggleClass('bg-inf',300);
+
+            $('#contentCard1').fadeToggle(300);
+        });
+
+        $('#contentCard2').fadeOut();
+
+        $('#reportBtn2').click(function(e) {
+            e.preventDefault();
+
+            // Toggle rotation
+            $('#reportBtn2').toggleClass('rotate');
+
+            // Change color of card
+            $('#repoerCard2').toggleClass('bg-inf',300);
+
+            $('#contentCard2').fadeToggle(300);
+        });
+
+        $('#contentCard3').fadeOut();
+
+        $('#reportBtn3').click(function(e) {
+            e.preventDefault();
+
+            // Toggle rotation
+            $('#reportBtn3').toggleClass('rotate');
+
+            // Change color of card
+            $('#repoerCard3').toggleClass('bg-inf',300);
+
+            $('#contentCard3').fadeToggle(300);
+        });
+
+        $('#contentCard4').fadeOut();
+
+        $('#reportBtn4').click(function(e) {
+            e.preventDefault();
+
+            // Toggle rotation
+            $('#reportBtn4').toggleClass('rotate');
+
+            // Change color of card
+            $('#repoerCard4').toggleClass('bg-inf',300);
+
+            $('#contentCard4').fadeToggle(300);
+        });
+    });
 </script>
