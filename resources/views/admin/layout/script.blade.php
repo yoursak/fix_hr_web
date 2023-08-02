@@ -135,6 +135,62 @@
 <script src="assets/plugins/fullcalendar/fullcalendar.min.js"></script>
 <!-- INTERNAL INDEX JS -->
 <script src="assets/js/hr/hr-overcldr.js"></script>
+<script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js') }}"></script>
+<script src="{{ url('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js') }}"></script>
+<script src="{{ asset('src/js/rescalendar.js') }}"></script>
+// horizontal calendar
+
+
+<script>
+    $('document').ready(function() {
+
+        var date = moment();
+        var month = moment().month();
+
+        console.log(month);
+        var currentDate = date.format('YYYY-MM-DD');
+        console.log(currentDate);
+        $('#my_calendar_en').rescalendar({
+            id: 'my_calendar_en',
+            format: 'YYYY-MM-DD',
+            refDate: currentDate,
+            jumpSize: 30,
+            disabledDays: ['2019-01-01', '2019-01-07', '2019-04-18', '2019-04-19', '2019-05-01',
+                '2019-05-02', '2019-05-13', '2019-08-15', '2019-10-12', '2019-11-01', '2019-12-06',
+                '2019-12-09', '2019-12-20', '2019-12-24', '2019-12-25', '2019-12-31'
+            ],
+            disabledWeekDays: [5, 6],
+            data: [{
+                    id: 1,
+                    name: 'item1',
+                    startDate: '2019-03-01',
+                    endDate: '2019-03-03',
+                    customClass: 'greenClass'
+                },
+                {
+                    id: 2,
+                    name: 'item2',
+                    startDate: '2019-03-05',
+                    endDate: '2019-03-15',
+                    customClass: 'blueClass',
+                    title: 'Title 2 en'
+                },
+                {
+                    id: 3,
+                    name: 'item5',
+                    startDate: '2019-03-05',
+                    endDate: '2019-03-08',
+                    customClass: 'greenClass'
+                }
+            ],
+
+            dataKeyField: 'name',
+            dataKeyValues: ['item1', 'item2', 'item3', 'item4', 'item5']
+
+        });
+    });
+</script>
+// horizontal calendar
 
 
 <script>
@@ -192,141 +248,6 @@
         });
     });
 
-
-    // horizontal calendar
-    <script src="{{asset('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js')}}"></script>
-        <script src="{{url('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js')}}"></script>
-        <script src="{{asset('src/js/rescalendar.js')}}"></script>
-
-        <script>
-
-            $(function(){
-
-                // Multiple instantiation (divs 1 and 2)
-                $('#my_calendar1').rescalendar({
-                    id: 'my_calendar1',
-                    format: 'DD/MM/YYYY',
-                    jumpSize: 15,
-                    locale: 'es',
-                    refDate: '06/03/2019',
-                    lang: {
-                        'today': 'Hoy',
-                        'init_error': 'Error al inicializar',
-                        'no_data_error' : 'No se encontraron datos para mostrar'
-                    },
-
-                    data: [
-                        {
-                            id: 1,
-                            name: 'item1',
-                            startDate: '01/03/2019',
-                            endDate: '03/03/2019',
-                            customClass: 'greenClass',
-                            title: 'Title 1'
-                        },
-                        {
-                            id: 2,
-                            name: 'item2',
-                            startDate: '05/03/2019',
-                            endDate: '15/03/2019',
-                            customClass: 'blueClass'
-                        },
-                        {
-                            id: 3,
-                            name: 'item1',
-                            startDate: '05/03/2019',
-                            endDate: '08/03/2019'
-                        }
-                    ],
-
-                    dataKeyField: 'name',
-                    dataKeyValues: ['item1', 'item2', 'item3']
-
-                });
-
-                $('#my_calendar_en').rescalendar({
-                    id: 'my_calendar_en',
-                    format: 'YYYY-MM-DD',
-                    refDate: '2019-03-08',
-                    jumpSize: 15,
-                    disabledDays: ['2019-01-01', '2019-01-07', '2019-04-18', '2019-04-19', '2019-05-01', '2019-05-02', '2019-05-13', '2019-08-15', '2019-10-12', '2019-11-01', '2019-12-06', '2019-12-09', '2019-12-20', '2019-12-24', '2019-12-25', '2019-12-31'],
-                    disabledWeekDays: [5,6],
-                    data: [
-                        {
-                            id: 1,
-                            name: 'item1',
-                            startDate: '2019-03-01',
-                            endDate: '2019-03-03',
-                            customClass: 'greenClass'
-                        },
-                        {
-                            id: 2,
-                            name: 'item2',
-                            startDate: '2019-03-05',
-                            endDate: '2019-03-15',
-                            customClass: 'blueClass',
-                            title: 'Title 2 en'
-                        },
-                        {
-                            id: 3,
-                            name: 'item5',
-                            startDate: '2019-03-05',
-                            endDate: '2019-03-08',
-                            customClass: 'greenClass'
-                        }
-                    ],
-
-                    dataKeyField: 'name',
-                    dataKeyValues: ['item1', 'item2', 'item3','item4','item5']
-
-                });
-
-                $('#my_calendar_simple').rescalendar({
-                    id: 'my_calendar_simple',
-                    dataKeyField: 'name',
-                    dataKeyValues: ['item1']
-                });
-
-                $('#my_calendar_calSize').rescalendar({
-                    id: 'my_calendar_calSize',
-                    jumpSize: 5,
-                    calSize: 10,
-                    data: [
-                        {
-                            id: 1,
-                            name: 'item1',
-                            startDate: '2019-03-01',
-                            endDate: '2019-03-03',
-                            customClass: 'greenClass'
-                        },
-                        {
-                            id: 2,
-                            name: 'item2',
-                            startDate: '2019-03-05',
-                            endDate: '2019-03-15',
-                            customClass: 'blueClass',
-                            title: 'Title 2 en'
-                        },
-                        {
-                            id: 3,
-                            name: 'item5',
-                            startDate: '2019-03-05',
-                            endDate: '2019-03-08',
-                            customClass: 'greenClass'
-                        }
-                    ],
-
-                    dataKeyField: 'name',
-                    dataKeyValues: ['item1', 'item2', 'item3','item4','item5']
-                });
-
-
-
-
-            });
-
-        </script>
-    // horizontal calendar
 
     //Late Entry Rule Page
     $(document).ready(function() {

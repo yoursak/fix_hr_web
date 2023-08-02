@@ -3,7 +3,7 @@
 Dashboard
 @endsection
 @section('css')
-<style>
+{{-- <style>
 
     body{
         text-align: center;
@@ -32,7 +32,7 @@ Dashboard
         background: blue;
     }
 
-</style>
+</style> --}}
 @endsection
 
 @section('contents')
@@ -126,7 +126,6 @@ Dashboard
                     </div>
                 </div>
             </div>
-            <div class="rescalendar" id="my_calendar_en"></div>
         </div>
         <div class="col-xl-3">
             <div class="row">
@@ -250,7 +249,7 @@ Dashboard
                         </tbody>
                     </table>
                 </div>
-                <div class="table-responsive hr-attlist d-none" id="calendertbl">
+                <div class="table-responsive hr-attlist" id="calendertbl">
                     <table class="table  table-vcenter text-nowrap table-bordered border-bottom" id="hr-attendance">
                         <thead>
                             <tr>
@@ -654,6 +653,7 @@ Dashboard
                         </tfoot>
                     </table>
                 </div>
+                <div class="rescalendar" id="my_calendar_en"></div>
             </div>
         </div>
     </div>

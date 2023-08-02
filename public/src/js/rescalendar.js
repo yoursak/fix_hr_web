@@ -7,7 +7,7 @@ Copyright (c) 2019 César Chas
 
 
 
-;(function($) {
+$('document').ready(function($) {
 
     $.fn.rescalendar = function( options ) {
 
@@ -17,7 +17,7 @@ Copyright (c) 2019 César Chas
                 '<div class="error_wrapper">',
 
                       '<div class="thumbnail_image vertical-center">',
-                      
+
                         '<p>',
                             '<span class="error">',
                                 error_message,
@@ -27,7 +27,7 @@ Copyright (c) 2019 César Chas
 
                     '</div>'
             ].join('');
-        
+
         }
 
         function set_template( targetObj, settings ){
@@ -39,14 +39,14 @@ Copyright (c) 2019 César Chas
 
                 targetObj.html( alert_error( settings.lang.init_error + ': No id or dataKeyValues' ) );
                 return false;
-            
+
             }
 
             if( settings.refDate.length != 10 ){
 
                 targetObj.html( alert_error( settings.lang.no_ref_date ) );
                 return false;
-                
+
             }
 
 
@@ -80,16 +80,16 @@ Copyright (c) 2019 César Chas
 
                 obj_data = data[i];
 
-                if( 
+                if(
                     name == obj_data.name &&
                     dateInRange( date, obj_data.startDate, obj_data.endDate )
-                ){ 
-                    
+                ){
+
                     return obj_data;
 
                 }
 
-            } 
+            }
 
             return false;
 
@@ -122,15 +122,15 @@ Copyright (c) 2019 César Chas
 
                 html += '<tr class="dataRow">';
                 html += '<td class="firstColumn">' + name + '</td>';
-                
+
                 for( var j=0; j < arr_dates.length; j++ ){
 
                     title    = '';
                     date     = arr_dates[j];
                     obj_data = dataInSet( data, name, date );
-                    
+
                     if( typeof obj_data === 'object' ){
-                        
+
                         if( obj_data.title ){ title = ' title="' + obj_data.title + '" '; }
 
                         content = '<a href="#" ' + title + '>&nbsp;</a>';
@@ -142,9 +142,9 @@ Copyright (c) 2019 César Chas
                         content       = ' ';
                         hasEventClass = '';
                         customClass   = '';
-                    
+
                     }
-                    
+
                     html += '<td data-date="' + date + '" data-name="' + name + '" class="data_cell ' + hasEventClass + ' ' + customClass + '">' + content + '</td>';
                 }
 
@@ -188,11 +188,11 @@ Copyright (c) 2019 César Chas
                 f_aux_format == today.format( format ) ? clase_today     = 'today'         : clase_today = '';
                 f_aux_format == middleDay              ? clase_middleDay = 'middleDay' : clase_middleDay = '';
 
-                if( 
+                if(
                     settings.disabledDays.indexOf(f_aux_format) > -1 ||
                     settings.disabledWeekDays.indexOf( num_dia_semana ) > -1
                 ){
-                    
+
                     clase_disabled = 'disabledDay';
                 }
 
@@ -200,7 +200,6 @@ Copyright (c) 2019 César Chas
                     '<td class="day_cell ' + clase_today + ' ' + clase_middleDay + ' ' + clase_disabled + '" data-cellDate="' + f_aux_format + '">',
                         '<span class="dia_semana">' + dia_semana + '</span>',
                         '<span class="dia">' + dia + '</span>',
-                        '<span class="mes">' + mes + '</span>',
                     '</td>'
                 ].join('');
 
@@ -212,7 +211,7 @@ Copyright (c) 2019 César Chas
 
             setData( targetObj )
 
-            
+
         }
 
         function addTdClickEvent(targetObj){
@@ -220,7 +219,7 @@ Copyright (c) 2019 César Chas
             var day_cell = targetObj.find('td.day_cell');
 
             day_cell.on('click', function(e){
-            
+
                 var cellDate = e.currentTarget.attributes['data-cellDate'].value;
 
                 targetObj.find('input.refDate').val( cellDate );
@@ -237,11 +236,11 @@ Copyright (c) 2019 César Chas
                 f_ref = '';
 
             if( action == 'subtract'){
-                f_ref = moment( refDate, settings.format ).subtract(num_days, 'days');    
+                f_ref = moment( refDate, settings.format ).subtract(num_days, 'days');
             }else{
                 f_ref = moment( refDate, settings.format ).add(num_days, 'days');
             }
-            
+
             targetObj.find('input.refDate').val( f_ref.format( settings.format ) );
 
             setDayCells( targetObj, f_ref );
@@ -270,7 +269,7 @@ Copyright (c) 2019 César Chas
             },
 
             template_html: function( targetObj, settings ){
-                
+
                 var id      = targetObj.attr('id'),
                     refDate = settings.refDate ;
 
@@ -280,13 +279,13 @@ Copyright (c) 2019 César Chas
 
                         '<div class="rescalendar_controls">',
 
-                            '<button class="move_to_last_month"> << </button>',
+                            '<button class="move_to_last_month"> Previous 15 Days </button>',
                             '<button class="move_to_yesterday"> < </button>',
 
                             '<input class="refDate" type="text" value="' + refDate + '" />',
-                            
+
                             '<button class="move_to_tomorrow"> > </button>',
-                            '<button class="move_to_next_month"> >> </button>',
+                            '<button class="move_to_next_month"> Next 15 Days </button>',
 
                             '<br>',
                             '<button class="move_to_today"> ' + settings.lang.today + ' </button>',
@@ -298,10 +297,10 @@ Copyright (c) 2019 César Chas
                                 '<tr class="rescalendar_day_cells"></tr>',
                             '</thead>',
                             '<tbody class="rescalendar_data_rows">',
-                                
+
                             '</tbody>',
                         '</table>',
-                        
+
                     '</div>',
 
                 ].join('');
@@ -314,7 +313,7 @@ Copyright (c) 2019 César Chas
 
 
         return this.each( function() {
-            
+
             var targetObj = $(this);
 
             set_template( targetObj, settings);
@@ -330,38 +329,38 @@ Copyright (c) 2019 César Chas
                 refDate            = targetObj.find('.refDate');
 
             move_to_last_month.on('click', function(e){
-                
+
                 change_day( targetObj, 'subtract', settings.jumpSize);
 
             });
 
             move_to_yesterday.on('click', function(e){
-                
+
                 change_day( targetObj, 'subtract', 1);
 
             });
 
             move_to_tomorrow.on('click', function(e){
-                
+
                 change_day( targetObj, 'add', 1);
 
             });
 
             move_to_next_month.on('click', function(e){
-                
+
                 change_day( targetObj, 'add', settings.jumpSize);
 
             });
 
             refDate.on('blur', function(e){
-                
+
                 var refDate = targetObj.find('input.refDate').val();
                 setDayCells( targetObj, refDate );
 
             });
 
             move_to_today.on('click', function(e){
-                
+
                 var today = moment().startOf('day').format( settings.format );
                 targetObj.find('input.refDate').val( today );
 
