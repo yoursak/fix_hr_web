@@ -17,6 +17,10 @@ Route::get('/', function () {
     return view('admin.dashboard.dashboard');
 });
 
+Route::get('/summary', function () {
+    return view('admin.dashboard.summary');
+});
+
 Route::get('/attendance', function () {
     return view('admin.attendance.attendance');
 });

@@ -10,7 +10,7 @@ Dashboard
                 <div class="page-leftheader">
                     <div class="page-title">Attendance</div>
                 </div>
-                <div class="page-rightheader ms-md-auto">
+                <div class="page-rightheader ms-auto">
                     <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
                         <div class="d-flex">
                             <div class="header-datepicker me-3">
@@ -614,7 +614,14 @@ Dashboard
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header border-bottom-0">
-                    <h3 class="card-title">Employee Payment Summary</h3>
+                    <h4 class="card-title">Employees Payment Summary</h4>
+                    <div class="page-rightheader ms-auto">
+                        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+                            <div class="btn-list d-flex">
+                                <a class="btn btn-primary btn-block btn-sm mb-3" href="{{url('/summary')}}">View Details</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

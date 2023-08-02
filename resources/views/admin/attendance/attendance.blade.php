@@ -27,27 +27,27 @@ Attendance
             </div>
             <div class="card-body pt-0 pb-3">
                 <div class="row mb-0 pb-0">
-                    <div class="col-md-4 col-sm-6 col-xl-2 text-center py-5">
+                    <div class="col-6 col-md-4 col-xl-2 text-center py-5">
                         <span class="avatar avatar-md bradius fs-20 bg-primary-transparent">31</span>
                         <h5 class="mb-0 mt-3">Total Working Days</h5>
                     </div>
-                    <div class="col-md-4 col-sm-6 col-xl-2 text-center py-5 ">
+                    <div class=" col-6 col-md-4 col-xl-2 text-center py-5 ">
                         <span class="avatar avatar-md bradius fs-20 bg-success-transparent">24</span>
                         <h5 class="mb-0 mt-3">Total Present</h5>
                     </div>
-                    <div class="col-md-4 col-sm-6 col-xl-2 text-center py-5">
+                    <div class="col-6 col-md-4 col-sm-6 col-xl-2 text-center py-5">
                         <span class="avatar avatar-md bradius fs-20 bg-danger-transparent">2</span>
                         <h5 class="mb-0 mt-3">Total Absent</h5>
                     </div>
-                    <div class="col-md-4 col-sm-6 col-xl-2 text-center py-5">
+                    <div class="col-6 col-md-4 col-sm-6 col-xl-2 text-center py-5">
                         <span class="avatar avatar-md bradius fs-20 bg-warning-transparent">0</span>
                         <h5 class="mb-0 mt-3">Total Half Days</h5>
                     </div>
-                    <div class="col-md-4 col-sm-6 col-xl-2 text-center py-5 ">
+                    <div class="col-6 col-md-4 col-sm-6 col-xl-2 text-center py-5 ">
                         <span class="avatar avatar-md bradius fs-20 bg-orange-transparent">2</span>
                         <h5 class="mb-0 mt-3">Total Late</h5>
                     </div>
-                    <div class="col-md-4 col-sm-6 col-xl-2 text-center py-5">
+                    <div class="col-6 col-md-4 col-sm-6 col-xl-2 text-center py-5">
                         <span class="avatar avatar-md bradius fs-20 bg-pink-transparent">5</span>
                         <h5 class="mb-0 mt-3">Holidays</h5>
                     </div>
