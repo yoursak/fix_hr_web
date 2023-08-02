@@ -2,6 +2,39 @@
 @section('title')
 Dashboard
 @endsection
+@section('css')
+<style>
+
+    body{
+        text-align: center;
+        font-family: 'Roboto';
+        background-color: #fafafa;
+    }
+
+    h1{
+        margin: 150px 0 100px 30px;
+    }
+
+    h4{
+        margin: 60px 0 10px 60px;
+    }
+
+    .wrapper{
+        width: 100%;
+        text-align: center;
+    }
+
+    .greenClass{
+        background: green;
+    }
+
+    .blueClass{
+        background: blue;
+    }
+
+</style>
+@endsection
+
 @section('contents')
 <div class="container-fluid">
     <div class="row">
@@ -37,8 +70,7 @@ Dashboard
                         </div>
                         <div class="d-lg-flex d-block">
                             <div class="btn-list">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#clockinmodal">Attendance Report</button>
+                                <a href="{{asset('/attendance')}}" type="button" class="btn btn-primary" >Attendance Report</a>
                             </div>
                         </div>
                     </div>
@@ -94,6 +126,7 @@ Dashboard
                     </div>
                 </div>
             </div>
+            <div class="rescalendar" id="my_calendar_en"></div>
         </div>
         <div class="col-xl-3">
             <div class="row">
@@ -141,8 +174,22 @@ Dashboard
                                 <a  href="javascript:void(0);" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
                             </div>
                         </div>
-                        <div class="card-body ">
-                            <p>Today is <b>User's</b> Birthday.</p>
+                        <div class="card-body mt-2">
+                            <div class="mb-5">
+                                <div class="d-flex comming_holidays calendar-icon icons">
+                                    <span class="date_time bg-purple-transparent bradius me-3"><span class="date fs-20">10</span>
+                                        <span class="month fs-13">FEB</span>
+                                    </span>
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 font-weight-semibold">Vanessa James</h6>
+                                        <span class="clearfix"></span>
+                                        <small>Birthday on Feb 16</small>
+                                    </div>
+                                    <p class="float-end mb-0  ms-auto  my-auto">
+                                        <a class="btn btn-outline-orange mt-1"  href="javascript:void(0);"><i class="fa fa-birthday-cake me-2"></i>Wish Now</a>
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

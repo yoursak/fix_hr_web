@@ -12,24 +12,28 @@
 <title>FixHR</title>
 
 <!-- FAVICON -->
-<link rel="icon" href={{ asset("assets/images/brand/favicon.ico") }} type="image/x-icon" />
+<link rel="icon" href={{ asset('assets/images/brand/favicon.ico') }} type="image/x-icon" />
 
 <!-- BOOTSTRAP CSS -->
-<link href={{ asset("assets/plugins/bootstrap/css/bootstrap.css") }} rel="stylesheet" />
+<link href={{ asset('assets/plugins/bootstrap/css/bootstrap.css') }} rel="stylesheet" />
 
 <!-- STYLE CSS -->
-<link href={{ asset("assets/css/style.css") }} rel="stylesheet" />
-<link href={{ asset("assets/css/plugins.css") }} rel="stylesheet" />
+<link href={{ asset('assets/css/style.css') }} rel="stylesheet" />
+<link href={{ asset('assets/css/plugins.css') }} rel="stylesheet" />
 
 <!-- ANIMATE CSS -->
-<link href={{ asset("assets/css/animated.css") }} rel="stylesheet" />
+<link href={{ asset('assets/css/animated.css') }} rel="stylesheet" />
 
 <!---ICONS CSS -->
-<link href={{ asset("assets/plugins/icons/icons.css") }} rel="stylesheet" />
+<link href={{ asset('assets/plugins/icons/icons.css') }} rel="stylesheet" />
 
 
 
 <!-- INTERNAL SWITCHER CSS -->
-<link href={{ asset("assets/switcher/css/switcher.css") }} rel="stylesheet" />
-<link href={{ asset("assets/switcher/demo.css") }} rel="stylesheet" />
+<link href={{ asset('assets/switcher/css/switcher.css') }} rel="stylesheet" />
+<link href={{ asset('assets/switcher/demo.css') }} rel="stylesheet" />
 
+
+<link href="{{asset('https://www.jqueryscript.net/css/jquerysctipttop.css')}}" rel="stylesheet" type="text/css">
+<!-- CSS -->
+<link rel="stylesheet" href="{{asset('src/css/rescalendar.css')}}">
