@@ -49,12 +49,12 @@
 }
 
 .rescalendar_day_cells td.today{
-	background: red;
+	background-color: red;
 	color: #fff;
 }
 
 .rescalendar_day_cells td.middleDay{
-	border: 1px solid blue;
+	border: 2px solid blue;
 }
 
 .rescalendar_day_cells td:hover{

@@ -185,8 +185,8 @@ $('document').ready(function($) {
                 dia_semana = f_aux.locale( settings.locale ).format('dd');
                 num_dia_semana = f_aux.day();
 
-                f_aux_format == today.format( format ) ? clase_today     = 'today'         : clase_today = '';
                 f_aux_format == middleDay              ? clase_middleDay = 'middleDay' : clase_middleDay = '';
+                f_aux_format == today.format( format ) ? clase_today     = 'today'         : clase_today = '';
 
                 if(
                     settings.disabledDays.indexOf(f_aux_format) > -1 ||
@@ -197,9 +197,9 @@ $('document').ready(function($) {
                 }
 
                 html += [
-                    '<td class="day_cell ' + clase_today + ' ' + clase_middleDay + ' ' + clase_disabled + '" data-cellDate="' + f_aux_format + '">',
-                        '<span class="dia_semana">' + dia_semana + '</span>',
-                        '<span class="dia">' + dia + '</span>',
+                    '<td class="day_cell' + clase_today + ' ' + clase_middleDay + ' ' + clase_disabled + '" data-cellDate="' + f_aux_format + '">',
+                        '<span class="dia_semana text-muted">' + dia_semana + '</span>',
+                        '<span class="dia text-muted">' + dia + '</span>',
                     '</td>'
                 ].join('');
 
@@ -250,9 +250,9 @@ $('document').ready(function($) {
         // INITIALIZATION
         var settings = $.extend({
             id           : 'rescalendar',
-            format       : 'YYYY-MM-DD',
-            refDate      : moment().format( 'YYYY-MM-DD' ),
-            jumpSize     : 15,
+            format       : 'MMM Do YY',
+            refDate      : moment().format( 'MMM Do YY' ),
+            jumpSize     : 30,
             calSize      : 30,
             locale       : 'en',
             disabledDays : [],
@@ -275,31 +275,32 @@ $('document').ready(function($) {
 
                 return [
 
-                    '<div class="rescalendar ' , id , '_wrapper">',
+                    '<div class="rescalendar' , id , '_wrapper">',
 
-                        '<div class="rescalendar_controls">',
+                        '<div class="rescalendar_controls my-5 d-flex justify-content-between ">',
 
-                            '<button class="move_to_last_month"> Previous 15 Days </button>',
-                            '<button class="move_to_yesterday"> < </button>',
+                            '<button class="move_to_last_month btn btn-outline-primary btn-sm mx-auto"> Previous Month </button>',
+                            '<button class="move_to_yesterday btn btn-outline-primary btn-sm mx-auto"> < </button>',
 
-                            '<input class="refDate" type="text" value="' + refDate + '" />',
+                            '<input class="refDate my-auto" type="text" value="' + refDate + '" />',
 
-                            '<button class="move_to_tomorrow"> > </button>',
-                            '<button class="move_to_next_month"> Next 15 Days </button>',
+                            '<button class="move_to_tomorrow btn btn-outline-primary btn-sm mx-auto"> > </button>',
+                            '<button class="move_to_next_month btn btn-outline-primary btn-sm mx-auto"> Next Month </button>',
 
                             '<br>',
-                            '<button class="move_to_today"> ' + settings.lang.today + ' </button>',
 
                         '</div>',
 
-                        '<table class="rescalendar_table">',
-                            '<thead>',
+                        '<div class="table-responsive hr-attlist">',
+                        '<table class="rescalendar_table table  table-vcenter text-nowrap table-bordered border-bottom">',
+                            '<tboady>',
                                 '<tr class="rescalendar_day_cells"></tr>',
-                            '</thead>',
+                            '</tboady>',
                             '<tbody class="rescalendar_data_rows">',
 
                             '</tbody>',
                         '</table>',
+                        '</div>',
 
                     '</div>',
 
@@ -356,15 +357,6 @@ $('document').ready(function($) {
 
                 var refDate = targetObj.find('input.refDate').val();
                 setDayCells( targetObj, refDate );
-
-            });
-
-            move_to_today.on('click', function(e){
-
-                var today = moment().startOf('day').format( settings.format );
-                targetObj.find('input.refDate').val( today );
-
-                setDayCells( targetObj, today );
 
             });
 

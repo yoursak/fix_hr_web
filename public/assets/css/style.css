@@ -109,6 +109,30 @@ Support	       :   support@spruko.com
 /* ###### bootstrap ####### */
 /*------ Accordion -------*/
 
+/* Ifsc Code css */
+#container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 3% auto;
+  }
+  #header {
+    font-size: 14px;
+    margin: 0 auto;
+  }
+  thead {
+    font-weight: bold;
+  }
+  #errMsg {
+    margin: 0 auto;
+    color: red;
+    font-size: 30px;
+  }
+  body {
+    text-align: center;
+  }
+  /* Ifsc Code css */
+
 .card{
     box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
 }

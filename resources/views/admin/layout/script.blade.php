@@ -132,13 +132,13 @@
 <script src="{{ asset('assets/plugins/multipleselect/multiple-select.js') }}"></script>
 <script src="{{ asset('assets/plugins/multipleselect/multi-select.js') }}"></script>
 <!-- INTERNAL FULLCALENDAR JS -->
-<script src="assets/plugins/fullcalendar/fullcalendar.min.js"></script>
+<script src="{{ asset('assets/plugins/fullcalendar/fullcalendar.min.js') }}"></script>
 <!-- INTERNAL INDEX JS -->
-<script src="assets/js/hr/hr-overcldr.js"></script>
+<script src="{{ asset('assets/js/hr/hr-overcldr.js') }}"></script>
 <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js') }}"></script>
 <script src="{{ url('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js') }}"></script>
 <script src="{{ asset('src/js/rescalendar.js') }}"></script>
-// horizontal calendar
+{{-- // horizontal calendar --}}
 
 
 <script>
@@ -148,18 +148,18 @@
         var month = moment().month();
 
         console.log(month);
-        var currentDate = date.format('YYYY-MM-DD');
+        var currentDate = date.format('MMM Do YY');
         console.log(currentDate);
         $('#my_calendar_en').rescalendar({
             id: 'my_calendar_en',
-            format: 'YYYY-MM-DD',
+            format: 'MMM Do YY',
             refDate: currentDate,
             jumpSize: 30,
             disabledDays: ['2019-01-01', '2019-01-07', '2019-04-18', '2019-04-19', '2019-05-01',
                 '2019-05-02', '2019-05-13', '2019-08-15', '2019-10-12', '2019-11-01', '2019-12-06',
                 '2019-12-09', '2019-12-20', '2019-12-24', '2019-12-25', '2019-12-31'
             ],
-            disabledWeekDays: [5, 6],
+            disabledWeekDays: [0],
             data: [{
                     id: 1,
                     name: 'item1',
@@ -185,18 +185,21 @@
             ],
 
             dataKeyField: 'name',
-            dataKeyValues: ['item1', 'item2', 'item3', 'item4', 'item5']
+            dataKeyValues: ['A/P', 'WH', ]
 
         });
     });
 </script>
-// horizontal calendar
+{{-- // horizontal calendar --}}
 
 
 <script>
-    $("#calenderbtn").click(function() {
-        $("#calendertbl").fadeToggle();
-        $("#calendertbl").removeClass("d-none");
+    $('document').ready(function() {
+        $("#my_calendar_en").fadeToggle();
+        $('#calenderbtn').click(function(e) {
+            e.preventDefault();
+            $("#my_calendar_en").fadeToggle();
+        });
     });
 </script>
 
@@ -604,5 +607,79 @@
 
             $('#contentCard4').fadeToggle(300);
         });
+    });
+</script>
+
+{{-- IFSC Code fetch --}}
+<script>
+    $(document).ready(function() {
+        start();
+
+        function start() {
+            var orig = $('#container').html();
+            var backBtn =
+                '<a id="backBtn" class="waves-effect waves-light btn light-green darken-2">Go Back</a>';
+
+            $('#ifsccode').blur(function (e) {
+                e.preventDefault();
+                if (!$('#container > input').val()) {
+                    alert("IFSC can't be blank!");
+                } else {
+                    change(1);
+                }
+            });
+
+            function change(i) {
+                if (i == 0) {
+                    $('#container').fadeOut(function() {
+                        $('#backBtn').remove();
+                        $('#container').empty().append(orig);
+                        $('#container').css({
+                            'width': '500%'
+                        });
+
+                    });
+                    $('#container').fadeIn(function() {
+                        start();
+                    });
+                } else if (i == 1) {
+                    var ifsc = String($('#container > input').val());
+                    $('#container').fadeOut(function() {
+                        $('#container').empty();
+                        $.getJSON('https://ifsc.razorpay.com/' + ifsc, function(data) {
+
+                            var table = '<table class="striped">' +
+                                '<thead>' +
+                                '<tr><td>Bank Name</td><td>IFSC Code</td><td>Branch</td><td>State</td></tr>' +
+                                '</thead>' +
+                                '<tbody>' +
+                                '<tr><td>' + data.BANK + '</td><td>' + data.IFSC + '</td><td>' +
+                                data.BRANCH + '</td><td>' + data.STATE + '</td></tr>' +
+                                '</tbody>' +
+                                '</table>';
+                            $('#container').append('<div id="header">Bank Details</div>');
+                            $('#container').append(table);
+                            $('#backBtn').show();
+
+                        }).fail(function() {
+                            var msg = '<div id="errMsg">Invalid IFSC code</div>';
+                            $('#container').append(msg);
+                        });
+                        $('#container').css({
+                            'width': '100%'
+                        });
+                        $('body').append(backBtn);
+
+                    });
+
+                    $('#container').fadeIn(function() {
+                        $('#backBtn').click(function() {
+                            change(0);
+                        });
+                    });
+
+                }
+            }
+        }
     });
 </script>
