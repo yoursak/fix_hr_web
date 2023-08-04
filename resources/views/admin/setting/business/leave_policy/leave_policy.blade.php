@@ -15,7 +15,7 @@
             <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
                 <div class="d-lg-flex d-block">
                     <div class="btn-list">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
                             data-bs-target="#clockinmodal" id="newTempFormBtn">Create Templates</button>
                     </div>
                 </div>
@@ -285,9 +285,9 @@
                                         <div class="btn-list radiobtns">
                                             <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                                                 <input type="radio" class="btn-check" name="btnradio" id="btnradioCount2" checked="">
-                                                <label class="btn btn-outline-primary" for="btnradioCount2">Count</label>
+                                                <label class="btn btn-outline-dark" for="btnradioCount2">Count</label>
                                                 <input type="radio" class="btn-check" name="btnradio" id="btnradioIgnore2">
-                                                <label class="btn btn-outline-primary" for="btnradioIgnore2">Ignore</label>
+                                                <label class="btn btn-outline-dark" for="btnradioIgnore2">Ignore</label>
                                             </div>
                                         </div>
                                     </div>
@@ -373,7 +373,7 @@
                                         </p>
                                     </div>
                                     <div class="col-xl-2 my-auto text-end">
-                                        <a href="#" class="btn btn-outline-primary btn-sm" data-bs-target="#EditMultilavelApprovalModal" data-bs-toggle="modal"><span>Edit</span></a>
+                                        <a href="#" class="btn btn-outline-dark btn-sm" data-bs-target="#EditMultilavelApprovalModal" data-bs-toggle="modal"><span>Edit</span></a>
                                     </div>
                                 </div>
                             </div>
@@ -409,9 +409,9 @@
                                     <div class="col-xl-4 my-auto">
                                         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                                             <input type="radio" class="btn-check" name="btnradio" id="btnradiomonth" checked="">
-                                            <label class="btn btn-outline-primary" for="btnradiomonth">Monthly</label>
+                                            <label class="btn btn-outline-dark" for="btnradiomonth">Monthly</label>
                                             <input type="radio" class="btn-check" name="btnradio" id="btnradioyear">
-                                            <label class="btn btn-outline-primary" for="btnradioyear">Yearly</label>
+                                            <label class="btn btn-outline-dark" for="btnradioyear">Yearly</label>
                                         </div>
                                     </div>
                                 </div>
@@ -462,9 +462,9 @@
                                     <div class="col-xl-4 my-auto">
                                         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                                             <input type="radio" class="btn-check" name="btnradio" id="btnradioCount1" checked="">
-                                            <label class="btn btn-outline-primary" for="btnradioCount1">Count</label>
+                                            <label class="btn btn-outline-dark" for="btnradioCount1">Count</label>
                                             <input type="radio" class="btn-check" name="btnradio" id="btnradioIgnore1">
-                                            <label class="btn btn-outline-primary" for="btnradioIgnore1">Ignore</label>
+                                            <label class="btn btn-outline-dark" for="btnradioIgnore1">Ignore</label>
                                         </div>
                                     </div>
                                 </div>
@@ -551,7 +551,7 @@
                     </div>
                 </div>
                 <div class=" text-end">
-                    <a href="#" class="btn btn-outline-primary" id="tempSave" data-bs-toggle="tooltip"
+                    <a href="#" class="btn btn-outline-dark" id="tempSave" data-bs-toggle="tooltip"
                         data-bs-placement="top" title="Save">Apply Template</a>
                 </div>
             </div>

@@ -16,9 +16,9 @@
         <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
             <div class="d-lg-flex d-block">
                 <div class="btn-list">
-                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
                         data-bs-target="#clockinmodal" id="">Send All at Once</button>
-                        <a href="#" class="btn btn-outline-primary d-none"><i
+                        <a href="#" class="btn btn-outline-dark d-none"><i
                             class="si si-paper-plane  text-primary"></i>Send Only Selected</a>
                 </div>
             </div>

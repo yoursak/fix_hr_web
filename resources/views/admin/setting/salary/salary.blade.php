@@ -208,7 +208,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button class="btn btn-outline-primary cancel" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-outline-dark cancel" data-bs-dismiss="modal">Cancel</button>
                     <button class="btn btn-primary savebtn">Continue</button>
                 </div>
             </div>
@@ -297,7 +297,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button class="btn btn-outline-primary cancel" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-outline-dark cancel" data-bs-dismiss="modal">Cancel</button>
                     <button class="btn btn-primary savebtn">Continue</button>
                 </div>
             </div>
@@ -351,7 +351,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button class="btn btn-outline-primary cancel" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-outline-dark cancel" data-bs-dismiss="modal">Cancel</button>
                     <button class="btn btn-primary savebtn">Continue</button>
                 </div>
             </div>

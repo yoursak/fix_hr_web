@@ -87,7 +87,7 @@
                         <div class="page-rightheader ms-md-auto">
                             <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
                                 <div class="btn-list d-flex">
-                                    <a class="modal-effect btn btn-outline-primary btn-block mb-3"
+                                    <a class="modal-effect btn btn-outline-dark btn-block mb-3"
                                         data-effect="effect-scale" data-bs-toggle="modal" href="#modaldemo8">Add Bulk
                                         Payment</a>
                                 </div>
@@ -275,7 +275,7 @@
 
     {{-- payment confirmation --}}
     <div class="modal fade" id="modaldemo8" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content modal-content-demo">
                 <div class="modal-body">
                     <div class="text-center">
@@ -393,11 +393,11 @@
                     <h5>Type Of Payment Address</h5>
                 </div>
                 <div class="modal-body d-flex justify-content-around">
-                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#bankAcPay">Bank A/c
+                    <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#bankAcPay">Bank A/c
                         Number</button>
-                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#upiPay">UPI
+                    <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#upiPay">UPI
                         ID</button>
-                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#saved">Offline
+                    <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#saved">Offline
                         Payment</button>
                 </div>
             </div>

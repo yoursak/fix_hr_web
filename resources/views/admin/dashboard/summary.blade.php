@@ -21,10 +21,29 @@ Employee Summary
                             <div class="card">
                                 <div class="card-header border-bottom-0">
                                     <h4 class="card-title">Non Weekly Staff</h4>
-                                    <div class="page-rightheader ms-auto ">
-                                        <div class="align-items-end flex-wrap my-auto right-content">
+                                    <div class="page-rightheader ms-auto">
+                                        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
                                             <div class="btn-list d-flex">
-                                                <a class="btn btn-outline-primary btn-block btn-sm mb-3" href=""><i class="mdi mdi-arrow-collapse-down mx-2"></i>Download</a>
+                                                <div>
+                                                    <button class="btn btn-outline-primary mx-3 border-0" href="#">Download</button>
+                                                </div>
+                                                <div class="my-auto">
+                                                    <select name="month" class="form-control btn-outline-dark border-0 mx-3 " data-placeholder="Select Cycle">
+                                                        <option label="Select Cycle"></option>
+                                                        <option value="1">January</option>
+                                                        <option value="2">February</option>
+                                                        <option value="3">March</option>
+                                                        <option value="4">April</option>
+                                                        <option value="5">May</option>
+                                                        <option value="6">June</option>
+                                                        <option value="7">July</option>
+                                                        <option value="8">August</option>
+                                                        <option value="9">September</option>
+                                                        <option value="10">October</option>
+                                                        <option value="11">November</option>
+                                                        <option value="12">December</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -59,9 +78,28 @@ Employee Summary
                             <div class="card">
                                 <div class="card-header border-bottom-0">
                                     <div class="page-rightheader ms-auto">
-                                        <div class="align-items-end flex-wrap my-auto right-content">
+                                        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
                                             <div class="btn-list d-flex">
-                                                <a class="btn btn-outline-primary btn-block btn-sm mb-3" href=""><i class="mdi mdi-arrow-collapse-down mx-2"></i>Download</a>
+                                                <div>
+                                                    <button class="btn btn-outline-primary mx-3 border-0" href="#">Download</button>
+                                                </div>
+                                                <div class="my-auto">
+                                                    <select name="month" class="form-control btn-outline-dark border-0 mx-3 " data-placeholder="Select Cycle">
+                                                        <option label="Select Cycle"></option>
+                                                        <option value="1">January 2023</option>
+                                                        <option value="2">February 2023</option>
+                                                        <option value="3">March 2023</option>
+                                                        <option value="4">April 2023</option>
+                                                        <option value="5">May 2023</option>
+                                                        <option value="6">June 2023</option>
+                                                        <option value="7">July 2023</option>
+                                                        <option value="8">August 2023</option>
+                                                        <option value="9">September 2023</option>
+                                                        <option value="10">October 2023</option>
+                                                        <option value="11">November 2023</option>
+                                                        <option value="12">December 2023</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

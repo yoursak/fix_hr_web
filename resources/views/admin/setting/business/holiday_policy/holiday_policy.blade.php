@@ -16,7 +16,7 @@
         <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
             <div class="d-lg-flex d-block">
                 <div class="btn-list">
-                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
                         data-bs-target="#clockinmodal" id="newTempFormBtn">Create Templates</button>
                 </div>
             </div>
@@ -386,7 +386,7 @@
                 </div>
             </div>
             <div class=" text-end">
-                <a href="#" class="btn btn-outline-primary" id="tempSave" data-bs-toggle="tooltip" data-bs-placement="top" title="Save">Apply Template</a>
+                <a href="#" class="btn btn-outline-dark" id="tempSave" data-bs-toggle="tooltip" data-bs-placement="top" title="Save">Apply Template</a>
             </div>
         </div>
     </div>

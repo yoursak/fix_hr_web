@@ -89,7 +89,7 @@
                             <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
                                 <div class="btn-list d-flex">
                                     <a class="modal-effect btn btn-primary btn-block mb-3" data-effect="effect-scale"
-                                        data-bs-toggle="modal" href="#addempmodal">Add New Employee</a>
+                                        data-bs-toggle="modal" href="#empType">Add New Employee</a>
                                     <button class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="top"
                                         title="Make Payment"><i class="feather feather-credit-card me-2"></i>Make Bulk
                                         Payment</button>
@@ -197,9 +197,9 @@
                                         <td>+9685321475</td>
                                         <td>05-05-2017</td>
                                         <td>
-                                            <a class="modal-effect btn btn-success btn-block mb-3"
+                                            <a class="modal-effect btn btn-outline-primary border-0 btn-block mb-3"
                                                 data-effect="effect-super-scaled" data-bs-toggle="modal"
-                                                href="#modaldemo8">Make Payment</a>
+                                                href="#modaldemo8">Add Payment</a>
                                         <td>
                                             <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal" data-bs-target="#deletemodal">
                                                 <i class="feather feather-edit primary text-primary" data-bs-toggle="tooltip" data-original-title="View"></i>
@@ -219,8 +219,186 @@
         <!-- END ROW -->
     </div>
 
-    {{-- payment confirmation --}}
+    {{-- add payment confirmation --}}
     <div class="modal fade" id="modaldemo8" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content modal-content-demo">
+                <div class="modal-header border-0">
+                    <div>
+                        <h4>Payment</h4>
+                        <p class='text-muted'>Aman Sahu</p>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="card-pay">
+                        <ul class="tabs-menu nav">
+                            <li><a href="#tab21" data-bs-toggle="tab" class="active">You Paid</a></li>
+                            <li><a href="#tab22" data-bs-toggle="tab" class="">You Took</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active show" id="tab21">
+                                <div class="mx-3">
+                                    <form class="form-horizontal">
+                                        <div class="form-group row">
+                                            <label class="col-md-3 form-label">Date</label>
+                                            <div class="col-md-9">
+                                                <input class="form-control fc-datepicker" placeholder="19 Feb 2020" type="date">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 form-label">Salary Cycle</label>
+                                            <div class="col-md-9">
+                                                <div class="my-auto">
+                                                    <select name="month" class="form-control btn-outline-dark " data-placeholder="Select Cycle">
+                                                        <option label="Select Cycle"></option>
+                                                        <option value="1">January</option>
+                                                        <option value="2">February</option>
+                                                        <option value="3">March</option>
+                                                        <option value="4">April</option>
+                                                        <option value="5">May</option>
+                                                        <option value="6">June</option>
+                                                        <option value="7">July</option>
+                                                        <option value="8">August</option>
+                                                        <option value="9">September</option>
+                                                        <option value="10">October</option>
+                                                        <option value="11">November</option>
+                                                        <option value="12">December</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 form-label">Amount</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control" value="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 form-label" for="example-email">Description</label>
+                                            <div class="col-md-9">
+                                                <input type="text" name="example-email" class="form-control" placeholder="Description">
+                                            </div>
+                                        </div>
+                                        <label class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1" checked>
+                                            <span class="custom-control-label"><b>Send SMS Employee</b></span>
+                                            <span class="fs-11">By continuing you agree to <b><a href="#" class="text-primary">Tearm & Conditions</a></b></span>
+                                        </label>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab22">
+                                <div class="mx-3">
+                                    <form class="form-horizontal">
+                                        <div class="form-group row">
+                                            <label class="col-md-3 form-label">Date</label>
+                                            <div class="col-md-9">
+                                                <input class="form-control fc-datepicker" placeholder="19 Feb 2020" type="date">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 form-label">Salary Cycle</label>
+                                            <div class="col-md-9">
+                                                <div class="my-auto">
+                                                    <select name="month" class="form-control btn-outline-dark " data-placeholder="Select Cycle">
+                                                        <option label="Select Cycle"></option>
+                                                        <option value="1">January</option>
+                                                        <option value="2">February</option>
+                                                        <option value="3">March</option>
+                                                        <option value="4">April</option>
+                                                        <option value="5">May</option>
+                                                        <option value="6">June</option>
+                                                        <option value="7">July</option>
+                                                        <option value="8">August</option>
+                                                        <option value="9">September</option>
+                                                        <option value="10">October</option>
+                                                        <option value="11">November</option>
+                                                        <option value="12">December</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 form-label">Amount</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 form-label" for="example-email">Description</label>
+                                            <div class="col-md-9">
+                                                <input type="text" name="example-email" class="form-control" placeholder="Description">
+                                            </div>
+                                        </div>
+                                        <label class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1" checked>
+                                            <span class="custom-control-label"><b>Send SMS Employee</b></span>
+                                            <span class="fs-11">By continuing you agree to <b><a href="#" class="text-primary">Tearm & Conditions</a></b></span>
+                                        </label>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" data-bs-dismiss="modal">Online Payment</button> <button class="btn btn-light"
+                        data-bs-toggle="modal" data-bs-target="#success">Save & Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- add payment  confirmation --}}
+
+    {{-- add payment confirmation --}}
+    <div class="modal fade" id="addCotractEmp" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content modal-content-demo">
+                <div class="modal-header border-0">
+                    <div>
+                        <h4>Add Contractual Employee</h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="mx-3">
+                        <form class="form-horizontal">
+                            <div class="form-group row">
+                                <label class="col-md-3 form-label">Date</label>
+                                <div class="col-md-9">
+                                    <input class="form-control fc-datepicker" placeholder="19 Feb 2020" type="date">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-label">Name</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" value="">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-label" for="example-email">Number</label>
+                                <div class="col-md-9">
+                                    <input type="text" name="example-email" class="form-control" placeholder="Description">
+                                </div>
+                            </div>
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1" checked>
+                                <span class="custom-control-label"><b>Send SMS Employee</b></span>
+                                <span class="fs-11">By continuing you agree to <b><a href="#" class="text-primary">Tearm & Conditions</a></b></span>
+                            </label>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" data-bs-dismiss="modal">Online Payment</button> <button class="btn btn-light"
+                        data-bs-toggle="modal" data-bs-target="#success">Save & Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- add payment  confirmation --}}
+
+    {{-- payment confirmation --}}
+    <div class="modal fade" id="pay" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content modal-content-demo">
                 <div class="modal-body">
@@ -291,7 +469,7 @@
     <div class="modal fade" id="addempmodal">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content modal-content-demo">
-                <div class="modal-body">
+                <div class="modal-body" style="5rem">
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-lg-12">
                             <h3 class="card-title">Add New Employee</h3>
@@ -312,6 +490,13 @@
                                     <div class="tab-pane active" id="tab5">
                                         <div class="card-body">
                                             <h4 class="mb-4 font-weight-bold">Basic</h4>
+                                            <div class="form-group d-flex justify-content-center">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <input type="file" class="dropify" data-height="180" />
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="form-group ">
                                                 <div class="row">
                                                     <div class="col-md-3">
@@ -332,16 +517,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group ">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <label class="form-label mb-0 mt-2">Father Name</label>
-                                                    </div>
-                                                    <div class="col-md-9">
-                                                        <input type="text" class="form-control" placeholder="Name">
-                                                    </div>
-                                                </div>
-                                            </div>
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col-md-3">
@@ -356,8 +531,7 @@
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col-md-3">
-                                                        <label class="form-label mb-0 mt-2">Emergency Contact Number
-                                                            01</label>
+                                                        <label class="form-label mb-0 mt-2">Alternative Contact Number</label>
                                                     </div>
                                                     <div class="col-md-9">
                                                         <input type="text" class="form-control"
@@ -365,15 +539,13 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group ">
                                                 <div class="row">
                                                     <div class="col-md-3">
-                                                        <label class="form-label mb-0 mt-2">Emergency Contact Number
-                                                            02</label>
+                                                        <label class="form-label mb-0 mt-2">Email</label>
                                                     </div>
                                                     <div class="col-md-9">
-                                                        <input type="text" class="form-control"
-                                                            placeholder="Contact Number02">
+                                                        <input type="text" class="form-control" placeholder="email">
                                                     </div>
                                                 </div>
                                             </div>
@@ -383,8 +555,7 @@
                                                         <label class="form-label mb-0 mt-2">Date Of Birth</label>
                                                     </div>
                                                     <div class="col-md-9">
-                                                        <input type="text" class="form-control fc-datepicker"
-                                                            placeholder="DD-MM-YYY">
+                                                        <input type="text" class="form-control fc-datepicker" placeholder="DD-MM-YYY">
                                                     </div>
                                                 </div>
                                             </div>
@@ -412,116 +583,24 @@
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col-md-3">
-                                                        <label class="form-label mb-0 mt-2">Marital Status</label>
-                                                    </div>
-                                                    <div class="col-md-9">
-                                                        <select name="projects" class="form-control custom-select select2"
-                                                            data-placeholder="Select">
-                                                            <option label="Select"></option>
-                                                            <option value="1">Single</option>
-                                                            <option value="2">Married</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <label class="form-label mb-0 mt-2">Blood Group</label>
-                                                    </div>
-                                                    <div class="col-md-9">
-                                                        <select name="projects" class="form-control custom-select select2"
-                                                            data-placeholder="Select Group">
-                                                            <option label="Select Group"></option>
-                                                            <option value="1">A+</option>
-                                                            <option value="2">B+</option>
-                                                            <option value="3">O+</option>
-                                                            <option value="4">AB+</option>
-                                                            <option value="5">A-</option>
-                                                            <option value="6">B-</option>
-                                                            <option value="7">O-</option>
-                                                            <option value="8">AB-</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group ">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <label class="form-label mb-0 mt-2">Email</label>
-                                                    </div>
-                                                    <div class="col-md-9">
-                                                        <input type="text" class="form-control" placeholder="email">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <label class="form-label mb-0 mt-2">Present Address</label>
-                                                    </div>
-                                                    <div class="col-md-9">
-                                                        <textarea rows="3" class="form-control" placeholder="Address1"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <label class="form-label mb-0 mt-2">Permanent Address</label>
+                                                        <label class="form-label mb-0 mt-2">Address</label>
                                                     </div>
                                                     <div class="col-md-9">
                                                         <textarea rows="3" class="form-control" placeholder="Address2"></textarea>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <div class="form-label mb-0 mt-2">Upload Photo</div>
-                                                    </div>
-                                                    <div class="col-md-9">
-                                                        <div class="form-group">
-                                                            <label class="form-label"></label>
-                                                            <input class="form-control" type="file">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <h4 class="mb-5 mt-7 font-weight-bold">Account Login</h4>
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <label class="form-label mb-0 mt-2">Employee Email</label>
-                                                    </div>
-                                                    <div class="col-md-9">
-                                                        <input type="text" class="form-control"
-                                                            placeholder="employee email">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <label class="form-label mb-0 mt-2">Password</label>
-                                                    </div>
-                                                    <div class="col-md-9">
-                                                        <input type="password" class="form-control"
-                                                            placeholder="password">
-                                                    </div>
-                                                </div>
-                                            </div>
                                             <div class="form-group mt-7">
                                                 <div class="row">
                                                     <div class="col-md-3">
-                                                        <label class="form-label">Email Notification:</label>
+                                                        <label class="form-label">Manual Attendance with Location And Selfie:</label>
                                                     </div>
                                                     <div class="col-md-9">
                                                         <label class="custom-switch">
                                                             <input type="checkbox" name="custom-switch-checkbox"
                                                                 class="custom-switch-input">
                                                             <span class="custom-switch-indicator"></span>
-                                                            <span class="custom-switch-description">On/Off</span>
+                                                            <span class="custom-switch-description">Active/Inactive</span>
                                                         </label>
                                                     </div>
                                                 </div>
@@ -543,11 +622,30 @@
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Branch</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <select name="projects" class="form-control custom-select select2"
+                                                            data-placeholder="Select">
+                                                            <option label="Select"></option>
+                                                            <option value="1">IT</option>
+                                                            <option value="2">Management</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
                                                         <label class="form-label mb-0 mt-2">Department</label>
                                                     </div>
                                                     <div class="col-md-9">
-                                                        <input type="text" class="form-control"
-                                                            placeholder="Department">
+                                                        <select name="projects" class="form-control custom-select select2"
+                                                            data-placeholder="Select">
+                                                            <option label="Select"></option>
+                                                            <option value="1">Software Developer</option>
+                                                            <option value="2">Web Developer</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -557,8 +655,12 @@
                                                         <label class="form-label mb-0 mt-2">Designation</label>
                                                     </div>
                                                     <div class="col-md-9">
-                                                        <input type="text" class="form-control"
-                                                            placeholder="Designation">
+                                                        <select name="projects" class="form-control custom-select select2"
+                                                            data-placeholder="Select">
+                                                            <option label="Select"></option>
+                                                            <option value="1">Software Developer</option>
+                                                            <option value="2">Web Developer</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -570,42 +672,6 @@
                                                     <div class="col-md-9">
                                                         <input type="text" class="form-control fc-datepicker"
                                                             placeholder="DD-MM-YYYY">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <label class="form-label mb-0 mt-2">Resignation Date</label>
-                                                    </div>
-                                                    <div class="col-md-9">
-                                                        <input type="text" class="form-control fc-datepicker"
-                                                            placeholder="DD-MM-YYYY">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <label class="form-label mb-0 mt-2">Termination Date</label>
-                                                    </div>
-                                                    <div class="col-md-9">
-                                                        <input type="text" class="form-control fc-datepicker"
-                                                            placeholder="DD-MM-YYYY">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <label class="form-label mb-0 mt-2">Credit Leaves
-                                                            <span class="form-help" data-bs-toggle="tooltip"
-                                                                data-bs-placement="top"
-                                                                title="Unused leaves for the Employee">?</span>
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-md-9">
-                                                        <input type="text" class="form-control" placeholder="0">
                                                     </div>
                                                 </div>
                                             </div>
@@ -635,10 +701,65 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Salary Cycle:</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="date" class="form-control" placeholder="$Salary">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Opening Balance:</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <select name="projects" class="form-control custom-select select2"
+                                                            data-placeholder="Select Type">
+                                                            <option label="Select Type"></option>
+                                                            <option value="0">Advance</option>
+                                                            <option value="1">Pending</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Select Shift</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <select name="projects" class="form-control custom-select select2"
+                                                            data-placeholder="Select Type">
+                                                            <option label="Select Type"></option>
+                                                            <option value="0">Assigned</option>
+                                                            <option value="1">Not Assigned</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="form-group mt-7">
                                                 <div class="row">
                                                     <div class="col-md-3">
-                                                        <label class="form-label">Status:</label>
+                                                        <label class="form-label">Allow Current Salary Cycle Access:</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <label class="custom-switch">
+                                                            <input type="checkbox" name="custom-switch-checkbox"
+                                                                class="custom-switch-input">
+                                                            <span class="custom-switch-indicator"></span>
+                                                            <span class="custom-switch-description">Active/Inactive</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mt-7">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Salary Detail Access:</label>
                                                     </div>
                                                     <div class="col-md-9">
                                                         <label class="custom-switch">
@@ -838,4 +959,20 @@
         </div>
     </div>
     {{-- delete confirmation --}}
+
+     {{-- Employee Type --}}
+     <div class="modal fade" id="empType" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content modal-content-demo">
+                <div class="modal-header">
+                    <h5>Type Of Employee</h5>
+                </div>
+                <div class="modal-body d-flex justify-content-around">
+                    <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#addempmodal">Regular Employee </button>
+                    <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#addCotractEmp">Contractual Employee</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Employee Type --}}
 @endsection

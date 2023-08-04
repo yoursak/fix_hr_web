@@ -172,92 +172,6 @@ Dashboard
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-12 col-md-6 col-lg-12">
-                    <div class="card overflow-hidden">
-                        <div class="card-header border-bottom-0">
-                            <h3 class="card-title">Wish Birthday</h3>
-                            <div class="card-options">
-                                <a  href="javascript:void(0);" class="card-options-collapse me-2" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-                                <a  href="javascript:void(0);" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
-                            </div>
-                        </div>
-                        <div class="card-body mt-2">
-                            <div class="mb-5">
-                                <div class="d-flex comming_holidays calendar-icon icons">
-                                    <span class="date_time bg-purple-transparent bradius me-3"><span class="date fs-20">10</span>
-                                        <span class="month fs-13">FEB</span>
-                                    </span>
-                                    <div class="me-3 mt-0 mt-sm-2 d-block">
-                                        <h6 class="mb-1 font-weight-semibold">Vanessa James</h6>
-                                        <span class="clearfix"></span>
-                                        <small>Birthday on Feb 16</small>
-                                    </div>
-                                    <p class="float-end mb-0  ms-auto  my-auto">
-                                        <a class="btn btn-outline-orange mt-1"  href="javascript:void(0);"><i class="fa fa-birthday-cake me-2"></i>Wish Now</a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="card">
-            <div class="card-header border-bottom-0">
-                <div class="card-title">
-                    Employee Summary
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table  table-vcenter text-nowrap table-bordered border-bottom table-striped"
-                        id="hr-attendance1">
-                        <thead>
-                            <tr>
-                                <th rowspan="2" class="text-center border-bottom-0">Action</th>
-                                <th rowspan="2" class="text-center border-bottom-0 ">Emp ID</th>
-                                <th rowspan="2" class="border-bottom-0 ">Employee</th>
-                                <th rowspan="2" class="text-center border-bottom-0 ">Present</th>
-                                <th rowspan="2" class="text-center border-bottom-0 ">Absent</th>
-                                <th rowspan="2" class="text-center border-bottom-0 ">Half Days</th>
-                                <th rowspan="2" class="text-center border-bottom-0 ">Paid Leave</th>
-                                <th rowspan="2" class="text-center border-bottom-0 ">Miss Punch</th>
-                                <th rowspan="2" class="text-center border-bottom-0 ">Overtime</th>
-                                <th rowspan="2" class="text-center border-bottom-0 ">Total Attendance</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="text-center">
-                                    <div class="btn btn-light btn-icon btn-sm" id="calenderbtn"
-                                        data-bs-toggle="tooltip" data-original-title="View">
-                                        <i class="feather feather-eye"></i>
-                                    </div>
-                                </td>
-                                <td>FD22311</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <span class="avatar avatar brround me-3"
-                                            style="background-image: url(imgs/user.png)"></span>
-                                        <div class="me-3 mt-0 mt-sm-2 d-block">
-                                            <h6 class="mb-1 fs-14">Aman Sahu</h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="text-center">5</td>
-                                <td class="text-center">2</td>
-                                <td class="text-center">1</td>
-                                <td class="text-center">-</td>
-                                <td class="text-center">-</td>
-                                <td class="text-center">-</td>
-                                <td class="text-center">5</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="rescalendar" id="my_calendar_en"></div>
             </div>
         </div>
     </div>
@@ -269,7 +183,29 @@ Dashboard
                     <div class="page-rightheader ms-auto">
                         <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
                             <div class="btn-list d-flex">
-                                <a class="btn btn-primary btn-block btn-sm mb-3" href="{{url('/summary')}}">View Details</a>
+                                <div>
+                                    <a class="btn btn-outline-primary border-0" href="{{url('/summary')}}">View Details</a>
+                                </div>
+                                <div>
+                                    <button class="btn btn-outline-primary mx-3 border-0" href="#">Download</button>
+                                </div>
+                                <div class="my-auto">
+                                    <select name="month" class="form-control btn-outline-dark border-0 mx-3 " data-placeholder="Select Cycle">
+                                        <option label="Select Cycle"></option>
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -304,6 +240,29 @@ Dashboard
             <div class="card">
                 <div class="card-header border-bottom-0">
                     <h3 class="card-title">Statutory Expenses</h3>
+                    <div class="page-rightheader ms-auto">
+                        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+                            <div class="btn-list d-flex">
+                                <div class="my-auto">
+                                    <select name="month" class="form-control btn-outline-dark btn-sm mx-3 border-0" data-placeholder="Select Cycle" >
+                                        <option label="Select Cycle"></option>
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -340,6 +299,96 @@ Dashboard
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="card">
+            <div class="card-header border-bottom-0">
+                <div class="card-title">
+                    Employee Summary
+                </div>
+                <div class="page-rightheader ms-auto">
+                    <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+                        <div class="btn-list d-flex">
+                            <div>
+                                <button class="btn btn-outline-primary mx-3 border-0" href="#">Expand All</button>
+                            </div>
+
+                            <div>
+                                <button class="btn btn-outline-primary mx-3 border-0" href="#">Download</button>
+                            </div>
+                            <div class="my-auto">
+                                <select name="month" class="form-control btn-outline-primary mx-3 border-0" data-placeholder="Select Cycle">
+                                    <option label="Select Cycle"></option>
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table  table-vcenter text-nowrap table-bordered border-bottom table-striped"
+                        id="hr-attendance1">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" class="text-center border-bottom-0">Action</th>
+                                <th rowspan="2" class="text-center border-bottom-0 ">Emp ID</th>
+                                <th rowspan="2" class="border-bottom-0 ">Employee</th>
+                                <th rowspan="2" class="text-center border-bottom-0 ">Present</th>
+                                <th rowspan="2" class="text-center border-bottom-0 ">Absent</th>
+                                <th rowspan="2" class="text-center border-bottom-0 ">Half Days</th>
+                                <th rowspan="2" class="text-center border-bottom-0 ">Paid Leave</th>
+                                <th rowspan="2" class="text-center border-bottom-0 ">Miss Punch</th>
+                                <th rowspan="2" class="text-center border-bottom-0 ">Overtime</th>
+                                <th rowspan="2" class="text-center border-bottom-0 ">Fine</th>
+                                <th rowspan="2" class="text-center border-bottom-0 ">Total Attendance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">
+                                    <div class="btn btn-light btn-icon btn-sm" id="calenderbtn"
+                                        data-bs-toggle="tooltip" data-original-title="View">
+                                        <i class="feather feather-eye"></i>
+                                    </div>
+                                </td>
+                                <td>FD22311</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <span class="avatar avatar brround me-3"
+                                            style="background-image: url(imgs/user.png)"></span>
+                                        <div class="me-3 mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-1 fs-14">Aman Sahu</h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">5</td>
+                                <td class="text-center">2</td>
+                                <td class="text-center">1</td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">5</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="rescalendar" id="my_calendar_en"></div>
             </div>
         </div>
     </div>

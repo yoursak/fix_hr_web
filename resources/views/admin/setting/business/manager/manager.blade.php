@@ -15,7 +15,7 @@
             <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
                 <div class="d-lg-flex d-block">
                     <div class="btn-list">
-                        <button type="button" id="addNewManager" class="btn btn-outline-primary" data-bs-toggle="modal"
+                        <button type="button" id="addNewManager" class="btn btn-outline-dark" data-bs-toggle="modal"
                             data-bs-target="#clockinmodal">Assign Manager</button>
                         <button type="button" id="SaveNewManager" class="btn btn-outline-success d-none" data-bs-toggle="modal"
                             data-bs-target="#clockinmodal">Save Manager</button>

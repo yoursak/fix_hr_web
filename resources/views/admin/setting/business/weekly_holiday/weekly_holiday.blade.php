@@ -33,10 +33,10 @@
                             <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                                 <input type="radio" class="btn-check" name="btnradio" id="btnradioCount2"=""
                                     data-bs-toggle="modal" data-bs-target="#businessLavel" checked>
-                                <label class="btn btn-outline-primary" for="btnradioCount2">Business</label>
+                                <label class="btn btn-outline-dark" for="btnradioCount2">Business</label>
                                 <input type="radio" class="btn-check" name="btnradio" id="btnradioIgnore2"
                                     data-bs-toggle="modal" data-bs-target="#employeeLavel">
-                                <label class="btn btn-outline-primary" for="btnradioIgnore2">Employee</label>
+                                <label class="btn btn-outline-dark" for="btnradioIgnore2">Employee</label>
                             </div>
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                             holidays fopr all your emplyees or different</p>
                             <div class="d-lg-flex d-block mt-5">
                                 <div class="btn-list ms-auto">
-                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
                                         data-bs-target="#clockinmodal">Cancel</button>
                                     <button type="button"  class="btn btn-primary" data-bs-toggle="modal"
                                         data-bs-target="#clockinmodal">Switch</button>
@@ -123,7 +123,7 @@
                             holidays fopr all your emplyees or different</p>
                             <div class="d-lg-flex d-block mt-5">
                                 <div class="btn-list ms-auto">
-                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
                                         data-bs-target="#clockinmodal">Cancel</button>
                                     <button type="button"  class="btn btn-primary" data-bs-toggle="modal"
                                         data-bs-target="#clockinmodal">Switch</button>

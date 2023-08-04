@@ -239,7 +239,7 @@ Account
                 </div>
             </div>
             <div class="modal-footer  border-0" id="anbbtns">
-                <a href="#" class="btn btn-outline-primary btn-sm" id="anbbtn1">Cancel</a>
+                <a href="#" class="btn btn-outline-dark btn-sm" id="anbbtn1">Cancel</a>
                 <a href="#" class="btn btn-primary btn-sm" id="anbbtn2">Add New Business</a>
             </div>
             <div class="modal-footer border-0 d-none" id="anbbtns1">

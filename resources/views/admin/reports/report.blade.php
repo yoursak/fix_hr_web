@@ -45,7 +45,7 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -58,8 +58,8 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -72,8 +72,8 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -86,8 +86,8 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -100,8 +100,8 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -133,9 +133,9 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
 
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -148,8 +148,8 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -162,7 +162,7 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -175,8 +175,8 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -189,8 +189,8 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -222,9 +222,9 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
 
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -237,8 +237,8 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -251,8 +251,8 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -265,7 +265,7 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -297,9 +297,9 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
 
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -312,8 +312,8 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -326,7 +326,7 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Genrate Report</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Genrate Report</button>
                     </div>
                 </div>
             </div>
@@ -339,8 +339,8 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -353,9 +353,9 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
 
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -368,8 +368,8 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -382,8 +382,8 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -396,8 +396,8 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>
@@ -410,8 +410,8 @@
                         </p>
                     </div>
                     <div class="col-5 my-auto text-end">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-pencil me-2"></i>Custmize</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#clockinmodal" id="newTempFormBtn"><i class="fa fa-file-excel-o me-2"></i>Download</button>
                     </div>
                 </div>
             </div>

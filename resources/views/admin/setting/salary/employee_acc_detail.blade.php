@@ -15,7 +15,7 @@
         <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
             <div class="d-lg-flex d-block">
                 <div class="btn-list">
-                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
                         data-bs-target="#clockinmodal"><i class="fa fa-file-excel-o mx-2"></i>Excel Bulk Upload</button>
                 </div>
             </div>
@@ -186,7 +186,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button class="btn btn-outline-primary cancel" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-outline-dark cancel" data-bs-dismiss="modal">Cancel</button>
                     <button class="btn btn-primary savebtn">Continue</button>
                 </div>
             </div>
@@ -229,7 +229,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button class="btn btn-outline-primary cancel" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-outline-dark cancel" data-bs-dismiss="modal">Cancel</button>
                     <button class="btn btn-primary savebtn">Continue</button>
                 </div>
             </div>
@@ -272,7 +272,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button class="btn btn-outline-primary cancel" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-outline-dark cancel" data-bs-dismiss="modal">Cancel</button>
                     <button class="btn btn-primary savebtn">Continue</button>
                 </div>
             </div>

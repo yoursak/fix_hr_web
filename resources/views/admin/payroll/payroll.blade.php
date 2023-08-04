@@ -200,7 +200,7 @@
 
     {{-- payment confirmation --}}
     <div class="modal fade" id="modaldemo8" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content modal-content-demo">
                 <div class="modal-body">
                     <div class="text-center">

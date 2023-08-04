@@ -574,7 +574,7 @@ Attendance
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-dismiss="modal">close</a>
+                <a href="javascript:void(0);" class="btn btn-outline-dark" data-bs-dismiss="modal">close</a>
                 <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal"
                     data-bs-target="#editmodal" data-bs-dismiss="modal">Edit</a>
             </div>
@@ -656,7 +656,7 @@ Attendance
                             class="feather feather-arrow-left me-1"></i>Back</a>
                 </div>
                 <div class="ms-auto">
-                    <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-dismiss="modal">close</a>
+                    <a href="javascript:void(0);" class="btn btn-outline-dark" data-bs-dismiss="modal">close</a>
                     <a href="javascript:void(0);" class="btn btn-primary">Save</a>
                 </div>
             </div>
@@ -711,7 +711,7 @@ Attendance
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-dismiss="modal">close</a>
+                <a href="javascript:void(0);" class="btn btn-outline-dark" data-bs-dismiss="modal">close</a>
                 <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal"
                     data-bs-target="#editmodal1" data-bs-dismiss="modal">Edit</a>
             </div>
@@ -792,7 +792,7 @@ Attendance
                             class="feather feather-arrow-left me-1"></i>Back</a>
                 </div>
                 <div class="ms-auto">
-                    <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-dismiss="modal">close</a>
+                    <a href="javascript:void(0);" class="btn btn-outline-dark" data-bs-dismiss="modal">close</a>
                     <a href="javascript:void(0);" class="btn btn-primary">Save</a>
                 </div>
             </div>
@@ -848,7 +848,7 @@ Attendance
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-dismiss="modal">close</a>
+                <a href="javascript:void(0);" class="btn btn-outline-dark" data-bs-dismiss="modal">close</a>
                 <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal"
                     data-bs-target="#halfdayeditmodal" data-bs-dismiss="modal">Edit</a>
             </div>
@@ -931,7 +931,7 @@ Attendance
                             class="feather feather-arrow-left me-1"></i>Back</a>
                 </div>
                 <div class="ms-auto">
-                    <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-dismiss="modal">close</a>
+                    <a href="javascript:void(0);" class="btn btn-outline-dark" data-bs-dismiss="modal">close</a>
                     <a href="javascript:void(0);" class="btn btn-primary">Save</a>
                 </div>
             </div>
