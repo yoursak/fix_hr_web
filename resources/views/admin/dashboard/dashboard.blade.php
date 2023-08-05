@@ -372,7 +372,7 @@ Dashboard
                                         <span class="avatar avatar brround me-3"
                                             style="background-image: url(imgs/user.png)"></span>
                                         <div class="me-3 mt-0 mt-sm-2 d-block">
-                                            <h6 class="mb-1 fs-14">Aman Sahu</h6>
+                                            <h6 class="mb-1 fs-14"><a href="{{url('/emprofile')}}">Aman Sahu</a></h6>
                                         </div>
                                     </div>
                                 </td>

@@ -51119,9 +51119,6 @@ select [aria-selected=true]:focus {
   .app .app-sidebar {
     left: -270px;
   }
-  .app .app-sidebar .app-sidebar3 {
-    margin-top: 0;
-  }
   .app .app-sidebar__overlay {
     visibility: hidden;
   }

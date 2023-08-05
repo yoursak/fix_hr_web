@@ -83,16 +83,37 @@
         <div class="row">
             <div class="col-xl-12 col-md-12 col-lg-12">
                 <div class="card">
-                    <div class="card-header  border-0">
+                    <div class="card-header border-0">
                         <h4 class="card-title">Employees List</h4>
                         <div class="page-rightheader ms-md-auto">
                             <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
                                 <div class="btn-list d-flex">
-                                    <a class="modal-effect btn btn-primary btn-block mb-3" data-effect="effect-scale"
+                                    <a class="modal-effect btn btn-outline-primary border-0" data-effect="effect-scale"
                                         data-bs-toggle="modal" href="#empType">Add New Employee</a>
-                                    <button class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="top"
-                                        title="Make Payment"><i class="feather feather-credit-card me-2"></i>Make Bulk
-                                        Payment</button>
+                                    <button class="btn btn-outline-light border-0" data-bs-toggle="tooltip"
+                                        data-bs-placement="top">
+                                        <div class="dropdown profile-dropdown">
+
+                                            <a href="javascript:void(0);" class="nav-link leading-none my-auto "
+                                                data-bs-toggle="dropdown">
+                                                <span><i class="feather feather-credit-card me-1"></i>Make Bulk
+                                                    Payment</span>
+                                            </a>
+
+                                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated">
+                                                <a class=" dropdown-item d-flex" href="{{url('onlinepay/makepayment')}}">
+                                                    <div class="mt-1">Online Pay</div>
+                                                </a>
+                                                <a class="dropdown-item d-flex" href="{{url('onlinepay/payment_entry')}}">
+                                                    <div class="mt-1">Save Payment Entry</div>
+                                                </a>
+
+                                                <a class=" dropdown-item d-flex"  href="{{url('onlinepay/bulkallowance')}}">
+                                                    <div class="mt-1">Allowance/Deduction/Bonus </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -185,9 +206,10 @@
                                         <td>
                                             <div class="d-flex">
                                                 <span class="avatar avatar-md brround me-3"
-                                                    style="background-image: url(assets/images/users/1.jpg)"></span>
+                                                    style="background-image: url()"></span>
                                                 <div class="me-3 mt-0 mt-sm-1 d-block">
-                                                    <h6 class="mb-1 fs-14">Faith Harris</h6>
+                                                    <h6 class="mb-1 fs-14"><a href="{{ url('/emprofile') }}">Aman Sahu</a>
+                                                    </h6>
                                                     <p class="text-muted mb-0 fs-12">faith@gmail.com</p>
                                                 </div>
                                             </div>
@@ -201,11 +223,15 @@
                                                 data-effect="effect-super-scaled" data-bs-toggle="modal"
                                                 href="#modaldemo8">Add Payment</a>
                                         <td>
-                                            <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal" data-bs-target="#deletemodal">
-                                                <i class="feather feather-edit primary text-primary" data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal"
+                                                data-bs-target="#deletemodal">
+                                                <i class="feather feather-edit primary text-primary"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
                                             </a>
-                                            <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal" data-bs-target="#deletemodal">
-                                                <i class="feather feather-trash primary text-primary" data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal"
+                                                data-bs-target="#deletemodal">
+                                                <i class="feather feather-trash primary text-primary"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
                                             </a>
                                         </td>
                                     </tr>
@@ -242,14 +268,16 @@
                                         <div class="form-group row">
                                             <label class="col-md-3 form-label">Date</label>
                                             <div class="col-md-9">
-                                                <input class="form-control fc-datepicker" placeholder="19 Feb 2020" type="date">
+                                                <input class="form-control fc-datepicker" placeholder="19 Feb 2020"
+                                                    type="date">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-md-3 form-label">Salary Cycle</label>
                                             <div class="col-md-9">
                                                 <div class="my-auto">
-                                                    <select name="month" class="form-control btn-outline-dark " data-placeholder="Select Cycle">
+                                                    <select name="month" class="form-control btn-outline-dark "
+                                                        data-placeholder="Select Cycle">
                                                         <option label="Select Cycle"></option>
                                                         <option value="1">January</option>
                                                         <option value="2">February</option>
@@ -276,13 +304,16 @@
                                         <div class="form-group row">
                                             <label class="col-md-3 form-label" for="example-email">Description</label>
                                             <div class="col-md-9">
-                                                <input type="text" name="example-email" class="form-control" placeholder="Description">
+                                                <input type="text" name="example-email" class="form-control"
+                                                    placeholder="Description">
                                             </div>
                                         </div>
                                         <label class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1" checked>
+                                            <input type="checkbox" class="custom-control-input" name="example-checkbox1"
+                                                value="option1" checked>
                                             <span class="custom-control-label"><b>Send SMS Employee</b></span>
-                                            <span class="fs-11">By continuing you agree to <b><a href="#" class="text-primary">Tearm & Conditions</a></b></span>
+                                            <span class="fs-11">By continuing you agree to <b><a href="#"
+                                                        class="text-primary">Tearm & Conditions</a></b></span>
                                         </label>
                                     </form>
                                 </div>
@@ -293,14 +324,16 @@
                                         <div class="form-group row">
                                             <label class="col-md-3 form-label">Date</label>
                                             <div class="col-md-9">
-                                                <input class="form-control fc-datepicker" placeholder="19 Feb 2020" type="date">
+                                                <input class="form-control fc-datepicker" placeholder="19 Feb 2020"
+                                                    type="date">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-md-3 form-label">Salary Cycle</label>
                                             <div class="col-md-9">
                                                 <div class="my-auto">
-                                                    <select name="month" class="form-control btn-outline-dark " data-placeholder="Select Cycle">
+                                                    <select name="month" class="form-control btn-outline-dark "
+                                                        data-placeholder="Select Cycle">
                                                         <option label="Select Cycle"></option>
                                                         <option value="1">January</option>
                                                         <option value="2">February</option>
@@ -327,13 +360,16 @@
                                         <div class="form-group row">
                                             <label class="col-md-3 form-label" for="example-email">Description</label>
                                             <div class="col-md-9">
-                                                <input type="text" name="example-email" class="form-control" placeholder="Description">
+                                                <input type="text" name="example-email" class="form-control"
+                                                    placeholder="Description">
                                             </div>
                                         </div>
                                         <label class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1" checked>
+                                            <input type="checkbox" class="custom-control-input" name="example-checkbox1"
+                                                value="option1" checked>
                                             <span class="custom-control-label"><b>Send SMS Employee</b></span>
-                                            <span class="fs-11">By continuing you agree to <b><a href="#" class="text-primary">Tearm & Conditions</a></b></span>
+                                            <span class="fs-11">By continuing you agree to <b><a href="#"
+                                                        class="text-primary">Tearm & Conditions</a></b></span>
                                         </label>
                                     </form>
                                 </div>
@@ -342,17 +378,17 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-success" data-bs-dismiss="modal">Online Payment</button> <button class="btn btn-light"
-                        data-bs-toggle="modal" data-bs-target="#success">Save & Close</button>
+                    <button class="btn btn-success" data-bs-dismiss="modal">Online Payment</button> <button
+                        class="btn btn-light" data-bs-toggle="modal" data-bs-target="#success">Save & Close</button>
                 </div>
             </div>
         </div>
     </div>
     {{-- add payment  confirmation --}}
 
-    {{-- add payment confirmation --}}
+    {{-- add contractual Emp --}}
     <div class="modal fade" id="addCotractEmp" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
             <div class="modal-content modal-content-demo">
                 <div class="modal-header border-0">
                     <div>
@@ -363,12 +399,6 @@
                     <div class="mx-3">
                         <form class="form-horizontal">
                             <div class="form-group row">
-                                <label class="col-md-3 form-label">Date</label>
-                                <div class="col-md-9">
-                                    <input class="form-control fc-datepicker" placeholder="19 Feb 2020" type="date">
-                                </div>
-                            </div>
-                            <div class="form-group row">
                                 <label class="col-md-3 form-label">Name</label>
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" value="">
@@ -377,25 +407,43 @@
                             <div class="form-group row">
                                 <label class="col-md-3 form-label" for="example-email">Number</label>
                                 <div class="col-md-9">
-                                    <input type="text" name="example-email" class="form-control" placeholder="Description">
+                                    <input type="text" name="example-email" class="form-control"
+                                        placeholder="eg. +91 123456789">
+                                </div>
+                            </div>
+                            <div class="form-group mt-7">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <label class="form-label">Manual Attendance with Location, Face Id And QR
+                                            Code:</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="custom-switch">
+                                            <input type="checkbox" name="custom-switch-checkbox"
+                                                class="custom-switch-input" placeholder="Enter Full Name">
+                                            <span class="custom-switch-indicator"></span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <label class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1" checked>
+                                <input type="checkbox" class="custom-control-input" name="example-checkbox1"
+                                    value="option1" checked>
                                 <span class="custom-control-label"><b>Send SMS Employee</b></span>
-                                <span class="fs-11">By continuing you agree to <b><a href="#" class="text-primary">Tearm & Conditions</a></b></span>
+                                <span class="fs-11">By continuing you agree to <b><a href="#"
+                                            class="text-primary">Tearm & Conditions</a></b></span>
                             </label>
                         </form>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-success" data-bs-dismiss="modal">Online Payment</button> <button class="btn btn-light"
-                        data-bs-toggle="modal" data-bs-target="#success">Save & Close</button>
+                    <button class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger" data-bs-dismiss="modal">Continue</button>
                 </div>
             </div>
         </div>
     </div>
-    {{-- add payment  confirmation --}}
+    {{-- add contractual Emp --}}
 
     {{-- payment confirmation --}}
     <div class="modal fade" id="pay" data-bs-backdrop="static">
@@ -454,7 +502,7 @@
                     </div> --}}
                     <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
                             aria-hidden="true">&times;</span></button>
-                    <img src="{{asset('imgs/check.gif')}}" alt="">
+                    <img src="{{ asset('imgs/check.gif') }}" alt="">
                     <h4 class="text-success mb-4">Payment Successful!</h4>
                     <p class="mb-4 mx-4">There are many variations of passages of Lorem Ipsum available, but the majority
                         have suffered alteration.</p><button class="btn btn-success pd-x-25" data-bs-dismiss="modal">Print
@@ -485,7 +533,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="panel-body tabs-menu-body hremp-tabs1 p-0">
+                            <div class="panel-body tabs-menu-body hremp-tabs1 p-0" style="height: 30rem; overflow:scroll">
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="tab5">
                                         <div class="card-body">
@@ -500,7 +548,7 @@
                                             <div class="form-group ">
                                                 <div class="row">
                                                     <div class="col-md-3">
-                                                        <label class="form-label mb-0 mt-2">User Name</label>
+                                                        <label class="form-label mb-0 mt-2">Employee Name</label>
                                                     </div>
                                                     <div class="col-md-9">
                                                         <div class="row">
@@ -531,7 +579,8 @@
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col-md-3">
-                                                        <label class="form-label mb-0 mt-2">Alternative Contact Number</label>
+                                                        <label class="form-label mb-0 mt-2">Alternative Contact
+                                                            Number</label>
                                                     </div>
                                                     <div class="col-md-9">
                                                         <input type="text" class="form-control"
@@ -555,7 +604,8 @@
                                                         <label class="form-label mb-0 mt-2">Date Of Birth</label>
                                                     </div>
                                                     <div class="col-md-9">
-                                                        <input type="text" class="form-control fc-datepicker" placeholder="DD-MM-YYY">
+                                                        <input type="text" class="form-control fc-datepicker"
+                                                            placeholder="DD-MM-YYY">
                                                     </div>
                                                 </div>
                                             </div>
@@ -592,10 +642,11 @@
                                             </div>
                                             <div class="form-group mt-7">
                                                 <div class="row">
-                                                    <div class="col-md-3">
-                                                        <label class="form-label">Manual Attendance with Location And Selfie:</label>
-                                                    </div>
                                                     <div class="col-md-9">
+                                                        <label class="form-label">Manual Attendance with Location, Face Id
+                                                            And QR Code:</label>
+                                                    </div>
+                                                    <div class="col-md-3">
                                                         <label class="custom-switch">
                                                             <input type="checkbox" name="custom-switch-checkbox"
                                                                 class="custom-switch-input">
@@ -744,7 +795,8 @@
                                             <div class="form-group mt-7">
                                                 <div class="row">
                                                     <div class="col-md-3">
-                                                        <label class="form-label">Allow Current Salary Cycle Access:</label>
+                                                        <label class="form-label">Allow Current Salary Cycle
+                                                            Access:</label>
                                                     </div>
                                                     <div class="col-md-9">
                                                         <label class="custom-switch">
@@ -928,13 +980,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card-footer text-end">
-                                        <a href="javascript:void(0);" class="btn btn-primary"
-                                            data-bs-dismiss="modal">Save</a>
-                                        <a href="javascript:void(0);" class="btn btn-danger"
-                                            data-bs-dismiss="modal">Cancel</a>
-                                    </div>
                                 </div>
+                            </div>
+                            <div class="card-footer text-end">
+                                <a href="javascript:void(0);" class="btn btn-primary" data-bs-dismiss="modal">Save</a>
+                                <a href="javascript:void(0);" class="btn btn-danger" data-bs-dismiss="modal">Cancel</a>
                             </div>
                         </div>
                     </div>
@@ -960,19 +1010,529 @@
     </div>
     {{-- delete confirmation --}}
 
-     {{-- Employee Type --}}
-     <div class="modal fade" id="empType" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+    {{-- Employee Type --}}
+    <div class="modal fade" id="empType" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content modal-content-demo">
                 <div class="modal-header">
-                    <h5>Type Of Employee</h5>
+                    <h5>Add Employee</h5>
                 </div>
                 <div class="modal-body d-flex justify-content-around">
-                    <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#addempmodal">Regular Employee </button>
-                    <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#addCotractEmp">Contractual Employee</button>
+                    <div class="row">
+                        <div class="col-xl-6 text-center">
+                            <div>
+                                <h3><b style="color: rgb(22, 109, 83)">Regular Employee</b></h3>
+                                <p class="fs-11" style="color: rgb(29, 112, 64)">With Salary Components (Basic, HRA, PF,
+                                    ESI, etc.)</p>
+                            </div>
+                            <a class="btn btn-outline-primary my-2 border-0" data-bs-toggle="modal"
+                                data-bs-target="#addempmodal"><b>Add Employee</b></a>
+                            <a class="btn btn-outline-primary my-2 border-0" data-bs-toggle="modal"
+                                data-bs-target="#"><b><i class="fa fa-file-excel-o me-1"></i>Upload Bulk</b></a>
+                        </div>
+                        <div class="col-xl-6 text-center">
+                            <div>
+                                <h3><b style="color: rgb(22, 109, 83)">Contractual Employee</b></h3>
+                                <p class="fs-11" style="color: rgb(29, 112, 64)">With Salary Components (Basic, HRA, PF,
+                                    ESI, etc.)</p>
+                            </div>
+                            <a class="btn btn-outline-primary my-2 border-0" data-bs-toggle="modal"
+                                data-bs-target="#addCotractEmp"><b>Add Employee</b></a>
+                            <a class="btn btn-outline-primary my-2 border-0" data-bs-toggle="modal"
+                                data-bs-target="#"><b><i class="fa fa-file-excel-o me-1"></i>Upload Bulk</b></a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     {{-- Employee Type --}}
+
+    {{-- online pay --}}
+    <div class="modal fade" id="bulkOnlinePay">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content modal-content-demo">
+                <div class="modal-body" style="5rem">
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-lg-12">
+                            <h3 class="card-title">Add New Employee</h3>
+                            <div class="tab-menu-heading hremp-tabs p-0 ">
+                                <div class="tabs-menu1">
+                                    <!-- Tabs -->
+                                    <ul class="nav panel-tabs">
+                                        <li class="ms-4"><a href="#tab5" class="active"
+                                                data-bs-toggle="tab">Personal Details</a></li>
+                                        <li><a href="#tab6" data-bs-toggle="tab">Company Details</a></li>
+                                        <li><a href="#tab7" data-bs-toggle="tab">Bank Details</a></li>
+                                        <li><a href="#tab8" data-bs-toggle="tab">Upload Documents</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-body tabs-menu-body hremp-tabs1 p-0" style="height: 30rem; overflow:scroll">
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tab5">
+                                        <div class="card-body">
+                                            <h4 class="mb-4 font-weight-bold">Basic</h4>
+                                            <div class="form-group d-flex justify-content-center">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <input type="file" class="dropify" data-height="180" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Employee Name</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control mb-md-0 mb-5"
+                                                                    placeholder="First Name">
+                                                                <span class="text-muted"></span>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="Last Name">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Contact Number</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Phone Number">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Alternative Contact
+                                                            Number</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Contact Number01">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Email</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control" placeholder="email">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Date Of Birth</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control fc-datepicker"
+                                                            placeholder="DD-MM-YYY">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Gender</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="custom-controls-stacked d-md-flex">
+                                                            <label class="custom-control custom-radio me-4">
+                                                                <input type="radio" class="custom-control-input"
+                                                                    name="example-radios4" value="option1">
+                                                                <span class="custom-control-label">Male</span>
+                                                            </label>
+                                                            <label class="custom-control custom-radio">
+                                                                <input type="radio" class="custom-control-input"
+                                                                    name="example-radios4" value="option2">
+                                                                <span class="custom-control-label">Female</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Address</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <textarea rows="3" class="form-control" placeholder="Address2"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mt-7">
+                                                <div class="row">
+                                                    <div class="col-md-9">
+                                                        <label class="form-label">Manual Attendance with Location, Face Id
+                                                            And QR Code:</label>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="custom-switch">
+                                                            <input type="checkbox" name="custom-switch-checkbox"
+                                                                class="custom-switch-input">
+                                                            <span class="custom-switch-indicator"></span>
+                                                            <span class="custom-switch-description">Active/Inactive</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="tab6">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Employee ID</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control" placeholder="#ID">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Branch</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <select name="projects" class="form-control custom-select select2"
+                                                            data-placeholder="Select">
+                                                            <option label="Select"></option>
+                                                            <option value="1">IT</option>
+                                                            <option value="2">Management</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Department</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <select name="projects" class="form-control custom-select select2"
+                                                            data-placeholder="Select">
+                                                            <option label="Select"></option>
+                                                            <option value="1">Software Developer</option>
+                                                            <option value="2">Web Developer</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Designation</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <select name="projects" class="form-control custom-select select2"
+                                                            data-placeholder="Select">
+                                                            <option label="Select"></option>
+                                                            <option value="1">Software Developer</option>
+                                                            <option value="2">Web Developer</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Date Of Joining</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control fc-datepicker"
+                                                            placeholder="DD-MM-YYYY">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h4 class="mb-5 mt-7 font-weight-bold">Salary</h4>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Type</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <select name="projects" class="form-control custom-select select2"
+                                                            data-placeholder="Select Type">
+                                                            <option label="Select Type"></option>
+                                                            <option value="0">Full-Time</option>
+                                                            <option value="1">Part-Time</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Salary</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control"
+                                                            placeholder="$Salary">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Salary Cycle:</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="date" class="form-control"
+                                                            placeholder="$Salary">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Opening Balance:</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <select name="projects"
+                                                            class="form-control custom-select select2"
+                                                            data-placeholder="Select Type">
+                                                            <option label="Select Type"></option>
+                                                            <option value="0">Advance</option>
+                                                            <option value="1">Pending</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Select Shift</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <select name="projects"
+                                                            class="form-control custom-select select2"
+                                                            data-placeholder="Select Type">
+                                                            <option label="Select Type"></option>
+                                                            <option value="0">Assigned</option>
+                                                            <option value="1">Not Assigned</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mt-7">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Allow Current Salary Cycle
+                                                            Access:</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <label class="custom-switch">
+                                                            <input type="checkbox" name="custom-switch-checkbox"
+                                                                class="custom-switch-input">
+                                                            <span class="custom-switch-indicator"></span>
+                                                            <span class="custom-switch-description">Active/Inactive</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mt-7">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Salary Detail Access:</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <label class="custom-switch">
+                                                            <input type="checkbox" name="custom-switch-checkbox"
+                                                                class="custom-switch-input">
+                                                            <span class="custom-switch-indicator"></span>
+                                                            <span class="custom-switch-description">Active/Inactive</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="tab7">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Account Holder</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control" placeholder="Name">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Account Number</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Number">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Bank Name</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control" placeholder="Name">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Branch Location</label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Location">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Bank Code (IFSC)
+                                                            <span class="form-help" data-bs-toggle="tooltip"
+                                                                data-bs-placement="top"
+                                                                title="Bank Identify Number in your Country">?</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control" placeholder="Code">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label mb-0 mt-2">Tax Payer ID (PAN)
+                                                            <span class="form-help" data-bs-toggle="tooltip"
+                                                                data-bs-placement="top"
+                                                                title="Taxpayer Identification Number Used in your Country">?</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control"
+                                                            placeholder="ID No">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="tab8">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-label mb-0 mt-2">Resume</div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="form-group">
+                                                            <label class="form-label"></label>
+                                                            <input class="form-control" type="file">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-label mb-0 mt-2">ID Proof</div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="form-group">
+                                                            <label class="form-label"></label>
+                                                            <input class="form-control" type="file">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-label mb-0 mt-2">Offer Letter</div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="form-group">
+                                                            <label class="form-label"></label>
+                                                            <input class="form-control" type="file">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-label mb-0 mt-2">Joining Letter</div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="form-group">
+                                                            <label class="form-label"></label>
+                                                            <input class="form-control" type="file">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-label mb-0 mt-2">Agreement Letter</div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="form-group">
+                                                            <label class="form-label"></label>
+                                                            <input class="form-control" type="file">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-label mb-0 mt-2">Experience Letter</div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="form-group">
+                                                            <label class="form-label"></label>
+                                                            <input class="form-control" type="file">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer text-end">
+                                <a href="javascript:void(0);" class="btn btn-primary" data-bs-dismiss="modal">Save</a>
+                                <a href="javascript:void(0);" class="btn btn-danger"
+                                    data-bs-dismiss="modal">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- online pay --}}
 @endsection

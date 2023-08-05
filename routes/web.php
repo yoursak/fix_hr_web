@@ -17,6 +17,10 @@ Route::get('/', function () {
     return view('admin.dashboard.dashboard');
 });
 
+Route::get('/emprofile', function () {
+    return view('admin.employees.emp_profile');
+});
+
 Route::get('/summary', function () {
     return view('admin.dashboard.summary');
 });
@@ -154,3 +158,16 @@ Route::get('settings/business/manager',function(){
 Route::get('settings/business/weeklyholiday',function(){
     return view('admin.setting.business.weekly_holiday.weekly_holiday');
 });
+
+
+Route::get('onlinepay/bulkallowance',function(){
+    return view('admin.onlinepay.payment.deductions');
+});
+Route::get('onlinepay/makepayment',function(){
+    return view('admin.onlinepay.payment.online_pay');
+});
+Route::get('onlinepay/payment_entry',function(){
+    return view('admin.onlinepay.payment.payment_entry');
+});
+
+

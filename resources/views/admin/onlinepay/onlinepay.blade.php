@@ -88,8 +88,7 @@
                             <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
                                 <div class="btn-list d-flex">
                                     <a class="modal-effect btn btn-outline-dark btn-block mb-3"
-                                        data-effect="effect-scale" data-bs-toggle="modal" href="#modaldemo8">Add Bulk
-                                        Payment</a>
+                                        data-effect="effect-scale" data-bs-toggle="modal" href="#BulkpayAdd">Add Bulk Payment</a>
                                 </div>
                             </div>
                         </div>
@@ -173,7 +172,7 @@
                                         <th class="border-bottom-0">Actual Payment</th>
                                         <th class="border-bottom-0">Total Payment</th>
                                         <th class="border-bottom-0">Total Deduction</th>
-                                        <th class="border-bottom-0">Payment Address</th>
+                                        <th class="border-bottom-0">Payment Details</th>
                                         <th class="border-bottom-0">Add Payment</th>
                                     </tr>
                                 </thead>
@@ -257,7 +256,7 @@
                                         <td>Rs.1000</td>
                                         <td>
                                             <a class="modal-effect btn btn-primary btn-sm mb-3" data-effect="effect-scale"
-                                                data-bs-toggle="modal" href="#payAdd">Add Payment Address</a>
+                                                data-bs-toggle="modal" href="#payAdd">Add Payment Detail</a>
                                         </td>
                                         <td class="text-center">
                                             <a href="#" class="btn btn-outline-muted btn-sm">Add Payment</a>
@@ -335,7 +334,13 @@
                         <div class="form-group col-12 mb-0">
                             <div class="form-group">
                                 <label class="form-label">Bank A/c Number</label>
-                                <input type="number" class="form-control" id="number" placeholder="A/c Number">
+                                <input type="password" class="form-control" id="number" placeholder="A/c Number">
+                            </div>
+                        </div>
+                        <div class="form-group col-12 mb-0">
+                            <div class="form-group">
+                                <label class="form-label">Bank A/c Number</label>
+                                <input type="text" class="form-control" id="number" placeholder="A/c Number">
                             </div>
                         </div>
                         <div class="form-group col-12 mb-0">
@@ -390,7 +395,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content modal-content-demo">
                 <div class="modal-header">
-                    <h5>Type Of Payment Address</h5>
+                    <h5>Type Of Payment Detail</h5>
                 </div>
                 <div class="modal-body d-flex justify-content-around">
                     <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#bankAcPay">Bank A/c
@@ -404,6 +409,128 @@
         </div>
     </div>
     {{-- payment address --}}
+
+    {{-- Bulk payment addreses --}}
+    <div class="modal fade" id="BulkpayAdd" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content modal-content-demo">
+                <div class="modal-header">
+                    <h5>Type Of Payment Detail</h5>
+                </div>
+                <div class="modal-body d-flex justify-content-around">
+                    <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#BulkAcpayAdd">Bank A/c
+                        Number</button>
+                    <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#BulkUPIpayAdd">UPI
+                        ID</button>
+                    <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#saved"><i class="fa fa-file-excel-o me-1"></i>Upload Bulk by Sheet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{--Bulk payment address --}}
+
+
+    {{-- Bulk bank Ac addreses --}}
+    <div class="modal fade" id="BulkAcpayAdd" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content modal-content-demo">
+                <div class="modal-header">
+                    <h5>Bank Account Detail</h5>
+                </div>
+                <div class="modal-body d-flex justify-content-around">
+                    <div class="table-responsive" style="height:30rem; overflow:scroll">
+                        <table class="table  table-vcenter text-nowrap table-bordered border-bottom" id="hr-table">
+                            <thead>
+                                <tr>
+                                    <th class="border-bottom-0 w-5">Emp ID</th>
+                                    <th class="border-bottom-0">Emp Name</th>
+                                    <th class="border-bottom-0">Department</th>
+                                    <th class="border-bottom-0">Payment Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>FD2987</td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <span class="avatar avatar-md brround me-3"
+                                                style="background-image: url(assets/images/users/1.jpg)"></span>
+                                            <div class="me-3 mt-0 mt-sm-1 d-block">
+                                                <h6 class="mb-1 fs-14">Faith Harris</h6>
+                                                <p class="text-muted mb-0 fs-12">faith@gmail.com</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Designing Department</td>
+                                    <td>
+                                        <input type="text" placeholder="A/c Number ">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer text-end">
+                    <a href="javascript:void(0);" class="btn btn-primary"
+                        data-bs-dismiss="modal">Save</a>
+                    <a href="javascript:void(0);" class="btn btn-danger"
+                        data-bs-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{--Bulk Bank acaddress --}}
+
+    {{-- Bulk Upi addreses --}}
+    <div class="modal fade" id="BulkUPIpayAdd" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content modal-content-demo">
+                <div class="modal-header">
+                    <h5>UPI Address Detail</h5>
+                </div>
+                <div class="modal-body d-flex justify-content-around">
+                    <div class="table-responsive" style="height:30rem; overflow:scroll">
+                        <table class="table  table-vcenter text-nowrap table-bordered border-bottom" id="hr-table">
+                            <thead>
+                                <tr>
+                                    <th class="border-bottom-0 w-5">Emp ID</th>
+                                    <th class="border-bottom-0">Emp Name</th>
+                                    <th class="border-bottom-0">Department</th>
+                                    <th class="border-bottom-0">Payment Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>FD2987</td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <span class="avatar avatar-md brround me-3"
+                                                style="background-image: url(assets/images/users/1.jpg)"></span>
+                                            <div class="me-3 mt-0 mt-sm-1 d-block">
+                                                <h6 class="mb-1 fs-14">Faith Harris</h6>
+                                                <p class="text-muted mb-0 fs-12">faith@gmail.com</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Designing Department</td>
+                                    <td>
+                                        <input type="text" placeholder="A/c Number ">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer text-end">
+                    <a href="javascript:void(0);" class="btn btn-primary"
+                        data-bs-dismiss="modal">Save</a>
+                    <a href="javascript:void(0);" class="btn btn-danger"
+                        data-bs-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{--Bulk UPi acaddress --}}
 
     {{-- save confirmation --}}
     <div class="modal fade" id="saved" data-bs-backdrop="static">
