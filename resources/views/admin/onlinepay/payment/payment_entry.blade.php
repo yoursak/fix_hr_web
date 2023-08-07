@@ -18,13 +18,12 @@ Bulk Payment- Save payment Entry
             </div>
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-12 d-flex">
-                    <div class="col-xl-3">
+                <div class="row">
+                    <div class="col-xl-3 col-sm-6">
                         <div class="form-group">
                             <div class="row">
                                 <div class="">
-                                    <label class="form-label mb-0 mt-2">Entry Type</label>
+                                    <label class="form-label mb-0 mt-2">Employee Type</label>
                                     <select name="projects" class="form-control custom-select select2"
                                         data-placeholder="Select">
                                         <option label="Select"></option>
@@ -36,21 +35,21 @@ Bulk Payment- Save payment Entry
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-3">
+                    <div class="col-xl-3 col-sm-6">
                         <div class="form-group">
                             <div class="row">
                                 <div class="">
-                                    <label class="form-label mb-0 mt-2">Description</label>
-                                    <input type="text" class="form-control" placeholder="Description">
+                                    <label class="form-label mb-0 mt-2">Payment Record Date</label>
+                                    <input type="date" class="form-control">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-3">
+                    <div class="col-xl-3 col-sm-6">
                         <div class="form-group">
                             <div class="row">
                                 <div class="">
-                                    <label class="form-label mb-0 mt-2">Paid to Salary cycle</label>
+                                    <label class="form-label mb-0 mt-2">Amount Type</label>
                                     <select name="projects" class="form-control custom-select select2"
                                         data-placeholder="Select">
                                         <option label="Select"></option>
@@ -61,18 +60,17 @@ Bulk Payment- Save payment Entry
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-3">
+                    <div class="col-xl-3 col-sm-6">
                         <div class="form-group">
                             <div class="row">
                                 <div class="">
-                                    <label class="form-label mb-0 mt-2">Date</label>
+                                    <label class="form-label mb-0 mt-2">Cycle</label>
                                     <input type="date" class="form-control" placeholder="#ID">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
         <div class="card-header border-bottom-0">
             <div>
@@ -84,9 +82,6 @@ Bulk Payment- Save payment Entry
                 <label class="custom-control custom-checkbox">
                     <div class="form-group">
                         <div class="row">
-                            {{-- <div class="col-1">
-                                <i class="fa fa-chevron-right"></i>
-                            </div> --}}
                             <div class="col-xl-3 col-sm-11 my-auto">
                                 <label class="form-label my-auto fs-16">Aman Sahu</label>
                             </div>

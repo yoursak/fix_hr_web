@@ -1,6 +1,9 @@
 <!-- JQUERY JS -->
 <script src={{ asset('assets/plugins/jquery/jquery.min.js') }}></script>
 
+{{-- fontawsome --}}
+<script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
+
 <!-- BOOTSTRAP JS -->
 <script src={{ asset('assets/plugins/bootstrap/js/popper.min.js') }}></script>
 <script src={{ asset('assets/plugins/bootstrap/js/bootstrap.min.js') }}></script>
@@ -605,6 +608,99 @@
             $('#repoerCard4').toggleClass('bg-inf', 300);
 
             $('#contentCard4').fadeToggle(300);
+        });
+    });
+
+    // Employee Summary in profile page
+
+    $('document').ready(function(){
+        $('#selected_btn1').click(function (e) {
+            e.preventDefault();
+            $('#selected_btn1').addClass('selected');
+            $('#selected_btn2').removeClass('selected');
+            $('#selected_btn3').removeClass('selected');
+            $('#selected_btn4').removeClass('selected');
+            $('#selected_btn5').removeClass('selected');
+            $('#selected_btn6').removeClass('selected');
+            $('#selected_btn7').removeClass('selected');
+            $('#selected_btn8').removeClass('selected');
+        });
+        $('#selected_btn2').click(function (e) {
+            e.preventDefault();
+            $('#selected_btn1').removeClass('selected');
+            $('#selected_btn2').addClass('selected');
+            $('#selected_btn3').removeClass('selected');
+            $('#selected_btn4').removeClass('selected');
+            $('#selected_btn5').removeClass('selected');
+            $('#selected_btn6').removeClass('selected');
+            $('#selected_btn7').removeClass('selected');
+            $('#selected_btn8').removeClass('selected');
+        });
+        $('#selected_btn3').click(function (e) {
+            e.preventDefault();
+            $('#selected_btn1').removeClass('selected');
+            $('#selected_btn2').removeClass('selected');
+            $('#selected_btn3').addClass('selected');
+            $('#selected_btn4').removeClass('selected');
+            $('#selected_btn5').removeClass('selected');
+            $('#selected_btn6').removeClass('selected');
+            $('#selected_btn7').removeClass('selected');
+            $('#selected_btn8').removeClass('selected');
+        });
+        $('#selected_btn4').click(function (e) {
+            e.preventDefault();
+            $('#selected_btn1').removeClass('selected');
+            $('#selected_btn2').removeClass('selected');
+            $('#selected_btn3').removeClass('selected');
+            $('#selected_btn4').addClass('selected');
+            $('#selected_btn5').removeClass('selected');
+            $('#selected_btn6').removeClass('selected');
+            $('#selected_btn7').removeClass('selected');
+            $('#selected_btn8').removeClass('selected');
+        });
+        $('#selected_btn5').click(function (e) {
+            e.preventDefault();
+            $('#selected_btn1').removeClass('selected');
+            $('#selected_btn2').removeClass('selected');
+            $('#selected_btn3').removeClass('selected');
+            $('#selected_btn4').removeClass('selected');
+            $('#selected_btn5').addClass('selected');
+            $('#selected_btn6').removeClass('selected');
+            $('#selected_btn7').removeClass('selected');
+            $('#selected_btn8').removeClass('selected');
+        });
+        $('#selected_btn6').click(function (e) {
+            e.preventDefault();
+            $('#selected_btn1').removeClass('selected');
+            $('#selected_btn2').removeClass('selected');
+            $('#selected_btn3').removeClass('selected');
+            $('#selected_btn4').removeClass('selected');
+            $('#selected_btn5').removeClass('selected');
+            $('#selected_btn6').addClass('selected');
+            $('#selected_btn7').removeClass('selected');
+            $('#selected_btn8').removeClass('selected');
+        });
+        $('#selected_btn7').click(function (e) {
+            e.preventDefault();
+            $('#selected_btn1').removeClass('selected');
+            $('#selected_btn2').removeClass('selected');
+            $('#selected_btn3').removeClass('selected');
+            $('#selected_btn4').removeClass('selected');
+            $('#selected_btn5').removeClass('selected');
+            $('#selected_btn6').removeClass('selected');
+            $('#selected_btn7').addClass('selected');
+            $('#selected_btn8').removeClass('selected');
+        });
+        $('#selected_btn8').click(function (e) {
+            e.preventDefault();
+            $('#selected_btn1').removeClass('selected');
+            $('#selected_btn2').removeClass('selected');
+            $('#selected_btn3').removeClass('selected');
+            $('#selected_btn4').removeClass('selected');
+            $('#selected_btn5').removeClass('selected');
+            $('#selected_btn6').removeClass('selected');
+            $('#selected_btn7').removeClass('selected');
+            $('#selected_btn8').addClass('selected');
         });
     });
 </script>
