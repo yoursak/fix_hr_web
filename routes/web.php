@@ -13,6 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/admin/login', function () {
+    return view('auth.admin.login');
+});
+
+Route::get('/employee/login', function () {
+    return view('auth.employee.login');
+});
+
+
 Route::get('/', function () {
     return view('admin.dashboard.dashboard');
 });
@@ -27,6 +36,9 @@ Route::get('/summary', function () {
 
 Route::get('/attendance', function () {
     return view('admin.attendance.attendance');
+});
+Route::get('/employee-attendance', function () {
+    return view('admin.attendance.emp_attendace');
 });
 
 Route::get('/employee', function () {

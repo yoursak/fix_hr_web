@@ -57,7 +57,7 @@
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" href="{{ url('/onlinepay') }}">
-                            <i class="feather feather-dollar-sign sidemenu_icon"></i>
+                            <i class="fa fa-inr sidemenu_icon"></i>
                             <span class="side-menu__label">Online Pay</span>
                         </a>
                     </li>

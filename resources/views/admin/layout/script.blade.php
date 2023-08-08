@@ -483,38 +483,9 @@
     });
 
     //Branches setting
-    $(document).ready(function() {
-        $('#BranchSavebtn').click(function(e) {
-            $('#editBranch4').fadeOut();
-            $('#editBranch3').fadeOut(200)
-            $('#editBranch2').fadeOut(350)
-            $('#editBranch1').fadeOut(400)
-            $('#editBranch').fadeOut(450)
-            $('#BranchSavebtn').addClass('d-none')
-            $('#BranchEditbtn').removeClass('d-none')
 
-        });
-        $('#BranchEditbtn').click(function(e) {
-            $('#editBranch').removeClass('d-none');
-            $('#editBranch').fadeIn(200)
-            $('#editBranch1').fadeIn(350)
-            $('#editBranch2').fadeIn(400)
-            $('#editBranch3').fadeIn(450)
-            $('#BranchSavebtn').removeClass('d-none')
-            $('#BranchEditbtn').addClass('d-none')
-        });
-        $('#addNewBranch').click(function(e) {
-            $('#addBranch').fadeIn();
-            $('#addBranch').removeClass('d-none');
-            $('#SaveNewBranch').removeClass('d-none');
-            $('#addNewBranch').addClass('d-none');
-        });
-        $('#SaveNewBranch').click(function(e) {
-            $('#addBranch').fadeOut();
-            $('#addBranch').removeClass('d-none');
-            $('#SaveNewBranch').addClass('d-none');
-            $('#addNewBranch').removeClass('d-none');
-        });
+    $('document').ready(function(){
+
     });
 
     //Departmentes setting
@@ -797,6 +768,7 @@
         $('#saved').addClass(effect);
         $('#bulkOnlinePay').addClass(effect);
         $('#bulkAllowance').addClass(effect);
+        $('#branchName').addClass(effect);
     }); // hide modal with effect
 
     $('#modaldemo8').on('hidden.bs.modal', function(e) {

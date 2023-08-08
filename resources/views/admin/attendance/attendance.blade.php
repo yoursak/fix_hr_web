@@ -14,8 +14,8 @@ Attendance
                     <label class="form-label">Current Time</label>
                 </div>
                 <div class="btn-list text-center mt-5">
-                    <a href="javascript:void(0);" class="btn ripple btn-primary disabled">Clock in</a>
-                    <a href="javascript:void(0);" class="btn ripple btn-primary">Clock Out</a>
+                    <a href="javascript:void(0);" class="btn ripple btn-primary disabled">Punch In</a>
+                    <a href="javascript:void(0);" class="btn ripple btn-primary">Punch Out</a>
                 </div>
             </div>
         </div>
@@ -176,11 +176,11 @@ Attendance
                                 <th class="border-bottom-0 w-5">#Emp ID</th>
                                 <th class="border-bottom-0">Emp Name</th>
                                 <th class="border-bottom-0">Status</th>
-                                <th class="border-bottom-0">Clock In</th>
-                                <th class="border-bottom-0">Clock Out</th>
+                                <th class="border-bottom-0">Punch In</th>
+                                <th class="border-bottom-0">Punch Out</th>
+                                <th class="border-bottom-0">Production Hour</th>
                                 <th class="border-bottom-0">IP Address</th>
                                 <th class="border-bottom-0">Working From</th>
-                                <th class="border-bottom-0">Attendance</th>
                                 <th class="border-bottom-0">Actions</th>
                             </tr>
                         </thead>
@@ -200,9 +200,9 @@ Attendance
                                 <td><span class="badge badge-success-light">Present</span></td>
                                 <td>09:30 AM</td>
                                 <td>06:30 PM</td>
+                                <td>04:08 Hr</td>
                                 <td>225.192.45.1</td>
                                 <td>Office</td>
-                                <td><span class="badge badge-success">Marked</span></td>
                                 <td>
                                     <div class="d-flex">
                                         <label class="custom-control custom-checkbox-md">
@@ -210,307 +210,9 @@ Attendance
                                                 name="example-checkbox1" value="option1" checked>
                                             <span class="custom-control-label-md success"></span>
                                         </label>
-                                        <a href="javascript:void(0);" class="action-btns1 bg-light"
-                                            data-bs-toggle="modal" data-bs-target="#presentmodal">
+                                        <a href="{{url('/employee-attendance')}}" class="action-btns1 bg-light">
                                             <i class="feather feather-eye primary text-primary" data-bs-toggle="tooltip"
                                                 data-original-title="View"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#4987</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <span class="avatar avatar-md brround me-3"
-                                            style="background-image: url(assets/images/users/9.jpg)"></span>
-                                        <div class="me-3 mt-0 mt-sm-1 d-block">
-                                            <h6 class="mb-1 fs-14">Austin Bell</h6>
-                                            <p class="text-muted mb-0 fs-12">Angular Developer</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-danger-light">Absent</span></td>
-                                <td>09:30 AM</td>
-                                <td>06:30 PM</td>
-                                <td>225.192.45.2</td>
-                                <td>Office</td>
-                                <td><span class="badge badge-danger">Not Marked</span></td>
-                                <td>
-                                    <div class="d-flex">
-                                        <label class="custom-control custom-checkbox-md">
-                                            <input type="checkbox" class="custom-control-input-success"
-                                                name="example-checkbox1" value="option1">
-                                            <span class="custom-control-label-md success"></span>
-                                        </label>
-                                        <a href="javascript:void(0);" class="action-btns1 bg-light"
-                                            data-bs-toggle="modal" data-bs-target="#presentmodal1">
-                                            <i class="feather feather-eye primary text-primary"
-                                                data-bs-toggle="tooltip" data-original-title="View"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#6729</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <span class="avatar avatar-md brround me-3"
-                                            style="background-image: url(assets/images/users/2.jpg)"></span>
-                                        <div class="me-3 mt-0 mt-sm-1 d-block">
-                                            <h6 class="mb-1 fs-14">Maria Bower</h6>
-                                            <p class="text-muted mb-0 fs-12">Marketing analyst</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-success-light">Present</span></td>
-                                <td>09:30 AM</td>
-                                <td>06:30 PM</td>
-                                <td>225.192.45.1</td>
-                                <td>Office</td>
-                                <td><span class="badge badge-success">Marked</span></td>
-                                <td>
-                                    <div class="d-flex">
-                                        <label class="custom-control custom-checkbox-md">
-                                            <input type="checkbox" class="custom-control-input-success"
-                                                name="example-checkbox1" value="option1" checked>
-                                            <span class="custom-control-label-md success"></span>
-                                        </label>
-                                        <a href="javascript:void(0);" class="action-btns1 bg-light"
-                                            data-bs-toggle="modal" data-bs-target="#presentmodal">
-                                            <i class="feather feather-eye primary text-primary"
-                                                data-bs-toggle="tooltip" data-original-title="View"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#2098</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <span class="avatar avatar-md brround me-3"
-                                            style="background-image: url(assets/images/users/10.jpg)"></span>
-                                        <div class="me-3 mt-0 mt-sm-1 d-block">
-                                            <h6 class="mb-1 fs-14">Peter Hill</h6>
-                                            <p class="text-muted mb-0 fs-12">Testor</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-warning-light">Half Day</span></td>
-                                <td>09:30 AM</td>
-                                <td>01:30 PM</td>
-                                <td>225.192.45.1</td>
-                                <td>Office</td>
-                                <td><span class="badge badge-danger">Not Marked</span></td>
-                                <td>
-                                    <div class="d-flex">
-                                        <label class="custom-control custom-checkbox-md">
-                                            <input type="checkbox" class="custom-control-input-success"
-                                                name="example-checkbox1" value="option1">
-                                            <span class="custom-control-label-md success"></span>
-                                        </label>
-                                        <a href="javascript:void(0);" class="action-btns1 bg-light"
-                                            data-bs-toggle="modal" data-bs-target="#halfpresentmodal">
-                                            <i class="feather feather-eye primary text-primary"
-                                                data-bs-toggle="tooltip" data-original-title="View"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#1025</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <span class="avatar avatar-md brround me-3"
-                                            style="background-image: url(assets/images/users/3.jpg)"></span>
-                                        <div class="me-3 mt-0 mt-sm-1 d-block">
-                                            <h6 class="mb-1 fs-14">Victoria Lyman</h6>
-                                            <p class="text-muted mb-0 fs-12">General Manager</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-success-light">Present</span></td>
-                                <td>09:30 AM</td>
-                                <td>06:30 PM</td>
-                                <td>225.192.45.1</td>
-                                <td>Office</td>
-                                <td><span class="badge badge-success">Marked</span></td>
-                                <td>
-                                    <div class="d-flex">
-                                        <label class="custom-control custom-checkbox-md">
-                                            <input type="checkbox" class="custom-control-input-success"
-                                                name="example-checkbox1" value="option1" checked>
-                                            <span class="custom-control-label-md success"></span>
-                                        </label>
-                                        <a href="javascript:void(0);" class="action-btns1 bg-light"
-                                            data-bs-toggle="modal" data-bs-target="#presentmodal">
-                                            <i class="feather feather-eye primary text-primary"
-                                                data-bs-toggle="tooltip" data-original-title="View"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#3262</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <span class="avatar avatar-md brround me-3"
-                                            style="background-image: url(assets/images/users/11.jpg)"></span>
-                                        <div class="me-3 mt-0 mt-sm-1 d-block">
-                                            <h6 class="mb-1 fs-14">Adam Quinn</h6>
-                                            <p class="text-muted mb-0 fs-12">Accountant</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-success-light">Present</span></td>
-                                <td>09:30 AM</td>
-                                <td>06:30 PM</td>
-                                <td>225.192.45.1</td>
-                                <td>Office</td>
-                                <td><span class="badge badge-success">Marked</span></td>
-                                <td>
-                                    <div class="d-flex">
-                                        <label class="custom-control custom-checkbox-md">
-                                            <input type="checkbox" class="custom-control-input-success"
-                                                name="example-checkbox1" value="option1" checked>
-                                            <span class="custom-control-label-md success"></span>
-                                        </label>
-                                        <a href="javascript:void(0);" class="action-btns1 bg-light"
-                                            data-bs-toggle="modal" data-bs-target="#presentmodal">
-                                            <i class="feather feather-eye primary text-primary"
-                                                data-bs-toggle="tooltip" data-original-title="View"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#3489</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <span class="avatar avatar-md brround me-3"
-                                            style="background-image: url(assets/images/users/4.jpg)"></span>
-                                        <div class="me-3 mt-0 mt-sm-1 d-block">
-                                            <h6 class="mb-1 fs-14">Melanie Coleman</h6>
-                                            <p class="text-muted mb-0 fs-12">App Designer</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-success-light">Present</span></td>
-                                <td>09:30 AM</td>
-                                <td>06:30 PM</td>
-                                <td>225.192.45.1</td>
-                                <td>Office</td>
-                                <td><span class="badge badge-success">Marked</span></td>
-                                <td>
-                                    <div class="d-flex">
-                                        <label class="custom-control custom-checkbox-md">
-                                            <input type="checkbox" class="custom-control-input-success"
-                                                name="example-checkbox1" value="option1" checked>
-                                            <span class="custom-control-label-md success"></span>
-                                        </label>
-                                        <a href="javascript:void(0);" class="action-btns1 bg-light"
-                                            data-bs-toggle="modal" data-bs-target="#presentmodal">
-                                            <i class="feather feather-eye primary text-primary"
-                                                data-bs-toggle="tooltip" data-original-title="View"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#3698</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <span class="avatar avatar-md brround me-3"
-                                            style="background-image: url(assets/images/users/12.jpg)"></span>
-                                        <div class="me-3 mt-0 mt-sm-1 d-block">
-                                            <h6 class="mb-1 fs-14">Max Wilson</h6>
-                                            <p class="text-muted mb-0 fs-12">PHP Developer</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-orange-light">Late</span></td>
-                                <td>10:30 AM</td>
-                                <td>06:30 PM</td>
-                                <td>225.192.45.1</td>
-                                <td>Office</td>
-                                <td><span class="badge badge-danger">Not Marked</span></td>
-                                <td>
-                                    <div class="d-flex">
-                                        <label class="custom-control custom-checkbox-md">
-                                            <input type="checkbox" class="custom-control-input-success"
-                                                name="example-checkbox1" value="option1">
-                                            <span class="custom-control-label-md success"></span>
-                                        </label>
-                                        <a href="javascript:void(0);" class="action-btns1 bg-light"
-                                            data-bs-toggle="modal" data-bs-target="#presentmodal1">
-                                            <i class="feather feather-eye primary text-primary"
-                                                data-bs-toggle="tooltip" data-original-title="View"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#5612</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <span class="avatar avatar-md brround me-3"
-                                            style="background-image: url(assets/images/users/5.jpg)"></span>
-                                        <div class="me-3 mt-0 mt-sm-1 d-block">
-                                            <h6 class="mb-1 fs-14">Amelia Russell</h6>
-                                            <p class="text-muted mb-0 fs-12">UX Designer</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-success-light">Present</span></td>
-                                <td>10:30 AM</td>
-                                <td>06:30 PM</td>
-                                <td>225.192.45.1</td>
-                                <td>Office</td>
-                                <td><span class="badge badge-success">Marked</span></td>
-                                <td>
-                                    <div class="d-flex">
-                                        <label class="custom-control custom-checkbox-md">
-                                            <input type="checkbox" class="custom-control-input-success"
-                                                name="example-checkbox1" value="option1" checked>
-                                            <span class="custom-control-label-md success"></span>
-                                        </label>
-                                        <a href="javascript:void(0);" class="action-btns1 bg-light"
-                                            data-bs-toggle="modal" data-bs-target="#presentmodal1">
-                                            <i class="feather feather-eye primary text-primary"
-                                                data-bs-toggle="tooltip" data-original-title="View"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#0245</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <span class="avatar avatar-md brround me-3"
-                                            style="background-image: url(assets/images/users/13.jpg)"></span>
-                                        <div class="me-3 mt-0 mt-sm-1 d-block">
-                                            <h6 class="mb-1 fs-14">Justin Metcalfe</h6>
-                                            <p class="text-muted mb-0 fs-12">Web Designer</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-success-light">Present</span></td>
-                                <td>10:30 AM</td>
-                                <td>06:30 PM</td>
-                                <td>225.192.45.1</td>
-                                <td>Office</td>
-                                <td><span class="badge badge-success">Marked</span></td>
-                                <td>
-                                    <div class="d-flex">
-                                        <label class="custom-control custom-checkbox-md">
-                                            <input type="checkbox" class="custom-control-input-success"
-                                                name="example-checkbox1" value="option1" checked>
-                                            <span class="custom-control-label-md success"></span>
-                                        </label>
-                                        <a href="javascript:void(0);" class="action-btns1 bg-light"
-                                            data-bs-toggle="modal" data-bs-target="#presentmodal1">
-                                            <i class="feather feather-eye primary text-primary"
-                                                data-bs-toggle="tooltip" data-original-title="View"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -527,7 +229,7 @@ Attendance
 </div>
 <!-- END ROW -->
 
-<!-- PRESENT MODAL -->
+{{-- <!-- PRESENT MODAL -->
 <div class="modal fade" id="presentmodal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -542,7 +244,7 @@ Attendance
                     <div class="col-md-4">
                         <div class="pt-5 text-center">
                             <h6 class="mb-1 fs-16 font-weight-semibold">09:30 AM</h6>
-                            <small class="text-muted fs-14">Clock In</small>
+                            <small class="text-muted fs-14">Punch In</small>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -554,7 +256,7 @@ Attendance
                     <div class="col-md-4">
                         <div class="pt-5 text-center">
                             <h6 class="mb-1 fs-16 font-weight-semibold"> 06:30 PM</h6>
-                            <small class="text-muted fs-14">Clock Out</small>
+                            <small class="text-muted fs-14">Punch Out</small>
                         </div>
                     </div>
                 </div>
@@ -581,9 +283,9 @@ Attendance
         </div>
     </div>
 </div>
-<!-- END PRESENT MODAL  -->
+<!-- END PRESENT MODAL  --> --}}
 
-<!-- EDIT MODAL -->
+{{-- <!-- EDIT MODAL -->
 <div class="modal fade" id="editmodal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -597,7 +299,7 @@ Attendance
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">
-                            <label class="form-label">Clock In</label>
+                            <label class="form-label">Punch In</label>
                             <div class="input-group">
                                 <input type="text" class="form-control timepicker" value="9:30 AM">
                                 <div class="input-group-text">
@@ -617,7 +319,7 @@ Attendance
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">
-                            <label class="form-label">Clock Out</label>
+                            <label class="form-label">Punch Out</label>
                             <div class="input-group">
                                 <input type="text" class="form-control timepicker" value="06: 30 PM">
                                 <div class="input-group-text">
@@ -663,7 +365,7 @@ Attendance
         </div>
     </div>
 </div>
-<!-- END EDIT MODAL -->
+<!-- END EDIT MODAL --> --}}
 
 <!-- PRESENT MODAL1 -->
 <div class="modal fade" id="presentmodal1">
@@ -680,7 +382,7 @@ Attendance
                     <div class="col-md-4">
                         <div class="pt-5 text-center">
                             <h6 class="mb-1 fs-16 font-weight-semibold">09:30 AM</h6>
-                            <small class="text-muted fs-14">Clock In</small>
+                            <small class="text-muted fs-14">Punch In</small>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -692,7 +394,7 @@ Attendance
                     <div class="col-md-4">
                         <div class="pt-5 text-center">
                             <h6 class="mb-1 fs-16 font-weight-semibold"> 06:30 PM</h6>
-                            <small class="text-muted fs-14">Clock Out</small>
+                            <small class="text-muted fs-14">Punch Out</small>
                         </div>
                     </div>
                 </div>
@@ -734,7 +436,7 @@ Attendance
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">
-                            <label class="form-label">Clock In</label>
+                            <label class="form-label">Punch In</label>
                             <div class="input-group">
                                 <input type="text" class="form-control timepicker" value="9:30 AM">
                                 <div class="input-group-text">
@@ -754,7 +456,7 @@ Attendance
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">
-                            <label class="form-label">Clock Out</label>
+                            <label class="form-label">Punch Out</label>
                             <div class="input-group">
                                 <input type="text" class="form-control timepicker" value="06: 30 PM">
                                 <div class="input-group-text">
@@ -816,7 +518,7 @@ Attendance
                     <div class="col-md-4">
                         <div class="pt-5 text-center">
                             <h6 class="mb-1 fs-16 font-weight-semibold">09:30 AM</h6>
-                            <small class="text-muted fs-14">Clock In</small>
+                            <small class="text-muted fs-14">Punch In</small>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -828,7 +530,7 @@ Attendance
                     <div class="col-md-4">
                         <div class="pt-5 text-center">
                             <h6 class="mb-1 fs-16 font-weight-semibold"> 01:30 PM</h6>
-                            <small class="text-muted fs-14">Clock Out</small>
+                            <small class="text-muted fs-14">Punch Out</small>
                         </div>
                     </div>
                 </div>
@@ -871,7 +573,7 @@ Attendance
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">
-                            <label class="form-label">Clock In</label>
+                            <label class="form-label">Punch In</label>
                             <div class="input-group">
                                 <input type="text" class="form-control timepicker" value="9:30 AM">
                                 <div class="input-group-text">
@@ -891,7 +593,7 @@ Attendance
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">
-                            <label class="form-label">Clock Out</label>
+                            <label class="form-label">Punch Out</label>
                             <div class="input-group">
                                 <input type="text" class="form-control timepicker" value="01: 30 PM">
                                 <div class="input-group-text">
