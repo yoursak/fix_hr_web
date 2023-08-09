@@ -105,7 +105,7 @@ $('.rescalendar').rescalendar({
 
 - You can instantiate several calendar objects on the same page. 
 - You can instantiate all the calendars with the same data if you identify them with a common class.
-- Check the index.html in the demo for more information
+- Check the #in the demo for more information
 - To run the tests, install Cypress (npm install cypress), then run the tests like this: $(npm bin)/cypress open
 
 

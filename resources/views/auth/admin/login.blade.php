@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
-<!-- Mirrored from laravelui.spruko.com/dayone/coming by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Jul 2023 06:22:37 GMT -->
-<!-- Added by HTTrack -->
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<!-- Developed from Aman sahu  by Aman Sahu [XR&CO'2014], Tue, 18 Jul 2023 06:22:37 GMT -->
+<!-- Added by FixingDots-->
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by FixingDots-->
 
 <head>
 
@@ -56,6 +56,7 @@
                     <form class="card-body pt-1" id="login" name="login">
                         <div class="form-group">
                             <div class="input-group mb-4">
+                                <label for="login" class="fw-bold">Enter Phone Number</label>
                                 <div class="input-group">
                                     <a href="#" class="input-group-text">
                                         <i class="fe fe-phone" aria-hidden="true"></i>
@@ -64,21 +65,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="input-group mb-4">
-                                <div class="input-group">
-                                    <a href="#" class="input-group-text">
-                                        <i class="fe fe-phone" aria-hidden="true"></i>
-                                    </a>
-                                    <input class="form-control" placeholder="eg. XXXXXX">
-                                </div>
-                            </div>
-                        </div>
                         <div class="submit">
-                            <a class="btn btn-primary btn-block" href="index.html">Login</a>
-                        </div>
-                        <div class="submit">
-                            <a class="btn btn-primary btn-block" href="index.html">Verify OTP</a>
+                            <a class="btn btn-primary btn-block" href="#">Login</a>
                         </div>
                         <div class="text-center mt-3">
                             <p class="text-dark mb-0">Don't have account?<a class="text-primary ms-1"
@@ -128,6 +116,6 @@
 
 </body>
 
-<!-- Mirrored from laravelui.spruko.com/dayone/coming by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Jul 2023 06:22:37 GMT -->
+<!-- Developed from Aman sahu  by Aman Sahu [XR&CO'2014], Tue, 18 Jul 2023 06:22:37 GMT -->
 
 </html>

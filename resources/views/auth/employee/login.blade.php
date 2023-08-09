@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
-<!-- Mirrored from laravelui.spruko.com/dayone/coming by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Jul 2023 06:22:37 GMT -->
-<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<!-- Developed from Aman sahu  by Aman Sahu [XR&CO'2014], Tue, 18 Jul 2023 06:22:37 GMT -->
+<!-- Added by FixingDots--><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by FixingDots-->
 <head>
 
 		<!-- META DATA -->
@@ -113,5 +113,5 @@
 
 	</body>
 
-<!-- Mirrored from laravelui.spruko.com/dayone/coming by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Jul 2023 06:22:37 GMT -->
+<!-- Developed from Aman sahu  by Aman Sahu [XR&CO'2014], Tue, 18 Jul 2023 06:22:37 GMT -->
 </html>
