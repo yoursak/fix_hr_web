@@ -67,17 +67,11 @@
                         <p class="h5 font-weight-normal mb-4 leading-normal">Make Your Human Resource Online</p>
                         <h4 class="mb-3 f-w-400">Sign up</h4>
 						<div class="input-group mb-3">
-							<input type="text" class="form-control" placeholder="Username">
-						</div>
-						<div class="input-group mb-3">
 							<input type="email" class="form-control" placeholder="Email address">
 						</div>
-						<div class="input-group mb-4">
-							<input type="password" class="form-control" placeholder="Password">
-						</div>
-                        <button class="btn btn-block btn-primary mb-4 rounded" style="background-color:#0000ff">Signin</button>
-                        <p class="mb-0 text-muted">Don’t have an account? <a href="#"
-                                class="f-w-400">Signup</a></p>
+                        <button class="btn btn-block btn-primary mb-4 rounded" style="background-color:#0000ff">Send OTP</button>
+                        <p class="mb-0 text-muted">Already have an account? <a href="{{url('/admin/login')}}"
+                                class="f-w-400">Sign In</a></p>
                     </div>
                 </div>
             </div>

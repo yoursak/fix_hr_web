@@ -63,26 +63,32 @@
                         <h1 class="h3  mb-3">Welcome to <span style="color: black"><b>FIX<span
                                         style="color: #0000ff">HR</span></b></span></h1>
                         <p class="h5 font-weight-normal mb-4 leading-normal">Make Your Human Resource Online</p>
-                        <h4 class="mb-3 f-w-400">Signin</h4>
+                        <h4 class="mb-3 f-w-400">Business Details</h4>
                         <div class="input-group mb-3">
-                            <input type="email" class="form-control" placeholder="Email address">
+                            <input type="text" class="form-control" placeholder="Enter Your Name">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Enter Business Name">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Business Category">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Mobile">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Business Address">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="GST Number">
                         </div>
                         <button class="btn btn-block btn-primary mb-4 rounded"
-                            style="background-color:#0000ff"><a href="{{url('/admin/otp')}}" class="text-light">Send OTP</a></button>
-                        <p class="mb-0 text-muted">Don’t have an account? <a href="{{url('/admin/signup')}}" class="f-w-400"
-                                style="color: #0000ff">Signup</a></p>
+                            style="background-color:#0000ff">Save & continue</button>
+                        <p class="mb-0 text-muted">Assign business latter? <a href="#" class="f-w-400"
+                                style="color: #0000ff">Skip</a></p>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="text-center">
-            <div class="saprator my-2"><span>OR</span></div>
-            <button class="btn text-white bg-facebook mb-2 mr-2  wid-40 px-0 hei-40 rounded-circle"><i
-                    class="fab fa-facebook-f"></i></button>
-            <button class="btn text-white bg-googleplus mb-2 mr-2 wid-40 px-0 hei-40 rounded-circle"><i
-                    class="fab fa-google-plus-g"></i></button>
-            <button class="btn text-white bg-twitter mb-2  wid-40 px-0 hei-40 rounded-circle"><i
-                    class="fab fa-twitter"></i></button>
         </div>
     </div>
     <svg width="100%" height="250px" version="1.1" xmlns="http://www.w3.org/2000/svg" class="wave bg-wave">

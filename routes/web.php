@@ -19,6 +19,12 @@ Route::get('/admin/login', function () {
 Route::get('/admin/signup', function () {
     return view('auth.admin.signup');
 });
+Route::get('/admin/otp', function () {
+    return view('auth.admin.otp');
+});
+Route::get('/admin/business', function () {
+    return view('auth.admin.business');
+});
 
 Route::get('/employee/login', function () {
     return view('auth.employee.login');
