@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 
-<!-- Developed from Aman sahu  by Aman Sahu [XR&CO'2014], Tue, 18 Jul 2023 06:22:37 GMT -->
-<!-- Added by FixingDots-->
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by FixingDots-->
+
+<!-- Mirrored from html.phoenixcoded.net/mintone/bootstrap/default/auth-signin.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 19 Dec 2022 09:46:53 GMT -->
 
 <head>
 
-    <!-- META DATA -->
     <meta charset="UTF-8">
     <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
     <meta
@@ -18,160 +16,153 @@
         content="admin dashboard, dashboard ui, backend, admin panel, admin template, dashboard template, admin, bootstrap, laravel, laravel admin panel, php admin panel, php admin dashboard, laravel admin template, laravel dashboard, laravel admin panel" />
 
     <!-- TITLE -->
-    <title> Dayone - Laravel Multipurpose Admin & Dashboard Template</title>
+    <title> FixHR Login</title>
 
     <!--FAVICON -->
-    <link rel="icon" href="{{ asset('assets/images/brand/favicon.ico') }}" type="image/x-icon" />
+    <link rel="icon" href="assets/images/brand/favicon.ico" type="image/x-icon" />
 
     <!-- BOOTSTRAP CSS -->
-    <link href="{{ asset('assets/plugins/bootstrap/css/bootstrap.css') }}" rel="stylesheet" />
+    <link href="assets/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" />
 
     <!-- STYLE CSS -->
-    <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" />
-    <link href="{{ asset('assets/css/plugins.css') }}" rel="stylesheet" />
+    <link href="assets/css/style.css" rel="stylesheet" />
+    <link href="assets/css/plugins.css" rel="stylesheet" />
 
     <!-- ANIMATE CSS -->
-    <link href="{{ asset('assets/css/animated.css') }}" rel="stylesheet" />
+    <link href="assets/css/animated.css" rel="stylesheet" />
 
     <!---ICONS CSS -->
-    <link href="{{ asset('assets/plugins/icons/icons.css') }}" rel="stylesheet" />
+    <link href="assets/plugins/icons/icons.css" rel="stylesheet" />
 
 
     <!-- INTERNAL SWITCHER CSS -->
-    <link href="{{ asset('assets/switcher/css/switcher.css') }}" rel="stylesheet" />
-    <link href="{{ asset('assets/switcher/demo.css') }}" rel="stylesheet" />
-     <style>
-        // best seen at 1500px or less
+    <link href="assets/switcher/css/switcher.css" rel="stylesheet" />
+    <link href="assets/switcher/demo.css" rel="stylesheet" />
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="">
+    <meta name="author" content="" />
+    <!-- Favicon icon -->
+    <link rel="icon" href="{{ asset('assetss/images/favicon.png" type="image/x-icon') }}">
 
-html, body { height: 100%; }
-body {
-  background:radial-gradient(ellipse at center, rgba(255,254,234,1) 0%, rgba(255,254,234,1) 35%, #B7E8EB 100%);
-  overflow: hidden;
-}
+    <!-- vendor css -->
+    <link rel="stylesheet" href="{{ asset('assetss/css/style.css') }}">
 
-.ocean {
-  height: 5%;
-  width:100%;
-  position:absolute;
-  bottom:0;
-  left:0;
-  background: #015871;
-}
-
-.wave {
-  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg) repeat-x;
-  position: absolute;
-  top: -198px;
-  width: 6400px;
-  height: 198px;
-  animation: wave 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) infinite;
-  transform: translate3d(0, 0, 0);
-}
-
-.wave:nth-of-type(2) {
-  top: -175px;
-  animation: wave 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) -.125s infinite, swell 7s ease -1.25s infinite;
-  opacity: 1;
-}
-
-@keyframes wave {
-  0% {
-    margin-left: 0;
-  }
-  100% {
-    margin-left: -1600px;
-  }
-}
-
-@keyframes swell {
-  0%, 100% {
-    transform: translate3d(0,-25px,0);
-  }
-  50% {
-    transform: translate3d(0,5px,0);
-  }
-}
-     </style>
 
 </head>
 
-<body class="login-img">
-
-    <div class="page responsive-log coming-bg">
-        <div class="page-content p-7 m-0">
-            <div class="container text-center">
-                <span class="avatar avatar-xxl bradius" style="background-image: url(assets/images/users/8.jpg)"></span>
-                <div class="display-4 mb-1 mt-3 font-weight-semibold">Welcome to <span style="color: #0000ff"><b><span style="color: #080808">Fix</span>HR</b></span>
-                </div>
-                <h1 class="h4">Make Your Human Resource Online</h1>
-                <div class="coming-footer">
-                    <form class="card-body pt-1" id="login" name="login">
-                        <div class="form-group">
-                            <div class="input-group mb-4">
-                                <label for="login" class="fw-bold">Enter Your Email</label>
-                                <div class="input-group">
-                                    <a href="#" class="input-group-text">
-                                        <i class="fe fe-mail" aria-hidden="true"></i>
-                                    </a>
-                                    <input class="form-control" placeholder="eg. xyz@gmail.com">
-                                </div>
-                            </div>
+<!-- [ auth-signin ] start -->
+<div class="auth-wrapper">
+    <div class="auth-content text-center">
+        <div class="card">
+            <div class="row align-items-center">
+                <div class="col-md-12">
+                    <div class="card-body">
+                        <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" class="img-fluid mb-4">
+                        <h1 class="h3  mb-3">Welcome to <span style="color: black"><b>FIX<span
+                                        style="color: #0000ff">HR</span></b></span></h1>
+                        <p class="h5 font-weight-normal mb-4 leading-normal">Make Your Human Resource Online</p>
+                        <h4 class="mb-3 f-w-400">Signin</h4>
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Email address">
                         </div>
-                        <div class="submit">
-                            <a class="btn btn-primary btn-block btn-lg" href="#">Login</a>
-                        </div>
-                        <div class="text-center mt-3">
-                            <p class="text-dark mb-0">Don't have account?<a class="text-primary ms-1"
-                                    href="javascript:void(0);">Register</a></p>
-                        </div>
-                    </form>
-                    <div class="card-body border-top-0 pb-6 pt-2">
-                        <div class="text-center">
-                            <span class="avatar btn brround me-3 bg-primary-transparent text-primary"><i
-                                    class="ri-facebook-line"></i></span>
-                            <span class="avatar btn brround me-3 bg-primary-transparent text-primary"><i
-                                    class="ri-instagram-line"></i></span>
-                            <span class="avatar btn brround me-3 bg-primary-transparent text-primary"><i
-                                    class="ri-twitter-line"></i></span>
-                        </div>
+                        <button class="btn btn-block btn-primary mb-4 rounded">Signin</button>
+                        <p class="mb-0 text-muted">Don’t have an account? <a href="auth-signup.html"
+                                class="f-w-400">Signup</a></p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="ocean">
-            <div class="wave"></div>
-            <div class="wave"></div>
-          </div>
+        <div class="text-center">
+            <div class="saprator my-2"><span>OR</span></div>
+            <button class="btn text-white bg-facebook mb-2 mr-2  wid-40 px-0 hei-40 rounded-circle"><i
+                    class="fab fa-facebook-f"></i></button>
+            <button class="btn text-white bg-googleplus mb-2 mr-2 wid-40 px-0 hei-40 rounded-circle"><i
+                    class="fab fa-google-plus-g"></i></button>
+            <button class="btn text-white bg-twitter mb-2  wid-40 px-0 hei-40 rounded-circle"><i
+                    class="fab fa-twitter"></i></button>
+        </div>
     </div>
+    <svg width="100%" height="250px" version="1.1" xmlns="http://www.w3.org/2000/svg" class="wave bg-wave">
+        <title>Wave</title>
+        <defs></defs>
+        <path id="feel-the-wave" d="" />
+    </svg>
+    <svg width="100%" height="250px" version="1.1" xmlns="http://www.w3.org/2000/svg" class="wave bg-wave">
+        <title>Wave</title>
+        <defs></defs>
+        <path id="feel-the-wave-two" d="" />
+    </svg>
+    <svg width="100%" height="250px" version="1.1" xmlns="http://www.w3.org/2000/svg" class="wave bg-wave">
+        <title>Wave</title>
+        <defs></defs>
+        <path id="feel-the-wave-three" d="" />
+    </svg>
+</div>
+<!-- [ auth-signin ] end -->
+
+<!-- Required Js -->
+<script src="{{ asset('assetss/js/vendor-all.min.js') }}"></script>
+<script src="{{ asset('assetss/js/plugins/bootstrap.min.js') }}"></script>
+<script src="{{ asset('assetss/js/waves.min.js') }}"></script>
+<script src="{{ asset('assetss/js/pages/TweenMax.min.js') }}"></script>
+<script src="{{ asset('assetss/js/pages/jquery.wavify.js') }}"></script>
+<!-- JQUERY JS -->
+<script src="assets/plugins/jquery/jquery.min.js"></script>
+
+<!-- BOOTSTRAP JS-->
+<script src="assets/plugins/bootstrap/js/popper.min.js"></script>
+<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- SELECT2 JS -->
+<script src="assets/plugins/select2/select2.full.min.js"></script>
+
+<!-- P-SCROLL JS -->
+<script src="assets/plugins/p-scrollbar/p-scrollbar.js"></script>
+
+<!--STICKY JS -->
+<script src="assets/js/sticky.js"></script>
+
+<!-- COLOR THEME JS-->
+<script src="assets/js/themeColors.js"></script>
+
+<!-- CUSTOM JS -->
+<script src="assets/js/custom.js"></script>
+
+<!-- SWITCHER -->
+<script src="assets/switcher/js/switcher.js"></script>
+<script>
+    $('#feel-the-wave').wavify({
+        height: 100,
+        bones: 3,
+        amplitude: 90,
+        color: 'rgba(72, 134, 255, 4)',
+        speed: .25
+    });
+    $('#feel-the-wave-two').wavify({
+        height: 70,
+        bones: 5,
+        amplitude: 60,
+        color: 'rgba(72, 134, 255, .3)',
+        speed: .35
+    });
+    $('#feel-the-wave-three').wavify({
+        height: 50,
+        bones: 4,
+        amplitude: 50,
+        color: 'rgba(72, 134, 255, .2)',
+        speed: .45
+    });
+</script>
 
 
-    <!-- JQUERY JS -->
-    <script src="assets/plugins/jquery/jquery.min.js"></script>
-
-    <!-- BOOTSTRAP JS-->
-    <script src="assets/plugins/bootstrap/js/popper.min.js"></script>
-    <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-
-    <!-- SELECT2 JS -->
-    <script src="assets/plugins/select2/select2.full.min.js"></script>
-
-    <!-- P-SCROLL JS -->
-    <script src="assets/plugins/p-scrollbar/p-scrollbar.js"></script>
-
-    <!--STICKY JS -->
-    <script src="assets/js/sticky.js"></script>
-
-    <!-- COLOR THEME JS-->
-    <script src="assets/js/themeColors.js"></script>
-
-    <!-- CUSTOM JS -->
-    <script src="assets/js/custom.js"></script>
-
-    <!-- SWITCHER -->
-    <script src="assets/switcher/js/switcher.js"></script>
 
 </body>
 
-<!-- Developed from Aman sahu  by Aman Sahu [XR&CO'2014], Tue, 18 Jul 2023 06:22:37 GMT -->
+
+<!-- Mirrored from html.phoenixcoded.net/mintone/bootstrap/default/auth-signin.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 19 Dec 2022 09:47:00 GMT -->
 
 </html>
