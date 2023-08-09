@@ -65,26 +65,22 @@
                         <h1 class="h3  mb-3">Welcome to <span style="color: black"><b>FIX<span
                                         style="color: #0000ff">HR</span></b></span></h1>
                         <p class="h5 font-weight-normal mb-4 leading-normal">Make Your Human Resource Online</p>
-                        <h4 class="mb-3 f-w-400">Signin</h4>
-                        <div class="input-group mb-3">
-                            <input type="email" class="form-control" placeholder="Email address">
-                        </div>
-                        <button class="btn btn-block btn-primary mb-4 rounded"
-                            style="background-color:#0000ff">Signin</button>
-                        <p class="mb-0 text-muted">Don’t have an account? <a href="#" class="f-w-400"
-                                style="color: #0000ff">Signup</a></p>
+                        <h4 class="mb-3 f-w-400">Sign up</h4>
+						<div class="input-group mb-3">
+							<input type="text" class="form-control" placeholder="Username">
+						</div>
+						<div class="input-group mb-3">
+							<input type="email" class="form-control" placeholder="Email address">
+						</div>
+						<div class="input-group mb-4">
+							<input type="password" class="form-control" placeholder="Password">
+						</div>
+                        <button class="btn btn-block btn-primary mb-4 rounded" style="background-color:#0000ff">Signin</button>
+                        <p class="mb-0 text-muted">Don’t have an account? <a href="#"
+                                class="f-w-400">Signup</a></p>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="text-center">
-            <div class="saprator my-2"><span>OR</span></div>
-            <button class="btn text-white bg-facebook mb-2 mr-2  wid-40 px-0 hei-40 rounded-circle"><i
-                    class="fab fa-facebook-f"></i></button>
-            <button class="btn text-white bg-googleplus mb-2 mr-2 wid-40 px-0 hei-40 rounded-circle"><i
-                    class="fab fa-google-plus-g"></i></button>
-            <button class="btn text-white bg-twitter mb-2  wid-40 px-0 hei-40 rounded-circle"><i
-                    class="fab fa-twitter"></i></button>
         </div>
     </div>
     <svg width="100%" height="250px" version="1.1" xmlns="http://www.w3.org/2000/svg" class="wave bg-wave">
