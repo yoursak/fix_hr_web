@@ -1,84 +1,105 @@
-@extends('admin.setting.setting')
-@section('subtitle')
-    Salary / Branch Setting
-@endsection
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
 
-@section('css')
-    <style>
-        .rotate {
-            transition: 500ms;
-            transform: rotate(90deg);
-            /* Adjust the desired rotation value */
-        }
+<!-- Developed By fixingfots.com/FixingDots/index2    /3.x [XR&CO'2014], Tue, 18 Jul 2023 06:20:41 GMT -->
+<!-- Added   -->
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added   -->
 
-        .bg-inf {
-            /* background-color: #a3d5dd; */
-            /* Change to your desired color */
-        }
-    </style>
-@endsection
-@section('settings')
-    <div class="page-header d-md-flex d-block">
-        <div class="page-leftheader">
-            <div class="page-title">Branch Setting</div>
-            <p class="text-muted">2 Active Branch</p>
-        </div>
-        <div class="page-rightheader ms-md-auto">
-            <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-                <div class="d-lg-flex d-block">
-                    <div class="btn-list">
-                        <button type="button" id="addNewBranch" class="btn btn-outline-dark" data-bs-toggle="modal"
-                            data-bs-target="#branchName">Add Branch</button>
-                        <button type="button" id="addNewDepart" class="btn btn-outline-dark" data-bs-toggle="modal"
-                            data-bs-target="#departName">Add Department</button>
-                        <button type="button" id="addNewDesig" class="btn btn-outline-dark" data-bs-toggle="modal"
-                            data-bs-target="#desigName">Add Designation</button>
+<head>
+    @include('admin.layout.head')
+    @yield('css')
+</head>
+
+<body class="app sidebar-mini ltr">
+
+    <div class="row m-5">
+        <div class="page-header d-block">
+            <div class="page-leftheader d-flex justify-content-center">
+                <h1 class="display-5">Add New Branch</h1>
+            </div>
+            <div class="page-rightheader ms-md-auto">
+                <div class="d-flex justify-content-center flex-wrap my-auto end-content breadcrumb-end">
+                    <div class="d-lg-flex d-block">
+                        <div class="btn-list">
+                            <button type="button" id="addNewBranch" class="btn btn-outline-dark" data-bs-toggle="modal"
+                                data-bs-target="#branchName">Add Branch</button>
+                            <button type="button" id="addNewDepart" class="btn btn-outline-dark" data-bs-toggle="modal"
+                                data-bs-target="#departName">Add Department</button>
+                            <button type="button" id="addNewDesig" class="btn btn-outline-dark" data-bs-toggle="modal"
+                                data-bs-target="#desigName">Add Designation</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="card" id="repoerCard4">
-            <div class="card-body border-bottum-0">
-                <div class="row">
-                    <div class="col-11 my-auto">
-                        <div class="row">
-                            <div class="col-xl-9 my-auto">
-                                <h5 class="my-auto">FixingDots</h5>
-                            </div>
-                            <div class="col-xl-3">
-                                <p class="my-auto text-muted text-end">
-                                    <a href="javascript:void(0);" class="action-btns" data-bs-toggle="modal"
-                                        data-bs-target="#editBranchName" id="BranchEditbtn" title="Edit">
-                                        <i class="feather feather-edit  text-dark"></i>
-                                    </a>
-                                    <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                        data-bs-placement="top" id="BranchDeletebtn" title="Delete">
-                                        <i class="feather feather-trash text-dark"></i>
-                                    </a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-1 my-auto text-end">
-                        <i class="fe fe-chevron-right fs-30 btn " id="reportBtn4"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body border-bottum-0 m-3" id="contentCard4">
-                <div class="row">
-                    <div class="card" id="repoerCard2">
-                        <div class="card-header  border-0">
-                            <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Department</b></span></h4>
-                        </div>
-                        <div class="card-body border-bottum-0">
+        <div class="row">
+            <div class="card" id="repoerCard4">
+                <div class="card-body border-bottum-0">
+                    <div class="row">
+                        <div class="col-11 my-auto">
                             <div class="row">
-                                <div class="col-11 my-auto">
+                                <div class="col-xl-9 my-auto">
+                                    <h5 class="my-auto">FixingDots</h5>
+                                </div>
+                                <div class="col-xl-3">
+                                    <p class="my-auto text-muted text-end">
+                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="modal"
+                                            data-bs-target="#editBranchName" id="BranchEditbtn" title="Edit">
+                                            <i class="feather feather-edit  text-dark"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" id="BranchDeletebtn" title="Delete">
+                                            <i class="feather feather-trash text-dark"></i>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-1 my-auto text-end">
+                            <i class="fe fe-chevron-right fs-30 btn " id="reportBtn4"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body border-bottum-0 m-3" id="contentCard4">
+                    <div class="row">
+                        <div class="card" id="repoerCard2">
+                            <div class="card-header  border-0">
+                                <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Department</b></span></h4>
+                            </div>
+                            <div class="card-body border-bottum-0">
+                                <div class="row">
+                                    <div class="col-11 my-auto">
+                                        <div class="row">
+                                            <div class="col-xl-8 my-auto">
+                                                <h5 class="my-auto">Informaton Technology</h5>
+                                            </div>
+                                            <div class="col-xl-3">
+                                                <p class="my-auto text-muted text-end">
+                                                    <a href="javascript:void(0);" class="action-btns" data-bs-toggle="modal"
+                                                        data-bs-target="#editBranchName" id="BranchEditbtn" title="Edit">
+                                                        <i class="feather feather-edit  text-dark"></i>
+                                                    </a>
+                                                    <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" id="BranchDeletebtn" title="Delete">
+                                                        <i class="feather feather-trash text-dark"></i>
+                                                    </a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-1 my-auto text-end">
+                                        <i class="fe fe-chevron-right fs-30 btn " id="reportBtn2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card" id="contentCard2">
+                                <div class="card-header  border-0">
+                                    <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Designation</b></span></h4>
+                                </div>
+                                <div class="card-body border-bottum-0">
                                     <div class="row">
-                                        <div class="col-xl-8 my-auto">
-                                            <h5 class="my-auto">Informaton Technology</h5>
+                                        <div class="col-xl-9 my-auto">
+                                            <h5 class="my-auto">Software Engineer</h5>
                                         </div>
                                         <div class="col-xl-3">
                                             <p class="my-auto text-muted text-end">
@@ -94,44 +115,18 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-1 my-auto text-end">
-                                    <i class="fe fe-chevron-right fs-30 btn " id="reportBtn2"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card" id="contentCard2">
-                            <div class="card-header  border-0">
-                                <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Designation</b></span></h4>
-                            </div>
-                            <div class="card-body border-bottum-0">
-                                <div class="row">
-                                    <div class="col-xl-9 my-auto">
-                                        <h5 class="my-auto">Software Engineer</h5>
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <p class="my-auto text-muted text-end">
-                                            <a href="javascript:void(0);" class="action-btns" data-bs-toggle="modal"
-                                                data-bs-target="#editBranchName" id="BranchEditbtn" title="Edit">
-                                                <i class="feather feather-edit  text-dark"></i>
-                                            </a>
-                                            <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" id="BranchDeletebtn" title="Delete">
-                                                <i class="feather feather-trash text-dark"></i>
-                                            </a>
-                                        </p>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class=" text-end">
+        <a href="{{ url('/') }}" class="btn btn-primary" id="formsave" data-bs-toggle="tooltip"
+            data-bs-placement="top" title="Save">Save & continue</a>
+        <a href="{{ url('/') }}" class="btn btn-outline-primary" id="formsave" data-bs-toggle="tooltip"
+            data-bs-placement="top" title="Save">Skip</a>
     </div>
-
-    <div class=" text-end">
-        <a href="{{ url('settings/businesssetting') }}" class="btn btn-success" id="formsave" data-bs-toggle="tooltip"
-            data-bs-placement="top" title="Save">Save</a>
     </div>
 
     {{-- Edit Branch Name --}}
@@ -260,4 +255,14 @@
             </div>
         </div>
     </div>
-@endsection
+
+    <!-- BACK TO TOP -->
+    <a href="#top" id="back-to-top"><span class="feather feather-chevrons-up"></span></a>
+
+    @yield('script')
+    @include('admin.layout.script')
+</body>
+
+<!-- Developed By fixingfots.com/FixingDots/index2    /3.x [XR&CO'2014], Tue, 18 Jul 2023 06:20:43 GMT -->
+
+</html>

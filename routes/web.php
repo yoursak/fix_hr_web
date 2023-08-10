@@ -22,8 +22,17 @@ Route::get('/admin/signup', function () {
 Route::get('/admin/otp', function () {
     return view('auth.admin.otp');
 });
+Route::get('/admin/otp_mobile', function () {
+    return view('auth.admin.otp_mobile');
+});
 Route::get('/admin/business', function () {
     return view('auth.admin.business');
+});
+Route::get('/admin/owner', function () {
+    return view('auth.admin.owner');
+});
+Route::get('/admin/branch', function () {
+    return view('auth.admin.branch');
 });
 
 Route::get('/employee/login', function () {

@@ -19,25 +19,21 @@
     <title> FixHR Login</title>
 
     <!--FAVICON -->
-    <link rel="icon" href="assets/images/brand/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="{{ asset('assets/images/brand/favicon.ico') }}" type="image/x-icon" />
 
     <!-- BOOTSTRAP CSS -->
-    <link href="assets/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/bootstrap/css/bootstrap.css') }}" rel="stylesheet" />
 
     <!-- STYLE CSS -->
-    <link href="assets/css/style.css" rel="stylesheet" />
-    <link href="assets/css/plugins.css" rel="stylesheet" />
+    <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/css/plugins.css') }}" rel="stylesheet" />
 
     <!-- ANIMATE CSS -->
-    <link href="assets/css/animated.css" rel="stylesheet" />
+    <link href="{{ asset('assets/css/animated.css') }}" rel="stylesheet" />
 
     <!---ICONS CSS -->
-    <link href="assets/plugins/icons/icons.css" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/icons/icons.css') }}" rel="stylesheet" />
 
-
-    <!-- INTERNAL SWITCHER CSS -->
-    <link href="assets/switcher/css/switcher.css" rel="stylesheet" />
-    <link href="assets/switcher/demo.css" rel="stylesheet" />
     <!-- Meta -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
@@ -54,58 +50,78 @@
 
 <!-- [ auth-signin ] start -->
 <div class="auth-wrapper">
-    <div class="auth-content text-center">
-        <div class="card">
-            <div class="row align-items-center">
-                <div class="col-md-12">
-                    <div class="card-body">
-                        <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" class="img-fluid mb-4">
-                        <h1 class="h3  mb-3">Welcome to <span style="color: black"><b>FIX<span
-                                        style="color: #0000ff">HR</span></b></span></h1>
-                        <p class="h5 font-weight-normal mb-4 leading-normal">Make Your Human Resource Online</p>
-                        <h4 class="mb-3 f-w-400">Business Details</h4>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Enter Your Name">
+    <div class="row d-flex justify-content-center">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="display-6 card-title"><b>Business Details</b></div>
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12">
+                            <input type="file" class="dropify"
+                                data-default-file="{{asset('imgs/business.gif')}}"
+                                data-height="180" />
                         </div>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Enter Business Name">
+                        <div class="col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Business Category</label>
+                                <select class="form-control  select2" data-placeholder="Select Country">
+                                    <option label="Select Country"></option>
+                                    <option value="1">Germany</option>
+                                    <option value="2">Canada</option>
+                                    <option value="3">Usa</option>
+                                    <option value="4">Afghanistan</option>
+                                    <option value="5">Albania</option>
+                                    <option value="6">China</option>
+                                    <option value="7">Denmark</option>
+                                    <option value="8">Finland</option>
+                                    <option value="9">India</option>
+                                    <option value="10">Kiribati</option>
+                                    <option value="11">Kuwait</option>
+                                    <option value="12">Mexico</option>
+                                    <option value="13">Pakistan</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Business Category">
+                        <div class="col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Business Name</label>
+                                <input type="text" class="form-control" placeholder="Business Name">
+                            </div>
                         </div>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Mobile">
+                        <div class="col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Owner Name</label>
+                                <input type="text" class="form-control" placeholder="Owner Name">
+                            </div>
                         </div>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Business Address">
+                        <div class="col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Email address</label>
+                                <input type="email" class="form-control" value="XXXXXsin@gmail.com" placeholder="Email" disabled>
+                            </div>
                         </div>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="GST Number">
+                        <div class="col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" placeholder="eg. +91 XXXXXXXXX5">
+                            </div>
                         </div>
-                        <button class="btn btn-block btn-primary mb-4 rounded"
-                            style="background-color:#0000ff">Save & continue</button>
-                        <p class="mb-0 text-muted">Assign business latter? <a href="#" class="f-w-400"
-                                style="color: #0000ff">Skip</a></p>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Address</label>
+                                <textarea name="" rows="2"></textarea>
+                            </div>
+                        </div>
+
                     </div>
+                </div>
+                <div class="card-footer text-end">
+                    <a  href="{{url('admin/branch')}}" class="btn btn-primary">Save & Continue</a>
+                    <a  href="#" class="btn btn-outline-primary">Skip</a>
                 </div>
             </div>
         </div>
     </div>
-    <svg width="100%" height="250px" version="1.1" xmlns="http://www.w3.org/2000/svg" class="wave bg-wave">
-        <title>Wave</title>
-        <defs></defs>
-        <path id="feel-the-wave" d="" />
-    </svg>
-    <svg width="100%" height="250px" version="1.1" xmlns="http://www.w3.org/2000/svg" class="wave bg-wave">
-        <title>Wave</title>
-        <defs></defs>
-        <path id="feel-the-wave-two" d="" />
-    </svg>
-    <svg width="100%" height="250px" version="1.1" xmlns="http://www.w3.org/2000/svg" class="wave bg-wave">
-        <title>Wave</title>
-        <defs></defs>
-        <path id="feel-the-wave-three" d="" />
-    </svg>
 </div>
 <!-- [ auth-signin ] end -->
 
@@ -116,29 +132,47 @@
 <script src="{{ asset('assetss/js/pages/TweenMax.min.js') }}"></script>
 <script src="{{ asset('assetss/js/pages/jquery.wavify.js') }}"></script>
 <!-- JQUERY JS -->
-<script src="assets/plugins/jquery/jquery.min.js"></script>
+<script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
 
 <!-- BOOTSTRAP JS-->
-<script src="assets/plugins/bootstrap/js/popper.min.js"></script>
-<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="{{ asset('assets/plugins/bootstrap/js/popper.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
 
 <!-- SELECT2 JS -->
-<script src="assets/plugins/select2/select2.full.min.js"></script>
+<script src="{{ asset('assets/plugins/select2/select2.full.min.js') }}"></script>
 
 <!-- P-SCROLL JS -->
-<script src="assets/plugins/p-scrollbar/p-scrollbar.js"></script>
+<script src="{{ asset('assets/plugins/p-scrollbar/p-scrollbar.js') }}"></script>
 
 <!--STICKY JS -->
-<script src="assets/js/sticky.js"></script>
+<script src="{{ asset('assets/js/sticky.js') }}"></script>
 
 <!-- COLOR THEME JS-->
-<script src="assets/js/themeColors.js"></script>
+<script src="{{ asset('assets/js/themeColors.js') }}"></script>
 
 <!-- CUSTOM JS -->
-<script src="assets/js/custom.js"></script>
+<script src="{{ asset('assets/js/custom.js') }}"></script>
 
 <!-- SWITCHER -->
-<script src="assets/switcher/js/switcher.js"></script>
+<script src="{{ asset('assets/switcher/js/switcher.js') }}"></script>
+
+<!-- INTERNAL FORM ADVANCED ELEMENT JS -->
+<script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
+<script src="{{ asset('assets/js/form-elements.js') }}"></script>
+<script src="{{ asset('assets/js/select2.js') }}"></script>
+
+<!-- INTERNAL FILE-UPLOADS JS -->
+<script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
+<script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
+<script src="{{ asset('assets/plugins/fancyuploder/jquery.iframe-transport.js') }}"></script>
+<script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
+<script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
+
+<!-- INTERNAL FILE-UPLOADS JS -->
+<script src="{{ asset('assets/plugins/fileupload/js/dropify.js') }}"></script>
+<script src="{{ asset('assets/js/filupload.js') }}"></script>
+
+
 <script>
     $('#feel-the-wave').wavify({
         height: 100,

@@ -66,7 +66,7 @@
                                         style="color: #0000ff">HR</span></b></span></h1>
                         <p class="h5 font-weight-normal mb-4 leading-normal">Make Your Human Resource Online</p>
                         <h4 class="mb-3 f-w-400">Verify OTP</h4>
-                        <span>Otp sended on <b>amansahu.er@gmail.com</b></span>
+                        <span>Otp sended on <b>+91 XXXXXX1766</b></span>
 						<div class="input-group mb-3">
 							<input type="email" class="form-control" placeholder="eg. XXX XXX">
 						</div>
