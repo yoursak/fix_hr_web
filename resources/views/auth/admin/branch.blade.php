@@ -7,7 +7,18 @@
 
 <head>
     @include('admin.layout.head')
-    @yield('css')
+    <style>
+        .rotate {
+            transition: 500ms;
+            transform: rotate(90deg);
+            /* Adjust the desired rotation value */
+        }
+
+        .bg-inf {
+            background-color: #a3d5dd;
+            /* Change to your desired color */
+        }
+    </style>
 </head>
 
 <body class="app sidebar-mini ltr">
@@ -15,7 +26,7 @@
     <div class="row m-5">
         <div class="page-header d-block">
             <div class="page-leftheader d-flex justify-content-center">
-                <h1 class="display-5">Add New Branch</h1>
+                <h1 class="display-5">Create Your Business Portfolio</h1>
             </div>
             <div class="page-rightheader ms-md-auto">
                 <div class="d-flex justify-content-center flex-wrap my-auto end-content breadcrumb-end">

@@ -5,12 +5,12 @@
 
 
 @section('css')
-<style>
-    .selected{
-        background-color: #353a40;
-        color: white;
-    }
-</style>
+    <style>
+        .selected {
+            background-color: #353a40;
+            color: white;
+        }
+    </style>
 @endsection
 
 @section('contents')
@@ -18,29 +18,50 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-xl-3 ">
+                    <div class="col-xl-2">
                         <img class="mx-auto d-block" src="{{ asset('imgs/user.png') }}" alt="">
                     </div>
-                    <div class="col-xl-9">
-                        <div class="card mx-3">
-                            <div class="card-body">
-                                <ul>
-                                    <li class="my-5"><span class="fs-16"><b><i class="fa fa-user mx-3"></i>Name:</b></span><span class="fs-16 mx-2">Aman
-                                            Sahu</span></li>
-                                    <li class="my-5"><span class="fs-16"><b><i class="fa fa-briefcase mx-3"></i>Designation:</b></span><span
-                                            class="fs-16 mx-2">Software Developer</span></li>
-                                    <li class="my-5"><span class="fs-16"><b><i class="fa fa-calendar mx-3"></i>Date of Birth:</b></span><span
-                                            class="fs-16 mx-2">July 07, 2000</span></li>
-                                    <li class="my-5"><span class="fs-16"><b><i class="fa fa-phone mx-3"></i>Phone:</b></span><span class="fs-16 mx-2">+91
-                                            8319151766</span></li>
-                                    <li class="my-5"><span class="fs-16"><b><i class="fa fa-envelope mx-3"></i>Email:</b></span><span
-                                            class="fs-16 mx-2">amansahu.er@gmail.com</span></li>
-                                    <li class="my-5"><span class="fs-16"><b><i class="fa fa-address-card mx-3"></i>Address:</b></span><span
-                                            class="fs-16 mx-2">Ring Road No. - 2 Opposite Dixit Doers, Gondwara, Bilaspur
-                                            Rd, Bhanpuri, Raipur, Chhattisgarh 492001</span></li>
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="col-xl-3">
+                        <ul>
+                            <li class="my-4"><span class="h1"><b>Aman Sahu</b></span>
+                                <p><span class="fs-16" style="color: #97928e"><b>Software Developer</b></span></p>
+                            </li>
+                            <li class="my-5"><span class="fs-16"><b><i
+                                            class="fa fa-briefcase mx-3"></i>Department:</b></span><span
+                                    class="fs-16 mx-2">IT</span></li>
+                            <li class="my-5"><span class="fs-16"><b><i class="fa fa-briefcase mx-3"></i>Emp
+                                        ID:</b></span><span class="fs-16 mx-2">FD011</span></li>
+                            <li class="my-5"><span class="fs-16"><b><i class="fa fa-calendar mx-3"></i>Date of
+                                        Joining:</b></span><span class="fs-16 mx-2">July 07, 2023</span></li>
+                            <li class="my-5"><span class="fs-16"><b><i class="fa fa-envelope mx-3"></i>Reports
+                                        to:</b></span><span class="fs-16 mx-2"><span class="avatar avatar-sm brround mx-2"
+                                        style="background-image: url(assets/images/users/15.jpg)"></span>Dilip Sahu</span>
+                            </li>
+                            <li class="btn btn-outline-primary"><a
+                                    href="mailto:amansahu.er@gmail.com?subject = Feedback&body = Message">
+                                    Send Mail
+                                </a></li>
+
+                        </ul>
+                    </div>
+                    <div class="col-xl-7 bl">
+                        <ul class="ps-4" style="border-left:dashed 2px #97928e;">
+                            <li class="my-5"><span class="fs-16"><b><i
+                                            class="fa fa-phone mx-3"></i>Phone:</b></span><span class="fs-16 mx-2">+91
+                                    8319151766</span></li>
+                            <li class="my-5"><span class="fs-16"><b><i
+                                            class="fa fa-envelope mx-3"></i>Email:</b></span><span
+                                    class="fs-16 mx-2">amansahu.er@gmail.com</span></li>
+                            <li class="my-5"><span class="fs-16"><b><i class="fa fa-calendar mx-3"></i>Date of
+                                        Birth:</b></span><span class="fs-16 mx-2">July 07, 2000</span></li>
+                            <li class="my-5"><span class="fs-16"><b><i
+                                            class="fa fa-street-view mx-3"></i>Gender:</b></span><span
+                                    class="fs-16 mx-2">Male</span></li>
+                            <li class="my-5"><span class="fs-16"><b><i
+                                            class="fa fa-address-card mx-3"></i>Address:</b></span><span
+                                    class="fs-16 mx-2">Ring Road No. - 2 Opposite Dixit Doers, Gondwara, Bilaspur
+                                    Rd, Bhanpuri, Raipur, Chhattisgarh 492001</span></li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -49,7 +70,7 @@
 
     <div class="page-header d-sm-flex d-block">
         <div class="page-leftheader">
-            <div class="page-title"><i class="fa fa-bank mx-2"></i>Bank Details<span
+            <div class="page-title"><i class="fa fa-bank mx-2"></i>Bank Acount Details<span
                     class="font-weight-normal text-muted ms-2"></span></div>
         </div>
         <div class="page-rightheader ms-md-auto">
@@ -68,10 +89,11 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-xl-12">
+                    <div class="col-xl-6">
                         <div class="card mx-3">
                             <div class="card-body">
-                                <ul>
+                                <ul class="pe-4" style="border-right:dashed 2px #97928e;">
+                                    <li class="my-5"><span class="fs-24"><b>Bank Details</b></span></li>
                                     <li class="my-5"><span class="fs-16"><b>A/c Holder Name:</b></span><span
                                             class="fs-16 mx-2">Aman Sahu</span></li>
                                     <li class="my-5"><span class="fs-16"><b>A/c Number:</b></span><span
@@ -85,6 +107,21 @@
                                     <li class="my-5"><span class="fs-16"><b>Address:</b></span><span
                                             class="fs-16 mx-2">Ring Road No. - 2 Opposite Dixit Doers, Gondwara, Bilaspur
                                             Rd, Bhanpuri, Raipur, Chhattisgarh 492001</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="card mx-3">
+                            <div class="card-body">
+                                <ul>
+                                    <li class="my-5"><span class="fs-24"><b>UPI Details</b></span></li>
+                                    <li class="my-5"><span class="fs-16"><b>UPI Holder Name:</b></span><span
+                                            class="fs-16 mx-2">Aman Sahu</span></li>
+                                    <li class="my-5"><span class="fs-16"><b>UPI ID:</b></span><span
+                                            class="fs-16 mx-2">83XXXXXX66@ybl</span></li>
+                                    <li class="my-5"><span class="fs-16"><b>Phone:</b></span><span
+                                            class="fs-16 mx-2">8319151766</span></li>
                                 </ul>
                             </div>
                         </div>
@@ -134,7 +171,7 @@
                         <h4 class="mt-3"><i class="fa fa-truck mx-1"></i>Allowance Bonus</h4>
                     </div>
                     <div id="selected_btn7" class="col-xl-3 btn btn-outline-dark">
-                        <h4 class="mt-3"><i class="fa fa-dollar mx-1"></i>Deduction</h4>
+                        <h4 class="mt-3"><i class="fa fa-scissors mx-1"></i>Deduction</h4>
                     </div>
                     <div id="selected_btn8" class="col-xl-3 btn btn-outline-dark">
                         <h4 class="mt-3"><i class="fa fa-taxi mx-1"></i>Leaves</h4>

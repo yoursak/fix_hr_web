@@ -12,7 +12,7 @@ Support	       :   support@spruko.com
 -------------------------------------------------------------------*/
 $('.dropify').dropify({
   messages: {
-    'default': 'Drag and drop a file here or click',
+    'default': 'Upload Your Business Profile',
     'replace': 'Drag and drop or click to replace',
     'remove': 'Remove',
     'error': 'Ooops, something wrong appended.'
