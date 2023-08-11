@@ -96,18 +96,18 @@
         <div class="col-xl-4">
             <div class="card">
                 <div class="card-header border-bottom-0">
-                    <h4 class="my-5">Timesheet<span class="fs-14 mx-3 text-muted">Tue, 08th Aug 2023</span></h4>
+                    <h4 class="">Timesheet<span class="fs-14 mx-3 text-muted">Tue, 08th Aug 2023</span></h4>
                     <div class="page-rightheader ms-auto d-md-flex">
                         <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
                             <a href="#" class="btn btn-primary btn-sm">Approve</a>
                         </div>
                     </div>
                 </div>
-                <div class="card-body pb-5">
+                <div class="card-body">
                     <div class="col-sm-12 my-auto" style="height: 300px">
-                        <div class="row mb-5 mt-5">
+                        <div class="row">
                             <div class="col-4">
-                                <div class="pt-5 text-center">
+                                <div class=" text-center">
                                     <h6 class="mb-1 fs-16 font-weight-semibold">09:30 AM</h6>
                                     <small class="text-muted fs-14">Punch In</small>
                                 </div>
