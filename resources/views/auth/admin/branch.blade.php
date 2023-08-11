@@ -75,7 +75,8 @@
                     <div class="row">
                         <div class="card" id="repoerCard2">
                             <div class="card-header  border-0">
-                                <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Department</b></span></h4>
+                                <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Department</b></span>
+                                </h4>
                             </div>
                             <div class="card-body border-bottum-0">
                                 <div class="row">
@@ -86,12 +87,14 @@
                                             </div>
                                             <div class="col-xl-3">
                                                 <p class="my-auto text-muted text-end">
-                                                    <a href="javascript:void(0);" class="action-btns" data-bs-toggle="modal"
-                                                        data-bs-target="#editBranchName" id="BranchEditbtn" title="Edit">
+                                                    <a href="javascript:void(0);" class="action-btns"
+                                                        data-bs-toggle="modal" data-bs-target="#editBranchName"
+                                                        id="BranchEditbtn" title="Edit">
                                                         <i class="feather feather-edit  text-dark"></i>
                                                     </a>
-                                                    <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                                        data-bs-placement="top" id="BranchDeletebtn" title="Delete">
+                                                    <a href="javascript:void(0);" class="action-btns"
+                                                        data-bs-toggle="tooltip" data-bs-placement="top"
+                                                        id="BranchDeletebtn" title="Delete">
                                                         <i class="feather feather-trash text-dark"></i>
                                                     </a>
                                                 </p>
@@ -105,7 +108,8 @@
                             </div>
                             <div class="card" id="contentCard2">
                                 <div class="card-header  border-0">
-                                    <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Designation</b></span></h4>
+                                    <h4 class="card-title"><span
+                                            style="color:rgb(104, 96, 151)"><b>Designation</b></span></h4>
                                 </div>
                                 <div class="card-body border-bottum-0">
                                     <div class="row">
@@ -114,12 +118,14 @@
                                         </div>
                                         <div class="col-xl-3">
                                             <p class="my-auto text-muted text-end">
-                                                <a href="javascript:void(0);" class="action-btns" data-bs-toggle="modal"
-                                                    data-bs-target="#editBranchName" id="BranchEditbtn" title="Edit">
+                                                <a href="javascript:void(0);" class="action-btns"
+                                                    data-bs-toggle="modal" data-bs-target="#editBranchName"
+                                                    id="BranchEditbtn" title="Edit">
                                                     <i class="feather feather-edit  text-dark"></i>
                                                 </a>
-                                                <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                                    data-bs-placement="top" id="BranchDeletebtn" title="Delete">
+                                                <a href="javascript:void(0);" class="action-btns"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    id="BranchDeletebtn" title="Delete">
                                                     <i class="feather feather-trash text-dark"></i>
                                                 </a>
                                             </p>
@@ -133,11 +139,11 @@
             </div>
         </div>
         <div class=" text-end">
-        <a href="{{ url('/') }}" class="btn btn-primary" id="formsave" data-bs-toggle="tooltip"
-            data-bs-placement="top" title="Save">Save & continue</a>
-        <a href="{{ url('/') }}" class="btn btn-outline-primary" id="formsave" data-bs-toggle="tooltip"
-            data-bs-placement="top" title="Save">Skip</a>
-    </div>
+            <a href="{{ url('/') }}" class="btn btn-primary" id="formsave" data-bs-toggle="tooltip"
+                data-bs-placement="top" title="Save">Save & continue</a>
+            <a href="{{ url('/') }}" class="btn btn-outline-primary" id="formsave" data-bs-toggle="tooltip"
+                data-bs-placement="top" title="Save">Skip</a>
+        </div>
     </div>
 
     {{-- Edit Branch Name --}}

@@ -155,26 +155,26 @@
                     <div id="selected_btn1" class="col-xl-3 btn btn-outline-dark selected">
                         <h4 class="mt-3"><i class="fa fa-file-text mx-2"></i>Summary</h4>
                     </div>
-                    <a href="{{url('/employee-attendance')}}" class="col-xl-3 btn btn-outline-dark">
-                        <h4 class="mt-3"><i class="fa fa-user mx-1"></i>Attendance</h4>
+                    <a href="{{ url('/employee-attendance') }}" class="col-xl-3 btn btn-outline-dark">
+                        <h4 class="mt-3"><i class="fa fa-user me-2"></i>Attendance</h4>
                     </a>
                     <div id="selected_btn3" class="col-xl-3 btn btn-outline-dark">
-                        <h4 class="mt-3"><i class="fa fa-inr mx-1"></i>Payment</h4>
+                        <h4 class="mt-3"><i class="fa fa-inr me-2"></i>Payment</h4>
                     </div>
-                    <div id="selected_btn4" class="col-xl-3 btn btn-outline-dark">
-                        <h4 class="mt-3"><i class="fa fa-file mx-1"></i>Pay Slip</h4>
-                    </div>
+                    <a id="selected_btn4" class="modal-effect col-xl-3 btn btn-outline-dark text-dark" data-bs-toggle="modal" data-bs-target="#salarySlip">
+                        <h4 class="mt-3"><i class="fa fa-file me-2"></i>Salary Slip</h4>
+                    </a>
                     <div id="selected_btn5" class="col-xl-3 btn btn-outline-dark">
-                        <h4 class="mt-3"><i class="fa fa-hourglass mx-1"></i>Overtime</h4>
+                        <h4 class="mt-3"><i class="fa fa-hourglass me-2"></i>Overtime</h4>
                     </div>
                     <div id="selected_btn6" class="col-xl-3 btn btn-outline-dark">
-                        <h4 class="mt-3"><i class="fa fa-truck mx-1"></i>Allowance Bonus</h4>
+                        <h4 class="mt-3"><i class="fa fa-truck me-2"></i>Allowance Bonus</h4>
                     </div>
                     <div id="selected_btn7" class="col-xl-3 btn btn-outline-dark">
-                        <h4 class="mt-3"><i class="fa fa-scissors mx-1"></i>Deduction</h4>
+                        <h4 class="mt-3"><i class="fa fa-scissors me-2"></i>Deduction</h4>
                     </div>
                     <div id="selected_btn8" class="col-xl-3 btn btn-outline-dark">
-                        <h4 class="mt-3"><i class="fa fa-taxi mx-1"></i>Leaves</h4>
+                        <h4 class="mt-3"><i class="fa fa-taxi me-2"></i>Leaves</h4>
                     </div>
                 </div>
             </div>
@@ -419,5 +419,51 @@
             </div>
         </div>
     </div>
+    </div>
+
+    {{-- Employee Salary Slip --}}
+    <div class="modal fade" id="salarySlip">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+            <div class="modal-content modal-content-demo">
+                <div class="modal-header py-3">
+                    <h5>Download Salary slip</h5>
+                </div>
+                <div class="modal-body d-flex justify-content-around mt-3">
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <select name="month" class="form-control btn-outline-dark btn-sm" data-placeholder="Select Month" style="width: 18rem">
+                                <option label="Select Month"></option>
+                                <option value="1">January 2023</option>
+                                <option value="2">February 2023</option>
+                                <option value="3">March 2023</option>
+                                <option value="4">April 2023</option>
+                                <option value="5">May 2023</option>
+                                <option value="6">June 2023</option>
+                                <option value="7">July 2023</option>
+                                <option value="8">August 2023</option>
+                                <option value="9">September 2023</option>
+                                <option value="10">October 2023</option>
+                                <option value="11">November 2023</option>
+                                <option value="12">December 2023</option>
+                            </select>
+                        </div>
+                        <div class="col-sm d-flex justify-content-center my-5">
+                            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                <input type="radio" class="btn-check" name="btnradio" id="btnradio111">
+                                <label class="btn btn-outline-primary" for="btnradio111"  style="width: 9rem">Full Slip</label>
+                                <input type="radio" class="btn-check" name="btnradio" id="btnradio333">
+                                <label class="btn btn-outline-primary" for="btnradio333"  style="width: 9rem">Summary</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex justify-content-evenly my-2">
+                                <a href="#" class="btn btn-sm btn-primary px-4"><i class="fa fa-mail-forward me-2"></i>Share</a>
+                                <a href="#" class="btn btn-sm btn-primary"><i class="fa fa-download me-2"></i>Download</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection

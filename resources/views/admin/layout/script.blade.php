@@ -771,6 +771,7 @@
         $('#branchName').addClass(effect);
         $('#PunchIn').addClass(effect);
         $('#PunchOut').addClass(effect);
+        $('#salarySlip').addClass(effect);
     }); // hide modal with effect
 
     $('#modaldemo8').on('hidden.bs.modal', function(e) {

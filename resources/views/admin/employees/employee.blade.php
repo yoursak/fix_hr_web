@@ -88,7 +88,7 @@
                         <div class="page-rightheader ms-md-auto">
                             <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
                                 <div class="btn-list d-flex">
-                                    <a class="modal-effect btn btn-outline-primary border-0" data-effect="effect-scale"
+                                    <a class="modal-effect btn btn-outline-primary border-0 my-auto" data-effect="effect-scale"
                                         data-bs-toggle="modal" href="#empType">Add New Employee</a>
                                     <button class="btn btn-outline-light border-0" data-bs-toggle="tooltip"
                                         data-bs-placement="top">
@@ -101,14 +101,15 @@
                                             </a>
 
                                             <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated">
-                                                <a class=" dropdown-item d-flex" href="{{url('onlinepay/makepayment')}}">
+                                                <a class=" dropdown-item d-flex" href="{{ url('onlinepay/makepayment') }}">
                                                     <div class="mt-1">Online Pay</div>
                                                 </a>
-                                                <a class="dropdown-item d-flex" href="{{url('onlinepay/payment_entry')}}">
+                                                <a class="dropdown-item d-flex" href="{{ url('onlinepay/payment_entry') }}">
                                                     <div class="mt-1">Save Payment Entry</div>
                                                 </a>
 
-                                                <a class=" dropdown-item d-flex"  href="{{url('onlinepay/bulkallowance')}}">
+                                                <a class=" dropdown-item d-flex"
+                                                    href="{{ url('onlinepay/bulkallowance') }}">
                                                     <div class="mt-1">Allowance/Deduction/Bonus </div>
                                                 </a>
                                             </div>
@@ -1283,8 +1284,7 @@
                                                         <label class="form-label mb-0 mt-2">Salary</label>
                                                     </div>
                                                     <div class="col-md-9">
-                                                        <input type="text" class="form-control"
-                                                            placeholder="$Salary">
+                                                        <input type="text" class="form-control" placeholder="$Salary">
                                                     </div>
                                                 </div>
                                             </div>

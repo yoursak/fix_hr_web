@@ -134,7 +134,7 @@
                             </div>
                         </div>
                         <div class="d-flex">
-                            <a  class="btn btn-green btn-block text-white mt-5">Approve</a>
+                            <a class="btn btn-green btn-block text-white mt-5">Approve</a>
                         </div>
                     </div>
                 </div>
@@ -210,16 +210,18 @@
                                 <div class="tl-header">
                                     <span class="tl-marker"></span>
                                     <div class="row">
-                                        <div class="col-sm-10">
+                                        <div class="col-10">
                                             <p class="tl-title">Punch In at 10:00 AM | General Shift<br><span
                                                     class="text-muted fs-14 fw-light"><i
                                                         class="fa fa-map-marker mx-1"></i>Bhanpuri,
                                                     Raipur(CG)- 492001 AM</span>
                                             <p>
                                         </div>
-                                        <div class="col-sm-2">
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#PunchIn" class="my-auto">
-                                                <span class="avatar brround" style="background-image: url(assets/images/users/1.jpg)"></span>
+                                        <div class="col-2">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#PunchIn"
+                                                class="my-auto">
+                                                <span class="avatar avatar-sm brround"
+                                                    style="background-image: url(assets/images/users/1.jpg)"></span>
                                             </a>
                                         </div>
                                     </div>
@@ -227,16 +229,18 @@
                                 <div class="tl-header">
                                     <span class="tl-marker"></span>
                                     <div class="row">
-                                        <div class="col-sm-10">
+                                        <div class="col-10">
                                             <p class="tl-title">Punch Out at 10:00 AM | General Shift<br><span
                                                     class="text-muted fs-14 fw-light"><i
                                                         class="fa fa-map-marker mx-1"></i>Bhanpuri,
                                                     Raipur(CG)- 492001 AM</span>
                                             <p>
                                         </div>
-                                        <div class="col-sm-2">
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#PunchIn" class="my-auto">
-                                                <span class="avatar brround" style="background-image: url(assets/images/users/1.jpg)"></span>
+                                        <div class="col-2">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#PunchIn"
+                                                class="my-auto">
+                                                <span class="avatar avatar-sm brround"
+                                                    style="background-image: url(assets/images/users/1.jpg)"></span>
                                             </a>
                                         </div>
                                     </div>
