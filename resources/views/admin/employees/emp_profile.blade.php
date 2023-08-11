@@ -155,9 +155,9 @@
                     <div id="selected_btn1" class="col-xl-3 btn btn-outline-dark selected">
                         <h4 class="mt-3"><i class="fa fa-file-text mx-2"></i>Summary</h4>
                     </div>
-                    <div id="selected_btn2" class="col-xl-3 btn btn-outline-dark">
+                    <a href="{{url('/employee-attendance')}}" class="col-xl-3 btn btn-outline-dark">
                         <h4 class="mt-3"><i class="fa fa-user mx-1"></i>Attendance</h4>
-                    </div>
+                    </a>
                     <div id="selected_btn3" class="col-xl-3 btn btn-outline-dark">
                         <h4 class="mt-3"><i class="fa fa-inr mx-1"></i>Payment</h4>
                     </div>

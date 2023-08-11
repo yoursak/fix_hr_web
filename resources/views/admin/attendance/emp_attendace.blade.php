@@ -50,12 +50,12 @@
         }
 
         .tl-title {
-            font-weight: 600;
-            font-size: 1em;
+            font-weight: 650;
+            font-size: 12px;
         }
 
         .tl-time {
-            font-size: 0.7em;
+            font-size: 5px;
         }
 
         .tl-marker {
@@ -95,16 +95,12 @@
     <div class="row">
         <div class="col-xl-4">
             <div class="card">
-                <div class="card-header border-bottom-0">
+                <div class="card-header border-bottom-0 mb-5">
                     <h4 class="">Timesheet<span class="fs-14 mx-3 text-muted">Tue, 08th Aug 2023</span></h4>
-                    <div class="page-rightheader ms-auto d-md-flex">
-                        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
-                            <a href="#" class="btn btn-primary btn-sm">Approve</a>
-                        </div>
-                    </div>
+
                 </div>
-                <div class="card-body">
-                    <div class="col-sm-12 my-auto" style="height: 300px">
+                <div class="card-body mt-5">
+                    <div class="col-sm-12 my-auto" style="height: 260px">
                         <div class="row">
                             <div class="col-4">
                                 <div class=" text-center">
@@ -125,20 +121,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row text-center">
-                            <div class="col-6">
-                                <a href="#" data-bs-toggle="modal"
-                                data-bs-target="#PunchIn" class="my-auto">
-                                    <span class="avatar avatar-xxl" style="background-image: url(assets/images/users/7.jpg)"></span>
-                                </a>
-                            </div>
-                            <div class="col-6">
-                                <a href="#" data-bs-toggle="modal"
-                                data-bs-target="#PunchOut" class="my-auto">
-                                    <span class="avatar avatar-xxl" style="background-image: url(assets/images/users/7.jpg)"></span>
-                                </a>
-                            </div>
-                        </div>
                         <div class="my-5">
                             <div class="row">
                                 <div class="col-5 text-center border border-muted px-5 py-1 mx-3">
@@ -150,6 +132,9 @@
                                     <p class="mb-1 fs-14 font-weight-semibold">09:30 AM</p>
                                 </div>
                             </div>
+                        </div>
+                        <div class="d-flex">
+                            <a  class="btn btn-green btn-block text-white mt-5">Approve</a>
                         </div>
                     </div>
                 </div>
@@ -221,19 +206,41 @@
                         </div>
                         <div class="col-sm-12 mt-5" style="height: 300px; overflow:scroll">
                             <div class="tl-content tl-content-active">
-                                <div class="tl-header">
-                                    <span class="tl-marker"></span>
-                                    <p class="tl-title">Punch In at10:00 AM | General Shift <br><span class="text-muted fs-14 fw-light"><i class="fa fa-map-marker mx-1"></i>Bhanpuri, Raipur(CG)- 492001
-                                            AM</span>
-                                    <p>
-                                </div>
-                                <div class="tl-header">
-                                    <span class="tl-marker"></span>
-                                    <p class="tl-title">Punch Out at 07:00 AM | General Shift <br><span class="text-muted fs-14 fw-light"><i class="fa fa-map-marker mx-1"></i>Bhanpuri, Raipur(CG)- 492001
-                                            AM</span>
-                                    <p>
-                                </div>
 
+                                <div class="tl-header">
+                                    <span class="tl-marker"></span>
+                                    <div class="row">
+                                        <div class="col-sm-10">
+                                            <p class="tl-title">Punch In at 10:00 AM | General Shift<br><span
+                                                    class="text-muted fs-14 fw-light"><i
+                                                        class="fa fa-map-marker mx-1"></i>Bhanpuri,
+                                                    Raipur(CG)- 492001 AM</span>
+                                            <p>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#PunchIn" class="my-auto">
+                                                <span class="avatar brround" style="background-image: url(assets/images/users/1.jpg)"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tl-header">
+                                    <span class="tl-marker"></span>
+                                    <div class="row">
+                                        <div class="col-sm-10">
+                                            <p class="tl-title">Punch Out at 10:00 AM | General Shift<br><span
+                                                    class="text-muted fs-14 fw-light"><i
+                                                        class="fa fa-map-marker mx-1"></i>Bhanpuri,
+                                                    Raipur(CG)- 492001 AM</span>
+                                            <p>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#PunchIn" class="my-auto">
+                                                <span class="avatar brround" style="background-image: url(assets/images/users/1.jpg)"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -299,19 +306,19 @@
         </div>
     </div>
 
-        {{-- Punch Image --}}
-        <div class="modal fade" id="PunchIn">
-            <div class="modal-dialog modal-dialog-centered " role="document">
-                <div class="modal-content tx-size-sm">
-                    <img src="{{asset('imgs/selfie.jpg')}}" alt="">
-                </div>
+    {{-- Punch Image --}}
+    <div class="modal fade" id="PunchIn">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content tx-size-sm">
+                <img src="{{ asset('imgs/selfie.jpg') }}" alt="">
             </div>
         </div>
-        <div class="modal fade" id="PunchOut">
-            <div class="modal-dialog modal-dialog-centered " role="document">
-                <div class="modal-content tx-size-sm">
-                    <img src="{{asset('imgs/selfie.jpg')}}" alt="">
-                </div>
+    </div>
+    <div class="modal fade" id="PunchOut">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content tx-size-sm">
+                <img src="{{ asset('imgs/selfie.jpg') }}" alt="">
             </div>
         </div>
+    </div>
 @endsection
