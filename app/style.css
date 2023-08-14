@@ -151,8 +151,8 @@ Support	       :   support@spruko.com
 }
 
 .card .att:hover{
-    border: solid 1px #0000ff;
-    color: #0000ff;
+    border: solid 1px #0066fd;
+    color: #0066fd;
     background-color: #e9ebfa;
 }
 /* card-border */
@@ -174,7 +174,7 @@ Support	       :   support@spruko.com
 #curved-corner-bottomleft:before {
   bottom: 0;
   left: 0;
-  box-shadow: -50px 50px 0 0 #0000ff;
+  box-shadow: -50px 50px 0 0 #0066fd;
 }
 /* curve border */
 
@@ -1608,13 +1608,13 @@ a.btn.disabled, fieldset:disabled a.btn {
 
 .btn-primary {
   color: #fff !important;
-  background-color: #0000ff;
+  background-color: #0066fd;
   border-color: var(--primary-bg-color);
 }
 .btn-primary:hover {
-  color: #0000ff !important;
+  color: #0066fd !important;
   background-color: #fff;
-  border-color: #0000ff;
+  border-color: #0066fd;
   opacity: 0.9;
 }
 .btn-primary:focus, .btn-primary.focus {

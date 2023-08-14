@@ -63,13 +63,13 @@
                     <div class="card-body">
                         <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" class="img-fluid mb-4">
                         <h1 class="h3  mb-3">Welcome to <span style="color: black"><b>FIX<span
-                                        style="color: #0000ff">HR</span></b></span></h1>
+                                        style="color: #0066fd">HR</span></b></span></h1>
                         <p class="h5 font-weight-normal mb-4 leading-normal">Make Your Human Resource Online</p>
                         <h4 class="mb-3 f-w-400">Sign up</h4>
 						<div class="input-group mb-3">
 							<input type="email" class="form-control" placeholder="Email address">
 						</div>
-                        <button class="btn btn-block btn-primary mb-4 rounded" style="background-color:#0000ff">Send OTP</button>
+                        <button class="btn btn-block btn-primary mb-4 rounded" style="background-color:#0066fd">Send OTP</button>
                         <p class="mb-0 text-muted">Already have an account? <a href="{{url('/admin/login')}}"
                                 class="f-w-400">Sign In</a></p>
                     </div>
