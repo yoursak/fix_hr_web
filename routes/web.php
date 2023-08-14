@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\admin\DashboardController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,6 +13,20 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/',[LoginController::class,'index']);
+
+Route::prefix('login')->group(function(){
+    Route::post('/otp',[LoginController::class,'login_otp'])->name('login.otp')->middleware('logincheck');
+    Route::post('/submit', [LoginController::class, 'submit'])->name('login.submit')->middleware('logincheck');
+});
+
+Route::prefix('/admin')->group(function(){
+    Route::get('/',[DashboardController::class,'index'])->name('admin.dashboard');
+});
+
+
+// temprary routes
 
 Route::get('/admin/login', function () {
     return view('auth.admin.login');
@@ -40,9 +55,9 @@ Route::get('/employee/login', function () {
 });
 
 
-Route::get('/', function () {
-    return view('admin.dashboard.dashboard');
-});
+// Route::get('/', function () {
+//     return view('admin.dashboard.dashboard');
+// });
 
 Route::get('/emprofile', function () {
     return view('admin.employees.emp_profile');
