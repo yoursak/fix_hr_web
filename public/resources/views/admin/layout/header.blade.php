@@ -89,6 +89,10 @@
                                         <i class="feather feather-user me-3 fs-16 my-auto"></i>
                                         <div class="mt-1">Profile</div>
                                     </a>
+                                    <a class="dropdown-item d-flex" href="profile1.html">
+                                        <i class="feather feather-award me-3 fs-16 my-auto"></i>
+                                        <div class="mt-1">Upgrade</div>
+                                    </a>
                                     <a class="dropdown-item d-flex" href="editprofile.html">
                                         <i class="feather feather-settings me-3 fs-16 my-auto"></i>
                                         <div class="mt-1">Settings</div>
@@ -96,7 +100,7 @@
                                     </a>
                                     <a class="dropdown-item d-flex" href="login1.html">
                                         <i class="feather feather-power me-3 fs-16 my-auto"></i>
-                                        <div class="mt-1">Sign Out</div>
+                                        <div class="mt-1">Log Out</div>
                                     </a>
                                 </div>
                             </div>

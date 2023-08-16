@@ -4,6 +4,9 @@
 @endsection
 
 @section('contents')
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
     <div class="container-fluid">
         <!-- ROW -->
         <div class="row">
@@ -85,6 +88,7 @@
                 <div class="card">
                     <div class="card-header border-0">
                         <h4 class="card-title">Employees List</h4>
+                        
                         <div class="page-rightheader ms-auto">
                             <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
                                 <div class="btn-list d-flex">
@@ -123,10 +127,22 @@
                         <div class="row">
                             <div class="col-md-12 col-xl-2">
                                 <div class="form-group">
+                                    <label class="form-label">Branch:</label>
+                                    <select name="attendance" class="form-control custom-select select2"
+                                        data-placeholder="Select Branch">
+                                        <option label="Select Branch"></option>
+                                        <option value="1">Raipur</option>
+                                        <option value="2">Gudgaon</option>
+                                        <option value="3">Ludhiana</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-xl-2">
+                                <div class="form-group">
                                     <label class="form-label">Department:</label>
                                     <select name="attendance" class="form-control custom-select select2"
-                                        data-placeholder="Select Employee">
-                                        <option label="Select Employee"></option>
+                                        data-placeholder="Select Department">
+                                        <option label="Select Department"></option>
                                         <option value="1">Faith Harris</option>
                                         <option value="2">Austin Bell</option>
                                         <option value="3">Maria Bower</option>
@@ -149,8 +165,8 @@
                                 <div class="form-group">
                                     <label class="form-label">Designation:</label>
                                     <select name="attendance" class="form-control custom-select select2"
-                                        data-placeholder="Select Employee">
-                                        <option label="Select Employee"></option>
+                                        data-placeholder="Select Designation">
+                                        <option label="Select Designation"></option>
                                         <option value="1">Faith Harris</option>
                                         <option value="2">Austin Bell</option>
                                         <option value="3">Maria Bower</option>
@@ -186,43 +202,45 @@
 
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table  table-vcenter text-nowrap table-bordered border-bottom" id="hr-table">
-                                <thead>
+                    <div class="card-body ant-table" style="    margin: 0px;
+                    padding: 0px;">
+                        <div class="table-responsive" style="text-align: center;">
+                            <table class="table  table-vcenter text-nowrap  border-bottom display" id="hr-table">
+                                <thead style="border-width: 5px 0px 3px 0px;">
                                     <tr>
-                                        <th class="border-bottom-0 w-5">Emp ID</th>
-                                        <th class="border-bottom-0">Emp Name</th>
+                                        {{-- <th class="border-bottom-0">S. No.</th> --}}
+                                        <th class="border-bottom-0">Employee Name</th>
+                                        <th class="border-bottom-0 w-5">Employee ID</th>
                                         <th class="border-bottom-0">Department</th>
                                         <th class="border-bottom-0">Designation</th>
+                                        <th class="border-bottom-0">Joining Date</th>
                                         <th class="border-bottom-0">Phone Number</th>
-                                        <th class="border-bottom-0">Join Date</th>
-                                        <th class="border-bottom-0">Add Payment</th>
+                                        {{-- <th class="border-bottom-0">Add Payment</th> --}}
                                         <th class="border-bottom-0">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>FD2987</td>
-                                        <td>
-                                            <div class="d-flex">
+                                <tbody style="border-bottom-width:3px;">
+                                    <tr >
+                                        {{-- <td>1</td> --}}
+                                        <td style="text-align: center">
+                                            <div class="d-flex"  >
                                                 <span class="avatar avatar-md brround me-3"
                                                     style="background-image: url()"></span>
-                                                <div class="me-3 mt-0 mt-sm-1 d-block">
-                                                    <h6 class="mb-1 fs-14"><a href="{{ url('/emprofile') }}">Aman Sahu</a>
+                                                <div class="my-auto">
+                                                    <h6 class="mb-1 fs-14 my-auto"><a href="{{ url('/emprofile') }}" >Aman Sahu</a>
                                                     </h6>
-                                                    <p class="text-muted mb-0 fs-12">faith@gmail.com</p>
                                                 </div>
                                             </div>
                                         </td>
+                                        <td >FD2987</td>
                                         <td>Designing Department</td>
                                         <td>Web Designer</td>
-                                        <td>+9685321475</td>
                                         <td>05-05-2017</td>
-                                        <td>
+                                        <td>+9685321475</td>
+                                        {{-- <td>
                                             <a class="modal-effect btn btn-outline-primary border-0 btn-block mb-3"
                                                 data-effect="effect-super-scaled" data-bs-toggle="modal"
-                                                href="#modaldemo8">Add Payment</a>
+                                                href="#modaldemo8">Add Payment</a></td> --}}
                                         <td>
                                             <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal"
                                                 data-bs-target="#deletemodal">
@@ -1534,5 +1552,10 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+    new DataTable('#example');
+    </script>
     {{-- online pay --}}
 @endsection

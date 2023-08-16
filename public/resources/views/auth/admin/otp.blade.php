@@ -63,11 +63,17 @@
                         <h4 class="mb-3 f-w-400">Verify OTP</h4>
                         <span>Otp Sent to Your Registered Email </span>
                         <form action="{{ route('login.submit') }}" method="post">
-                            <div class="input-group mb-3">
+                            @csrf
+                            <div class="input-group">
                                 <input type="text" name="otp" class="form-control" placeholder="eg. XXX XXX"
                                     required>
                             </div>
-                            <button class="btn btn-block btn-primary mb-4 rounded" style="background-color:#0000ff"
+                            <div class="text-start">
+                                @if (Session::has('otpFail'))
+                                <span class="text-danger fs-14"><i class="fa fa-warning mx-1"></i>{{ Session::get('Fail') }}</span>
+                            @endif
+                            </div>
+                            <button class="btn btn-block btn-primary mt-3 mb-4 rounded" style="background-color:#0000ff"
                                 type="submit">Verify OTP</button>
                             <p class="mb-0 text-muted">OTP not received? <a href="#" class="f-w-400"
                                     style="color: #0000ff">Resend</a></p>

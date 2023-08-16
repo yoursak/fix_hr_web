@@ -484,7 +484,7 @@
 
     //Branches setting
 
-    $('document').ready(function(){
+    $('document').ready(function() {
 
     });
 
@@ -584,8 +584,8 @@
 
     // Employee Summary in profile page
 
-    $('document').ready(function(){
-        $('#selected_btn1').click(function (e) {
+    $('document').ready(function() {
+        $('#selected_btn1').click(function(e) {
             e.preventDefault();
             $('#selected_btn1').addClass('selected');
             $('#selected_btn2').removeClass('selected');
@@ -596,7 +596,7 @@
             $('#selected_btn7').removeClass('selected');
             $('#selected_btn8').removeClass('selected');
         });
-        $('#selected_btn2').click(function (e) {
+        $('#selected_btn2').click(function(e) {
             e.preventDefault();
             $('#selected_btn1').removeClass('selected');
             $('#selected_btn2').addClass('selected');
@@ -607,7 +607,7 @@
             $('#selected_btn7').removeClass('selected');
             $('#selected_btn8').removeClass('selected');
         });
-        $('#selected_btn3').click(function (e) {
+        $('#selected_btn3').click(function(e) {
             e.preventDefault();
             $('#selected_btn1').removeClass('selected');
             $('#selected_btn2').removeClass('selected');
@@ -618,7 +618,7 @@
             $('#selected_btn7').removeClass('selected');
             $('#selected_btn8').removeClass('selected');
         });
-        $('#selected_btn4').click(function (e) {
+        $('#selected_btn4').click(function(e) {
             e.preventDefault();
             $('#selected_btn1').removeClass('selected');
             $('#selected_btn2').removeClass('selected');
@@ -629,7 +629,7 @@
             $('#selected_btn7').removeClass('selected');
             $('#selected_btn8').removeClass('selected');
         });
-        $('#selected_btn5').click(function (e) {
+        $('#selected_btn5').click(function(e) {
             e.preventDefault();
             $('#selected_btn1').removeClass('selected');
             $('#selected_btn2').removeClass('selected');
@@ -640,7 +640,7 @@
             $('#selected_btn7').removeClass('selected');
             $('#selected_btn8').removeClass('selected');
         });
-        $('#selected_btn6').click(function (e) {
+        $('#selected_btn6').click(function(e) {
             e.preventDefault();
             $('#selected_btn1').removeClass('selected');
             $('#selected_btn2').removeClass('selected');
@@ -651,7 +651,7 @@
             $('#selected_btn7').removeClass('selected');
             $('#selected_btn8').removeClass('selected');
         });
-        $('#selected_btn7').click(function (e) {
+        $('#selected_btn7').click(function(e) {
             e.preventDefault();
             $('#selected_btn1').removeClass('selected');
             $('#selected_btn2').removeClass('selected');
@@ -662,7 +662,7 @@
             $('#selected_btn7').addClass('selected');
             $('#selected_btn8').removeClass('selected');
         });
-        $('#selected_btn8').click(function (e) {
+        $('#selected_btn8').click(function(e) {
             e.preventDefault();
             $('#selected_btn1').removeClass('selected');
             $('#selected_btn2').removeClass('selected');
@@ -779,4 +779,15 @@
             return (className.match(/(^|\s)effect-\S+/g) || []).join(' ');
         });
     }); //  Back to top Button
+</script>
+
+{{-- tree view --}}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<!--Tree Nav Js-->
+<script src="{{asset('assets/treeview/js/jquery.treenav.js')}}"></script>
+<script>
+    $(document).ready(function() {
+        $(".tree-nav").treeNav();
+    });
 </script>

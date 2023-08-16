@@ -21,7 +21,7 @@
                 <ul class="side-menu">
                     <li class="side-item side-item-category mt-4">General</li>
                     <li class="slide">
-                        <a class="side-menu__item" href="{{ url('/') }}">
+                        <a class="side-menu__item" href="{{ url('/admin') }}">
                             <i class="feather feather-home  sidemenu_icon"></i>
                             <span class="side-menu__label">Dashboard</span>
                         </a>
@@ -42,7 +42,7 @@
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                             <i class="feather feather-file-text sidemenu_icon"></i>
                             <span class="side-menu__label">Requests</span><i class="angle fa fa-angle-right"></i></a>
-                        <ul class="slide-menu">
+                        <ul class="slide-menu" style="background-color: #1877F2; border-radius:7px;">
                             <li class="side-menu-label1"><a href="{{ url('/leave') }}">Leave</a></li>
                             <li><a href="{{ url('/leave') }}" class="slide-item"> Leave </a></li>
                             <li><a href="{{ url('/misspunch') }}" class="slide-item"> Miss Punch </a></li>
@@ -74,12 +74,122 @@
                         </a>
                     </li>
                     <li class="slide">
-                        <a class="side-menu__item" href="{{ url('/setting') }}">
+                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                             <i class="feather feather-settings sidemenu_icon"></i>
-                            <span class="side-menu__label">Settings</span>
+                            <span class="side-menu__label">Settings</span><i class="angle fa fa-angle-right"></i></a>
+                        <ul class="slide-menu">
+                            <li class="side-menu-label1"><a href="{{ url('settings/attendancesetting') }}">Attendance
+                                    Setting</a></li>
+                            <li><a href="{{ url('settings/attendancesetting') }}" class="slide-item"> Attendance
+                                    Setting </a></li>
+                            <li><a href="{{ url('settings/businesssetting') }}" class="slide-item"> Business Setting
+                                </a></li>
+                            <li><a href="{{ url('settings/salarysetting') }}" class="slide-item"> Salary Setting </a>
+                            </li>
+                            <li><a href="{{ url('settings/businessinfosetting') }}" class="slide-item"> Business Info
+                                    Setting </a></li>
+                            <li><a href="{{ url('setting/') }}" class="slide-item"> Account Setting </a></li>
+                            <li><a href="{{ url('admin/login') }}" class="slide-item"> Logout </a></li>
+                        </ul>
+                    </li>
+                    <li class="slide">
+                        <a class="side-menu__item" href="{{ url('/') }}">
+                            <i class="fe fe-log-out sidemenu_icon"></i>
+                            <span class="side-menu__label">Log Out</span>
                         </a>
                     </li>
                 </ul>
+                {{-- <nav class="tree-nav default">
+                    <ul class="main-items">
+                        <li data-type="folder">
+                            <a href="#1"> Main Item 1 </a>
+                            <ul class="sub-items">
+                                <li data-type="folder">
+                                    <a href="#1"> sub Item 1</a>
+                                    <ul class="sub-items">
+                                        <li data-type="folder">
+                                            <a href="#1"> sub Item 1.1</a>
+                                            <ul class="sub-items">
+                                                <li><a href="#1"> sub Item 1.1.1</a>
+                                                </li>
+                                                <li><a href="#1"> sub Item 1.1.2</a></li>
+                                                <li data-type="folder">
+                                                    <a href="#1"> sub Item 1.1.3</a>
+                                                    <ul>
+                                                        <li><a href="#1">Item 1.1.3.1 </a> </li>
+                                                        <li><a href="#1">Item 1.1.3.2 </a> </li>
+                                                        <li><a href="#1">Item 1.1.3.3</a> </li>
+                                                    </ul>
+                                                </li>
+                                                <li><a href="#1"> sub Item 1.1.4 </a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#1"> <i class="fa fa-file-text"></i> sub Item 1.2 </a></li>
+                                        <li><a href="#1"> <i class="fa fa-file-text"></i> sub Item 1.3 </a></li>
+                                        <li><a href="#1"> <i class="fa fa-file-text"></i> sub Item 1.4 </a></li>
+                                    </ul>
+                                </li>
+                                <li> <a href="#1"> sub Item 2</a></li>
+                                <li><a href="#1"> sub Item 3</a></li>
+                                <li><a href="#1"> sub Item 4</a></li>
+                            </ul>
+                        </li>
+                        <li data-type="folder">
+                            <a href="#1"> Main Item 2 </a>
+                            <ul>
+                                <li><a href="#1"> Sub Item 2.1</a> </li>
+                                <li><a href="#1"> Sub Item 2.2 </a> </li>
+                                <li><a href="#1"> Sub Item 2.3</a> </li>
+                            </ul>
+                        </li>
+                        <li data-type="folder">
+                            <a href="#1"> Main Item 3</a>
+                            <ul>
+                                <li><a href="#1"> Sub Item 2.1</a> </li>
+                                <li><a href="#1"> Sub Item 2.2 </a> </li>
+                                <li><a href="#1"> Sub Item 2.3</a> </li>
+                            </ul>
+                        </li>
+                        <li data-type="folder">
+                            <a href="#1"> Main Item 4</a>
+                            <ul>
+                                <li><a href="#1"> Sub Item 4.1</a> </li>
+                                <li data-type="folder">
+                                    <a href="#1"> Sub Item 4.2 </a>
+                                    <ul>
+                                        <li><a href="#1"> <i class="fa fa-file-text"></i> Sub Item 4.2.1</a>
+                                        </li>
+                                        <li><a href="#1"> <i class="fa fa-file-text"></i> Sub Item 4.2.2 </a>
+                                        </li>
+                                        <li><a href="#1"> <i class="fa fa-file-text"></i> Sub Item 4.2.3</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><a href="#1"> Sub Item 4.3</a> </li>
+                                <li><a href="#1"> Sub Item 4.4</a> </li>
+                                <li><a href="#1"> Sub Item 4.5</a> </li>
+                            </ul>
+                        </li>
+                        <li data-type="folder">
+                            <a href="#1"> Main Item 5</a>
+                            <ul>
+                                <li><a href="#1"> Sub Item 5.1</a> </li>
+                                <li><a href="#1"> Sub Item 5.2 </a> </li>
+                                <li data-type="folder">
+                                    <a href="#1"> Sub Item 5.3</a>
+                                    <ul>
+                                        <li><a href="#1"> <i class="fa fa-file-text"></i> Item 5.3.1 </a> </li>
+                                        <li><a href="#1"> <i class="fa fa-file-text"></i> Item 5.3.2 </a> </li>
+                                        <li><a href="#1"> <i class="fa fa-file-text"></i> Item 5.3.3</a> </li>
+                                    </ul>
+                                </li>
+                                <li><a href="#1"> Sub Item 5.4</a> </li>
+                                <li><a href="#1"> Sub Item 5.5</a> </li>
+                                <li><a href="#1"> Sub Item 5.6</a> </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav> --}}
                 <div class="slide-right" id="slide-right"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191"
                         width="24" height="24" viewBox="0 0 24 24">
                         <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z" />

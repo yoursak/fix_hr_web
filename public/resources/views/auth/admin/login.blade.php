@@ -61,16 +61,22 @@
                                         style="color: #0000ff">HR</span></b></span></h1>
                         <p class="h5 font-weight-normal mb-4 leading-normal">Make Your Human Resource Online</p>
                         <h4 class="mb-3 f-w-400">Signin</h4>
-                        <form method="POST" action="{{route('login.otp')}}">
+                        <form method="POST" action="{{ route('login.otp') }}">
                             @csrf
-                            <div class="input-group mb-3">
-                                <input type="email" class="form-control" placeholder="Email address" name="email" required>
+                            <div class="input-group">
+                                <input type="email" class="form-control" placeholder="Email address" name="email"
+                                    required>
                             </div>
-                            <button class="btn btn-block btn-primary mb-4 rounded"
-                                style="background-color:#0000ff" type="submit">Send OTP</button>
+                            <div class="text-start">
+                                @if (Session::has('Fail'))
+                                <span class="text-danger fs-14"><i class="fa fa-warning mx-1"></i>{{ Session::get('Fail') }}</span>
+                            @endif
+                            </div>
+                            <button class="btn btn-block btn-primary mt-3 mb-4 rounded" style="background-color:#0000ff"
+                                type="submit">Send OTP</button>
                         </form>
-                        <p class="mb-0 text-muted">Don’t have an account? <a href="{{url('/admin/signup')}}" class="f-w-400"
-                                style="color: #0000ff">Signup</a></p>
+                        <p class="mb-0 text-muted">Don’t have an account? <a href="{{ url('/admin/signup') }}"
+                                class="f-w-400" style="color: #0000ff">Signup</a></p>
                     </div>
                 </div>
             </div>
