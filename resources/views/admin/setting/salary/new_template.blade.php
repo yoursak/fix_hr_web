@@ -9,18 +9,17 @@
     <div class="row" id="editform">
         <div class="card">
             <div class="card-body border-bottum-0">
-                <div class="d-flex justify-content-between my-auto">
-                    <div class=" col-xl-4 my-auto">
+                <div class="row my-auto">
+                    <div class="col-xl-4 my-auto">
                         <p class="mb-0 fs-16 text-dark">Template Name</p>
                     </div>
-                    <div class="my-auto">
+                    <div class="col-7 col-xl-5 my-auto">
                         <input type="text" class="form-control" id="inputName" placeholder="Name">
                     </div>
-                    <div class="my-auto">
+                    <div class="col-5 col-xl-3 my-auto">
                         <div class="d-flex justify-content-end">
                             <label class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="default"
-                                >
+                                <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="default">
                                 <span class="custom-control-label">Set as default</span>
                             </label>
                         </div>

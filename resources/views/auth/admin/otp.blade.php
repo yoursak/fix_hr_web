@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
-<!-- Mirrored from html.phoenixcoded.net/mintone/bootstrap/default/auth-signin.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 19 Dec 2022 09:46:53 GMT -->
-
 <head>
 
     <meta charset="UTF-8">
@@ -50,8 +47,6 @@
 
     <!-- vendor css -->
     <link rel="stylesheet" href="{{ asset('assetss/css/style.css') }}">
-
-
 </head>
 
 <!-- [ auth-signin ] start -->
@@ -67,12 +62,31 @@
                         <p class="h5 font-weight-normal mb-4 leading-normal">Make Your Human Resource Online</p>
                         <h4 class="mb-3 f-w-400">Verify OTP</h4>
                         <span>Otp Sent to Your Registered Email </span>
+<<<<<<< Updated upstream
 						<div class="input-group mb-3">
 							<input type="email" class="form-control" placeholder="eg. XXX XXX">
 						</div>
                         <button class="btn btn-block btn-primary mb-4 rounded" style="background-color:#0066fd"><a href="{{url('/admin/business')}}" class="text-light">Verify OTP</a></button>
                         <p class="mb-0 text-muted">OTP not received? <a href="#" class="f-w-400"
                             style="color: #0066fd">Resend</a></p>
+=======
+                        <form action="{{ route('login.submit') }}" method="post">
+                            @csrf
+                            <div class="input-group">
+                                <input type="text" name="otp" class="form-control" placeholder="eg. XXX XXX"
+                                    required>
+                            </div>
+                            <div class="text-start">
+                                @if (Session::has('otpFail'))
+                                <span class="text-danger fs-14"><i class="fa fa-warning mx-1"></i>{{ Session::get('Fail') }}</span>
+                            @endif
+                            </div>
+                            <button class="btn btn-block btn-primary mt-3 mb-4 rounded" style="background-color:#0000ff"
+                                type="submit">Verify OTP</button>
+                            <p class="mb-0 text-muted">OTP not received? <a href="#" class="f-w-400"
+                                    style="color: #0000ff">Resend</a></p>
+                        </form>
+>>>>>>> Stashed changes
                     </div>
                 </div>
             </div>

@@ -691,7 +691,7 @@ hr {
 }
 /*--- Booststrap-styles ---*/
 :root {
-  --primary-bg-color: #3366ff;
+  --primary-bg-color: #1877F2;
   --primary-bg-hover: #255bfb;
   --primary-bg-border: #255bfb;
   --transparent-body: #002aab;
@@ -27388,6 +27388,7 @@ video {
   display: none;
 }
 
+
 .horizontalMenu ul li a.btn {
   font-size: 14px !important;
   margin: 5px 0;
@@ -51310,7 +51311,7 @@ select [aria-selected=true]:focus {
   bottom: 0;
   left: 0;
   z-index: 1000;
-  background: #0000FF;
+  background: #012169;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0px 6px 18px rgba(196, 205, 224, 0.2);
   -webkit-transition: left 0.2s ease, width 0.2s ease;
@@ -51457,7 +51458,7 @@ select [aria-selected=true]:focus {
   font-size: 14px;
   font-weight: 400;
   transition: border-left-color 0.3s ease, background-color 0.3s ease;
-  margin: 5px 0;
+  margin: 0px 0;
 }
 .side-menu__item.active, .side-menu__item:hover, .side-menu__item:focus {
   text-decoration: none;

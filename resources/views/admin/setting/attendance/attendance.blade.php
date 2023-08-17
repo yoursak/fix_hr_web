@@ -8,13 +8,13 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-2 col-sm-2 col-md-12">
+                        <div class="col-2">
                             <div class="mt-2 mb-4">
                                 <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
                                         class="fe fe-settings"></i></span>
                             </div>
                         </div>
-                        <div class="col-xl-10 col-sm-10 col-md-12">
+                        <div class="col-10">
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Attendance Mode</h5>
                             </a>
@@ -30,13 +30,13 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-2 col-sm-2 col-md-12">
+                        <div class="col-2">
                             <div class="mt-2 mb-4">
                                 <span class="settings-icon bg-secondary-transparent text-secondary border-secondary"><i
                                         class="fe fe-unlock"></i></span>
                             </div>
                         </div>
-                        <div class="col-xl-10 col-sm-10 col-md-12">
+                        <div class="col-10">
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Attendance Employee Access</h5>
                             </a>
@@ -52,13 +52,13 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-2 col-sm-2 col-md-12">
+                        <div class="col-2">
                             <div class="mt-2 mb-4">
                                 <span class="settings-icon bg-danger-transparent text-danger border-danger"><i
                                         class="fe fe-clock"></i></span>
                             </div>
                         </div>
-                        <div class="col-xl-10 col-sm-10 col-md-12">
+                        <div class="col-10">
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Shift Settings</h5>
                             </a>
@@ -74,13 +74,13 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-2 col-sm-2 col-md-12">
+                        <div class="col-2">
                             <div class="mt-2 mb-4">
                                 <span class="settings-icon bg-warning-transparent text-warning border-warning"><i
                                         class="fe fe-grid"></i></span>
                             </div>
                         </div>
-                        <div class="col-xl-10 col-sm-10 col-md-12">
+                        <div class="col-10">
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Automation Rules</h5>
                             </a>
@@ -96,13 +96,13 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-2 col-sm-2 col-md-12">
+                        <div class="col-2">
                             <div class="mt-2 mb-4">
                                 <span class="settings-icon bg-success-transparent text-success border-success"><i
                                         class="fe fe-monitor"></i></span>
                             </div>
                         </div>
-                        <div class="col-xl-10 col-sm-10 col-md-12">
+                        <div class="col-10">
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Daily Work Entry</h5>
                             </a>
@@ -118,13 +118,13 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-2 col-sm-2 col-md-12">
+                        <div class="col-2">
                             <div class="mt-2 mb-4">
                                 <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
                                         class="fe fe-map"></i></span>
                             </div>
                         </div>
-                        <div class="col-xl-10 col-sm-10 col-md-12">
+                        <div class="col-10">
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Track In & Out Time</h5>
                             </a>
@@ -140,13 +140,13 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-2 col-sm-2 col-md-12">
+                        <div class="col-2">
                             <div class="mt-2 mb-4">
                                 <span class="settings-icon bg-info-transparent text-info border-info"><i
                                         class="fe fe-umbrella"></i></span>
                             </div>
                         </div>
-                        <div class="col-xl-10 col-sm-10 col-md-12">
+                        <div class="col-10">
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Attendance On Holiday</h5>
                             </a>
@@ -161,13 +161,13 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-2 col-sm-2 col-md-12">
+                        <div class="col-2">
                             <div class="mt-2 mb-4">
                                 <span class="settings-icon bg-success-transparent text-success border-success"><i
                                         class="fe fe-user-x"></i></span>
                             </div>
                         </div>
-                        <div class="col-xl-10 col-sm-10 col-md-12">
+                        <div class="col-10">
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Mark Absent on Previous Day</h5>
                             </a>

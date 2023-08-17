@@ -10,9 +10,9 @@
         <div class="card">
             <div class="card-header">
                 <div class="page-leftheader ">
-                    <p class="mb-0 fs-18 text-dark"><b>Department</b></p>
+                    <p class="mb-0 fs-18 text-dark"><b>Salary Template</b></p>
                 </div>
-                <div class="page-rightheader ms-md-auto">
+                <div class="page-rightheader ms-auto">
                     <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
                         <div class="btn-list">
                             <a href="{{url('settings/salary/salaryTemp/create')}}" class="btn btn-primary btn-sm">Create Template</a>

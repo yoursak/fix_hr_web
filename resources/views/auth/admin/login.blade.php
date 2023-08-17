@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
-<!-- Mirrored from html.phoenixcoded.net/mintone/bootstrap/default/auth-signin.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 19 Dec 2022 09:46:53 GMT -->
-
 <head>
 
     <meta charset="UTF-8">
@@ -64,6 +61,7 @@
                                         style="color: #0066fd">HR</span></b></span></h1>
                         <p class="h5 font-weight-normal mb-4 leading-normal">Make Your Human Resource Online</p>
                         <h4 class="mb-3 f-w-400">Signin</h4>
+<<<<<<< Updated upstream
                         <div class="input-group mb-3">
                             <input type="email" class="form-control" placeholder="Email address">
                         </div>
@@ -71,6 +69,24 @@
                             style="background-color:#0066fd"><a href="{{url('/admin/otp')}}" class="text-light">Send OTP</a></button>
                         <p class="mb-0 text-muted">Don’t have an account? <a href="{{url('/admin/signup')}}" class="f-w-400"
                                 style="color: #0066fd">Signup</a></p>
+=======
+                        <form method="POST" action="{{ route('login.otp') }}">
+                            @csrf
+                            <div class="input-group">
+                                <input type="email" class="form-control" placeholder="Email address" name="email"
+                                    required>
+                            </div>
+                            <div class="text-start">
+                                @if (Session::has('Fail'))
+                                <span class="text-danger fs-14"><i class="fa fa-warning mx-1"></i>{{ Session::get('Fail') }}</span>
+                            @endif
+                            </div>
+                            <button class="btn btn-block btn-primary mt-3 mb-4 rounded" style="background-color:#0000ff"
+                                type="submit">Send OTP</button>
+                        </form>
+                        <p class="mb-0 text-muted">Don’t have an account? <a href="{{ url('/admin/signup') }}"
+                                class="f-w-400" style="color: #0000ff">Signup</a></p>
+>>>>>>> Stashed changes
                     </div>
                 </div>
             </div>

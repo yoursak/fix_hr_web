@@ -42,7 +42,11 @@
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                             <i class="feather feather-file-text sidemenu_icon"></i>
                             <span class="side-menu__label">Requests</span><i class="angle fa fa-angle-right"></i></a>
+<<<<<<< Updated upstream
                         <ul class="slide-menu" style="background-color: #1877F2; border-radius:7px;">
+=======
+                        <ul class="slide-menu" style="background-color:  #1034A6; border-radius:7px;">
+>>>>>>> Stashed changes
                             <li class="side-menu-label1"><a href="{{ url('/leave') }}">Leave</a></li>
                             <li><a href="{{ url('/leave') }}" class="slide-item"> Leave </a></li>
                             <li><a href="{{ url('/misspunch') }}" class="slide-item"> Miss Punch </a></li>

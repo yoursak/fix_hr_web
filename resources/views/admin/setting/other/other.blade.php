@@ -8,13 +8,13 @@ Others
         <div class="card custom-card">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-xl-2 col-sm-2 col-md-12">
+                    <div class="col-2">
                         <div class="mt-2 mb-4">
                             <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
                                     class="fe fe-settings"></i></span>
                         </div>
                     </div>
-                    <div class="col-xl-10 col-sm-10 col-md-12">
+                    <div class="col-10">
                         <a href="#">
                             <h5 class="mb-1 text-dark">Chanel Partners ID (optional)</h5>
                         </a>
@@ -29,14 +29,14 @@ Others
         <div class="card custom-card">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-xl-2 col-sm-2 col-md-12">
+                    <div class="col-2">
                         <div class="mt-2 mb-4">
                             <span
                                 class="settings-icon bg-secondary-transparent text-secondary border-secondary"><i
                                     class="fe fe-log-out"></i></span>
                         </div>
                     </div>
-                    <div class="col-xl-10 col-sm-10 col-md-12">
+                    <div class="col-10">
                         <a href="#">
                             <h5 class="mb-1 text-dark">Log Out</h5>
                         </a>

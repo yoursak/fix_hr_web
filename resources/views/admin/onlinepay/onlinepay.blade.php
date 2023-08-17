@@ -84,7 +84,7 @@
                 <div class="card">
                     <div class="card-header  border-0">
                         <h4 class="card-title">Employees List</h4>
-                        <div class="page-rightheader ms-md-auto">
+                        <div class="page-rightheader ms-auto">
                             <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
                                 <div class="btn-list d-flex">
                                     <a class="modal-effect btn btn-outline-dark btn-block mb-3"

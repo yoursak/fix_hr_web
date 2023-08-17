@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-header  border-0">
                     <h4 class="card-title">Create Shift</h4>
-                    <div class="page-rightheader ms-sm-auto">
+                    <div class="page-rightheader ms-auto">
                         <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
                             <div class="btn-list d-flex">
                                 <a class="modal-effect btn btn-primary btn-block mx-3" data-effect="effect-scale"
@@ -18,37 +18,33 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-xl-1 pe-0 my-auto">
-                                    <label class="custom-switch">
-                                        <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                                        <span class="custom-switch-indicator"></span>
-                                    </label>
+                    <div class="row">
+                        <div class="col-2 col-xl-1 pe-0 my-auto">
+                            <label class="custom-switch">
+                                <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
+                                <span class="custom-switch-indicator"></span>
+                            </label>
+                        </div>
+                        <div class="col-5 col-xl-4 text-secondary my-auto">
+                            <h5>General Shift</h5>
+                        </div>
+                        <div class="col-5 col-xl-3 text-muted my-auto">
+                            <p>09:00 AM - 06:00 PM</p>
+                        </div>
+                        <div class="col-10 col-xl-3 text-muted my-auto">
+                            <p>Assigned to 15 Employees</p>
+                        </div>
+                        <div class="col-2 col-xl-1 btn">
+                            <div class="dropdown header-message" id="moredrop">
+                                <div class="nav-link icon" data-bs-toggle="dropdown">
+                                    <i class="fe fe-more-vertical fs-22"></i>
                                 </div>
-                                <div class="col-xl-4 text-secondary my-auto">
-                                    <h5>General Shift</h5>
-                                </div>
-                                <div class="col-xl-3 text-muted my-auto">
-                                    <p>09:00 AM - 06:00 PM</p>
-                                </div>
-                                <div class="col-xl-3 text-muted my-auto">
-                                    <p>Assigned to 15 Employees</p>
-                                </div>
-                                <div class="col-xl-1 btn">
-                                    <div class="dropdown header-message" id="moredrop">
-                                        <div class="nav-link icon" data-bs-toggle="dropdown">
-                                            <i class="fe fe-more-vertical fs-22"></i>
-                                        </div>
-                                        <div class="dropdown-menu dropdown-menu-end animated">
-                                            <div class="header-dropdown-list message-menu" id="message-menu">
-                                                <div
-                                                    class=" dropdown-item d-flex align-items-center justify-content-around">
-                                                    <i class="fe fe-edit fs-18"></i>
-                                                    <i class="fe fe-trash-2 fs-18"></i>
-                                                </div>
-                                            </div>
+                                <div class="dropdown-menu dropdown-menu-end animated">
+                                    <div class="header-dropdown-list message-menu" id="message-menu">
+                                        <div
+                                            class=" dropdown-item d-flex align-items-center justify-content-around">
+                                            <i class="fe fe-edit fs-18"></i>
+                                            <i class="fe fe-trash-2 fs-18"></i>
                                         </div>
                                     </div>
                                 </div>

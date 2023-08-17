@@ -175,7 +175,7 @@ Dashboard
             </div>
         </div>
     </div>
-    <div class="row row-sm">
+    {{-- <div class="row row-sm">
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header border-bottom-0">
@@ -189,7 +189,7 @@ Dashboard
                                 <div>
                                     <button class="btn btn-outline-primary mx-3 border-0" href="#">Download</button>
                                 </div>
-                                <div class="my-auto">
+                                <div class="my-auto d-none d-md-block">
                                     <select name="month" class="form-control btn-outline-dark border-0 mx-3 " data-placeholder="Select Cycle">
                                         <option label="Select Cycle"></option>
                                         <option value="1">January</option>
@@ -301,7 +301,7 @@ Dashboard
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <div class="row">
         <div class="card">
             <div class="card-header border-bottom-0">
@@ -318,7 +318,7 @@ Dashboard
                             <div>
                                 <button class="btn btn-outline-primary mx-3 border-0" href="#">Download</button>
                             </div>
-                            <div class="my-auto">
+                            <div class="my-auto d-none d-md-block">
                                 <select name="month" class="form-control btn-outline-primary mx-3 border-0" data-placeholder="Select Cycle">
                                     <option label="Select Cycle"></option>
                                     <option value="1">January</option>
@@ -372,7 +372,7 @@ Dashboard
                                         <span class="avatar avatar brround me-3"
                                             style="background-image: url(imgs/user.png)"></span>
                                         <div class="me-3 mt-0 mt-sm-2 d-block">
-                                            <h6 class="mb-1 fs-14"><a href="{{url('/emprofile')}}">Aman Sahu</a></h6>
+                                            <h6 class=" fs-14"><a href="{{url('/emprofile')}}">Aman Sahu</a></h6>
                                         </div>
                                     </div>
                                 </td>

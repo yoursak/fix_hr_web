@@ -43,7 +43,7 @@ $(function (e) {
     size: "md",
     borderColor: "transparent",
     backgroundColor: "transparent",
-    fontColor: "#313e6a" // timeZone : "+1"
+    fontColor: "#313e6a"
 
   }); //________ Datepicker
 
@@ -55,5 +55,5 @@ $(function (e) {
     width: '100%'
   });
 });
-/******/ })()
+ })()
 ;

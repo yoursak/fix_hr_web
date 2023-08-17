@@ -37,3 +37,5 @@
 <link href="{{asset('https://www.jqueryscript.net/css/jquerysctipttop.css')}}" rel="stylesheet" type="text/css">
 <!-- CSS -->
 <link rel="stylesheet" href="{{asset('src/css/rescalendar.css')}}">
+
+<link rel="stylesheet" href="{{asset('assets/treeview/css/tree-nav.css')}}" />

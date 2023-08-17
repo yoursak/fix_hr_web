@@ -15,13 +15,13 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-2 col-sm-2 col-md-12">
+                        <div class="col-2">
                             <div class="mt-2 mb-4">
                                 <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
                                         class="fa fa-calculator"></i></span>
                             </div>
                         </div>
-                        <div class="col-xl-10 col-sm-10 col-md-12">
+                        <div class="col-10">
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Salary Calculation Logic</h5>
                             </a>
@@ -37,13 +37,13 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-2 col-sm-2 col-md-12">
+                        <div class="col-2">
                             <div class="mt-2 mb-4">
                                 <span class="settings-icon bg-secondary-transparent text-secondary border-secondary"><i
                                         class="fa fa-money"></i></span>
                             </div>
                         </div>
-                        <div class="col-xl-10 col-sm-10 col-md-12">
+                        <div class="col-10">
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Manage Salary Templates</h5>
                             </a>
@@ -58,13 +58,13 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-2 col-sm-2 col-md-12">
+                        <div class="col-2">
                             <div class="mt-2 mb-4">
                                 <span class="settings-icon bg-danger-transparent text-danger border-danger"><i
                                         class="fa fa-newspaper-o"></i></span>
                             </div>
                         </div>
-                        <div class="col-xl-10 col-sm-10 col-md-12">
+                        <div class="col-10">
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Employee Bank Account Details</h5>
                             </a>
@@ -79,13 +79,13 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-2 col-sm-2 col-md-12">
+                        <div class="col-2">
                             <div class="mt-2 mb-4">
                                 <span class="settings-icon bg-warning-transparent text-warning border-warning"><i
                                         class="fa fa-bank"></i></span>
                             </div>
                         </div>
-                        <div class="col-xl-10 col-sm-10 col-md-12">
+                        <div class="col-10">
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Business Name in Bank Statement</h5>
                             </a>
@@ -101,13 +101,13 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-2 col-sm-2 col-md-12">
+                        <div class="col-2">
                             <div class="mt-2 mb-4">
                                 <span class="settings-icon bg-success-transparent text-success border-success"><i
                                         class="fa fa-key"></i></span>
                             </div>
                         </div>
-                        <div class="col-xl-10 col-sm-10 col-md-12">
+                        <div class="col-10">
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Salary Details Access to Employee</h5>
                             </a>
@@ -122,13 +122,13 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-2 col-sm-2 col-md-12">
+                        <div class="col-2">
                             <div class="mt-2 mb-4">
                                 <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
                                         class="fa fa-sort-numeric-desc"></i></span>
                             </div>
                         </div>
-                        <div class="col-xl-10 col-sm-10 col-md-12">
+                        <div class="col-10">
                             <a href="#">
                                 <h5 class="mb-1 text-dark">Custom Deduction Plan</h5>
                             </a>

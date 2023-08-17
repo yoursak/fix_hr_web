@@ -248,13 +248,13 @@
                         <h5 class="my-auto">Kunal Pandit</h5>
                         <p class="my-auto fs-12 text-muted" style="color:rgb(34, 33, 29)">kunalpandit@fixingdots.com</p>
                     </div>
-                    <div class="col-xl-3 my-auto">
+                    <div class="col-5 col-xl-3 my-auto">
                         <p class="my-auto" style="color:rgb(34, 33, 29)"><b>FixingDots</b></p>
                     </div>
-                    <div class="col-xl-3 my-auto">
+                    <div class="col-5 col-xl-3 my-auto">
                         <p class="my-auto " style="color:rgb(34, 33, 29)"><i class="fe fe-phone mx-2"></i>+91 8548658547</p>
                     </div>
-                    <div class="col-xl-2">
+                    <div class="col-2 col-xl-2">
                         <p class="my-auto text-muted text-end">
                             <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
                                 data-bs-placement="top" id="MngEditbtn"  title="Edit">
