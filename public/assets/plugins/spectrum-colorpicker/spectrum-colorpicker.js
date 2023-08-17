@@ -55,7 +55,7 @@
         replacerClassName: "",
         showAlpha: false,
         theme: "sp-light",
-        palette: [["#ffffff", "#000000", "#ff0000", "#ff8000", "#ffff00", "#008000", "#0066fd", "#4b0082", "#9400d3"]],
+        palette: [["#ffffff", "#000000", "#ff0000", "#ff8000", "#ffff00", "#008000", "#0000ff", "#4b0082", "#9400d3"]],
         selectionPalette: [],
         disabled: false,
         offset: null

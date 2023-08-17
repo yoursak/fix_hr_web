@@ -15989,7 +15989,7 @@ License: MIT
 }
 
 .sp-hue {
-  background: linear-gradient(to bottom, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0066fd 67%, #ff00ff 83%, #ff0000 100%);
+  background: linear-gradient(to bottom, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
 }
 
 /* IE filters do not support multiple color stops.
@@ -16013,12 +16013,12 @@ License: MIT
 
 .sp-4 {
   height: 17%;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#00ffff", endColorstr=" #0066fd");
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#00ffff", endColorstr=" #0000ff");
 }
 
 .sp-5 {
   height: 16%;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=" #0066fd", endColorstr="#ff00ff");
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=" #0000ff", endColorstr="#ff00ff");
 }
 
 .sp-6 {

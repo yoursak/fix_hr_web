@@ -24,11 +24,7 @@ class LoginCheck
         if($User){
             $otp = rand(100000, 999999);
             $User->update(['otp' => $otp]);
-<<<<<<< Updated upstream
-            session()->put('user',$User);
-=======
             // session()->put('user',$User);
->>>>>>> Stashed changes
             return $next($request);
         }elseif($check_otp) {
             return $next($request);
