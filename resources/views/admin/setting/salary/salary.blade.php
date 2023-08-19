@@ -15,19 +15,20 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
-                                        class="fa fa-calculator"></i></span>
-                            </div>
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="nav-icon fa fa-calculator"></i></span>
                         </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Salary Calculation Logic</h5>
-                            </a>
-                            <p>Calendar month</p>
-                            <a href="#" data-bs-target="#salaryCalLogic" data-bs-toggle="modal">Change Settings <i
-                                    class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Salary Calculation</h5>
+                                </a>
+                                <p class="my-auto">Calendar month</p>
+                            </div>
+                            <div class="my-auto"><a href="#" data-bs-target="#salaryCalLogic"
+                                    data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -37,18 +38,18 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-secondary-transparent text-secondary border-secondary"><i
-                                        class="fa fa-money"></i></span>
-                            </div>
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="nav-icon fa fa-files-o"></i></span>
                         </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Manage Salary Templates</h5>
-                            </a>
-                            <p> 2 Templates</p>
-                            <a href="{{url('settings/salary/salaryTemp')}}">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Manage Salary Templates</h5>
+                                </a>
+                                <p class="my-auto"> 2 Templates</p>
+                            </div>
+                            <div class="my-auto"><a href="{{ url('settings/salary/salaryTemp') }}"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
+
                         </div>
                     </div>
                 </div>
@@ -58,18 +59,18 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-danger-transparent text-danger border-danger"><i
-                                        class="fa fa-newspaper-o"></i></span>
-                            </div>
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="nav-icon fa fa-bank"></i></span>
                         </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Employee Bank Account Details</h5>
-                            </a>
-                            <p>Add Employee bank account details in bulk</p>
-                            <a href="{{url('settings/salary/employeeAcc')}}">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Employee Bank Account Details</h5>
+                                </a>
+                                <p class="my-auto">Add Employee bank account details in bulk</p>
+                            </div>
+                            <div class="my-auto"><a href="{{ url('settings/salary/employeeAcc') }}"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
+
                         </div>
                     </div>
                 </div>
@@ -79,19 +80,18 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-warning-transparent text-warning border-warning"><i
-                                        class="fa fa-bank"></i></span>
-                            </div>
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="nav-icon fa fa-address-card-o"></i></span>
                         </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Business Name in Bank Statement</h5>
-                            </a>
-                            <p>Not Added</p>
-                            <a href="#" data-bs-target="#bname" data-bs-toggle="modal">Change Settings <i
-                                    class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Business Name in Bank Statement</h5>
+                                </a>
+                                <p class="my-auto">Not Added</p>
+                            </div>
+                            <div class="my-auto"><a href="#" data-bs-target="#bname" data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
+
                         </div>
                     </div>
                 </div>
@@ -101,18 +101,20 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-success-transparent text-success border-success"><i
-                                        class="fa fa-key"></i></span>
-                            </div>
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="nav-icon fa fa-credit-card"></i></span>
                         </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Salary Details Access to Employee</h5>
-                            </a>
-                            <p>All Employees</p>
-                            <a href="#" data-bs-target="#salaryDetailAccess" data-bs-toggle="modal">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Salary Details Access to Employee</h5>
+                                </a>
+                                <p class="my-auto">All Employees</p>
+                            </div>
+                            <div class="my-auto"><a href="#" data-bs-target="#salaryDetailAccess"
+                                    data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -122,18 +124,20 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
-                                        class="fa fa-sort-numeric-desc"></i></span>
-                            </div>
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="nav-icon fa fa-cut"></i></span>
                         </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Custom Deduction Plan</h5>
-                            </a>
-                            <p>Inactive</p>
-                            <a href="#" data-bs-target="#deductionPlan" data-bs-toggle="modal">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Custom Deduction Plan</h5>
+                                </a>
+                                <p class="my-auto">Inactive</p>
+                            </div>
+                            <div class="my-auto"><a href="#" data-bs-target="#deductionPlan"
+                                    data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -194,7 +198,8 @@
                 <div class="modal-header border-0">
                     <div>
                         <h4 class="modal-title ms-2">Business Name in Bank Statement</h4>
-                        <p class="mb-0 pb-0 text-muted fs-12 ms-2">Your Employees will see the provided business name in their
+                        <p class="mb-0 pb-0 text-muted fs-12 ms-2">Your Employees will see the provided business name in
+                            their
                             bank statement against the creadited salary.</p>
                     </div>
 
@@ -215,15 +220,15 @@
         </div>
     </div>
 
-
-    {{-- Salary detail  Access--}}
+    {{-- Salary detail  Access --}}
     <div class="modal fade" id="salaryDetailAccess">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content tx-size-sm">
                 <div class="modal-header border-0">
                     <div>
                         <h4 class="modal-title ms-2">Salary Details Access to Employee</h4>
-                        <p class="mb-0 pb-0 text-muted fs-12 ms-2">Employee with salary details access can see their salary slips and payment details in their Staff App</p>
+                        <p class="mb-0 pb-0 text-muted fs-12 ms-2">Employee with salary details access can see their salary
+                            slips and payment details in their Staff App</p>
                     </div>
 
                 </div>
@@ -236,15 +241,18 @@
                             <div class="d-flex justify-content-between">
                                 <div class="">
                                     <label class="custom-control custom-radio">
-                                        <input type="radio" id="NotselectedEmployees1" class="custom-control-input" name="example-radios" value="option1" checked>
+                                        <input type="radio" id="NotselectedEmployees1" class="custom-control-input"
+                                            name="example-radios" value="option1" checked>
                                         <span class="custom-control-label">All Employee</span>
                                     </label>
                                     <label class="custom-control custom-radio">
-                                        <input type="radio" id="NotselectedEmployees" class="custom-control-input" name="example-radios" value="option1" >
+                                        <input type="radio" id="NotselectedEmployees" class="custom-control-input"
+                                            name="example-radios" value="option1">
                                         <span class="custom-control-label">No access</span>
                                     </label>
                                     <label class="custom-control custom-radio">
-                                        <input type="radio" id="selectedEmployees" class="custom-control-input" name="example-radios" value="option1" >
+                                        <input type="radio" id="selectedEmployees" class="custom-control-input"
+                                            name="example-radios" value="option1">
                                         <span class="custom-control-label">Only Selected Employee</span>
                                     </label>
                                 </div>
@@ -284,11 +292,11 @@
                                     </td>
                                     <td class="text-start fs-13">+91 1234567890</td>
                                     <td class="text-end">
-                                        <a href="javascript:void(0);" class="action-btns"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Mail"><i
+                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="Mail"><i
                                                 class="feather feather-edit  text-primary"></i></a>
-                                        <a href="javascript:void(0);" class="action-btns"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i
+                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="Delete"><i
                                                 class="feather feather-trash-2 text-danger"></i></a>
                                     </td>
                                 </tr>
@@ -311,7 +319,8 @@
                 <div class="modal-header border-0">
                     <div>
                         <h4 class="modal-title ms-2">Custom Deduction Plan</h4>
-                        <p class="mb-0 pb-0 text-muted fs-12 ms-2">Entered amount will be deducted on first day of every month from selected Employee.</p>
+                        <p class="mb-0 pb-0 text-muted fs-12 ms-2">Entered amount will be deducted on first day of every
+                            month from selected Employee.</p>
                     </div>
 
                 </div>
@@ -322,7 +331,8 @@
                                 <h5 class="mb-0 pb-0 text-dark fs-14 mt-1 ">Plan Name</h5>
                             </div>
                             <div class="col-6">
-                                <input class="form-control" placeholder="Name will be shown in salary slip" type="text">
+                                <input class="form-control" placeholder="Name will be shown in salary slip"
+                                    type="text">
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -340,14 +350,13 @@
                             <div class="col-6">
                                 <label for="abc" class="my-auto text-primary">For all employees</label>
                                 <label class="custom-switch">
-                                    <input type="checkbox" name="custom-switch-checkbox"
-                                        class="custom-switch-input">
+                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
                                     <span class="custom-switch-indicator"></span>
                                 </label>
                             </div>
                         </div>
                         <p class="mb-0 pb-0 text-muted fs-12 mt-5 mt-1">By continuing you agree to <a href="#"
-                            class="text-primary">Terms & Conditions</a></p>
+                                class="text-primary">Terms & Conditions</a></p>
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">

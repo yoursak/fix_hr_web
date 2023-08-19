@@ -53,154 +53,157 @@
     <div class="row d-flex justify-content-center">
         <div class="col-sm-12 col-md-8 col-sm-6">
             <div class="card">
-                <div class="card-body">
-                    <div class="display-6 card-title"><b>Business Details</b></div>
-                    <div class="row">
-                        <div class="col-lg-12 col-sm-12">
-                            <input type="file" class="dropify"
-                                data-default-file="{{asset('imgs/business.gif')}}"
-                                data-height="180" />
-                        </div>
-                        <div class="col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Business Category</label>
-                                <select class="form-control  select2" data-placeholder="Select Business Category">
-                                    <option label="Select Business Category"></option>
-                                    <option value="1">Germany</option>
-                                    <option value="2">Canada</option>
-                                    <option value="3">Usa</option>
-                                    <option value="4">Afghanistan</option>
-                                    <option value="5">Albania</option>
-                                    <option value="6">China</option>
-                                    <option value="7">Denmark</option>
-                                    <option value="8">Finland</option>
-                                    <option value="9">India</option>
-                                    <option value="10">Kiribati</option>
-                                    <option value="11">Kuwait</option>
-                                    <option value="12">Mexico</option>
-                                    <option value="13">Pakistan</option>
-                                </select>
+                <form method="POST" action="{{route('signup.business')}}">
+                    @csrf
+                    <div class="card-body">
+                        <div class="display-6 card-title"><b>Business Details</b></div>
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12">
+                                <input type="file" name="logo" class="dropify"
+                                    data-default-file="{{asset('imgs/business.gif')}}"
+                                    data-height="180" />
                             </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Name</label>
-                                <input type="text" class="form-control" placeholder="Enter Your Name">
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Business Name</label>
-                                <input type="text" class="form-control" placeholder="Business Name">
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Email address</label>
-                                <input type="email" class="form-control" value="XXXXXsin@gmail.com" placeholder="Email" disabled>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" placeholder="eg. +91 XXXXXXXXX5">
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Country</label>
-                                <select class="form-control  select2" data-placeholder="Select Country">
-                                    <option label="Select Country"></option>
-                                    <option value="1">Germany</option>
-                                    <option value="2">Canada</option>
-                                    <option value="3">Usa</option>
-                                    <option value="4">Afghanistan</option>
-                                    <option value="5">Albania</option>
-                                    <option value="6">China</option>
-                                    <option value="7">Denmark</option>
-                                    <option value="8">Finland</option>
-                                    <option value="9">India</option>
-                                    <option value="10">Kiribati</option>
-                                    <option value="11">Kuwait</option>
-                                    <option value="12">Mexico</option>
-                                    <option value="13">Pakistan</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">State</label>
-                                <select class="form-control  select2" data-placeholder="Select State">
-                                    <option label="Select State"></option>
-                                    <option value="1">Germany</option>
-                                    <option value="2">Canada</option>
-                                    <option value="3">Usa</option>
-                                    <option value="4">Afghanistan</option>
-                                    <option value="5">Albania</option>
-                                    <option value="6">China</option>
-                                    <option value="7">Denmark</option>
-                                    <option value="8">Finland</option>
-                                    <option value="9">India</option>
-                                    <option value="10">Kiribati</option>
-                                    <option value="11">Kuwait</option>
-                                    <option value="12">Mexico</option>
-                                    <option value="13">Pakistan</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">City/Distict</label>
-                                <select class="form-control  select2" data-placeholder="Select City/Distict">
-                                    <option label="Select City/Distict"></option>
-                                    <option value="1">Germany</option>
-                                    <option value="2">Canada</option>
-                                    <option value="3">Usa</option>
-                                    <option value="4">Afghanistan</option>
-                                    <option value="5">Albania</option>
-                                    <option value="6">China</option>
-                                    <option value="7">Denmark</option>
-                                    <option value="8">Finland</option>
-                                    <option value="9">India</option>
-                                    <option value="10">Kiribati</option>
-                                    <option value="11">Kuwait</option>
-                                    <option value="12">Mexico</option>
-                                    <option value="13">Pakistan</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-6">
-                            <div class="row">
-                                <div class="col-sm-6 col-md-12">
-                                    <div class="form-group">
-                                        <label class="form-label">Pin Code</label>
-                                        <input type="text" class="form-control" placeholder="Pin Code">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 col-md-12">
-                                    <div class="form-group">
-                                        <label class="form-label">GST Number</label>
-                                        <input type="tel" class="form-control" placeholder="eg. 29GGGGG1314R9Z6">
-                                    </div>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Business Category</label>
+                                    <select class="form-control  select2" name="businessCategory" data-placeholder="Select Business Category">
+                                        <option label="Select Business Category"></option>
+                                        <option value="1">Germany</option>
+                                        <option value="2">Canada</option>
+                                        <option value="3">Usa</option>
+                                        <option value="4">Afghanistan</option>
+                                        <option value="5">Albania</option>
+                                        <option value="6">China</option>
+                                        <option value="7">Denmark</option>
+                                        <option value="8">Finland</option>
+                                        <option value="9">India</option>
+                                        <option value="10">Kiribati</option>
+                                        <option value="11">Kuwait</option>
+                                        <option value="12">Mexico</option>
+                                        <option value="13">Pakistan</option>
+                                    </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="form-label">Address</label>
-                                        <textarea rows="5" class="form-control" placeholder="Enter Business Address"></textarea>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" name="name" class="form-control" placeholder="Enter Your Name">
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Business Name</label>
+                                    <input type="text" name="bname" class="form-control" placeholder="Business Name">
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Email address</label>
+                                    <input type="email" name="email" class="form-control" value="XXXXXsin@gmail.com" placeholder="Email" disabled>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="tel" name="phone" class="form-control" placeholder="eg. +91 XXXXXXXXX5">
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Country</label>
+                                    <select class="form-control  select2" name="country" data-placeholder="Select Country">
+                                        <option label="Select Country"></option>
+                                        <option value="1">Germany</option>
+                                        <option value="2">Canada</option>
+                                        <option value="3">Usa</option>
+                                        <option value="4">Afghanistan</option>
+                                        <option value="5">Albania</option>
+                                        <option value="6">China</option>
+                                        <option value="7">Denmark</option>
+                                        <option value="8">Finland</option>
+                                        <option value="9">India</option>
+                                        <option value="10">Kiribati</option>
+                                        <option value="11">Kuwait</option>
+                                        <option value="12">Mexico</option>
+                                        <option value="13">Pakistan</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">State</label>
+                                    <select class="form-control  select2" name="state" data-placeholder="Select State">
+                                        <option label="Select State"></option>
+                                        <option value="1">Germany</option>
+                                        <option value="2">Canada</option>
+                                        <option value="3">Usa</option>
+                                        <option value="4">Afghanistan</option>
+                                        <option value="5">Albania</option>
+                                        <option value="6">China</option>
+                                        <option value="7">Denmark</option>
+                                        <option value="8">Finland</option>
+                                        <option value="9">India</option>
+                                        <option value="10">Kiribati</option>
+                                        <option value="11">Kuwait</option>
+                                        <option value="12">Mexico</option>
+                                        <option value="13">Pakistan</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">City/Distict</label>
+                                    <select class="form-control  select2" name="city" data-placeholder="Select City/Distict">
+                                        <option label="Select City/Distict"></option>
+                                        <option value="1">Germany</option>
+                                        <option value="2">Canada</option>
+                                        <option value="3">Usa</option>
+                                        <option value="4">Afghanistan</option>
+                                        <option value="5">Albania</option>
+                                        <option value="6">China</option>
+                                        <option value="7">Denmark</option>
+                                        <option value="8">Finland</option>
+                                        <option value="9">India</option>
+                                        <option value="10">Kiribati</option>
+                                        <option value="11">Kuwait</option>
+                                        <option value="12">Mexico</option>
+                                        <option value="13">Pakistan</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-12">
+                                        <div class="form-group">
+                                            <label class="form-label">Pin Code</label>
+                                            <input type="text" name="pin" class="form-control" placeholder="Pin Code">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-12">
+                                        <div class="form-group">
+                                            <label class="form-label">GST Number</label>
+                                            <input type="text" name="gst" class="form-control" placeholder="eg. 29GGGGG1314R9Z6">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="form-label">Address</label>
+                                            <textarea rows="5" name="address" class="form-control" placeholder="Enter Business Address"></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer text-end">
-                    <a  href="{{url('admin/branch')}}" class="btn btn-primary">Save & Continue</a>
-                    <a  href="#" class="btn btn-outline-primary">Skip</a>
-                </div>
+                    <div class="card-footer text-end">
+                        <button  href="#" type="submit" class="btn btn-primary">Save & Continue</button>
+                        <a  href="{{url('/admin')}}" class="btn btn-outline-primary">Skip</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -107,7 +107,8 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    {{-- Temprarly Commented By Aman Sahu (Do not remove) --}}
+    {{-- <div class="row">
         <div class="card" id="repoerCard2">
             <div class="card-body border-bottum-0">
                 <div class="row">
@@ -195,7 +196,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <div class="row">
         <div class="card" id="repoerCard3">
             <div class="card-body border-bottum-0">
@@ -271,7 +272,8 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    {{-- Temprarly Commented By Aman Sahu (Do not remove) --}}
+    {{-- <div class="row">
         <div class="card" id="repoerCard4">
             <div class="card-body border-bottum-0">
                 <div class="row">
@@ -416,7 +418,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <div class=" text-end">
         <a href="{{ url('settings/businesssetting') }}" class="btn btn-success" id="formsave" data-bs-toggle="tooltip"

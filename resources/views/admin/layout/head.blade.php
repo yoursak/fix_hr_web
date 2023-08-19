@@ -18,7 +18,7 @@
 <link href={{ asset('assets/plugins/bootstrap/css/bootstrap.css') }} rel="stylesheet" />
 
 <!-- STYLE CSS -->
-<link href={{ asset('assets/css/style.css') }} rel="stylesheet" />
+<link href={{ asset('assets/css/style.css?V=1.6') }} rel="stylesheet" />
 <link href={{ asset('assets/css/plugins.css') }} rel="stylesheet" />
 
 <!-- ANIMATE CSS -->
@@ -26,8 +26,6 @@
 
 <!---ICONS CSS -->
 <link href={{ asset('assets/plugins/icons/icons.css') }} rel="stylesheet" />
-
-
 
 <!-- INTERNAL SWITCHER CSS -->
 <link href={{ asset('assets/switcher/css/switcher.css') }} rel="stylesheet" />

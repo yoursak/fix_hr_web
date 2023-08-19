@@ -6,20 +6,7 @@ Attendance
 @section('contents')
 <!-- ROW -->
 <div class="row">
-    <div class="col-xl-3 col-md-12 col-lg-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="countdowntimer mt-0">
-                    <span id="clocktimer2" class="border-0"></span>
-                    <label class="form-label">Current Time</label>
-                </div>
-                <div class="btn-list text-center mt-5">
-                    <a href="javascript:void(0);" class="btn ripple btn-primary disabled">Punch In</a>
-                    <a href="javascript:void(0);" class="btn ripple btn-primary">Punch Out</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    
     <div class="col-xl-9 col-md-12 col-lg-12">
         <div class="card">
             <div class="card-header  border-0">
@@ -55,6 +42,20 @@ Attendance
             </div>
         </div>
     </div>
+    <div class="col-xl-3 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-body ">
+                <div class="countdowntimer mt-3">
+                    <span id="clocktimer2" class="border-0"></span>
+                    <label class="form-label">Panding Approvals for abc days</label>
+                </div>
+                <div class="btn-list text-center mt-5 mb-5">
+                    <a  type="submit" class="btn ripple btn-primary">Approve All</a>
+                    {{-- <a href="javascript:void(0);" class="btn ripple btn-primary disabled">Punch Out</a> --}}
+                </div>
+            </div>
+        </div>
+    </div> 
 </div>
 <!-- END ROW -->
 

@@ -8,19 +8,18 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
-                                        class="fe fe-settings"></i></span>
-                            </div>
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="nav-icon fa fa-id-card-o"></i></span>
                         </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Business Name</h5>
-                            </a>
-                            <p>Fixing Dots</p>
-                            <a href="#" data-bs-target="#modaldemo4" data-bs-toggle="modal">Change Settings <i
-                                    class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Business Name</h5>
+                                </a>
+                                <p class="my-auto">Fixing Dots</p>
+                            </div>
+                            <div class="my-auto"><a href="#" data-bs-target="#modaldemo4" data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
+
                         </div>
                     </div>
                 </div>
@@ -30,19 +29,18 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-secondary-transparent text-secondary border-secondary"><i
-                                        class="fa fa-bank"></i></span>
-                            </div>
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="nav-icon fa fa-bank"></i></span>
                         </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Business Bank Account</h5>
-                            </a>
-                            <p>XXXX XXXX XX12</p>
-                            <a href="#" data-bs-target="#bAccName" data-bs-toggle="modal">Change Settings <i
-                                    class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Business Bank Account</h5>
+                                </a>
+                                <p class="my-auto">XXXX XXXX XX12</p>
+                            </div>
+                            <div class="my-auto"><a href="#" data-bs-target="#bAccName" data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
+
                         </div>
                     </div>
                 </div>
@@ -52,19 +50,18 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-danger-transparent text-danger border-danger"><i
-                                        class="fa fa-briefcase"></i></span>
-                            </div>
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="nav-icon ion ion-images"></i></span>
                         </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Business Logo</h5>
-                            </a>
-                            <p>Not Added</p>
-                            <a href="#" data-bs-target="#bLogo" data-bs-toggle="modal">Change Settings <i
-                                    class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Business Logo</h5>
+                                </a>
+                                <p class="my-auto">Not Added</p>
+                            </div>
+                            <div class="my-auto"><a href="#" data-bs-target="#bLogo" data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
+
                         </div>
                     </div>
                 </div>
@@ -74,27 +71,24 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-warning-transparent text-warning border-warning"><i
-                                        class="fa fa-address-card-o"></i></span>
-                            </div>
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="nav-icon fa fa-map-signs mx-2"></i></span>
                         </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Business Address</h5>
-                            </a>
-                            <p>Fixingdots,Keshar Earth Solution Building, Ring Road No-2, Raipur</p>
-                            <a href="#" data-bs-target="#bAddress" data-bs-toggle="modal">Change Settings <i
-                                    class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Business Address</h5>
+                                </a>
+                                <p class="my-auto">Fixingdots,Keshar Earth Solution Building, Ring Road No-2, Raipur</p>
+                            </div>
+                            <div class="my-auto"> <a href="#" data-bs-target="#bAddress" data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
 
     {{-- Business Name --}}
     <div class="modal fade" id="modaldemo4">
@@ -127,7 +121,8 @@
                     <div>
                         <h4 class="modal-title ms-2">Business Account Details</h4><button aria-label="Close"
                             class="btn-close" data-bs-dismiss="modal"></button><br />
-                        <p class="mb-0 pb-0 fs-13 ms-2 " style="color: rgb(110, 104, 88)">Provide Business Acount Detail to
+                        <p class="mb-0 pb-0 fs-13 ms-2 " style="color: rgb(110, 104, 88)">Provide Business Acount Detail
+                            to
                             get Instant Refound in the
                             case of payout or transaction failures</p>
                     </div>
@@ -171,8 +166,10 @@
                         <div class=" card-body">
                             <div class="row">
                                 <div class="col-lg-12 col-sm-12">
-									<input type="file" class="dropify" data-default-file="{{asset('imgs/uploadgificon.gif')}}" data-width="200" data-height="200" />
-								</div>
+                                    <input type="file" class="dropify"
+                                        data-default-file="{{ asset('imgs/uploadgificon.gif') }}" data-width="200"
+                                        data-height="200" />
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -191,8 +188,8 @@
             <div class="modal-content tx-size-sm">
                 <div class="modal-header border-0">
                     <div>
-                        <h4 class="modal-title ms-2">Address</h4><button aria-label="Close"
-                            class="btn-close" data-bs-dismiss="modal"></button><br />
+                        <h4 class="modal-title ms-2">Address</h4><button aria-label="Close" class="btn-close"
+                            data-bs-dismiss="modal"></button><br />
                     </div>
                 </div>
                 <div class="modal-body">
@@ -208,7 +205,6 @@
 
                         <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">City</p>
                         <input class="form-control" placeholder="City Name" type="text">
-
 
                         <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Pin Code</p>
                         <input class="form-control" placeholder="Pin Code" type="text">

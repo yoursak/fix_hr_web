@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\signupController;
 use App\Http\Controllers\admin\DashboardController;
+use App\Http\Controllers\admin\Attendance\AttendanceController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,14 +24,23 @@ Route::prefix('login')->group(function(){
     Route::post('/error', [LoginController::class, 'error'])->name('login.error');
 });
 
-Route::prefix('signup')->group(function(){
-    Route::get('/',[signupController::class,'index'])->name('signup');
-    Route::post('/otp',[signupController::class,'signup_otp'])->name('signup.otp');
-    Route::post('/save',[signupController::class,'save'])->name('signup.save');
+
+Route::controller(AttendanceController::class)->group(function () {
+    Route::get('attendance','index')->name('attendance');
+    // Route::get('/orders/{id}', 'show');
+    // Route::post('/orders', 'store');
 });
+// Route::prefix('signup')->group(function(){
+//     Route::get('/',[signupController::class,'index'])->name('signup');
+//     Route::get('/otp',[signupController::class,'signup_otp'])->name('signup.otp');
+//     Route::get('/business',[signupController::class,'business'])->name('signup.business');
+//     Route::post('/saveemail',[signupController::class,'saveEmail'])->name('signup.email');
+//     Route::post('/saveotp',[signupController::class,'saveOTP'])->name('signup.otp');
+//     Route::post('/savebusiness',[signupController::class,'saveBusiness'])->name('signup.business');
+// });
 
 Route::prefix('/admin')->group(function(){
-    Route::get('/',[DashboardController::class,'index'])->name('admin.dashboard');
+    Route::get('/',[DashboardController::class,'index']);
 });
 
 
@@ -75,9 +85,9 @@ Route::get('/summary', function () {
     return view('admin.dashboard.summary');
 });
 
-Route::get('/attendance', function () {
-    return view('admin.attendance.attendance');
-});
+// Route::get('/attendance', function () {
+//     return view('admin.attendance.attendance');
+// });
 Route::get('/employee-attendance', function () {
     return view('admin.attendance.emp_attendace');
 });

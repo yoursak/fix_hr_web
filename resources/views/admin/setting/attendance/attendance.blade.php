@@ -8,19 +8,18 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
-                                        class="fe fe-settings"></i></span>
-                            </div>
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="mdi mdi-account-convert nav-icon"></i></span>
                         </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Attendance Mode</h5>
-                            </a>
-                            <p>Face Id, QR Code and Location.</p>
-                            <a href="#" data-bs-target="#attMode" data-bs-toggle="modal">Change Settings <i
-                                    class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Attendance Mode</h5>
+                                </a>
+                                <p class="my-auto">Face Id, QR Code and Location.</p>
+                            </div>
+                            <div class="my-auto"><a href="#" data-bs-target="#attMode" data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
+
                         </div>
                     </div>
                 </div>
@@ -30,19 +29,20 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-secondary-transparent text-secondary border-secondary"><i
-                                        class="fe fe-unlock"></i></span>
-                            </div>
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="mdi mdi-account-check nav-icon"></i></span>
                         </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Attendance Employee Access</h5>
-                            </a>
-                            <p>20 Employees</p>
-                            <a href="#" data-bs-target="#EmployeeAccess" data-bs-toggle="modal">Change Settings <i
-                                    class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Attendance Employee Access</h5>
+                                </a>
+                                <p class="my-auto">20 Employees</p>
+                            </div>
+                            <div class="my-auto"><a href="#" data-bs-target="#EmployeeAccess"
+                                    data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -52,19 +52,18 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-danger-transparent text-danger border-danger"><i
-                                        class="fe fe-clock"></i></span>
-                            </div>
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="mdi mdi-alarm-plus nav-icon"></i></span>
                         </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Shift Settings</h5>
-                            </a>
-                            <p>One Fixed Shift</p>
-                            <a href="{{ url('settings/attendancesetting/createshift') }}">Change Settings <i
-                                    class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Shift Settings</h5>
+                                </a>
+                                <p class="my-auto">One Fixed Shift</p>
+                            </div>
+                            <div class="my-auto"><a href="{{ url('settings/attendancesetting/createshift') }}"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
+
                         </div>
                     </div>
                 </div>
@@ -74,19 +73,67 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-warning-transparent text-warning border-warning"><i
-                                        class="fe fe-grid"></i></span>
-                            </div>
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="fa fa-gears nav-icon"></i></span>
                         </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Automation Rules</h5>
-                            </a>
-                            <p>Track Late Entry, Early Out, Overtime, and Breaks.</p>
-                            <a href="{{ url('settings/attendancesetting/automationrule') }}">Change Settings <i
-                                    class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Automation Rules</h5>
+                                </a>
+                                <p class="my-auto">Track Late Entry, Early Out, Overtime, and Breaks.</p>
+                            </div>
+                            <div class="my-auto"><a href="{{ url('settings/attendancesetting/automationrule') }}"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Temprarly Commented By Aman Sahu (Do not remove) --}}
+        {{-- <div class="col-xl-6">
+            <div class="card custom-card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="nav-icon las la-cog"></i></span>
+                        </div>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Daily Work Entry</h5>
+                                </a>
+                                <p class="my-auto">Assign to Employee</p>
+                            </div>
+                            <div class="my-auto"><a href="#" data-bs-target="#workAccess"
+                                    data-bs-toggle="modal"><i class="ion-chevron-right fs-10 my-auto"></i>
+                                    <i class="ion-chevron-right fs-10 my-auto"></i>
+                                    <i class="ion-chevron-right fs-10 my-auto"></i></a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> --}}
+
+        <div class="col-xl-6">
+            <div class="card custom-card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="fa mdi mdi-alarm nav-icon"></i></span>
+                        </div>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Track In & Out Time</h5>
+                                </a>
+                                <p class="my-auto">Punch Out Required</p>
+                            </div>
+                            <div class="my-auto"><a href="#" data-bs-target="#ioModal" data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
+
                         </div>
                     </div>
                 </div>
@@ -96,19 +143,19 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-success-transparent text-success border-success"><i
-                                        class="fe fe-monitor"></i></span>
-                            </div>
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="mdi mdi-beach nav-icon"></i></span>
                         </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Daily Work Entry</h5>
-                            </a>
-                            <p>Assign to Employee</p>
-                            <a href="#" data-bs-target="#workAccess" data-bs-toggle="modal">Change Settings <i
-                                    class="ion-chevron-right fs-10 ms-1"></i></a>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Attendance On Holiday</h5>
+                                </a>
+                                <p class="my-auto">Attendance on Holidays, Comoff.</p>
+                            </div>
+                            <div class="my-auto"><a href="#" data-bs-target="#ioModal"
+                                    data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
+
                         </div>
                     </div>
                 </div>
@@ -118,61 +165,18 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
-                                        class="fe fe-map"></i></span>
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="fa fa-calendar-check-o nav-icon"></i></span>
+                        </div>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Mark Absent on Previous Day</h5>
+                                </a>
+                                <p class="my-auto">Not Activated.</p>
                             </div>
-                        </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Track In & Out Time</h5>
-                            </a>
-                            <p>Punch Out Required</p>
-                                <a href="#" data-bs-target="#ioModal" data-bs-toggle="modal">Change Settings <i
-                                    class="ion-chevron-right fs-10 ms-1"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-6">
-            <div class="card custom-card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-info-transparent text-info border-info"><i
-                                        class="fe fe-umbrella"></i></span>
-                            </div>
-                        </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Attendance On Holiday</h5>
-                            </a>
-                            <p>Attendance on Holidays, Comoff.</p>
-                            <a href="#" data-bs-target="#ioModal" data-bs-toggle="modal">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-6">
-            <div class="card custom-card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                <span class="settings-icon bg-success-transparent text-success border-success"><i
-                                        class="fe fe-user-x"></i></span>
-                            </div>
-                        </div>
-                        <div class="col-10">
-                            <a href="#">
-                                <h5 class="mb-1 text-dark">Mark Absent on Previous Day</h5>
-                            </a>
-                            <p>Not Activated.</p>
-                            <a href="#">Change Settings <i class="ion-chevron-right fs-10 ms-1"></i></a>
+                            <div class="my-auto"><a href="#"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
+
                         </div>
                     </div>
                 </div>
@@ -494,7 +498,8 @@
                                 <div class="row">
                                     <div class="col-xl-11">
                                         <label class="form-label">Track In & Out Time</label>
-                                        <span class="d-block fs-12 text-muted">Record both In & Out time for all employee</span>
+                                        <span class="d-block fs-12 text-muted">Record both In & Out time for all
+                                            employee</span>
                                     </div>
                                     <div class="col-xl-1 pe-0">
                                         <label class="custom-switch">
@@ -509,7 +514,8 @@
                                 <div class="row">
                                     <div class="col-xl-11">
                                         <label class="form-label">No Attendance without punch</label>
-                                        <span class="d-block fs-12 text-muted">Punch out is required to mark attendance</span>
+                                        <span class="d-block fs-12 text-muted">Punch out is required to mark
+                                            attendance</span>
                                     </div>
                                     <div class="col-xl-1 pe-0">
                                         <label class="custom-switch">
@@ -524,11 +530,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary">Save changes</button> <button class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary">Save changes</button> <button class="btn btn-light"
+                        data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
 
-    {{--Mark Absent on Previous Day modal --}}
+    {{-- Mark Absent on Previous Day modal --}}
 @endsection

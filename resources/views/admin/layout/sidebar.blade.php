@@ -49,7 +49,10 @@
                             <li><a href="{{ url('/gatepass') }}" class="slide-item"> Gate Pass</a></li>
                         </ul>
                     </li>
-                    <li class="slide">
+
+                    {{-- Temprarly Commented By Aman Sahu (Do not remove) --}}
+
+                    {{-- <li class="slide">
                         <a class="side-menu__item" href="{{ url('/payroll') }}">
                             <i class="feather feather-credit-card sidemenu_icon"></i>
                             <span class="side-menu__label">Payroll</span>
@@ -60,7 +63,9 @@
                             <i class="fa fa-inr sidemenu_icon"></i>
                             <span class="side-menu__label">Online Pay</span>
                         </a>
-                    </li>
+                    </li> --}} 
+
+
                     <li class="slide">
                         <a class="side-menu__item" href="{{ url('/report') }}">
                             <i class="feather feather-flag sidemenu_icon"></i>
@@ -77,19 +82,18 @@
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                             <i class="feather feather-settings sidemenu_icon"></i>
                             <span class="side-menu__label">Settings</span><i class="angle fa fa-angle-right"></i></a>
-                        <ul class="slide-menu">
+                        <ul class="slide-menu" style="background-color:  #1034A6; border-radius:7px;">
                             <li class="side-menu-label1"><a href="{{ url('settings/attendancesetting') }}">Attendance
                                     Setting</a></li>
                             <li><a href="{{ url('settings/attendancesetting') }}" class="slide-item"> Attendance
                                     Setting </a></li>
                             <li><a href="{{ url('settings/businesssetting') }}" class="slide-item"> Business Setting
                                 </a></li>
-                            <li><a href="{{ url('settings/salarysetting') }}" class="slide-item"> Salary Setting </a>
-                            </li>
+                            {{-- <li><a href="{{ url('settings/salarysetting') }}" class="slide-item"> Salary Setting </a>
+                            </li> --}}
                             <li><a href="{{ url('settings/businessinfosetting') }}" class="slide-item"> Business Info
                                     Setting </a></li>
                             <li><a href="{{ url('setting/') }}" class="slide-item"> Account Setting </a></li>
-                            <li><a href="{{ url('admin/login') }}" class="slide-item"> Logout </a></li>
                         </ul>
                     </li>
                     <li class="slide">

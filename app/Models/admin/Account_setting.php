@@ -1,28 +1,27 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\admin;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Login extends Model
+class Account_setting extends Model
 {
     use HasFactory;
-    protected $table="login";
     protected $primary_key="id";
 
     protected $casts = [
-		'otp' => 'int'
+		'updated_at' => 'timestamp'
 	];
 
 	protected $fillable = [
         'user',
 		'name',
-		'email',
         'country_code',
-		'phone',
-		'otp',
-		'created_at',
+        'phone',
+		'email_address',
+		'business_id',
+		'subscriptions',
         'updated_at'
 	];
 }
