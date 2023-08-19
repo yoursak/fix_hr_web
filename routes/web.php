@@ -3,8 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\signupController;
-use App\Http\Controllers\admin\DashboardController;
+use App\Http\Controllers\admin\Dashboard\DashboardController;
 use App\Http\Controllers\admin\Attendance\AttendanceController;
+use App\Http\Controllers\admin\Employee\EmployeeController;
+use App\Http\Controllers\admin\Onlinepay\OnlinepayController;
+use App\Http\Controllers\admin\Report\ReportController;
+use App\Http\Controllers\admin\Requests\RequestController;
+use App\Http\Controllers\admin\Settings\SettingController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -39,9 +44,80 @@ Route::controller(AttendanceController::class)->group(function () {
 //     Route::post('/savebusiness',[signupController::class,'saveBusiness'])->name('signup.business');
 // });
 
-Route::prefix('/admin')->group(function(){
-    Route::get('/',[DashboardController::class,'index']);
-});
+
+
+// Route::prefix('/admin')->group(function(){
+//     Route::get('/',[DashboardController::class,'index']);
+
+//     Route::prefix('/attendance')->group(function(){
+//         Route::get('/',[AttendanceController::class,'index']);
+//         Route::get('/details',[AttendanceController::class,'details']);
+//     });
+
+//     Route::prefix('/employee')->group(function(){
+//         Route::get('/',[EmployeeController::class,'index']);
+//         Route::get('/add',[EmployeeController::class,'add']);
+//         Route::get('/profile',[EmployeeController::class,'empProfile']);
+//     });
+
+//     Route::prefix('/onlinepay')->group(function(){
+//         Route::get('/',[OnlinepayController::class,'index']);
+//         Route::get('/deduction',[OnlinepayController::class,'deduction']);
+//         Route::get('/online_pay',[OnlinepayController::class,'onlinePay']);
+//         Route::get('/payment_entry',[OnlinepayController::class,'paymentEntry']);
+//     });
+
+//     Route::prefix('/report')->group(function(){
+//         Route::get('/',[ReportController::class,'index']);
+//     });
+
+//     Route::prefix('/requests')->group(function(){
+//         Route::get('/leaves',[RequestController::class,'leaves']);
+//         Route::get('/gatepass',[RequestController::class,'gatepass']);
+//         Route::get('/misspunch',[RequestController::class,'misspunch']);
+//     });
+
+//     Route::prefix('/settings')->group(function(){
+//         Route::get('/',[SettingController::class,'index']);
+
+//         Route::prefix('/account')->group(function(){
+//             Route::get('/',[SettingController::class,'index']);
+//         });
+
+//         Route::prefix('/business')->group(function(){
+//             Route::get('/',[SettingController::class,'index']);
+//             Route::get('/admin',[SettingController::class,'admin']);
+//             Route::get('/branches',[SettingController::class,'branches']);
+//             Route::get('/department',[SettingController::class,'department']);
+//             Route::get('/holiday_policy',[SettingController::class,'holidayPolicy']);
+//             Route::get('/invite_employee',[SettingController::class,'inviteEmpl']);
+//             Route::get('/leave_policy',[SettingController::class,'leavePolicy']);
+//             Route::get('/manage_emp',[SettingController::class,'manageEmpDetails']);
+//             Route::get('/manager',[SettingController::class,'manager']);
+//             Route::get('/weekly_holiday',[SettingController::class,'weeklyHoliday']);
+//         });
+
+//         Route::prefix('/businessinfo')->group(function(){
+//             Route::get('/',[SettingController::class,'index']);
+//         });
+
+//         Route::prefix('/attendance')->group(function(){
+//             Route::get('/',[SettingController::class,'index']);
+//             Route::get('/create_shift',[SettingController::class,'createShift']);
+//         });
+
+//         Route::prefix('/automation')->group(function(){
+//             Route::get('/',[SettingController::class,'index']);
+//         });
+
+//         Route::prefix('/salary')->group(function(){
+//             Route::get('/',[SettingController::class,'index']);
+//             Route::get('/salary_structure_temp',[SettingController::class,'salaryTemp']);
+//             Route::get('/employee_acc_detail',[SettingController::class,'EmpAcDetail']);
+//             Route::get('/other',[SettingController::class,'other']);
+//         });
+//     });
+// });
 
 
 // temprary routes

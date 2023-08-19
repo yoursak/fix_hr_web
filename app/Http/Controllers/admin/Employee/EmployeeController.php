@@ -14,4 +14,8 @@ class EmployeeController extends Controller
     public function add(){
         return view('admin.employees.addemp');
     }
+
+    public function empProfile(){
+        return view('admin.employees.emp_profile');
+    }
 }
