@@ -63,7 +63,7 @@
                             <i class="fa fa-inr sidemenu_icon"></i>
                             <span class="side-menu__label">Online Pay</span>
                         </a>
-                    </li> --}} 
+                    </li> --}}
 
 
                     <li class="slide">
