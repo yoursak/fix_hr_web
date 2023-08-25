@@ -140,7 +140,7 @@ class SettingController extends Controller
     public function DeleteDesignation($id){
         $designation = Designation_list::where('desig_id', $id)->delete();
         // dd($designation);
-        Session::flash('success', 'Succefully Deleted !'); 
+        // Session::flash('success', 'Succefully Deleted !'); 
         return redirect()->route('admin.designation');
     }
 

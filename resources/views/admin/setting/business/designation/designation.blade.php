@@ -1,6 +1,6 @@
 @extends('admin.setting.setting')
 @section('subtitle')
-Salary / Department Setting
+Salary / Designation Setting
 @endsection
 
 @section('css')
@@ -44,11 +44,14 @@ Salary / Department Setting
 @endsection
 
 @section('settings')
+<form method="POST" action="{{route('add.designation')}}">
+    @csrf
 <div class="page-header d-md-flex d-block">
     @php
     $Designation = App\Helpers\Central_unit::DesignationList();
-    $Department = App\Helpers\Central_unit::DepartmentList();
     $Branch = App\Helpers\Central_unit::BranchList();
+    $Department = App\Helpers\Central_unit::DepartmentList();
+    // dd($Designation);
     $i = 0;
     $j = 1;
     foreach ($Designation as $item) {
@@ -66,19 +69,19 @@ Salary / Department Setting
                 <div class="btn-list">
                     <button type="reset" id="addNewDepartment" class="btn btn-outline-dark" data-bs-toggle="modal"
                         data-bs-target="#clockinmodal">Assign Designation</button>
+                    <button type="submit" id="SaveNewDepartment" class="btn btn-outline-success d-none"
+                        data-bs-toggle="modal" data-bs-target="#clockinmodal">Save Designation</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
 <div class="row">
     <div class="card">
         <div class="card-header  border-0">
-            <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Designation</b></span></h4>
+            <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Designations</b></span></h4>
         </div>
-
         <div class="card-body d-none" id="addDepartment">
             <div class="row">
                 <div class="card" style="color: rgb(56, 113, 117)">
@@ -88,222 +91,37 @@ Salary / Department Setting
                                         Detail</b></span></h5>
                         </div>
                     </div>
-
                     <div class="card-body">
-                        <form method="post" action="{{route('add.designation')}}">
-                            @csrf
-                            <div class="row">
-                                <div class="col-md-12 col-xl-3">
-                                    <div class="form-group">
-                                        <p class="form-label"> Designation Name</p>
-                                        <input name="designation" type="text" class="form-control" value=""
-                                            placeholder="Enter Name" aria-label="Search" tabindex="1" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 col-xl-3">
-                                    <div class="form-group">
-                                        <p class="form-label">Branch</p>
-                                        <select name="branch" class="form-control select2"
-                                            data-placeholder="Department" required>
-                                            @foreach ($Branch as $branch)
-                                            <option value="{{$branch->id}}">{{$branch->branch_name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 col-xl-3">
-                                    <div class="form-group">
-                                        <p class="form-label">Deparment</p>
-                                        <select name="department" class="form-control select2"
-                                            data-placeholder="Department" required>
-                                            @foreach ($Department as $department)
-                                            <option value="{{$department->id}}">{{$department->depart_name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 col-xl-3 my-auto">
-                                    <button type="submit" id="SaveNewDepartment" class="btn btn-outline-success d-none"
-                                        data-bs-toggle="modal" data-bs-target="#clockinmodal">Save Department</button>
+                        <div class="row">
+                            <div class="col-md-12 col-xl-3">
+                                <div class="form-group">
+                                    <p class="form-label">Designation's Name</p>
+                                    <input name='designation' type="text" class="form-control" value=""
+                                        placeholder="Enter Name" aria-label="Search" tabindex="1" required>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    {{-- <div class="card-header  border-0">
-                        <div>
-                            <h5 class="title"><span style="color:rgb(79, 136, 109)"><b>Add Employees</b></span>
-                            </h5>
-                            <p class="text-muted">You can add active Employees</p>
+                            <div class="col-md-12 col-xl-3">
+                                <div class="form-group">
+                                    <p class="form-label">Branch</p>
+                                    <select name='branch' class="form-control select2" data-placeholder="Branch" required>
+                                        @foreach ($Branch as $branch)
+                                        <option value="{{$branch->branch_id}}">{{$branch->branch_name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-xl-3">
+                                <div class="form-group">
+                                    <p class="form-label">Department</p>
+                                    <select name='department' class="form-control select2" data-placeholder="Branch" required>
+                                        @foreach ($Department as $department)
+                                        <option value="{{$department->depart_id}}">{{$department->depart_name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-body" style="height:15rem; overflow:scroll">
-                        <table class="table mb-0 text-nowrap">
-                            <tbody>
-                                <tr class="border-bottom">
-                                    <td>
-                                        <label class="custom-switch">
-                                            <input type="checkbox" name="custom-switch-checkbox"
-                                                class="custom-switch-input">
-                                            <span class="custom-switch-indicator"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="me-3 mt-0 mt-sm-1 d-block">
-                                                <h6 class="mb-0">Faith Harris</h6>
-                                                <div class="clearfix"></div>
-                                                <small class="text-muted">UI designer</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-start fs-13">+91 1234567890</td>
-                                    <td class="text-end">
-                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Edit"><i
-                                                class="feather feather-edit  text-primary"></i></a>
-                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Delete"><i
-                                                class="feather feather-trash-2 text-danger"></i></a>
-                                    </td>
-                                </tr>
-                                <tr class="border-bottom">
-                                    <td>
-                                        <label class="custom-switch">
-                                            <input type="checkbox" name="custom-switch-checkbox"
-                                                class="custom-switch-input">
-                                            <span class="custom-switch-indicator"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="me-3 mt-0 mt-sm-1 d-block">
-                                                <h6 class="mb-0">Faith Harris</h6>
-                                                <div class="clearfix"></div>
-                                                <small class="text-muted">UI designer</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-start fs-13">+91 1234567890</td>
-                                    <td class="text-end">
-                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Edit"><i
-                                                class="feather feather-edit  text-primary"></i></a>
-                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Delete"><i
-                                                class="feather feather-trash-2 text-danger"></i></a>
-                                    </td>
-                                </tr>
-                                <tr class="border-bottom">
-                                    <td>
-                                        <label class="custom-switch">
-                                            <input type="checkbox" name="custom-switch-checkbox"
-                                                class="custom-switch-input">
-                                            <span class="custom-switch-indicator"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="me-3 mt-0 mt-sm-1 d-block">
-                                                <h6 class="mb-0">Faith Harris</h6>
-                                                <div class="clearfix"></div>
-                                                <small class="text-muted">UI designer</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-start fs-13">+91 1234567890</td>
-                                    <td class="text-end">
-                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Edit"><i
-                                                class="feather feather-edit  text-primary"></i></a>
-                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Delete"><i
-                                                class="feather feather-trash-2 text-danger"></i></a>
-                                    </td>
-                                </tr>
-                                <tr class="border-bottom">
-                                    <td>
-                                        <label class="custom-switch">
-                                            <input type="checkbox" name="custom-switch-checkbox"
-                                                class="custom-switch-input">
-                                            <span class="custom-switch-indicator"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="me-3 mt-0 mt-sm-1 d-block">
-                                                <h6 class="mb-0">Faith Harris</h6>
-                                                <div class="clearfix"></div>
-                                                <small class="text-muted">UI designer</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-start fs-13">+91 1234567890</td>
-                                    <td class="text-end">
-                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Edit"><i
-                                                class="feather feather-edit  text-primary"></i></a>
-                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Delete"><i
-                                                class="feather feather-trash-2 text-danger"></i></a>
-                                    </td>
-                                </tr>
-                                <tr class="border-bottom">
-                                    <td>
-                                        <label class="custom-switch">
-                                            <input type="checkbox" name="custom-switch-checkbox"
-                                                class="custom-switch-input">
-                                            <span class="custom-switch-indicator"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="me-3 mt-0 mt-sm-1 d-block">
-                                                <h6 class="mb-0">Faith Harris</h6>
-                                                <div class="clearfix"></div>
-                                                <small class="text-muted">UI designer</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-start fs-13">+91 1234567890</td>
-                                    <td class="text-end">
-                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Edit"><i
-                                                class="feather feather-edit  text-primary"></i></a>
-                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Delete"><i
-                                                class="feather feather-trash-2 text-danger"></i></a>
-                                    </td>
-                                </tr>
-                                <tr class="border-bottom">
-                                    <td>
-                                        <label class="custom-switch">
-                                            <input type="checkbox" name="custom-switch-checkbox"
-                                                class="custom-switch-input">
-                                            <span class="custom-switch-indicator"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="me-3 mt-0 mt-sm-1 d-block">
-                                                <h6 class="mb-0">Faith Harris</h6>
-                                                <div class="clearfix"></div>
-                                                <small class="text-muted">UI designer</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-start fs-13">+91 1234567890</td>
-                                    <td class="text-end">
-                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Edit"><i
-                                                class="feather feather-edit  text-primary"></i></a>
-                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Delete"><i
-                                                class="feather feather-trash-2 text-danger"></i></a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div> --}}
                 </div>
             </div>
         </div>
@@ -314,8 +132,8 @@ Salary / Department Setting
                     <thead>
                         <tr>
                             <th class="border-bottom-0 w-10">S.No.</th>
-                            <th class="border-bottom-0">Designation Name</th>
-                            <th class="border-bottom-0">Department Name</th>
+                            <th class="border-bottom-0">Deparment Name</th>
+                            <th class="border-bottom-0">Branch Name</th>
                             <th class="border-bottom-0">Action</th>
                         </tr>
                     </thead>
@@ -327,18 +145,19 @@ Salary / Department Setting
                             <td class="font-weight-semibold">{{$item->depart_name}}</td>
                             <td>
                                 <div class="d-flex">
-                                    <div id="actionBtn{{$j}}" class="d-none">
+                                    <div id="actionBtn{{$item->desig_id}}" class="d-none">
                                         <a href="javascript:void(0);" class="action-btns" data-bs-toggle="modal"
                                             data-bs-target="#editBranchName" id="BranchEditbtn" title="Edit">
                                             <i class="feather feather-edit  text-dark"></i>
                                         </a>
                                         <a href="javascript:void(0);" class="action-btns" data-bs-toggle="modal"
-                                            data-bs-target="#desigDeletebtn{{$item->id}}" id="BranchEditbtn"
+                                            data-bs-target="#departDeletebtn{{$item->desig_id}}" id="BranchEditbtn"
                                             title="Edit">
                                             <i class="feather feather-trash  text-dark"></i>
                                         </a>
                                     </div>
-                                    <div class="ms-auto"><i id="{{$j}}" onclick="btnFunc(this)"
+
+                                    <div class="ms-auto"><i id="{{$item->desig_id}}" onclick="btnFunc(this)"
                                             class="btn si si-options-vertical ms-auto"></i>
                                     </div>
                                 </div>
@@ -352,17 +171,19 @@ Salary / Department Setting
     </div>
 </div>
 
+</form>
+
 @foreach ($Designation as $item)
-{{-- @dd($Designation); --}}
-<div class="modal fade" id="desigDeletebtn{{$item->id}}" data-bs-backdrop="static">
+{{-- @dd($item); --}}
+<div class="modal fade" id="departDeletebtn{{$item->desig_id}}" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">
         <div class="modal-content modal-content-demo">
             <div class="modal-body">
                 <h3>Are you sure want to Delete, <span class="text-primary">{{$item->desig_name}}</span> ?</h3>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-danger" data-bs-dismiss="modal">Decline</button>
-                <form method="POST" action="{{route('delete.designation',$item->id)}}">
+                <button type="reset" class="btn btn-danger" data-bs-dismiss="modal">Decline</button>
+                <form method="POST" action="{{route('delete.designation',$item->desig_id)}}">
                     @csrf
                     <button type="submit" class="btn btn-success" data-bs-toggle="modal"
                         data-bs-target="#">Delete</button>
@@ -372,6 +193,7 @@ Salary / Department Setting
     </div>
 </div>
 @endforeach
+
 @endsection
 
 @section('script')

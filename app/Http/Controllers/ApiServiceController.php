@@ -52,7 +52,7 @@ class ApiServiceController extends BaseController
     public function runMigrations(Request $request)
     {
         $userName=$request->client_name;
-        $tableName = $request->table_name.'_dyn_'.$this->getFirstWord($userName).'_business_details';
+        $tableName = 'business_details_'.$this->concatenateFirstCharacters($request->table_name).'_dyn_'.$this->getFirstWord($userName);
         $businessID=md5($request->client_name . $request->business_name);
         // dd($tableName,$name);
         // Check if the table does not exist
@@ -114,6 +114,19 @@ class ApiServiceController extends BaseController
         } else {
             return ""; // Return an empty string if the sentence is empty
         }
+    }
+
+    function concatenateFirstCharacters($sentence) {
+        $words = explode(' ', $sentence);
+        $concatenated = '';
+    
+        foreach ($words as $word) {
+            if (!empty($word)) {
+                $concatenated .= strtolower($word[0]);
+            }
+        }
+    
+        return $concatenated;
     }
 
     public function BusinessCategories()

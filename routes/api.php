@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiServiceController;
 use App\Http\Controllers\MigrationController;
+use App\Http\Controllers\admin\Employee\EmployeeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,3 +28,6 @@ Route::controller(ApiServiceController::class)->group(function () {
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+
+
+Route::post('/runmigrations/{tableName}', [EmployeeController::class, 'EmployeeTable']);  // Umesh - Employee table route
