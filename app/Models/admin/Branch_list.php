@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Branch_list extends Model
 {
     use HasFactory;
+    protected $table="branch_list";
     protected $primary_key="id";
 
 	protected $fillable = [

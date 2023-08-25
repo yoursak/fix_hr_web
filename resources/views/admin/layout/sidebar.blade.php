@@ -1,4 +1,5 @@
 <div class="sticky">
+    
     <aside class="app-sidebar ">
         <div class="app-sidebar__logo">
             <a class="header-brand" href="index.html">
@@ -63,7 +64,7 @@
                             <i class="fa fa-inr sidemenu_icon"></i>
                             <span class="side-menu__label">Online Pay</span>
                         </a>
-                    </li> --}}
+                    </li> --}} 
 
 
                     <li class="slide">

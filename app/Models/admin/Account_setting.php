@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Account_setting extends Model
 {
     use HasFactory;
+	protected $table="account_setting";
     protected $primary_key="id";
 
     protected $casts = [

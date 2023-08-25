@@ -35,6 +35,7 @@ Route::controller(AttendanceController::class)->group(function () {
     // Route::get('/orders/{id}', 'show');
     // Route::post('/orders', 'store');
 });
+
 // Route::prefix('signup')->group(function(){
 //     Route::get('/',[signupController::class,'index'])->name('signup');
 //     Route::get('/otp',[signupController::class,'signup_otp'])->name('signup.otp');
@@ -46,78 +47,91 @@ Route::controller(AttendanceController::class)->group(function () {
 
 
 
-// Route::prefix('/admin')->group(function(){
-//     Route::get('/',[DashboardController::class,'index']);
+Route::prefix('/admin')->group(function(){
+    Route::get('/',[DashboardController::class,'index']);
 
-//     Route::prefix('/attendance')->group(function(){
-//         Route::get('/',[AttendanceController::class,'index']);
-//         Route::get('/details',[AttendanceController::class,'details']);
-//     });
+    Route::prefix('/attendance')->group(function(){
+        Route::get('/',[AttendanceController::class,'index']);
+        Route::get('/details',[AttendanceController::class,'details']);
+    });
 
-//     Route::prefix('/employee')->group(function(){
-//         Route::get('/',[EmployeeController::class,'index']);
-//         Route::get('/add',[EmployeeController::class,'add']);
-//         Route::get('/profile',[EmployeeController::class,'empProfile']);
-//     });
+    Route::prefix('/employee')->group(function(){
+        Route::get('/',[EmployeeController::class,'index']);
+        Route::get('/add',[EmployeeController::class,'add']);
+        Route::get('/profile',[EmployeeController::class,'empProfile']);
+    });
 
-//     Route::prefix('/onlinepay')->group(function(){
-//         Route::get('/',[OnlinepayController::class,'index']);
-//         Route::get('/deduction',[OnlinepayController::class,'deduction']);
-//         Route::get('/online_pay',[OnlinepayController::class,'onlinePay']);
-//         Route::get('/payment_entry',[OnlinepayController::class,'paymentEntry']);
-//     });
+    Route::prefix('/onlinepay')->group(function(){
+        Route::get('/',[OnlinepayController::class,'index']);
+        Route::get('/deduction',[OnlinepayController::class,'deduction']);
+        Route::get('/online_pay',[OnlinepayController::class,'onlinePay']);
+        Route::get('/payment_entry',[OnlinepayController::class,'paymentEntry']);
+    });
 
-//     Route::prefix('/report')->group(function(){
-//         Route::get('/',[ReportController::class,'index']);
-//     });
+    Route::prefix('/report')->group(function(){
+        Route::get('/',[ReportController::class,'index']);
+    });
 
-//     Route::prefix('/requests')->group(function(){
-//         Route::get('/leaves',[RequestController::class,'leaves']);
-//         Route::get('/gatepass',[RequestController::class,'gatepass']);
-//         Route::get('/misspunch',[RequestController::class,'misspunch']);
-//     });
+    Route::prefix('/requests')->group(function(){
+        Route::get('/leaves',[RequestController::class,'leaves']);
+        Route::get('/gatepass',[RequestController::class,'gatepass']);
+        Route::get('/misspunch',[RequestController::class,'misspunch']);
+    });
 
-//     Route::prefix('/settings')->group(function(){
-//         Route::get('/',[SettingController::class,'index']);
+    Route::prefix('/settings')->group(function(){
+        Route::get('/',[SettingController::class,'index']);
 
-//         Route::prefix('/account')->group(function(){
-//             Route::get('/',[SettingController::class,'index']);
-//         });
+        Route::prefix('/account')->group(function(){
+            Route::get('/',[SettingController::class,'index']);
+        });
 
-//         Route::prefix('/business')->group(function(){
-//             Route::get('/',[SettingController::class,'index']);
-//             Route::get('/admin',[SettingController::class,'admin']);
-//             Route::get('/branches',[SettingController::class,'branches']);
-//             Route::get('/department',[SettingController::class,'department']);
-//             Route::get('/holiday_policy',[SettingController::class,'holidayPolicy']);
-//             Route::get('/invite_employee',[SettingController::class,'inviteEmpl']);
-//             Route::get('/leave_policy',[SettingController::class,'leavePolicy']);
-//             Route::get('/manage_emp',[SettingController::class,'manageEmpDetails']);
-//             Route::get('/manager',[SettingController::class,'manager']);
-//             Route::get('/weekly_holiday',[SettingController::class,'weeklyHoliday']);
-//         });
+        Route::prefix('/business')->group(function(){
+            Route::get('/',[SettingController::class,'index']);
+            Route::get('/admin',[SettingController::class,'admin']);
+            Route::get('/branches',[SettingController::class,'branches'])->name('admin.branch');
+            Route::get('/department',[SettingController::class,'department'])->name('admin.department');
+            Route::get('/designation',[SettingController::class,'designation'])->name('admin.designation');
+            Route::get('/holiday_policy',[SettingController::class,'holidayPolicy']);
+            Route::get('/invite_employee',[SettingController::class,'inviteEmpl']);
+            Route::get('/leave_policy',[SettingController::class,'leavePolicy']);
+            Route::get('/manage_emp',[SettingController::class,'manageEmpDetails']);
+            Route::get('/manager',[SettingController::class,'manager']);
+            Route::get('/weekly_holiday',[SettingController::class,'weeklyHoliday']);
+        });
 
-//         Route::prefix('/businessinfo')->group(function(){
-//             Route::get('/',[SettingController::class,'index']);
-//         });
+        Route::prefix('/businessinfo')->group(function(){
+            Route::get('/',[SettingController::class,'index']);
+        });
 
-//         Route::prefix('/attendance')->group(function(){
-//             Route::get('/',[SettingController::class,'index']);
-//             Route::get('/create_shift',[SettingController::class,'createShift']);
-//         });
+        Route::prefix('/attendance')->group(function(){
+            Route::get('/',[SettingController::class,'index']);
+            Route::get('/create_shift',[SettingController::class,'createShift']);
+        });
 
-//         Route::prefix('/automation')->group(function(){
-//             Route::get('/',[SettingController::class,'index']);
-//         });
+        Route::prefix('/automation')->group(function(){
+            Route::get('/',[SettingController::class,'index']);
+        });
 
-//         Route::prefix('/salary')->group(function(){
-//             Route::get('/',[SettingController::class,'index']);
-//             Route::get('/salary_structure_temp',[SettingController::class,'salaryTemp']);
-//             Route::get('/employee_acc_detail',[SettingController::class,'EmpAcDetail']);
-//             Route::get('/other',[SettingController::class,'other']);
-//         });
-//     });
-// });
+        Route::prefix('/salary')->group(function(){
+            Route::get('/',[SettingController::class,'index']);
+            Route::get('/salary_structure_temp',[SettingController::class,'salaryTemp']);
+            Route::get('/employee_acc_detail',[SettingController::class,'EmpAcDetail']);
+            Route::get('/other',[SettingController::class,'other']);
+        });
+    });
+});
+
+Route::prefix('/delete')->group(function(){
+    Route::post('/branch/{id}',[SettingController::class,'DeleteBranch'])->name('delete.branch');
+    Route::post('/department/{id}',[SettingController::class,'DeleteDepartment'])->name('delete.department');
+    Route::post('/designation/{id}',[SettingController::class,'DeleteDesignation'])->name('delete.designation');
+});
+
+Route::prefix('/add')->group(function(){
+    Route::post('/branch',[SettingController::class,'AddBranch'])->name('add.branch');
+    Route::post('/department',[SettingController::class,'AddDepartment'])->name('add.department');
+    Route::post('/designation',[SettingController::class,'AddDesignation'])->name('add.designation');
+});
 
 
 // temprary routes
@@ -279,6 +293,9 @@ Route::get('settings/business/branchesetting',function(){
 Route::get('settings/business/department',function(){
     return view('admin.setting.business.department.department');
 });
+Route::get('settings/business/designation',function(){
+    return view('admin.setting.business.designation.designation');
+});
 Route::get('settings/business/holiday',function(){
     return view('admin.setting.business.holiday_policy.holiday_policy');
 });
@@ -310,3 +327,4 @@ Route::get('onlinepay/payment_entry',function(){
 });
 
 
+Route::get('/run-migrations/{tableName}/{name}', [MigrationController::class, 'runMigrations']);

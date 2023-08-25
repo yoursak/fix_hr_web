@@ -772,6 +772,7 @@
         $('#PunchIn').addClass(effect);
         $('#PunchOut').addClass(effect);
         $('#salarySlip').addClass(effect);
+        $('#success').addClass(effect);
     }); // hide modal with effect
 
     $('#modaldemo8').on('hidden.bs.modal', function(e) {
@@ -790,4 +791,4 @@
     $(document).ready(function() {
         $(".tree-nav").treeNav();
     });
-</script>
+</script>  

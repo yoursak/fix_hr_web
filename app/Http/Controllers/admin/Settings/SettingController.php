@@ -4,6 +4,10 @@ namespace App\Http\Controllers\admin\Settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\admin\Branch_list;
+use App\Models\admin\Department_list;
+use App\Models\admin\Designation_list;
 
 class SettingController extends Controller
 {
@@ -28,6 +32,9 @@ class SettingController extends Controller
     }
     public function department(){
         return view('admin.setting.business.department.department');
+    }
+    public function designation(){
+        return view('admin.setting.business.designation.designation');
     }
     public function holidayPolicy(){
         return view('admin.setting.business.holiday_policy.holiday_policy');
@@ -106,5 +113,73 @@ class SettingController extends Controller
         return view('admin.setting.other.other');
     }
 
+
+
+
+
+    // Deletion Functions 
+
+    public function DeleteBranch($id){
+        $department = Department_list::where('branch_id', $id)->first();
+        if(isset($department)){
+            return redirect()->route('admin.branch');
+        }
+        $branch = Branch_list::where('branch_id', $id)->delete();
+        return redirect()->route('admin.branch');
+    }
+    public function DeleteDepartment($id){
+        $designation = Designation_list::where('department_id', $id)->first();
+        if(isset($designation)){
+            // dd(isset($designation));
+            return redirect()->route('admin.department');
+        }
+        $department = Department_list::where('depart_id', $id)->delete();
+        return redirect()->route('admin.department');
+    }
+
+    public function DeleteDesignation($id){
+        $designation = Designation_list::where('desig_id', $id)->delete();
+        // dd($designation);
+        Session::flash('success', 'Succefully Deleted !'); 
+        return redirect()->route('admin.designation');
+    }
+
+
+    // addition functions 
+
+    public function AddBranch(Request $request){
+        // dd($request->branch);
+        $branch = new Branch_list;
+        $branch-> branch_name = $request->branch;
+        $branch-> status = 0;
+        $branch-> save();
+
+
+        return redirect()->route('admin.branch');
+    }
+
+    public function AddDepartment(Request $request){
+        // dd($request);
+        $department = new Department_list;
+        $department-> depart_name = $request->department;
+        $department-> branch_id = $request->branch;
+        $department-> status = 0;
+        $department-> save();
+
+
+        return redirect()->route('admin.department');
+    }
+    public function AddDesignation(Request $request){
+        // dd($request);
+        $designation = new Designation_list;
+        $designation-> desig_name = $request->designation;
+        $designation-> department_id = $request->department;
+        $designation-> branch_id = $request->branch;
+        $designation-> save();
+
+
+        return redirect()->route('admin.designation');
+    }
+    
 
 }

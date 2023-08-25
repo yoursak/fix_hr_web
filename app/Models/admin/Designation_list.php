@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Designation_list extends Model
 {
     use HasFactory;
+    protected $table="designation_list";
     protected $primary_key="id";
 
 	protected $fillable = [
