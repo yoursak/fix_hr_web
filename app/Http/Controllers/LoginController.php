@@ -24,4 +24,8 @@ class LoginController extends Controller
     public function error(){
         return Redirect::back();
     }
+    public function thankyou(Request $request){
+        // dd($request->session()->get('login_name'));
+        return view('auth.admin.thanks');
+    }
 }

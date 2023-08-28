@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use App\Models\login;
+use App\Models\admin\Login_Admin;
 
 class LoginCheck
 {
@@ -17,20 +17,26 @@ class LoginCheck
      */
     public function handle(Request $request, Closure $next)
     {
-        // dd($request->otp);
-        $check_otp = login::where('otp', $request->otp)->first();
-        $User = login::where('email', $request->email)->first();
-        // dd($User);
-        if($User){
+        if ($request->session()->has('business_id')) {
+            return redirect('/admin');
+        }
+        $check_otp = Login_Admin::where('otp', $request->otp)->first();
+        $User = Login_Admin::where('email', $request->email)->first();
+        if ($User) {
+            // dd($User);
             $otp = rand(100000, 999999);
             $User->update(['otp' => $otp]);
-            // session()->put('user',$User);
+            $request->session()->put('business_id', $User->business_id);
+            $request->session()->put('login_role', $User->user);
+            $request->session()->put('login_name', $User->name);
+            $request->session()->put('login_email', $User->email);
             return $next($request);
-        }elseif($check_otp) {
+        } elseif ($check_otp) {
             return $next($request);
-        }else{
+        } else {
             session()->flash('Fail', 'You had entered wrong Credential....!!');
-            return redirect('/');
+            return redirect('/login');
         }
+
     }
 }

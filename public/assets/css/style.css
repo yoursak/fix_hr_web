@@ -114,6 +114,22 @@ Support	       :   support@spruko.com
 
 /* wave animation */
 
+/* table css */
+tr{
+  line-height:3.0;
+}
+
+Button .dt-button{
+  background-color: black;
+}
+
+.fa-angle-double-right{
+  color: #012169;
+  margin: 0;
+  font-size: 15px;
+  box-sizing: 0;
+}
+
 /* Ifsc Code css */
 #container {
     display: flex;
@@ -8441,7 +8457,7 @@ table.dataTable thead th, table.dataTable thead td {
 }
 
 thead, tbody, tfoot, tr, td, th {
-  border-style: none;
+  border-style: none; 
 }
 
 .parent {
