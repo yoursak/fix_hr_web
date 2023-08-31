@@ -18,7 +18,7 @@ Business
                             </a>
                             <p class="my-auto">2 Branch added | assign to all Employee</p>
                         </div>
-                        <div class="my-auto"> <a href="{{ url('settings/business/branchesetting') }}"><i
+                        <div class="my-auto"> <a href="{{ url('admin/settings/business/branches') }}"><i
                                     class="fa fa-angle-double-right fs-20 my-auto"></i></a>
                         </div>
 
@@ -41,7 +41,7 @@ Business
                             </a>
                             <p class="my-auto">1 Departments | assign to 25/50 employees</p>
                         </div>
-                        <div class="my-auto"> <a href="{{url('settings/business/department')}}"><i
+                        <div class="my-auto"> <a href="{{url('admin/settings/business/department')}}"><i
                                     class="fa fa-angle-double-right fs-20 my-auto"></i></a>
                         </div>
 
@@ -64,7 +64,7 @@ Business
                             </a>
                             <p class="my-auto">1 Designation | assign to 25/50 employees</p>
                         </div>
-                        <div class="my-auto"> <a href="{{url('settings/business/designation')}}"><i
+                        <div class="my-auto"> <a href="{{url('admin/settings/business/designation')}}"><i
                                     class="fa fa-angle-double-right fs-20 my-auto"></i></a>
                         </div>
 
@@ -87,7 +87,7 @@ Business
                             </a>
                             <p class="my-auto">5 Admins</p>
                         </div>
-                        <div class="my-auto"> <a href="{{ url('settings/business/adminsetting') }}"><i
+                        <div class="my-auto"> <a href="{{ url('admin/settings/business/admin') }}"><i
                                     class="fa fa-angle-double-right fs-20 my-auto"></i></a>
                         </div>
 
@@ -110,7 +110,7 @@ Business
                             </a>
                             <p class="my-auto">0 Managers Added</p>
                         </div>
-                        <div class="my-auto"> <a href="{{ url('settings/business/manager') }}"><i
+                        <div class="my-auto"> <a href="{{ url('admin/settings/business/manager') }}"><i
                                     class="fa fa-angle-double-right fs-20 my-auto"></i></a>
                         </div>
 
@@ -133,7 +133,7 @@ Business
                             </a>
                             <p class="my-auto">One Template</p>
                         </div>
-                        <div class="my-auto"><a href="{{ url('settings/business/holiday') }}"><i
+                        <div class="my-auto"><a href="{{ url('admin/settings/business/holiday_policy') }}"><i
                                     class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
 
                     </div>
@@ -155,7 +155,7 @@ Business
                             </a>
                             <p class="my-auto">Three Templates</p>
                         </div>
-                        <div class="my-auto"> <a href="{{ url('settings/business/leave') }}"><i
+                        <div class="my-auto"> <a href="{{ url('admin/settings/business/leave_policy') }}"><i
                                     class="fa fa-angle-double-right fs-20 my-auto"></i></a>
                         </div>
 
@@ -178,7 +178,7 @@ Business
                             </a>
                             <p class="my-auto">Sunday</p>
                         </div>
-                        <div class="my-auto"> <a href="{{ url('settings/business/weeklyholiday') }}"><i
+                        <div class="my-auto"> <a href="{{ url('admin/settings/business/weekly_holiday') }}"><i
                                     class="fa fa-angle-double-right fs-20 my-auto"></i></a>
                         </div>
 
@@ -201,7 +201,7 @@ Business
                             </a>
                             <p class="my-auto">No data added</p>
                         </div>
-                        <div class="my-auto"> <a href="{{ url('settings/business/manageEmp') }}"><i
+                        <div class="my-auto"> <a href="{{ url('admin/settings/business/manage_emp') }}"><i
                                     class="fa fa-angle-double-right fs-20 my-auto"></i></a>
                         </div>
 
@@ -224,7 +224,7 @@ Business
                             </a>
                             <p class="my-auto"></p>
                         </div>
-                        <div class="my-auto"> <a href="{{ url('settings/business/invite') }}"><i
+                        <div class="my-auto"> <a href="{{ url('admin/settings/business/invite_employee') }}"><i
                                     class="fa fa-angle-double-right fs-20 my-auto"></i></a>
                         </div>
 

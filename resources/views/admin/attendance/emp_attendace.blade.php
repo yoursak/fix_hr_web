@@ -104,7 +104,7 @@
                         <div class="row">
                             <div class="col-4">
                                 <div class="pt-5 text-center">
-                                    <h6 class="mb-1 fs-16 font-weight-semibold">09:30 AM</h6>
+                                    <h6 class="mb-1 fs-16 font-weight-semibold">{{$model->punch_in}}</h6>
                                     <small class="text-muted fs-14">Punch In</small>
                                 </div>
                             </div>
@@ -116,7 +116,7 @@
                             </div>
                             <div class="col-4">
                                 <div class="pt-5 text-center">
-                                    <h6 class="mb-1 fs-16 font-weight-semibold"> 06:30 PM</h6>
+                                    <h6 class="mb-1 fs-16 font-weight-semibold">{{$model->punch_out }}</h6>
                                     <small class="text-muted fs-14">Punch Out</small>
                                 </div>
                             </div>

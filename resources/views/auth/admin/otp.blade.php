@@ -62,7 +62,7 @@
                         <p class="h5 font-weight-normal mb-4 leading-normal">Make Your Human Resource Online</p>
                         <h4 class="mb-3 f-w-400">Verify OTP</h4>
                         <span>Otp Sent to Your Registered Email </span>
-                        <form action="{{ route('login.submit') }}" method="post">
+                        <form method="post" action="{{ route('login.submit') }}">
                             @csrf
                             <div class="input-group">
                                 <input type="text" name="otp" class="form-control" placeholder="eg. XXX XXX"

@@ -19,32 +19,21 @@
                     <i class="feather feather-x"></i>
                 </a>
             </div>
-            <div class="mt-0">
-                <form class="form-inline">
-                    <div class="search-element">
-                        <input type="search" class="form-control header-search" placeholder="Search…"
-                            aria-label="Search" tabindex="1">
-                        <button class="btn btn-primary-color">
-                            <i class="feather feather-search"></i>
-                        </button>
+            <div class="d-flex order-lg-1 my-auto ms-auto">
+                {{-- <div class="d-flex me-auto">
+                    <div class="me-3 mt-0 mt-sm-1 d-block text-center">
+                        <h6 class="fs-18 mb-0"><b>Welcome to FixHR Admin Dashboard.</b></h6>
+                        <p class="text-muted mt-0 fs-12">Your Lats Login is 26/08/2023 : 01:05 pm</p>
                     </div>
-                </form>
-            </div><!-- SEARCH -->
-            <div class="d-flex order-lg-2 my-auto ms-auto">
-                <button class="navbar-toggler nav-link icon navresponsive-toggler vertical-icon ms-auto"
-                    type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent-4"
-                    aria-controls="navbarSupportedContent-4" aria-expanded="false"
-                    aria-label="Toggle navigation">
+                </div> --}}
+                <button class="navbar-toggler nav-link icon navresponsive-toggler vertical-icon ms-auto" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent-4"
+                    aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fe fe-more-vertical header-icons navbar-toggler-icon"></i>
                 </button>
-                <div
-                    class="mb-0 navbar navbar-expand-lg navbar-nav-right responsive-navbar navbar-dark p-0">
+                <div class="mb-0 navbar navbar-expand-lg navbar-nav-right responsive-navbar navbar-dark p-0">
                     <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
                         <div class="d-flex ms-auto">
-                            <a class="nav-link  icon p-0 nav-link-lg d-lg-none navsearch"
-                                href="javascript:void(0);" data-bs-toggle="search">
-                                <i class="feather feather-search search-icon header-icon"></i>
-                            </a>
                             <div class="dropdown  d-flex">
                                 <a class="nav-link icon theme-layout nav-link-bg layout-setting">
                                     <span class="dark-layout"><i class="fe fe-moon"></i></span>
@@ -53,31 +42,40 @@
                             </div>
                             <div class="dropdown header-flags">
                                 <a class="nav-link icon" data-bs-toggle="dropdown">
-                                    <img src={{ asset("assets/images/flags/flag-png/india.png")}}
-                                        class="h-24" alt="img">
+                                    <img src={{ asset("assets/images/flags/flag-png/india.png")}} class="h-24"
+                                        alt="img">
                                 </a>
                             </div>
                             <div class="dropdown header-fullscreen">
                                 <a class="nav-link icon full-screen-link">
-                                    <i
-                                        class="feather feather-maximize fullscreen-button fullscreen header-icons"></i>
+                                    <i class="feather feather-maximize fullscreen-button fullscreen header-icons"></i>
                                     <i
                                         class="feather feather-minimize fullscreen-button exit-fullscreen header-icons"></i>
                                 </a>
                             </div>
 
                             <div class="dropdown header-notify">
-                                <a class="nav-link icon" data-bs-toggle="sidebar-right"
-                                    data-bs-target=".sidebar-right">
+                                <a class="nav-link icon" data-bs-toggle="sidebar-right" data-bs-target=".sidebar-right">
                                     <i class="feather feather-bell header-icon"></i>
                                     <span class="bg-dot"></span>
                                 </a>
                             </div>
                             <div class="dropdown header-notify my-auto">
-                                <h6 class="mx-2">Admin</h6>
+                                <?php if(Session::has('business_id')){ ?>
+                                <div class="me-3 mt-0 mt-sm-1 d-block text-center">
+                                    <span class="fs-14 mb-0"><b>Mr.{{Session::get('login_name')}}</b></span><br>
+                                    <span class="text-muted mt-0">{{Session::get('login_role')}}</span>
+                                </div>
+                                <?php }else{  ?>
+                                <div class="mt-0 mt-sm-1 d-block text-center">
+                                    <span class="fs-14 mb-0">Login User</span><br>
+                                    <span class="text-muted mt-0">Designation</span>
+                                </div>
+                                <?php } ?>
+
                             </div>
                             <div class="dropdown profile-dropdown">
-                                <a href="javascript:void(0);" class="nav-link pe-1 ps-0 leading-none"
+                                <a href="javascript:void(0);" class="nav-link  ps-0 leading-none"
                                     data-bs-toggle="dropdown">
                                     <span>
                                         <img src={{ asset("assets/images/users/16.jpg")}} alt="img"

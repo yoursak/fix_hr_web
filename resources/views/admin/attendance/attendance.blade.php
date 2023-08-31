@@ -211,7 +211,7 @@ Attendance
                                                 name="example-checkbox1" value="option1" checked>
                                             <span class="custom-control-label-md success"></span>
                                         </label>
-                                        <a href="{{url('/employee-attendance')}}" class="action-btns1 bg-light">
+                                        <a href="{{url('/admin/attendance/details')}}" class="action-btns1 bg-light">
                                             <i class="feather feather-eye primary text-primary" data-bs-toggle="tooltip"
                                                 data-original-title="View"></i>
                                         </a>

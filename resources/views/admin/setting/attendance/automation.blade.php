@@ -26,7 +26,7 @@
                                     of the box</p>
                             </div>
                             <div class="d-flex my-auto">
-                                <h6 class="text-primary btn"><a  href="{{url('settings/attendancesetting/automationrule/lateentry')}}">Create Rule</a></h6>
+                                <h6 class="text-primary btn"><a  href="{{url('admin/settings/attendance/automation/late_entry')}}">Create Rule</a></h6>
                                 <i class="fa fa-angle-right fs-22"></i>
                             </div>
                         </div>
@@ -43,7 +43,7 @@
                                     of the box</p>
                             </div>
                             <div class="d-flex my-auto">
-                                <h6 class="text-primary btn"><a  href="{{url('settings/attendancesetting/automationrule/break')}}">Create Rule</a></h6>
+                                <h6 class="text-primary btn"><a  href="{{url('admin/settings/attendance/automation/break_rule')}}">Create Rule</a></h6>
                                 <i class="fa fa-angle-right fs-22"></i>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                                     of the box</p>
                             </div>
                             <div class="d-flex my-auto">
-                                <h6 class="text-primary btn"><a  href="{{url('settings/attendancesetting/automationrule/earlyexit')}}">Create Rule</a></h6>
+                                <h6 class="text-primary btn"><a  href="{{url('admin/settings/attendance/automation/early_exit')}}">Create Rule</a></h6>
                                 <i class="fa fa-angle-right fs-22"></i>
                             </div>
                         </div>
@@ -77,7 +77,7 @@
                                     of the box</p>
                             </div>
                             <div class="d-flex my-auto">
-                                <h6 class="text-primary btn"><a  href="{{url('settings/attendancesetting/automationrule/overtime')}}">Create Rule</a></h6>
+                                <h6 class="text-primary btn"><a  href="{{url('admin/settings/attendance/automation/overtime_rule')}}">Create Rule</a></h6>
                                 <i class="fa fa-angle-right fs-22"></i>
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                                     of the box</p>
                             </div>
                             <div class="d-flex my-auto">
-                                <h6 class="text-primary btn"><a  href="{{url('settings/attendancesetting/automationrule/earlyovertime')}}">Create Rule</a></h6>
+                                <h6 class="text-primary btn"><a  href="{{url('admin/settings/attendance/automation/early_overtimes')}}">Create Rule</a></h6>
                                 <i class="fa fa-angle-right fs-22"></i>
                             </div>
                         </div>

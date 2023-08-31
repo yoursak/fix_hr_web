@@ -21,12 +21,11 @@ Miss Punch Request
 
     /* Aman Sir */
     .animatedBtn,
-        {
-        position: relative;
-        animation-name: example;
-        animation-duration: 200ms;
+    {
+    position: relative;
+    animation-name: example;
+    animation-duration: 200ms;
     }
-
     @keyframes example {
         0% {
             left: 10px;
@@ -38,7 +37,6 @@ Miss Punch Request
 
         }
     }
-
 </style>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
@@ -59,7 +57,8 @@ Miss Punch Request
                     <div class="col-md-12 col-xl-2">
                         <div class="form-group">
                             <label class="form-label">Branch</label>
-                            <select name="attendance" class="form-control custom-select select2" data-placeholder="Select Branch">
+                            <select name="attendance" class="form-control custom-select select2"
+                                data-placeholder="Select Branch">
                                 <option label="Select Branch"></option>
                                 <option value="1">High</option>
                                 <option value="2">Medium</option>
@@ -70,7 +69,8 @@ Miss Punch Request
                     <div class="col-md-12 col-xl-2">
                         <div class="form-group">
                             <label class="form-label">Department</label>
-                            <select name="attendance" class="form-control custom-select select2" data-placeholder="Select Department">
+                            <select name="attendance" class="form-control custom-select select2"
+                                data-placeholder="Select Department">
                                 <option label="Select Department"></option>
                                 <option value="1">Faith Harris</option>
                                 <option value="2">Austin Bell</option>
@@ -93,7 +93,8 @@ Miss Punch Request
                     <div class="col-md-12 col-xl-2">
                         <div class="form-group">
                             <label class="form-label">Designation</label>
-                            <select name="attendance" class="form-control custom-select select2" data-placeholder="Select Designation">
+                            <select name="attendance" class="form-control custom-select select2"
+                                data-placeholder="Select Designation">
                                 <option label="Select Designation"></option>
                                 <option value="1">Faith Harris</option>
                                 <option value="2">Austin Bell</option>
@@ -139,9 +140,8 @@ Miss Punch Request
                         <tbody>
                             <tr>
                                 <td>
-                                    
-                                     <span class="avatar avatar brround me-3" style="background-image: url(assets/images/users/1.jpg)"></span>Faith Harris
-                                        
+                                    <span class="avatar avatar brround me-3"
+                                        style="background-image: url(assets/images/users/1.jpg)"></span>Faith Harris
                                 </td>
                                 <td>FD2987</td>
                                 <td>Casual Leave</td>
@@ -155,15 +155,300 @@ Miss Punch Request
                                 <td>
                                     <div class="d-flex">
                                         <div id="actionBtn1" class="d-none">
-                                            <a href="javascript:void(0);" class="action-btns1 " data-bs-toggle="modal" data-bs-target="#deletemodalview">
-                                                <i class="feather feather-eye secondary text-primary" data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            <a href="javascript:void(0);" class="action-btns1 " data-bs-toggle="modal"
+                                                data-bs-target="#deletemodalview">
+                                                <i class="feather feather-eye secondary text-primary"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
                                             </a>
-                                            <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal" data-bs-target="#deletemodal">
-                                                <i class="feather feather-trash danger text-danger" data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal"
+                                                data-bs-target="#deletemodal">
+                                                <i class="feather feather-trash danger text-danger"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
                                             </a>
                                         </div>
 
-                                        <div class="ms-auto"><i id="moreBtn" class="btn si si-options-vertical ms-auto"></i>
+                                        <div class="ms-auto"><i id="moreBtn"
+                                                class="btn si si-options-vertical ms-auto"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="avatar avatar brround me-3"
+                                        style="background-image: url(assets/images/users/1.jpg)"></span>Faith Harris
+                                </td>
+                                <td>FD2987</td>
+                                <td>Casual Leave</td>
+                                <td>16-01-2021</td>
+                                <td>16-01-2021</td>
+                                <td class="font-weight-semibold">1 Day</td>
+                                {{-- <td>Personal</td> --}}
+                                <td>
+                                    <span class="badge badge-success">Approved</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                        <div id="actionBtn1" class="d-none">
+                                            <a href="javascript:void(0);" class="action-btns1 " data-bs-toggle="modal"
+                                                data-bs-target="#deletemodalview">
+                                                <i class="feather feather-eye secondary text-primary"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal"
+                                                data-bs-target="#deletemodal">
+                                                <i class="feather feather-trash danger text-danger"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            </a>
+                                        </div>
+
+                                        <div class="ms-auto"><i id="moreBtn"
+                                                class="btn si si-options-vertical ms-auto"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="avatar avatar brround me-3"
+                                        style="background-image: url(assets/images/users/1.jpg)"></span>Faith Harris
+                                </td>
+                                <td>FD2987</td>
+                                <td>Casual Leave</td>
+                                <td>16-01-2021</td>
+                                <td>16-01-2021</td>
+                                <td class="font-weight-semibold">1 Day</td>
+                                {{-- <td>Personal</td> --}}
+                                <td>
+                                    <span class="badge badge-success">Approved</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                        <div id="actionBtn1" class="d-none">
+                                            <a href="javascript:void(0);" class="action-btns1 " data-bs-toggle="modal"
+                                                data-bs-target="#deletemodalview">
+                                                <i class="feather feather-eye secondary text-primary"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal"
+                                                data-bs-target="#deletemodal">
+                                                <i class="feather feather-trash danger text-danger"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            </a>
+                                        </div>
+
+                                        <div class="ms-auto"><i id="moreBtn"
+                                                class="btn si si-options-vertical ms-auto"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="avatar avatar brround me-3"
+                                        style="background-image: url(assets/images/users/1.jpg)"></span>Faith Harris
+                                </td>
+                                <td>FD2987</td>
+                                <td>Casual Leave</td>
+                                <td>16-01-2021</td>
+                                <td>16-01-2021</td>
+                                <td class="font-weight-semibold">1 Day</td>
+                                {{-- <td>Personal</td> --}}
+                                <td>
+                                    <span class="badge badge-success">Approved</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                        <div id="actionBtn1" class="d-none">
+                                            <a href="javascript:void(0);" class="action-btns1 " data-bs-toggle="modal"
+                                                data-bs-target="#deletemodalview">
+                                                <i class="feather feather-eye secondary text-primary"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal"
+                                                data-bs-target="#deletemodal">
+                                                <i class="feather feather-trash danger text-danger"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            </a>
+                                        </div>
+
+                                        <div class="ms-auto"><i id="moreBtn"
+                                                class="btn si si-options-vertical ms-auto"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="avatar avatar brround me-3"
+                                        style="background-image: url(assets/images/users/1.jpg)"></span>Faith Harris
+                                </td>
+                                <td>FD2987</td>
+                                <td>Casual Leave</td>
+                                <td>16-01-2021</td>
+                                <td>16-01-2021</td>
+                                <td class="font-weight-semibold">1 Day</td>
+                                {{-- <td>Personal</td> --}}
+                                <td>
+                                    <span class="badge badge-success">Approved</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                        <div id="actionBtn1" class="d-none">
+                                            <a href="javascript:void(0);" class="action-btns1 " data-bs-toggle="modal"
+                                                data-bs-target="#deletemodalview">
+                                                <i class="feather feather-eye secondary text-primary"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal"
+                                                data-bs-target="#deletemodal">
+                                                <i class="feather feather-trash danger text-danger"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            </a>
+                                        </div>
+
+                                        <div class="ms-auto"><i id="moreBtn"
+                                                class="btn si si-options-vertical ms-auto"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="avatar avatar brround me-3"
+                                        style="background-image: url(assets/images/users/1.jpg)"></span>Faith Harris
+                                </td>
+                                <td>FD2987</td>
+                                <td>Casual Leave</td>
+                                <td>16-01-2021</td>
+                                <td>16-01-2021</td>
+                                <td class="font-weight-semibold">1 Day</td>
+                                {{-- <td>Personal</td> --}}
+                                <td>
+                                    <span class="badge badge-success">Approved</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                        <div id="actionBtn1" class="d-none">
+                                            <a href="javascript:void(0);" class="action-btns1 " data-bs-toggle="modal"
+                                                data-bs-target="#deletemodalview">
+                                                <i class="feather feather-eye secondary text-primary"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal"
+                                                data-bs-target="#deletemodal">
+                                                <i class="feather feather-trash danger text-danger"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            </a>
+                                        </div>
+
+                                        <div class="ms-auto"><i id="moreBtn"
+                                                class="btn si si-options-vertical ms-auto"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="avatar avatar brround me-3"
+                                        style="background-image: url(assets/images/users/1.jpg)"></span>Faith Harris
+                                </td>
+                                <td>FD2987</td>
+                                <td>Casual Leave</td>
+                                <td>16-01-2021</td>
+                                <td>16-01-2021</td>
+                                <td class="font-weight-semibold">1 Day</td>
+                                {{-- <td>Personal</td> --}}
+                                <td>
+                                    <span class="badge badge-success">Approved</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                        <div id="actionBtn1" class="d-none">
+                                            <a href="javascript:void(0);" class="action-btns1 " data-bs-toggle="modal"
+                                                data-bs-target="#deletemodalview">
+                                                <i class="feather feather-eye secondary text-primary"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal"
+                                                data-bs-target="#deletemodal">
+                                                <i class="feather feather-trash danger text-danger"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            </a>
+                                        </div>
+
+                                        <div class="ms-auto"><i id="moreBtn"
+                                                class="btn si si-options-vertical ms-auto"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="avatar avatar brround me-3"
+                                        style="background-image: url(assets/images/users/1.jpg)"></span>Faith Harris
+                                </td>
+                                <td>FD2987</td>
+                                <td>Casual Leave</td>
+                                <td>16-01-2021</td>
+                                <td>16-01-2021</td>
+                                <td class="font-weight-semibold">1 Day</td>
+                                {{-- <td>Personal</td> --}}
+                                <td>
+                                    <span class="badge badge-success">Approved</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                        <div id="actionBtn1" class="d-none">
+                                            <a href="javascript:void(0);" class="action-btns1 " data-bs-toggle="modal"
+                                                data-bs-target="#deletemodalview">
+                                                <i class="feather feather-eye secondary text-primary"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal"
+                                                data-bs-target="#deletemodal">
+                                                <i class="feather feather-trash danger text-danger"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            </a>
+                                        </div>
+
+                                        <div class="ms-auto"><i id="moreBtn"
+                                                class="btn si si-options-vertical ms-auto"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="avatar avatar brround me-3"
+                                        style="background-image: url(assets/images/users/1.jpg)"></span>Faith Harris
+                                </td>
+                                <td>FD2987</td>
+                                <td>Casual Leave</td>
+                                <td>16-01-2021</td>
+                                <td>16-01-2021</td>
+                                <td class="font-weight-semibold">1 Day</td>
+                                {{-- <td>Personal</td> --}}
+                                <td>
+                                    <span class="badge badge-success">Approved</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                        <div id="actionBtn1" class="d-none">
+                                            <a href="javascript:void(0);" class="action-btns1 " data-bs-toggle="modal"
+                                                data-bs-target="#deletemodalview">
+                                                <i class="feather feather-eye secondary text-primary"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" class="action-btns1" data-bs-toggle="modal"
+                                                data-bs-target="#deletemodal">
+                                                <i class="feather feather-trash danger text-danger"
+                                                    data-bs-toggle="tooltip" data-original-title="View"></i>
+                                            </a>
+                                        </div>
+
+                                        <div class="ms-auto"><i id="moreBtn"
+                                                class="btn si si-options-vertical ms-auto"></i>
                                         </div>
                                     </div>
                                 </td>
@@ -185,7 +470,8 @@ Miss Punch Request
                 <h5 class="modal-title" id="exampleModalLongTitle">Misspunch Request</h5>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
-                    {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button> --}}
+                    {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
+                    --}}
                 </button>
             </div>
             <div class="modal-body">
@@ -219,7 +505,8 @@ Miss Punch Request
                     </div>
                     <div class="row p-3">
                         <div class="form-group  col-md-3 col-sm-3">
-                            <label for="inputPassword4">Date <i class="fa fa-calendar" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-calendar" aria-label="fa fa-calendar"></i></label>
+                            <label for="inputPassword4">Date <i class="fa fa-calendar" data-bs-toggle="tooltip" title=""
+                                    data-bs-original-title="fa fa-calendar" aria-label="fa fa-calendar"></i></label>
                             <input type="text" class="form-control" id="inputPassword4" placeholder="Password">
                         </div>
                         <div class="form-group    col-md-3 col-sm-3">
@@ -309,6 +596,5 @@ Miss Punch Request
 
         });
     });
-
 </script>
 @endsection

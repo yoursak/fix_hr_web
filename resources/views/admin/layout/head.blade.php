@@ -37,3 +37,6 @@
 <link rel="stylesheet" href="{{asset('src/css/rescalendar.css')}}">
 
 <link rel="stylesheet" href="{{asset('assets/treeview/css/tree-nav.css')}}" />
+
+{{-- city state country  --}}
+<script src="{{asset('assets/js/cities.js')}}"></script>

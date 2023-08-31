@@ -57,7 +57,8 @@
             <div class="row align-items-center">
                 <div class="col-md-12">
                     <div class="card-body">
-                        <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" class="img-fluid mb-4">
+                        <?php echo Session::get('business_id')?>
+                        {{-- <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" class="img-fluid mb-4"> --}}
                         <h1 class="h3  mb-3">Welcome to <span style="color: black"><b>FIX<span
                                         style="color: #0000ff">HR</span></b></span></h1>
                         <p class="h5 font-weight-normal mb-4 leading-normal">Make Your Human Resource Online</p>

@@ -141,6 +141,8 @@
 <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js') }}"></script>
 <script src="{{ url('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js') }}"></script>
 <script src="{{ asset('src/js/rescalendar.js') }}"></script>
+
+
 {{-- // horizontal calendar --}}
 
 

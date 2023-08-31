@@ -62,7 +62,7 @@
                                 </a>
                                 <p class="my-auto">One Fixed Shift</p>
                             </div>
-                            <div class="my-auto"><a href="{{ url('settings/attendancesetting/createshift') }}"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
+                            <div class="my-auto"><a href="{{ url('admin/settings/attendance/create_shift') }}"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
 
                         </div>
                     </div>
@@ -83,7 +83,7 @@
                                 </a>
                                 <p class="my-auto">Track Late Entry, Early Out, Overtime, and Breaks.</p>
                             </div>
-                            <div class="my-auto"><a href="{{ url('settings/attendancesetting/automationrule') }}"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
+                            <div class="my-auto"><a href="{{ url('admin/settings/attendance/automation') }}"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
 
                         </div>
                     </div>

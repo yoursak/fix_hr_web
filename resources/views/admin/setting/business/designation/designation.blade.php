@@ -51,7 +51,7 @@ Salary / Designation Setting
     $Designation = App\Helpers\Central_unit::DesignationList();
     $Branch = App\Helpers\Central_unit::BranchList();
     $Department = App\Helpers\Central_unit::DepartmentList();
-    // dd($Designation);
+    // dd($Department);
     $i = 0;
     $j = 1;
     foreach ($Designation as $item) {
@@ -132,8 +132,8 @@ Salary / Designation Setting
                     <thead>
                         <tr>
                             <th class="border-bottom-0 w-10">S.No.</th>
-                            <th class="border-bottom-0">Deparment Name</th>
-                            <th class="border-bottom-0">Branch Name</th>
+                            <th class="border-bottom-0">Designation Name</th>
+                            <th class="border-bottom-0">Department Name</th>
                             <th class="border-bottom-0">Action</th>
                         </tr>
                     </thead>
