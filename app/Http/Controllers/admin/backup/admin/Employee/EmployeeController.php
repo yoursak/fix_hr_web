@@ -22,12 +22,7 @@ class EmployeeController extends Controller
 
     public function empProfile(Request $request){
         // echo $request->id;
-        if(Session::has('business_id')){
-            return view('admin.employees.emp_profile',['id'=>$request->id]);
-            // return view('admin.dashboard.dashboard');
-        }else{
-            return back();
-        }
+        return view('admin.employees.emp_profile',['id'=>$request->id]);
     }
 
 

@@ -5,6 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use App\Models\admin\Login_Admin;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AuthMailer;
+use Session;
 
 class LoginCheck
 {
@@ -17,26 +20,39 @@ class LoginCheck
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->session()->has('business_id')) {
-            return redirect('/admin');
-        }
-        $check_otp = Login_Admin::where('otp', $request->otp)->first();
-        $User = Login_Admin::where('email', $request->email)->first();
-        if ($User) {
-            // dd($User);
-            $otp = rand(100000, 999999);
-            $User->update(['otp' => $otp]);
-            $request->session()->put('business_id', $User->business_id);
-            $request->session()->put('login_role', $User->user);
-            $request->session()->put('login_name', $User->name);
-            $request->session()->put('login_email', $User->email);
-            return $next($request);
-        } elseif ($check_otp) {
-            return $next($request);
-        } else {
-            session()->flash('Fail', 'You had entered wrong Credential....!!');
-            return redirect('/login');
-        }
 
+        // if(Session::has('business_id')){
+        //     return redirect('/');
+        // }else{
+        //     if ($request->email) {
+        //         $User = Login_Admin::where('email', $request->email)->first();
+        //         if ($User) {
+        //             $otp = rand(100000, 999999);
+        //             $details = [
+        //                 'name' => $User->name,
+        //                 'title' => 'OTP Genrated',
+        //                 'body' => ' Your FixHR Admin Login one time PIN is: ' . "$otp",
+        //             ];
+        //             $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
+    
+        //             if ($sendMail) {
+        //                 $User->update(['otp' => $otp]);
+        //                 return $next($request);
+        //             }
+        //         }else{
+        //             session()->flash('Fail', 'You had entered wrong Email....!!');
+        //             return back();
+        //         }
+        //     }else if($request->otp) {
+        //         $check_otp = Login_Admin::where('otp', $request->otp)->first();
+        //         if (isset($check_otp)) {
+        //             Session::put('business_id', $check_otp->business_id);
+        //             Session::put('login_role', $check_otp->user);
+        //             Session::put('login_name', $check_otp->name);
+        //             Session::put('login_email', $check_otp->email);
+        //         }
+        //     }
+        //     return $next($request);
+        // }
     }
 }

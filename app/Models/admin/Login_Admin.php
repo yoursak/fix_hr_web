@@ -12,7 +12,9 @@ class Login_Admin extends Model
     protected $primary_key="admin_login_id";
 
     protected $casts = [
-		'otp' => 'int'
+		'otp' => 'int',
+		'otp_created_at' => 'datetime'
+
 	];
 
 	protected $fillable = [
@@ -28,3 +30,4 @@ class Login_Admin extends Model
 	];
 
 }
+

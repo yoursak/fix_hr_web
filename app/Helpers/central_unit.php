@@ -6,6 +6,7 @@ use App\Models\admin\SidebarMenu;
 use App\Models\admin\Branch_list;
 use App\Models\admin\Department_list;
 use App\Models\admin\Designation_list;
+use App\Models\employee\Employee_Details;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -35,6 +36,11 @@ class Central_unit
       $designation = DB::table('designation_list')->join('department_list', 'designation_list.department_id', '=', 'department_list.depart_id')->select('*')->get();
       // dd($designation);
       return $designation;
+   }
+
+   static function EmployeeDetails(){
+      $employee =  DB::table('employee_personal_details')->join('designation_list', 'employee_personal_details.emp_designation', '=', 'designation_list.desig_id')->join('department_list', 'employee_personal_details.emp_department', '=', 'department_list.depart_id')->select('*')->get();
+      return $employee;
    }
 }
 
