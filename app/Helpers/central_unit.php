@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
  * Laravel Centra Logic Helper
  *
  * @package		Laravel
- * @subpackage  Central Unit Helper
+ * @subpackage Central Unit Helper
  * @category	Helpers
  * @author		Aman Sahu
  */

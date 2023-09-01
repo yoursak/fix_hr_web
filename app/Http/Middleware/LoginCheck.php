@@ -20,39 +20,9 @@ class LoginCheck
      */
     public function handle(Request $request, Closure $next)
     {
-
-        // if(Session::has('business_id')){
-        //     return redirect('/');
-        // }else{
-        //     if ($request->email) {
-        //         $User = Login_Admin::where('email', $request->email)->first();
-        //         if ($User) {
-        //             $otp = rand(100000, 999999);
-        //             $details = [
-        //                 'name' => $User->name,
-        //                 'title' => 'OTP Genrated',
-        //                 'body' => ' Your FixHR Admin Login one time PIN is: ' . "$otp",
-        //             ];
-        //             $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
-    
-        //             if ($sendMail) {
-        //                 $User->update(['otp' => $otp]);
-        //                 return $next($request);
-        //             }
-        //         }else{
-        //             session()->flash('Fail', 'You had entered wrong Email....!!');
-        //             return back();
-        //         }
-        //     }else if($request->otp) {
-        //         $check_otp = Login_Admin::where('otp', $request->otp)->first();
-        //         if (isset($check_otp)) {
-        //             Session::put('business_id', $check_otp->business_id);
-        //             Session::put('login_role', $check_otp->user);
-        //             Session::put('login_name', $check_otp->name);
-        //             Session::put('login_email', $check_otp->email);
-        //         }
-        //     }
-        //     return $next($request);
-        // }
+        if($request->session()->has('business_id')){
+            return back();
+        }
+        return $request->$next;
     }
 }

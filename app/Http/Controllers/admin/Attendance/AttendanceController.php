@@ -9,11 +9,7 @@ use Illuminate\Http\Request;
 class AttendanceController extends Controller
 {
     public function index(){
-        if(Session::has('business_id')){
-            return view('admin.attendance.attendance');
-        }else{
-            return back();
-        }
+        return view('admin.attendance.attendance');
     }
     public function details(){
         $model=DB::table('attendance_list')->first();

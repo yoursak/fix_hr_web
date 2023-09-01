@@ -21,7 +21,6 @@ class EmailVerifiedMiddleware
         if (Session::get('business_id')) {
             return $next($request);
         } else {
-           
             return redirect('/login');
         }
     }

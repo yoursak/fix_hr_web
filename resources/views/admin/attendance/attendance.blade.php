@@ -47,10 +47,10 @@ Attendance
             <div class="card-body ">
                 <div class="countdowntimer mt-3">
                     <span id="clocktimer2" class="border-0"></span>
-                    <label class="form-label">Panding Approvals for abc days</label>
+                    <label class="form-label">Pending Approvals for abc days</label>
                 </div>
                 <div class="btn-list text-center mt-5 mb-5">
-                    <a  type="submit" class="btn ripple btn-primary">Approve All</a>
+                    <a  type="submit" class="btn ripple btn-primary">Approve</a>
                     {{-- <a href="javascript:void(0);" class="btn ripple btn-primary disabled">Punch Out</a> --}}
                 </div>
             </div>
@@ -160,16 +160,6 @@ Attendance
                 </div>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="hr-checkall">
-                            <label class="custom-control custom-checkbox mb-0">
-                                <input type="checkbox" class="custom-control-input" id="checkAll">
-                                <span class="custom-control-label">Check All</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
                 <div class="table-responsive">
                     <table class="table  table-vcenter text-nowrap table-bordered border-bottom" id="hr-table">
                         <thead>
@@ -183,6 +173,12 @@ Attendance
                                 <th class="border-bottom-0">IP Address</th>
                                 <th class="border-bottom-0">Working From</th>
                                 <th class="border-bottom-0">Actions</th>
+                                <th><div class="row">
+                                    <label class="custom-control custom-checkbox mb-0">
+                                        <input type="checkbox" class="custom-control-input" id="checkAll">
+                                        <span class="custom-control-label">Select All</span>
+                                    </label>
+                                </div></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -206,16 +202,18 @@ Attendance
                                 <td>Office</td>
                                 <td>
                                     <div class="d-flex">
-                                        <label class="custom-control custom-checkbox-md">
-                                            <input type="checkbox" class="custom-control-input-success"
-                                                name="example-checkbox1" value="option1" checked>
-                                            <span class="custom-control-label-md success"></span>
-                                        </label>
                                         <a href="{{url('/admin/attendance/details')}}" class="action-btns1 bg-light">
                                             <i class="feather feather-eye primary text-primary" data-bs-toggle="tooltip"
                                                 data-original-title="View"></i>
                                         </a>
                                     </div>
+                                </td>
+                                <td>
+                                    <label class="custom-control custom-checkbox-md">
+                                        <input type="checkbox" class="custom-control-input-success"
+                                            name="example-checkbox1" value="option1" checked>
+                                        <span class="custom-control-label-md success"></span>
+                                    </label>
                                 </td>
                             </tr>
                         </tbody>
@@ -223,7 +221,7 @@ Attendance
                 </div>
             </div>
             <div class="card-footer">
-                <a href="javascript:void(0);" class="btn btn-primary float-end">Save All</a>
+                <a href="javascript:void(0);" class="btn btn-primary float-end">Save</a>
             </div>
         </div>
     </div>

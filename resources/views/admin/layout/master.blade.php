@@ -11,7 +11,7 @@
 </head>
 
 <body class="app sidebar-mini ltr">
-
+    @include('sweetalert::alert')
     <!-- SWITCHER -->
     <div class="switcher-wrapper">
         <div class="demo_changer">

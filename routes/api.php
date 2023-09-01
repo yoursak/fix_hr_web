@@ -9,6 +9,7 @@ use App\Http\Controllers\admin\Requests\RequestController;
 use App\Http\Controllers\ApiController\ApiLoginController;
 use App\Http\Controllers\ApiController\EmployeeLoginApiController   ;
 use App\Http\Controllers\ApiController\EmployeeApiController;
+use App\Http\Controllers\ApiController\AttendanceApiController;
 // /public_html/app/Http/Controllers/ApiController
 /*
 |--------------------------------------------------------------------------
@@ -27,9 +28,11 @@ Route::prefix('admin')->group(function () {
     Route::any('/verify_otp', [ApiLoginController::class, 'VerifiedOtp']);
     
     Route::prefix('employee')->group(function () {
-        Route::get('/details', [EmployeeApiController::class, 'index']);
-        Route::post('/details', [EmployeeApiController::class, 'store']);
-        Route::get('/detail/delete/{$id}', [EmployeeApiController::class, 'destroy']);
+        Route::get('/detail', [EmployeeApiController::class, 'index']);
+        Route::post('/detail', [EmployeeApiController::class, 'store']);
+        Route::get('detail/{id}',[EmployeeApiController::class,'show']);
+        Route::put('detail/{id}',[EmployeeApiController::class,'update']);
+        Route::delete('detail/{id}',[EmployeeApiController::class,'destroy']);
     }); 
 });
 
@@ -49,7 +52,6 @@ Route::controller(BusinessController::class)->group(function () {
 });
 
 
-Route::get('employee/{id}',[EmployeeApiController::class,'show']);
 Route::post('/runmigrations/{tableName}', [EmployeeController::class, 'EmployeeTable']);
 Route::any('/employee_add', [EmployeeController::class, 'Store']);
 Route::get('/branch', [EmployeeController::class, 'Branch']);
@@ -69,3 +71,7 @@ Route::any('/misspunch/{tableName}', [RequestController::class, 'MisspunchTable'
 // Route::any('sendOtp', 'LoginApiController@sendOtp');
 
 Route::get('qr', [ApiLoginController::class, 'index']);
+
+Route::prefix('attendance')->group(function () {
+        Route::get('/detail', [AttendanceApiController::class, 'index']);
+    }); 

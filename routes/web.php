@@ -140,6 +140,7 @@ Route::prefix('/delete')->group(function () {
     Route::post('/branch/{id}', [SettingController::class, 'DeleteBranch'])->name('delete.branch');
     Route::post('/department/{id}', [SettingController::class, 'DeleteDepartment'])->name('delete.department');
     Route::post('/designation/{id}', [SettingController::class, 'DeleteDesignation'])->name('delete.designation');
+    Route::post('/employee/{id}', [EmployeeController::class, 'DeleteEmployee'])->name('delete.employee');
 });
 
 Route::prefix('/add')->group(function () {
@@ -147,6 +148,10 @@ Route::prefix('/add')->group(function () {
     Route::post('/department', [SettingController::class, 'AddDepartment'])->name('add.department');
     Route::post('/designation', [SettingController::class, 'AddDesignation'])->name('add.designation');
     Route::post('/employee', [EmployeeController::class, 'AddEmployee'])->name('add.employee');
+});
+
+Route::prefix('/update')->group(function(){
+    Route::post('/employee', [EmployeeController::class, 'UpdateEmployee'])->name('update.employee');
 });
 
 

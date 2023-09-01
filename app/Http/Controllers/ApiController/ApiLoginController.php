@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\ApiController;
 use Illuminate\Routing\Controller as BaseController;
-// use App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Schema\Blueprint;
@@ -69,13 +70,13 @@ class ApiLoginController extends BaseController
             ->where('email', $request->email)
             ->first();
 
-                 $otp = rand(100000, 999999); // Ensure OTP is generated as a six-digit number
+        $otp = rand(100000, 999999); // Ensure OTP is generated as a six-digit number
 
         if ($admin) {
             $details = [
                 'name' => $admin->name,
                 'title' => 'Mail from fixingdots.com ',
-                'body' =>  'Your FixHR Admin Login one time PIN is: ' . "$otp"
+                'body' => 'Your FixHR Admin Login one time PIN is: ' . "$otp",
             ];
 
             $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
@@ -92,6 +93,9 @@ class ApiLoginController extends BaseController
                     $adminroot = DB::table('login_admin')
                         ->where('email', $request->email)
                         ->first();
+
+                    // Store admin information in the session
+                    session(['admin' => $adminroot]);
                     return response()->json(['Admin_login' => [$adminroot]]);
                 }
             }
@@ -106,7 +110,7 @@ class ApiLoginController extends BaseController
 
         if ($admin) {
             $otpCreationTime = Carbon::parse($admin->otp_created_at);
-            $expirationTime = $otpCreationTime->addSeconds(60);
+            $expirationTime = $otpCreationTime->addMinutes(5);
 
             if (Carbon::now()->lt($expirationTime)) {
                 if ($admin->otp === $request->otp) {
@@ -171,19 +175,16 @@ class ApiLoginController extends BaseController
         }
     }
 
-    
     public function index()
     {
-       if($admin = true){
-        return response()->json(['success' => false, 'msg' => 'Jayant']);
-       }
-       return response()->json(['success' => false, 'msg' => 'Error']);
+        if ($admin = true) {
+            return response()->json(['success' => false, 'msg' => 'Jayant']);
+        }
+        return response()->json(['success' => false, 'msg' => 'Error']);
     }
 
-    
     public function store(Request $request)
     {
-        
     }
 
     /**

@@ -25,7 +25,7 @@ class LoginController extends BaseController
         $User = Login_Admin::where('email', $request->email)->first();
         $otp = rand(100000, 999999);
         $details = [
-            'name' => 'd',
+            'name' => $User->name,
             'title' => 'OTP Genrated',
             'body' => ' Your FixHR Admin Login one time PIN is: ' . "$otp",
         ];
@@ -44,23 +44,16 @@ class LoginController extends BaseController
         echo $email . $otp;
 
         if (isset($email) && isset($otp)) {
-            // dd($email);
-            // dd($request->all());
 
             $check_otp = DB::table('login_admin')->where('email', $email)->where('otp', $otp)->first();
             if (isset($check_otp)) {
 
-                Session::put('business_id', $check_otp->business_id);
+                // Session::put('business_id', $check_otp->business_id);
                 $request->session()->put('business_id', $check_otp->business_id);
                 $request->session()->put('login_role', $check_otp->user);
                 $request->session()->put('login_name', $check_otp->name);
                 $request->session()->put('login_email', $check_otp->email);
 
-                // echo $request->session()->get('business_id');
-
-                // echo $email . $otp;
-
-                // dd($check_otp);
                 return redirect('/');
             }else{
                 return back();
@@ -68,9 +61,6 @@ class LoginController extends BaseController
         } else {
             return redirect('/login');
         }
-        // Session::put('business_id','sfsdfdsfs');
-
-        // return redirect('/');
     }
 
     public function error()

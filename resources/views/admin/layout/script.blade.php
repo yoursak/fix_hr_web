@@ -761,6 +761,7 @@
         $('#modaldemo8').addClass(effect);
         $('#payAdd').addClass(effect);
         $('#addempmodal').addClass(effect);
+        $('#updateempmodal').addClass(effect);
         $('#upiPay').addClass(effect);
         $('#BulkAcpayAdd').addClass(effect);
         $('#success').addClass(effect);
