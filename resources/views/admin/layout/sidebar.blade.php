@@ -81,7 +81,7 @@
                         </ul>
                     </li>
                     <li class="slide">
-                        <a class="side-menu__item" href="{{ url('logout') }}">
+                        <a class="side-menu__item" href="" data-bs-toggle="modal" data-bs-target="#LogoutModal">
                             <i class="fe fe-log-out sidemenu_icon"></i>
                             <span class="side-menu__label">Log Out</span>
                         </a>
@@ -95,3 +95,19 @@
         </div>
     </aside>
 </div>
+
+<!-- MODAL -->
+<div class="modal fade modal-effect"  id="LogoutModal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content tx-size-sm">
+            <div class="modal-body text-center">
+                <i class="fe fe-alert-triangle fs-50"></i>
+                <h4 class="text-primary fs-20 font-weight-semibold mt-2">Logout Alert</h4>
+                <p class="mb-4 mx-4">Are you sure want to log out ???</p>
+                <a class="btn btn-danger px-5" href="{{ url('logout') }}">Log Out</a>
+                <a aria-label="Close" class="btn btn-primary px-5 text-white" data-bs-dismiss="modal">Stay Logedin</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END MODAL -->

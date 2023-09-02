@@ -10,6 +10,7 @@ use App\Http\Controllers\admin\Onlinepay\OnlinepayController;
 use App\Http\Controllers\admin\Report\ReportController;
 use App\Http\Controllers\admin\Requests\RequestController;
 use App\Http\Controllers\admin\Settings\SettingController;
+use App\Http\Controllers\admin\Settings\BusinessController;
 
 /*
 |--------------------------------------------------------------------------
@@ -148,6 +149,7 @@ Route::prefix('/add')->group(function () {
     Route::post('/department', [SettingController::class, 'AddDepartment'])->name('add.department');
     Route::post('/designation', [SettingController::class, 'AddDesignation'])->name('add.designation');
     Route::post('/employee', [EmployeeController::class, 'AddEmployee'])->name('add.employee');
+    Route::post('/holiday', [BusinessController::class,'CreateHoliday'])->name('add.holiday');
 });
 
 Route::prefix('/update')->group(function(){
@@ -161,7 +163,7 @@ Route::prefix('/update')->group(function(){
 Route::get('/run-migrations/{tableName}/{name}', [MigrationController::class, 'runMigrations']);
 
 
-Route::get('/clear-cache', function () {
+Route::get('/clear', function () {
     Artisan::call('optimize:clear');
     Artisan::call('cache:clear');
     Artisan::call('view:clear');

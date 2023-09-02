@@ -8,6 +8,8 @@ use App\Models\admin\Department_list;
 use App\Models\admin\Designation_list;
 use App\Models\employee\Employee_Details;
 use Illuminate\Support\Facades\DB;
+use App\Models\admin\HolidayTemplate;
+use App\Models\admin\HolidayDetail;
 
 /**
  * Laravel Centra Logic Helper
@@ -41,6 +43,15 @@ class Central_unit
    static function EmployeeDetails(){
       $employee =  DB::table('employee_personal_details')->join('designation_list', 'employee_personal_details.emp_designation', '=', 'designation_list.desig_id')->join('department_list', 'employee_personal_details.emp_department', '=', 'department_list.depart_id')->select('*')->get();
       return $employee;
+   }
+
+   static function Template(){
+      $template = DB::table('holiday_template')->select('*')->get();
+      return $template;
+   }
+   static function Holiday(){
+      $template = DB::table('holiday_details')->select('*')->get();
+      return $template;
    }
 }
 

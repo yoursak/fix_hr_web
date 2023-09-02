@@ -38,5 +38,14 @@
 
 <link rel="stylesheet" href="{{asset('assets/treeview/css/tree-nav.css')}}" />
 
+<!-- INTERNAL SESSION JS -->
+<script src="{{asset('assets/js/session.js')}}"></script>
+
+<!-- MOMENT JS -->
+<script src="{{asset('assets/plugins/moment/moment.js')}}"></script>
+
+<!-- CIRCLE-PROGRESS JS -->
+<script src="{{asset('assets/plugins/circle-progress/circle-progress.min.js')}}"></script>
+
 {{-- city state country  --}}
 <script src="{{asset('assets/js/cities.js')}}"></script>

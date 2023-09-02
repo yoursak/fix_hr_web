@@ -11,7 +11,7 @@ use App\Mail\AuthMailer;
 use App\Helpers\Layout;
 use DB;
 use Session;
-use App\Models\admin\Login_Admin;
+use App\Models\admin\LoginAdmin;
 class LoginController extends BaseController
 {
     public function index()
@@ -22,7 +22,7 @@ class LoginController extends BaseController
     public function login_otp(Request $request)
     {
         $request->session()->put('email', $request->email);
-        $User = Login_Admin::where('email', $request->email)->first();
+        $User = LoginAdmin::where('email', $request->email)->first();
         $otp = rand(100000, 999999);
         $details = [
             'name' => $User->name,

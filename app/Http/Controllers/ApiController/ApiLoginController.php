@@ -14,115 +14,72 @@ use Carbon\Carbon;
 use DateTime;
 use App\Mail\AuthMailer;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Models\admin\Login_Admin;
-
+use App\Models\admin\LoginAdmin;
+use App\Helpers\ReturnHelpers;  
+use App\Http\Resources\Api\AdminLoginResource;
+// use Session;
 class ApiLoginController extends BaseController
 {
-    // public function login(Request $request)
-    // {
-    //     // $admin = CompanyDetail::where('comp_email', $request->email)->where('comp_unique_id', $request->id)->first();
-    //     $admin = DB::table('login_admin')
-    //         ->where('email', $request->email)
-    //         ->first();
-    //     // return $admin;
-    //     $otp = rand(000000, 999999);
-    //     if ($admin) {
-    //         $details = [
-    //             'title' => 'Mail from fixingdots.com ',
-    //             'body' => 'This is for testing Auth otp checking ' . "$otp",
-    //         ];
-
-    //         $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
-
-    //         if ($sendMail) {
-    //             $updateset = DB::table('login_admin')
-    //                 ->where('email', $request->email)
-    //                 ->update(['otp' => $otp]);
-
-    //             if ($updateset) {
-    //                 $adminroot = DB::table('login_admin')
-    //                     ->where('email', $request->email)
-    //                     ->first();
-
-    //                 return response()->json(['Admin_login' => [$adminroot]]);
-    //             }
-    //         }
-    //     }
-    // }
-
-    // public function VerifiedOtp(Request $request)
-    // {
-    //     $admin = DB::table('login_admin')
-    //         ->where('email', $request->email)
-    //         ->where('otp', $request->otp)
-    //         ->first();
-    //     if ($admin) {
-    //         // printf("Now: %s", Carbon::now());
-
-    //         return response()->json(['Admin_login' => $admin]);
-    //     } else {
-    //         return response()->json(['Admin_login' => 'Pleace enter correct otp']);
-    //     }
-    // }
     public function login(Request $request)
     {
-        $admin = DB::table('login_admin')
-            ->where('email', $request->email)
-            ->first();
-
+        $admin = LoginAdmin::where('email', $request->email)->first();
         $otp = rand(100000, 999999); // Ensure OTP is generated as a six-digit number
-
+        
         if ($admin) {
             $details = [
                 'name' => $admin->name,
                 'title' => 'Mail from fixingdots.com ',
                 'body' => 'Your FixHR Admin Login one time PIN is: ' . "$otp",
             ];
-
+            
             $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
-
+            
             if ($sendMail) {
-                $updateset = DB::table('login_admin')
-                    ->where('email', $request->email)
-                    ->update([
-                        'otp' => $otp,
-                        'otp_created_at' => Carbon::now(), // Store the OTP creation time
-                    ]);
-
+                $updateset = LoginAdmin::where('email', $request->email)->update([
+                    'otp' => $otp,
+                    'otp_created_at' => Carbon::now(), // Store the OTP creation time
+                ]);
+                
                 if ($updateset) {
-                    $adminroot = DB::table('login_admin')
-                        ->where('email', $request->email)
-                        ->first();
-
+                    $adminroot = LoginAdmin::where('email', $request->email)->first();
+                    
                     // Store admin information in the session
-                    session(['admin' => $adminroot]);
-                    return response()->json(['Admin_login' => [$adminroot]]);
+                    // session(['admin' => $adminroot]);
+                    // return response()->json(['Admin_login' => [$adminroot]]);
+                    
+                    return ReturnHelpers::jsonApiReturn(AdminLoginResource::collection([LoginAdmin::find($adminroot->id)])->all());
+                    
                 }
             }
         }
+        return response()->json(['result' => [], 'status' => false], 401);
     }
-
+    
     public function VerifiedOtp(Request $request)
     {
-        $admin = DB::table('login_admin')
-            ->where('email', $request->email)
-            ->first();
-
+        $admin = LoginAdmin::where('email', $request->email)->first();
+        return true;
         if ($admin) {
             $otpCreationTime = Carbon::parse($admin->otp_created_at);
             $expirationTime = $otpCreationTime->addMinutes(5);
-
+            
             if (Carbon::now()->lt($expirationTime)) {
                 if ($admin->otp === $request->otp) {
                     // Reset the OTP and its creation time to null
-                    DB::table('login_admin')
-                        ->where('email', $request->email)
-                        ->update([
-                            'otp' => null,
-                            'otp_created_at' => null,
-                        ]);
+                 $updateAdmin=   LoginAdmin::where('email', $request->email)->update([
+                        'otp' => null,
+                        'otp_created_at' => null,
+                        'is_verified' => 1
+                    ]);
+                    if(isset($updateAdmin)){
 
-                    return response()->json(['Admin_login' => $admin]);
+                        $verifyOtp=[LoginAdmin::where('business_id',$admin->business_id)->first()];
+                        $admin->token = $admin->createToken("API TOKEN")->plainTextToken;
+                        return ReturnHelpers::jsonApiReturn($verifyOtp);
+                    }
+                    
+                    // return $admin;
+                     return AdminLoginResource::collection([LoginAdmin::where('business_id ',$admin->business_id)->first()]);
                 } else {
                     return response()->json(['Admin_login' => 'Incorrect OTP']);
                 }

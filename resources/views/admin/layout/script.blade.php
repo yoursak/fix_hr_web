@@ -75,7 +75,6 @@
 <!-- SWITCHER JS -->
 <script src={{ asset('assets/switcher/js/switcher.js') }}></script>
 
-
 <!-- INTERNAL  DATEPICKER JS -->
 <script src={{ asset('assets/plugins/date-picker/jquery-ui.js') }}></script>
 <!-- INTERNAL DATA TABLES  -->
@@ -85,7 +84,6 @@
 <script src={{ asset('assets/plugins/datatable/js/buttons.bootstrap5.min.js') }}></script>
 <script src={{ asset('assets/plugins/datatable/dataTables.responsive.min.js') }}></script>
 <script src={{ asset('assets/plugins/datatable/responsive.bootstrap5.min.js') }}></script>
-
 
 <!-- INTERNAL INDEX JS -->
 <script src={{ asset('assets/js/hr/hr-attview.js') }}></script>
@@ -142,9 +140,16 @@
 <script src="{{ url('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js') }}"></script>
 <script src="{{ asset('src/js/rescalendar.js') }}"></script>
 
+{{-- /** JQuery && Javascript Function Start
+ * 
+ *
+ * @package		JQuery && Javascript
+ * @subpackage  Central Script File
+ * @category	JQuery && Javascript Functions
+ * @author		Aman Sahu
+ */ --}}
 
 {{-- // horizontal calendar --}}
-
 
 <script>
     $('document').ready(function() {
@@ -196,7 +201,6 @@
     });
 </script>
 {{-- // horizontal calendar --}}
-
 
 <script>
     $('document').ready(function() {
@@ -376,40 +380,115 @@
 
     // script for Holiday Template
     $(document).ready(function() {
-        $('#manageemp1').click(function(e) {
-            $('#emplist1').fadeIn();
-            $('#manageemp2').removeClass('d-none');
-            $('#manageemp1').addClass('d-none');
-            $('#emplist1').removeClass('d-none');
-        })
-        $('#manageemp2').click(function(e) {
-            $('#emplist1').fadeOut();
-            $('#manageemp1').removeClass('d-none');
-            $('#manageemp2').addClass('d-none');
-            $('#emplist1').addClass('d-none');
-        })
-        $('#editTempBtn').click(function(e) {
-            $('#editTempForm').fadeIn();
-            $('#applyTempBtn').removeClass('d-none');
-            $('#searchTemp').removeClass('d-none');
-            $('#editTempForm').removeClass('d-none');
-            $('#editTempBtn').addClass('d-none');
-        })
-        $('#applyTempBtn').click(function(e) {
-            $('#editTempForm').fadeOut();
-            $('#applyTempBtn').addClass('d-none');
-            $('#searchTemp').addClass('d-none');
-            $('#editTempForm').addClass('d-none');
-            $('#editTempBtn').removeClass('d-none');
-        })
         $('#newTempFormBtn').click(function(e) {
             $('#newTemplate').removeClass('d-none');
         });
         $('#tempSave').click(function(e) {
             $('#newTemplate').addClass('d-none');
         });
+        var i = 0;
+        $('#addField').click(function(e) {
+            e.preventDefault();
+            i++;
+            $('#holidayCard').append(
+                '<div class="row my-auto py-2" id="addedForm'+i+'">' +
+                '<div class="col-5 col-xl-5 my-auto">' +
+                '<input type="text" class="form-control bg-muted" id="inputName" placeholder="Holiday Name" name="holiday_name[]" required>' +
+                '</div>' +
+                '<div class="col-5 col-xl-4 my-auto">' +
+                '<div class="form-group d-flex my-auto">' +
+                '<div class="input-group">' +
+                '<div class="input-group-prepend">' +
+                '<div class="input-group-text">' +
+                '<i class="feather feather-calendar"></i>' +
+                '</div>' +
+                '</div>' +
+                '<input class="form-control fc-datepicker" placeholder="DD-MM-YYYY" type="date" name="holiday_date[]" required>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-2 col-xl-1 my-auto">' +
+                '<div class="d-flex justify-content-end">' +
+                '<a href="javascript:void(0);" id="'+i+'" class="action-btns remove_btn" title="Delete" onclick="deleteElem(this.id)">' +
+                '<i class="feather feather-trash-2 text-danger"></i>' +
+                '</a>' +
+                '</div>' +
+                '</div>' +
+                '</div>'
+            );
+        });
+        var j = 0;
+        $('#addField2').click(function(e) {
+            e.preventDefault();
+            i++;
+            $('#holidayCard2').append(
+                '<div class="row my-auto py-2" id="addedForm2'+j+'">' +
+                '<div class="col-5 col-xl-5 my-auto">' +
+                '<input type="text" class="form-control bg-muted" id="inputName" placeholder="Holiday Name" name="holiday_name[]" required>' +
+                '</div>' +
+                '<div class="col-5 col-xl-4 my-auto">' +
+                '<div class="form-group d-flex my-auto">' +
+                '<div class="input-group">' +
+                '<div class="input-group-prepend">' +
+                '<div class="input-group-text">' +
+                '<i class="feather feather-calendar"></i>' +
+                '</div>' +
+                '</div>' +
+                '<input class="form-control fc-datepicker" placeholder="DD-MM-YYYY" type="date" name="holiday_date[]" required>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-2 col-xl-1 my-auto">' +
+                '<div class="d-flex justify-content-end">' +
+                '<a href="javascript:void(0);" id="D'+j+'" class="action-btns remove_btn" title="Delete" onclick="deleteElem2(this.id)">' +
+                '<i class="feather feather-trash-2 text-danger"></i>' +
+                '</a>' +
+                '</div>' +
+                '</div>' +
+                '</div>'
+            );
+        });
     });
 
+    function manageemp(id){
+        var id = id.match(/\d+/g); //split String and Number and get Number Value
+        document.getElementById('manageEmp'+id).classList.toggle("d-none");
+        document.getElementById('saveemp'+id).classList.toggle("d-none");
+        document.getElementById('emplist'+id).classList.toggle("d-none");
+        // alert(id);
+    }
+
+    function saveeemp(id){
+        var id = id.match(/\d+/g); //split String and Number and get Number Value
+        document.getElementById('manageEmp'+id).classList.toggle("d-none");
+        document.getElementById('saveemp'+id).classList.toggle("d-none");
+        document.getElementById('emplist'+id).classList.toggle("d-none");
+    }
+
+    function editTemplate(id){
+        var id = id.match(/\d+/g);
+            document.getElementById('applyTempBtn'+id).classList.toggle("d-none");
+            document.getElementById('searchTemp'+id).classList.toggle("d-none");
+            document.getElementById('editTempForm'+id).classList.toggle("d-none");
+            document.getElementById('editTempBtn'+id).classList.toggle("d-none");
+    }
+    function saveTemplate(id){
+        var id = id.match(/\d+/g);
+            document.getElementById('applyTempBtn'+id).classList.toggle("d-none");
+            document.getElementById('searchTemp'+id).classList.toggle("d-none");
+            document.getElementById('editTempForm'+id).classList.toggle("d-none");
+            document.getElementById('editTempBtn'+id).classList.toggle("d-none");
+    }
+
+    function deleteElem(id){
+        $element = document.getElementById('addedForm'+id);
+        $element.remove();
+    }
+    function deleteElem2(id){
+        var id = id.match(/\d+/g);
+        $element = document.getElementById('addedForm2'+id);
+        $element.remove();
+    }
     //script for Leave Template
     $(document).ready(function() {
         // set multi lavel approval
@@ -775,10 +854,15 @@
         $('#PunchIn').addClass(effect);
         $('#PunchOut').addClass(effect);
         $('#salarySlip').addClass(effect);
-        $('#success').addClass(effect);
+        $('#LogoutModal').addClass(effect);
     }); // hide modal with effect
 
     $('#modaldemo8').on('hidden.bs.modal', function(e) {
+        $(this).removeClass(function(index, className) {
+            return (className.match(/(^|\s)effect-\S+/g) || []).join(' ');
+        });
+    }); //  Back to top Button
+    $('#LogoutModal').on('hidden.bs.modal', function(e) {
         $(this).removeClass(function(index, className) {
             return (className.match(/(^|\s)effect-\S+/g) || []).join(' ');
         });
@@ -789,9 +873,20 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!--Tree Nav Js-->
-<script src="{{asset('assets/treeview/js/jquery.treenav.js')}}"></script>
+<script src="{{ asset('assets/treeview/js/jquery.treenav.js') }}"></script>
 <script>
     $(document).ready(function() {
         $(".tree-nav").treeNav();
     });
-</script>  
+</script>
+
+{{-- /** JQuery && Javascript Function End
+ * 
+ *
+ * @package		JQuery && Javascript
+ * @subpackage  Central Script File
+ * @category	JQuery && Javascript Functions
+ * @author		Aman Sahu
+ *
+ *
+ */ --}}

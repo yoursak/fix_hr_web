@@ -278,13 +278,12 @@
             @csrf
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content modal-content-demo">
-                    <div class="modal-body" style="5rem">
+                    <div class="modal-body">
                         <div class="row">
                             <div class="col-xl-12 col-md-12 col-lg-12">
                                 <h3 class="card-title">Add Regular Employee</h3>
                                 <div class="tab-menu-heading hremp-tabs p-0 ">
                                     <div class="tabs-menu1">
-                                        <!-- Tabs -->
                                         <ul class="nav panel-tabs">
                                             <li class="ms-4"><a href="#tab5" class="active"
                                                     data-bs-toggle="tab">Personal
@@ -294,25 +293,23 @@
                                     </div>
                                 </div>
                                 <div class="panel-body tabs-menu-body hremp-tabs1 p-0"
-                                    style="height: 30rem; overflow:scroll">
+                                    style="height: 32rem; overflow:scroll">
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="tab5">
                                             <div class="card-body">
-                                                <h4 class="mb-4 font-weight-bold">Basic</h4>
-                                                <div class="form-group d-flex justify-content-center">
+                                                <h4 class="mb-2 font-weight-bold">Basic</h4>
+                                                {{-- <div class="form-group d-flex justify-content-center">
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <input type="file" name="image" class="dropify"
                                                                 data-height="180" />
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </div> --}}
                                                 <div class="form-group">
                                                     <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-12">
                                                             <label class="form-label mb-0 mt-2">Employee Type</label>
-                                                        </div>
-                                                        <div class="col-md-9">
                                                             <select class="form-select" aria-label="Type"
                                                                 name="employee_type" required>
                                                                 <option selected>Employee Type</option>
@@ -320,14 +317,8 @@
                                                                 <option value="2">Contractual</option>
                                                             </select>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group ">
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                            <label class="form-label mb-0 mt-2">Employee Name</label>
-                                                        </div>
-                                                        <div class="col-md-9">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">First Name</label>
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <input type="text"
@@ -337,47 +328,45 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                            <label class="form-label mb-0 mt-2">Contact Number</label>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">Middle Name</label>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <input type="text"
+                                                                        class="form-control mb-md-0 mb-5"
+                                                                        placeholder="Middle Name" name="mName">
+                                                                    <span class="text-muted"></span>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="col-md-9">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">Last Name</label>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <input type="text"
+                                                                        class="form-control mb-md-0 mb-5"
+                                                                        placeholder="Last Name" name="lName">
+                                                                    <span class="text-muted"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">Contact Number</label>
                                                             <input type="text" class="form-control"
                                                                 placeholder="Phone Number" name="mobile_number" required>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group ">
-                                                    <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-4">
                                                             <label class="form-label mb-0 mt-2">Email</label>
-                                                        </div>
-                                                        <div class="col-md-9">
                                                             <input type="text" class="form-control"
                                                                 placeholder="email" name="email" required>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group ">
-                                                    <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-4">
                                                             <label class="form-label mb-0 mt-2">Date Of Birth</label>
-                                                        </div>
-                                                        <div class="col-md-9">
                                                             <input type="date" class="form-control fc-datepicker"
                                                                 placeholder="DD-MM-YYY" name="dob" required>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group ">
-                                                    <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-12">
                                                             <label class="form-label">Gender</label>
-                                                        </div>
-                                                        <div class="col-md-9">
                                                             <div class="custom-controls-stacked d-md-flex">
                                                                 <label class="custom-control custom-radio me-4">
                                                                     <input type="radio" class="custom-control-input"
@@ -396,25 +385,13 @@
                                                                 </label>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group ">
-                                                    <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-4">
                                                             <label class="form-label mb-0 mt-2">Pin Code</label>
-                                                        </div>
-                                                        <div class="col-md-9">
                                                             <input type="text" class="form-control"
                                                                 placeholder="Postal PIN" name="pincode" required>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group ">
-                                                    <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-4">
                                                             <label class="form-label mb-0 mt-2">Country</label>
-                                                        </div>
-                                                        <div class="col-md-9">
                                                             <select class="form-select" aria-label="Type" name="country"
                                                                 required>
                                                                 <option selected>Select Country</option>
@@ -422,75 +399,25 @@
                                                                 <option value="2">USA</option>
                                                             </select>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group ">
-                                                    <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-4">
                                                             <label class="form-label mb-0 mt-2">State</label>
-                                                        </div>
-
-                                                        <div class="col-md-9">
                                                             <select onchange="print_city('state1', this.selectedIndex);"
                                                                 id="sts1" name="state" style="height:50px"
                                                                 name="stt" class="form-control w-100 border rounded"
                                                                 required></select>
-                                                            {{-- <select class="form-select" aria-label="Type" name="state"
-                                                            required>
-                                                            <option selected>Select State</option>
-                                                            <option value="1">Chhattishgarh</option>
-                                                            <option value="2">Maharastra</option>
-                                                        </select> --}}
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group ">
-                                                    <div class="row">
-
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-4">
                                                             <label class="form-label mb-0 mt-2">City</label>
-                                                        </div>
-                                                        <div class="col-md-9">
                                                             <select id="state1" name="city"
                                                                 class="form-control w-100 border rounded"
                                                                 style="height:50px" required></select>
                                                             <script language="javascript">
                                                                 print_state("sts1");
                                                             </script>
-                                                            {{-- <select class="form-select" aria-label="Type" name="city"
-                                                            required>
-                                                            <option selected>Select City</option>
-                                                            <option value="1">India</option>
-                                                            <option value="2">USA</option>
-                                                        </select> --}}
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                            <label class="form-label mb-0 mt-2">Address</label>
-                                                        </div>
-                                                        <div class="col-md-9">
-                                                            <textarea rows="3" class="form-control" placeholder="Address2" name="address" required></textarea>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group mt-7">
-                                                    <div class="row">
-                                                        <div class="col-md-9">
-                                                            <label class="form-label">Manual Attendance with Location, Face
-                                                                Id
-                                                                And QR Code:</label>
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <label class="custom-switch">
-                                                                <input type="checkbox" name="custom-switch-checkbox"
-                                                                    class="custom-switch-input">
-                                                                <span class="custom-switch-indicator"></span>
-                                                                <span
-                                                                    class="custom-switch-description">Active/Inactive</span>
-                                                            </label>
+                                                        <div class="col-md-8">
+                                                            <label class="form-label mb-0 mt-2">Address Line 1</label>
+                                                            <input type="text" class="form-control" placeholder="Address" name="address">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -500,21 +427,23 @@
                                             <div class="card-body">
                                                 <div class="form-group">
                                                     <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-6">
                                                             <label class="form-label mb-0 mt-2">Employee ID</label>
-                                                        </div>
-                                                        <div class="col-md-9">
                                                             <input name="emp_id" type="text" class="form-control"
                                                                 placeholder="Employee ID" required>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                            <label class="form-label mb-0 mt-2">Branch</label>
+                                                        <div class="col-md-6">
+                                                            <label class="form-label mb-0 mt-2">Select Shift</label>
+                                                            <select name="projects"
+                                                                class="form-control custom-select select2"
+                                                                data-placeholder="Select Type">
+                                                                <option label="Select Type"></option>
+                                                                <option value="0">Assigned</option>
+                                                                <option value="1">Not Assigned</option>
+                                                            </select>
                                                         </div>
-                                                        <div class="col-md-9">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">Branch</label>
                                                             <select class="form-select" aria-label="Type" name="branch"
                                                                 required>
                                                                 @foreach ($Branch as $branch)
@@ -523,30 +452,19 @@
                                                                 @endforeach
                                                             </select>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-4">
                                                             <label class="form-label mb-0 mt-2">Department</label>
-                                                        </div>
-                                                        <div class="col-md-9">
                                                             <select class="form-select" aria-label="Type"
-                                                                name="department" required>
+                                                            name="department" required>
+                                                            <label class="form-label mb-0 mt-2">Department</label>
                                                                 @foreach ($Department as $depart)
                                                                     <option value="{{ $depart->depart_id }}">
                                                                         {{ $depart->depart_name }}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-4">
                                                             <label class="form-label mb-0 mt-2">Designation</label>
-                                                        </div>
-                                                        <div class="col-md-9">
                                                             <select class="form-select" aria-label="Type"
                                                                 name="designation" required>
                                                                 @foreach ($Designation as $designation)
@@ -554,35 +472,28 @@
                                                                         {{ $designation->desig_name }}</option>
                                                                 @endforeach
                                                             </select>
-                                                            {{-- @dd($Designation); --}}
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-4">
                                                             <label class="form-label mb-0 mt-2">Date Of Joining</label>
-                                                        </div>
-                                                        <div class="col-md-9">
                                                             <input type="date" class="form-control fc-datepicker"
                                                                 placeholder="DD-MM-YYYY" name="doj" required>
                                                         </div>
+
                                                     </div>
                                                 </div>
-                                                <h4 class="mb-5 mt-7 font-weight-bold">Shift</h4>
-                                                <div class="form-group">
+                                                <div class="form-group mt-7">
                                                     <div class="row">
-                                                        <div class="col-md-3">
-                                                            <label class="form-label mb-0 mt-2">Select Shift</label>
-                                                        </div>
                                                         <div class="col-md-9">
-                                                            <select name="projects"
-                                                                class="form-control custom-select select2"
-                                                                data-placeholder="Select Type">
-                                                                <option label="Select Type"></option>
-                                                                <option value="0">Assigned</option>
-                                                                <option value="1">Not Assigned</option>
-                                                            </select>
+                                                            <label class="form-label">Manual Attendance with Location, FaceId And QR Code:</label>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="custom-switch">
+                                                                <input type="checkbox" name="custom-switch-checkbox"
+                                                                    class="custom-switch-input">
+                                                                <span class="custom-switch-indicator"></span>
+                                                                <span
+                                                                    class="custom-switch-description">Active/Inactive</span>
+                                                            </label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -828,60 +739,40 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group ">
-                                                        <div class="row">
-                                                            <div class="col-md-3">
-                                                                <label class="form-label mb-0 mt-2">Country</label>
+
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label class="form-label mb-0 mt-2">Country</label>
+                                                                </div>
+                                                                <div class="col-md-9">
+                                                                    <input type="text" class="form-control"
+                                                                        placeholder="Country"
+                                                                        value="{{ $emp->emp_country }}" name="country">
+                                                                </div>
                                                             </div>
-                                                            <div class="col-md-9">
-                                                                <select class="form-select" aria-label="Type"
-                                                                    name="country">
-                                                                    @if ($emp->emp_country == 1)
-                                                                        <option>Select Country</option>
-                                                                        <option value="1" selected>India</option>
-                                                                        <option value="2">USA</option>
-                                                                    @else
-                                                                        <option selected>Select Country</option>
-                                                                        <option value="1">India</option>
-                                                                        <option value="2" selected>USA</option>
-                                                                    @endif
-                                                                </select>
-                                                            </div>
-                                                        </div>
+
                                                     </div>
                                                     <div class="form-group ">
                                                         <div class="row">
                                                             <div class="col-md-3">
                                                                 <label class="form-label mb-0 mt-2">State</label>
                                                             </div>
-
                                                             <div class="col-md-9">
-                                                                <select
-                                                                    onchange="print_city('state1', this.selectedIndex);"
-                                                                    id="sts1" name="state" style="height:50px"
-                                                                    name="stt"
-                                                                    class="form-control w-100 border rounded"></select>
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="State"
+                                                                    value="{{ $emp->emp_state }}" name="state">
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group ">
                                                         <div class="row">
-
                                                             <div class="col-md-3">
                                                                 <label class="form-label mb-0 mt-2">City</label>
                                                             </div>
                                                             <div class="col-md-9">
-                                                                <select id="state1" name="city"
-                                                                    class="form-control w-100 border rounded"
-                                                                    style="height:50px"></select>
-                                                                <script language="javascript">
-                                                                    print_state("sts1");
-                                                                </script>
-                                                                {{-- <select class="form-select" aria-label="Type" name="city"
-                                                            >
-                                                            <option selected>Select City</option>
-                                                            <option value="1">India</option>
-                                                            <option value="2">USA</option>
-                                                        </select> --}}
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="City"
+                                                                    value="{{ $emp->emp_city }}" name="city">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -926,7 +817,7 @@
                                                             <div class="col-md-9">
                                                                 <input name="emp_id" type="text" class="form-control"
                                                                     value="{{ $emp->emp_id }}"
-                                                                    placeholder="Employee ID">
+                                                                    placeholder="Employee ID" disable>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -939,10 +830,10 @@
                                                                 <select class="form-select" aria-label="Type"
                                                                     name="branch">
                                                                     @foreach ($Branch as $branch)
-                                                                        <option value="{{ $branch->branch_id }}">
-                                                                            {{ $branch->branch_name }}</option>
+                                                                        <option value="{{ $branch->branch_id }}" selected>{{ $branch->branch_name }}</option>
                                                                     @endforeach
                                                                 </select>
+                                                                {{-- @dd($branch); --}}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -955,7 +846,7 @@
                                                                 <select class="form-select" aria-label="Type"
                                                                     name="department">
                                                                     @foreach ($Department as $depart)
-                                                                        <option value="{{ $depart->depart_id }}">
+                                                                        <option value="{{ $depart->depart_id }}" selected>
                                                                             {{ $depart->depart_name }}</option>
                                                                     @endforeach
                                                                 </select>
@@ -971,7 +862,7 @@
                                                                 <select class="form-select" aria-label="Type"
                                                                     name="designation">
                                                                     @foreach ($Designation as $designation)
-                                                                        <option value="{{ $designation->desig_id }}">
+                                                                        <option value="{{ $designation->desig_id }}" selected>
                                                                             {{ $designation->desig_name }}</option>
                                                                     @endforeach
                                                                 </select>

@@ -4,7 +4,7 @@
     <title>FixHRAdmin</title>
 </head>
 <body>
-    <p>Dear {{ $details['name'] }}</p>
+    <p>Dear {{ $details['name'] }}</p>  
 
     <p>{{ $details['title'] }}</p>
     <p>{{ $details['body'] }} ,and is valid for only 10 minutes</p>

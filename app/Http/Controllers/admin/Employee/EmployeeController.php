@@ -36,7 +36,7 @@ class EmployeeController extends Controller
     // add employee 
     public function AddEmployee(Request $request){
         // dd($request);
-         $added = DB::table('employee_personal_details')->insert([
+        $added = DB::table('employee_personal_details')->insert([
             'business_id' => $request->session()->get('business_id'),
             'employee_type' => $request->employee_type,
             'emp_name' => $request->name,
@@ -56,6 +56,15 @@ class EmployeeController extends Controller
             'emp_pin_code' => $request->pincode,
             'profile_photo' => $request->photo,   
         ]);
+
+        // $loginEmp = DB::table('login_employee')->insert([
+        //     'emp_id' => $request->emp_id,
+        //     'business_id' => $request->session()->get('business_id'),
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'country_code'=> '+91',
+        //     'phone' => $request->mobile_number,
+        // ]);
 
         if(isset($added)){
             Alert::success('Added Successfully', 'Your Employee Detail is Added Successfully');

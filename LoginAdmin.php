@@ -1,17 +1,21 @@
 <?php
 
-
-namespace App\Models\employee;
+/**
+ * Created by Reliese Model.
+ */
+namespace App\Models\admin;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
+
 
 /**
- * Class LoginEmployee
+ * Class LoginAdmin
  * 
  * @property int $id
- * @property string|null $emp_id
+ * @property string|null $user
  * @property string|null $business_id
  * @property string|null $name
  * @property string|null $email
@@ -24,16 +28,17 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
- class LoginEmployee extends Model
+class LoginAdmin extends Model
 {
-	protected $table = 'login_employee';
+	use HasApiTokens;
+	protected $table = 'login_admin';
 
 	protected $casts = [
 		'otp_created_at' => 'datetime'
 	];
 
 	protected $fillable = [
-		'emp_id',
+		'user',
 		'business_id',
 		'name',
 		'email',
