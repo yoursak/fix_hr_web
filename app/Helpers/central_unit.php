@@ -10,6 +10,7 @@ use App\Models\employee\Employee_Details;
 use Illuminate\Support\Facades\DB;
 use App\Models\admin\HolidayTemplate;
 use App\Models\admin\HolidayDetail;
+use Session;
 
 /**
  * Laravel Centra Logic Helper
@@ -53,6 +54,11 @@ class Central_unit
       $template = DB::table('holiday_details')->select('*')->get();
       return $template;
    }
+
+   static function GetAttDetails(){
+      $AttList = DB::table('attendance_list')->where('business_id',Session::get('business_id'))->get();
+      return $AttList;
+  }
 }
 
 ?>

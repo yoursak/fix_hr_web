@@ -11,12 +11,9 @@ class AttendanceController extends Controller
     public function index(){
         return view('admin.attendance.attendance');
     }
-    public function details(){
-        $model=DB::table('attendance_list')->first();
-        // $in_time =$model->punch_in;
-        // $out_time =$model->punch_out;
-        // $time=now()->format('h:i:s A');
-        // dd($time);
+    public function details(Request $request){
+        // dd($request->emp_id);
+        $model=DB::table('attendance_list')->where('emp_id',$request->emp_id)->first();
         $load=compact('model');
         return view('admin.attendance.emp_attendace',$load);
     }

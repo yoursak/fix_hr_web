@@ -48,6 +48,7 @@ class LoginAdmin extends Model
 		'phone',
 		'otp',
 		'otp_created_at',
-		'is_verified'
+		'is_verified',
+		'api_token'
 	];
 }

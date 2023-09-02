@@ -11,6 +11,7 @@ use App\Http\Controllers\admin\Report\ReportController;
 use App\Http\Controllers\admin\Requests\RequestController;
 use App\Http\Controllers\admin\Settings\SettingController;
 use App\Http\Controllers\admin\Settings\BusinessController;
+use App\Http\Controllers\admin\Settings\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,7 +61,7 @@ Route::middleware(['email_verified'])->group(function () {
 
         Route::prefix('/attendance')->group(function () {
             Route::get('/', [AttendanceController::class, 'index']);
-            Route::get('/details', [AttendanceController::class, 'details']);
+            Route::get('/details/{emp_id}', [AttendanceController::class, 'details'])->name('attendance.detail');
         });
 
         Route::prefix('/employee')->group(function () {
@@ -88,6 +89,8 @@ Route::middleware(['email_verified'])->group(function () {
 
         Route::prefix('/settings')->group(function () {
             Route::get('/', [SettingController::class, 'index']);
+
+            Route::get('/roles-and-permissions', [PermissionController::class, 'index'])->name('settings.permission');
 
             Route::prefix('/account')->group(function () {
                 Route::get('/', [SettingController::class, 'account']);

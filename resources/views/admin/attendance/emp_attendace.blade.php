@@ -95,11 +95,13 @@
     <div class="row">
         <div class="col-xl-4">
             <div class="card">
-                <div class="card-header border-bottom-0 mb-5">
-                    <h4 class="">Timesheet<span class="fs-14 mx-3 text-muted">Tue, 08th Aug 2023</span></h4>
-
+                <div class="card-header border-bottom-0 my-5">
+                    @php
+                        $dt=time();
+                    @endphp
+                    <h4 class="">Timesheet<span class="fs-14 mx-3 text-muted">{{date("M d y H:i:s",$dt)}}</span></h4>
                 </div>
-                <div class="card-body mt-5">
+                <div class="card-body mt-2">
                     <div class="col-sm-12 my-auto" style="height: 260px">
                         <div class="row">
                             <div class="col-4">
@@ -111,7 +113,7 @@
                             <div class="col-4">
                                 <div class="chart-circle chart-circle-md" data-value="100" data-thickness="8"
                                     data-color="#0dcd94">
-                                    <div class="chart-circle-value text-muted">09:00 hrs</div>
+                                    <div class="chart-circle-value text-muted">09:05 hrs</div>
                                 </div>
                             </div>
                             <div class="col-4">
@@ -211,7 +213,7 @@
                                     <span class="tl-marker"></span>
                                     <div class="row">
                                         <div class="col-10">
-                                            <p class="tl-title">Punch In at 10:00 AM | General Shift<br><span
+                                            <p class="tl-title">Punch In at {{$model->punch_in}} | General Shift<br><span
                                                     class="text-muted fs-14 fw-light"><i
                                                         class="fa fa-map-marker mx-1"></i>Bhanpuri,
                                                     Raipur(CG)- 492001 AM</span>
@@ -230,7 +232,7 @@
                                     <span class="tl-marker"></span>
                                     <div class="row">
                                         <div class="col-10">
-                                            <p class="tl-title">Punch Out at 10:00 AM | General Shift<br><span
+                                            <p class="tl-title">Punch Out at {{$model->punch_out}} | General Shift<br><span
                                                     class="text-muted fs-14 fw-light"><i
                                                         class="fa fa-map-marker mx-1"></i>Bhanpuri,
                                                     Raipur(CG)- 492001 AM</span>

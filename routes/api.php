@@ -11,7 +11,8 @@ use App\Http\Controllers\ApiController\ApiLoginController;
 use App\Http\Controllers\ApiController\EmployeeLoginApiController;
 use App\Http\Controllers\ApiController\EmployeeApiController;
 use App\Http\Controllers\ApiController\AttendanceApiController;
-// /public_html/app/Http/Controllers/ApiController
+use App\Http\Controllers\ApiController\CommonApiController;
+// use App\Http\Middleware\LoginMiddleware\ApiLoginCheck;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -22,11 +23,15 @@ use App\Http\Controllers\ApiController\AttendanceApiController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::any('/bussinesscheck',[CommonApiController::class,'businesscheck']);
 
 Route::prefix('admin')->group(function () {
     Route::post('/login', [ApiLoginController::class, 'login']);
     Route::any('/verify_otp', [ApiLoginController::class, 'VerifiedOtp']);
-    // Route::middleware('auth:sanctum')->group(function () {
+    // Route::middleware(['login_middleware'])->group(function () {
+    // Route::middleware('auth:api')->group(function(){
+    // Route::group(['middleware' => 'apilogincheck'], function () {
+    Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         Route::prefix('employee')->group(function () {
             Route::get('/detail', [EmployeeApiController::class, 'index']);
             Route::post('/detail', [EmployeeApiController::class, 'store']);
@@ -34,7 +39,7 @@ Route::prefix('admin')->group(function () {
             Route::put('detail/{id}', [EmployeeApiController::class, 'update']);
             Route::delete('detail/{id}', [EmployeeApiController::class, 'destroy']);
             Route::get('detailall/{id}', [EmployeeApiController::class, 'bemployee']);
-        // });
+        });
     });
 });
 
@@ -74,5 +79,5 @@ Route::any('/misspunch/{tableName}', [RequestController::class, 'MisspunchTable'
 Route::get('qr', [ApiLoginController::class, 'index']);
 
 Route::prefix('attendance')->group(function () {
-    Route::get('/detail', [AttendanceApiController::class, 'index']);   
+    Route::get('/detail', [AttendanceApiController::class, 'index']);
 });

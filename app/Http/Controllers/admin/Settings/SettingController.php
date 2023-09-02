@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\admin\Branch_list;
 use App\Models\admin\Department_list;
 use App\Models\admin\Designation_list;
+use Session;
 
 class SettingController extends Controller
 {
@@ -17,7 +18,8 @@ class SettingController extends Controller
 
     // account setting 
     public function account(){
-        return view('admin.setting.account.account');
+        $accDetail = DB::table('login_admin')->where('business_id',Session::get('business_id'))->first();
+        return view('admin.setting.account.account',compact('accDetail'));
     }
 
     // business setting 

@@ -57,16 +57,16 @@ class EmployeeController extends Controller
             'profile_photo' => $request->photo,   
         ]);
 
-        // $loginEmp = DB::table('login_employee')->insert([
-        //     'emp_id' => $request->emp_id,
-        //     'business_id' => $request->session()->get('business_id'),
-        //     'name' => $request->name,
-        //     'email' => $request->email,
-        //     'country_code'=> '+91',
-        //     'phone' => $request->mobile_number,
-        // ]);
+        $loginEmp = DB::table('login_employee')->insert([
+            'emp_id' => $request->emp_id,
+            'business_id' => $request->session()->get('business_id'),
+            'name' => $request->name,
+            'email' => $request->email,
+            'country_code'=> '+91',
+            'phone' => $request->mobile_number,
+        ]);
 
-        if(isset($added)){
+        if(isset($added) && isset($loginEmp)){
             Alert::success('Added Successfully', 'Your Employee Detail is Added Successfully');
             return redirect('admin/employee');
         }

@@ -17,7 +17,7 @@
                                 <a href="#">
                                     <h5 class="my-auto text-dark">Name</h5>
                                 </a>
-                                <p class="my-auto" class="my-auto">Fix HR</p>
+                                <p class="my-auto" class="my-auto">{{$accDetail->name}}</p>
                             </div>
                             <div class="my-auto">
                                 <a href="#" data-bs-target="#nameModal" data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a>
@@ -39,7 +39,7 @@
                             <div class="my-auto"><a href="#">
                                     <h5 class="my-auto text-dark">Phone Number</h5>
                                 </a>
-                                <p class="my-auto">+91 1234567890</p>
+                                <p class="my-auto">{{$accDetail->country_code}} {{$accDetail->phone}}</p>
                             </div>
                             <div class="my-auto"> <a class="text-muted" href="#" data-bs-target="#bAddress"
                                     data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a>
@@ -62,7 +62,7 @@
                             <div class="my-auto"><a href="#">
                                     <h5 class="my-auto text-dark">Email Address</h5>
                                 </a>
-                                <p class="my-auto">Fixingdots@gmail.com</p>
+                                <p class="my-auto">{{$accDetail->email}}</p>
                             </div>
                             <div class="my-auto"> <a href="#" data-bs-target="#emailModal" data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a>
                             </div>
@@ -173,8 +173,7 @@
                 <div class="modal-body">
                     <div class="col-lg">
                         <p class="my-auto" class="mb-0 pb-0 text-dark fs-13 mt-1 ">Name</p>
-                        <input class="form-control" placeholder="Enter Name" type="text">
-
+                        <input class="form-control" placeholder="Enter Name" type="text" name="name" value="{{$accDetail->name}}">
                     </div>
                 </div>
                 <div class="modal-footer  border-0">
@@ -194,7 +193,7 @@
                 <div class="modal-body">
                     <div class="col-lg">
                         <p class="my-auto" class="mb-0 pb-0 text-dark fs-13 mt-1 ">Email</p>
-                        <input class="form-control" placeholder="Enter Email" type="email">
+                        <input class="form-control" placeholder="Enter Email" type="email" name="email" value="{{$accDetail->email}}" disabled>
 
                     </div>
                 </div>

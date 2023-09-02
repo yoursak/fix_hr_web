@@ -6,7 +6,10 @@ Attendance
 @section('contents')
 <!-- ROW -->
 <div class="row">
-    
+    @php
+        $AttList = App\Helpers\Central_unit::GetAttDetails();
+        // dd($AttList);
+    @endphp
     <div class="col-xl-9 col-md-12 col-lg-12">
         <div class="card">
             <div class="card-header  border-0">
@@ -173,49 +176,36 @@ Attendance
                                 <th class="border-bottom-0">IP Address</th>
                                 <th class="border-bottom-0">Working From</th>
                                 <th class="border-bottom-0">Actions</th>
-                                <th><div class="row">
-                                    <label class="custom-control custom-checkbox mb-0">
-                                        <input type="checkbox" class="custom-control-input" id="checkAll">
-                                        <span class="custom-control-label">Select All</span>
-                                    </label>
-                                </div></th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($AttList as $list)
                             <tr>
-                                <td>#2987</td>
+                                <td>{{$list->emp_id}}</td>
                                 <td>
                                     <div class="d-flex">
                                         <span class="avatar avatar-md brround me-3"
                                             style="background-image: url(assets/images/users/1.jpg)"></span>
-                                        <div class="me-3 mt-0 mt-sm-1 d-block">
-                                            <h6 class="mb-1 fs-14">Faith Harris</h6>
-                                            <p class="text-muted mb-0 fs-12">Web Designer</p>
+                                        <div class="my-auto d-block">
+                                            <h6 class="fs-14 my-auto "><b>{{$list->emp_name}}</b></h6>
                                         </div>
                                     </div>
                                 </td>
                                 <td><span class="badge badge-success-light">Present</span></td>
-                                <td>09:30 AM</td>
-                                <td>06:30 PM</td>
-                                <td>04:08 Hr</td>
-                                <td>225.192.45.1</td>
-                                <td>Office</td>
+                                <td>{{$list->punch_in}}</td>
+                                <td>{{$list->punch_out}}</td>
+                                <td>{{$list->production_hour}}</td>
+                                <td>{{$list->location_ip}}</td>
+                                <td>{{$list->working_from}}</td>
                                 <td>
                                     <div class="d-flex">
-                                        <a href="{{url('/admin/attendance/details')}}" class="action-btns1 bg-light">
-                                            <i class="feather feather-eye primary text-primary" data-bs-toggle="tooltip"
-                                                data-original-title="View"></i>
+                                        <a href="{{route('attendance.detail',['emp_id'=>$list->emp_id])}}" class="action-btns1 bg-light">
+                                            <i class="feather feather-eye primary text-primary" data-bs-toggle="tooltip" data-original-title="View"></i>
                                         </a>
                                     </div>
                                 </td>
-                                <td>
-                                    <label class="custom-control custom-checkbox-md">
-                                        <input type="checkbox" class="custom-control-input-success"
-                                            name="example-checkbox1" value="option1" checked>
-                                        <span class="custom-control-label-md success"></span>
-                                    </label>
-                                </td>
                             </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
