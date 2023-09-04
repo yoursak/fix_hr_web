@@ -19,6 +19,7 @@ class AdminLoginResource extends JsonResource
             'phone' => $this->phone ?? '',
             'otp' => $this->otp ?? '',
             'otp_created_at' => $this->otp_created_at ?? '',
+            ''
         ];
     }
 }

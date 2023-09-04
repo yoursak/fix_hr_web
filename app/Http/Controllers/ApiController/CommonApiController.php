@@ -19,14 +19,13 @@ class CommonApiController extends Controller
 
         $emp = LoginAdmin::where('email',$request->email)->first();
         $emp = BusinessDetailsList::where('business_id',$emp->business_id)->first();
-    // $businessID = md5($emp- . $businessEmail . $businessGSTNo);
-       
-        return $emp->client_name;
-        if ($emp) {
-            return ReturnHelpers::jsonApiReturn(EmployeeResource::collection([$emp])->all());
+        $businessID = md5($emp->client_name . $emp->business_email .$emp->gstnumber);
+       if ($emp->business_id== $businessID) {
+        return response()->json(['status' => true]);
+
         }
 
-        return response()->json(['result' => [], 'status' => false]);
+        return response()->json(['status' => false]);
     }
 
     public function index()

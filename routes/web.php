@@ -44,17 +44,21 @@ use App\Http\Controllers\admin\Settings\PermissionController;
 // });
 
 
-Route::prefix('login')->group(function () {
-    Route::get('/', [LoginController::class, 'index'])->name('login');
-    Route::any('/otp', [LoginController::class, 'login_otp'])->name('login.otp');
-    Route::post('/submit', [LoginController::class, 'submit'])->name('login.submit');
+Route::middleware(['logincheck'])->group(function () {
+    Route::prefix('login')->group(function () {
+        Route::get('/', [LoginController::class, 'index'])->name('login');
+        Route::any('/otp', [LoginController::class, 'login_otp'])->name('login.otp');
+        Route::post('/submit', [LoginController::class, 'submit'])->name('login.submit');
+    });
 });
+
+
 Route::get('/thankyou', [LoginController::class, 'thankyou'])->name('login.thankyou');
-Route::get('/logout', [DashboardController::class, 'logout']);
 
 Route::middleware(['email_verified'])->group(function () {
     
     Route::get('/', [DashboardController::class, 'index']);
+    Route::get('/logout', [DashboardController::class, 'logout'])->name('admin.logout');
    
     Route::prefix('/admin')->group(function () {
         Route::any('/', [DashboardController::class, 'index']);
@@ -152,7 +156,9 @@ Route::prefix('/add')->group(function () {
     Route::post('/department', [SettingController::class, 'AddDepartment'])->name('add.department');
     Route::post('/designation', [SettingController::class, 'AddDesignation'])->name('add.designation');
     Route::post('/employee', [EmployeeController::class, 'AddEmployee'])->name('add.employee');
+    Route::post('/contractual-employee', [EmployeeController::class, 'AddContractualEmployee'])->name('add.employee.contractual');
     Route::post('/holiday', [BusinessController::class,'CreateHoliday'])->name('add.holiday');
+    Route::post('/manager', [BusinessController::class,'AddManager'])->name('add.manager');
 });
 
 Route::prefix('/update')->group(function(){

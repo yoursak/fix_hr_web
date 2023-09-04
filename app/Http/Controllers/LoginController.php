@@ -70,8 +70,7 @@ class LoginController extends BaseController
 
     public function thankyou(Request $request)
     {
-        session()->flush();
-
+        Session()->flush();
         return view('auth.admin.thanks');
     }
 

@@ -272,30 +272,30 @@
         <!-- END ROW -->
     </div>
 
-    {{-- add regular employee --}}
-    <div class="modal fade" id="addempmodal" data-bs-backdrop="static">
-        <form action="{{ route('add.employee') }}" method="post">
+    {{-- add Contractual employee --}}
+    <div class="modal fade" id="empmodal" data-bs-backdrop="static">
+        <form action="{{ route('add.employee.contractual') }}" method="post">
             @csrf
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content modal-content-demo">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-xl-12 col-md-12 col-lg-12">
-                                <h3 class="card-title">Add Regular Employee</h3>
+                                <h3 class="card-title">Add Contractual Employee</h3>
                                 <div class="tab-menu-heading hremp-tabs p-0 ">
                                     <div class="tabs-menu1">
                                         <ul class="nav panel-tabs">
-                                            <li class="ms-4"><a href="#tab5" class="active"
+                                            <li class="ms-4"><a href="#tab3" class="active"
                                                     data-bs-toggle="tab">Personal
                                                     Details</a></li>
-                                            <li><a href="#tab6" data-bs-toggle="tab">Company Details</a></li>
+                                            <li><a href="#tab4" data-bs-toggle="tab">Company Details</a></li>
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="panel-body tabs-menu-body hremp-tabs1 p-0"
                                     style="height: 32rem; overflow:scroll">
                                     <div class="tab-content">
-                                        <div class="tab-pane active" id="tab5">
+                                        <div class="tab-pane active" id="tab3">
                                             <div class="card-body">
                                                 <h4 class="mb-2 font-weight-bold">Basic</h4>
                                                 {{-- <div class="form-group d-flex justify-content-center">
@@ -308,15 +308,6 @@
                                                 </div> --}}
                                                 <div class="form-group">
                                                     <div class="row">
-                                                        <div class="col-md-12">
-                                                            <label class="form-label mb-0 mt-2">Employee Type</label>
-                                                            <select class="form-select" aria-label="Type"
-                                                                name="employee_type" required>
-                                                                <option selected>Employee Type</option>
-                                                                <option value="1">Regular</option>
-                                                                <option value="2">Contractual</option>
-                                                            </select>
-                                                        </div>
                                                         <div class="col-md-4">
                                                             <label class="form-label mb-0 mt-2">First Name</label>
                                                             <div class="row">
@@ -386,9 +377,254 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">Country</label>
+                                                            <select class="form-select" aria-label="Type" name="country"
+                                                                required>
+                                                                <option selected>Select Country</option>
+                                                                <option value="1">India</option>
+                                                                <option value="2">USA</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">State</label>
+                                                            <select onchange="print_city('state1', this.selectedIndex);"
+                                                                id="sts1" name="state" style="height:50px"
+                                                                name="stt" class="form-control w-100 border rounded"
+                                                                required></select>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">City</label>
+                                                            <select id="state1" name="city"
+                                                                class="form-control w-100 border rounded"
+                                                                style="height:50px" required></select>
+                                                            <script language="javascript">
+                                                                print_state("sts1");
+                                                            </script>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <label class="form-label mb-0 mt-2">Address Line 1</label>
+                                                            <input type="text" class="form-control" placeholder="Address" name="address">
+                                                        </div>
+                                                        <div class="col-md-4">
                                                             <label class="form-label mb-0 mt-2">Pin Code</label>
                                                             <input type="text" class="form-control"
                                                                 placeholder="Postal PIN" name="pincode" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="tab4">
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <label class="form-label mb-0 mt-2">Employee ID</label>
+                                                            <input name="emp_id" type="text" class="form-control"
+                                                                placeholder="Employee ID" required>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="form-label mb-0 mt-2">Select Shift</label>
+                                                            <select name="projects"
+                                                                class="form-control custom-select select2"
+                                                                data-placeholder="Select Type">
+                                                                <option label="Select Type"></option>
+                                                                <option value="0">Assigned</option>
+                                                                <option value="1">Not Assigned</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">Branch</label>
+                                                            <select class="form-select" aria-label="Type" name="branch"
+                                                                required>
+                                                                @foreach ($Branch as $branch)
+                                                                    <option value="{{ $branch->branch_id }}">
+                                                                        {{ $branch->branch_name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">Department</label>
+                                                            <select class="form-select" aria-label="Type"
+                                                            name="department" required>
+                                                            <label class="form-label mb-0 mt-2">Department</label>
+                                                                @foreach ($Department as $depart)
+                                                                    <option value="{{ $depart->depart_id }}">
+                                                                        {{ $depart->depart_name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">Designation</label>
+                                                            <select class="form-select" aria-label="Type"
+                                                                name="designation" required>
+                                                                @foreach ($Designation as $designation)
+                                                                    <option value="{{ $designation->desig_id }}">
+                                                                        {{ $designation->desig_name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">Date Of Joining</label>
+                                                            <input type="date" class="form-control fc-datepicker"
+                                                                placeholder="DD-MM-YYYY" name="doj" required>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="form-group mt-7">
+                                                    <div class="row">
+                                                        <div class="col-md-9">
+                                                            <label class="form-label">Manual Attendance with Location, FaceId And QR Code:</label>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="custom-switch">
+                                                                <input type="checkbox" name="custom-switch-checkbox"
+                                                                    class="custom-switch-input">
+                                                                <span class="custom-switch-indicator"></span>
+                                                                <span
+                                                                    class="custom-switch-description">Active/Inactive</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-9">
+                                                            <label class="custom-control custom-checkbox">
+                                                                <input type="checkbox" class="custom-control-input"
+                                                                    name="example-checkbox1" value="option1" checked>
+                                                                <span class="custom-control-label"><b>Send SMS
+                                                                        Employee</b></span>
+                                                                <span class="fs-11">By continuing you agree to <b><a
+                                                                            href="#" class="text-primary">Tearm &
+                                                                            Conditions</a></b></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer text-end">
+                                    <button class="btn btn-primary" type="submit">Save</button>
+                                    <button class="btn btn-danger" type="reset" data-bs-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    {{-- add employee --}}
+
+
+    {{-- add regular employee --}}
+    <div class="modal fade" id="addempmodal" data-bs-backdrop="static">
+        <form action="{{ route('add.employee') }}" method="post">
+            @csrf
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content modal-content-demo">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xl-12 col-md-12 col-lg-12">
+                                <h3 class="card-title">Add Regular Employee</h3>
+                                <div class="tab-menu-heading hremp-tabs p-0 ">
+                                    <div class="tabs-menu1">
+                                        <ul class="nav panel-tabs">
+                                            <li class="ms-4"><a href="#tab5" class="active"
+                                                    data-bs-toggle="tab">Personal
+                                                    Details</a></li>
+                                            <li><a href="#tab6" data-bs-toggle="tab">Company Details</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="panel-body tabs-menu-body hremp-tabs1 p-0"
+                                    style="height: 32rem; overflow:scroll">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="tab5">
+                                            <div class="card-body">
+                                                <h4 class="mb-2 font-weight-bold">Basic</h4>
+                                                {{-- <div class="form-group d-flex justify-content-center">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <input type="file" name="image" class="dropify"
+                                                                data-height="180" />
+                                                        </div>
+                                                    </div>
+                                                </div> --}}
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">First Name</label>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <input type="text"
+                                                                        class="form-control mb-md-0 mb-5"
+                                                                        placeholder="First Name" name="name" required>
+                                                                    <span class="text-muted"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">Middle Name</label>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <input type="text"
+                                                                        class="form-control mb-md-0 mb-5"
+                                                                        placeholder="Middle Name" name="mName">
+                                                                    <span class="text-muted"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">Last Name</label>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <input type="text"
+                                                                        class="form-control mb-md-0 mb-5"
+                                                                        placeholder="Last Name" name="lName">
+                                                                    <span class="text-muted"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">Contact Number</label>
+                                                            <input type="text" class="form-control"
+                                                                placeholder="Phone Number" name="mobile_number" required>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">Email</label>
+                                                            <input type="text" class="form-control"
+                                                                placeholder="email" name="email" required>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">Date Of Birth</label>
+                                                            <input type="date" class="form-control fc-datepicker"
+                                                                placeholder="DD-MM-YYY" name="dob" required>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <label class="form-label">Gender</label>
+                                                            <div class="custom-controls-stacked d-md-flex">
+                                                                <label class="custom-control custom-radio me-4">
+                                                                    <input type="radio" class="custom-control-input"
+                                                                        name="gender" value="1">
+                                                                    <span class="custom-control-label">Male</span>
+                                                                </label>
+                                                                <label class="custom-control custom-radio">
+                                                                    <input type="radio" class="custom-control-input"
+                                                                        name="gender" value="2">
+                                                                    <span class="custom-control-label">Female</span>
+                                                                </label>
+                                                                <label class="custom-control custom-radio">
+                                                                    <input type="radio" class="custom-control-input"
+                                                                        name="gender" value="3">
+                                                                    <span class="custom-control-label">Other</span>
+                                                                </label>
+                                                            </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <label class="form-label mb-0 mt-2">Country</label>
@@ -418,6 +654,11 @@
                                                         <div class="col-md-8">
                                                             <label class="form-label mb-0 mt-2">Address Line 1</label>
                                                             <input type="text" class="form-control" placeholder="Address" name="address">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-0 mt-2">Pin Code</label>
+                                                            <input type="text" class="form-control"
+                                                                placeholder="Postal PIN" name="pincode" required>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -960,18 +1201,29 @@
                 <div class="modal-header">
                     <h5>Add Employee</h5>
                 </div>
-                <div class="modal-body d-flex justify-content-around">
+                <div class="modal-body">
                     <div class="row">
-                        <div class="col-xl-12 text-center">
+                        <div class="col-xl-6 text-center p-3" style="border-right:solid 3px green">
                             <div>
-                                <h3><b style="color: rgb(22, 109, 83)">Add New Employee</b></h3>
-                                <p class="fs-11" style="color: rgb(29, 112, 64)">With Salary Components (Basic, HRA, PF,
-                                    ESI, etc.)</p>
+                                <h3><b style="color: rgb(22, 109, 83)">Regular</b></h3>
                             </div>
-                            <a class="btn btn-outline-primary my-2 border-0" data-bs-toggle="modal"
-                                data-bs-target="#addempmodal"><b>Add Employee</b></a>
-                            <a class="btn btn-outline-primary my-2 border-0" data-bs-toggle="modal"
+                            <div class="d-flex justify-content-center">
+                                <a class="btn btn-outline-primary btn-sm my-2 border-0" data-bs-toggle="modal"
+                                data-bs-target="#addempmodal"><b><i class="fa fa-user me-1"></i>Add Employee</b></a>
+                            <a class="btn btn-outline-primary btn-sm my-2 border-0" data-bs-toggle="modal"
                                 data-bs-target="#"><b><i class="fa fa-file-excel-o me-1"></i>Upload Bulk</b></a>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 text-center p-3">
+                            <div>
+                                <h3><b style="color: rgb(22, 109, 83)">Contractual</b></h3>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <a class="btn btn-outline-primary my-2 border-0 btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#empmodal"><b><i class="fa fa-user me-1"></i>Add Employee</b></a>
+                            <a class="btn btn-outline-primary my-2 border-0 btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#"><b><i class="fa fa-file-excel-o me-1"></i>Upload Bulk</b></a>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -20,6 +20,8 @@ use Illuminate\Http\Request;
 use App\Models\admin\HolidayTemplate;
 use App\Models\admin\HolidayDetail;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\DB;
+use Session;
 
 class BusinessController extends Controller
 {
@@ -57,5 +59,31 @@ class BusinessController extends Controller
         }
 
 
+    }
+
+
+    public function AddManager(Request $request){
+        // dd($request->all());
+        $getEmp = DB::table('employee_personal_details')->where(['business_id'=>$request->session()->get('business_id'),'emp_id'=>$request->EmpId])->first();
+        if($getEmp){
+            $assign = DB::table('manager_details')->insert([
+                'business_id'=> $request->session()->get('business_id'),
+                'mngr_name'=> $getEmp->emp_name,
+                'mngr_emp_id'=> $getEmp->emp_id,
+                'mngr_phone'=> $getEmp->emp_mobile_number,
+                'mngr_depart_id'=> $getEmp->emp_name,
+                'mngr_branch_id'=> $getEmp->branch_id
+            ]);
+            if($assign){
+                Alert::success('Assigned Successfully','Manager Asigned Successfully.');
+                return redirect('admin/settings/business/manager');
+            }else{
+                Alert::error('Failed','Fail to Assign Employee');
+                return redirect('admin/settings/business/manager');
+            }
+        }else{
+            Alert::error('Failed','Employee Id does not exist in emplopyee data');
+            return redirect('admin/settings/business/manager');
+        }
     }
 }

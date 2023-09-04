@@ -108,18 +108,18 @@ Roles And Permissions
                             <thead>
                                 <tr>
                                     <th class=" border-bottom-0">Module Permission</th>
-                                    <th class=" border-bottom-0 text-center">Read</th>
-                                    <th class=" border-bottom-0 text-center">Write</th>
-                                    <th class=" border-bottom-0 text-center">Create</th>
-                                    <th class=" border-bottom-0 text-center">Delete</th>
-                                    <th class=" border-bottom-0 text-center">Import</th>
-                                    <th class=" border-bottom-0 text-center">Export</th>
+                                    <th class=" border-bottom-0">Read</th>
+                                    <th class=" border-bottom-0">Write</th>
+                                    <th class=" border-bottom-0">Create</th>
+                                    <th class=" border-bottom-0">Delete</th>
+                                    <th class=" border-bottom-0">Import</th>
+                                    <th class=" border-bottom-0">Export</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>Employee</td>
-                                    <td >
+                                    <td>
                                         <label class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1" checked>
                                             <span class="custom-control-label"></span>

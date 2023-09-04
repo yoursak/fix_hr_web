@@ -38,7 +38,46 @@ class EmployeeController extends Controller
         // dd($request);
         $added = DB::table('employee_personal_details')->insert([
             'business_id' => $request->session()->get('business_id'),
-            'employee_type' => $request->employee_type,
+            'employee_type' => 1,
+            'emp_name' => $request->name,
+            'emp_id' => $request->emp_id,
+            'emp_mobile_number' => $request->mobile_number,
+            'emp_email' => $request->email,
+            'branch_id' => $request->branch,
+            'emp_department' => $request->department,
+            'emp_designation' => $request->designation,
+            'emp_date_of_birth' => $request->dob,
+            'emp_date_of_joining' => $request->doj,
+            'emp_gender' => $request->gender,
+            'emp_address' => $request->address,
+            'emp_country' => $request->country,
+            'emp_state' => $request->state,
+            'emp_city' => $request->city,
+            'emp_pin_code' => $request->pincode,
+            'profile_photo' => $request->photo,
+        ]);
+
+        $loginEmp = DB::table('login_employee')->insert([
+            'emp_id' => $request->emp_id,
+            'business_id' => $request->session()->get('business_id'),
+            'name' => $request->name,
+            'email' => $request->email,
+            'country_code'=> '+91',
+            'phone' => $request->mobile_number,
+        ]);
+
+        if(isset($added) && isset($loginEmp)){
+            Alert::success('Added Successfully', 'Your Employee Detail is Added Successfully');
+            return redirect('admin/employee');
+        }
+        Alert::error('Not Updated', 'Your Employee Detail Updation is Fail');
+        return redirect('admin/employee');
+    } 
+    public function AddContractualEmployee(Request $request){
+        // dd($request);
+        $added = DB::table('employee_personal_details')->insert([
+            'business_id' => $request->session()->get('business_id'),
+            'employee_type' => 2,
             'emp_name' => $request->name,
             'emp_id' => $request->emp_id,
             'emp_mobile_number' => $request->mobile_number,

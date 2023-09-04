@@ -106,7 +106,7 @@
                         <div class="row">
                             <div class="col-4">
                                 <div class="pt-5 text-center">
-                                    <h6 class="mb-1 fs-16 font-weight-semibold">{{$model->punch_in}}</h6>
+                                    <h6 class="mb-1 fs-16 font-weight-semibold">{{$model->punch_in_time}}</h6>
                                     <small class="text-muted fs-14">Punch In</small>
                                 </div>
                             </div>
@@ -118,7 +118,7 @@
                             </div>
                             <div class="col-4">
                                 <div class="pt-5 text-center">
-                                    <h6 class="mb-1 fs-16 font-weight-semibold">{{$model->punch_out }}</h6>
+                                    <h6 class="mb-1 fs-16 font-weight-semibold">{{$model->punch_out_time }}</h6>
                                     <small class="text-muted fs-14">Punch Out</small>
                                 </div>
                             </div>
@@ -213,7 +213,7 @@
                                     <span class="tl-marker"></span>
                                     <div class="row">
                                         <div class="col-10">
-                                            <p class="tl-title">Punch In at {{$model->punch_in}} | General Shift<br><span
+                                            <p class="tl-title">Punch In at {{$model->punch_in_time}} | General Shift<br><span
                                                     class="text-muted fs-14 fw-light"><i
                                                         class="fa fa-map-marker mx-1"></i>Bhanpuri,
                                                     Raipur(CG)- 492001 AM</span>
@@ -232,7 +232,7 @@
                                     <span class="tl-marker"></span>
                                     <div class="row">
                                         <div class="col-10">
-                                            <p class="tl-title">Punch Out at {{$model->punch_out}} | General Shift<br><span
+                                            <p class="tl-title">Punch Out at {{$model->punch_out_time}} | General Shift<br><span
                                                     class="text-muted fs-14 fw-light"><i
                                                         class="fa fa-map-marker mx-1"></i>Bhanpuri,
                                                     Raipur(CG)- 492001 AM</span>

@@ -391,7 +391,7 @@
             e.preventDefault();
             i++;
             $('#holidayCard').append(
-                '<div class="row my-auto py-2" id="addedForm'+i+'">' +
+                '<div class="row my-auto py-2" id="addedForm' + i + '">' +
                 '<div class="col-5 col-xl-5 my-auto">' +
                 '<input type="text" class="form-control bg-muted" id="inputName" placeholder="Holiday Name" name="holiday_name[]" required>' +
                 '</div>' +
@@ -409,7 +409,8 @@
                 '</div>' +
                 '<div class="col-2 col-xl-1 my-auto">' +
                 '<div class="d-flex justify-content-end">' +
-                '<a href="javascript:void(0);" id="'+i+'" class="action-btns remove_btn" title="Delete" onclick="deleteElem(this.id)">' +
+                '<a href="javascript:void(0);" id="' + i +
+                '" class="action-btns remove_btn" title="Delete" onclick="deleteElem(this.id)">' +
                 '<i class="feather feather-trash-2 text-danger"></i>' +
                 '</a>' +
                 '</div>' +
@@ -422,7 +423,7 @@
             e.preventDefault();
             i++;
             $('#holidayCard2').append(
-                '<div class="row my-auto py-2" id="addedForm2'+j+'">' +
+                '<div class="row my-auto py-2" id="addedForm2' + j + '">' +
                 '<div class="col-5 col-xl-5 my-auto">' +
                 '<input type="text" class="form-control bg-muted" id="inputName" placeholder="Holiday Name" name="holiday_name[]" required>' +
                 '</div>' +
@@ -440,7 +441,8 @@
                 '</div>' +
                 '<div class="col-2 col-xl-1 my-auto">' +
                 '<div class="d-flex justify-content-end">' +
-                '<a href="javascript:void(0);" id="D'+j+'" class="action-btns remove_btn" title="Delete" onclick="deleteElem2(this.id)">' +
+                '<a href="javascript:void(0);" id="D' + j +
+                '" class="action-btns remove_btn" title="Delete" onclick="deleteElem2(this.id)">' +
                 '<i class="feather feather-trash-2 text-danger"></i>' +
                 '</a>' +
                 '</div>' +
@@ -450,43 +452,45 @@
         });
     });
 
-    function manageemp(id){
+    function manageemp(id) {
         var id = id.match(/\d+/g); //split String and Number and get Number Value
-        document.getElementById('manageEmp'+id).classList.toggle("d-none");
-        document.getElementById('saveemp'+id).classList.toggle("d-none");
-        document.getElementById('emplist'+id).classList.toggle("d-none");
+        document.getElementById('manageEmp' + id).classList.toggle("d-none");
+        document.getElementById('saveemp' + id).classList.toggle("d-none");
+        document.getElementById('emplist' + id).classList.toggle("d-none");
         // alert(id);
     }
 
-    function saveeemp(id){
+    function saveeemp(id) {
         var id = id.match(/\d+/g); //split String and Number and get Number Value
-        document.getElementById('manageEmp'+id).classList.toggle("d-none");
-        document.getElementById('saveemp'+id).classList.toggle("d-none");
-        document.getElementById('emplist'+id).classList.toggle("d-none");
+        document.getElementById('manageEmp' + id).classList.toggle("d-none");
+        document.getElementById('saveemp' + id).classList.toggle("d-none");
+        document.getElementById('emplist' + id).classList.toggle("d-none");
     }
 
-    function editTemplate(id){
+    function editTemplate(id) {
         var id = id.match(/\d+/g);
-            document.getElementById('applyTempBtn'+id).classList.toggle("d-none");
-            document.getElementById('searchTemp'+id).classList.toggle("d-none");
-            document.getElementById('editTempForm'+id).classList.toggle("d-none");
-            document.getElementById('editTempBtn'+id).classList.toggle("d-none");
-    }
-    function saveTemplate(id){
-        var id = id.match(/\d+/g);
-            document.getElementById('applyTempBtn'+id).classList.toggle("d-none");
-            document.getElementById('searchTemp'+id).classList.toggle("d-none");
-            document.getElementById('editTempForm'+id).classList.toggle("d-none");
-            document.getElementById('editTempBtn'+id).classList.toggle("d-none");
+        document.getElementById('applyTempBtn' + id).classList.toggle("d-none");
+        document.getElementById('searchTemp' + id).classList.toggle("d-none");
+        document.getElementById('editTempForm' + id).classList.toggle("d-none");
+        document.getElementById('editTempBtn' + id).classList.toggle("d-none");
     }
 
-    function deleteElem(id){
-        $element = document.getElementById('addedForm'+id);
+    function saveTemplate(id) {
+        var id = id.match(/\d+/g);
+        document.getElementById('applyTempBtn' + id).classList.toggle("d-none");
+        document.getElementById('searchTemp' + id).classList.toggle("d-none");
+        document.getElementById('editTempForm' + id).classList.toggle("d-none");
+        document.getElementById('editTempBtn' + id).classList.toggle("d-none");
+    }
+
+    function deleteElem(id) {
+        $element = document.getElementById('addedForm' + id);
         $element.remove();
     }
-    function deleteElem2(id){
+
+    function deleteElem2(id) {
         var id = id.match(/\d+/g);
-        $element = document.getElementById('addedForm2'+id);
+        $element = document.getElementById('addedForm2' + id);
         $element.remove();
     }
     //script for Leave Template
@@ -561,12 +565,6 @@
             $('#SaveNewManager').addClass('d-none');
             $('#addNewManager').removeClass('d-none');
         });
-    });
-
-    //Branches setting
-
-    $('document').ready(function() {
-
     });
 
     //Departmentes setting

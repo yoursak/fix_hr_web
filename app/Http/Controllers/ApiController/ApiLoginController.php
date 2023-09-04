@@ -65,21 +65,23 @@ class ApiLoginController extends BaseController
             
             if (Carbon::now()->lt($expirationTime)) {
                 if ($admin->otp === $request->otp) {
+                    
                     $data = $admin->createToken("API TOKEN")->plainTextToken;
                     // Reset the OTP and its creation time to null
                  $updateAdmin=   LoginAdmin::where('email', $request->email)->update([
                         'otp' => null,
                         'otp_created_at' => null,
                         'is_verified' => 1,
-                        'api_token' => $data
+                        'api_token' => $data,
                     ]);
                     if(isset($updateAdmin)){
 
-                        $verifyOtp=[LoginAdmin::where('business_id',$admin->business_id)->first()];
-                        return ReturnHelpers::jsonApiReturn($verifyOtp);
+                        // $verifyOtp=[LoginAdmin::where('business_id',$admin->business_id)->first()];
+                        // return ReturnHelpers::jsonApiReturn($verifyOtp);
+                         // return ReturnHelpers::jsonApiReturn([$verifyOtp,'token_type' =>'Bearer']);
                     }
                     
-                    // return $admin;
+                    return $admin;
                     //  return AdminLoginResource::collection([LoginAdmin::where('business_id ',$admin->business_id)->first()]);
                 } else {
                     return response()->json(['result' => ['Admin_login => Incorrect OTP.'], 'status' => false],401);

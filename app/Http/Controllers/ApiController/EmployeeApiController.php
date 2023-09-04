@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Helpers\ReturnHelpers;
 use App\Http\Resources\Api\EmployeeResource;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Support\Facades\Auth;
 // use Illuminate\Support\Facades\Validator;
 use Session;
 use Validator;
@@ -19,6 +20,7 @@ class EmployeeApiController extends Controller
 {
     public function index()
     {
+        $user = Auth::user();
         $emp = EmployeePersonalDetail::all();
         if ($emp) {
             return ReturnHelpers::jsonApiReturn(EmployeeResource::collection($emp)->all());
@@ -74,8 +76,14 @@ class EmployeeApiController extends Controller
             }
             // Employee Personal Detail Table
             $emp = new EmployeePersonalDetail();
+            $validatedData = $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust max size as needed
+            ]);
+            $image = $request->file('image');
+            $path = public_path('business_logo/');
+            $imageName = date('d-m-Y') . '_' . md5($image) . '.' . $request->image->extension();
             $emp->emp_id = $request->emp_id;
-            $emp->business_id = $b_id;
+            $emp->business_id = $request->business_id;
             $emp->branch_id = $request->branch_id;
             $emp->employee_type = $request->employee_type;
             $emp->emp_name = $request->name;
@@ -92,18 +100,18 @@ class EmployeeApiController extends Controller
             $emp->emp_state = $request->state;
             $emp->emp_city = $request->city;
             $emp->emp_pin_code = $request->pin_code;
-            $emp->profile_photo = $request->photo;
+            $emp->profile_photo = $imageName;
 
             // LoginEmployee Table
             $emplogin = new LoginEmployee();
-            $emplogin->business_id =$b_id;
+            $emplogin->business_id = $request->business_id;
             $emplogin->name = $request->name;
             $emplogin->email = $request->email;
             $emplogin->country_code = $request->country_code;
             $emplogin->phone = $request->mobile_no;
             // return true;
             if ($emp->save() && $emplogin->save()) {
-                return ReturnHelpers::jsonApiReturn(EmployeeResource::collection(EmployeePersonalDetail::where('emp_id',$request->emp_id)->get()));
+                return ReturnHelpers::jsonApiReturn(EmployeeResource::collection(EmployeePersonalDetail::where('emp_id', $request->emp_id)->get()));
             }
             return response()->json(['result' => [], 'status' => false]);
         }
@@ -111,7 +119,7 @@ class EmployeeApiController extends Controller
 
     public function show($emp_id)
     {
-        $emp = EmployeePersonalDetail::where('emp_id',$emp_id)->first();
+        $emp = EmployeePersonalDetail::where('emp_id', $emp_id)->first();
         // return $emp;
         if ($emp) {
             return ReturnHelpers::jsonApiReturn(EmployeeResource::collection([$emp])->all());
@@ -120,7 +128,7 @@ class EmployeeApiController extends Controller
     }
     public function update(Request $request, $emp_id)
     {
-        $emp = EmployeePersonalDetail::where('emp_id',$emp_id)->first();
+        $emp = EmployeePersonalDetail::where('emp_id', $emp_id)->first();
         $emp->business_id = $request->business_id ?? $emp->business_id;
         $emp->branch_id = $request->branch_id ?? $emp->branch_id;
         $emp->employee_type = $request->employee_type ?? $emp->employee_type;
@@ -141,7 +149,7 @@ class EmployeeApiController extends Controller
         $emp->emp_pin_code = $request->pin_code ?? $emp->emp_pin_code;
         $emp->profile_photo = $request->photo ?? $emp->profile_photo;
 
-        $emplogin = LoginEmployee::where('emp_id',$emp_id)->first();
+        $emplogin = LoginEmployee::where('emp_id', $emp_id)->first();
         $emplogin->business_id = $request->business_id ?? $emplogin->business_id;
         $emplogin->name = $request->name ?? $emplogin->name;
         $emplogin->email = $request->email ?? $emplogin->email;
@@ -158,8 +166,8 @@ class EmployeeApiController extends Controller
 
     public function destroy($emp_id)
     {
-        $emp = EmployeePersonalDetail::where('emp_id',$emp_id)->first();
-        $emplogin = LoginEmployee::where('emp_id',$emp_id)->first();
+        $emp = EmployeePersonalDetail::where('emp_id', $emp_id)->first();
+        $emplogin = LoginEmployee::where('emp_id', $emp_id)->first();
         if ($emp) {
             $emp->delete();
             $emplogin->delete();
@@ -170,20 +178,20 @@ class EmployeeApiController extends Controller
 
     public function bemployee($business_id)
     {
-        $emp = EmployeePersonalDetail::where('business_id',$business_id)->get();
-        // return $emp;    
+        $emp = EmployeePersonalDetail::where('business_id', $business_id)->get();
+        // return $emp;
         if ($emp) {
-               return ReturnHelpers::jsonApiReturn(EmployeeResource::collection(EmployeePersonalDetail::where('business_id',$business_id)->get()));
+            return ReturnHelpers::jsonApiReturn(EmployeeResource::collection(EmployeePersonalDetail::where('business_id', $business_id)->get()));
         }
         return response()->json(['result' => [], 'status' => false]);
     }
 
     public function bbranch($business_id)
     {
-        $emp = EmployeePersonalDetail::where('business_id',$business_id)->get();
-        // return $emp;    
+        $emp = EmployeePersonalDetail::where('business_id', $business_id)->get();
+        // return $emp;
         if ($emp) {
-               return ReturnHelpers::jsonApiReturn(EmployeeResource::collection(EmployeePersonalDetail::where('business_id',$business_id)->get()));
+            return ReturnHelpers::jsonApiReturn(EmployeeResource::   (EmployeePersonalDetail::where('business_id', $business_id)->get()));
         }
         return response()->json(['result' => [], 'status' => false]);
     }

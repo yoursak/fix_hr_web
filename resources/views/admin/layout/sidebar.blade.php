@@ -138,9 +138,9 @@
                 <i class="fe fe-alert-triangle fs-50"></i>
                 <h4 class="text-primary fs-20 font-weight-semibold mt-2">Logout Alert</h4>
                 <p class="mb-4 mx-4">Are you sure want to log out ???</p>
-                <a class="btn btn-danger px-5" href="{{ url('logout') }}">Log Out</a>
-                <a aria-label="Close" class="btn btn-primary px-5 text-white" data-bs-dismiss="modal">Stay
-                    Logedin</a>
+                    <a href="{{url('/logout')}}" class="btn btn-danger px-5">Log Out</a>
+                    <a aria-label="Close" class="btn btn-primary px-5 text-white" data-bs-dismiss="modal">StayLogedin</a>
+
             </div>
         </div>
     </div>

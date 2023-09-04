@@ -192,10 +192,10 @@ Attendance
                                     </div>
                                 </td>
                                 <td><span class="badge badge-success-light">Present</span></td>
-                                <td>{{$list->punch_in}}</td>
-                                <td>{{$list->punch_out}}</td>
-                                <td>{{$list->production_hour}}</td>
-                                <td>{{$list->location_ip}}</td>
+                                <td>{{$list->punch_in_time}}</td>
+                                <td>{{$list->punch_out_time}}</td>
+                                <td>{{$list->working_hour}}</td>
+                                <td>127.0.0.1</td>
                                 <td>{{$list->working_from}}</td>
                                 <td>
                                     <div class="d-flex">

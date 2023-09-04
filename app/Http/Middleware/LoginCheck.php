@@ -20,9 +20,10 @@ class LoginCheck
      */
     public function handle(Request $request, Closure $next)
     {
-        if($request->session()->has('business_id')){
-            return back();
+        if(Session::get('business_id')){
+            return redirect('/');
+        }else{
+            return $next($request);
         }
-        return $request->$next;
     }
 }

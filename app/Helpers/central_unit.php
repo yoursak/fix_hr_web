@@ -59,6 +59,15 @@ class Central_unit
       $AttList = DB::table('attendance_list')->where('business_id',Session::get('business_id'))->get();
       return $AttList;
   }
+
+   static function GetBusinessType(){
+      $AttList = DB::table('business_type_list')->get();
+      return $AttList;
+  }
+   static function Get(){
+      $AttList = DB::table('business_type_list')->get();
+      return $AttList;
+  }
 }
 
 ?>
