@@ -26,6 +26,9 @@ class EmployeeLoginApiController extends Controller
         return response()->json(['result' => [], 'status' => false]);
     }
 }
+//****************************************************************************************************************
+//****************************************Email Login Check with otp*********************************************
+//****************************************************************************************************************
 
  // public function login1(Request $request)
     // {
@@ -88,7 +91,7 @@ class EmployeeLoginApiController extends Controller
     //     } else {
     //         return response()->json(['Admin_login' => 'Invalid OTP']);
     //     }
-    
+    //*********************************************************************************************************************************
 
     // public function index()
     // {

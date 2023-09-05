@@ -25,13 +25,6 @@ use App\Http\Controllers\ApiController\CommonApiController;
 */
 
 // Employee Attendance Section
-Route::prefix('attendance')->group(function () {
-    Route::get('/detail', [AttendanceApiController::class, 'index']);
-    Route::post('/detail', [AttendanceApiController::class, 'store']);
-    Route::get('detail/{id}', [AttendanceApiController::class, 'show']);
-    Route::put('detail/{id}', [AttendanceApiController::class, 'update']);
-    Route::delete('detail/{id}', [AttendanceApiController::class, 'destroy']);
-});
 
 Route::any('/bussinesscheck', [CommonApiController::class, 'businesscheck']);
 
@@ -39,15 +32,22 @@ Route::prefix('admin')->group(function () {
     Route::post('/login', [ApiLoginController::class, 'login']);
     Route::any('/verify_otp', [ApiLoginController::class, 'VerifiedOtp']);
 
-    // Route::group(['middleware' => 'apilogincheck'], function () {
-    Route::prefix('employee')->group(function () {
-        Route::get('/detail', [EmployeeApiController::class, 'index']);
-        Route::post('/detail', [EmployeeApiController::class, 'store']);
-        Route::get('detail/{id}', [EmployeeApiController::class, 'show']);
-        Route::put('detail/{id}', [EmployeeApiController::class, 'update']);
-        Route::delete('detail/{id}', [EmployeeApiController::class, 'destroy']);
-        Route::get('detailall/{id}', [EmployeeApiController::class, 'bemployee']);
-        // });
+    Route::group(['middleware' => 'apilogincheck'], function () {
+        Route::prefix('employee')->group(function () {
+            Route::get('/detail', [EmployeeApiController::class, 'index']);
+            Route::post('/detail', [EmployeeApiController::class, 'store']);
+            Route::get('detail/{id}', [EmployeeApiController::class, 'show']);
+            Route::put('detail/{id}', [EmployeeApiController::class, 'update']);
+            Route::delete('detail/{id}', [EmployeeApiController::class, 'destroy']);
+            Route::get('detailall/{id}', [EmployeeApiController::class, 'bemployee']);
+        });
+        Route::prefix('attendance')->group(function () {
+            Route::get('/detail', [AttendanceApiController::class, 'index']);
+            Route::post('/detail', [AttendanceApiController::class, 'store']);
+            Route::get('detail/{id}', [AttendanceApiController::class, 'show']);
+            Route::put('detail/{id}', [AttendanceApiController::class, 'update']);
+            Route::delete('detail/{id}', [AttendanceApiController::class, 'destroy']);
+        });
     });
 });
 

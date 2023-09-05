@@ -32,9 +32,9 @@ class ApiLoginController extends BaseController
                 'body' => 'Your FixHR Admin Login one time PIN is: ' . "$otp",
             ];
             
-            $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
+            // $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
             
-            if ($sendMail) {
+            if (true) {
                 $updateset = LoginAdmin::where('email', $request->email)->update([
                     'otp' => $otp,
                     'otp_created_at' => Carbon::now(), // Store the OTP creation time
@@ -76,12 +76,13 @@ class ApiLoginController extends BaseController
                     ]);
                     if(isset($updateAdmin)){
 
-                        // $verifyOtp=[LoginAdmin::where('business_id',$admin->business_id)->first()];
+                        $verifyOtp=[LoginAdmin::where('business_id',$admin->business_id)->first()];
                         // return ReturnHelpers::jsonApiReturn($verifyOtp);
-                         // return ReturnHelpers::jsonApiReturn([$verifyOtp,'token_type' =>'Bearer']);
+                        //  return ReturnHelpers::jsonApiReturn([$verifyOtp,'token_type' =>'Bearer']);
+                        return ReturnHelpers::jsonApiReturn($verifyOtp);
                     }
                     
-                    return $admin;
+                    // return $admin;
                     //  return AdminLoginResource::collection([LoginAdmin::where('business_id ',$admin->business_id)->first()]);
                 } else {
                     return response()->json(['result' => ['Admin_login => Incorrect OTP.'], 'status' => false],401);

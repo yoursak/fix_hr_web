@@ -3,7 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\admin\SidebarMenu;
-use App\Models\admin\Branch_list;
+use App\Models\admin\BranchList;
 use App\Models\admin\Department_list;
 use App\Models\admin\Designation_list;
 use App\Models\employee\Employee_Details;
@@ -26,7 +26,7 @@ class Central_unit
 {
    static function BranchList()
    {
-      return Branch_list::select('*')->get();
+      return BranchList::select('*')->get();
    }
    static function DepartmentList()
    {
