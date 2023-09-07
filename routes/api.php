@@ -31,7 +31,10 @@ Route::any('/bussinesscheck', [CommonApiController::class, 'businesscheck']);
 Route::prefix('admin')->group(function () {
     Route::post('/login', [ApiLoginController::class, 'login']);
     Route::any('/verify_otp', [ApiLoginController::class, 'VerifiedOtp']);
-
+    Route::get('/branchlist/{id}',[ApiLoginController::class,'branchList']);
+    Route::get('/departmentlist/{id}',[ApiLoginController::class,'departmentList']);
+    Route::any('/allemployee',[ApiLoginController::class,'employeeList']);
+     
     Route::group(['middleware' => 'apilogincheck'], function () {
         Route::prefix('employee')->group(function () {
             Route::get('/detail', [EmployeeApiController::class, 'index']);
@@ -84,7 +87,7 @@ Route::any('/misspunch/{tableName}', [RequestController::class, 'MisspunchTable'
 
 // Route::any('sendOtp', 'LoginApiController@sendOtp');
 
-Route::get('qr', [ApiLoginController::class, 'index']);
+Route::any('/test/{id}', [EmployeeApiController::class, 'allemployee']);
 
 Route::prefix('attendance')->group(function () {
     Route::get('/detail', [AttendanceApiController::class, 'index']);

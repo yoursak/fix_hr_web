@@ -11,7 +11,9 @@ use App\Http\Controllers\admin\Report\ReportController;
 use App\Http\Controllers\admin\Requests\RequestController;
 use App\Http\Controllers\admin\Settings\SettingController;
 use App\Http\Controllers\admin\Settings\BusinessController;
-use App\Http\Controllers\admin\Settings\PermissionController;
+use App\Http\Controllers\admin\Settings\RolePermission\RolePermissionController;
+use App\Http\Controllers\admin\Settings\RolePermission\RoleController;
+use App\Http\Controllers\admin\Settings\RolePermission\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +61,31 @@ Route::middleware(['email_verified'])->group(function () {
     
     Route::get('/', [DashboardController::class, 'index']);
     Route::get('/logout', [DashboardController::class, 'logout'])->name('admin.logout');
+
+
+    Route::prefix('/Role-permission')->group(function () {
+
+        Route::controller(PermissionController::class)->group(function () {
+
+            Route::get('/permission','index');
+            Route::post('/permission-add','store')->name('permission.add');
+
+        });
+
+        Route::controller(RoleController::class)->group(function () {
+            Route::get('/role','index')->name('role');
+            Route::post('/add','store')->name('role.add');
+        });
+
+        Route::controller(RolePermissionController::class)->group(function () {
+            Route::get('/allot-permission{data}','index')->name('rolePermission');
+            Route::get('/admin-list','AdminList');
+            Route::post('/add-admin','addAdmin')->name('add.admin');
+            Route::any('/make-admin','makeAdmin')->name('make.admin');
+            Route::post('/assign-permission-to-role','assignPermissionToRole')->name('assign.permission');
+            Route::post('/assign-role-to-model','assignRoleToModel')->name('assign.role');
+        });
+    });
    
     Route::prefix('/admin')->group(function () {
         Route::any('/', [DashboardController::class, 'index']);
@@ -141,28 +168,27 @@ Route::middleware(['email_verified'])->group(function () {
             });
         });
     });
-});
 
+    Route::prefix('/update')->group(function(){
+        Route::post('/employee', [EmployeeController::class, 'UpdateEmployee'])->name('update.employee');
+    });
 
-Route::prefix('/delete')->group(function () {
-    Route::post('/branch/{id}', [SettingController::class, 'DeleteBranch'])->name('delete.branch');
-    Route::post('/department/{id}', [SettingController::class, 'DeleteDepartment'])->name('delete.department');
-    Route::post('/designation/{id}', [SettingController::class, 'DeleteDesignation'])->name('delete.designation');
-    Route::post('/employee/{id}', [EmployeeController::class, 'DeleteEmployee'])->name('delete.employee');
-});
-
-Route::prefix('/add')->group(function () {
-    Route::post('/branch', [SettingController::class, 'AddBranch'])->name('add.branch');
-    Route::post('/department', [SettingController::class, 'AddDepartment'])->name('add.department');
-    Route::post('/designation', [SettingController::class, 'AddDesignation'])->name('add.designation');
-    Route::post('/employee', [EmployeeController::class, 'AddEmployee'])->name('add.employee');
-    Route::post('/contractual-employee', [EmployeeController::class, 'AddContractualEmployee'])->name('add.employee.contractual');
-    Route::post('/holiday', [BusinessController::class,'CreateHoliday'])->name('add.holiday');
-    Route::post('/manager', [BusinessController::class,'AddManager'])->name('add.manager');
-});
-
-Route::prefix('/update')->group(function(){
-    Route::post('/employee', [EmployeeController::class, 'UpdateEmployee'])->name('update.employee');
+    Route::prefix('/delete')->group(function () {
+        Route::post('/branch/{id}', [SettingController::class, 'DeleteBranch'])->name('delete.branch');
+        Route::post('/department/{id}', [SettingController::class, 'DeleteDepartment'])->name('delete.department');
+        Route::post('/designation/{id}', [SettingController::class, 'DeleteDesignation'])->name('delete.designation');
+        Route::post('/employee/{id}', [EmployeeController::class, 'DeleteEmployee'])->name('delete.employee');
+    });
+    
+    Route::prefix('/add')->group(function () {
+        Route::post('/branch', [SettingController::class, 'AddBranch'])->name('add.branch');
+        Route::post('/department', [SettingController::class, 'AddDepartment'])->name('add.department');
+        Route::post('/designation', [SettingController::class, 'AddDesignation'])->name('add.designation');
+        Route::post('/employee', [EmployeeController::class, 'AddEmployee'])->name('add.employee');
+        Route::post('/contractual-employee', [EmployeeController::class, 'AddContractualEmployee'])->name('add.employee.contractual');
+        Route::post('/holiday', [BusinessController::class,'CreateHoliday'])->name('add.holiday');
+        Route::post('/manager', [BusinessController::class,'AddManager'])->name('add.manager');
+    });
 });
 
 

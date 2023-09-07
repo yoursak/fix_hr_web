@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\admin\SidebarMenu;
 use App\Models\admin\BranchList;
+use App\Models\Permissions\Role;
 use App\Models\admin\Department_list;
 use App\Models\admin\Designation_list;
 use App\Models\employee\Employee_Details;
@@ -42,7 +43,7 @@ class Central_unit
    }
 
    static function EmployeeDetails(){
-      $employee =  DB::table('employee_personal_details')->join('designation_list', 'employee_personal_details.emp_designation', '=', 'designation_list.desig_id')->join('department_list', 'employee_personal_details.emp_department', '=', 'department_list.depart_id')->select('*')->get();
+      $employee =  DB::table('employee_personal_details')->select('*')->get();
       return $employee;
    }
 
@@ -67,6 +68,10 @@ class Central_unit
    static function Get(){
       $AttList = DB::table('business_type_list')->get();
       return $AttList;
+  }
+   static function GetRoles(){
+      $Roles = Role::select('*')->get();
+      return $Roles;
   }
 }
 

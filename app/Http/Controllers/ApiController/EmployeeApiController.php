@@ -5,9 +5,12 @@ namespace App\Http\Controllers\ApiController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\employee\EmployeePersonalDetail;
+use App\Models\admin\LoginAdmin;
 use App\Models\employee\LoginEmployee;
 use Illuminate\Support\Facades\DB;
+// /public_html/app/Models/admin    
 use App\Helpers\ReturnHelpers;
+use App\Helpers\ApiResponse;
 use App\Http\Resources\Api\EmployeeResource;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Auth;
@@ -90,8 +93,8 @@ class EmployeeApiController extends Controller
             $emp->emp_mobile_number = $request->mobile_no;
             $emp->emp_email = $request->email;
             // $emp->emp_branch = $request->branch;
-            $emp->emp_department = $request->department;
-            $emp->emp_designation = $request->designation;
+            $emp->department_id = $request->department;
+            $emp->designation_id = $request->designation;
             $emp->emp_date_of_birth = $request->dob;
             $emp->emp_date_of_joining = $request->doj;
             $emp->emp_gender = $request->gender;
@@ -137,8 +140,8 @@ class EmployeeApiController extends Controller
         $emp->emp_mobile_number = $request->mobile_no ?? $emp->emp_mobile_number;
         $emp->emp_email = $request->email ?? $emp->emp_email;
         // $emp->emp_branch = $request->branch ?? $emp->emp_branch;
-        $emp->emp_department = $request->department ?? $emp->emp_department;
-        $emp->emp_designation = $request->designation ?? $emp->emp_designation;
+        $emp->department_id = $request->department ?? $emp->department_id;
+        $emp->designation_id = $request->designation ?? $emp->designation_id;
         $emp->emp_date_of_birth = $request->dob ?? $emp->emp_date_of_birth;
         $emp->emp_date_of_joining = $request->doj ?? $emp->emp_date_of_joining;
         $emp->emp_gender = $request->gender ?? $emp->emp_gender;
@@ -186,13 +189,20 @@ class EmployeeApiController extends Controller
         return response()->json(['result' => [], 'status' => false]);
     }
 
-    public function bbranch($business_id)
+    public function allemployee($business_id)
     {
-        $emp = EmployeePersonalDetail::where('business_id', $business_id)->get();
-        // return $emp;
-        if ($emp) {
-            return ReturnHelpers::jsonApiReturn(EmployeeResource::   (EmployeePersonalDetail::where('business_id', $business_id)->get()));
-        }
-        return response()->json(['result' => [], 'status' => false]);
+        return ApiResponse::allBranch($business_id);
+        // return ApiResponse::allEmployeeList($business_id);
+
+        // allEmployeeList
+    }
+    
+    public function departmenttoallEmployeeList($branch_id)
+    {
+        // return true;
+        return ApiResponse::allBranch($branch_id);
+        // return ApiResponse::allBranch($branch_id);
+
+        // $emp = EmployeePersonalDetail::where('business_id', $business_id)->get();
     }
 }

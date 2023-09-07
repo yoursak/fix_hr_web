@@ -4,6 +4,7 @@
 @endsection
 
 @section('css')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 @endsection
 @section('settings')
     <div class="page-header d-md-flex d-block">
@@ -15,178 +16,216 @@
             <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
                 <div class="d-lg-flex d-block">
                     <div class="btn-list">
-                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
-                            data-bs-target="#clockinmodal" id="newTempFormBtn">Create Templates</button>
+                        {{-- <a href="javascript:void(0);" type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
+                            data-bs-target="#deletemodalview">Create Templates</a> --}}
+                        {{-- <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
+                            data-bs-target="#clockinmodal" id="newTempFormBtn">Create Templates</button> --}}
+                        <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#myModal">
+                            Create Templates
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container">
+        <!-- Button to Open the Modal -->
+
+        <!-- The Modal -->
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Leave Policy</h5>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body m-3 p-auto">
+                        <form action="" method="post">
+                            <div class="row ">
+                                <div class="border-0 pl-3">
+                                    <h4 class="card-title "><span>Leave Setting</span></h4>
+                                </div>
+                                <div class="card-body pb-2">
+                                    {{-- <div class="row form-group">
+                                        <div class="col-4 col-xl-4">
+                                            <p class="fs-15 form-label">Policy Name</p>
+                                        </div>
+                                        <div class="col-8 col-xl-4 ">
+                                            <input type="text" class="form-control bg-muted form-label" id="inputName"
+                                                placeholder="Enter Template Name">
+                                        </div>
+                                    </div> --}}
+
+                                    
+                                    <div class="row from-group">
+                                        <div class="col-4 col-xl-4 ">
+                                            <p class="my-auto fs-15 form-label">Policy Name</p>
+                                        </div>
+                                        <div class="col-8 col-xl-4 ">
+                                            <input type="text" class="form-control bg-muted form-label" id="inputName"
+                                                placeholder="Enter Template Name">
+                                        </div>
+                                    </div>
+
+                                    <div class="row pt-3">
+                                        <div class="col-4 col-xl-4 ">
+                                            <p class="my-auto fs-15 form-label">Leave Policy Cycle</p>
+                                        </div>
+                                        <div class="col-8 col-xl-4 ">
+                                            <div class="btn-group" role="group"
+                                                aria-label="Basic radio toggle button group">
+                                                <input type="radio" class="btn-check" name="btnradio" id="btnradiomonth"
+                                                    checked="">
+                                                <label class="btn btn-outline-dark" for="btnradiomonth">Monthly</label>
+                                                <input type="radio" class="btn-check" name="btnradio" id="btnradioyear">
+                                                <label class="btn btn-outline-dark" for="btnradioyear">Yearly</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row pt-3">
+                                        <div class="col-xl-4">
+                                            <p class="my-auto fs-15 form-label">Leave Period</p>
+                                        </div>
+                                        <div class="col-xl-6 my-auto">
+                                            <div class="form-group d-flex">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">
+                                                            <i class="feather feather-calendar"></i>
+                                                        </div>
+                                                    </div><input class="form-control fc-datepicker" placeholder="DD-MM-YYYY"
+                                                        type="text">
+                                                </div>
+                                                <label class="form-label mx-3 my-auto">To</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">
+                                                            <i class="feather feather-calendar"></i>
+                                                        </div>
+                                                    </div><input class="form-control fc-datepicker" placeholder="DD-MM-YYYY"
+                                                        type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{-- <div class="row my-5">
+                                <div class="col-4 col-xl-4 my-auto">
+                                    <p class="my-auto fs-15"><b>Sandwitch Leave</b></p>
+                                </div>
+                                <div class="col-8 col-xl-4 my-auto">
+                                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                        <input type="radio" class="btn-check" name="btnradio" id="btnradioCount1" checked="">
+                                        <label class="btn btn-outline-dark" for="btnradioCount1">Count</label>
+                                        <input type="radio" class="btn-check" name="btnradio" id="btnradioIgnore1">
+                                        <label class="btn btn-outline-dark" for="btnradioIgnore1">Ignore</label>
+                                    </div>
+                                </div>
+                            </div> --}}
+                                </div>
+                            </div>
+                            <hr style="background: black" />
+                            <div class="row pt-3 mt-3">
+                                <div class="  col border-0">
+                                    <h4 class="card-title"><span>Leave Category</span></h4>
+                                </div>
+                                <div class="col text-end mr-3">
+                                    <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Delete" value="Add More" onclick="addMore()"><i
+                                            class="fe fe-plus text-primary">Add</i></a>
+                                </div>
+                                {{-- <div class="card-body" id="dynamictable"> --}}
+                                    <div class="row card-body pt-0 pr-0 " id="dynamictable">
+                                        <div class="col-xl-3 pt-3">
+                                            <label for="inputCity" class="form-label">Category Name</label>
+                                            <input type="text" class="form-control" id="inputCity"
+                                                placeholder="Category Name">
+                                        </div>
+                                        <div class="col-xl-2 pt-3">
+                                            <label for="inputCity" class="form-label ">Days</label>
+                                            {{-- <input type="text" class="form-control bg-muted" id="inputCity"
+                                            placeholder="Days"> --}}
+                                            <input type="number" class="form-control bg-muted" placeholder="Count">
+                                        </div>
+                                        <div class="col-xl-2 pt-3">
+                                            <label for="inputState" class="form-label">Unused Leave Rule</label>
+                                            <select class="form-control select2" data-placeholder="Leave Rule">
+                                                <option label="Fixed Amount"></option>
+                                                <option>Lapse</option>
+                                                <option>Carry Forward</option>
+                                                <option>Encash</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-xl-2 pt-3">
+                                            <label for="inputCity" class="form-label">Carry Forward Limit</label>
+                                            <input type="text" class="form-control" id="inputCity"
+                                                placeholder="Days">
+                                        </div>
+
+                                        <div class="col-xl-2 pt-3">
+                                            <label for="inputState" class="form-label">Applicable To</label>
+                                            <select class="form-control select2" data-placeholder="Applicable To">
+                                                <option label="Fixed Amount"></option>
+                                                <option>All</option>
+                                                <option>Male</option>
+                                                <option>Female</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-xl-1 text-end" style="padding-top:45px;">
+                                            <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
+                                                data-bs-placement="top" title="Delete"><i
+                                                    class="feather feather-trash danger text-danger"></i></a>
+                                        </div>
+                                    </div>
+                                {{-- </div> --}}
+                            </div>
+                            {{-- <hr style="background: black" />
+                        {{-- style="margin: auto;" --}}
+                            {{-- <div class="row pb-4">
+                            <div class="card-header  border-0">
+                                <div class="col-xl-8 p-0">
+                                <h4 class="card-title"><span >Leave Approval</span></h4>
+                            </div>
+                                <div class="text-end col-xl-4 p-0 ">
+                                <select class="form-select" aria-label="Default">
+                                    <option selected>Set Multilavel Approval</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select></div>
+                            </div>
+                        
+                        </div> --}}
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="text-center">
+                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#">Apply</button>
+                        </div>
+
+                        {{-- <div class="">
+                            {{-- <button class="btn btn-danger mx-2" data-bs-dismiss="modal">Decline</button> --}}
+                        </div> 
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="card d-none" id="newTemplate">
-            <div class="row">
-                <div class="card-header  border-0">
-                    <h4 class="card-title"><span style="color:rgb(119, 110, 79)">Leave Setting</span></h4>
-                </div>
-                <div class="card-body">
-                    <div class="row my-5">
-                        <div class="col-4 col-xl-4 my-auto">
-                            <p class="my-auto fs-15"><b>Template Name</b></p>
-                        </div>
-                        <div class="col-8 col-xl-4 my-auto">
-                            <input type="text" class="form-control bg-muted" id="inputName"
-                                placeholder="Enter Template Name">
-                        </div>
-                    </div>
-                    <div class="row my-5">
-                        <div class="col-4 col-xl-4 my-auto">
-                            <p class="my-auto fs-15"><b>Leave Policy Cycle</b></p>
-                        </div>
-                        <div class="col-8 col-xl-4 my-auto">
-                            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                <input type="radio" class="btn-check" name="btnradio" id="btnradiomonth" checked="">
-                                <label class="btn btn-outline-dark" for="btnradiomonth">Monthly</label>
-                                <input type="radio" class="btn-check" name="btnradio" id="btnradioyear">
-                                <label class="btn btn-outline-dark" for="btnradioyear">Yearly</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row my-5">
-                        <div class="col-4 col-xl-4 my-auto">
-                            <p class="my-auto fs-15"><b>Accrual Type</b></p>
-                        </div>
-                        <div class="col-8 col-xl-4 my-auto">
-                            <div class="form-group">
-                                <select class="form-control select2" data-placeholder="Policy Cycle">
-                                    <option label="Fixed Amount"></option>
-                                    <option>Monthly</option>
-                                    <option>Yearly</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row my-5">
-                        <div class="col-xl-4 my-auto">
-                            <p class="my-auto fs-15"><b>Leave Period</b></p>
-                        </div>
-                        <div class="col-xl-6 my-auto">
-                            <div class="form-group d-flex">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">
-                                            <i class="feather feather-calendar"></i>
-                                        </div>
-                                    </div><input class="form-control fc-datepicker" placeholder="DD-MM-YYYY"
-                                        type="text">
-                                </div>
-                                <label class="form-label mx-3 my-auto">To</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">
-                                            <i class="feather feather-calendar"></i>
-                                        </div>
-                                    </div><input class="form-control fc-datepicker" placeholder="DD-MM-YYYY"
-                                        type="text">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row my-5">
-                        <div class="col-4 col-xl-4 my-auto">
-                            <p class="my-auto fs-15"><b>Sandwitch Leave</b></p>
-                        </div>
-                        <div class="col-8 col-xl-4 my-auto">
-                            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                <input type="radio" class="btn-check" name="btnradio" id="btnradioCount1" checked="">
-                                <label class="btn btn-outline-dark" for="btnradioCount1">Count</label>
-                                <input type="radio" class="btn-check" name="btnradio" id="btnradioIgnore1">
-                                <label class="btn btn-outline-dark" for="btnradioIgnore1">Ignore</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="card-header  border-0">
-                    <h4 class="card-title"><span style="color:rgb(119, 110, 79)">Leave Category</span></h4>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-5">
-                        <div class="col-xl-3 my-auto">
-                            <p class="d-none d-xl-block my-auto"><b class="fs-13 text-muted">Category Name</b></p>
-                        </div>
-                        <div class="col-xl-2 my-auto">
-                            <p class="d-none d-xl-block my-auto"><b class="fs-13 text-muted">Count</b></p>
-                        </div>
-                        <div class="col-xl-3 my-auto">
-                            <p class="d-none d-xl-block my-auto"><b class="fs-13 text-muted">Unused Leave Rule</b></p>
-                        </div>
-                        <div class="col-xl-3 my-auto">
-                            <p class="d-none d-xl-block my-auto"><b class="fs-13 text-muted">Encashment/Carry Forward
-                                    Limited</b></p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-8 col-xl-3">
-                            <input type="text" class="form-control bg-muted" placeholder="eg. Casual Leave">
-                        </div>
-                        <div class="col-4 col-xl-2">
-                            <input type="number" class="form-control bg-muted" placeholder="Count">
-                        </div>
-                        <div class="col-xl-3 mt-4 mt-xl-0">
-                            <div class="form-group">
-                                <select class="form-control select2" data-placeholder="Leave Rule">
-                                    <option label="Fixed Amount"></option>
-                                    <option>Lapse</option>
-                                    <option>Carry Forward</option>
-                                    <option>Encash</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-8 col-xl-3">
-                            <input type="text" class="form-control bg-muted" placeholder="Days">
-                        </div>
-                        <div class="col-2 col-xl-1">
-                            <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                data-bs-placement="top" title="Delete"><i
-                                    class="feather feather-trash-2 text-danger"></i></a>
-                        </div>
-                        <div>
-                            <a href="#" class="btn text-primary my-3"><b>Add More Leave ategory</b></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="card-header  border-0">
-                    <h4 class="card-title"><span style="color:rgb(119, 110, 79)">Leave Approval</span></h4>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-5">
-                        <div class="col-xl-6 my-auto">
-                            <p class="my-auto d-flex text-muted">
-                                Multilavel Approval Setting is set to lavel 1 by default
-                            </p>
-                        </div>
-                        <div class="col-xl-6 my-auto text-end">
-                            <a href="#" class="btn btn-secondary" data-bs-target="#SetMultilavelApprovalModal" data-bs-toggle="modal"><span>Set Multilavel Approval</span></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body" id="TempForm">
-                <div class=" text-end">
-                    <a href="#" class="btn btn-outline-dark" id="tempSave" data-bs-toggle="tooltip"
-                        data-bs-placement="top" title="Save">Apply Template</a>
-                </div>
-            </div>
-        </div>
     </div>
+    {{-- delete confirmation --}}
+
+    {{-- delete confirmation --}}
+
 
     <div class="row">
         <div class="card">
-            <div class="card-body border-bottum-0">
+            <div class="card-body border-bottum-0 p-2">
                 <div class="row">
                     <div class="col-6 col-xl-3 my-auto">
                         <h5 class="my-auto">FD Leave Template</h5>
@@ -373,226 +412,79 @@
                     </tbody>
                 </table>
             </div>
-            <div class="card-body d-none" id="editTempForm">
-                <div class="row">
-                    <div class="card-header  border-0">
-                        <h4 class="card-title"><span style="color:rgb(119, 110, 79)">Leave Setting</span></h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="row my-5">
-                            <div class="col-xl-4 my-auto">
-                                <p class="my-auto fs-15"><b>Template Name</b></p>
-                            </div>
-                            <div class="col-xl-4 my-auto">
-                                <input type="text" class="form-control bg-muted" id="inputName"
-                                    placeholder="Enter Template Name">
-                            </div>
-                        </div>
-                        <div class="row my-5">
-                            <div class="col-xl-4 my-auto">
-                                <p class="my-auto fs-15"><b>Leave Policy Cycle</b></p>
-                            </div>
-                            <div class="col-xl-4 my-auto">
-                                <p class="my-auto ">Yearly</p>
-                            </div>
-                        </div>
-                        <div class="row my-5">
-                            <div class="col-xl-4 my-auto">
-                                <p class="my-auto fs-15"><b>Accrual Type</b></p>
-                            </div>
-                            <div class="col-xl-4 my-auto">
-                                <div class="form-group">
-                                    <select class="form-control select2" data-placeholder="Policy Cycle">
-                                        <option label="Fixed Amount"></option>
-                                        <option>Monthly</option>
-                                        <option>Yearly</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row my-5">
-                            <div class="col-xl-4 my-auto">
-                                <p class="my-auto fs-15"><b>Leave Period</b></p>
-                            </div>
-                            <div class="col-xl-6 my-auto">
-                                <div class="form-group d-flex">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="feather feather-calendar"></i>
-                                            </div>
-                                        </div><input class="form-control fc-datepicker" placeholder="DD-MM-YYYY"
-                                            type="text">
-                                    </div>
-                                    <label class="form-label mx-3 my-auto">To</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="feather feather-calendar"></i>
-                                            </div>
-                                        </div><input class="form-control fc-datepicker" placeholder="DD-MM-YYYY"
-                                            type="text">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row my-5">
-                            <div class="col-6 col-xl-4 my-auto">
-                                <p class="my-auto fs-15"><b>Sandwitch Leave</b></p>
-                            </div>
-                            <div class="col-6 col-xl-4 my-auto">
-                                <div class="btn-list radiobtns">
-                                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                        <input type="radio" class="btn-check" name="btnradio" id="btnradioCount2" checked="">
-                                        <label class="btn btn-outline-dark" for="btnradioCount2">Count</label>
-                                        <input type="radio" class="btn-check" name="btnradio" id="btnradioIgnore2">
-                                        <label class="btn btn-outline-dark" for="btnradioIgnore2">Ignore</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="card-header  border-0">
-                        <h4 class="card-title"><span style="color:rgb(119, 110, 79)">Leave Category</span></h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mb-5">
-                            <div class="col-xl-3 my-auto">
-                                <p class="d-none d-xl-block my-auto"><b class="fs-13 text-muted">Category Name</b></p>
-                            </div>
-                            <div class="col-xl-2 my-auto">
-                                <p class="d-none d-xl-block my-auto"><b class="fs-13 text-muted">Count</b></p>
-                            </div>
-                            <div class="col-xl-3 my-auto">
-                                <p class="d-none d-xl-block my-auto"><b class="fs-13 text-muted">Unused Leave Rule</b></p>
-                            </div>
-                            <div class="col-xl-3 my-auto">
-                                <p class="d-none d-xl-block my-auto"><b class="fs-13 text-muted">Encashment/Carry Forward
-                                        Limited</b></p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-8 col-xl-3">
-                                <input type="text" class="form-control bg-muted" placeholder="eg. Casual Leave">
-                            </div>
-                            <div class="col-4 col-xl-2">
-                                <input type="number" class="form-control bg-muted" placeholder="Count">
-                            </div>
-                            <div class="col-xl-3 mt-4 mt-xl-0">
-                                <div class="form-group">
-                                    <select class="form-control select2" data-placeholder="Leave Rule">
-                                        <option label="Fixed Amount"></option>
-                                        <option>Lapse</option>
-                                        <option>Carry Forward</option>
-                                        <option>Encash</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-8 col-xl-3">
-                                <input type="text" class="form-control bg-muted" placeholder="Days">
-                            </div>
-                            <div class="col-2 col-xl-1">
-                                <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Delete"><i
-                                        class="feather feather-trash-2 text-danger"></i></a>
-                            </div>
-                            <div>
-                                <a href="#" class="btn text-primary my-3"><b>Add More Leave ategory</b></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="card-header  border-0">
-                        <h4 class="card-title"><span style="color:rgb(119, 110, 79)">Leave Approval</span></h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mb-5">
-                            <div class="col-xl-10 my-auto">
-                                <p class="my-auto d-flex">
-                                    <b class="mx-2 manager">Manager</b>
-                                    <b class="mx-2 manager">--------</b>
-                                    <b class="mx-2 hr">HR</b>
-                                    <b class="mx-2 hr">--------</b>
-                                    <b class="mx-2 employer">Employer</b>
-                                    <b class="mx-2 text-success">--------</b>
-                                    <b class="mx-2 text-success">Approval</b>
-                                </p>
-                            </div>
-                            <div class="col-xl-2 my-auto text-end">
-                                <a href="#" class="btn btn-outline-dark btn-sm" data-bs-target="#EditMultilavelApprovalModal" data-bs-toggle="modal"><span>Edit</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            < </div>
         </div>
-    </div>
 
-    <div class=" text-end">
-        <a href="{{ url('settings/businesssetting') }}" class="btn btn-success" id="formsave" data-bs-toggle="tooltip"
-            data-bs-placement="top" title="Save">Apply Changes</a>
-    </div>
+        <div class=" text-end">
+            <a href="{{ url('settings/businesssetting') }}" class="btn btn-success" id="formsave"
+                data-bs-toggle="tooltip" data-bs-placement="top" title="Save">Apply Changes</a>
+        </div>
 
-    {{-- Set Multilavel Approval Modal --}}
-    <div class="modal fade" id="SetMultilavelApprovalModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content modal-content-demo">
-                <div class="modal-body border-0">
-                    <div class="card">
-                        <div class="card-header  border-0">
-                            <h6 class="card-title">Set Multilavel Approval</h6>
-                        </div>
-                        <div class="card-body border-0">
-                            <div class="row">
-                                <div class="col-md-12 col-xl-12">
-                                    <div class="form-group">
-                                        <label class="form-label">Choose Type of Approval:</label>
-                                        <select name="attendance" class="form-control custom-select select2"
-                                            data-placeholder="Type of Approval" id='lavelofapproval'>
-                                            <option label="Select Employee"></option>
-                                            <option value="1">Lavel One</option>
-                                            <option value="2">Lavel Two</option>
-                                            <option value="3">Lavel Three</option>
-                                        </select>
+        {{-- Set Multilavel Approval Modal --}}
+        <div class="modal fade" id="SetMultilavelApprovalModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content modal-content-demo">
+                    <div class="modal-body border-0 ">
+                        <div class="card">
+                            <div class="card-header  border-0">
+                                <h6 class="card-title">Set Multilavel Approval</h6>
+                            </div>
+                            <div class="card-body border-0">
+                                <div class="row">
+                                    <div class="col-md-12 col-xl-12">
+                                        <div class="form-group">
+                                            <label class="form-label">Choose Type of Approval:</label>
+                                            <select name="attendance" class="form-control custom-select select2"
+                                                data-placeholder="Type of Approval" id='lavelofapproval'>
+                                                <option label="Select Employee"></option>
+                                                <option value="1">Lavel One</option>
+                                                <option value="2">Lavel Two</option>
+                                                <option value="3">Lavel Three</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-12 col-xl-12">
-                                    <div class="row">
-                                        <div class="col-sm-11 col-md-11 col-xl-11 ms-auto">
-                                            <div class="form-group d-none" id="firstlavel">
-                                                <label class="form-label fs-12" style="color: rgb(173, 139, 144);">First Approved By:</label>
-                                                <select name="attendance" class="form-control custom-select select2 d-none"
-                                                    data-placeholder="Select Employee" >
-                                                    <option label="Select Employee"></option>
-                                                    <option value="1">Employer</option>
-                                                    <option value="2">Manager</option>
-                                                    <option value="3">HR</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group d-none" id="secondlavel">
-                                                <label class="form-label fs-12" style="color: rgb(173, 139, 144);">Second Approved By:</label>
-                                                <select name="attendance" class="form-control custom-select select2 d-none"
-                                                    data-placeholder="Select Employee">
-                                                    <option label="Select Employee"></option>
-                                                    <option value="1">Employer</option>
-                                                    <option value="2">Manager</option>
-                                                    <option value="3">HR</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group d-none" id="thirdlavel">
-                                                <label class="form-label fs-12" style="color: rgb(173, 139, 144);">Final Approved By:</label>
-                                                <select name="attendance" class="form-control custom-select select2 d-none"
-                                                    data-placeholder="Select Employee" >
-                                                    <option label="Select Employee"></option>
-                                                    <option value="1">Employer</option>
-                                                    <option value="2">Manager</option>
-                                                    <option value="3">HR</option>
-                                                </select>
+                                    <div class="col-md-12 col-xl-12">
+                                        <div class="row">
+                                            <div class="col-sm-11 col-md-11 col-xl-11 ms-auto">
+                                                <div class="form-group d-none" id="firstlavel">
+                                                    <label class="form-label fs-12"
+                                                        style="color: rgb(173, 139, 144);">First
+                                                        Approved By:</label>
+                                                    <select name="attendance"
+                                                        class="form-control custom-select select2 d-none"
+                                                        data-placeholder="Select Employee">
+                                                        <option label="Select Employee"></option>
+                                                        <option value="1">Employer</option>
+                                                        <option value="2">Manager</option>
+                                                        <option value="3">HR</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group d-none" id="secondlavel">
+                                                    <label class="form-label fs-12"
+                                                        style="color: rgb(173, 139, 144);">Second
+                                                        Approved By:</label>
+                                                    <select name="attendance"
+                                                        class="form-control custom-select select2 d-none"
+                                                        data-placeholder="Select Employee">
+                                                        <option label="Select Employee"></option>
+                                                        <option value="1">Employer</option>
+                                                        <option value="2">Manager</option>
+                                                        <option value="3">HR</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group d-none" id="thirdlavel">
+                                                    <label class="form-label fs-12"
+                                                        style="color: rgb(173, 139, 144);">Final
+                                                        Approved By:</label>
+                                                    <select name="attendance"
+                                                        class="form-control custom-select select2 d-none"
+                                                        data-placeholder="Select Employee">
+                                                        <option label="Select Employee"></option>
+                                                        <option value="1">Employer</option>
+                                                        <option value="2">Manager</option>
+                                                        <option value="3">HR</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -600,69 +492,78 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer border-0">
-                    <button class="btn btn-primary">Save changes</button> <button class="btn btn-light"
-                        data-bs-dismiss="modal">Close</button>
+                    <div class="modal-footer border-0">
+                        <button class="btn btn-primary">Save changes</button> <button class="btn btn-light"
+                            data-bs-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    {{-- Edit Multilavel Approval Modal --}}
-    <div class="modal fade" id="EditMultilavelApprovalModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content modal-content-demo">
-                <div class="modal-body border-0">
-                    <div class="card">
-                        <div class="card-header  border-0">
-                            <h6 class="card-title">Edit Multilavel Approval</h6>
-                        </div>
-                        <div class="card-body border-0">
-                            <div class="row">
-                                <div class="col-md-12 col-xl-12">
-                                    <div class="form-group">
-                                        <label class="form-label">Choose Type of Approval:</label>
-                                        <select name="attendance" class="form-control custom-select select2"
-                                            data-placeholder="Type of Approval" id='Editlavelofapproval'>
-                                            <option label="Select Employee"></option>
-                                            <option value="1">Lavel One</option>
-                                            <option value="2">Lavel Two</option>
-                                            <option value="3">Lavel Three</option>
-                                        </select>
+        {{-- Edit Multilavel Approval Modal --}}
+        <div class="modal fade" id="EditMultilavelApprovalModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content modal-content-demo">
+                    <div class="modal-body border-0">
+                        <div class="card">
+                            <div class="card-header  border-0">
+                                <h6 class="card-title">Edit Multilavel Approval</h6>
+                            </div>
+                            <div class="card-body border-0">
+                                <div class="row">
+                                    <div class="col-md-12 col-xl-12">
+                                        <div class="form-group">
+                                            <label class="form-label">Choose Type of Approval:</label>
+                                            <select name="attendance" class="form-control custom-select select2"
+                                                data-placeholder="Type of Approval" id='Editlavelofapproval'>
+                                                <option label="Select Employee"></option>
+                                                <option value="1">Lavel One</option>
+                                                <option value="2">Lavel Two</option>
+                                                <option value="3">Lavel Three</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-12 col-xl-12">
-                                    <div class="row">
-                                        <div class="col-sm-11 col-md-11 col-xl-11 ms-auto">
-                                            <div class="form-group d-none" id="Editfirstlavel">
-                                                <label class="form-label fs-12" style="color: rgb(173, 139, 144);">First Approved By:</label>
-                                                <select name="attendance" class="form-control custom-select select2 d-none"
-                                                    data-placeholder="Select Employee" >
-                                                    <option label="Select Employee"></option>
-                                                    <option value="1">Employer</option>
-                                                    <option value="2">Manager</option>
-                                                    <option value="3">HR</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group d-none" id="Editsecondlavel">
-                                                <label class="form-label fs-12" style="color: rgb(173, 139, 144);">Second Approved By:</label>
-                                                <select name="attendance" class="form-control custom-select select2 d-none"
-                                                    data-placeholder="Select Employee">
-                                                    <option label="Select Employee"></option>
-                                                    <option value="1">Employer</option>
-                                                    <option value="2">Manager</option>
-                                                    <option value="3">HR</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group d-none" id="Editthirdlavel">
-                                                <label class="form-label fs-12" style="color: rgb(173, 139, 144);">Final Approved By:</label>
-                                                <select name="attendance" class="form-control custom-select select2 d-none"
-                                                    data-placeholder="Select Employee" >
-                                                    <option label="Select Employee"></option>
-                                                    <option value="1">Employer</option>
-                                                    <option value="2">Manager</option>
-                                                    <option value="3">HR</option>
-                                                </select>
+                                    <div class="col-md-12 col-xl-12">
+                                        <div class="row">
+                                            <div class="col-sm-11 col-md-11 col-xl-11 ms-auto">
+                                                <div class="form-group d-none" id="Editfirstlavel">
+                                                    <label class="form-label fs-12"
+                                                        style="color: rgb(173, 139, 144);">First
+                                                        Approved By:</label>
+                                                    <select name="attendance"
+                                                        class="form-control custom-select select2 d-none"
+                                                        data-placeholder="Select Employee">
+                                                        <option label="Select Employee"></option>
+                                                        <option value="1">Employer</option>
+                                                        <option value="2">Manager</option>
+                                                        <option value="3">HR</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group d-none" id="Editsecondlavel">
+                                                    <label class="form-label fs-12"
+                                                        style="color: rgb(173, 139, 144);">Second
+                                                        Approved By:</label>
+                                                    <select name="attendance"
+                                                        class="form-control custom-select select2 d-none"
+                                                        data-placeholder="Select Employee">
+                                                        <option label="Select Employee"></option>
+                                                        <option value="1">Employer</option>
+                                                        <option value="2">Manager</option>
+                                                        <option value="3">HR</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group d-none" id="Editthirdlavel">
+                                                    <label class="form-label fs-12"
+                                                        style="color: rgb(173, 139, 144);">Final
+                                                        Approved By:</label>
+                                                    <select name="attendance"
+                                                        class="form-control custom-select select2 d-none"
+                                                        data-placeholder="Select Employee">
+                                                        <option label="Select Employee"></option>
+                                                        <option value="1">Employer</option>
+                                                        <option value="2">Manager</option>
+                                                        <option value="3">HR</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -670,12 +571,23 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer border-0">
-                    <button class="btn btn-primary">Save changes</button> <button class="btn btn-light"
-                        data-bs-dismiss="modal">Close</button>
+                    <div class="modal-footer border-0">
+                        <button class="btn btn-primary">Save changes</button> <button class="btn btn-light"
+                            data-bs-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-@endsection
+
+
+        <script>
+            function addMore() {
+                $('#dynamictable').append(
+                    ' <div class="col-xl-3 pt-3"> <label for="inputCity" class="form-label">Category Name</label> <input type="text" class="form-control" id="inputCity" placeholder="Category Name"> </div> <div class="col-xl-2 pt-3"> <label for="inputCity" class="form-label">Days</label> <input type="number" class="form-control bg-muted" placeholder="Count"> </div> <div class="col-xl-2 pt-3"> <label for="inputState" class="form-label">Unused Leave Rule</label> <select class="form-control select2" data-placeholder="Leave Rule"> <option label="Leave Rule"></option> <option>Lapse</option> <option>Carry Forward</option> <option>Encash</option> </select> </div> <div class="col-xl-2 pt-3"> <label for="inputCity" class="form-label">Carry Forward Limit</label> <input type="text" class="form-control" id="inputCity" placeholder="Days"> </div> <div class="col-xl-2 pt-3"> <label for="inputState" class="form-label">Applicable To</label> <select class="form-control select2" data-placeholder="Applicable To"> <option label="Applicable To"></option> <option>All</option> <option>Male</option> <option>Female</option> </select> </div> <div class="col-xl-1  text-end"  style="padding-top:45px;"> <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i class="feather feather-trash danger text-danger"></i></a>  '
+                );
+            }
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    @endsection

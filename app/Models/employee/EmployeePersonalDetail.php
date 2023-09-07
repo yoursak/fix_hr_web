@@ -24,8 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $emp_mobile_number
  * @property string|null $emp_email
  * @property int|null $emp_branch
- * @property int|null $emp_department
- * @property int|null $emp_designation
+ * @property int|null $department_id
+ * @property int|null $designation_id
  * @property Carbon|null $emp_date_of_birth
  * @property Carbon|null $emp_date_of_joining
  * @property int|null $emp_gender
@@ -47,8 +47,8 @@ class EmployeePersonalDetail extends Model
 	protected $casts = [
 		'employee_type' => 'int',
 		'emp_branch' => 'int',
-		'emp_department' => 'int',
-		'emp_designation' => 'int',
+		'department_id' => 'int',
+		'designation_id' => 'int',
 		'emp_date_of_birth' => 'datetime',
 		'emp_date_of_joining' => 'datetime',
 		'emp_gender' => 'int'
@@ -63,8 +63,8 @@ class EmployeePersonalDetail extends Model
 		'emp_mobile_number',
 		'emp_email',
 		'emp_branch',
-		'emp_department',
-		'emp_designation',
+		'department_id',
+		'designation_id',
 		'emp_date_of_birth',
 		'emp_date_of_joining',
 		'emp_gender',

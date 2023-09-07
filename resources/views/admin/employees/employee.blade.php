@@ -231,8 +231,8 @@
                                                 </div>
                                             </td>
                                             <td>{{ $item->emp_id }}</td>
-                                            <td>{{ $item->desig_name }}</td>
-                                            <td>{{ $item->depart_name }}</td>
+                                            <td>{{ $item->designation_id }}</td>
+                                            <td>{{ $item->department_id }}</td>
                                             <td>{{ $item->emp_date_of_joining }}</td>
                                             <td>{{ $item->emp_mobile_number }}</td>
                                             <td>
@@ -403,7 +403,8 @@
                                                         </div>
                                                         <div class="col-md-8">
                                                             <label class="form-label mb-0 mt-2">Address Line 1</label>
-                                                            <input type="text" class="form-control" placeholder="Address" name="address">
+                                                            <input type="text" class="form-control"
+                                                                placeholder="Address" name="address">
                                                         </div>
                                                         <div class="col-md-4">
                                                             <label class="form-label mb-0 mt-2">Pin Code</label>
@@ -446,8 +447,8 @@
                                                         <div class="col-md-4">
                                                             <label class="form-label mb-0 mt-2">Department</label>
                                                             <select class="form-select" aria-label="Type"
-                                                            name="department" required>
-                                                            <label class="form-label mb-0 mt-2">Department</label>
+                                                                name="department" required>
+                                                                <label class="form-label mb-0 mt-2">Department</label>
                                                                 @foreach ($Department as $depart)
                                                                     <option value="{{ $depart->depart_id }}">
                                                                         {{ $depart->depart_name }}</option>
@@ -475,7 +476,8 @@
                                                 <div class="form-group mt-7">
                                                     <div class="row">
                                                         <div class="col-md-9">
-                                                            <label class="form-label">Manual Attendance with Location, FaceId And QR Code:</label>
+                                                            <label class="form-label">Manual Attendance with Location,
+                                                                FaceId And QR Code:</label>
                                                         </div>
                                                         <div class="col-md-3">
                                                             <label class="custom-switch">
@@ -520,7 +522,6 @@
 
     </div>
     {{-- add employee --}}
-
 
     {{-- add regular employee --}}
     <div class="modal fade" id="addempmodal" data-bs-backdrop="static">
@@ -653,7 +654,8 @@
                                                         </div>
                                                         <div class="col-md-8">
                                                             <label class="form-label mb-0 mt-2">Address Line 1</label>
-                                                            <input type="text" class="form-control" placeholder="Address" name="address">
+                                                            <input type="text" class="form-control"
+                                                                placeholder="Address" name="address">
                                                         </div>
                                                         <div class="col-md-4">
                                                             <label class="form-label mb-0 mt-2">Pin Code</label>
@@ -696,8 +698,8 @@
                                                         <div class="col-md-4">
                                                             <label class="form-label mb-0 mt-2">Department</label>
                                                             <select class="form-select" aria-label="Type"
-                                                            name="department" required>
-                                                            <label class="form-label mb-0 mt-2">Department</label>
+                                                                name="department" required>
+                                                                <label class="form-label mb-0 mt-2">Department</label>
                                                                 @foreach ($Department as $depart)
                                                                     <option value="{{ $depart->depart_id }}">
                                                                         {{ $depart->depart_name }}</option>
@@ -725,7 +727,8 @@
                                                 <div class="form-group mt-7">
                                                     <div class="row">
                                                         <div class="col-md-9">
-                                                            <label class="form-label">Manual Attendance with Location, FaceId And QR Code:</label>
+                                                            <label class="form-label">Manual Attendance with Location,
+                                                                FaceId And QR Code:</label>
                                                         </div>
                                                         <div class="col-md-3">
                                                             <label class="custom-switch">
@@ -981,16 +984,16 @@
                                                     </div>
                                                     <div class="form-group ">
 
-                                                            <div class="row">
-                                                                <div class="col-md-3">
-                                                                    <label class="form-label mb-0 mt-2">Country</label>
-                                                                </div>
-                                                                <div class="col-md-9">
-                                                                    <input type="text" class="form-control"
-                                                                        placeholder="Country"
-                                                                        value="{{ $emp->emp_country }}" name="country">
-                                                                </div>
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <label class="form-label mb-0 mt-2">Country</label>
                                                             </div>
+                                                            <div class="col-md-9">
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="Country" value="{{ $emp->emp_country }}"
+                                                                    name="country">
+                                                            </div>
+                                                        </div>
 
                                                     </div>
                                                     <div class="form-group ">
@@ -1000,8 +1003,8 @@
                                                             </div>
                                                             <div class="col-md-9">
                                                                 <input type="text" class="form-control"
-                                                                    placeholder="State"
-                                                                    value="{{ $emp->emp_state }}" name="state">
+                                                                    placeholder="State" value="{{ $emp->emp_state }}"
+                                                                    name="state">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1012,8 +1015,8 @@
                                                             </div>
                                                             <div class="col-md-9">
                                                                 <input type="text" class="form-control"
-                                                                    placeholder="City"
-                                                                    value="{{ $emp->emp_city }}" name="city">
+                                                                    placeholder="City" value="{{ $emp->emp_city }}"
+                                                                    name="city">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1057,8 +1060,8 @@
                                                             </div>
                                                             <div class="col-md-9">
                                                                 <input name="emp_id" type="text" class="form-control"
-                                                                    value="{{ $emp->emp_id }}"
-                                                                    placeholder="Employee ID" disable>
+                                                                    value="{{ $emp->emp_id }}" placeholder="Employee ID"
+                                                                    disable>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1071,7 +1074,8 @@
                                                                 <select class="form-select" aria-label="Type"
                                                                     name="branch">
                                                                     @foreach ($Branch as $branch)
-                                                                        <option value="{{ $branch->branch_id }}" selected>{{ $branch->branch_name }}</option>
+                                                                        <option value="{{ $branch->branch_id }}" selected>
+                                                                            {{ $branch->branch_name }}</option>
                                                                     @endforeach
                                                                 </select>
                                                                 {{-- @dd($branch); --}}
@@ -1103,7 +1107,8 @@
                                                                 <select class="form-select" aria-label="Type"
                                                                     name="designation">
                                                                     @foreach ($Designation as $designation)
-                                                                        <option value="{{ $designation->desig_id }}" selected>
+                                                                        <option value="{{ $designation->desig_id }}"
+                                                                            selected>
                                                                             {{ $designation->desig_name }}</option>
                                                                     @endforeach
                                                                 </select>
@@ -1209,9 +1214,9 @@
                             </div>
                             <div class="d-flex justify-content-center">
                                 <a class="btn btn-outline-primary btn-sm my-2 border-0" data-bs-toggle="modal"
-                                data-bs-target="#addempmodal"><b><i class="fa fa-user me-1"></i>Add Employee</b></a>
-                            <a class="btn btn-outline-primary btn-sm my-2 border-0" data-bs-toggle="modal"
-                                data-bs-target="#"><b><i class="fa fa-file-excel-o me-1"></i>Upload Bulk</b></a>
+                                    data-bs-target="#addempmodal"><b><i class="fa fa-user me-1"></i>Add Employee</b></a>
+                                <a class="btn btn-outline-primary btn-sm my-2 border-0" data-bs-toggle="modal"
+                                    data-bs-target="#"><b><i class="fa fa-file-excel-o me-1"></i>Upload Bulk</b></a>
                             </div>
                         </div>
                         <div class="col-xl-6 text-center p-3">
@@ -1220,9 +1225,9 @@
                             </div>
                             <div class="d-flex justify-content-center">
                                 <a class="btn btn-outline-primary my-2 border-0 btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#empmodal"><b><i class="fa fa-user me-1"></i>Add Employee</b></a>
-                            <a class="btn btn-outline-primary my-2 border-0 btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#"><b><i class="fa fa-file-excel-o me-1"></i>Upload Bulk</b></a>
+                                    data-bs-target="#empmodal"><b><i class="fa fa-user me-1"></i>Add Employee</b></a>
+                                <a class="btn btn-outline-primary my-2 border-0 btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#"><b><i class="fa fa-file-excel-o me-1"></i>Upload Bulk</b></a>
                             </div>
                         </div>
                     </div>

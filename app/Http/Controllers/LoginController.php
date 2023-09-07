@@ -23,29 +23,47 @@ class LoginController extends BaseController
     {
         $request->session()->put('email', $request->email);
         $User = LoginAdmin::where('email', $request->email)->first();
+        $first_login = DB::table('pending_admins')->where('emp_email', $request->email)->first();
         $otp = rand(100000, 999999);
-        $details = [
-            'name' => $User->name,
-            'title' => 'OTP Genrated',
-            'body' => ' Your FixHR Admin Login one time PIN is: ' . "$otp",
-        ];
-        $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
-
-        if (isset($sendMail)) {
-            $User->update(['otp' => $otp]);
+        if(isset($User)){
+            $details = [
+                'name' => $User->name,
+                'title' => 'OTP Genrated',
+                'body' => ' Your FixHR Admin Login one time PIN is: ' . "$otp",
+            ];
+            $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
+    
+            if (isset($sendMail)) {
+                $User->update(['otp' => $otp]);
+            }
+            return view('auth.admin.otp');
         }
-        return view('auth.admin.otp');
+         if (isset($first_login)) {
+            $details = [
+                'name' => $first_login->emp_name,
+                'title' => 'OTP Genrated',
+                'body' => ' Your FixHR Admin Login one time PIN is: ' . "$otp",
+            ];
+            $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
+    
+            if (isset($sendMail)) {
+                $first = DB::table('pending_admins')->where('emp_email', $request->email)->update(['otp' => $otp]);
+                // dd($otp);
+            }
+            return view('auth.admin.otp');
+        }
     }
 
     public function submit(Request $request)
     {
         $email = Session::get('email');
         $otp = $request->otp;
-        echo $email . $otp;
+        // echo $email . $otp;
 
         if (isset($email) && isset($otp)) {
 
             $check_otp = DB::table('login_admin')->where('email', $email)->where('otp', $otp)->first();
+            $check_otp_for_first = DB::table('pending_admins')->where('emp_email', $email)->where('otp', $otp)->first();
             if (isset($check_otp)) {
 
                 // Session::put('business_id', $check_otp->business_id);
@@ -55,6 +73,14 @@ class LoginController extends BaseController
                 $request->session()->put('login_email', $check_otp->email);
 
                 return redirect('/');
+            }elseif (isset($check_otp_for_first)) {
+                $request->session()->put('business_id', $check_otp_for_first->business_id);
+                $request->session()->put('login_role', 'admin');
+                $request->session()->put('login_name', $check_otp_for_first->emp_name);
+                $request->session()->put('login_email', $check_otp_for_first->emp_email);
+                $request->session()->put('login_phone', $check_otp_for_first->emp_phone);
+
+                return redirect()->route('make.admin');
             }else{
                 return back();
             }

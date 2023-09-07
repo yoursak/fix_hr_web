@@ -853,6 +853,10 @@
         $('#PunchOut').addClass(effect);
         $('#salarySlip').addClass(effect);
         $('#LogoutModal').addClass(effect);
+        $('#empRole').addClass(effect);
+        $('#empPermission').addClass(effect);
+        $('#asignAdmin').addClass(effect);
+        $('#addNewAdmin').addClass(effect);
     }); // hide modal with effect
 
     $('#modaldemo8').on('hidden.bs.modal', function(e) {
