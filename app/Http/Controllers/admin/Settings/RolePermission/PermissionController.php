@@ -11,7 +11,7 @@ class PermissionController extends Controller
 {
     public function store(Request $request)
     {
-        // dd($request->all());
+        // dd(data);
         $permission = new Permission();
         $permission->name = $request->Permission;
         $permission->description = $request->Description;

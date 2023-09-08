@@ -12,12 +12,15 @@ use RealRashid\SweetAlert\Facades\Alert;
 class RolePermissionController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
+        $params_data = $request->data;
+        // dd($params_data);
         $Admins = DB::table('login_admin')->get();
         $roles = DB::table('roles')->get();
         $permissions = DB::table('permissions')->get();
-        return view('admin.setting.permissions.Permissions', compact('roles', 'permissions', 'Admins'));
+        $RoleDetails = DB::table('model_has_roles')->where('model_id', $params_data)->first();
+        return view('admin.setting.permissions.Permissions', compact('roles', 'permissions', 'Admins','RoleDetails'));
     }
 
     public function AdminList()
@@ -25,9 +28,10 @@ class RolePermissionController extends Controller
         $admins = DB::table('login_admin')->get();
         $roles = DB::table('roles')->get();
         $pendings = DB::table('pending_admins')->get();
+        $permissions = DB::table('permissions')->get();
         $modelHasRole = DB::table('model_has_roles')->get();
         // dd($roles);
-        return view('admin.setting.permissions.AdminList', compact('admins', 'roles', 'pendings','modelHasRole'));
+        return view('admin.setting.permissions.AdminList', compact('admins', 'roles', 'pendings','modelHasRole','permissions'));
     }
 
 
@@ -38,7 +42,6 @@ class RolePermissionController extends Controller
             'emp_id' => $request->employee,
             // 'business_id'=>$request->session()->get('business_id')
         ])->first();
-        // dd($is_Admin);
         if (isset($is_Emp)) {
             $pending_admin = DB::table('pending_admins')->insert([
                 'emp_id' => $is_Emp->emp_id,
@@ -93,9 +96,44 @@ class RolePermissionController extends Controller
     }
 
 
-    public function assignPermissionToRole(Request $request)
+    public function assignPermissionToModel(Request $request)
     {
+        $employee = DB::table('employee_personal_details')->where('emp_email',$request->model)->first();
+        $RoleDetails = DB::table('model_has_roles')->where('model_id', $employee->emp_id)->first();
+
+        foreach ($request->permissions as $permission) {
+            $permit_id = DB::table('permissions')->where('id', $permission)->first();
+            // dd($permit_id->module_id);
+            $assignPermision = DB::table('model_has_permissions')->insert([
+                'business_id'=> $request->session()->get('business_id'),
+                'branch_id'=> $RoleDetails->branch_id,
+                'role_id'=> $RoleDetails->role_id,
+                'permission_id'=> $permission,
+                'module_id'=>$permit_id->module_id,
+                'model_type'=> $RoleDetails->model_type,
+                'model_id'=> $RoleDetails->model_id,
+            ]);
+        }
+        if (isset($assignPermision)) {
+            Alert::success('Congratulations', 'Permissions Assigned Successfully');
+        }else{
+            Alert::error('Failed','Fail to assign permissions');
+        }
+        return redirect('/Role-permission/allot-permission');
     }
+
+
+    public function getPermissions(Request $request){
+        if ($request->ajax()) {
+            $admin_mail = $request->valueq;
+            // $employee = DB::table('employee_personal_details')->where('emp_email',$admin_mail)->first();
+            // $modelHasRole = DB::table('model_has_roles')->where('model_id',$employee->emp_id)->first();
+
+            return response()->json(admin_mail);
+        }
+    }
+
+
     public function assignRoleToModel(Request $request)
     {
         // dd($request->all());

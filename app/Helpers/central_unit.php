@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Models\admin\SidebarMenu;
 use App\Models\admin\BranchList;
 use App\Models\Permissions\Role;
+use App\Models\Permissions\ModelHasPermission;
 use App\Models\admin\Department_list;
 use App\Models\admin\Designation_list;
 use App\Models\employee\Employee_Details;
@@ -72,6 +73,12 @@ class Central_unit
    static function GetRoles(){
       $Roles = Role::select('*')->get();
       return $Roles;
+  }
+
+  static function GetModelPermission(){
+   $ModelPermission = DB::table('model_has_permissions')->where('model_id',Session::get('login_emp_id'))->get();
+
+   return $ModelPermission;
   }
 }
 

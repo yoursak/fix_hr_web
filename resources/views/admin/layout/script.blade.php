@@ -859,6 +859,18 @@
         $('#addNewAdmin').addClass(effect);
     }); // hide modal with effect
 
+
+    // geting permission data 
+    $(document).ready(function(){
+        $('#selectAdmin').change(function () { 
+            alert("sdfsdf");
+            // e.preventDefault();
+            // alert($(this).val());
+        });
+    });
+
+
+
     $('#modaldemo8').on('hidden.bs.modal', function(e) {
         $(this).removeClass(function(index, className) {
             return (className.match(/(^|\s)effect-\S+/g) || []).join(' ');

@@ -14,6 +14,7 @@ use App\Http\Controllers\admin\Settings\BusinessController;
 use App\Http\Controllers\admin\Settings\RolePermission\RolePermissionController;
 use App\Http\Controllers\admin\Settings\RolePermission\RoleController;
 use App\Http\Controllers\admin\Settings\RolePermission\PermissionController;
+use App\Http\Controllers\admin\Settings\LeavePolicyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,12 +79,14 @@ Route::middleware(['email_verified'])->group(function () {
         });
 
         Route::controller(RolePermissionController::class)->group(function () {
-            Route::get('/allot-permission{data}','index')->name('rolePermission');
+            // Route::get('/allot-permission/{data}','index')->name('rolePermission');
+            Route::get('/allot-permission','index')->name('rolePermission');
             Route::get('/admin-list','AdminList');
             Route::post('/add-admin','addAdmin')->name('add.admin');
             Route::any('/make-admin','makeAdmin')->name('make.admin');
-            Route::post('/assign-permission-to-role','assignPermissionToRole')->name('assign.permission');
+            Route::post('/assign-permission-to-role','assignPermissionToModel')->name('assignPermission.Model');
             Route::post('/assign-role-to-model','assignRoleToModel')->name('assign.role');
+            Route::post('/get-permissions','getPermissions')->name('getPermissions');
         });
     });
    
@@ -139,6 +142,10 @@ Route::middleware(['email_verified'])->group(function () {
                 Route::get('/manage_emp', [SettingController::class, 'manageEmpDetails']);
                 Route::get('/manager', [SettingController::class, 'manager']);
                 Route::get('/weekly_holiday', [SettingController::class, 'weeklyHoliday']);
+            });
+
+            Route::prefix('/business')->group(function (){
+                Route::post('/policy_sumbit', [LeavePolicyController::class, 'store'])->name('leave.policy');
             });
 
             Route::prefix('/businessinfo')->group(function () {

@@ -2,15 +2,14 @@
     @php
         $Sidebar = App\Helpers\Layout::SidebarList();
         $SidebarMenu = App\Helpers\Layout::SidebarMenu();
-        // dd($SidebarMenu);
+        
+        
     @endphp
     <aside class="app-sidebar ">
         <div class="app-sidebar__logo">
             <a class="header-brand" href="index.html">
-                <img src="{{ asset('assets/logo/FixHR.png') }}" class="header-brand-img desktop-lgo"
-                    alt="FixingDotslogo">
-                <img src="{{ asset('assets/logo/FixHR.png') }}" class="header-brand-img dark-logo"
-                    alt="FixingDotslogo">
+                <img src="{{ asset('assets/logo/FixHR.png') }}" class="header-brand-img desktop-lgo" alt="FixingDotslogo">
+                <img src="{{ asset('assets/logo/FixHR.png') }}" class="header-brand-img dark-logo" alt="FixingDotslogo">
                 <img src="{{ asset('assets/logo/FixHR.png') }}" class="header-brand-img mobile-logo"
                     alt="FixingDotslogo">
                 <img src="{{ asset('assets/logo/FixHR.png') }}" class="header-brand-img darkmobile-logo"
@@ -25,12 +24,14 @@
                     </svg></div>
                 <ul class="side-menu">
                     <li class="side-item side-item-category mt-4">General</li>
-                    <li class="slide">
-                        <a class="side-menu__item" href="{{ url('/admin') }}">
-                            <i class="feather feather-home sidemenu_icon"></i>
-                            <span class="side-menu__label">Dashboard</span>
-                        </a>
-                    </li>
+                    {{-- @if ($abc != null) --}}
+                        <li class="slide">
+                            <a class="side-menu__item" href="{{ url('/admin') }}">
+                                <i class="feather feather-home sidemenu_icon"></i>
+                                <span class="side-menu__label">Dashboard</span>
+                            </a>
+                        </li>
+                    {{-- @endif --}}
                     <li class="slide">
                         <a class="side-menu__item" href="{{ url('/admin/employee') }}">
                             <i class="feather feather-users sidemenu_icon"></i>
@@ -71,10 +72,13 @@
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                             <i class="feather feather-file-text sidemenu_icon"></i>
-                            <span class="side-menu__label">Role & Permission</span><i class="angle fa fa-angle-right"></i></a>
+                            <span class="side-menu__label">Role & Permission</span><i
+                                class="angle fa fa-angle-right"></i></a>
                         <ul class="slide-menu" style="background-color:  #1034A6; border-radius:7px;">
-                            <li><a href="{{ url('/Role-permission/allot-permission') }}" class="slide-item"> Role & Permission List </a></li>
-                            <li><a href="{{ url('/Role-permission/admin-list') }}" class="slide-item"> Admin List </a></li>
+                            <li><a href="{{ url('/Role-permission/allot-permission') }}" class="slide-item"> Role &
+                                    Permission List </a></li>
+                            <li><a href="{{ url('/Role-permission/admin-list') }}" class="slide-item"> Admin List </a>
+                            </li>
                         </ul>
                     </li>
                     <li class="slide">
@@ -82,17 +86,22 @@
                             <i class="feather feather-settings sidemenu_icon"></i>
                             <span class="side-menu__label">Settings</span><i class="angle fa fa-angle-right"></i></a>
                         <ul class="slide-menu" style="background-color:  #1034A6; border-radius:7px;">
-                            <li class="side-menu-label1"><a href="{{ url('settings/attendancesetting') }}">Attendance Setting</a></li>
-                            <li><a href="{{ url('admin/settings/attendance') }}" class="slide-item"> Attendance Setting </a></li>
-                            <li><a href="{{ url('admin/settings/business') }}" class="slide-item"> Business Setting</a></li>
+                            <li class="side-menu-label1"><a href="{{ url('settings/attendancesetting') }}">Attendance
+                                    Setting</a></li>
+                            <li><a href="{{ url('admin/settings/attendance') }}" class="slide-item"> Attendance Setting
+                                </a></li>
+                            <li><a href="{{ url('admin/settings/business') }}" class="slide-item"> Business Setting</a>
+                            </li>
                             <li><a href="{{ url('admin/settings/account') }}" class="slide-item"> Account Setting </a>
                             </li>
-                            <li><a href="{{ url('admin/settings/roles-and-permissions') }}" class="slide-item"> Role & Permissions </a>
+                            <li><a href="{{ url('admin/settings/roles-and-permissions') }}" class="slide-item"> Role
+                                    & Permissions </a>
                             </li>
                         </ul>
                     </li>
                     <li class="slide">
-                        <a class="side-menu__item" href="" data-bs-toggle="modal" data-bs-target="#LogoutModal">
+                        <a class="side-menu__item" href="" data-bs-toggle="modal"
+                            data-bs-target="#LogoutModal">
                             <i class="fe fe-log-out sidemenu_icon"></i>
                             <span class="side-menu__label">Log Out</span>
                         </a>
@@ -108,7 +117,7 @@
                             </a>
                             <ul class="slide-menu" style="background-color:  #1034A6; border-radius:7px;">
                                 <li class="side-menu-label1"><a href="{{ url('/admin/leave') }}">Leave</a></li>
-                                @foreach ($SidebarMenu->where('sidebar_id',$item->bar_id) as $menu)
+                                @foreach ($SidebarMenu->where('sidebar_id', $item->bar_id) as $menu)
                                 <li><a href="{{ url($menu->menu_link) }}" class="slide-item"> {{$menu->menu_name}} </a></li>
                                 @endforeach
                             </ul>
@@ -144,8 +153,8 @@
                 <i class="fe fe-alert-triangle fs-50"></i>
                 <h4 class="text-primary fs-20 font-weight-semibold mt-2">Logout Alert</h4>
                 <p class="mb-4 mx-4">Are you sure want to log out ???</p>
-                    <a href="{{url('/logout')}}" class="btn btn-danger px-5">Log Out</a>
-                    <a aria-label="Close" class="btn btn-primary px-5 text-white" data-bs-dismiss="modal">StayLogedin</a>
+                <a href="{{ url('/logout') }}" class="btn btn-danger px-5">Log Out</a>
+                <a aria-label="Close" class="btn btn-primary px-5 text-white" data-bs-dismiss="modal">StayLogedin</a>
 
             </div>
         </div>

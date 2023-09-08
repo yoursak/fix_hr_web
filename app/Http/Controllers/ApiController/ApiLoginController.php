@@ -16,8 +16,10 @@ use DateTime;
 use App\Mail\AuthMailer;
 use Illuminate\Support\Facades\Mail;
 use App\Models\admin\LoginAdmin;
+use App\Models\admin\CameraPermissionModel;
 use App\Helpers\ReturnHelpers;
 use App\Http\Resources\Api\AdminLoginResource;
+use App\Http\Resources\Api\CameraPermission;
 use App\Models\employee\EmployeePersonalDetail;
 use App\Http\Resources\Api\EmployeeResource;
 
@@ -38,7 +40,7 @@ class ApiLoginController extends BaseController
 
             $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
 
-            if ($sendMail) {
+            if (true) {
                 $updateset = LoginAdmin::where('email', $request->email)->update([
                     'otp' => $otp,
                     'otp_created_at' => Carbon::now(), // Store the OTP creation time
@@ -79,10 +81,12 @@ class ApiLoginController extends BaseController
                     ]);
                     if (isset($updateAdmin)) {
 
-                        $verifyOtp = [LoginAdmin::where('business_id', $admin->business_id)->first()];
+                        $verifyOtp = LoginAdmin::where('business_id', $admin->business_id)->first();
+                        $cameraMode=CameraPermissionModel::where('business_id',$admin->business_id)->first();
+
                         // return ReturnHelpers::jsonApiReturn($verifyOtp);
                         //  return ReturnHelpers::jsonApiReturn([$verifyOtp,'token_type' =>'Bearer']);
-                        return ReturnHelpers::jsonApiReturn($verifyOtp);
+                        return ReturnHelpers::jsonApiReturn([$verifyOtp,CameraPermission::collection([CameraPermissionModel::find($cameraMode->id)])->all()]);
                     }
 
                     // return $admin;

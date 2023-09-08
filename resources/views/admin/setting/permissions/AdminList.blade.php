@@ -9,7 +9,10 @@
             $Department = App\Helpers\Central_unit::DepartmentList();
             $Employee = App\Helpers\Central_unit::EmployeeDetails();
             $Roles = App\Helpers\Central_unit::GetRoles();
-            // dd($Roles->where('id',3)->first());
+            
+            $Permission = App\Helpers\Central_unit::GetModelPermission();
+            // dd($right->where('permission_id', 74) != null);
+            // dd($Permission->where('permission_id',78)->all()!= null);
         @endphp
         <div class="page-header d-md-flex d-block">
             <div class="page-leftheader">
@@ -103,10 +106,13 @@
                         <div class="col-6 col-xl-3 my-auto">
                             @if (isset($Emp->role_id))
                                 @php
-                                    $Role_id = $Roles->where('id',$Emp->role_id)->first();
+                                    $Role_id = $Roles->where('id', $Emp->role_id)->first();
                                 @endphp
-                                <p class="my-auto " style="color:rgb(34, 33, 29)"><i
-                                        class="fe fe-user mx-2"></i><a href="{{route('rolePermission')}}">{{ $Role_id->name }}</a></p>
+                                <p class="my-auto " style="color:rgb(34, 33, 29)"><i class="fe fe-user mx-2"></i>
+                                    {{-- <a href="{{route('rolePermission',['data'=>$Emp->emp_id])}}"> --}}
+                                    {{ $Role_id->name }}
+                                    {{-- </a> --}}
+                                </p>
                             @else
                                 <a class="modal-effect btn btn-primary btn-sm border-0 my-auto" data-effect="effect-scale"
                                     data-bs-toggle="modal" href="#asignAdmin{{ $admin->id }}">Assign</a>

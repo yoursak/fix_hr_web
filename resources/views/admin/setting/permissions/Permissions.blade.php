@@ -11,8 +11,9 @@
             $Modules = App\Helpers\Layout::SidebarMenu();
             $Department = App\Helpers\Central_unit::DepartmentList();
             $Employee = App\Helpers\Central_unit::EmployeeDetails();
-
-            // dd($Admins);
+            
+            // dd($RoleDetails);
+            
         @endphp
         <div class="page-header d-md-flex d-block">
             <div class="page-leftheader">
@@ -35,9 +36,11 @@
 
     <div class="row">
         <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-3">
+            <form action="{{ route('assignPermission.Model') }}" method="post">
+                @csrf
+                <div class="card-body">
+                    <div class="row">
+                        {{-- <div class="col-3">
                         <div class="form-group my-auto mx-2">
                             <label class="form-label">Branch</label>
                             <select name="branch" class="form-control custom-select select2"
@@ -69,65 +72,93 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-                    <div class="col-xl-3">
-                        <div class="form-group my-auto mx-2">
-                            <label class="form-label">Assign to</label>
-                            <select name="branch" class="form-control custom-select select2"
-                                data-placeholder="Select Branch" required>
-                                @foreach ($Admins as $admin)
-                                    <option value="{{ $admin->email }}">{{ $admin->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xl-3">
-                        <div class="page-header d-md-flex d-block">
-                            <div class="page-leftheader">
-                                <h4>Module Names</h4>
+                    </div> --}}
+                        <div class="col-xl-4">
+                            <div class="form-group my-auto mx-2">
+                                <label class="form-label">Assign to</label>
+                                <select id="selectAdmin" onchange="check(this)" name="model"  class="form-control custom-select select2"
+                                    data-placeholder="Select Branch" required>
+                                    @foreach ($Admins as $admin)
+                                        <option value="{{ $admin->email }}">{{ $admin->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-9">
-                        <div class="page-header d-md-flex d-block">
-                            <div class="page-leftheader">
-                                <h4>Module Permissions</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @foreach ($Modules as $module)
+                    <script>
+                         function check(e) {
+                        var valueq = e.value;
+                                // console.log(valueq);
+                                $.ajax({
+                                    url: "{{ url('Role-permission/get-permissions') }}",
+                                    type: "POST",
+                                    data: {
+                                        valueq: valueq,
+                                        _token: '{{ csrf_token() }}'
+                                    },
+                                    dataType: 'json',
+                                    success: function(result) {
+                                        console.log(result);
+                                    }
+                                });
+                            }
+                    </script>
                     <div class="row">
                         <div class="col-xl-3">
-                            <div>
-                                <label class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" name="example-checkbox1"
-                                        value="option1">
-                                    <span class="custom-control-label">{{ $module->menu_name }}</span>
-                                </label>
+                            <div class="page-header d-md-flex d-block">
+                                <div class="page-leftheader">
+                                    <h4>Module Names</h4>
+                                </div>
                             </div>
                         </div>
                         <div class="col-xl-9">
-                            <div class="d-flex">
-                                <label class="custom-control custom-checkbox mx-3">
-                                    <input type="checkbox" class="custom-control-input" name="example-checkbox1"
-                                        value="option1">
-                                    <span class="custom-control-label">All</span>
-                                </label>
-                                @foreach ($permissions->where('module_id', $module->menu_id) as $permission)
-                                    <label class="custom-control custom-checkbox mx-3 fw-20">
-                                        <input type="checkbox" class="custom-control-input" name="example-checkbox1"
-                                            value="option1">
-                                        <span class="custom-control-label">{{ $permission->name }}</span>
-                                    </label>
-                                @endforeach
+                            <div class="page-header d-md-flex d-block">
+                                <div class="page-leftheader">
+                                    <h4>Module Permissions</h4>
+                                </div>
                             </div>
                         </div>
                     </div>
-                @endforeach
-            </div>
+                    @foreach ($Modules as $module)
+                        <div class="row">
+                            <div class="col-xl-3">
+                                <div>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input">
+                                        <span class="custom-control-label">{{ $module->menu_name }}</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-xl-9">
+                                <div class="d-flex">
+                                    <label class="custom-control custom-checkbox mx-3">
+                                        <input type="checkbox" class="custom-control-input">
+                                        <span class="custom-control-label">All</span>
+                                    </label>
+                                    @foreach ($permissions->where('module_id', $module->menu_id) as $permission)
+                                        <label class="custom-control custom-checkbox mx-3 fw-20">
+                                            <input type="checkbox" class="custom-control-input allow"
+                                                name="permissions[]" value="{{ $permission->id }}">
+                                            <span class="custom-control-label">{{ $permission->name }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="page-header d-md-flex d-block">
+                    <div class="page-rightheader ms-auto">
+                        <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
+                            <div class="d-lg-flex d-block">
+                                <div class="btn-list">
+                                    <button type="submit" class="btn btn-primary my-auto">Save & Continoue</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
     <!-- END ROW -->
