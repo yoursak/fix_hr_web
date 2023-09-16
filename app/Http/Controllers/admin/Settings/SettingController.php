@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\admin\BranchList;
+use App\Models\admin\LoginAdmin;
 use App\Models\admin\DepartmentList;
 use App\Models\admin\DesignationList;
 use Session;
@@ -23,9 +24,74 @@ class SettingController extends Controller
     // account setting 
     public function account()
     {
-        $accDetail = DB::table('login_admin')->where('business_id', Session::get('business_id'))->first();
+        $accDetail = DB::table('business_details_list')->where('business_id', Session::get('business_id'))->first();
         return view('admin.setting.account.account', compact('accDetail'));
     }
+
+
+    // sbussinesstype.update
+    public function semailupdate(Request $request)
+    {
+        // dd($request->all());
+        $branch = DB::table('business_details_list')->where('id', $request->editBranchId)->where('business_id', Session::get('business_id'))->update(['client_name' => $request->name]);
+        // return $branch;
+        return back();   
+    }
+
+    public function saddressupdate(Request $request)
+    {
+        // dd($request->all());
+        $branch = DB::table('business_details_list')->where('id', $request->editBranchId)->where('business_id', Session::get('business_id'))->update([
+        'business_address' => $request->address,
+         'country' => $request->country,
+         'state' => $request->state, 
+         'city' => $request->city, 
+         'pin_code' => $request->pincode
+       ]);
+        // $branch = DB::table('business_details_list')->where('id', $request->editBranchId)->where('business_id', Session::get('business_id'))->update(['business_address' = $request->address, 'country' = $request->country , 'state' = $request->state , 'city' = $request->city , 'pincode' = $request->pincode]);
+        // $branch->business_address = $request->address;
+        // $branch->country = $request->country;
+        // $branch->state = $request->state;
+        // $branch->city = $request->city;
+        // $branch->pincode = $request->pincode;
+        // $branch->update();
+
+        // return $branch;
+        return back();   
+    }
+
+    public function sbtypeupdate(Request $request)
+    {
+        // dd($request->all());
+        $branch = DB::table('business_details_list')->where('id', $request->editBranchId)->where('business_id', Session::get('business_id'))->update(['business_type'=>$request->select]);
+        // return $branch;
+        return back();   
+    }
+
+    public function sbussinessnameupdate(Request $request)
+    {
+        // dd($request->all());
+        $branch = DB::table('business_details_list')->where('id', $request->editBranchId)->where('business_id', Session::get('business_id'))->update(['business_name' => $request->business_name, 'business_categories'=>$request->select]);
+        // return $branch;
+        return back();   
+    }
+    // sphoneupdate
+    public function sphoneupdate(Request $request)
+    {
+        // dd($request->all());
+        $branch = DB::table('business_details_list')->where('id', $request->editBranchId)->where('business_id', Session::get('business_id'))->update(['mobile_no' => $request->phone]);
+        // return $branch;
+        return back();   
+    }
+
+    public function nameupdate(Request $request)
+    {
+        // dd($request->all());
+        $branch = DB::table('business_details_list')->where('id', $request->editBranchId)->where('business_id', Session::get('business_id'))->update(['client_name' => $request->name]);
+        // return $branch;
+        return back();   
+    }
+   
 
     // business setting 
     public function business()
@@ -363,4 +429,7 @@ class SettingController extends Controller
     {
         return view('admin.setting.other.other');
     }
+
+
+   
 }

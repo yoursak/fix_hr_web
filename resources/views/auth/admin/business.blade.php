@@ -102,16 +102,16 @@
                                 </script>
                             </div>
                         </div>
-                        <div class="col-sm-12 col-md-12">
+                        <div class="col-sm-12 col-md-6">
                             <div class="row">
                                
-                                <div class="col-sm-6 col-md-6">
+                                <div class="col-sm-6 col-md-12">
                                     <div class="form-group">
                                         <label class="form-label">Zip Code</label>
                                         <input type="text" name="pin" class="form-control" placeholder="Pin Code">
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-md-6">
+                                <div class="col-sm-6 col-md-12">
                                     <div class="form-group">
                                         <label class="form-label">GST Number</label>
                                         <input type="text" name="gst" class="form-control"
@@ -125,17 +125,17 @@
                         <div class="col-sm-12 col-md-6">
                             <div class="row">
                                 
-                                <div class="col-sm-6 col-md-6">
+                                {{-- <div class="col-sm-6 col-md-6"> --}}
                                     {{-- data-default-file="{{ asset('imgs/business.gif') }}" --}}
-                                    <input type="file" name="image" class="dropify" data-height="100" data-width="400" />
-                                </div>
-                                <div class="col-sm-6 col-md-6">
+                                    {{-- <input type="file" name="image" class="dropify" data-height="100" data-width="400" />
+                                </div> --}}
+                                {{-- <div class="col-sm-6 col-md-6"> --}}
                                     <div class="form-group">
                                         <label class="form-label">Address</label>
-                                        <textarea rows="5" name="address" class="form-control"
+                                        <textarea rows="6" name="address" class="form-control"
                                             placeholder="Enter Business Address"></textarea>
                                     </div>
-                                </div>
+                                {{-- </div> --}}
                             </div>
                         </div>
                     </div>

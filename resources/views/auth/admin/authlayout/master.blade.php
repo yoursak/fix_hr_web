@@ -4,6 +4,7 @@
 
 <head>
     <title>FixHR - @yield('title')</title>
+  
     @include('auth/admin/authlayout.head')
     @yield('css')
 </head>
@@ -11,8 +12,9 @@
 <body>
 
     <div class="auth-wrapper">
-
+                
         <div class="auth-content text-center">
+            @yield('contentes')
             @yield('content')
         </div>
 

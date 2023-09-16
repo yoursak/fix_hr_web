@@ -14,6 +14,7 @@ use App\Models\employee\Employee_Details;
 use Illuminate\Support\Facades\DB;
 use App\Models\admin\HolidayTemplate;
 use App\Models\admin\HolidayDetail;
+// use App\Models\admin\HolidayDetail;
 use Session;
 
 /**
@@ -28,6 +29,21 @@ use Session;
 
 class Central_unit
 {
+   static function BusinessIdToName($email, $businessID)
+   {
+      $result = DB::table('business_details_list')
+         ->where('business_email', $email)
+         ->where('business_id', $businessID)->get();
+         // ->first(); // Get the first row as an object
+
+      // Check if a result was found
+      if ($result) {
+         return $result->business_name; // Access the 'business_name' property
+      } else {
+         // Handle the case where no result was found
+         return "No matching business found";
+      }
+   }
    static function BranchList()
    {
       return BranchList::select('*')->where(['business_id' => Session::get('business_id')])->get();
@@ -115,6 +131,31 @@ class Central_unit
       $AttList = DB::table('business_type_list')->get();
       return $AttList;
    }
+
+   static function GetBusinessCategory()
+   {
+      $AttList = DB::table('business_categories_list')->get();
+      return $AttList;
+   }
+
+   // static function GetBusinessCategoryName($id){
+   //    $data = DB::table('business_categories_list')->find($id);
+   //    return $data
+   // }
+
+   public static function GetBusinessCategoryName($id){
+      $data = DB::table('business_categories_list')->where('id',$id)->first();
+      return $data ;
+    }
+
+    public static function GetBusinessTypeName($id){
+      $data = DB::table('business_type_list')->where('id',$id)->first();
+      return $data ;
+    }
+
+
+   //  business_type_list
+
    static function Get()
    {
       $AttList = DB::table('business_type_list')->get();

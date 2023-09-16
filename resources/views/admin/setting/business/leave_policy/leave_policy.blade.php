@@ -566,6 +566,7 @@
                             <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
                         </button>
                     </div>
+                    
                     <div class="card-header border-0">
                         <h4 class="card-title">Assign Policy to Employee</h4>
                     </div>
@@ -586,7 +587,6 @@
                                     <select name="attendance" class="form-control custom-select select2"
                                         data-placeholder="Select Department">
                                         <option value="1">select</option>
-
                                     </select>
                                 </div>
                             </div>
@@ -598,42 +598,55 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-12 col-xl-3">
-                                <div class="form-group">
-                                    <label class="form-label">Employee:</label>
-                                    <input type="search" class="form-control">
-                                </div>
-                            </div>
                         </div>
                         <div class="row">
+                            <div class="col-xl-3"></div>
+                            <div class="col-xl-3"></div>
+                            <div class="col-xl-3"></div>
                             <table class="table mb-0 text-nowrap">
                                 <thead>
-                                    <div class="d-flex my-5">
-                                        <label class="custom-switch">
-                                            <input type="checkbox" id="allAllow" onchange="allow()" name="custom-switch-checkbox"
-                                            class="custom-switch-input">
-                                            <span class="custom-switch-indicator"></span>
-                                        </label>
-                                        <h5 class="title ms-5 my-auto">Select All</h5>
+                                    <div class="card-header border-bottom-0">
+                                        <div class="card-title">
+                                            Employee List
+                                        </div>
+                                        <div class="page-rightheader ms-auto">
+                                            <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+                                                <div class="btn-list d-flex">
+                                                    <div class="d-flex my-5">
+                                                        <label class="custom-switch">
+                                                            <input type="checkbox" id="allAllow" onchange="allow()" class="custom-switch-input">
+                                                            <span class="custom-switch-indicator"></span>
+                                                        </label>
+                                                        <h5 class="title ms-5 my-auto">Select All</h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </thead>
                                 <tbody>
                                     <tr class="border-bottom">
                                         <td>
+                                            <div class="row">
+                                                <div class="col-xl-6">
+                                                    <div class="d-flex">
+                                                        <div class="me-3 mt-0 mt-sm-1 d-block">
+                                                            <h5 class="mb-0"><b><i class="fa fa-user fs-20 mx-3"></i>Jayant Nishas</b><br/><span class="text-muted"><i class="fa fa fs-20 mx-3"></i><span class="fs-14">Software Developer</span></span></h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <span class="d-sm-none d-md-block"><b class="my-auto"><i class="fa fa-phone fs-20 mx-3"></i> +91 1234567890</b></span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
                                             <label class="custom-switch">
-                                                <input type="checkbox" id="emp_check" name="custom-switch-checkbox "
+                                                <input type="checkbox" id="emp_check" name="employeeAllow"
                                                     class="custom-switch-input">
                                                 <span class="custom-switch-indicator"></span>
                                             </label>
                                         </td>
-                                        <td>
-                                            <div class="d-flex">
-                                                <div class="me-3 mt-0 mt-sm-1 d-block">
-                                                    <h6 class="mb-0"><b>Jayant</b></h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-start fs-13"><b>+91 1234567890</b></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -641,18 +654,22 @@
                     </div>
                     <script>
                         function allow(){
-                            if(document.getElementById("allAllow").checked = true){
-                                document.getElementById("emp_check").checked = true;
-                            }else{
-                                document.getElementById("emp_check").checked = false;
-                            }
+                           $allcheck =  document.getElementById('allAllow');
+
+                           $checkbox = document.getElementById('emp_check');
+                           if($allcheck.checked == true){
+                                $checkbox.checked = true;
+                           }else{
+                                $checkbox.checked = false;
+                           }
+
                         }
                     </script>
 
                     <div class="modal-footer d-flex justify-content-center">
                         <div class="text-center">
                             <button class="btn btn-success" type="submit" id="submit"
-                                data-bs-target="">Apply</button>
+                                data-bs-target=""> Save & Apply</button>
                         </div>
                     </div>
 

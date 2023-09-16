@@ -9,7 +9,6 @@ class UploadImageApiController extends Controller
 {
     public function uploadImage(Request $request)
     {
-        
         if ($request->image) {
             // return true; 
             // Validate the incoming request

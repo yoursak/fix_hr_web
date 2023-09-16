@@ -32,15 +32,7 @@ class CreateBusinessController extends Controller
 
     public function verify(Request $request){
 
-        $validatedData = $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust max size as needed
-        ]);
-        // Get the uploaded image file
-        $image = $request->file('image');
-        $path = public_path('business_logo/');
-        $imageName = date('d-m-Y') . '_' . md5($image) . '.' . $request->image->extension();
-        $request->image->move($path, $imageName);
-
+   
         
         if($request->has("email")){
             $otp = rand(100000, 999999);
@@ -78,7 +70,15 @@ class CreateBusinessController extends Controller
         }elseif ($request->has("bname")) {
             // dd($request->all());
 
-
+            // $validatedData = $request->validate([
+            //     'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust max size as needed
+            // ]);
+            // // Get the uploaded image file
+            // $image = $request->file('image');
+            // $path = public_path('business_logo/');
+            // $imageName = date('d-m-Y') . '_' . md5($image) . '.' . $request->image->extension();
+            // $request->image->move($path, $imageName);
+    
             $business_id = md5($request->name.$request->bname.$request->gst);
             $created = DB::table("business_details_list")->insert([
                 "business_id"=> $business_id,
@@ -87,7 +87,7 @@ class CreateBusinessController extends Controller
                 "client_name"=> $request->name,
                 "business_email"=> Session()->get('firstEmail'),
                 "business_name"=> $request->bname,
-                "business_logo"=>  $imageName,
+                "business_logo"=> '',
                 "mobile_no"=> $request->phone,
                 "country"=> $request->country,
                 "state"=> $request->state,

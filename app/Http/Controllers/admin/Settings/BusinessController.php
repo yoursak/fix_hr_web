@@ -27,7 +27,7 @@ class BusinessController extends Controller
 {
 
     public function CreateHoliday(Request $request){
-        // dd($request->holiday_name[0]);
+        // dd($request->holiday_day[0]);
         if($request->has("temp_name")){
             $template = HolidayTemplate::create([
                 "temp_name"=> $request->temp_name,
@@ -42,6 +42,7 @@ class BusinessController extends Controller
             foreach ($request->holiday_name as $key => $holiday) {
                 $holiday = HolidayDetail::create([
                     'holiday_name'=> $request->holiday_name[$i],
+                    'day'=> $request->holiday_day[$i],
                     'holiday_date'=> $request->holiday_date[$i],
                     'business_id'=> $request->session()->get('business_id'),
                     'template_id'=> $temp_id->temp_id
@@ -59,6 +60,11 @@ class BusinessController extends Controller
         }
 
 
+    }
+
+    public function UpdateHoliday(Request $request){
+
+        dd($request->all());
     }
 
 

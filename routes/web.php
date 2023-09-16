@@ -36,7 +36,8 @@ Route::middleware(['logincheck'])->group(function () {
     Route::prefix('login')->group(function () {
         Route::get('/', [LoginController::class, 'index'])->name('login');
         Route::any('/otp', [LoginController::class, 'login_otp'])->name('login.otp');
-        Route::post('/submit', [LoginController::class, 'submit'])->name('login.submit');
+        Route::any('/logintype',[LoginController::class,'loginTypeCheck']);
+        Route::any('/submit', [LoginController::class, 'submit'])->name('login.submit');
     });
 
     Route::prefix('signup')->group(function(){
@@ -127,6 +128,15 @@ Route::middleware(['email_verified'])->group(function () {
 
             Route::prefix('/account')->group(function () {
                 Route::get('/', [SettingController::class, 'account']);
+            // Route::put('/gatepassapprove/{id}', [RequestController::class, 'ApproveGatepass'])->name('admin.gatepassapprove');
+
+                Route::post('/name/{id}', [SettingController::class, 'nameupdate'])->name('name.update');
+                Route::post('/email/{id}', [SettingController::class, 'semailupdate'])->name('email.update');
+                Route::post('/business/{id}', [SettingController::class, 'sbussinessnameupdate'])->name('sbussinessname.update');
+                Route::post('/phone/{id}', [SettingController::class, 'sphoneupdate'])->name('sphone.update');
+                Route::post('/address/{id}', [SettingController::class, 'saddressupdate'])->name('saddress.update');
+                Route::post('/btype/{id}', [SettingController::class, 'sbtypeupdate'])->name('sbussinesstype.update');
+                // Route::post('/email/{id}', [SettingController::class, 'semailupdate'])->name('email.update');
             });
 
             Route::prefix('/business')->group(function () {
@@ -188,6 +198,7 @@ Route::middleware(['email_verified'])->group(function () {
 
     Route::prefix('/update')->group(function () {
         Route::post('/employee', [EmployeeController::class, 'UpdateEmployee'])->name('update.employee');
+        Route::post('/holiday', [EmployeeController::class, 'UpdateHoliday'])->name('update.holiday');
     });
 
     Route::prefix('/delete')->group(function () {
