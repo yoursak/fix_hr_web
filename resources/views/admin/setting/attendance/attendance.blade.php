@@ -161,7 +161,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-6">
+        {{-- <div class="col-xl-6">
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="row">
@@ -181,7 +181,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 
     {{-- attendance mode modal --}}

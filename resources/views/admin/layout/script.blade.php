@@ -1,3 +1,8 @@
+{{-- jquery cdn  --}}
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
 <!-- JQUERY JS -->
 <script src={{ asset('assets/plugins/jquery/jquery.min.js') }}></script>
 
@@ -12,7 +17,7 @@
 <script src={{ asset('assets/plugins/moment/moment.js') }}></script>
 
 <!-- CIRCLE-PROGRESS JS -->
-<script src={{ asset('assets/plugins/circle-progress/circle-progress.min.js') }}></script>
+{{-- <script src={{ asset('assets/plugins/circle-progress/circle-progress.min.js') }}></script> --}}
 
 <!--SIDEMENU JS -->
 <script src={{ asset('assets/plugins/sidemenu/sidemenu.js') }}></script>
@@ -43,12 +48,20 @@
 <script src={{ asset('assets/plugins/chart.min/rounded-barchart.js') }}></script>
 
 <!-- INTERNAL DATA TABLES  -->
-<script src={{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}></script>
-<script src={{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.js') }}></script>
-<script src={{ asset('assets/plugins/datatable/js/dataTables.buttons.min.js') }}></script>
-<script src={{ asset('assets/plugins/datatable/js/buttons.bootstrap5.min.js') }}></script>
-<script src={{ asset('assets/plugins/datatable/dataTables.responsive.min.js') }}></script>
-<script src={{ asset('assets/plugins/datatable/responsive.bootstrap5.min.js') }}></script>
+<script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatable/js/buttons.bootstrap5.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatable/js/jszip.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatable/pdfmake/pdfmake.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatable/pdfmake/vfs_fonts.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
+<script src="{{ asset('assets/js/datatables.js') }}"></script>
+<script src="{{ asset('assets/js/select2.js') }}"></script>
 
 <!-- INTERNAL PG-CALENDAR-MASTER JS -->
 <script src={{ asset('assets/plugins/pg-calendar-master/pignose.calendar.full.min.js') }}></script>
@@ -174,7 +187,7 @@
                     id: 1,
                     name: 'item1',
                     startDate: '2019-03-01',
-                    endDate: '2019-03-03',
+                    endDate: '2019-03-03',  
                     customClass: 'greenClass'
                 },
                 {
@@ -218,6 +231,8 @@
         $('#unpaidbreak').click(function(e) {
             $('#unpaidbreak').addClass('d-none');
             $('#unpaidbreaktbl').addClass('d-block');
+            $('#unpaiddelete').removeClass('d-none');
+            
         })
 
     });
@@ -228,6 +243,7 @@
         $('#unpaiddelete').click(function(e) {
             $('#unpaidbreak').removeClass('d-none');
             $('#unpaidbreaktbl').removeClass('d-block');
+            $('#unpaiddelete').addClass('d-none');
         })
 
         // display input box for break time
@@ -236,28 +252,6 @@
             $('#breaktime').addClass('d-block');
         })
 
-        $('#shifttype').change(function(e) {
-            $val = $('#shifttype').val();
-            if ($val == 'fs') {
-                $('#shifttime').removeClass('d-none');
-                $('#unpaidbreaklabel').removeClass('d-none');
-                $('#unpaidbreak').removeClass('d-none');
-                $('#workhour').addClass('d-none');
-                $('#additionaltbl').addClass('d-none');
-            } else if ($val == 'rs') {
-                $('#shifttime').addClass('d-none');
-                $('#unpaidbreaklabel').addClass('d-none');
-                $('#unpaidbreak').addClass('d-none');
-                $('#workhour').addClass('d-none');
-                $('#additionaltbl').removeClass('d-none');
-            } else {
-                $('#shifttime').addClass('d-none');
-                $('#unpaidbreaklabel').addClass('d-none');
-                $('#unpaidbreak').addClass('d-none');
-                $('#workhour').removeClass('d-none');
-                $('#additionaltbl').addClass('d-none');
-            }
-        });
     });
 
 

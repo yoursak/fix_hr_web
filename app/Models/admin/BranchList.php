@@ -22,13 +22,13 @@ use Illuminate\Database\Eloquent\Model;
 class BranchList extends Model
 {
     protected $table = 'branch_list';
-    protected $primaryKey = 'branch_id';
-    public $incrementing = false;
+    protected $primaryKey = 'id';
+    // public $incrementing = false;
 
-    protected $casts = [
-        'id' => 'int',
-        'is_active' => 'bool',
-    ];
+    // protected $casts = [
+    //     'id' => 'int',
+    //     'is_active' => 'bool',
+    // ];
 
-    protected $fillable = ['id', 'business_id', 'branch_name', 'is_active', 'address'];
+    // protected $fillable = ['id', 'business_id', 'branch_name', 'is_active', 'address'];
 }

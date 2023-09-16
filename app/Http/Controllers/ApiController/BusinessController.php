@@ -4,7 +4,6 @@ namespace App\Http\Controllers\ApiController;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-q
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\admin\Business_categories_list;
 use App\Models\admin\Business_type;

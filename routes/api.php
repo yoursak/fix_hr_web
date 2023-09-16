@@ -12,6 +12,10 @@ use App\Http\Controllers\ApiController\EmployeeLoginApiController;
 use App\Http\Controllers\ApiController\EmployeeApiController;
 use App\Http\Controllers\ApiController\AttendanceApiController;
 use App\Http\Controllers\ApiController\CommonApiController;
+use App\Http\Controllers\ApiController\LeaveRequestApiController;
+use App\Http\Controllers\ApiController\MisspuchApiController;
+use App\Http\Controllers\ApiController\GatePassApiController;
+use App\Http\Controllers\ApiController\UploadImageApiController;
 // use App\Http\Middleware\LoginMiddleware\ApiLoginCheck;
 /*
 |--------------------------------------------------------------------------
@@ -24,22 +28,65 @@ use App\Http\Controllers\ApiController\CommonApiController;
 |
 */
 
-// Employee Attendance Section
+Route::prefix('image')->group(function () {
+        Route::post('upload',[UploadImageApiController::class, 'uploadImage']);
+});
+
+// Employee Section 
+Route::prefix('employee')->group(function () {
+    // Leave Request
+    Route::prefix('leaverequest')->group(function () {
+        // Route::get('detail',[LeaveRequestApiController::class, 'index']);
+        Route::post('detail',[LeaveRequestApiController::class, 'store']);
+        Route::get('detail/{id}',[LeaveRequestApiController::class, 'show']);
+        Route::put('detail/{id}',[LeaveRequestApiController::class, 'update']);
+        Route::delete('detail/{id}', [LeaveRequestApiController::class, 'destroy']);
+    });
+
+    // Gate Pass Request
+    Route::prefix('gatepassrequest')->group(function () {
+        // Route::get('detail',[GatePassApiController::class, 'index']);
+        Route::post('detail',[GatePassApiController::class, 'store']);
+        Route::get('detail/{id}',[GatePassApiController::class, 'show']);
+        Route::put('detail/{id}',[GatePassApiController::class, 'update']);
+        Route::delete('detail/{id}', [GatePassApiController::class, 'destroy']);
+    });
+
+    // Miss Punch Request
+    Route::prefix('misspuchrequest')->group(function () {
+        // Route::get('detail',[MisspuchApiController::class, 'index']);
+        Route::get('detail/{id}', [MisspuchApiController::class, 'show']);
+        Route::post('detail',[MisspuchApiController::class, 'store']);
+        Route::put('detail/{id}',[MisspuchApiController::class, 'update']);
+        Route::delete('detail/{id}',[MisspuchApiController::class, 'destroy']);
+        
+        // Route::delete('detail/{id}',[MisspuchApiController::class, 'destroy'])
+    });
+});
 
 Route::any('/bussinesscheck', [CommonApiController::class, 'businesscheck']);
 
 Route::prefix('admin')->group(function () {
     Route::post('/login', [ApiLoginController::class, 'login']);
     Route::any('/verify_otp', [ApiLoginController::class, 'VerifiedOtp']);
-    Route::get('/branchlist/{id}',[ApiLoginController::class,'branchList']);
-    Route::get('/departmentlist/{id}',[ApiLoginController::class,'departmentList']);
-    Route::any('/allemployee',[ApiLoginController::class,'employeeList']);
-     
+
+    Route::get('/branchlist/{id}', [ApiLoginController::class, 'branchList']);
+    Route::get('/departmentlist/{id}', [ApiLoginController::class, 'departmentList']);
+    Route::any('/allemployee', [ApiLoginController::class, 'employeeList']);
+
+    Route::any('/attend', [ApiLoginController::class, 'attendence']); //Mode attendances
+    Route::get('/business_name/{business_id}', [ApiLoginController::class, 'nameBusiness']); //Mode attendances
+    Route::get('/brand_name/{brand_id}', [ApiLoginController::class, 'nameBrand']); //Mode attendances
+    Route::get('/totalbranddetails/{business_id}', [ApiLoginController::class, 'nameTotalBrand']); //Mode attendances
+
+    Route::prefix('employee')->group(function () {
+        Route::get('detail/{id}', [EmployeeApiController::class, 'show']);
+    });
     Route::group(['middleware' => 'apilogincheck'], function () {
         Route::prefix('employee')->group(function () {
             Route::get('/detail', [EmployeeApiController::class, 'index']);
             Route::post('/detail', [EmployeeApiController::class, 'store']);
-            Route::get('detail/{id}', [EmployeeApiController::class, 'show']);
+            // Route::get('detail/{id}', [EmployeeApiController::class, 'show']);
             Route::put('detail/{id}', [EmployeeApiController::class, 'update']);
             Route::delete('detail/{id}', [EmployeeApiController::class, 'destroy']);
             Route::get('detailall/{id}', [EmployeeApiController::class, 'bemployee']);

@@ -29,11 +29,11 @@
                     <div class="col-xl-3">
                         <ul>
                             <li class="my-4"><span class="h1"><b>{{ $Details->emp_name }}</b></span>
-                                <p><span class="fs-16" style="color: #97928e"><b>{{ $Details->desig_name }}</b></span></p>
+                                <p><span class="fs-16" style="color: #97928e"><b>{{ $Details->designation_id }}</b></span></p>
                             </li>
                             <li class="my-5"><span class="fs-16"><b><i
                                             class="fa fa-briefcase mx-3"></i>Department:</b></span><span
-                                    class="fs-16 mx-2">{{ $Details->depart_name }}</span></li>
+                                    class="fs-16 mx-2">{{ $Details->department_id }}</span></li>
                             <li class="my-5"><span class="fs-16"><b><i class="fa fa-briefcase mx-3"></i>Emp
                                         ID:</b></span><span class="fs-16 mx-2">{{ $Details->emp_id }}</span></li>
                             <li class="my-5"><span class="fs-16"><b><i class="fa fa-calendar mx-3"></i>Date of

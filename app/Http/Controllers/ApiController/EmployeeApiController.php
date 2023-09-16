@@ -122,6 +122,7 @@ class EmployeeApiController extends Controller
 
     public function show($emp_id)
     {
+        // return true; 
         $emp = EmployeePersonalDetail::where('emp_id', $emp_id)->first();
         // return $emp;
         if ($emp) {

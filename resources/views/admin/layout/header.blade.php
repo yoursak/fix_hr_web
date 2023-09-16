@@ -96,7 +96,7 @@
                                         <div class="mt-1">Settings</div>
                                     </a>
                                     </a>
-                                    <a class="dropdown-item d-flex" href="login1.html">
+                                    <a class="dropdown-item d-flex" href="{{url('/logout')}}">
                                         <i class="feather feather-power me-3 fs-16 my-auto"></i>
                                         <div class="mt-1">Log Out</div>
                                     </a>

@@ -11,7 +11,7 @@ class EmployeeResource extends JsonResource
 
         return [
             'id' => $this->id ?? $this->employee_personal_details->id,
-            'emp_role_id' => $this->role_id ?? '',
+            'emp_role_id' => (string)$this->role_id ?? '',
             'emp_id' => $this->emp_id ?? '',
             'business_id' => $this->business_id ?? '',
             'branch_id' => $this->branch_id ?? '',

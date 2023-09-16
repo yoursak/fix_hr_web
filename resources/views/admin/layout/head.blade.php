@@ -8,6 +8,8 @@
 <meta name="keywords"
     content="admin dashboard, admin panel template, html admin template, dashboard html template, bootstrap 5 dashboard, template admin bootstrap 5 , simple admin panel template, simple dashboard html template,  bootstrap admin panel, task dashboard, job dashboard, bootstrap admin panel, dashboards html, panel in html, bootstrap 5 dashboard, bootstrap 5 dashboard, bootstrap5 dashboard" />
 
+
+
 <!-- TITLE -->
 <title>FixHR</title>
 
@@ -31,8 +33,10 @@
 <link href={{ asset('assets/switcher/css/switcher.css') }} rel="stylesheet" />
 <link href={{ asset('assets/switcher/demo.css') }} rel="stylesheet" />
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@9">
 
-<link href="{{asset('https://www.jqueryscript.net/css/jquerysctipttop.css')}}" rel="stylesheet" type="text/css">
+<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+
 <!-- CSS -->
 <link rel="stylesheet" href="{{asset('src/css/rescalendar.css')}}">
 
@@ -49,3 +53,28 @@
 
 {{-- city state country  --}}
 <script src="{{asset('assets/js/cities.js')}}"></script>
+
+
+{{-- MDB CDN  --}}
+
+<!-- Font Awesome -->
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+  rel="stylesheet"
+/>
+<!-- Google Fonts -->
+<link
+  href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+  rel="stylesheet"
+/>
+<!-- MDB -->
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css"
+  rel="stylesheet"
+/>
+
+<!-- MDB -->
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.js"
+></script>

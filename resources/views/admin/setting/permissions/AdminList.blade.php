@@ -9,10 +9,8 @@
             $Department = App\Helpers\Central_unit::DepartmentList();
             $Employee = App\Helpers\Central_unit::EmployeeDetails();
             $Roles = App\Helpers\Central_unit::GetRoles();
-            
-            $Permission = App\Helpers\Central_unit::GetModelPermission();
-            // dd($right->where('permission_id', 74) != null);
-            // dd($Permission->where('permission_id',78)->all()!= null);
+            // $Permission = App\Helpers\Central_unit::GetModelPermission();
+            // $Permission->where('permission_name','Employee.View')->all()!= null
         @endphp
         <div class="page-header d-md-flex d-block">
             <div class="page-leftheader">
@@ -23,8 +21,8 @@
                 <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
                     <div class="d-lg-flex d-block">
                         <div class="btn-list">
-                            <a class="modal-effect btn btn-primary border-0 my-auto" data-effect="effect-scale"
-                                data-bs-toggle="modal" href="#addNewAdmin">Add New Admin</a>
+                                <a class="modal-effect btn btn-primary border-0 my-auto" data-effect="effect-scale"
+                                data-bs-toggle="modal" href="#addNewAdmin">Add New Admin</a>    
                         </div>
                     </div>
                 </div>
@@ -32,6 +30,7 @@
         </div>
     </div>
 
+    @foreach ($admins->where('user','Owner') as $admin)
     <div class="row">
         <div class="card">
             <div class="card-header  border-0">
@@ -40,25 +39,20 @@
             <div class="card-body border-bottum-0">
                 <div class="row">
                     <div class="col-xl-3 my-auto">
-                        <h5 class="my-auto">Dilip Sahu</h5>
+                        <h5 class="my-auto">{{ $admin->name }}</h5>
                     </div>
                     <div class="col-6 col-xl-3 my-auto">
-                        <p class="my-auto" style="color:rgb(34, 33, 29)"><i class="fe fe-mail me-2"></i>dilipsahu@xyz.com
+                        <p class="my-auto" style="color:rgb(34, 33, 29)"><i class="fe fe-mail me-2"></i>{{ $admin->email }}
                         </p>
                     </div>
                     <div class="col-6 col-xl-3 my-auto">
-                        <p class="my-auto " style="color:rgb(34, 33, 29)"><i class="fe fe-phone mx-2"></i>+91 8558652478</p>
-                    </div>
-                    <div class="col-xl-3">
-                        <p class="my-auto text-muted text-end">
-                            <a class="btn text-primary" id="" href="#"><i class="fe fe-edit"></i></a>
-                            <a class="btn text-primary" id="" href="#"><i class="fe fe-trash"></i></a>
-                        </p>
+                        <p class="my-auto " style="color:rgb(34, 33, 29)"><i class="fe fe-phone mx-2"></i>{{ $admin->phone }}</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    @endforeach
 
     <div class="row">
         <div class="card">
@@ -89,7 +83,7 @@
                 </div>
             @endforeach
 
-            @foreach ($admins as $admin)
+            @foreach ($admins->where('user','admin') as $admin)
                 @php
                     $Emp = $Employee->where('emp_email', $admin->email)->first();
                     // dd($Emp_Id->emp_id);

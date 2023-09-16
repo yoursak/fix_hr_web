@@ -22,6 +22,7 @@ use App\Http\Resources\Api\AdminLoginResource;
 use App\Http\Resources\Api\CameraPermission;
 use App\Models\employee\EmployeePersonalDetail;
 use App\Http\Resources\Api\EmployeeResource;
+use Illuminate\Support\Facades\Validator;
 
 // use Session;
 class ApiLoginController extends BaseController
@@ -40,7 +41,7 @@ class ApiLoginController extends BaseController
 
             $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
 
-            if (true) {
+            if ($sendMail) {
                 $updateset = LoginAdmin::where('email', $request->email)->update([
                     'otp' => $otp,
                     'otp_created_at' => Carbon::now(), // Store the OTP creation time
@@ -81,12 +82,16 @@ class ApiLoginController extends BaseController
                     ]);
                     if (isset($updateAdmin)) {
 
-                        $verifyOtp = LoginAdmin::where('business_id', $admin->business_id)->first();
-                        $cameraMode=CameraPermissionModel::where('business_id',$admin->business_id)->first();
+                        $verifyOtp = LoginAdmin::where('business_id', $admin->business_id)->where('email', $admin->email)->first();
+                        $cameraMode = CameraPermissionModel::where('business_id', $admin->business_id)->first();
 
                         // return ReturnHelpers::jsonApiReturn($verifyOtp);
                         //  return ReturnHelpers::jsonApiReturn([$verifyOtp,'token_type' =>'Bearer']);
-                        return ReturnHelpers::jsonApiReturn([$verifyOtp,CameraPermission::collection([CameraPermissionModel::find($cameraMode->id)])->all()]);
+                        if (isset($cameraMode)) {
+                            return ReturnHelpers::jsonApiReturn([$verifyOtp, CameraPermission::collection([CameraPermissionModel::find($cameraMode->id)])->all()]);
+                        } else {
+                            return ReturnHelpers::jsonApiReturn([$verifyOtp]);
+                        }
                     }
 
                     // return $admin;
@@ -169,59 +174,151 @@ class ApiLoginController extends BaseController
         if (isset($request->branch_id)) {
             $query->where('branch_id', $request->branch_id);
         }
-        
+
         if (isset($request->department_id)) {
             $query->where('department_id', $request->department_id);
         }
-        
+
         if (isset($request->business_id)) {
             $query->where('business_id', $request->business_id);
         }
-        
+
         $emp = $query->get();
-        
+
         if ($emp->isEmpty()) {
             return response()->json(['success' => false, 'msg' => 'No employees found'], 401);
         }
-        
-        return ReturnHelpers::jsonApiReturn(EmployeeResource::collection($emp));
-        
-    }
 
+        return ReturnHelpers::jsonApiReturn(EmployeeResource::collection($emp));
+    }
+    public function attendence(Request $request)
+    {
+        // Validate the request data
+        $validator = Validator::make($request->all(), [
+            'emp_id' => 'required',
+            'business_id' => 'required',
+            'branch_id' => 'required',
+            'mode' => 'required', // Assuming mode is an integer
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'address' => 'required'
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+        // Check if mode is 1 (in Office with QRScanner)
+        if ($request->mode == 1) {
+            // Get today's date once
+            $today = now()->toDateString();
+
+            // Find the latest attendance record for today by the same employee
+            $latestRecord = DB::table('attendance_list')
+                ->where('emp_id', $request->input('emp_id'))
+                ->whereDate('created_at', $today)
+                ->orderBy('created_at', 'desc')
+                ->first();
+            
+               $empInfo= DB::table('employee_personal_details')->where('emp_id',$request->input('emp_id'))->first();
+            if (!$latestRecord) {
+                // If no record exists for today, it's the first action of the day, so mark punch_in
+                $attendanceData = [
+                    'emp_id' => $request->input('emp_id'),
+                    'emp_today_current_status' => 'punch_in',
+                    'punch_in' => 1,
+                    'emp_name'=>$empInfo->emp_name,
+                    'business_id' => $request->business_id,
+                    'branch_id' => $request->branch_id,
+                    'punch_in_latitude' => $request->latitude,
+                    'punch_in_longitude' => $request->longitude,
+                    'punch_in_address' => $request->address,
+                    'punch_in_time' => now(),
+                    'working_from_mode' => 'Office',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+
+                DB::table('attendance_list')->insert($attendanceData);
+                return response()->json(['message' => 'Punch-in marked successfully', 'punchIn' => '1'], 200);
+            } else {
+                if ($latestRecord->emp_today_current_status === 'punch_in') {
+                    // If the latest action was punch_in, mark punch_out and calculate working hours
+                    $punchInTime = Carbon::parse($latestRecord->punch_in_time);
+                    $punchOutTime = now();
+
+                    // Calculate the difference in minutes and then convert it to decimal hours
+                    $minutesDifference = $punchInTime->diffInMinutes($punchOutTime);
+                    $workingHours = round($minutesDifference / 60, 2); // Convert minutes to decimal hours with 2 decimal places
+
+                    // Update the total working hours by adding the working hours for this punch-out action
+                    $totalWorkingHours = $latestRecord->total_working_hour + $workingHours;
+
+                    DB::table('attendance_list')
+                        ->where('id', $latestRecord->id)
+                        ->update([
+                            'emp_today_current_status' => 'punch_out',
+                            'punch_out' => 1,
+                            'punch_out_latitude' => $request->latitude,
+                            'punch_out_longitude' => $request->longitude,
+                            'punch_out_address' => $request->address,
+                            'working_from_mode' => 'Office',
+                            'punch_out_time' => $punchOutTime,
+                            'total_working_hour' => $totalWorkingHours,
+                            'updated_at' => now(),
+                        ]);
+                    // Update the total working hours
+
+                    return response()->json(['message' => 'Punch-out marked successfully', 'punchOut' => '1'], 200);
+                } else {
+                    // If the latest action was punch_out or the same action is repeated, return an error
+                    $todays_punched_done = DB::table('attendance_list')->where('emp_id', $request->emp_id)->where('created_at', now())->first();
+
+                    // if (isset($todays_punched_done)) {
+
+                    // }
+                    return response()->json(['message' => 'Todays Punching Complete', 'complete' => 1], 200);
+
+                    // return response()->json(['message' => 'Invalid action sequence'], 400);
+                }
+            }
+        } else {
+            // If mode is not 1, return an error
+            return response()->json(['message' => 'Invalid mode'], 400);
+        }
+    }
+    // name of Business
+    public function nameBusiness(Request $request)
+    {
+        $value = DB::table('business_details_list')->where('business_id', $request->business_id)->first();
+        return response()->json(["result" => $value]);
+    }
+    public function nameBrand(Request $request)
+    {
+        $value = DB::table('brand_list')->where('brand_id', $request->brand_id)->first();
+        return response()->json(["result" => $value]);
+    }
+    public function nameTotalBrand(Request $request)
+    {
+        $value = DB::table('brand_list')->where('business_id', $request->business_id)->get();
+        return response()->json(["result" => $value]);
+    }
 
     public function store(Request $request)
     {
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //

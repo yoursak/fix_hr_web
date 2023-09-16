@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Helpers\ApiResponse;
 use Carbon\Carbon;
 use DateTime;
+use App\Models\employee\GatepassRequestList;    
+use App\Models\employee\MisspunchList;    
 
 
 class RequestController extends Controller
@@ -20,11 +22,39 @@ class RequestController extends Controller
     }
 
     public function gatepass(){
-        return view('admin.request.gatepass');
+        $data = GatepassRequestList::all(); 
+        // $data1 = BranchList::where('branch_id')
+        // return $data;
+        // dd($data->id);
+        return view('admin.request.gatepass', compact('data'));
     }
 
+    public function ApproveGatepass(Request $request, $id)
+    {
+        // dd($request->all());
+        // $data = GatepassRequestList::find($id);
+        // $data->status = 'Approve';
+        // $data->in_time = $request->in_time;
+        // if($data->save()){
+        // return back();
+            // return redirect()->route('/admin/requests/gatepass');
+        // }
+    }
+
+    public function DestroyGatepass($id)
+    {
+        // dd($id);    
+        $data = GatepassRequestList::find($id);
+        $data->delete();
+
+        return back();
+    }
+
+
     public function misspunch(){
-        return view('admin.request.misspunch');
+        $data = MisspunchList::all();    
+        // dd($data);   
+        return view('admin.request.misspunch', compact('data'));
     }
 
     /**

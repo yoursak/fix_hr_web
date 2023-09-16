@@ -257,8 +257,8 @@
     </style>
 @endsection
 @section('settings')
-    {{--
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"> --}}
+    @include('sweetalert::alert', ['cdn' => 'https://cdn.jsdelivr.net/npm/sweetalert2@9'])
+
     <div class="page-header d-md-flex d-block">
         <div class="page-leftheader">
             <div class="page-title">Leave Templates</div>
@@ -268,10 +268,6 @@
             <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
                 <div class="d-lg-flex d-block">
                     <div class="btn-list">
-                        {{-- <a href="javascript:void(0);" type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
-                        data-bs-target="#deletemodalview">Create Templates</a> --}}
-                        {{-- <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
-                        data-bs-target="#clockinmodal" id="newTempFormBtn">Create Templates</button> --}}
                         <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#myModal">
                             Create Templates
                         </button>
@@ -279,47 +275,77 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="container">
         <!-- Button to Open the Modal -->
-
         <!-- The Modal -->
         <div class="modal fade" id="myModal">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header p-5">
-                        <h5 class="modal-title px-5" id="exampleModalLongTitle" style="font-size:18px;">Leave Policy</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Leave Policy</h5>
                         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body mx-5 px-5">
-                        <form action="{{ route('leave.policy')}}" method="post">
+                    <form action="{{ route('admin.leavepolicySubmit') }}" method="POST">
+                        @csrf
+                        <div class="modal-body m-5">
                             @csrf
                             <div class="row">
-                                <div class="col border-0">
-                                    <h4 class="card-title "><span>Leave Setting</span></h4>
+
+                                <div class="col">
+                                    <h4 class="card-title"><span>Leave Setting</span></h4>
                                 </div>
-                                <div class="card-body mb-0 pb-0">
-                                    <div class="form-row form-group pt-2 m-0">
-                                        <div class="col-4 col-xl-4 p-0">
-                                            <p class="my-auto fs-15 form-label">Policy Name</p>
-                                        </div>
-                                        <div class="col-8 col-xl-4 ">
-                                            <input type="text" class="form-control bg-muted form-label" id="inputName"
-                                                placeholder="Enter Template Name" name="policyname">
+                                <div class="form-group row">
+                                    <label for="inputPassword" class="col-sm-2 col-form-label">Policy Name</label>
+                                    <div class="col">
+                                        <input type="text" class="form-control bg-muted form-label" id="inputName"
+                                            placeholder="Enter Template Name" name="policyname" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword" class="col-sm-2 col-form-label">Leave Policy Cycle</label>
+                                    <div class="col-sm-5">
+                                        {{-- <input type="text" class="form-control bg-muted form-label" id="inputName"
+                                            placeholder="Enter Template Name" name="policyname"> --}}
+                                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                            <input type="radio" class="btn-check" name="btnradio" id="btnradiomonth"
+                                                value="1" checked=true>
+                                            <label class="btn btn-outline-dark" for="btnradiomonth">Monthly</label>
+                                            <input type="radio" class="btn-check" name="btnradio" id="btnradioyear"
+                                                value="2">
+                                            <label class="btn btn-outline-dark" for="btnradioyear">Yearly</label>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword" class="col-xl-2 col-form-label">Leave Period</label>
+                                    <div class="form-row col-xl-5">
+                                        <input type="date" name="leave_periodfrom" class="form-control col-xl-4"
+                                            required>
+                                        <label class="col-xl-1" for="">To</label>
+                                        <input type="date" name="leave_periodto" class="form-control col-xl-4 " required>
+                                    </div>
+                                </div>
 
-                                    <div class="row pt-3">
+                                {{-- <div class="form-row pt-3">
+                                    <div class="col-4 col-xl-4">
+                                        <p class="my-auto fs-15 form-label ">Policy Name</p>
+                                    </div>
+                                    <div class="col-8 col-xl-4 ">
+                                        <input type="text" class="form-control bg-muted form-label" id="inputName"
+                                            placeholder="Enter Template Name" name="policyname">
+                                    </div>
+                                </div> --}}
+
+                                {{-- <div class="form-row pt-3">
                                         <div class="col-4 col-xl-4 ">
                                             <p class="my-auto fs-15 form-label">Leave Policy Cycle</p>
                                         </div>
                                         <div class="col-8 col-xl-4 ">
-                                            <div class="btn-group" role="group"
-                                                aria-label="Basic radio toggle button group">
+                                            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                                                 <input type="radio" class="btn-check" name="btnradio" id="btnradiomonth"
                                                     checked="">
                                                 <label class="btn btn-outline-dark" for="btnradiomonth">Monthly</label>
@@ -328,6 +354,8 @@
                                             </div>
                                         </div>
                                     </div>
+
+
 
                                     <div class="row pt-3">
                                         <div class="col-xl-4">
@@ -341,8 +369,8 @@
                                                             <i class="feather feather-calendar"></i>
                                                         </div>
                                                     </div>
-                                                    <input class="form-control fc-datepicker" name="leavefrom" placeholder="DD-MM-YYYY"
-                                                        type="date">
+                                                    <input class="form-control fc-datepicker" name="leavefrom"
+                                                        placeholder="DD-MM-YYYY" type="date">
                                                 </div>
                                                 <label class="form-label mx-3 my-auto">To</label>
                                                 <div class="input-group">
@@ -350,303 +378,411 @@
                                                         <div class="input-group-text">
                                                             <i class="feather feather-calendar"></i>
                                                         </div>
-                                                    </div><input class="form-control fc-datepicker" name="leaveto" placeholder="DD-MM-YYYY"
-                                                        type="date">
+                                                    </div><input class="form-control fc-datepicker" name="leaveto"
+                                                        placeholder="DD-MM-YYYY" type="date">
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
-                                </div>
                             </div>
 
                             <hr style="background: black" />
-                            <div class="row ">
-                                <div class="col border-0">
+                            {{-- <div class="row ">
+                                <div class="col">
                                     <h4 class="card-title"><span>Leave Category</span></h4>
                                 </div>
-                                
-                                    <div class="row card-body pr-0" id="show_item">
 
-                                    </div>
-                                    <div  class="row card-body pr-0" >
-                                        <div class="col-xl-3 pt-3">
-                                            <label for="inputCity" class="form-label">Category Name</label>
-                                            <input type="text" class="form-control" id="inputCity" name="categoryname"
-                                                placeholder="Category Name">
-                                        </div>
-                                        <div class="col-xl-2 pt-3">
-                                            <label for="inputCity" class="form-label ">Days</label>
-                                            <input type="number" class="form-control bg-muted" name="days" placeholder="Count">
-                                        </div>
-                                        <div class="col-xl-2 pt-3">
-                                            <label for="inputState" class="form-label">Unused Leave Rule</label>
-                                            <select class="form-control select2" data-placeholder="Leave Rule" name="leaverule">
-                                                <option label="Fixed Amount"></option>
-                                                <option>Lapse</option>
-                                                <option>Carry Forward</option>
-                                                <option>Encash</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-xl-2 pt-3">
-                                            <label for="inputCity" class="form-label" >Carry Forward Limit</label>
-                                            <input type="text" class="form-control" name="cfl" id="inputCity"
-                                                placeholder="Days">
-                                        </div>
 
-                                        <div class="col-xl-2 pt-3">
-                                            <label for="inputState" class="form-label">Applicable To</label>
-                                            <select class="form-control select2" name="applicable" data-placeholder="Applicable To">
-                                                <option label="Fixed Amount"></option>
-                                                <option>All</option>
-                                                <option>Male</option>
-                                                <option>Female</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-xl-1 pt-3 text-end">
-                                            <label for="inputCity" class="form-label ">&nbsp;</label>
-                                            <button type="button" class="btn btn-outline-primary add_item_btn"><i
-                                                    class="fe fe-plus bold"></i></button>
+                                <span id="show_item">
 
-                                            {{-- <a href="javascript:void(0);" id="hidehide" style="display:none"
-                                            class="action-btns" data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="Delete"><i class="feather feather-trash danger text-danger"></i></a>
-                                        <a href="javascript:void(0);" id="showshow" class="n add_item_btn action-btns"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"
-                                            value="Add More" onclick="addMore()"><i
-                                                class="fe fe-plus text-primary"></i></a> --}}
-                                            {{-- <button id="hidehide" style="display:none">Hide</button> --}}
-                                            {{-- <button id="">Show</button> <a href=""></a> --}}
-
-                                        </div>
-
+                                </span>
+                                <div class="col-xl-3 pt-3">
+                                    <label for="inputCity" class="form-label">Category Name</label>
+                                    <input type="text" class="form-control" id="categoryname"
+                                        name=" addmore[0][categoryname]" placeholder="Category Name">
+                                </div>
+                                <div class="col-xl-2 pt-3">
+                                    <label for="inputCity" class="form-label ">Days</label>
+                                    <input type="number" class="form-control bg-muted" id="days" name="days[]"
+                                        value="null" placeholder="Count">
+                                </div>
+                                <div class="col-xl-2 pt-3">
+                                    <label for="inputState" class="form-label">Unused Leave Rule</label>
+                                    <select class="form-control select2" data-placeholder="Leave Rule" id="leaverule"
+                                        name="leaverule[]">
+                                        <option label="Fixed Amount"></option>
+                                        <option>Lapse</option>
+                                        <option>Carry Forward</option>
+                                        <option>Encash</option>
+                                    </select>
+                                </div>
+                                <div class="col-xl-2 pt-3">
+                                    <label for="inputCity" class="form-label">Carry Forward Limit</label>
+                                    <input type="text" class="form-control" name="cfl[]" id="cfl"
+                                        placeholder="Days">
+                                </div>
+                                <div class="col-xl-2 pt-3">
+                                    <label for="inputState" class="form-label">Applicable To</label>
+                                    <select class="form-control select2" name="applicable[]" id="applicable"
+                                        data-placeholder="Applicable To">
+                                        <option label="Fixed Amount"></option>
+                                        <option>All</option>
+                                        <option>Male</option>
+                                        <option>Female</option>
+                                    </select>
+                                </div>
+                                <div class="col-xl-1 pt-3 text-end">
+                                    <label for="inputCity" class="form-label ">&nbsp;</label>
+                                    <button type="button" class="btn btn-outline-primary add_item_btn"><i
+                                            class="fe fe-plus bold"></i>
+                                    </button>
+                                </div>
+                            </div> --}}
+                            <div class="form-group">
+                                <!-- Hover added -->
+                                <div class="mt-3 border-bottom">
+                                    <div class="col">
+                                        <h4 class="card-title"><span>Leave Category</span></h4>
                                     </div>
 
-                                {{-- </div> --}}
+                                    <div class="row" style="align-items: center;">
+
+                                        <div class="col-md-10 dynamic-field" id="dynamic-field-1">
+                                            <div class="row" id="row">
+
+                                                <div class="col-md-3 col-xl-3 pt-3">
+                                                    <div class="form-group">
+                                                        <label for="field" class="hidden-md">Category Name*</label>
+                                                        <input type="text" id="categoryname" class="form-control" />
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2 col-xl-2 pt-3">
+                                                    <div class="form-group">
+                                                        <label for="field" class="hidden-md">Days*</label>
+                                                        <input type="number" id="days" class="form-control" />
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2 col-xl-2 pt-3">
+                                                    <label for="inputState" class="form-label">Unused Leave Rule</label>
+                                                    <select class="form-control select2" data-placeholder="Leave Rule"
+                                                        id="leaverules">
+                                                        <option value="" label="Fixed Amount"></option>
+                                                        <option>Lapse</option>
+                                                        <option>Carry Forward</option>
+                                                        <option>Encash</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-2 col-xl-2 pt-3">
+                                                    <div class="form-group">
+                                                        <label>Carry Forward Limit</label>
+                                                        <input type="number" id="carryforward" class="form-control" />
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-md-2 col-xl-2 pt-3">
+                                                    <label for="inputState" class="form-label">Applicable To</label>
+                                                    <select class="form-control select2" id="applicables"
+                                                        data-placeholder="Applicable To">
+                                                        <option value="" label="Fixed Amount"></option>
+                                                        <option>All</option>
+                                                        <option>Male</option>
+                                                        <option>Female</option>
+                                                    </select>
+                                                </div>
+                                                {{-- <div class="col-md-4">
+                                                      <div class="form-group">
+                                                          <input hidden type="number" id="totalset0" class="form-control"
+                                                              name="totalset0" />
+                                                      </div>
+      
+                                                  </div> --}}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl-1 pt-4 col-md-1 append-buttons">
+
+                                            <button type="button" onclick="addSetData()"
+                                                class="btn btn-primary btn-sm mb-2 text-uppercase shadow-sm"><i
+                                                    class="fa fa-plus fa-fw"></i>
+                                            </button>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-md-12 table-responsive-sm">
+                                    <table width="100%" id="displayTable"
+                                        class="table text-center table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                {{-- <th>SNo</th> --}}
+                                                <th>Category Name</th>
+                                                <th>Days</th>
+                                                <th>Unused Leave Rule</th>
+                                                <th>Carry Forward Limit</th>
+                                                <th>Applicable To</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
                             </div>
 
+                            <div hidden class="moreManpower row">
 
+                            </div>
 
                         </div>
+
                         <div class="modal-footer d-flex justify-content-center">
                             <div class="text-center">
-                                <button class="btn btn-success" type="submit" data-bs-target="">Apply</button>
+                                <button class="btn btn-success" type="submit" id="submit"
+                                    data-bs-target="">Apply</button>
                             </div>
-                        </form>
+                        </div>
+                    </form>
 
-                        {{-- <div class="">
-                        {{-- <button class="btn btn-danger mx-2" data-bs-dismiss="modal">Decline</button> --}}
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="ManageEmployee">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header p-5">
+                        <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Manage Employee</h5>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
+                        </button>
                     </div>
+                    <div class="card-header border-0">
+                        <h4 class="card-title">Assign Policy to Employee</h4>
+                    </div>
+                    <div class="modal-body m-5">
+                        <div class="row">
+                            <div class="col-md-12 col-xl-3">
+                                <div class="form-group">
+                                    <label class="form-label">Branch:</label>
+                                    <select name="attendance" class="form-control custom-select select2"
+                                        data-placeholder="Select Branch">
+                                        <option value="1">select</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-xl-3">
+                                <div class="form-group">
+                                    <label class="form-label">Department:</label>
+                                    <select name="attendance" class="form-control custom-select select2"
+                                        data-placeholder="Select Department">
+                                        <option value="1">select</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-xl-3">
+                                <div class="form-group">
+                                    <label class="form-label">Designation:</label>
+                                    <select name="attendance" class="form-control custom-select select2" data-placeholder="Select Designation">
+                                        <option value="1">Select</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-xl-3">
+                                <div class="form-group">
+                                    <label class="form-label">Employee:</label>
+                                    <input type="search" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <table class="table mb-0 text-nowrap">
+                                <thead>
+                                    <div class="d-flex my-5">
+                                        <label class="custom-switch">
+                                            <input type="checkbox" id="allAllow" onchange="allow()" name="custom-switch-checkbox"
+                                            class="custom-switch-input">
+                                            <span class="custom-switch-indicator"></span>
+                                        </label>
+                                        <h5 class="title ms-5 my-auto">Select All</h5>
+                                    </div>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-bottom">
+                                        <td>
+                                            <label class="custom-switch">
+                                                <input type="checkbox" id="emp_check" name="custom-switch-checkbox "
+                                                    class="custom-switch-input">
+                                                <span class="custom-switch-indicator"></span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <div class="me-3 mt-0 mt-sm-1 d-block">
+                                                    <h6 class="mb-0"><b>Jayant</b></h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-start fs-13"><b>+91 1234567890</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <script>
+                        function allow(){
+                            if(document.getElementById("allAllow").checked = true){
+                                document.getElementById("emp_check").checked = true;
+                            }else{
+                                document.getElementById("emp_check").checked = false;
+                            }
+                        }
+                    </script>
+
+                    <div class="modal-footer d-flex justify-content-center">
+                        <div class="text-center">
+                            <button class="btn btn-success" type="submit" id="submit"
+                                data-bs-target="">Apply</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
-    </div>
 
-    </div>
-    {{-- delete confirmation --}}
+    {{-- modal --}}
+    <?php $LeavePolicy = App\Helpers\Central_unit::LeavePolicyList(Session::get('business_id'), Session::get('branch_id'));
+    
+    ?>
 
-    {{-- delete confirmation --}}
-
-
-    <div class="row">
-        <div class="card">
-            <div class="card-body ">
-                {{-- border-bottum-0 p-2 --}}
-                <div class="row">
-                    <div class="col-6 col-xl-3 my-auto">
-                        <h5 class="my-auto">FD Leave Template</h5>
-                    </div>
-                    <div class="col-6 col-xl-2 my-auto">
-                        <p class="my-auto text-muted">2 Leaves Per Month</p>
-                    </div>
-                    <div class="col-xl-3 my-auto">
-                        <p class="my-auto text-muted">Applied to 14 Employees</p>
-                    </div>
-                    <div class="col-8 col-xl-2">
-                        <p class="my-auto text-muted">
-                            <a class="btn text-primary" id="manageemp1" href="#"><b>Manage Employee List</b></a>
-                            <a class="btn btn-outline-success d-none" id="manageemp2" href="#"><b>Apply</b></a>
-                        </p>
-                    </div>
-                    <div class="col-4 col-xl-2">
-                        <p class="my-auto text-muted text-end">
-                            <a class="btn text-primary" id="editTempBtn" href="#"><b>Edit Template</b></a>
-                            <a class="btn btn-outline-success d-none" id="applyTempBtn" href="#"><b>Apply</b></a>
-                        </p>
+    @foreach ($LeavePolicy as $item)
+        <div class="row">
+            <div class="card">
+                <div class="card-body ">
+                    {{-- border-bottum-0 p-2 --}}
+                    <div class="row">
+                        <div class="col-6 col-xl-3 my-auto">
+                            <h5 class="my-auto">Policy Name: <?= $item->policy_name ?></h5>
+                        </div>
+                        <div class="col-6 col-xl-2 my-auto">
+                            <p class="my-auto text-muted">2 Leaves Per Month</p>
+                        </div>
+                        <div class="col-xl-3 my-auto">
+                            <p class="my-auto text-muted">Applied to 14 Employees</p>
+                        </div>
+                        <div class="col-8 col-xl-2">
+                            <p class="my-auto text-muted">
+                                <a class="btn text-primary" id="manageemp1" href="#" data-toggle="modal"
+                                    data-target="#ManageEmployee"><b>Manage Employee List</b></a>
+                                <a class="btn btn-outline-success d-none" id="manageemp2" href="#"><b>Apply</b></a>
+                            </p>
+                        </div>
+                        <div class="col-4 col-xl-2">
+                            <p class="my-auto text-muted text-end">
+                                <a class="btn text-primary" id="editTempBtn" href="#"><b>Edit Template</b></a>
+                                <a class="btn btn-outline-success d-none" id="applyTempBtn"
+                                    href="#"><b>Apply</b></a>
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-body border-bottum-0 d-none" style="height: 20rem; overflow:scroll" id="emplist1">
-                <table class="table mb-0 text-nowrap">
-                    <tbody>
-                        <tr class="border-bottom">
-                            <td>
-                                <label class="custom-switch">
-                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                                    <span class="custom-switch-indicator"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <div class="d-flex">
-                                    <div class="me-3 mt-0 mt-sm-1 d-block">
-                                        <h6 class="mb-0">Faith Harris</h6>
-                                        <div class="clearfix"></div>
-                                        <small class="text-muted">UI designer</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-start fs-13">+91 1234567890</td>
-                            <td class="text-end">
-                                <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Mail"><i
-                                        class="feather feather-edit  text-primary"></i></a>
-                                <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Delete"><i
-                                        class="feather feather-trash-2 text-danger"></i></a>
-                            </td>
-                        </tr>
-                        <tr class="border-bottom">
-                            <td>
-                                <label class="custom-switch">
-                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                                    <span class="custom-switch-indicator"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <div class="d-flex">
-                                    <div class="me-3 mt-0 mt-sm-1 d-block">
-                                        <h6 class="mb-0">Faith Harris</h6>
-                                        <div class="clearfix"></div>
-                                        <small class="text-muted">UI designer</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-start fs-13">+91 1234567890</td>
-                            <td class="text-end">
-                                <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Mail"><i
-                                        class="feather feather-edit  text-primary"></i></a>
-                                <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Delete"><i
-                                        class="feather feather-trash-2 text-danger"></i></a>
-                            </td>
-                        </tr>
-                        <tr class="border-bottom">
-                            <td>
-                                <label class="custom-switch">
-                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                                    <span class="custom-switch-indicator"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <div class="d-flex">
-                                    <div class="me-3 mt-0 mt-sm-1 d-block">
-                                        <h6 class="mb-0">Faith Harris</h6>
-                                        <div class="clearfix"></div>
-                                        <small class="text-muted">UI designer</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-start fs-13">+91 1234567890</td>
-                            <td class="text-end">
-                                <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Mail"><i
-                                        class="feather feather-edit  text-primary"></i></a>
-                                <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Delete"><i
-                                        class="feather feather-trash-2 text-danger"></i></a>
-                            </td>
-                        </tr>
-                        <tr class="border-bottom">
-                            <td>
-                                <label class="custom-switch">
-                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                                    <span class="custom-switch-indicator"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <div class="d-flex">
-                                    <div class="me-3 mt-0 mt-sm-1 d-block">
-                                        <h6 class="mb-0">Faith Harris</h6>
-                                        <div class="clearfix"></div>
-                                        <small class="text-muted">UI designer</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-start fs-13">+91 1234567890</td>
-                            <td class="text-end">
-                                <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Mail"><i
-                                        class="feather feather-edit  text-primary"></i></a>
-                                <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Delete"><i
-                                        class="feather feather-trash-2 text-danger"></i></a>
-                            </td>
-                        </tr>
-                        <tr class="border-bottom">
-                            <td>
-                                <label class="custom-switch">
-                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                                    <span class="custom-switch-indicator"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <div class="d-flex">
-                                    <div class="me-3 mt-0 mt-sm-1 d-block">
-                                        <h6 class="mb-0">Faith Harris</h6>
-                                        <div class="clearfix"></div>
-                                        <small class="text-muted">UI designer</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-start fs-13">+91 1234567890</td>
-                            <td class="text-end">
-                                <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Mail"><i
-                                        class="feather feather-edit  text-primary"></i></a>
-                                <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Delete"><i
-                                        class="feather feather-trash-2 text-danger"></i></a>
-                            </td>
-                        </tr>
-                        <tr class="border-bottom">
-                            <td>
-                                <label class="custom-switch">
-                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                                    <span class="custom-switch-indicator"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <div class="d-flex">
-                                    <div class="me-3 mt-0 mt-sm-1 d-block">
-                                        <h6 class="mb-0">Faith Harris</h6>
-                                        <div class="clearfix"></div>
-                                        <small class="text-muted">UI designer</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-start fs-13">+91 1234567890</td>
-                            <td class="text-end">
-                                <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Mail"><i
-                                        class="feather feather-edit  text-primary"></i></a>
-                                <a href="javascript:void(0);" class="action-btns" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Delete"><i
-                                        class="feather feather-trash-2 text-danger"></i></a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+
             </div>
         </div>
-    </div>
+    @endforeach
 
     <div class=" text-end">
         <a href="{{ url('settings/businesssetting') }}" class="btn btn-success" id="formsave" data-bs-toggle="tooltip"
             data-bs-placement="top" title="Save">Apply Changes</a>
     </div>
 
+    {{-- Set Multilavel Approval Modal --}}
+    <div class="modal fade" id="ManageEmployeeModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-content-demo">
+                <div class="modal-body border-0 ">
+                    <div class="card">
+                        <div class="card-header  border-0">
+                            <h6 class="card-title">Set Multilavel Approval</h6>
+                        </div>
+                        <div class="card-body border-0">
+                            <div class="row">
+                                <div class="col-md-12 col-xl-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Choose Type of Approval:</label>
+                                        <select name="attendance" class="form-control custom-select select2"
+                                            data-placeholder="Type of Approval" id='lavelofapproval'>
+                                            <option label="Select Employee"></option>
+                                            <option value="1">Lavel One</option>
+                                            <option value="2">Lavel Two</option>
+                                            <option value="3">Lavel Three</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-xl-12">
+                                    <div class="row">
+                                        <div class="col-sm-11 col-md-11 col-xl-11 ms-auto">
+                                            <div class="form-group d-none" id="firstlavel">
+                                                <label class="form-label fs-12" style="color: rgb(173, 139, 144);">First
+                                                    Approved By:</label>
+                                                <select name="attendance"
+                                                    class="form-control custom-select select2 d-none"
+                                                    data-placeholder="Select Employee">
+                                                    <option label="Select Employee"></option>
+                                                    <option value="1">Employer</option>
+                                                    <option value="2">Manager</option>
+                                                    <option value="3">HR</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group d-none" id="secondlavel">
+                                                <label class="form-label fs-12" style="color: rgb(173, 139, 144);">Second
+                                                    Approved By:</label>
+                                                <select name="attendance"
+                                                    class="form-control custom-select select2 d-none"
+                                                    data-placeholder="Select Employee">
+                                                    <option label="Select Employee"></option>
+                                                    <option value="1">Employer</option>
+                                                    <option value="2">Manager</option>
+                                                    <option value="3">HR</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group d-none" id="thirdlavel">
+                                                <label class="form-label fs-12" style="color: rgb(173, 139, 144);">Final
+                                                    Approved By:</label>
+                                                <select name="attendance"
+                                                    class="form-control custom-select select2 d-none"
+                                                    data-placeholder="Select Employee">
+                                                    <option label="Select Employee"></option>
+                                                    <option value="1">Employer</option>
+                                                    <option value="2">Manager</option>
+                                                    <option value="3">HR</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button class="btn btn-primary">Save changes</button> <button class="btn btn-light"
+                        data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     {{-- Set Multilavel Approval Modal --}}
     <div class="modal fade" id="SetMultilavelApprovalModal">
         <div class="modal-dialog" role="document">
@@ -800,42 +936,166 @@
         </div>
     </div>
 
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    {{-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script> --}}
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
     <script>
-        $(document).ready(function() {
-            $(".add_item_btn").click(function(e) {
-                e.preventDefault();
-                // $("#show_item").prepend('<div class="col-xl-3 pt-3" id="dynamictable"> <label for="inputCity" class="form-label">Category Name</label> <input type="text" class="form-control" id="inputCity" placeholder="Category Name"> </div> <div class="col-xl-2 pt-3"> <label for="inputCity" class="form-label">Days</label> <input type="number" class="form-control bg-muted" placeholder="Count"> </div> <div class="col-xl-2 pt-3"> <label for="inputState" class="form-label">Unused Leave Rule</label> <select class="form-control select2" data-placeholder="Leave Rule"> <option label="Leave Rule"></option> <option>Lapse</option> <option>Carry Forward</option> <option>Encash</option> </select> </div> <div class="col-xl-2 pt-3"> <label for="inputCity" class="form-label">Carry Forward Limit</label> <input type="text" class="form-control" id="inputCity" placeholder="Days"> </div> <div class="col-xl-2 pt-3"> <label for="inputState" class="form-label">Applicable To</label> <select class="form-control select2" data-placeholder="Applicable To"> <option label="Applicable To"></option> <option>All</option> <option>Male</option> <option>Female</option> </select> </div> <div class="col-xl-1 pt-3 text-end"> <label for="inputCity" class="form-label ">&nbsp;</label><a href="javascript:void(0);" id="hidehide" style="display:none" class="action-btns" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i class="feather feather-trash danger text-danger"></i></a> <a href="javascript:void(0);" id="showshow" class="n add_item_btn action-btns" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" value="Add More" onclick="addMore()"><i class="fe fe-plus text-primary"></i></a></div>')
-                $("#show_item").append(
-                    ' <div class="col-xl-3 pt-3"> <label for="inputCity" class="form-label">Category Name</label> <input type="text" class="form-control" id="inputCity" placeholder="Category Name"> </div> <div class="col-xl-2 pt-3"> <label for="inputCity" class="form-label ">Days</label> <input type="number" class="form-control bg-muted" placeholder="Count"> </div> <div class="col-xl-2 pt-3"> <label for="inputState" class="form-label">Unused Leave Rule</label> <select class="form-control select2" data-placeholder="Leave Rule"> <option label="Fixed Amount"></option> <option>Lapse</option> <option>Carry Forward</option> <option>Encash</option> </select> </div> <div class="col-xl-2 pt-3"> <label for="inputCity" class="form-label">Carry Forward Limit</label> <input type="text" class="form-control" id="inputCity" placeholder="Days"> </div> <div class="col-xl-2 pt-3"> <label for="inputState" class="form-label">Applicable To</label> <select class="form-control select2" data-placeholder="Applicable To"> <option label="Fixed Amount"></option> <option>All</option> <option>Male</option> <option>Female</option> </select> </div> <div class="col-xl-1 pt-3 text-end"> <label for="inputCity" class="form-label ">&nbsp;</label> <button type="button" class="btn btn-outline-danger remove_item_btn"><i class="feather feather-trash "></i></button>  </div>  ');
+        var i = 1;
+        var carryforwardloading = 1; //inital state
+        var rowData = [];
+
+        function addSetData() {
+            var categoryname = document.getElementById('categoryname').value;
+            var days = document.getElementById("days").value;
+            var leaverules = document.getElementById('leaverules').value;
+            var carryforward = document.getElementById("carryforward").value;
+            var applicable = document.getElementById('applicables').value;
+            if (days != '' && carryforward != '' && categoryname != '' && leaverules != '' && applicable != '') {
+                addSETData1();
+                document.getElementById("categoryname").value = "";
+                document.getElementById("days").value = "";
+                // document.getElementById('leaverules').value = "";
+                document.getElementById("carryforward").value = "";
+                // document.getElementById('applicables').value = "";
+
+            } else {
+                alert("All Fields are Required!!");
+            }
+
+        }
+
+        function addSETData1() {
+            $('#displayTable').show();
+            var table = document.getElementById("displayTable");
+            var row = table.insertRow(-1);
+            // var sno = row.insertCell(0);
+            var categoryname = row.insertCell(0);
+            var days = row.insertCell(1);
+            var leaveRules = row.insertCell(2);
+            var carryforward = row.insertCell(3);
+            var applicables = row.insertCell(4);
+            var action = row.insertCell(5);
+            // sno.innerHTML = carryforwardloading++;
+
+            // Get values from input fields
+            var categorynameValue = document.getElementById('categoryname').value;
+            var daysValue = document.getElementById('days').value;
+            var carryforwardValue = document.getElementById('carryforward').value;
+            var leaveRulesValue = document.getElementById('leaverules').value;
+            var applicablesValue = document.getElementById('applicables').value;
+
+            // Push the data for this row into the array
+            rowData.push({
+                categoryname: categorynameValue,
+                days: daysValue,
+                carryforward: carryforwardValue,
+                leaveRules: leaveRulesValue,
+                applicables: applicablesValue
             });
 
-            $(document).on('click','.remove_item_btn',function(e){
-                e.preventDefault();
-                let row_item = $(this).parent().parent();
-                $(row_item).remove();
-            })
-        });
-        // function addMore() {
+            categoryname.innerHTML = categorynameValue;
+            days.innerHTML = daysValue;
+            carryforward.innerHTML = carryforwardValue;
+            leaveRules.innerHTML = leaveRulesValue;
+            applicables.innerHTML = applicablesValue;
 
-        //     $('#dynamictable').append(
-        //         '<div class="col-xl-3 pt-3" id="dynamictable"> <label for="inputCity" class="form-label">Category Name</label> <input type="text" class="form-control" id="inputCity" placeholder="Category Name"> </div> <div class="col-xl-2 pt-3"> <label for="inputCity" class="form-label">Days</label> <input type="number" class="form-control bg-muted" placeholder="Count"> </div> <div class="col-xl-2 pt-3"> <label for="inputState" class="form-label">Unused Leave Rule</label> <select class="form-control select2" data-placeholder="Leave Rule"> <option label="Leave Rule"></option> <option>Lapse</option> <option>Carry Forward</option> <option>Encash</option> </select> </div> <div class="col-xl-2 pt-3"> <label for="inputCity" class="form-label">Carry Forward Limit</label> <input type="text" class="form-control" id="inputCity" placeholder="Days"> </div> <div class="col-xl-2 pt-3"> <label for="inputState" class="form-label">Applicable To</label> <select class="form-control select2" data-placeholder="Applicable To"> <option label="Applicable To"></option> <option>All</option> <option>Male</option> <option>Female</option> </select> </div> <div class="col-xl-1 pt-3 text-end"> <label for="inputCity" class="form-label ">&nbsp;</label><a href="javascript:void(0);" id="hidehide" style="display:none" class="action-btns" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i class="feather feather-trash danger text-danger"></i></a> <a href="javascript:void(0);" id="showshow" class="n add_item_btn action-btns" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" value="Add More" onclick="addMore()"><i class="fe fe-plus text-primary"></i></a></div>');
-        // }
+            var delete2 =
+                "<button type='button' class='btn btn-primary btn-sm float-left text-uppercase'><i class='fa fa-minus fa-fw'></i></button>";
+            action.innerHTML = delete2;
+
+            $(action).click(function(e) {
+                var row = action.parentNode;
+                var rowIndex = row.rowIndex;
+                rowData.splice(rowIndex - 1, 1);
+                row.parentNode.removeChild(row);
+                // Update the loader array based on the current rowData
+                updateLoaderArray();
+            });
+            // Update the loader array based on the current rowData
+            updateLoaderArray();
+
+            return true;
+        }
+        // Function to update the loader array based on the rowData
+        function updateLoaderArray() {
+            var loader = '';
+
+            // Iterate through the rowData and generate the loader content
+            rowData.forEach(function(data) {
+                loader += `<input type="text" name="category_name[]" value="${data.categoryname}">
+                   <input type="text" name="days[]" value="${data.days}">
+                   <input type="text" name="unused_leave_rule[]" value="${data.leaveRules}">
+                   <input type="text" name="carry_forward_limit[]" value="${data.carryforward}">
+                   <input type="text" name="applicable_to[]" value="${data.applicables}">
+                   `;
+            });
+
+            // Replace the content of '.moreManpower' with the updated loader content
+            $('.moreManpower').eq(0).html(loader);
+        }
 
         // $(document).ready(function() {
-        //     $("#hidehide").click(function() {
-        //         $("#hidehide").hide();
-        //         $("#showshow").show();
+        //     var postURL = "<?php echo url('policy_sumbit'); ?>";
+        //     $(".add_item_btn").click(function(e) {
+        //         // e.preventDefault();
+        //         let categoryname = $('#categoryname').val();
+        //         let days = $('#days').val();
+        //         let leaverule = $('#leaverule').val();
+        //         let cfl = $('#cfl').val();
+        //         let applicable = $('#applicable').val();
+        //         // leave_id = document.getElementById('cfl').value;
+        //         console.log(categoryname, days, leaverule, cfl, applicable);
+        //         $("#show_item").append(
+        //             '<div class="row"> <div class="card-body col-xl-3 pt-3"  id="' + i +
+        //             '" > <label for="inputCity" class="form-label">Category Name</label> <input type="text" name="addmore[' +
+        //             i + '][categoryname]" value="' +
+        //             categoryname +
+        //             '" class="form-control" id="inputCity" placeholder="Category Name"> </div> <div class="col-xl-2 pt-3"> <label for="inputCity" class="form-label ">Days</label> <input type="number" name="days[]" value="' +
+        //             days +
+        //             '" class="form-control bg-muted" placeholder="Count"> </div> <div class="col-xl-2 pt-3 bg-muted"> <label for="inputState" class="form-label">Unused Leave Rule</label> <select class="form-control select2" name="leaverule[]" data-placeholder="Leave Rule"> <option label="' +
+        //             leaverule +
+        //             '"></option> <option>Lapse</option> <option>Carry Forward</option> <option>Encash</option> </select> </div> <div class="col-xl-2 pt-3"> <label for="inputCity" class="form-label">Carry Forward Limit</label> <input name="cfl[]" type="text" value="' +
+        //             cfl +
+        //             '" class="form-control" id="inputCity" placeholder="Days"> </div> <div class="col-xl-2 pt-3"> <label for="inputState" class="form-label">Applicable To</label> <select class="form-control select2" name="applicable[]" data-placeholder="Applicable To"> <option  label="' +
+        //             applicable +
+        //             '"></option> <option>All</option> <option>Male</option> <option>Female</option> </select> </div> <div class="col-xl-1 pt-3 text-end"> <label for="inputCity" class="form-label ">&nbsp;</label> <button type="button" class="btn btn-outline-danger remove_item_btn"><i class="feather feather-trash "></i></button>  </div> </div> '
+        //         );
+        //         i++;
+        //         // leave_id = document.getElementById('categoryname').value;    
+
         //     });
-        //     $("#showshow").click(function() {
-        //         $("#hidehide").show();
-        //         $("#showshow").hide();
+
+        //     $(document).on('click', '.remove_item_btn', function(e) {
+        //         // e.preventDefault();
+        //         let row_item = $(this).parent().parent();
+        //         console.log(row_item);
+        //         $(row_item).remove();
+        //     })
+        //     $('#submit').click(function() {
+        //         $.ajax({
+        //             url: postURL,
+        //             method: "POST",
+        //             data: $('#add_item_btn').serialize(),
+        //             type: 'json',
+        //             // dd(data);
+        //             success: function(data) {
+        //                 if (data.error) {
+        //                     return Hello;
+        //                     printErrorMsg(data.error);
+        //                 } else {
+        //                     i = 1;
+        //                     $('.dynamic-added').remove();
+        //                     $('#remove_item_btn')[0].reset();
+        //                     // dd(i);
+        //                     // $(".print-success-msg").find("ul").html('');
+        //                     // $(".print-success-msg").css('display','block');
+        //                     // $(".print-error-msg").css('display','none');
+        //                     // $(".print-success-msg").find("ul").append('<li>Record Inserted Successfully.</li>');
+        //                 }
+        //             }
+        //         });
         //     });
         // });
     </script>

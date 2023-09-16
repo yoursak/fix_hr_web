@@ -5,6 +5,8 @@ namespace App\Http\Controllers\admin\Settings;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\admin\LeavePolicy;
+use Validator;
+use DB;
 // /public_html/app/Models/admin
 
 class LeavePolicyController extends Controller
@@ -26,7 +28,6 @@ class LeavePolicyController extends Controller
      */
     public function create()
     {
-        
     }
 
     /**
@@ -35,21 +36,88 @@ class LeavePolicyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
+        // return $request->all();     
+
+        $request->validate([
+            'addmore.*.categoryname' => 'required',
+            // 'addmore.*.qty' => 'required',
+            // 'addmore.*.price' => 'required',
+        ]);
+
+        foreach ($request->addmore as $key => $value) {
+            // LeavePolicy::create($value);
+            $data[]= $value;
+            LeavePolicy::create($data);
+        }
+        // return $data;
+
+        return back()->with('success', 'Record Created Successfully.');
+    }
+
+    public function storess(Request $request)
+    {
+        $rules = [];
         // dd($request->all());
-        $leave = new LeavePolicy();
-        $leave->policy_name = $request->policyname;
-        $leave->leave_policy_cycle = ($request->btnradio) == 'on' ? 'Month': 'Year';
-        $leave->leave_period_from = $request->leavefrom ;
-        $leave->leave_period_to = $request->leaveto;
-        $leave->category_name = $request->categoryname;
-        $leave->days = $request->days;
-        $leave->unused_leave_rule = $request->leaverule;
-        $leave->carry_forward_limit = $request->cfl;
-        $leave->applicable_to = $request->applicable;
-        if($leave->save()){
-            return back();
+        // $leave = new LeavePolicy();
+        // foreach ($request->input('categoryname') as $key => $value) {
+        //     // return $key;
+        //     $rules["category_name.{$key}"] = 'required';
+        //     $rules["days.{$key}"] = 'required';
+        // }
+
+        // $validator = Validator::make($request->all(), $rules);
+
+        if (true) {
+            // for ($i = 0; $i < sizeof($request->input('categoryname')); $i++) {
+            //     $data=['category_name' => $request->input('categoryname'),
+            //     'days' => $request->input('days')];
+            //     // dd(['category_name' => $request->input('categoryname'), 'days' => $request->input('days')]);
+            //     // LeavePolicy::create($data);
+            //     print($data['category_name']);
+            //     print($data['days']);
+            //     //   $sal=  DB::table('leave_policy');
+            //     // $sal->category_name[$i]=$data[$i];
+            // }
+            $dataArray = $request->all();
+
+            for ($i = 0; $i < sizeof($totalset); $i++) {
+                $rake_loading_transportation = [
+                    'category_name' => $rakeID,
+                    'days' => $days[$i],
+                  
+                ];
+                DB::table('leave_policy')->insert($rake_loading_transportation);
+            }
+
+            // foreach ($request->all() as $key => $value) {
+            //     // LeavePolicy::create(['category_name'=>$value]);
+            //     $data = ['category_name'=>$request->input('categoryname'),'day'=>$request->input['days']];
+
+            //     //   $sal=  DB::table('leave_policy');
+            //     // $sal->category_name=$request->input('categoryname');
+            //       // dd($request->input('categoryname'));
+
+            //       dd($data['category_name']);
+            //     // dd($request->input('days'));
+            //     LeavePolicy::create(['category_name'=>$data]);
+            //     // return $data;
+            //     // return back();
+            // }
+
+            // $leave->policy_name = $request->policyname;
+            // $leave->leave_policy_cycle = ($request->btnradio) == 'on' ? 'Month': 'Year';
+            // $leave->leave_period_from = $request->leavefrom ;
+            // $leave->leave_period_to = $request->leaveto;
+            // // $leave->category_name = $request->categoryname;
+            // $leave->days = $request->days;
+            // $leave->unused_leave_rule = $request->leaverule;
+            // $leave->carry_forward_limit = $request->cfl;
+            // $leave->applicable_to = $request->applicable;
+            // if($leave->save([])){
+            //     return back();
         }
 
         // $data = array(
@@ -58,7 +126,6 @@ class LeavePolicyController extends Controller
         //         'end_time'  => $end_time[$count],
         //         'zone_id'  => $zone_id,
         //       );
-
     }
 
     /**

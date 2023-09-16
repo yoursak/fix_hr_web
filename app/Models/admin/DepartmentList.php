@@ -29,8 +29,9 @@ class DepartmentList extends Model
 	];
 
 	protected $fillable = [
-		'depart_name',
+		'business_id',
 		'branch_id',
+		'depart_name',
 		'status'
 	];
 }

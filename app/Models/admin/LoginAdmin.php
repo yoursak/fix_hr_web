@@ -9,6 +9,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
 
 /**
@@ -29,9 +31,10 @@ use Laravel\Sanctum\HasApiTokens;
  *
  * @package App\Models
  */
-class LoginAdmin extends Model
+class LoginAdmin extends Authenticatable
 {
 	use HasApiTokens;
+	use HasRoles;
 	protected $table = 'login_admin';
 
 	protected $casts = [
