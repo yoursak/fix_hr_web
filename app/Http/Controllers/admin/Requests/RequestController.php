@@ -11,49 +11,119 @@ use Illuminate\Support\Facades\Hash;
 use App\Helpers\ApiResponse;
 use Carbon\Carbon;
 use DateTime;
-use App\Models\employee\GatepassRequestList;    
-use App\Models\employee\MisspunchList;    
-
+use App\Models\employee\LeaveRequestList;
+use App\Models\employee\GatepassRequestList;
+use App\Models\employee\MisspunchList;
+use Session;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class RequestController extends Controller
 {
-    public function leaves(){
-        return view('admin.request.leave');
+    public function leaves()
+    {
+        $data = LeaveRequestList::where('business_id', Session::get('business_id'))->get();
+        return view('admin.request.leave', compact('data'));
     }
 
-    public function gatepass(){
-        $data = GatepassRequestList::all(); 
+    public function gatepass()
+    {
+        $data = GatepassRequestList::where('business_id', Session::get('business_id'))->get();
+
+        // $data = GatepassRequestList::all();
         // $data1 = BranchList::where('branch_id')
         // return $data;
         // dd($data->id);
         return view('admin.request.gatepass', compact('data'));
     }
 
-    public function ApproveGatepass(Request $request, $id)
+    public function ApproveGatepass(Request $request)
     {
         // dd($request->all());
-        // $data = GatepassRequestList::find($id);
-        // $data->status = 'Approve';
-        // $data->in_time = $request->in_time;
-        // if($data->save()){
-        // return back();
-            // return redirect()->route('/admin/requests/gatepass');
-        // }
+
+        $branch = DB::table('gatepass_request_list')
+            ->where('id', $request->editGatepassId)
+            ->where('business_id', Session::get('business_id'))
+            ->update(['in_time' => $request->in_time, 'status' => $request->approve]);
+        return back();
+        if ($branch) {
+            Alert::success('Data Updated', 'Updated  Created');
+        }
+    }
+
+    public function ApproveLeave(Request $request)
+    {
+        // dd($request->all());
+
+        $toDate = Carbon::parse($request->to_date);
+        $fromDate = Carbon::parse($request->from_date);
+
+        $loaded = $toDate->diffInDays($fromDate);
+        $branch = DB::table('leave_request_list')
+            ->where('id', $request->editLeaveId)
+            ->where('business_id', Session::get('business_id'))
+            ->update(['leave_type' => $request->leave_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $loaded, 'status' => $request->status]);
+        if ($branch) {
+            Alert::success('Data Updated', 'Updated  Created');
+        }
+        return back();
+    }
+
+    public function ApproveMisspunch(Request $request, $id)
+    {
+        $data = MisspunchList::where('id', $id)
+            ->where('business_id', Session::get('business_id'))
+            ->update(['emp_miss_in_time' => $request->in_time, 'emp_miss_out_time' => $request->out_time, 'status' => $request->approve]);
+
+        if ($data) {
+            Alert::success('Data Updated', 'Updated  Created');
+        }
+        return back();
     }
 
     public function DestroyGatepass($id)
     {
-        // dd($id);    
+        // dd($id);
         $data = GatepassRequestList::find($id);
         $data->delete();
-
+        if ($data) {
+            Alert::success('Delete Success', 'Delete Gatepass Successfully');
+        }
+        // Session::flash('success', 'Succefully Deleted !');
         return back();
     }
 
+    public function DestroyLeave($id)
+    {
+        // dd($id);
+        $data = LeaveRequestList::find($id);
+        $data->delete();
+        if ($data) {
+            Alert::success('Delete Success', 'Delete Gatepass Successfully');
+        }
+        // Session::flash('success', 'Succefully Deleted !');
+        return back();
+    }
 
-    public function misspunch(){
-        $data = MisspunchList::all();    
-        // dd($data);   
+    public function DestroyMisspunch($id)
+    {
+        // dd($id);
+        $data = MisspunchList::find($id);
+        $data->delete();
+        if ($data) {
+            Alert::success('Delete Success', 'Delete Gatepass Successfully');
+        }
+        // Session::flash('success', 'Succefully Deleted !');
+        return back();
+    }
+
+    // DestroyMisspunch
+    public function misspunch()
+    {
+        // return true;
+        $data = MisspunchList::where('business_id', Session::get('business_id'))->get();
+
+        // $data = MisspunchList::all();
+        // dd($data);
         return view('admin.request.misspunch', compact('data'));
     }
 
@@ -67,12 +137,11 @@ class RequestController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * 
+     *
      */
 
     public function store(Request $request)
     {
-       
     }
 
     /**
@@ -98,7 +167,6 @@ class RequestController extends Controller
     {
         //
     }
-
 
     public function GatepassTable($tableName, Request $request)
     {
@@ -126,9 +194,8 @@ class RequestController extends Controller
                 'in_time' => $request->intime,
                 'created_at' => now(),
                 'updated_at' => now(),
-                
             ]);
-            return response()->json(["gatpass_details" =>$request->all()]);
+            return response()->json(['gatpass_details' => $request->all()]);
         } else {
             return "Table '$tableName' already exists.";
         }
@@ -145,7 +212,7 @@ class RequestController extends Controller
                 // $table->string('emp_name');
                 $table->string('emp_name');
                 $table->date('emp_miss_date');
-                $table->enum('emp_miss_time_type', ['1'=>'intime', '2'=>'outtime']);
+                $table->enum('emp_miss_time_type', ['1' => 'intime', '2' => 'outtime']);
                 $table->time('emp_miss_in_time')->nullable();
                 $table->time('emp_miss_out_time')->nullable();
                 $table->time('emp_working_hour')->nullable();
@@ -162,29 +229,26 @@ class RequestController extends Controller
                 'message' => $request->message,
                 'created_at' => now(),
                 'updated_at' => now(),
-                
             ]);
-            return response()->json(["gatpass_details" =>$request->all()]);
+            return response()->json(['gatpass_details' => $request->all()]);
             // return response($tableName->request);
         } else {
             return "Table '$tableName' already exists.";
         }
-
     }
 
     public function addTimes(Request $request)
     {
-        
         $time1 = $request->time1;
         $time2 = $request->time2;
-        
+
         // Create Carbon instances for the provided times
         $carbonTime1 = Carbon::parse($time1);
         $carbonTime2 = Carbon::parse($time2);
-        
+
         // Add the two times together
         $sumTime = $carbonTime1->addHours($carbonTime2->hour)->addMinutes($carbonTime2->minute);
-        
+
         return response()->json(['sum_time' => $sumTime->format('H:i')]);
         // return true;
     }

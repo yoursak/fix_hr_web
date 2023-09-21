@@ -9,70 +9,87 @@ use RealRashid\SweetAlert\Facades\Alert;
 class ShiftController extends Controller
 {
     public function addShift(Request $request){
-        dd($request->all());
 
-        if($request->shift_type == 'fixed'){
-            $fixShift = DB::table('shifts')->insert([
-                'shift_name'=> $request->shift_name,
-                'shift_type'=> $request->shift_type,
-                'shift_from'=> $request->fix_shift_from,
-                'shift_to'=> $request->fix_shift_to,
-                'is_paid_break'=> $request->break_type,
-                'break_from'=> $request->break_from,
-                'break_to'=> $request->break_to,
+        if($request->shiftType == 'fixed'){
+            $fixShift = DB::table('shift_fixed')->insert([
+                'shift_name'=> $request->fixedshiftName,
+                'shift_start'=> $request->fixShiftStart,
+                'shift_end'=> $request->fixShiftEnd,
+                'break_min'=> $request->fixShiftBreak,
+                'is_paid'=> $request->fixpaid,
                 'business_id'=> $request->session()->get('business_id'),
+                'branch_id'=> $request->session()->get('branch_id'),
                 'updated_at'=> now(),
             ]);
 
             if($fixShift ){
                 Alert::success('Shift Created Successfully','');
-                return redirect('admin/settings/attendance/create_shift');
+                
             }else{
                 Alert::error('Failed','');
-                return redirect('admin/settings/attendance/create_shift');
+                
             }
 
-        }elseif($request->shift_type == 'rotational'){
-            $roatationalShift = DB::table('shifts')->insert([
-                'shift_name'=> $request->Shiftname,
-                'shift_type'=> $request->shift_type,
-                'rotational_shift_name'=> $request->rotational_name,
-                'shift_from'=> $request->from,
-                'shift_to'=> $request->to,
-                'break_hour'=> $request->rotetional_break,
-                'is_paid_break'=> '0',
+        }
+
+        if($request->shiftType == 'rotational'){
+            $shift = DB::table('shift_set')->insert([
+                'set_name'=> $request->rotationalName,
+                'branch_id'=> $request->session()->get('branch_id'),
                 'business_id'=> $request->session()->get('business_id'),
-                'updated_at'=> now(),
             ]);
 
+            $getShift = DB::table('shift_set')->where([
+                'set_name'=> $request->rotationalName,
+                'business_id'=> $request->session()->get('business_id'),
+            ])->first('set_id');
+
+            // dd($getShift->set_id);
+
+            foreach ($request->rotationalShiftName as $key => $rotationalShiftName) {
+                $roatationalShift = DB::table('shift_rotational')->insert([
+                    'set_id'=> $getShift->set_id,
+                    'shift_name'=> $request->rotationalShiftName[$key],
+                    'shift_start'=> $request->rotationalShiftStart[$key],
+                    'shift_end'=> $request->rotationalShiftEnd[$key],
+                    'break_min'=> $request->rotationalShiftBreak[$key],
+                    'is_paid'=> $request->rotationalpaid[$key],
+                    'branch_id'=> $request->session()->get('branch_id'),
+                    'business_id'=> $request->session()->get('business_id'),
+                    'updated_at'=> now(),
+                ]);
+            }
+
             if($roatationalShift){
-                Alert::success('Shift Created Successfully','');
-                return redirect('admin/settings/attendance/create_shift');
+                Alert::success('Rotationa Shift Created Successfully','');
+
             }else{
                 Alert::error('Failed','');
-                return redirect('admin/settings/attendance/create_shift');
+               
             }
-        }elseif($request->shift_type == 'open'){
-            $openShift = DB::table('shifts')->insert([
-                'shift_name'=> $request->shift_name,
-                'shift_type'=> $request->shift_type,
-                'work_hour'=> $request->work_hour,
-                'work_minute'=> $request->work_minute,
+        }
+
+        if($request->shiftType == 'open'){
+            $openShift = DB::table('shift_open')->insert([
+                'shift_name'=> $request->openShiftName,
+                'shift_hr'=> $request->openHour,
+                'shift_min'=> $request->openMin,
+                'break_min'=> $request->openBreak,
+                'is_paid'=> $request->work_minute,
+                'branch_id'=> $request->session()->get('branch_id'),
                 'business_id'=> $request->session()->get('business_id'),
                 'updated_at'=> now(),
             ]);
 
             if($openShift){
                 Alert::success('Shift Created Successfully','');
-                return redirect('admin/settings/attendance/create_shift');
+                
             }else{
                 Alert::error('Failed','');
-                return redirect('admin/settings/attendance/create_shift');
+                
             }
         }
-
-
-            return redirect('admin/settings/attendance/create_shift');
+        return back();
 
     }
 }

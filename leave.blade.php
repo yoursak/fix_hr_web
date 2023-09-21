@@ -52,9 +52,9 @@
             $DepartmentName = $loaded->DepartmentName($item->department_id);
             // dd($DepartmentName);
             $DesignationName = $loaded->DasignationName($item->designation_id);
-            dd($DesignationName);
+            // dd($DesignationName);
             $BranchList = $centralUnit->BranchList();
-            dd($BranchList);
+            // dd($BrachList);
             $DepartmentList = $centralUnit->DepartmentList();
             // dd($DepartmentList);
             $DesignationList = $centralUnit->DesignationList();
@@ -224,7 +224,7 @@
                 <!-- ROW -->
 
                 <!-- END ROW -->
-                <div class="card-body pt-2  ">
+                <div class="card-body p-2   ">
                     <div class="table-responsive">
                         <table class="table  table-vcenter text-nowrap  border-bottom " id="file-datatable">
                             {{-- <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom"> --}}
@@ -259,7 +259,7 @@
                                                     class="avatar avatar-md brround me-3">{{ $item->profile_photo }}</span>
                                                 <div class="me-3 mt-0 mt-sm-1 d-block">
                                                     <h6 class=" m-0 fs-14">{{ $item->emp_name }}</h6> <span
-                                                        {{-- class="text-muted m-0 fs-12">{{ $DesignationName->desig_name? '$DesignationName->desig_name' : '' }}</span> --}}
+                                                        class="text-muted m-0 fs-12">{{ $DesignationName->desig_name }}</span>
                                                 </div>
                                             </div>
                                         </td>
@@ -339,8 +339,8 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="inputPassword4">Designation</label>
-                                {{-- <input type="text" class="form-control" id="inputPassword4" placeholder="Password"
-                                    value="{{ $DesignationName->desig_name? '$DesignationName->desig_name' : '' }}" readonly> --}}
+                                <input type="text" class="form-control" id="inputPassword4" placeholder="Password"
+                                    value="{{ $DesignationName->desig_name }}" readonly>
                                 {{-- placeholder="Password" value="{{$item->designation_id}}" readonly> --}}
                             </div>
                             <div class="form-group col-md-4">

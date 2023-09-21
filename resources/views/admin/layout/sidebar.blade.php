@@ -1,8 +1,12 @@
+<?php use App\Helpers\Central_unit;
+$Helper=new Central_unit;
+?>  
 <div class="sticky">
     @php
     $Sidebar = App\Helpers\Layout::SidebarList();
     $SidebarMenu = App\Helpers\Layout::SidebarMenu();
     $Permission = App\Helpers\Central_unit::GetModelPermission();
+    
     @endphp
     <aside class="app-sidebar ">
         <div class="app-sidebar__logo">
@@ -84,7 +88,7 @@
                                 class="angle fa fa-angle-right"></i></a>
                         <ul class="slide-menu" style="background-color:  #1034A6; border-radius:7px;">
 
-                            <li><a href="{{ url('/Role-permission/allot-permission') }}" class="slide-item"> Role &
+                            <li><a href="{{ url('Role-permission/role_permission') }}" class="slide-item"> Role &
                                     Permission List </a></li>
 
 
@@ -177,7 +181,7 @@
                 <i class="fe fe-alert-triangle fs-50"></i>
                 <h4 class="text-primary fs-20 font-weight-semibold mt-2">Logout Alert</h4>
                 <p class="mb-4 mx-4">Are you sure want to log out ???</p>
-                <a href="/logout" class="btn btn-danger px-5">Log Out</a>
+                <a href="{{url('/logout')}}" class="btn btn-danger px-5">Log Out</a>
                 <a aria-label="Close" class="btn btn-primary px-5 text-white" data-bs-dismiss="modal">StayLogedin</a>
             </div>
         </div>

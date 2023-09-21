@@ -23,6 +23,7 @@ class LeaveRequestResources extends JsonResource
             'days' => (string)$this->days ?? '',
             'reason' => $this->reason ?? '',
             'status' => $this->status ?? '',
+            'profile_photo' => $this->profile_photo ?? '',
             'created_at' => $this->created_at ?? '',
             'updated_at' => $this->updated_at ?? ''
            

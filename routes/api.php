@@ -105,6 +105,13 @@ Route::prefix('admin')->group(function () {
 Route::prefix('employee')->group(function () {
     Route::post('/login', [EmployeeLoginApiController::class, 'login']);
     Route::any('/verify_otp', [EmployeeLoginApiController::class, 'VerifiedOtp']);
+    Route::prefix('attendance')->group(function () {
+            Route::get('/detail', [AttendanceApiController::class, 'index']);
+            Route::post('/detail', [AttendanceApiController::class, 'store']);
+            Route::get('detail/{id}', [AttendanceApiController::class, 'show']);
+            Route::put('detail/{id}', [AttendanceApiController::class, 'update']);
+            Route::delete('detail/{id}', [AttendanceApiController::class, 'destroy']);
+        });
 });
 
 Route::controller(BusinessController::class)->group(function () {

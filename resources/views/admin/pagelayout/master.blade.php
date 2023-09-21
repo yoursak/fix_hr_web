@@ -6,13 +6,13 @@
     <!-- META DATA -->
     <meta charset="UTF-8">
     <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
-    <meta
-        content="DayOne - It is one of the Major Dashboard Template which includes - HR, Employee and Job Dashboard. This template has multipurpose HTML template and also deals with Task, Project, Client and Support System Dashboard."
-        name="description">
-    <meta content="Spruko Technologies Private Limited" name="author">
-    <meta name="keywords"
-        content="admin dashboard, dashboard ui, backend, admin panel, admin template, dashboard template, admin, bootstrap, laravel, laravel admin panel, php admin panel, php admin dashboard, laravel admin template, laravel dashboard, laravel admin panel" />
+    <meta content="" name="description">
+    <meta content="" name="author">
+    <meta name="keywords" content="" />
     <title>FixHR - @yield('title')</title>
+    <!--sweet alert-->
+    <script src="{{ config('app.cdn') }}"></script>    
+
     <!-- FAVICON -->
     <link rel="icon" href="{{asset('assets/images/brand/favicon.ico')}}" type="image/x-icon" />
     <!-- BOOTSTRAP CSS -->
@@ -30,11 +30,7 @@
     <link href="{{asset('assets/switcher/demo.css')}}" rel="stylesheet" />
 
 </head>
-
-
-
 <body class="app sidebar-mini ltr">
-
     @include('sweetalert::alert')
     <!-- SWITCHER -->
     <div class="switcher-wrapper">
@@ -383,7 +379,7 @@
             <!-- APP-SIDEBAR CLOSED -->
 
             <div class="app-content main-content mt-0">
-                <div class="side-app main-container">
+                <div class="side-app main-container pt-0">
 
                     <!-- PAGE HEADER -->
                     @include('admin.layout.breadcrumb')
@@ -403,7 +399,7 @@
 
     </div>
 
-
+<!-- BACK TO TOP -->
     <a href="#top" id="back-to-top"><span class="feather feather-chevrons-up"></span></a>
     <!-- BACK TO TOP -->
 
@@ -418,7 +414,7 @@
     <script src="{{asset('assets/plugins/moment/moment.js')}}"></script>
 
     <!-- CIRCLE-PROGRESS JS -->
-    <script src="{{asset('assets/plugins/circle-progress/circle-progress.min.js')}}"></script>
+    <script src="{{asset('assets/plugins/circle-progress/circle-progress.min.js')}}"></script>  
 
     <!--SIDEMENU JS -->
     <script src="{{asset('assets/plugins/sidemenu/sidemenu.js')}}"></script>
@@ -434,7 +430,7 @@
     <script src="{{asset('assets/plugins/select2/select2.full.min.js')}}"></script>
 
     <!-- INTERNAL DATA TABLES -->
-    <script src="{{asset('assets/plugins/datatable/js/jquery.dataTables.min.js')}}"></script>
+    {{-- <script src="{{asset('assets/plugins/datatable/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('assets/plugins/datatable/js/dataTables.bootstrap5.js')}}"></script>
     <script src="{{asset('assets/plugins/datatable/js/dataTables.buttons.min.js')}}"></script>
     <script src="{{asset('assets/plugins/datatable/js/buttons.bootstrap5.min.js')}}"></script>
@@ -445,9 +441,9 @@
     <script src="{{asset('assets/plugins/datatable/js/buttons.print.min.js')}}"></script>
     <script src="{{asset('assets/plugins/datatable/js/buttons.colVis.min.js')}}"></script>
     <script src="{{asset('assets/plugins/datatable/dataTables.responsive.min.js')}}"></script>
-    <script src="{{asset('assets/plugins/datatable/responsive.bootstrap5.min.js')}}"></script>
-    <script src="{{asset('assets/js/datatables.js')}}"></script>
-    <script src="{{asset('assets/js/select2.js')}}"></script>
+    <script src="{{asset('assets/plugins/datatable/responsive.bootstrap5.min.js')}}"></script> --}}
+    {{-- <script src="{{asset('assets/js/datatables.js')}}"></script> --}}
+    <script src="{{asset('assets/js/select2.js')}}"></script> 
 
     <!-- STICKY JS -->
     <script src="{{asset('assets/js/sticky.js')}}"></script>
@@ -461,7 +457,7 @@
     <!-- SWITCHER JS -->
     <script src="{{asset('assets/switcher/js/switcher.js')}}"></script>
     @yield('js');
-  
+
 </body>
 
 </html>

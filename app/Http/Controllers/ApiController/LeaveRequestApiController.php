@@ -21,27 +21,31 @@ class LeaveRequestApiController extends Controller
     public function store(Request $request)
     {
         $emp = EmployeePersonalDetail::where('emp_id', $request->emp_id)->first();
-        $leave = new LeaveRequestList();
-        $leave->business_id = $emp->business_id;
-        $leave->branch_id = $emp->branch_id;
-        $leave->department_id = $emp->department_id;
-        $leave->designation_id = $emp->designation_id;
-        $leave->emp_id = $request->emp_id;
-        $leave->emp_name = $emp->emp_name;
-        $leave->emp_mobile_no = $emp->emp_mobile_number;
-        $leave->leave_type = $request->leave_type;
-        $leave->from_date = $request->from_date;
-        $leave->to_date = $request->to_date;
-        $leave->days = $request->days;
-        $leave->reason = $request->reason;
-        $leave->status = $request->status;
-        $leave->created_at = now();
-        $leave->updated_at = now();
+        if ($emp) {
+            $leave = new LeaveRequestList();
+            $leave->business_id = $emp->business_id;
+            $leave->branch_id = $emp->branch_id;
+            $leave->department_id = $emp->department_id;
+            $leave->designation_id = $emp->designation_id;
+            $leave->emp_id = $request->emp_id;
+            $leave->emp_type = $emp->employee_type;
+            $leave->emp_name = $emp->emp_name;
+            $leave->emp_mobile_no = $emp->emp_mobile_number;
+            $leave->leave_type = $request->leave_type;
+            $leave->from_date = $request->from_date;
+            $leave->to_date = $request->to_date;
+            $leave->days = $request->days;
+            $leave->reason = $request->reason;
+            $leave->status = $request->status;
+            $leave->profile_photo = $emp->profile_photo;
+         
 
-        if ($leave->save()) {
-            return ReturnHelpers::jsonApiReturn(LeaveRequestResources::collection([LeaveRequestList::find($leave->id)])->all());
+            if ($leave->save()) {
+                return ReturnHelpers::jsonApiReturn(LeaveRequestResources::collection([LeaveRequestList::find($leave->id)])->all());
+            }
+            return response()->json(['result' => [], 'status' => false]);
         }
-        return response()->json(['result' => [], 'status' => false]);
+        return response()->json(['result' => [], 'status' => false], 404);
     }
 
     public function show($id)
@@ -50,31 +54,34 @@ class LeaveRequestApiController extends Controller
         if ($data) {
             return ReturnHelpers::jsonApiReturn(LeaveRequestResources::collection([$data])->all());
         } else {
-            return response()->json(['result' => [], 'status' => false]);
+            return response()->json(['result' => [], 'status' => false], 404);
         }
     }
 
     public function update(Request $request, $id)
     {
         $leave = LeaveRequestList::find($id);
-        $leave->business_id = $request->business_id ?? $leave->business_id;
-        $leave->branch_id = $request->branch_id ?? $leave->branch_id;
-        $leave->department_id = $request->department_id ?? $leave->department_id;
-        $leave->designation_id = $request->designation_id ?? $leave->designation_id;
-        $leave->emp_id = $request->emp_id ?? $leave->emp_id;
-        $leave->emp_name = $request->emp_name ?? $leave->emp_name;
-        $leave->emp_mobile_no = $request->emp_mobile_no ?? $leave->emp_mobile_no;
-        $leave->leave_type = $request->leave_type ?? $leave->leave_type;
-        $leave->from_date = $request->from_date ?? $leave->from_date;
-        $leave->to_date = $request->to_date ?? $leave->to_date;
-        $leave->days = $request->days ?? $leave->days;
-        $leave->reason = $request->reason ?? $leave->reason;
-        $leave->status = $request->status ?? $leave->status;
+        if ($leave) {
+            $leave->business_id = $request->business_id ?? $leave->business_id;
+            $leave->branch_id = $request->branch_id ?? $leave->branch_id;
+            $leave->department_id = $request->department_id ?? $leave->department_id;
+            $leave->designation_id = $request->designation_id ?? $leave->designation_id;
+            $leave->emp_id = $request->emp_id ?? $leave->emp_id;
+            $leave->emp_name = $request->emp_name ?? $leave->emp_name;
+            $leave->emp_mobile_no = $request->emp_mobile_no ?? $leave->emp_mobile_no;
+            $leave->leave_type = $request->leave_type ?? $leave->leave_type;
+            $leave->from_date = $request->from_date ?? $leave->from_date;
+            $leave->to_date = $request->to_date ?? $leave->to_date;
+            $leave->days = $request->days ?? $leave->days;
+            $leave->reason = $request->reason ?? $leave->reason;
+            $leave->status = $request->status ?? $leave->status;
 
-        if ($leave->update()) {
-            return ReturnHelpers::jsonApiReturn(LeaveRequestResources::collection([LeaveRequestList::find($leave->id)])->all());
+            if ($leave->update()) {
+                return ReturnHelpers::jsonApiReturn(LeaveRequestResources::collection([LeaveRequestList::find($leave->id)])->all());
+            }
+            return response()->json(['result' => [], 'status' => false]);
         }
-        return response()->json(['result' => [], 'status' => false]);
+        return response()->json(['result' => [], 'status' => false], 404);
     }
 
     public function destroy($id)
@@ -85,7 +92,7 @@ class LeaveRequestApiController extends Controller
             $data->delete();
             return response()->json(['result' => true, 'status' => true]);
         } else {
-            return response()->json(['result' => [], 'status' => false]);
+            return response()->json(['result' => [], 'status' => false], 404);
         }
     }
 }

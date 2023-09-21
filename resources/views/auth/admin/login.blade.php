@@ -5,7 +5,6 @@
     <div class="row align-items-center">
         <div class="col-md-12">
             <div class="card-body">
-                <?php echo Session::get('business_id'); ?>
                 <img src="{{ asset('assets/logo/FixHR.png') }}" alt="" class="img-fluid mb-4">
                
                 <h1 class="h3  mb-3">Welcome to <span style="color: black"><b>FIX<span

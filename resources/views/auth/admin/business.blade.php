@@ -90,7 +90,7 @@
                             <div class="form-group">
                                 <label class="form-label">State</label>
                                 <select onchange="print_city('state1', this.selectedIndex);" id="sts1" name="state"
-                                    name="stt" class="form-control  " required></select>
+                                     class="form-control  " required></select>
                             </div>
                         </div>
                         <div class="col-sm-4 col-md-4">
@@ -141,7 +141,7 @@
                     </div>
                 </div>
                 <div class="card-footer text-end">
-                    <button href="#" type="submit" class="btn btn-primary">Save & Continue</button>
+                    <button type="submit" class="btn btn-primary">Save & Continue</button>
                     {{-- <a href="{{ url('/admin') }}" class="btn btn-outline-primary">Skip</a> --}}
                 </div>
             </form>

@@ -5,10 +5,11 @@
 @section('settings')
     <div class="row">
         @php
-            $Branch = App\Helpers\Central_unit::BranchList();
-            $Department = App\Helpers\Central_unit::DepartmentList();
-            $Employee = App\Helpers\Central_unit::EmployeeDetails();
-            $Roles = App\Helpers\Central_unit::GetRoles();
+            $rooted = new App\Helpers\Central_unit();
+            $Branch = $rooted->BranchList();
+            $Department = $rooted->DepartmentList();
+            $Employee = $rooted->EmployeeDetails();
+            $Roles = $rooted->GetRoles();
             // $Permission = App\Helpers\Central_unit::GetModelPermission();
             // $Permission->where('permission_name','Employee.View')->all()!= null
         @endphp
@@ -21,8 +22,8 @@
                 <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
                     <div class="d-lg-flex d-block">
                         <div class="btn-list">
-                                <a class="modal-effect btn btn-primary border-0 my-auto" data-effect="effect-scale"
-                                data-bs-toggle="modal" href="#addNewAdmin">Add New Admin</a>    
+                            <a class="modal-effect btn btn-primary border-0 my-auto" data-effect="effect-scale"
+                                data-bs-toggle="modal" href="#addNewAdmin">Add New Admin</a>
                         </div>
                     </div>
                 </div>
@@ -30,36 +31,38 @@
         </div>
     </div>
 
-    @foreach ($admins->where('user','Owner') as $admin)
-    <div class="row">
-        <div class="card">
-            <div class="card-header  border-0">
-                <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Owner</b></span></h4>
-            </div>
-            <div class="card-body border-bottum-0">
-                <div class="row">
-                    <div class="col-xl-3 my-auto">
-                        <h5 class="my-auto">{{ $admin->name }}</h5>
-                    </div>
-                    <div class="col-6 col-xl-3 my-auto">
-                        <p class="my-auto" style="color:rgb(34, 33, 29)"><i class="fe fe-mail me-2"></i>{{ $admin->email }}
-                        </p>
-                    </div>
-                    <div class="col-6 col-xl-3 my-auto">
-                        <p class="my-auto " style="color:rgb(34, 33, 29)"><i class="fe fe-phone mx-2"></i>{{ $admin->phone }}</p>
+    @foreach ($admins->where('user', '0') as $admin)
+        <div class="row">
+            <div class="card">
+                <div class="card-header  border-0">
+                    <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Owner</b></span></h4>
+                </div>
+                <div class="card-body border-bottum-0">
+                    <div class="row">
+                        <div class="col-xl-3 my-auto">
+                            <h5 class="my-auto">{{ $admin->name }}</h5>
+                        </div>
+                        <div class="col-6 col-xl-3 my-auto">
+                            <p class="my-auto" style="color:rgb(34, 33, 29)"><i
+                                    class="fe fe-mail me-2"></i>{{ $admin->email }}
+                            </p>
+                        </div>
+                        <div class="col-6 col-xl-3 my-auto">
+                            <p class="my-auto " style="color:rgb(34, 33, 29)"><i
+                                    class="fe fe-phone mx-2"></i>{{ $admin->phone }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     @endforeach
 
     <div class="row">
         <div class="card">
-            <div class="card-header  border-0">
-                <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Admins</b></span></h4>
-            </div>
             @foreach ($pendings as $pending)
+                <div class="card-header  border-0">
+                    <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Admins</b></span></h4>
+                </div>
                 <div class="card-body border-bottum-0">
                     <div class="row">
                         <div class="col-xl-3 my-auto">
@@ -83,10 +86,10 @@
                 </div>
             @endforeach
 
-            @foreach ($admins->where('user','admin') as $admin)
+            @foreach ($admins->where('user', '1') as $admin)
                 @php
                     $Emp = $Employee->where('emp_email', $admin->email)->first();
-                    // dd($Emp_Id->emp_id);
+                    // dd($Emp);
                 @endphp
                 <div class="card-body border-bottum-0">
                     <div class="row">
@@ -98,19 +101,25 @@
                                     class="fe fe-mail me-2"></i>{{ $admin->email }}</p>
                         </div>
                         <div class="col-6 col-xl-3 my-auto">
-                            @if (isset($Emp->role_id))
-                                @php
-                                    $Role_id = $Roles->where('id', $Emp->role_id)->first();
-                                @endphp
-                                <p class="my-auto " style="color:rgb(34, 33, 29)"><i class="fe fe-user mx-2"></i>
-                                    {{-- <a href="{{route('rolePermission',['data'=>$Emp->emp_id])}}"> --}}
-                                    {{ $Role_id->name }}
-                                    {{-- </a> --}}
-                                </p>
-                            @else
-                                <a class="modal-effect btn btn-primary btn-sm border-0 my-auto" data-effect="effect-scale"
-                                    data-bs-toggle="modal" href="#asignAdmin{{ $admin->id }}">Assign</a>
-                            @endif
+
+                            <?php
+                            
+                            // $Role_id = $Roles->where('id', $Emp->role_id)->first();
+                            $Roless = DB::table('roles')
+                                ->where('id', $Emp->role_id)
+                                ->where('business_id', Session::get('business_id'))
+                                ->select('*') // Select all columns from all three tables
+                                ->first();
+                                // ->where('branch_id', Session::get('branch_id'))
+                            // dd($Roless);
+                            ?>
+                            <p class="my-auto " style="color:rgb(34, 33, 29)"><i class="fe fe-user mx-2"></i>
+                                <?= $Roless != '' ? $Roless->name : 'Role Name : null' ?>
+                            </p>
+                            {{-- @else --}}
+                            <a class="modal-effect btn btn-primary btn-sm border-0 my-auto" data-effect="effect-scale"
+                                data-bs-toggle="modal" href="#asignAdmin{{ $admin->id }}">Assign</a>
+                            {{-- @endif --}}
 
                         </div>
                         <div class="col-xl-3">

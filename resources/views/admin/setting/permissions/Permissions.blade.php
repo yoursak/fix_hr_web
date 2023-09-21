@@ -6,13 +6,14 @@
     <!-- ROW -->
     <div class="row">
         @php
-            $Branch = App\Helpers\Central_unit::BranchList();
-            $Roles = App\Helpers\Central_unit::GetRoles();
-            $Modules = App\Helpers\Layout::SidebarMenu();
-            $Department = App\Helpers\Central_unit::DepartmentList();
-            $Employee = App\Helpers\Central_unit::EmployeeDetails();
+            $rooted = new App\Helpers\Central_unit();
+            $rooted1 = new App\Helpers\Layout();
             
-            // dd($RoleDetails);
+            $Branch = $rooted->BranchList();
+            $Roles = $rooted->GetRoles();
+            $Modules = $rooted1->SidebarMenu();
+            $Department = $rooted->DepartmentList();
+            $Employee = $rooted->EmployeeDetails();
             
         @endphp
         <div class="page-header d-md-flex d-block">
@@ -37,10 +38,10 @@
     <div class="row">
         <div class="card">
 
-                @csrf
-                <div class="card-body">
-                    <div class="row">
-                        {{-- <div class="col-3">
+            @csrf
+            <div class="card-body">
+                <div class="row">
+                    {{-- <div class="col-3">
                         <div class="form-group my-auto mx-2">
                             <label class="form-label">Branch</label>
                             <select name="branch" class="form-control custom-select select2"
@@ -73,80 +74,101 @@
                     </select>
                 </div>
             </div> --}}
-                        <div class="col-xl-4">
-                            <div class="form-group my-auto mx-2">
-                                <label class="form-label">Assign to</label>
-                                <select id="selectAdmin" onchange="check(this)" name="model"
-                                    class="form-control custom-select select2" data-placeholder="Select Branch" required>
-                                    <option value="">Select Admin</option>
-                                    @foreach ($Admins as $admin)
-                                        <option value="{{ $admin->email }}">{{ $admin->name }}</option>
-                                    @endforeach
-                                </select>
+                    <div class="col-xl-3">
+                        <div class="form-group my-auto mx-2">
+                            <label class="form-label">Assign to</label>
+                            <select id="selectAdmin" onchange="check(this)" name="model"
+                                class="form-control custom-select select2" data-placeholder="Select Branch" required>
+                                <option value="">Select Admin</option>
+                                @foreach ($Admins as $admin)
+                                    <option value="{{ $admin->email }}">{{ $admin->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label">Role Name</label>
+                        <input class="form-control" placeholder="Role Name" type="text" name="role" required>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label class="form-label">Branch</label>
+                            <select name="branch" class="form-control custom-select select2"
+                                data-placeholder="Select Branch" required>
+                                @foreach ($Branch as $branch)
+                                    <option value="{{ $branch->branch_id }}">{{ $branch->branch_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label">Description</label>
+                        <input class="form-control" placeholder="Description" type="text" name="Description" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-3">
+                        <div class="page-header d-md-flex d-block">
+                            <div class="page-leftheader">
+
+                                <h4>Module Names</h4>
+
+                                <label class="custom-control custom-checkbox mx-3">
+                                    <input id="allCheck" type="checkbox" class="custom-control-input">
+                                    <span class="custom-control-label">All</span>
+                                </label>
                             </div>
                         </div>
                     </div>
+                    <div class="col-xl-9">
+                        <div class="page-header d-md-flex d-block">
+                            <div class="page-leftheader">
+                                <h4>Module Permissions</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @foreach ($Modules as $module)
                     <div class="row">
                         <div class="col-xl-3">
-                            <div class="page-header d-md-flex d-block">
-                                <div class="page-leftheader">
-
-                                    <h4>Module Names</h4>
-
-                                    <label class="custom-control custom-checkbox mx-3">
-                                        <input id="allCheck" type="checkbox" class="custom-control-input">
-                                        <span class="custom-control-label">All</span>
-                                    </label>
-                                </div>
+                            <div>
+                                <label class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input">
+                                    <span class="custom-control-label">{{ $module->menu_name }}</span>
+                                </label>
                             </div>
                         </div>
                         <div class="col-xl-9">
-                            <div class="page-header d-md-flex d-block">
-                                <div class="page-leftheader">
-                                    <h4>Module Permissions</h4>
-                                </div>
+                            <div class="d-flex" id="permit">
+                                <label class="custom-control custom-checkbox mx-3">
+                                    <input type="checkbox" class="custom-control-input">
+                                    <span class="custom-control-label">All</span>
+                                </label>
+                                @foreach ($permissions->where('module_id', $module->menu_id) as $permission)
+                                    <label class="custom-control custom-checkbox mx-3 fw-20">
+                                        <input id="{{ $permission->id }}" type="checkbox" class="custom-control-input allow"
+                                            name="permissions[]" value="{{ $module->menu_name . '.' . $permission->name }}"
+                                            onchange="givePermit(this)">
+                                        <span class="custom-control-label">{{ $permission->name }}</span>
+                                    </label>
+                                @endforeach
                             </div>
                         </div>
                     </div>
-
-                    @foreach ($Modules as $module)
-                        <div class="row">
-                            <div class="col-xl-3">
-                                <div>
-                                    <label class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input">
-                                        <span class="custom-control-label">{{ $module->menu_name }}</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-xl-9">
-                                <div class="d-flex" id="permit">
-                                    <label class="custom-control custom-checkbox mx-3">
-                                        <input type="checkbox" class="custom-control-input">
-                                        <span class="custom-control-label">All</span>
-                                    </label>
-                                    @foreach ($permissions->where('module_id', $module->menu_id) as $permission)
-                                        <label class="custom-control custom-checkbox mx-3 fw-20">
-                                            <input id="{{ $permission->id }}" type="checkbox" class="custom-control-input allow" name="permissions[]" value="{{ $module->menu_name.'.'.$permission->name }}" onchange="givePermit(this)">
-                                            <span class="custom-control-label">{{ $permission->name }}</span>
-                                        </label>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-                <div class="page-header d-md-flex d-block">
-                    <div class="page-rightheader ms-auto">
-                        <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-                            <div class="d-lg-flex d-block">
-                                <div class="btn-list">
-                                    <a href="" type="submit" class="btn btn-primary my-auto">Save & Continoue</a>
-                                </div>
+                @endforeach
+            </div>
+            <div class="page-header d-md-flex d-block">
+                <div class="page-rightheader ms-auto">
+                    <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
+                        <div class="d-lg-flex d-block">
+                            <div class="btn-list">
+                                <a href="" type="submit" class="btn btn-primary my-auto">Save & Continoue</a>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
         </div>
     </div>
@@ -174,7 +196,7 @@
             });
         }
 
-        function givePermit(e){
+        function givePermit(e) {
             var elem = document.getElementById('selectAdmin').value;
             var permission = e.value;
             var permission_id = e.id;
@@ -183,32 +205,36 @@
             console.log(e.id);
             console.log(elem);
 
-            if(e.checked == true){
+            if (e.checked == true) {
                 $.ajax({
-                url: "{{ url('Role-permission/assign-permission-to-role') }}",
-                type: "post",
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    admin: elem,permission,permission_id
-                },
-                dataType: 'json',
-                success: function(result) {
-                    console.log(result);
-                }
-            });
-            }else{
+                    url: "{{ url('Role-permission/assign-permission-to-role') }}",
+                    type: "post",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        admin: elem,
+                        permission,
+                        permission_id
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+                        console.log(result);
+                    }
+                });
+            } else {
                 $.ajax({
-                url: "{{ url('Role-permission/remove-permission') }}",
-                type: "post",
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    admin: elem,permission,permission_id
-                },
-                dataType: 'json',
-                success: function(result) {
-                    console.log(result);
-                }
-            });
+                    url: "{{ url('Role-permission/remove-permission') }}",
+                    type: "post",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        admin: elem,
+                        permission,
+                        permission_id
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+                        console.log(result);
+                    }
+                });
             }
         }
     </script>
@@ -227,7 +253,8 @@
                         <div class="row p-3">
                             <div class="col-12 my-2">
                                 <label class="form-label">Role Name</label>
-                                <input class="form-control" placeholder="Role Name" type="text" name="role" required>
+                                <input class="form-control" placeholder="Role Name" type="text" name="role"
+                                    required>
                             </div>
                             <div class="col-12 my-2">
                                 <div class="form-group">

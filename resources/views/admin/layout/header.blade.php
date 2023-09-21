@@ -1,3 +1,6 @@
+<?php use App\Helpers\Central_unit;
+$Helper=new Central_unit;
+?>
 <div class="app-header header sticky">
     <div class="container-fluid main-container">
         <div class="d-flex">
@@ -64,7 +67,9 @@
                                 <?php if(Session::has('business_id')){ ?>
                                 <div class="me-3 mt-0 mt-sm-1 d-block text-center">
                                     <span class="fs-14 mb-0"><b>Mr.{{Session::get('login_name')}}</b></span><br>
-                                    <span class="text-muted mt-0">{{Session::get('login_role')}}</span>
+                                    <span class="text-muted mt-0">
+                                        <?=$Helper->RoleIdToName();?>
+                                    </span>
                                 </div>
                                 <?php }else{  ?>
                                 <div class="mt-0 mt-sm-1 d-block text-center">
@@ -78,8 +83,8 @@
                                 <a href="javascript:void(0);" class="nav-link  ps-0 leading-none"
                                     data-bs-toggle="dropdown">
                                     <span>
-                                        <img src={{ asset("assets/images/users/16.jpg")}} alt="img"
-                                            class="avatar avatar-md rounded-circle">
+                                        <img src="{{ asset('business_logo/' . Session::get('login_business_image')) }}"
+                                            alt="img" class="avatar avatar-md rounded-circle">
                                     </span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated">

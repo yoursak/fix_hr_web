@@ -18,11 +18,11 @@
     </style>
 @endsection
 @section('settings')
-    @include('sweetalert::alert', ['cdn' => 'https://cdn.jsdelivr.net/npm/sweetalert2@9'])
 
     <div class="page-header d-md-flex d-block">
         @php
-            $branch = App\Helpers\Central_unit::BranchList();
+            $root =new App\Helpers\Central_unit;
+            $branch=$root->BranchList();
             $i = 0;
             foreach ($branch as $item) {
                 $i++;
@@ -38,10 +38,6 @@
                     <div class="btn-list">
                         <button type="button" id="addNewBranch" class="btn btn-outline-dark" data-bs-toggle="modal"
                             data-bs-target="#branchName">Create Branch</button>
-                        {{-- <button type="button" id="addNewDepart" class="btn btn-outline-dark" data-bs-toggle="modal"
-                            data-bs-target="#departName">Add Department</button>
-                        <button type="button" id="addNewDesig" class="btn btn-outline-dark" data-bs-toggle="modal"
-                            data-bs-target="#desigName">Add Designation</button> --}}
                     </div>
                 </div>
             </div>
@@ -50,8 +46,7 @@
 
     <div class="row">
         @foreach ($branch as $item)
-            {{-- @dd($branch); --}}
-            <div class="card" id="repoerCard4">
+           <div class="card" id="repoerCard4">
                 <div class="card-body border-bottum-0">
                     <div class="row">
                         <div class="col-12 my-auto">
@@ -61,22 +56,21 @@
                                 </div>
                                 <div class="col-xl-2">
                                     <p class="my-auto text-muted text-end">
-                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="modal"
+                                        <a  class="action-btns btn btn-sm btn-primary" data-bs-toggle="modal"
                                             data-bs-target="#editBranchName{{ $item->id }}" id="BranchEditbtn"
                                             title="Edit">
-                                            <i class="feather feather-edit  text-dark"></i>
+                                            <i class="feather feather-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="modal"
+                                        <a  class="action-btns btn btn-sm btn-danger" data-bs-toggle="modal"
                                             data-bs-target="#branchDeletebtn{{ $item->id }}" id="BranchEditbtn"
                                             title="Edit">
-                                            <i class="feather feather-trash  text-dark"></i>
+                                            <i class="feather feather-trash "></i>
                                         </a>
                                     </p>
                                 </div>
                             </div>
                         </div>
                         {{-- <div class="col-1 my-auto text-end">
-                            
                             <i class="fe fe-chevron-right fs-30 btn " id="reportBtn4"></i>
                         </div> --}}
                     </div>
@@ -140,8 +134,7 @@
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
                         @csrf
-                        <button type="reset" class="btn btn-outline-dark cancel"
-                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="reset" class="btn btn-outline-dark cancel" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary savebtn">Continue</button>
                     </div>
                 </form>

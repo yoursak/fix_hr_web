@@ -10,8 +10,6 @@ class UploadImageApiController extends Controller
     public function uploadImage(Request $request)
     {
         if ($request->image) {
-            // return true; 
-            // Validate the incoming request
             $validatedData = $request->validate([
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust max size as needed
             ]);

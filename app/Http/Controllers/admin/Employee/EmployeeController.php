@@ -9,13 +9,17 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Session;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Models\employee\EmployeePersonalDetail;
+
 
 
 
 class EmployeeController extends Controller
 {
     public function index(){
-        return view('admin.employees.employee');
+        $data = EmployeePersonalDetail::where('business_id', Session::get('business_id'))->get();
+        
+        return view('admin.employees.employee', compact('data'));
     }
 
     public function add(){

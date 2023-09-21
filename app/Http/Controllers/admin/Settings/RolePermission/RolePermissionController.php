@@ -19,16 +19,16 @@ class RolePermissionController extends Controller
         $params_data = $request->data;
         // dd($params_data);
         $Admins = DB::table('login_admin')->where([
-            'business_id'=>$request->session()->get('business_id'),
-            'user'=>'admin',
+            'business_id' => $request->session()->get('business_id'),
+            'user' => '1',
         ])->get();
         $roles = DB::table('roles')->get();
         $permissions = DB::table('permissions')->where([
-            'business_id'=>$request->session()->get('business_id'),
+            'business_id' => $request->session()->get('business_id'),
         ])->get();
         $RoleDetails = DB::table('model_has_roles')->where([
-            'model_id'=> $params_data,
-            'business_id'=> $request->session()->get('business_id'),
+            'model_id' => $params_data,
+            'business_id' => $request->session()->get('business_id'),
         ])->first();
         return view('admin.setting.permissions.Permissions', compact('roles', 'permissions', 'Admins', 'RoleDetails'));
     }
@@ -36,19 +36,19 @@ class RolePermissionController extends Controller
     public function AdminList(Request $request)
     {
         $admins = DB::table('login_admin')->where([
-            'business_id'=> $request->session()->get('business_id'),
+            'business_id' => $request->session()->get('business_id'),
         ])->get();
         $roles = DB::table('roles')->where([
-            'business_id'=> $request->session()->get('business_id'),
+            'business_id' => $request->session()->get('business_id'),
         ])->get();
         $pendings = DB::table('pending_admins')->where([
-            'business_id'=> $request->session()->get('business_id'),
+            'business_id' => $request->session()->get('business_id'),
         ])->get();
         $permissions = DB::table('permissions')->where([
-            'business_id'=> $request->session()->get('business_id'),
+            'business_id' => $request->session()->get('business_id'),
         ])->get();
         $modelHasRole = DB::table('model_has_roles')->where([
-            'business_id'=> $request->session()->get('business_id'),
+            'business_id' => $request->session()->get('business_id'),
         ])->get();
         // dd($roles);
         return view('admin.setting.permissions.AdminList', compact('admins', 'roles', 'pendings', 'modelHasRole', 'permissions'));
@@ -60,7 +60,7 @@ class RolePermissionController extends Controller
         // dd($request->all());
         $is_Emp = DB::table('employee_personal_details')->where([
             'emp_id' => $request->employee,
-            'business_id'=>$request->session()->get('business_id'),
+            'business_id' => $request->session()->get('business_id'),
         ])->first();
         if (isset($is_Emp)) {
             $pending_admin = DB::table('pending_admins')->insert([
@@ -140,8 +140,9 @@ class RolePermissionController extends Controller
         return response()->json($RoleDetails);
     }
 
-    public function removePermission(Request $request){
-        $permission = DB::table('model_has_permissions')->where('permission_id',$request->permission_id)->delete();
+    public function removePermission(Request $request)
+    {
+        $permission = DB::table('model_has_permissions')->where('permission_id', $request->permission_id)->delete();
         return response()->json($permission);
     }
 
@@ -161,28 +162,51 @@ class RolePermissionController extends Controller
     {
         // dd($request->all());
 
-        $model_has_role = DB::table('model_has_roles')->insert([
-            'role_id' => $request->role,
-            'business_id' => $request->session()->get('business_id'),
-            'branch_id' => $request->branch,
-            'model_id' => $request->model,
-            'model_type' => 'admin'
-        ]);
 
-        if (isset($model_has_role)) {
-            // $model_has_role->assignRole($model_has_role);
-            $update_employee = DB::table('employee_personal_details')->where([
-                'emp_id' => $request->model,
-                'business_id'=> $request->session()->get('business_id'),
-                ])->update([
+        $check = DB::table('model_has_roles')->where('model_id', $request->model)->first();
+
+        if (isset($check)) {
+            $model_has_role1 = DB::table('model_has_roles')->where('model_id',$request->model)->update([
                 'role_id' => $request->role,
             ]);
+           
+            if (isset($model_has_role1)) {
+                // $model_has_role->assignRole($model_has_role);
+                $update_employee = DB::table('employee_personal_details')->where([
+                    'emp_id' => $request->model,
+                    'business_id' => $request->session()->get('business_id'),
+                ])->update([
+                    'role_id' => $request->role,
+                ]);
 
-            if (isset($update_employee)) {
-                Alert::success('Congratulations', 'Role Assigned Successfully');
+                if (isset($update_employee)) {
+                    Alert::success('Congratulations', 'Role Assigned Successfully');
+                }
+            }
+        } else {
+            $model_has_role2 = DB::table('model_has_roles')->insert([
+                'role_id' => $request->role,
+                'business_id' => $request->session()->get('business_id'),
+                'branch_id' => $request->branch,
+                'model_id' => $request->model,
+                'model_type' => 'admin'
+            ]);
+            if (isset($model_has_role2)) {
+                // $model_has_role->assignRole($model_has_role);
+                $update_employee = DB::table('employee_personal_details')->where([
+                    'emp_id' => $request->model,
+                    'business_id' => $request->session()->get('business_id'),
+                ])->update([
+                    'role_id' => $request->role,
+                ]);
+
+                if (isset($update_employee)) {
+                    Alert::success('Congratulations', 'Role Assigned Successfully');
+                }
             }
         }
+
+
         return redirect('/Role-permission/admin-list');
     }
-
 }

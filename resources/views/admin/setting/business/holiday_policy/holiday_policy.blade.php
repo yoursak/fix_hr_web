@@ -258,8 +258,9 @@ Business / Holiday Policy Setting
 @section('settings')
 <div class="page-header d-md-flex d-block">
     @php
-    $HolidayTemplate = App\Helpers\Central_unit::Template();
-    $Holiday = App\Helpers\Central_unit::Holiday();
+    $centralUnit = new App\Helpers\Central_unit();
+    $HolidayTemplate = $centralUnit->Template();
+    $Holiday = $centralUnit->Holiday();
     // dd($HolidayTemplate);
     $j = 0;
     @endphp
@@ -307,143 +308,137 @@ Business / Holiday Policy Setting
                                 List</b></a>
                     </p>
                 </div>
-                <div class="col-4 col-xl-2">
+                <div class="col-4 col-xl-2 d-flex">
                     <p class="my-auto text-muted text-end">
-                        <a class="btn text-primary" id="editTempBtn{{ $template->temp_id }}" data-bs-toggle="modal" data-bs-target="#updateTemplate{{ $template->temp_id }}"><b>Edit Template</b></a>
+                        <a class="btn text-primary" id="editTempBtn{{ $template->temp_id }}" data-bs-toggle="modal"
+                            data-bs-target="#updateTemplate{{ $template->temp_id }}"><b>Edit</b></a>
                     </p>
+                    <form action="{{route('delete.holidayTemp',$template->temp_id)}}" method="post">
+                        @csrf
+                        <p class="my-auto text-muted text-end">
+                            <button type-'submit' class="btn text-danger" id="editTempBtn{{ $template->temp_id }}"><b>Delete</b></button>
+                        </p>
+                    </form>
                 </div>
             </div>
         </div>
 
-        <div class="container">
-            <div class="modal fade" id="ManageEmployee{{ $template->temp_id }}">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header p-5">
-                            <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Manage
-                                Employee</h5>
-                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
-                            </button>
-                        </div>
-
-                        <div class="card-header border-0">
-                            <h4 class="card-title">Assign Policy to Employee</h4>
-                        </div>
-                        <div class="modal-body m-5">
-                            <div class="row">
-                                <div class="col-md-12 col-xl-3">
-                                    <div class="form-group">
-                                        <label class="form-label">Branch:</label>
-                                        <select name="attendance" class="form-control custom-select select2"
-                                            data-placeholder="Select Branch">
-                                            <option value="1">select</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 col-xl-3">
-                                    <div class="form-group">
-                                        <label class="form-label">Department:</label>
-                                        <select name="attendance" class="form-control custom-select select2"
-                                            data-placeholder="Select Department">
-                                            <option value="1">select</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 col-xl-3">
-                                    <div class="form-group">
-                                        <label class="form-label">Designation:</label>
-                                        <select name="attendance" class="form-control custom-select select2"
-                                            data-placeholder="Select Designation">
-                                            <option value="1">Select</option>
-                                        </select>
-                                    </div>
+        <div class="modal fade" id="ManageEmployee{{ $template->temp_id }}">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header p-5">
+                        <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Manage Employee</h5>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
+                        </button>
+                    </div>
+                    
+                    <div class="card-header border-0">
+                        <h4 class="card-title">Assign Policy to Employee</h4>
+                    </div>
+                    <div class="modal-body m-5">
+                        <div class="row">
+                            <div class="col-md-12 col-xl-3">
+                                <div class="form-group">
+                                    <label class="form-label">Branch:</label>
+                                    <select name="attendance" class="form-control custom-select select2"
+                                        data-placeholder="Select Branch">
+                                        <option value="1">select</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-xl-3"></div>
-                                <div class="col-xl-3"></div>
-                                <div class="col-xl-3"></div>
-                                <table class="table mb-0 text-nowrap">
-                                    <thead>
-                                        <div class="card-header border-bottom-0">
-                                            <div class="card-title">
-                                                Employee List
-                                            </div>
-                                            <div class="page-rightheader ms-auto">
-                                                <div
-                                                    class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
-                                                    <div class="btn-list d-flex">
-                                                        <div class="d-flex my-5">
-                                                            <label class="custom-switch">
-                                                                <input type="checkbox" id="allAllow" onchange="allow()"
-                                                                    class="custom-switch-input">
-                                                                <span class="custom-switch-indicator"></span>
-                                                            </label>
-                                                            <h5 class="title ms-5 my-auto">Select All</h5>
-                                                        </div>
+                            <div class="col-md-12 col-xl-3">
+                                <div class="form-group">
+                                    <label class="form-label">Department:</label>
+                                    <select name="attendance" class="form-control custom-select select2"
+                                        data-placeholder="Select Department">
+                                        <option value="1">select</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-xl-3">
+                                <div class="form-group">
+                                    <label class="form-label">Designation:</label>
+                                    <select name="attendance" class="form-control custom-select select2" data-placeholder="Select Designation">
+                                        <option value="1">Select</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-3"></div>
+                            <div class="col-xl-3"></div>
+                            <div class="col-xl-3"></div>
+                            <table class="table mb-0 text-nowrap">
+                                <thead>
+                                    <div class="card-header border-bottom-0">
+                                        <div class="card-title">
+                                            Employee List
+                                        </div>
+                                        <div class="page-rightheader ms-auto">
+                                            <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+                                                <div class="btn-list d-flex">
+                                                    <div class="d-flex my-5">
+                                                        <label class="custom-switch">
+                                                            <input type="checkbox" id="allAllow" onchange="allow()" class="custom-switch-input">
+                                                            <span class="custom-switch-indicator"></span>
+                                                        </label>
+                                                        <h5 class="title ms-5 my-auto">Select All</h5>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="border-bottom">
-                                            <td>
-                                                <div class="row">
-                                                    <div class="col-xl-6">
-                                                        <div class="d-flex">
-                                                            <div class="me-3 mt-0 mt-sm-1 d-block">
-                                                                <h5 class="mb-0"><b><i
-                                                                            class="fa fa-user fs-20 mx-3"></i>Jayant
-                                                                        Nishas</b><br /><span class="text-muted"><i
-                                                                            class="fa fa fs-20 mx-3"></i><span
-                                                                            class="fs-14">Software
-                                                                            Developer</span></span></h5>
-                                                            </div>
+                                    </div>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-bottom">
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-xl-6">
+                                                    <div class="d-flex">
+                                                        <div class="me-3 mt-0 mt-sm-1 d-block">
+                                                            <h5 class="mb-0"><b><i class="fa fa-user fs-20 mx-3"></i>Jayant Nishas</b><br/><span class="text-muted"><i class="fa fa fs-20 mx-3"></i><span class="fs-14">Software Developer</span></span></h5>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-6">
-                                                        <span class="d-sm-none d-md-block"><b class="my-auto"><i
-                                                                    class="fa fa-phone fs-20 mx-3"></i> +91
-                                                                1234567890</b></span>
-                                                    </div>
                                                 </div>
-                                            </td>
-                                            <td>
-                                                <label class="custom-switch">
-                                                    <input type="checkbox" id="emp_check" name="employeeAllow"
-                                                        class="custom-switch-input">
-                                                    <span class="custom-switch-indicator"></span>
-                                                </label>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                                                <div class="col-xl-6">
+                                                    <span class="d-sm-none d-md-block"><b class="my-auto"><i class="fa fa-phone fs-20 mx-3"></i> +91 1234567890</b></span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <label class="custom-switch">
+                                                <input type="checkbox" id="emp_check" name="employeeAllow"
+                                                    class="custom-switch-input">
+                                                <span class="custom-switch-indicator"></span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <script>
-                            function allow() {
-                                        $allcheck = document.getElementById('allAllow');
-
-                                        $checkbox = document.getElementById('emp_check');
-                                        if ($allcheck.checked == true) {
-                                            $checkbox.checked = true;
-                                        } else {
-                                            $checkbox.checked = false;
-                                        }
-
-                                    }
-                        </script>
-
-                        <div class="modal-footer d-flex justify-content-center">
-                            <div class="text-center">
-                                <button class="btn btn-success" type="submit" id="submit" data-bs-target="">
-                                    Save & Apply</button>
-                            </div>
-                        </div>
-
                     </div>
+                    <script>
+                        function allow(){
+                           $allcheck =  document.getElementById('allAllow');
+
+                           $checkbox = document.getElementById('emp_check');
+                           if($allcheck.checked == true){
+                                $checkbox.checked = true;
+                           }else{
+                                $checkbox.checked = false;
+                           }
+
+                        }
+                    </script>
+
+                    <div class="modal-footer d-flex justify-content-center">
+                        <div class="text-center">
+                            <button class="btn btn-success" type="submit" id="submit"
+                                data-bs-target=""> Save & Apply</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -456,7 +451,7 @@ Business / Holiday Policy Setting
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header p-5">
-                    <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">New Holiday Template
+                    <h5 class="modal-title" style="font-size:18px;">New Holiday Template
                     </h5>
                     <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
@@ -520,29 +515,15 @@ Business / Holiday Policy Setting
                                                 <div class="col-xl-4 pt-3">
                                                     <div class="form-group">
                                                         <label for="field" class="hidden-md">Holiday Name*</label>
-                                                        <input type="text" id="holidayName" class="form-control" />
+                                                        <input type="text" id="holidayNames" class="form-control" />
                                                     </div>
                                                 </div>
                                                 <div class="col-xl-4 pt-3">
                                                     <div class="form-group">
                                                         <label for="field" class="hidden-md">Date</label>
-                                                        <input type="date" id="holidayDate" class="form-control" />
+                                                        <input type="date" id="holidayDates" class="form-control" />
 
                                                     </div>
-                                                </div>
-                                                <div class="col-xl-4 pt-3">
-                                                    <label for="inputState" class="form-label">Day</label>
-                                                    <select class="form-control select2" data-placeholder="Select Day"
-                                                        id="autoDay">
-                                                        <option value=""></option>
-                                                        <option value="Sunday">Sunday</option>
-                                                        <option value="Monday">Monday</option>
-                                                        <option value="Tuesday">Tuesday</option>
-                                                        <option value="Wednesday">Wednesday</option>
-                                                        <option value="Thursday">Thursday</option>
-                                                        <option value="Friday">Friday</option>
-                                                        <option value="Saturday">Saturday</option>
-                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -592,14 +573,14 @@ Business / Holiday Policy Setting
     </div>
 
 </div>
+
 @foreach ($HolidayTemplate as $template)
 <div class="container">
     <div class="modal fade" id="updateTemplate{{ $template->temp_id }}">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header p-5">
-                    <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Update Holiday Template
-                    </h5>
+                    <h5 class="modal-title" style="font-size:18px;">Update Holiday Template</h5>
                     <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
                     </button>
@@ -616,8 +597,11 @@ Business / Holiday Policy Setting
                                 <div class="form-group">
                                     <p class="form-label">Template Name</p>
                                     <input type="text" class="form-control header-text"
-                                        placeholder="Enter Template Name" value="{{ $template->temp_name }}" aria-label="text" tabindex="1"
-                                        name="update_temp_name">
+                                        placeholder="Enter Template Name" value="{{ $template->temp_id }}"
+                                        aria-label="text" tabindex="1" name="update_temp_id" hidden>
+                                    <input type="text" class="form-control header-text"
+                                        placeholder="Enter Template Name" value="{{ $template->temp_name }}"
+                                        aria-label="text" tabindex="1" name="update_temp_name" required>
                                 </div>
                             </div>
                             <div class="col-xl-4">
@@ -628,8 +612,9 @@ Business / Holiday Policy Setting
                                             <div class="input-group-text">
                                                 <i class="feather feather-calendar"></i>
                                             </div>
-                                        </div><input class="form-control fc-datepicker" placeholder="DD-MM-YYYY"
-                                            type="date" name="update_temp_from" value="{{ $template->temp_from }}" required>
+                                        </div><input class="form-control fc-datepicker"
+                                            value="{{ $template->temp_from }}" placeholder="DD-MM-YYYY" type="date"
+                                            name="update_temp_from" required>
                                     </div>
                                 </div>
                             </div>
@@ -641,8 +626,8 @@ Business / Holiday Policy Setting
                                             <div class="input-group-text">
                                                 <i class="feather feather-calendar"></i>
                                             </div>
-                                        </div><input class="form-control fc-datepicker" placeholder="DD-MM-YYYY"
-                                            type="date" name="update_temp_to" value="{{ $template->temp_to }}" required>
+                                        </div><input class="form-control fc-datepicker" value="{{ $template->temp_to }}"
+                                            placeholder="DD-MM-YYYY" type="date" name="update_temp_to" required>
                                     </div>
                                 </div>
                             </div>
@@ -656,54 +641,96 @@ Business / Holiday Policy Setting
                                         <h4 class="card-title"><span>Holiday</span></h4>
                                     </div>
 
-                                    @foreach ($Holiday->where('template_id', $template->temp_id) as $holiday)
                                     <div class="row" style="align-items: center;">
-                                        <div class="col-md-10 dynamic-field" id="dynamic-field-1">
+                                        <div class="col-md-10 dynamic-field">
                                             <div class="row" id="row">
                                                 <div class="col-xl-4 pt-3">
                                                     <div class="form-group">
-                                                        <label for="field" class="hidden-md">Holiday Name*</label>
-                                                        <input type="text" id="update_holidayName" class="form-control" value="{{ $holiday->holiday_name }}" />
+                                                        <label for="field" class="hidden-md">Holiday
+                                                            Name*</label>
+                                                        <input type="text" class="form-control"
+                                                            id="update_holiday_name{{ $template->temp_id }}" />
                                                     </div>
                                                 </div>
                                                 <div class="col-xl-4 pt-3">
                                                     <div class="form-group">
                                                         <label for="field" class="hidden-md">Date</label>
-                                                        <input type="date" id="update_holidayDate" class="form-control" value="{{ $holiday->holiday_date }}" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-xl-4 pt-3">
-                                                    <label for="inputState" class="form-label">Day</label>
-                                                    <select class="form-control select2" data-placeholder="Select Day" id="update_autoDay">
-                                                        <option value=""></option>
+                                                        <input type="date" class="form-control"
+                                                            id="update_holiday_date{{ $template->temp_id }}" />
 
-                                                        <option value="Sunday">Sunday</option>
-                                                        <option value="Monday">Monday</option>
-                                                        <option value="Tuesday">Tuesday</option>
-                                                        <option value="Wednesday">Wednesday</option>
-                                                        <option value="Thursday">Thursday</option>
-                                                        <option value="Friday">Friday</option>
-                                                        <option value="Saturday">Saturday</option>
-                                                    </select>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-xl-1 pt-4 col-md-1 append-buttons">
-                                            <button type="button" onclick="updated_addSetData()"
+                                            <button type="button" id="{{ $template->temp_id }}"
+                                                onclick="updateAppend(this.id)"
                                                 class="btn btn-primary btn-sm mb-2 text-uppercase shadow-sm"><i
                                                     class="fa fa-plus fa-fw"></i>
                                             </button>
                                         </div>
                                     </div>
-                                    @endforeach
                                 </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-md-12 table-responsive-sm">
+                                    <table width="100%" id="displayTableUpdate{{ $template->temp_id }}"
+                                        class="table text-center table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Holiday Name</th>
+                                                <th>Date</th>
+                                                <th>Day</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($Holiday->where('template_id', $template->temp_id) as $holiday)
+                                            <tr>
+                                                <td>{{ $holiday->holiday_name }}</td>
+                                                <td>{{ $holiday->holiday_date }}</td>
+                                                <td>{{ $holiday->day }}</td>
+                                                <td><button type="button" id="{{ $holiday->holiday_id }}"
+                                                        class="btn btn-danger btn-sm"
+                                                        onclick="deleteHolidayOnly(this.id,{{ $template->temp_id }})">Delete</button>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+
+                                    <div hidden class="UpdatemoreManpower{{ $template->temp_id }} row">
+
+                                    </div>
+                                </div>
+                                <script>
+                                    function deleteHolidayOnly(id,temp) {
+                                        
+                                                // console.log(document.getElementById("displayTableUpdate"+temp));
+                                                // alert(id);
+                                                $.ajax({
+                                                    url: "{{ url('/delete/holiday') }}",
+                                                    type: "POST",
+                                                    data: {
+                                                        state: id,
+                                                        _token: '{{ csrf_token() }}'
+                                                    },
+                                                    dataType: 'json',
+                                                    success: function(result) {
+                                                        location.reload();
+                                                        console.log(result);
+
+                                                    }
+                                                });
+                                            }
+                                </script>
                             </div>
 
                             <div class=" text-end">
-                                <button type="reset" class="btn btn-outline-dark" id="update_tempSave" data-bs-toggle="tooltip"
+                                <button type="reset" class="btn btn-outline-dark" data-bs-toggle="tooltip"
                                     data-bs-placement="top" title="Reset">Reset</button>
-                                <button type="submit" class="btn btn-outline-success" id="update_tempSave"
-                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Save">Apply
+                                <button type="submit" class="btn btn-outline-success" data-bs-toggle="tooltip"
+                                    data-bs-placement="top" title="Save">Apply
                                     Template</button>
                             </div>
                         </div>
@@ -711,12 +738,9 @@ Business / Holiday Policy Setting
             </div>
         </div>
     </div>
+
 </div>
 @endforeach
-
-
-
-
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
@@ -727,17 +751,36 @@ Business / Holiday Policy Setting
     var holidayData = [];
 
         function addSetData() {
-            var holidayName = document.getElementById('holidayName').value;
-            var holidayDate = document.getElementById('holidayDate').value;
-            var autoDay = document.getElementById('autoDay').value;
+            var holidayName = document.getElementById('holidayNames').value;
+            var holidayDate = document.getElementById('holidayDates').value;
 
-            if (holidayName && holidayDate && autoDay) {
-                addHoliday(holidayName, holidayDate, autoDay);
+            if (holidayName && holidayDate) {
+                var day = getDayName(holidayDate);
+                addHoliday(holidayName, holidayDate, day);
                 clearForm();
             } else {
                 alert("All fields are required!");
             }
         }
+        function clearForm() {
+            document.getElementById('holidayNames').value = '';
+            document.getElementById('holidayDates').value = '';
+        }
+
+        function getDayName(dateString) {
+            // Create a Date object from the input string
+            var date = new Date(dateString);
+
+            // Get the day name
+            var options = {
+                weekday: 'long'
+            };
+            var dayName = date.toLocaleDateString(undefined, options);
+
+            return dayName;
+        }
+
+
 
         function addHoliday(name, date, day) {
             var table = document.getElementById("displayTable").getElementsByTagName('tbody')[0];
@@ -771,12 +814,6 @@ Business / Holiday Policy Setting
             updateLoaderArray();
         }
 
-        function clearForm() {
-            document.getElementById('holidayName').value = '';
-            document.getElementById('holidayDate').value = '';
-            document.getElementById('autoDay').value = '';
-        }
-
         function updateDayField() {
             var selectedDate = document.getElementById('holidayDate').value;
             if (selectedDate) {
@@ -802,6 +839,67 @@ Business / Holiday Policy Setting
             });
 
             $('.moreManpower').eq(0).html(loader);
+        }
+</script>
+
+<script>
+    var holidayUpdateData = [];
+
+        function updateAppend(id){
+            var holidayNameUpdate = document.getElementById('update_holiday_name'+id).value;
+            var holidayDateUpdate = document.getElementById('update_holiday_date'+id).value;
+
+            // alert(holidayNameUpdate);
+            if (holidayNameUpdate && holidayDateUpdate) {
+                var dayUpdate = getDayName(holidayDateUpdate);
+                addHolidayUpdate(holidayNameUpdate, holidayDateUpdate, dayUpdate,id);
+                clearUpdateForm(id);
+            }else {
+                alert("All fields are required!");
+            }
+        }
+
+        function addHolidayUpdate(name, date, day, id) {
+            var table = document.getElementById("displayTableUpdate"+id).getElementsByTagName('tbody')[0];
+            var row = table.insertRow(table.rows.length);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+
+            cell1.innerHTML = name;
+            cell2.innerHTML = date;
+            cell3.innerHTML = day;
+            cell4.innerHTML =
+                '<button type="button" class="btn btn-danger btn-sm" onclick="deleteHoliday(this)">Delete</button>';
+
+            // Add the holiday data to the array
+            holidayUpdateData.push({
+                name: name,
+                date: date,
+                day: day
+            });
+
+            LoaderArray(id);
+        }
+
+        function clearUpdateForm(id) {
+            document.getElementById('update_holiday_name'+id).value = '';
+            document.getElementById('update_holiday_date'+id).value = '';
+        }
+
+        function LoaderArray(id) {
+            var loaderUpdate = '';
+
+            holidayUpdateData.forEach(function(data) {
+                loaderUpdate += `
+                    <input type="text" name="update_name[]" value="${data.name}">
+                    <input type="date" name="update_date[]" value="${data.date}">
+                    <input type="text" name="update_day[]" value="${data.day}">
+                `;
+            });
+
+            $('.UpdatemoreManpower'+id).eq(0).html(loaderUpdate);
         }
 </script>
 @endsection

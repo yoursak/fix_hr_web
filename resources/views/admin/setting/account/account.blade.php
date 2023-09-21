@@ -26,13 +26,15 @@
                                 <p class="my-auto">Not Added</p>
                             </div>
                             <div class="my-auto"><a href="#" data-bs-target="#bLogo" data-bs-toggle="modal"><i
-                                        class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
-
+                                        class="fa fa-angle-double-right fs-20 my-auto"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
+
         <div class="col-xl-6">
             <div class="card custom-card">
                 <div class="card-body">
@@ -58,43 +60,80 @@
                 $Bname = app\Helpers\Central_unit::GetBusinessCategoryName($accDetail->business_categories);
                 
             @endphp
+            {{-- Logo Upload --}}
+            <form method="post" enctype="multipart/form-data" action="{{ route('upload.logo', $accDetail->id) }}">
+                @csrf
+
+                <div class="modal fade" id="bLogo">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content tx-size-sm">
+                            <div class="modal-header border-0">
+                                <h4 class="modal-title">Logo</h4><button aria-label="Close" class="btn-close"
+                                    data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            {{-- <div class="form-row border-bottom"> --}}
+                            <p class=" fs-13 px-4 border-bottom " style="color: rgb(110, 104, 88)">Please upload the logo
+                                ogf
+                                business in png, jpg or jpeg formate, this logo will be visible in payment slip.</p>
+                            {{-- </div> --}}
+                            <div class="modal-body">
+                                {{-- <div class="card-header border-bottom-0"> --}}
+                                <h3 class="card-title">File Upload</h3>
+                                {{-- </div> --}}
+                                <input type="text" name="editlogoId" value="{{ $accDetail->id }}" hidden>
+                                {{-- src="{{ asset('business_logo/' . Session::get('login_business_image')) }}" --}}
+                                <input type="file" name="image"  class="dropify" data-default-file="{{asset('business_logo/'.$accDetail->business_logo )}}" />
+{{--                               
+                                <img type="file" src="{{asset('business_logo/'.$accDetail->business_logo )}}" class="dropify" name="image" 
+                                    data-default-file=""
+                                    data-height="180" /> --}}
+                             
+                            </div>
+                            <div class="modal-footer py-1">
+                                <button type="" class="btn btn-danger savebtn">Cancel</button>
+                                <button type="submit" class="btn btn-primary savebtn me-0">Update & Continue</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
             {{-- Business Name --}}
             <form method="post" action="{{ route('sbussinessname.update', $accDetail->id) }}">
                 @csrf
                 <div class="modal fade" id="modaldemo4">
                     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                         <div class="modal-content tx-size-sm">
-                            <div class="modal-header border-0">
-                                <h4 class="modal-title ms-2">Business Category</h4><button aria-label="Close"
-                                    class="btn-close" data-bs-dismiss="modal"><span
-                                        aria-hidden="true">&times;</span></button>
+                            <div class="modal-header">
+                                <h4 class="modal-title">Business Category</h4><button aria-label="Close" class="btn-close"
+                                    data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
                             </div>
                             <div class="modal-body">
-                                <div class="col-lg">
-                                    <div class="form-group co-lg">
-                                        <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden>
 
-                                        <p class="my-auto" class="mb-0 pb-0 text-dark fs-13 mt-1 ">Business Category</p>
-                                        <select class="form-control custom-select select2"
-                                            data-placeholder="Select Department" name="select">
+                                <div class="form-group co-lg">
+                                    <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden>
 
-                                            <option label="Select Employee" value="{{$Bname->id}}">{{ $Bname->name }}</option>
-                                            {{-- @foreach ($BType as $btype)
+                                    <p class="my-auto" class="mb-0 pb-0 text-dark fs-13 mt-1 ">Business Category</p>
+                                    <select class="form-control custom-select select2" data-placeholder="Select Department"
+                                        name="select">
+
+                                        <option label="Select Employee" value="{{ $Bname->id }}">{{ $Bname->name }}
+                                        </option>
+                                        {{-- @foreach ($BType as $btype)
                                                 <option value="{{ $btype->id }}">{{ $btype->name }}</option>
                                             @endforeach --}}
-                                            @foreach ($Bcategory as $bcategory)
-                                                <option value="{{ $bcategory->id }}">{{ $bcategory->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <p class="my-auto" class="mb-0 pb-0 text-dark fs-13 mt-1 ">Business Name</p>
-                                    <input class="form-control" placeholder="Software Industry" type="text"
-                                        name="business_name" value="{{ $accDetail->business_name }}">
+                                        @foreach ($Bcategory as $bcategory)
+                                            <option value="{{ $bcategory->id }}">{{ $bcategory->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
+                                <p class="my-auto" class="mb-0 pb-0 text-dark fs-13 mt-1 ">Business Name</p>
+                                <input class="form-control" placeholder="Software Industry" type="text"
+                                    name="business_name" value="{{ $accDetail->business_name }}">
                             </div>
-                            <div class="modal-footer  border-0">
+                            <div class="modal-footer py-1">
                                 <button type="" class="btn btn-danger savebtn">Cancel</button>
-                                <button type="submit" class="btn btn-success savebtn">Update & Save</button>
+                                <button type="submit" class="btn btn-primary     savebtn me-0">Update & Continue</button>
                             </div>
                         </div>
                     </div>
@@ -162,26 +201,28 @@
                 <div class="modal fade" id="nameUpdateModal">
                     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                         <div class="modal-content tx-size-sm">
-                            <div class="modal-header border-0">
-                                <h4 class="modal-title ms-2">Name</h4><button aria-label="Close" class="btn-close"
+                            <div class="modal-header">
+                                <h4 class="modal-title ">Name</h4><button aria-label="Close" class="btn-close"
                                     data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span aria-hidden="true">×</span></button>
+                                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
+                                        aria-hidden="true">×</span></button>
                             </div>
                             @csrf
                             <div class="modal-body">
-                                <div class="col-lg">
-                                    <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden>
-                                    <p class="my-auto" class="mb-0 pb-0 text-dark fs-13 mt-1 ">Name</p>
-                                    <input class="form-control" placeholder="Enter Name" type="text" name="name"
-                                        value="{{ $accDetail->client_name }}">
-                                </div>
+                                <p>Please add your name to continue</p>
+
+                                <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden>
+                                <p class="my-auto" class="mb-0 pb-0 text-dark fs-13 mt-1 ">Name</p>
+                                <input class="form-control" placeholder="Enter Name" type="text" name="name"
+                                    value="{{ $accDetail->client_name }}">
                             </div>
-                            <div class="modal-footer  border-0">
+                            <div class="modal-footer py-1" style="background:#f9f8f8;">
                                 <button class="btn btn-danger savebtn" type="sumbit">Cancel</button>
-                                <button class="btn btn-primary savebtn" type="sumbit">Save & Update</button>
+                                <button class="btn btn-primary savebtn me-0" type="sumbit">Update & Continue</button>
                                 {{-- <a href="{{ route('name.update') }}" method="post" type="sumbit" class="btn btn-primary btn-sm">Continue</a> --}}
                             </div>
                         </div>
+
                     </div>
                 </div>
             </form>
@@ -198,7 +239,6 @@
                         <div class="col-10 d-flex justify-content-between">
                             <div class="my-auto"><a href="#">
                                     <h5 class="my-auto text-dark">Phone Number</h5>
-                                    
                                 </a>
                                 <p class="my-auto"> {{ $accDetail->mobile_no }}</p>
                             </div>
@@ -217,26 +257,23 @@
                     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                         <div class="modal-content tx-size-sm">
                             <div class="modal-header " style="background:#f9f8f8;">
-                                <h4 class="modal-title ms-2">Phone Number</h4>
-                                
-                                <button aria-label="Close"
-                                    class="btn-close" data-bs-dismiss="modal"><span
+                                <h4 class="modal-title">Phone Number</h4>
+
+                                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
                                         aria-hidden="true">&times;</span></button>
-                                    </div>
-                                    
-                                    @csrf
-                                    <div class="modal-body">
-                                        <div class="col-lg">
-                                    <div class=""><p>Please add your phone number to continue</p></div>
-                                    <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden>
-                                    <p class="my-auto" class="mb-0 pb-0 text-dark fs-13 mt-1 ">Phone Number</p>
-                                    <input class="form-control" placeholder="Enter Name" type="text" name="phone"
-                                        value="{{ $accDetail->mobile_no }}" maxlength="10">
-                                </div>
                             </div>
-                            <div class="modal-footer p-1 " style="background:#f9f8f8;">
-                                <button class="btn btn-danger savebtn" type="sumbit">Cancel</button>
-                                <button class="btn btn-primary savebtn" type="sumbit">Save & Update </button>
+
+                            @csrf
+                            <div class="modal-body">
+                                <p>Please add your phone number to continue</p>
+                                <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden>
+                                <p class="my-auto" class="mb-0 pb-0 text-dark fs-13 mt-1 ">Phone Number</p>
+                                <input class="form-control" placeholder="Enter Name" type="text" name="phone"
+                                    value="{{ $accDetail->mobile_no }}" maxlength="10">
+                            </div>
+                            <div class="modal-footer py-1" style="background:#f9f8f8;">
+                                <button class="btn btn-danger savebtn" type="cancel">Cancel</button>
+                                <button class="btn btn-primary savebtn me-0" type="sumbit">Update & Continue </button>
                                 {{-- <a href="{{ route('name.update') }}" method="post" type="sumbit" class="btn btn-primary btn-sm">Continue</a> --}}
                             </div>
                         </div>
@@ -268,30 +305,29 @@
                 </div>
             </div>
             {{-- <form method="post" action="{{ route('name.update', $accDetail->id) }}"> --}}
-                {{-- @csrf --}}
-                <div class="modal fade" id="emailupdateModal">
-                    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-                        <div class="modal-content tx-size-sm">
-                            <div class="modal-header border-0">
-                                <h4 class="modal-title ms-2">Email</h4><button aria-label="Close" class="btn-close"
-                                    data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                            </div>
-                            <div class="modal-body">
-                                <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden>
-
-                                <div class="col-lg">
-                                    <p class="my-auto" class="mb-0 pb-0 text-dark fs-13 mt-1 ">Email</p>
-                                    <input class="form-control" placeholder="Enter Email" type="email" name="email"
-                                        value="{{ $accDetail->business_email }}" readonly>
-                                </div>
-                            </div>
-                            <div class="modal-footer  border-0">
-                                <button class="btn btn-success">Continue</button>
-                                {{-- <a href="#" class="btn btn-primary btn-sm">Continue</a> --}}
-                            </div>
+            {{-- @csrf --}}
+            <div class="modal fade" id="emailupdateModal">
+                <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                    <div class="modal-content tx-size-sm">
+                        <div class="modal-header border">
+                            <h4 class="modal-title ">Email</h4><button aria-label="Close" class="btn-close"
+                                data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Please add your email to continue</p>
+                            <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden>
+                            <p class="my-auto" class="mb-0 pb-0 text-dark fs-13 mt-1 ">Email</p>
+                            <input class="form-control" placeholder="Enter Email" type="email" name="email"
+                                value="{{ $accDetail->business_email }}" readonly>
+                        </div>
+                        <div class="modal-footer py-1">
+                            <button class="btn btn-danger savebtn" type="">Cancel</button>
+                            <button class="btn btn-primary savebtn me-0" type="sumbit">Update & Continue </button>
+                            {{-- <a href="#" class="btn btn-primary btn-sm">Continue</a> --}}
                         </div>
                     </div>
                 </div>
+            </div>
             {{-- </form> --}}
         </div>
         <div class="col-xl-6">
@@ -306,7 +342,7 @@
                             <div class="my-auto"><a href="#">
                                     <h5 class="my-auto text-dark">Business Type</h5>
                                 </a>
-                                <p class="my-auto">Software Development</p>
+                                <p class="my-auto"></p>
                             </div>
                             <div class="my-auto"> <a href="#" data-bs-target="#btypeModal"
                                     data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a>
@@ -326,36 +362,29 @@
                 <div class="modal fade" id="btypeModal">
                     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                         <div class="modal-content tx-size-sm">
-                            <div class="modal-header border-0">
-                                <h4 class="modal-title ms-2">Business Category</h4><button aria-label="Close"
-                                    class="btn-close" data-bs-dismiss="modal"><span
-                                        aria-hidden="true">&times;</span></button>
-                                        
-                                    </div>
-                                    
+                            <div class="modal-header">
+                                <h4 class="modal-title">Business Type</h4><button aria-label="Close" class="btn-close"
+                                    data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                            </div>
+
                             <div class="modal-body">
-                                <div class="col-lg">
-                                    <div class="form-group co-lg">
-                                        <input type="text" name="editBranchId" value="{{ $Btypename->name}}" hidden>
+                                <div class="form-group">
+                                    <input type="text" name="editBtypeId" value="{{ $accDetail->id }}" hidden>
 
-                                        <p class="my-auto" class="mb-0 pb-0 text-dark fs-13 mt-1 ">Business Type</p>
-                                        <select class="form-control custom-select select2"
-                                            data-placeholder="Select Department" name="select">
-
-                                            <option label="Select Employee">{{ $Btypename->name }}</option>
-                                            
-                                            @foreach ($BType as $btype)
-                                                    <option value="{{ $btype->id }}">{{ $btype->name }}</option>
-                                            @endforeach
-                                           
-                                        </select>
-                                    </div>
-                                   
+                                    <p class="my-auto" class="mb-0 pb-0 text-dark fs-13 mt-1 ">Business Type</p>
+                                    <select class="form-control custom-select select2"
+                                        data-placeholder="Select Department" name="select">
+                                        <option label="Select Employee" value="{{ $Btypename->id }}">
+                                            {{ $Btypename->name }}</option>
+                                        @foreach ($BType as $btype)
+                                            <option value="{{ $btype->id }}">{{ $btype->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
-                            <div class="modal-footer  border-0">
+                            <div class="modal-footer py-1">
                                 <button type="" class="btn btn-danger savebtn">Cancel</button>
-                                <button type="submit" class="btn btn-success savebtn">Save & Update</button>
+                                <button type="submit" class="btn btn-primary savebtn me-0">Update & Continue</button>
                             </div>
                         </div>
                     </div>
@@ -365,95 +394,7 @@
             {{--  Manage Business --}}
 
         </div>
-        {{-- <div class="col-xl-6">
-        <div class="card custom-card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-2 my-auto">
-                        <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
-                                class="nav-icon fa fa-edit"></i></span>
-                    </div>
-                    <div class="col-10 d-flex justify-content-between">
-                        <div class="my-auto"><a href="#">
-                                <h5 class="my-auto text-dark">Add/Delete Business</h5>
-                            </a>
-                            <p class="my-auto">1 Active Business</p>
-                        </div>
-                        <div class="my-auto"> <a href="#" data-bs-target="#baddDelete" data-bs-toggle="modal"><i
-                                    class="fa fa-angle-double-right fs-20 my-auto"></i></a>
-                        </div>
 
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-        {{-- <div class="col-xl-6">
-                <div class="card custom-card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-2 my-auto">
-                                <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
-                                        class="nav-icon si si-diamond"></i></span>
-                            </div>
-                            <div class="col-10 d-flex justify-content-between">
-                                <div class="my-auto"><a href="#">
-                                        <h5 class="my-auto text-dark">Subscriptions</h5>
-                                    </a>
-                                    <p class="my-auto">Desktop App</p>
-                                </div>
-                                <div class="my-auto"> <a href="#" data-bs-target="#bAddress" data-bs-toggle="modal"><i
-                                            class="fa fa-angle-double-right fs-20 my-auto"></i></a>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
-        {{-- <div class="col-xl-6">
-            <div class="card custom-card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-2 my-auto">
-                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
-                                    class="nav-icon fa fa-copy"></i></span>
-                        </div>
-                        <div class="col-10 d-flex justify-content-between">
-                            <div class="my-auto"><a href="#">
-                                    <h5 class="my-auto text-dark">KYB</h5>
-                                </a>
-                                <p class="my-auto">To awail online payment services</p>
-                            </div>
-                            <div class="my-auto"> <a href="#" data-bs-target="#kybModal" data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-6">
-            <div class="card custom-card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-2 my-auto">
-                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
-                                    class="nav-icon fa fa-bank"></i></span>
-                        </div>
-                        <div class="col-10 d-flex justify-content-between">
-                            <div class="my-auto"><a href="#">
-                                    <h5 class="my-auto text-dark">Business Bank Account</h5>
-                                </a>
-                                <p class="my-auto">XXXX XXXX XX12</p>
-                            </div>
-                            <div class="my-auto"><a href="#" data-bs-target="#bAccName" data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
         <div class="col-xl-6">
             <div class="card custom-card">
                 <div class="card-body">
@@ -481,41 +422,43 @@
                 <div class="modal fade" id="bAddress">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content tx-size-sm">
-                            <div class="modal-header border-0">
-                                <div>
-                                     <h4 class="modal-title ms-2">Business Address</h4><button aria-label="Close" class="btn-close"
-                                data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                                </div>
+                            {{-- <div>
+                                    <h4 class="modal-title ms-2">Business Address</h4><button aria-label="Close"
+                                        class="btn-close" data-bs-dismiss="modal"><span
+                                            aria-hidden="true">&times;</span></button>
+                                </div> --}}
+                            <div class="modal-header">
+                                <h4 class="modal-title">Business Address</h4><button aria-label="Close" class="btn-close"
+                                    data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
                             </div>
                             <div class="modal-body">
-                                <div class="col-lg">
-                                    <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden>
+                                <p>Please add your phone number to continue</p>
 
-                                    <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Address Line</p>
-                                    <textarea class="form-control mb-4" placeholder="Address Line 1" rows="3" name="address" maxlength="100">{{ $accDetail->business_address }}</textarea>
+                                <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden>
 
-                                    {{-- <p class="mb-0 pb-0 text-dark fs-13 mt-1 "></p>
-                                <textarea class="form-control mb-4" placeholder="Address Line 2" rows="3" maxlength="100"></textarea> --}}
-                                    <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Country</p>
-                                    <input class="form-control" placeholder="Confirm Bank Account Number" name="country"
-                                        type="text" value="India" readonly>
+                                <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">Address Line</p>
+                                <textarea class="form-control " placeholder="Address Line 1" rows="3" name="address" maxlength="100">{{ $accDetail->business_address }}</textarea>
 
-                                    <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">State</p>
-                                    <input class="form-control" placeholder="Confirm Bank Account Number" name="state"
-                                        type="text" value="{{ $accDetail->state }}">
 
-                                    <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">City</p>
-                                    <input class="form-control" placeholder="City Name" name="city" type="text"
-                                        value="{{ $accDetail->city }}">
+                                <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">Country</p>
+                                <input class="form-control" placeholder="Confirm Bank Account Number" name="country"
+                                    type="text" value="India" readonly>
 
-                                    <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Pin Code</p>
-                                    <input class="form-control" placeholder="Pin Code" name="pincode" type="text"
-                                        value="{{ $accDetail->pin_code }}">
-                                </div>
+                                <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">State</p>
+                                <input class="form-control" placeholder="Confirm Bank Account Number" name="state"
+                                    type="text" value="{{ $accDetail->state }}">
+
+                                <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">City</p>
+                                <input class="form-control" placeholder="City Name" name="city" type="text"
+                                    value="{{ $accDetail->city }}">
+
+                                <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">Pin Code</p>
+                                <input class="form-control" placeholder="Pin Code" name="pincode" type="text"
+                                    value="{{ $accDetail->pin_code }}">
                             </div>
-                            <div class="modal-footer d-flex justify-content-center">
+                            <div class="modal-footer d-flex py-1">
                                 <button class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</button>
-                                <button class="btn btn-success savebtn" type="sumbit">Save & Update</button>
+                                <button class="btn btn-primary savebtn me-0" type="sumbit">Update & Continue</button>
                             </div>
                         </div>
                     </div>
@@ -614,38 +557,7 @@
             </div>
         </div>
     </div>
-    {{-- Logo Upload --}}
-    <div class="modal fade" id="bLogo">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content tx-size-sm">
-                <div class="modal-header border-0">
-                    <div>
-                        <h4 class="modal-title ms-2">Add Logo</h4><button aria-label="Close" class="btn-close"
-                            data-bs-dismiss="modal"></button><br />
-                        <p class="mb-0 pb-0 fs-13 ms-2 " style="color: rgb(110, 104, 88)">Please upload the logo ogf
-                            business in png, jpg or jpeg formate, this logo will be visible in payment slip.</p>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <form method="post" class="card">
-                        <div class=" card-body">
-                            <div class="row">
-                                <div class="col-lg-12 col-sm-12">
-                                    <input type="file" class="dropify"
-                                        data-default-file="{{ asset('imgs/uploadgificon.gif') }}" data-width="200"
-                                        data-height="200" />
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer d-flex justify-content-center">
-                    <button class="btn btn-outline-dark cancel" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary savebtn">Continue</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     {{-- Business Address detail --}}
 @endsection

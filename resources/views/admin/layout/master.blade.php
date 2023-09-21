@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
-<!-- Developed By fixingfots.com/FixingDots/index2    /3.x [XR&CO'2014], Tue, 18 Jul 2023 06:20:41 GMT -->
-<!-- Added   -->
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added   -->
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 
 <head>
+    <title>FixHR - @yield('title')</title>
     @include('admin.layout.head')
     @yield('css');
 </head>
@@ -20,7 +19,7 @@
                     <div class="predefined_styles">
                         <div class="swichermainleft text-center">
                             <div class="p-3">
-                                <a href="index-2.html" class="btn ripple btn-primary btn-block mt-0" target="blank">View
+                                <a href="{{url('/')}}" class="btn ripple btn-primary btn-block mt-0" target="blank">View
                                     Demo</a>
                                 <a href="https://themeforest.net/item/FixingDots-laravel-admin-dashboard-template/33043521"
                                     class="btn ripple btn-secondary btn-block">Buy Now</a>
@@ -149,8 +148,8 @@
                                         <div class="">
                                             <input
                                                 class="w-30p h-30 input-transparent-color-picker color-bg-transparent"
-                                                value="#6c5ffc" id="transparentBgColorID" type="color"
-                                                data-id5="body" data-id6="theme" data-id9="transparentcolor"
+                                                value="#6c5ffc" id="transparentBgColorID" type="color" data-id5="body"
+                                                data-id6="theme" data-id9="transparentcolor"
                                                 name="transparentBackground">
                                         </div>
                                     </div>
@@ -171,14 +170,18 @@
                                     </div>
                                 </div>
                                 <div class="switch-toggle d-flex mt-2">
-                                    <a class="bg-img1" href="javascript:void(0);"><img
-                                            src={{ asset("assets/images/photos/bg-img1.jpg")}} alt="Bg-Image" id="bgimage1"></a>
-                                    <a class="bg-img2" href="javascript:void(0);"><img
-                                            src={{ asset("assets/images/photos/bg-img2.jpg")}} alt="Bg-Image" id="bgimage2"></a>
-                                    <a class="bg-img3" href="javascript:void(0);"><img
-                                            src={{ asset("assets/images/photos/bg-img3.jpg")}} alt="Bg-Image" id="bgimage3"></a>
-                                    <a class="bg-img4" href="javascript:void(0);"><img
-                                            src={{ asset("assets/images/photos/bg-img4.jpg")}} alt="Bg-Image" id="bgimage4"></a>
+                                    <a class="bg-img1" href="javascript:void(0);"><img src={{
+                                            asset("assets/images/photos/bg-img1.jpg")}} alt="Bg-Image"
+                                            id="bgimage1"></a>
+                                    <a class="bg-img2" href="javascript:void(0);"><img src={{
+                                            asset("assets/images/photos/bg-img2.jpg")}} alt="Bg-Image"
+                                            id="bgimage2"></a>
+                                    <a class="bg-img3" href="javascript:void(0);"><img src={{
+                                            asset("assets/images/photos/bg-img3.jpg")}} alt="Bg-Image"
+                                            id="bgimage3"></a>
+                                    <a class="bg-img4" href="javascript:void(0);"><img src={{
+                                            asset("assets/images/photos/bg-img4.jpg")}} alt="Bg-Image"
+                                            id="bgimage4"></a>
                                 </div>
                             </div>
                         </div>

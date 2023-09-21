@@ -32,25 +32,26 @@ class EmployeeApiController extends Controller
     }
     public function store(Request $request)
     {
+        dd($request);
         $validator = Validator::make($request->all(), [
-            'business_id' => 'required',
-            'branch_id' => 'required',
-            'employee_type' => 'required',
-            'name' => 'required',
-            'emp_id' => 'required',
-            'mobile_no' => 'required',
-            'email' => 'required',
-            'branch' => 'required',
-            'department' => 'required',
-            'designation' => 'required',
-            'dob' => 'required',
-            'doj' => 'required',
-            'gender' => 'required',
-            'address' => 'required',
-            'country' => 'required',
-            'state' => 'required',
-            'city' => 'required',
-            'pin_code' => 'required',
+                // 'business_id' => 'required',
+                // 'branch_id' => 'required',
+                // 'employee_type' => 'required',
+                // 'name' => 'required',
+                // 'emp_id' => 'required',
+                // 'mobile_no' => 'required',
+                // 'email' => 'required',
+                // 'branch' => 'required',
+                // 'department' => 'required',
+                // 'designation' => 'required',
+                // 'dob' => 'required',
+                // 'doj' => 'required',
+                // 'gender' => 'required',
+                // 'address' => 'required',
+                // 'country' => 'required',
+                // 'state' => 'required',
+                // 'city' => 'required',
+                // 'pin_code' => 'required',
             // 'photo' => 'required',
         ]);
 
@@ -114,7 +115,8 @@ class EmployeeApiController extends Controller
             $emplogin->phone = $request->mobile_no;
             // return true;
             if ($emp->save() && $emplogin->save()) {
-                return ReturnHelpers::jsonApiReturn(EmployeeResource::collection(EmployeePersonalDetail::where('emp_id', $request->emp_id)->get()));
+            return ReturnHelpers::jsonApiReturn(EmployeeResource::collection([EmployeePersonalDetail::find($emp->id)])->all());
+                
             }
             return response()->json(['result' => [], 'status' => false]);
         }
@@ -163,7 +165,9 @@ class EmployeeApiController extends Controller
         if ($emp->save() && $emplogin->update()) {
             // return true;
             // $emplogin->update();
-            return ReturnHelpers::jsonApiReturn(EmployeeResource::collection([$emp])->all());
+            return ReturnHelpers::jsonApiReturn(EmployeeResource::collection([EmployeePersonalDetail::find($emp->id)])->all());
+
+            // return ReturnHelpers::jsonApiReturn(EmployeeResource::collection([$emp])->all());
         }
         return response()->json(['result' => [], 'status' => false]);
     }

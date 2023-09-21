@@ -6,10 +6,13 @@
     <title>FixHR - @yield('title')</title>
     @include('auth/admin/authlayout.head_simple')
     @yield('css')
+
+    <script src="{{ config('app.cdn') }}"></script>
 </head>
 
 <body>
 
+    @include('sweetalert::alert')
     <div class="auth-wrapper">
         @yield('content')
     </div>
