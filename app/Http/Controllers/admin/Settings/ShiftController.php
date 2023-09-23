@@ -10,6 +10,7 @@ class ShiftController extends Controller
 {
     public function addShift(Request $request){
 
+        // dd($request->all());
         if($request->shiftType == 'fixed'){
             $fixShift = DB::table('shift_fixed')->insert([
                 'shift_name'=> $request->fixedshiftName,
@@ -75,7 +76,7 @@ class ShiftController extends Controller
                 'shift_hr'=> $request->openHour,
                 'shift_min'=> $request->openMin,
                 'break_min'=> $request->openBreak,
-                'is_paid'=> $request->work_minute,
+                'is_paid'=> $request->openPaid,
                 'branch_id'=> $request->session()->get('branch_id'),
                 'business_id'=> $request->session()->get('business_id'),
                 'updated_at'=> now(),
@@ -86,10 +87,114 @@ class ShiftController extends Controller
                 
             }else{
                 Alert::error('Failed','');
-                
             }
         }
         return back();
 
+    }
+
+    public function updateShift(Request $request){
+        // dd($request->all());
+
+        if($request->has('fixedId')){
+            $fixUpdate = DB::table('shift_fixed')->where(['business_id'=>$request->session()->get('business_id'),'fixed_id'=>$request->fixedId])->update([
+                'shift_name'=> $request->UpdatedFixedshiftName,
+                'shift_start'=> $request->UpdatedFixShiftStart,
+                'shift_end'=> $request->UpdatedFixShiftEnd,
+                'break_min'=> $request->UpdatedFixShiftBreak,
+                'is_paid'=> $request->UpdatedFixpaid,
+                'updated_at'=> now(),
+            ]);
+
+            if($fixUpdate ){
+                Alert::success('Shift Updated Successfully','');
+                
+            }else{
+                Alert::error('Failed','');
+                
+            }
+        }
+
+        if($request->has('openId')){
+            $updateOpen = DB::table('shift_open')->where(['business_id'=>$request->session()->get('business_id'),'open_id'=>$request->openId])->update([
+                'shift_name'=> $request->updatedOpenShiftName,
+                'shift_hr'=> $request->updatedOpenHour,
+                'shift_min'=> $request->updatedOpenMin,
+                'break_min'=> $request->updatedOpenBreak,
+                'is_paid'=> $request->updatedOpenPaid,
+                'updated_at'=> now(),
+            ]);
+
+            if($updateOpen){
+                Alert::success('Shift Updated Successfully','');
+            }else{
+                Alert::error('Failed','');
+            }
+        }
+
+        if($request->has('setId')){
+
+            $shift = DB::table('shift_set')->where(['business_id'=> $request->session()->get('business_id'),'set_id'=> $request->setId])->update([
+                'set_name'=> $request->updatedRotationalName,
+                'updated_at'=>now(),
+            ]);
+
+            $roatationalRemove = DB::table('shift_rotational')->where(['business_id'=> $request->session()->get('business_id'),'set_id'=> $request->setId])->delete();
+
+            foreach ($request->updatedRotationalShiftName as $key => $rotationalShiftName) {
+                $roatationalShift = DB::table('shift_rotational')->insert([
+                    'set_id'=> $request->setId,
+                    'shift_name'=> $request->updatedRotationalShiftName[$key],
+                    'shift_start'=> $request->updatedRotationalShiftStart[$key],
+                    'shift_end'=> $request->updatedRotationalShiftEnd[$key],
+                    'break_min'=> $request->updatedRotationalShiftBreak[$key],
+                    'is_paid'=> $request->rotationalpaid[$key],
+                    'branch_id'=> $request->session()->get('branch_id'),
+                    'business_id'=> $request->session()->get('business_id'),
+                    'updated_at'=> now(),
+                ]);
+            }
+
+            if($roatationalShift){
+                Alert::success('Rotational Shift Created Successfully','');
+            }else{
+                Alert::error('Failed','');
+            }
+        }
+
+        return back();
+    }
+
+    public function deleteShift(Request $request ,$id){
+        // dd($request->all());
+
+        if($request->has('fixed')){
+            $fixDelete = DB::table('shift_fixed')->where(['business_id'=>$request->session()->get('business_id'),'fixed_id'=>$id])->delete();
+            if($fixDelete){
+                Alert::success('Fixed Shift Delete Successfully','');
+            }else{
+                Alert::error('Failed','');
+            }
+        }
+
+        if($request->has('open')){
+            $openDelete = DB::table('shift_open')->where(['business_id'=>$request->session()->get('business_id'),'open_id'=>$id])->delete();
+            if($openDelete){
+                Alert::success('Open Shift Delete Successfully','');
+            }else{
+                Alert::error('Failed','');
+            }
+        }
+
+        if($request->has('set')){
+            $roatationalDelete = DB::table('shift_rotational')->where(['business_id'=> $request->session()->get('business_id'),'set_id'=> $id])->delete();
+            $setDelete = DB::table('shift_set')->where(['business_id'=> $request->session()->get('business_id'),'set_id'=> $id])->delete();
+            if($setDelete){
+                Alert::success('Rotational Shift Delete Successfully','');
+            }else{
+                Alert::error('Failed','');
+            }
+        }
+        return back();
     }
 }

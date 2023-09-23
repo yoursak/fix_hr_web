@@ -166,7 +166,7 @@ Route::middleware(['email_verified'])->group(function () {
                 Route::get('/department', [SettingController::class, 'department'])->name('admin.department');
                 Route::any('/designation/{id?}', [SettingController::class, 'designation'])->name('admin.designation');
                 Route::post('/leave_policy_submit', [SettingController::class, 'leavePolicySubmit'])->name('admin.leavepolicySubmit');
-                // ajax dropdown  verify usefull
+                // ajax dropdown
                 Route::post('/alldepartment', [SettingController::class, 'allDepartment']); //save
                 Route::post('/alldesignation', [SettingController::class, 'allDesignation']);
                 Route::post('/allemployeefilter', [SettingController::class, 'allEmployeeFilter']);
@@ -223,7 +223,6 @@ Route::middleware(['email_verified'])->group(function () {
         Route::post('/employee', [EmployeeController::class, 'UpdateEmployee'])->name('update.employee');
         Route::post('/holiday', [BusinessController::class, 'UpdateHoliday'])->name('update.holiday');
         Route::post('/leaveTemplate', [SettingController::class, 'UpdateLeaveTemp'])->name('update.leaveTemp');
-        Route::post('/shift', [ShiftController::class, 'updateShift'])->name('update.shift');
     });
 
     Route::prefix('/delete')->group(function () {
@@ -235,7 +234,6 @@ Route::middleware(['email_verified'])->group(function () {
         Route::post('/holidayTemplate/{id}', [BusinessController::class, 'DeleteHolidayTemp'])->name('delete.holidayTemp');
         Route::post('/leave', [SettingController::class, 'DeleteLeave'])->name('delete.leave');
         Route::post('/leaveTemplate/{id}', [SettingController::class, 'DeleteLeaveTemp'])->name('delete.leaveTemp');
-        Route::post('/shift/{id}', [ShiftController::class, 'deleteShift'])->name('delete.shift');
     });
 
     Route::prefix('/add')->group(function () {

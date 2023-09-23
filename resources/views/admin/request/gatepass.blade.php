@@ -26,13 +26,7 @@
     <script src="{{ asset('assets/js/datatables.js') }}"></script>
     <script src="{{ asset('assets/js/select2.js') }}"></script>
     <script src="{{ asset('assets/js/hr/hr-emp.js') }}"></script>
-    <script>
-        new DataTable('#example10', {
-            dom: '<"top"lfB>rtip',
-            buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis']
-        });
-    </script>
-
+    
 @endsection
 @section('content')
 
@@ -159,7 +153,9 @@
                                 @endphp
                                 @foreach ($data as $item)
                                     @php
-                                        $DesignationName = App\Helpers\Layout::DasignationName($item->designation_id);
+                                        $Layout = new App\Helpers\Layout();
+
+                                        $DesigName=$Layout::DasignationName($item->designation_id);
                                         
                                     @endphp
                                     <tr>
@@ -168,7 +164,7 @@
                                             <div class="d-flex"> <span class="avatar avatar-md brround me-3">{{ $item->profile_photo }}</span>
                                                 <div class="me-3 mt-0 mt-sm-1 d-block">
                                                     <h6 class=" m-0 fs-14">{{ $item->emp_name }}</h6> <span
-                                                        class="text-muted m-0 fs-12">{{ $DesignationName->desig_name }}</span>
+                                                        class="text-muted m-0 fs-12">{{ $DesigName->desig_name }}</span>
                                                 </div>
                                             </div>
                                         </td>

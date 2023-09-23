@@ -10,6 +10,7 @@ use App\Models\admin\LoginAdmin;
 use App\Models\admin\DepartmentList;
 use App\Models\admin\DesignationList;
 use App\Models\admin\WeeklyHolidayList;
+use App\Models\admin\SettingLeaveCategory;
 use Session;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -94,11 +95,11 @@ class SettingController extends Controller
             $data = $request->image->move($path, $imageName);
             // return $data;
             // return $path;
-            $data=DB::table('business_details_list')->where('id', $request->editlogoId)->where('business_id', Session::get('business_id'))->update(['business_logo' => $imageName]); 
-            if($data){
+            $data = DB::table('business_details_list')->where('id', $request->editlogoId)->where('business_id', Session::get('business_id'))->update(['business_logo' => $imageName]);
+            if ($data) {
                 // return $data;
                 return back();
-            }else{
+            } else {
                 return "hasfail";
             }
             // $image  = new Image();
@@ -215,6 +216,27 @@ class SettingController extends Controller
     {
         $get = DepartmentList::where('branch_id', $request->brand_id)->get();
         return response()->json(['department' => $get]);
+    }
+    public function allDesignation(Request $request)
+    {
+        $get = DB::table('designation_list')->where('department_id', $request->depart_id)->get();
+        return response()->json(['designation' => $get]);
+    }
+    public function allEmployeeFilter()
+    {
+        $get = DB::table('employee_personal_details')
+            ->where('business_id', Session::get('business_id'))
+            ->when(request('branch_id'), function ($query, $branchId) {
+                return $query->where('branch_id', $branchId);
+            })
+            ->when(request('depart_id'), function ($query, $departId) {
+                return $query->where('department_id', $departId);
+            })
+            ->when(request('department_id'), function ($query, $designation) {
+                return $query->where('department_id', $designation);
+            })
+            ->get();
+        return response()->json(['employee' => $get]);
     }
     public function designationDetails(Request $request)
     {
@@ -372,7 +394,7 @@ class SettingController extends Controller
 
     public function holidayPolicy()
     {
-    
+
         return view('admin.setting.business.holiday_policy.holiday_policy');
     }
     public function inviteEmpl()
@@ -383,67 +405,90 @@ class SettingController extends Controller
     {
         $leaveTemp = DB::table('setting_leave_policy')->where('business_id', $request->session()->get('business_id'))->get();
         $Leaves = DB::table('setting_leave_category')->where('business_id', $request->session()->get('business_id'))->get();
-        return view('admin.setting.business.leave_policy.leave_policy', compact('leaveTemp','Leaves'));
+        return view('admin.setting.business.leave_policy.leave_policy', compact('leaveTemp', 'Leaves'));
     }
 
-    public function DeleteLeave(Request $request){
+    public function DeleteLeave(Request $request)
+    {
         $data = $request->state;
         $leaveDelete = DB::table('setting_leave_category')->where('id', $data)->delete();
         return response()->json([$leaveDelete]);
     }
-    public function DeleteLeaveTemp($id){
+    public function DeleteLeaveTemp($id)
+    {
         // dd($id);
         $deleteTemp = DB::table('setting_leave_policy')->where('id', $id)->delete();
         $deleteLeaves = DB::table('setting_leave_category')->where('leave_policy_id', $id)->delete();
 
-        if($deleteTemp){
-            Alert::success('Successfully Deleted ','');
+        if ($deleteTemp) {
+            Alert::success('Successfully Deleted ', '');
             return back();
-        }else{
-            Alert::error('Failed','');
+        } else {
+            Alert::error('Failed', '');
             return back();
         }
-
     }
-    public function UpdateLeaveTemp(Request $request){
+    public function UpdateLeaveTemp(Request $request)
+    {
         // dd($request->all());
 
-        if($request->has('Tempid')){
+        if ($request->has('Tempid')) {
             $updateTemp = DB::table('setting_leave_policy')->where('id', $request->Tempid)->update([
                 'policy_name' => $request->Update_policyname,
                 'leave_policy_cycle_monthly' => $request->btnradio,
                 'leave_period_from' => $request->update_leave_periodfrom,
-                'leave_period_to'=> $request->update_leave_periodto,
+                'leave_period_to' => $request->update_leave_periodto,
             ]);
         }
 
-        if( $request->has('category_name') ){
+        if ($request->has('category_name')) {
             foreach ($request->category_name as $key => $category) {
                 $leave = DB::table('setting_leave_category')->insert([
-                    'leave_policy_id'=> $request->Tempid,
-                    'business_id'=> $request->session()->get('business_id'),
-                    'branch_id'=> $request->session()->get('branch_id'),
-                    'category_name'=> $request->category_name[$key],
-                    'days'=> $request->update_days[$key],
-                    'unused_leave_rule'=> $request->update_unused_leave_rule[$key],
-                    'carry_forward_limit'=> $request->update_carry_forward_limit[$key],
-                    'applicable_to'=> $request->update_applicable_to[$key],
+                    'leave_policy_id' => $request->Tempid,
+                    'business_id' => $request->session()->get('business_id'),
+                    'branch_id' => $request->session()->get('branch_id'),
+                    'category_name' => $request->category_name[$key],
+                    'days' => $request->update_days[$key],
+                    'unused_leave_rule' => $request->update_unused_leave_rule[$key],
+                    'carry_forward_limit' => $request->update_carry_forward_limit[$key],
+                    'applicable_to' => $request->update_applicable_to[$key],
                 ]);
             }
         }
 
-        if($updateTemp || $leave){
-            Alert::success('Successfully Updated','');
+        if ($updateTemp || $leave) {
+            Alert::success('Successfully Updated', '');
             return back();
-        }else{
-            Alert::error('Failed','');
+        } else {
+            Alert::error('Failed', '');
             return back();
         }
     }
 
     public function leavePolicySubmit(Request $request)
     {
+// dd($request->all());
+// dd(sizeof($request->category_name));
+//         dd(sizeof($request->leave_id));
         // dd($request->all());
+        // for ($i=0; $i < sizeof; $i++) { 
+        //     # code...
+        // }
+        // dd($request->addmore);
+        // $data = new SettingLeaveCategory();
+        // $data->category_name= $value;
+        // $data->save();
+        
+        // foreach ($request->addmore as $key => $value) {
+        //  dd($request->addmore);
+        //     SettingLeaveCategory::create($value);
+        
+        //     // $data = new SettingLeaveCategory();
+        //     // $data->category_name = $value;
+        //     // $data->save();
+
+        // }
+        // return back();
         $BusinessID = $request->session()->get('business_id');
         $branchID = $request->session()->get('branch_id');
         $storeData = [
@@ -455,6 +500,7 @@ class SettingController extends Controller
             'leave_period_from' => $request->leave_periodfrom,
             'leave_period_to' => $request->leave_periodto,
         ];
+        dd($storeData);
         $truechecking_id = DB::table('setting_leave_policy')->insert($storeData);
         if ($truechecking_id) {
             $latestID = DB::table('setting_leave_policy')
@@ -477,9 +523,9 @@ class SettingController extends Controller
                         'branch_id' => $branchID,
                         'category_name' => $CategoryName[$i],
                         'days' => $Days[$i],
-                        'unused_leave_rule' => $UnusedLeaveRule[$i],
-                        'carry_forward_limit' => $carryForwardLimit[$i],
-                        'applicable_to' => $applicationTo[$i],
+                        // 'unused_leave_rule' => $UnusedLeaveRule[$i],
+                        // 'carry_forward_limit' => $carryForwardLimit[$i],
+                        // 'applicable_to' => $applicationTo[$i],
                     ];
                     print_r($collectionDataSet);
                     DB::table('setting_leave_category')->insert($collectionDataSet);
@@ -504,14 +550,14 @@ class SettingController extends Controller
     {
         $data = WeeklyHolidayList::where('business_id', Session::get('business_id'))->get();
 
-            // dd($data);
+        // dd($data);
         $days = [];
 
         foreach ($data as $item) {
             $days = json_decode($item->days, true); // Assuming 'days' column contains JSON data
         }
 
-        return view('admin.setting.business.weekly_holiday.weekly_holiday', compact('data','days') );
+        return view('admin.setting.business.weekly_holiday.weekly_holiday', compact('data', 'days'));
     }
 
     // business info
@@ -528,7 +574,11 @@ class SettingController extends Controller
     public function createShift()
     {
 
-        return view('admin.setting.attendance.createshift');
+        $fixShift = DB::table('shift_fixed')->where('business_id', Session::get('business_id'))->get();
+        $openShift = DB::table('shift_open')->where('business_id', Session::get('business_id'))->get();
+        $rotationalShift = DB::table('shift_rotational')->where('business_id', Session::get('business_id'))->get();
+        $setShift = DB::table('shift_set')->where('business_id', Session::get('business_id'))->get();
+        return view('admin.setting.attendance.createshift', compact('setShift', 'rotationalShift', 'openShift', 'fixShift'));
     }
 
     // automation rule

@@ -11,34 +11,42 @@ use Session;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\employee\EmployeePersonalDetail;
 
+use  App\Helpers\Central_unit;
 
 
 
 class EmployeeController extends Controller
 {
-    public function index(){
+    public function index()
+    {
+        $call = new Central_unit();
+        $Branch = $call->BranchList();
+
         $data = EmployeePersonalDetail::where('business_id', Session::get('business_id'))->get();
-        
-        return view('admin.employees.employee', compact('data'));
+
+        return view('admin.employees.employee', compact('data', 'Branch'));
     }
 
-    public function add(){
+    public function add()
+    {
         return view('admin.employees.addemp');
     }
 
-    public function empProfile(Request $request){
+    public function empProfile(Request $request)
+    {
         // echo $request->id;
-        if(Session::has('business_id')){
-            return view('admin.employees.emp_profile',['id'=>$request->id]);
+        if (Session::has('business_id')) {
+            return view('admin.employees.emp_profile', ['id' => $request->id]);
             // return view('admin.dashboard.dashboard');
-        }else{
+        } else {
             return back();
         }
     }
 
 
     // add employee 
-    public function AddEmployee(Request $request){
+    public function AddEmployee(Request $request)
+    {
         // dd($request);
         $added = DB::table('employee_personal_details')->insert([
             'business_id' => $request->session()->get('business_id'),
@@ -66,18 +74,19 @@ class EmployeeController extends Controller
             'business_id' => $request->session()->get('business_id'),
             'name' => $request->name,
             'email' => $request->email,
-            'country_code'=> '+91',
+            'country_code' => '+91',
             'phone' => $request->mobile_number,
         ]);
 
-        if(isset($added) && isset($loginEmp)){
+        if (isset($added) && isset($loginEmp)) {
             Alert::success('Added Successfully', 'Your Employee Detail is Added Successfully');
             return redirect('admin/employee');
         }
         Alert::error('Not Updated', 'Your Employee Detail Updation is Fail');
         return redirect('admin/employee');
-    } 
-    public function AddContractualEmployee(Request $request){
+    }
+    public function AddContractualEmployee(Request $request)
+    {
         // dd($request);
         $added = DB::table('employee_personal_details')->insert([
             'business_id' => $request->session()->get('business_id'),
@@ -97,7 +106,7 @@ class EmployeeController extends Controller
             'emp_state' => $request->state,
             'emp_city' => $request->city,
             'emp_pin_code' => $request->pincode,
-            'profile_photo' => $request->photo,   
+            'profile_photo' => $request->photo,
         ]);
 
         $loginEmp = DB::table('login_employee')->insert([
@@ -105,21 +114,22 @@ class EmployeeController extends Controller
             'business_id' => $request->session()->get('business_id'),
             'name' => $request->name,
             'email' => $request->email,
-            'country_code'=> '+91',
+            'country_code' => '+91',
             'phone' => $request->mobile_number,
         ]);
 
-        if(isset($added) && isset($loginEmp)){
+        if (isset($added) && isset($loginEmp)) {
             Alert::success('Added Successfully', 'Your Employee Detail is Added Successfully');
             return redirect('admin/employee');
         }
         Alert::error('Not Updated', 'Your Employee Detail Updation is Fail');
         return redirect('admin/employee');
-    } 
+    }
 
-    public function UpdateEmployee(Request $request){
+    public function UpdateEmployee(Request $request)
+    {
         // dd($request);
-        $updated = DB::table('employee_personal_details')->where('emp_id',$request->emp_id)->update([
+        $updated = DB::table('employee_personal_details')->where('emp_id', $request->emp_id)->update([
             'business_id' => $request->session()->get('business_id'),
             'employee_type' => $request->employee_type,
             'emp_name' => $request->name,
@@ -137,21 +147,21 @@ class EmployeeController extends Controller
             'emp_state' => $request->state,
             'emp_city' => $request->city,
             'emp_pin_code' => $request->pin,
-            'profile_photo' => $request->photo, 
+            'profile_photo' => $request->photo,
         ]);
 
-        if(isset($updated)){
+        if (isset($updated)) {
             Alert::success('Updated Successfully', 'Your Employee Detail is Updated Successfully');
             return redirect('admin/employee');
         }
         Alert::error('Not Updated', 'Your Employee Detail Updation is Fail');
         return redirect('admin/employee');
     }
-    public function DeleteEmployee(Request $request){
-       echo $request->id;
-       DB::table('employee_personal_details')->where('emp_id',$request->id)->delete();
-       Alert::success('Deleted Successfully', 'Success Message');
-       return redirect('admin/employee');
+    public function DeleteEmployee(Request $request)
+    {
+        echo $request->id;
+        DB::table('employee_personal_details')->where('emp_id', $request->id)->delete();
+        Alert::success('Deleted Successfully', 'Success Message');
+        return redirect('admin/employee');
     }
-
 }

@@ -1,12 +1,14 @@
-<?php use App\Helpers\Central_unit;
-$Helper=new Central_unit;
-?>  
+<?php
+$Helper = new App\Helpers\Central_unit();
+$Helper1 = new App\Helpers\Layout();
+?>
 <div class="sticky">
     @php
-    $Sidebar = App\Helpers\Layout::SidebarList();
-    $SidebarMenu = App\Helpers\Layout::SidebarMenu();
-    $Permission = App\Helpers\Central_unit::GetModelPermission();
-    
+    $Sidebar = $Helper1->SidebarList();
+    $SidebarMenu = $Helper1->SidebarMenu();
+    $Permission = $Helper->GetModelPermission();
+    $SiderBarLoad=$Helper->ModuleIdToPermission();
+    // dd($ss);
     @endphp
     <aside class="app-sidebar ">
         <div class="app-sidebar__logo">
@@ -29,12 +31,38 @@ $Helper=new Central_unit;
                 <ul class="side-menu">
                     <li class="side-item side-item-category mt-4">General</li>
 
+                    {{-- @foreach ($SiderBarLoad as $item)
+
+                    @php
+                    $otherdetails= $Helper->sidebarMenu($Helper->patternViewDots($item->model_name));
+                    @endphp
+                    <?php
+                //    if($Helper->patternViewDots($item->model_name)=='Dashboard'){ 
+                //        print_r($otherdetails);
+                       ?>
+                    <li class="slide">
+                        <a class="side-menu__item" href="{{ url($otherdetails->menu_link) }}">
+                            <i class="feather feather-home sidemenu_icon"></i>
+                            <span class="side-menu__label">{{$otherdetails->menu_name}}</span>
+                        </a>
+                    </li>
+                    <?php //}?>
+                    <?php //if($Helper->patternViewDots($item->model_name)=='Employee'){ ?>
+                    <li class="slide">
+                        <a class="side-menu__item" href="{{ url($otherdetails->menu_link) }}">
+                            <i class="feather feather-users sidemenu_icon"></i>
+                            <span class="side-menu__label">{{$otherdetails->menu_name}}</span>
+                        </a>
+                    </li>
+                    <?php //}?>
+                    @endforeach --}}
                     <li class="slide">
                         <a class="side-menu__item" href="{{ url('/admin') }}">
                             <i class="feather feather-home sidemenu_icon"></i>
                             <span class="side-menu__label">Dashboard</span>
                         </a>
                     </li>
+                   
 
                     <li class="slide">
                         <a class="side-menu__item" href="{{ url('/admin/employee') }}">
@@ -71,7 +99,7 @@ $Helper=new Central_unit;
 
                         </ul>
                     </li>
-   
+
 
                     <li class="slide">
                         <a class="side-menu__item" href="{{ url('/admin/report') }}">
@@ -134,40 +162,6 @@ $Helper=new Central_unit;
                     </li>
                 </ul>
 
-                {{-- dynemic sidebar  --}}
-
-                {{-- <ul class="side-menu">
-                    @foreach ($Sidebar as $item)
-                    <li class="slide">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
-                            <i class="{{$item->side_icon}} sidemenu_icon"></i>
-                <span class="side-menu__label">{{$item->sidebar_title}}</span><i class="angle fa fa-angle-right"></i>
-                </a>
-                <ul class="slide-menu" style="background-color:  #1034A6; border-radius:7px;">
-                    <li class="side-menu-label1"><a href="{{ url('/admin/leave') }}">Leave</a></li>
-                    @foreach ($SidebarMenu->where('sidebar_id', $item->bar_id) as $menu)
-                    <li><a href="{{ url($menu->menu_link) }}" class="slide-item"> {{$menu->menu_name}} </a></li>
-                    @endforeach
-                </ul>
-                </li>
-                @endforeach
-                <li class="slide">
-                    <a class="side-menu__item" href="{{ url('/help') }}">
-                        <i class="feather feather-headphones sidemenu_icon"></i>
-                        <span class="side-menu__label">Help & Support</span>
-                    </a>
-                </li>
-                <li class="slide">
-                    <a class="side-menu__item" href="" data-bs-toggle="modal" data-bs-target="#LogoutModal">
-                        <i class="fe fe-log-out sidemenu_icon"></i>
-                        <span class="side-menu__label">Log Out</span>
-                    </a>
-                </li>
-                </ul>
-                <div class="slide-right" id="slide-right"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191"
-                        width="24" height="24" viewBox="0 0 24 24">
-                        <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z" />
-                    </svg></div> --}}
             </div>
         </div>
     </aside>
@@ -181,7 +175,7 @@ $Helper=new Central_unit;
                 <i class="fe fe-alert-triangle fs-50"></i>
                 <h4 class="text-primary fs-20 font-weight-semibold mt-2">Logout Alert</h4>
                 <p class="mb-4 mx-4">Are you sure want to log out ???</p>
-                <a href="{{url('/logout')}}" class="btn btn-danger px-5">Log Out</a>
+                <a href="{{ url('/logout') }}" class="btn btn-danger px-5">Log Out</a>
                 <a aria-label="Close" class="btn btn-primary px-5 text-white" data-bs-dismiss="modal">StayLogedin</a>
             </div>
         </div>

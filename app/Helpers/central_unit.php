@@ -21,18 +21,21 @@ use Session;
 class Central_unit
 {
    // public ;
-   protected static $UserType, $BusinessID, $BranchID, $LoginRole, $LoginName, $LoginEmail, $LoginBusinessImage;
+   protected static $UserType, $LoginEmpID, $BusinessID, $BranchID, $LoginRole, $LoginModelID, $LoginName, $LoginEmail, $LoginBusinessImage;
 
    public function __construct()
    {
       self::$BusinessID = Session::get('business_id');
-      self::$UserType = Session::get('user_type');
+      self::$UserType = Session::get('user_type'); //Other checking loader
       self::$BranchID = Session::get('branch_id');
-      self::$LoginRole = Session::get('login_role');
+      self::$LoginRole = Session::get('login_role'); //role table id : 8
+      self::$LoginEmpID = Session::get('login_emp_id');
+      // self::$LoginModelType = Session::get('model_type'); //type loginModel : admin
+      self::$LoginModelID = Session::get('model_id'); //user id like : FD001
       self::$LoginName = Session::get('login_name');
       self::$LoginEmail = Session::get('login_email');
-      self::$LoginBusinessImage = Session::get('login_business_image');
-      // dd(self::$BusinessID);
+      self::$LoginBusinessImage = Session::get('login_business_image'); //bimg
+      // dd(self::$BusinessID,self::$UserType,self::$BranchID,self::$LoginRole,self::$LoginModelID,self::$LoginEmail,self::$LoginName);
    }
 
    static function BusinessIdToName($email, $businessID)
@@ -50,6 +53,7 @@ class Central_unit
          return "No matching business found";
       }
    }
+
    // standard helpers
    public static function RoleIdToName()
    {
@@ -76,19 +80,19 @@ class Central_unit
 
    public static function BranchList()
    {
-      return BranchList::select('*')->where('business_id', self::$BusinessID)->get();
+      return DB::table('branch_list')->where('business_id', self::$BusinessID)->select('*')->get();
    }
    static function Departmentget($id)
    {
-      return DepartmentList::where(['branch_id' => $id, 'business_id' =>  self::$BusinessID])->select('depart_name')->get();
+      return DepartmentList::where(['branch_id' => $id, 'business_id' => self::$BusinessID])->select('depart_name')->get();
    }
    static function Branchget($id)
    {
-      return BranchList::where(['branch_id' => $id, 'business_id' =>  self::$BusinessID])->select('branch_name')->first();
+      return BranchList::where(['branch_id' => $id, 'business_id' => self::$BusinessID])->select('branch_name')->first();
    }
    static function DepartmentList()
    {
-      $department = DB::table('department_list')->where(['business_id' =>  self::$BusinessID])->join('branch_list', 'department_list.branch_id', '=', 'branch_list.branch_id')->select('*')->get();
+      $department = DB::table('department_list')->where(['business_id' => self::$BusinessID])->join('branch_list', 'department_list.branch_id', '=', 'branch_list.branch_id')->select('*')->get();
       // dd($department);
       return $department;
    }
@@ -122,6 +126,21 @@ class Central_unit
 
       return $Rooted;
    }
+   static function EmpPlaceHolder()
+   {
+      $ad = DB::table('model_has_permissions')->where('business_id', self::$BusinessID)->first();
+      if ($ad != null) {
+         return $ad;
+      }
+   }
+   static function RoleIdToCountAssignUsers($roleId)
+   {
+      $node = DB::table('setting_role_assign_permission')->where('business_id', self::$BusinessID)->where('role_id', $roleId)->count();
+
+      if ($node != null) {
+         return $node;
+      }
+   }
    static function DesignationList()
    {
       $designation = DB::table('designation_list')
@@ -136,24 +155,24 @@ class Central_unit
 
    static function EmployeeDetails()
    {
-      $employee = DB::table('employee_personal_details')->where(['business_id' =>  self::$BusinessID])->select('*')->get();
+      $employee = DB::table('employee_personal_details')->where(['business_id' => self::$BusinessID])->select('*')->get();
       return $employee;
    }
 
    static function Template()
    {
-      $template = DB::table('holiday_template')->where(['business_id' =>  self::$BusinessID])->select('*')->get();
+      $template = DB::table('holiday_template')->where(['business_id' => self::$BusinessID])->select('*')->get();
       return $template;
    }
    static function Holiday()
    {
-      $template = DB::table('holiday_details')->where(['business_id' =>  self::$BusinessID])->select('*')->get();
+      $template = DB::table('holiday_details')->where(['business_id' => self::$BusinessID])->select('*')->get();
       return $template;
    }
 
    static function GetAttDetails()
    {
-      $AttList = DB::table('attendance_list')->where(['business_id' =>  self::$BusinessID])->get();
+      $AttList = DB::table('attendance_list')->where(['business_id' => self::$BusinessID])->get();
       return $AttList;
    }
 
@@ -225,9 +244,72 @@ class Central_unit
       // $Roles = DB::table('roles')->where(['business_id' =>  self::$BusinessID])->select('*')->get();
    }
 
+
+   // skipping  pattern Dashboard.View -> get In Dashboard
+   static function patternViewDots($string)
+   {
+      // Define a regular expression pattern to capture the first part (Dashboard)
+      $pattern = '/^(.+)\.View$/i';
+
+      // Use preg_match to match the pattern
+      if (preg_match($pattern, $string, $matches)) {
+         // $matches[1] contains the captured value
+         $result = $matches[1];
+         return $result;
+      } else {
+         return $string;
+      }
+   }
+   static function sidebarMenu($menu_name)
+   {
+      return DB::table('sidebar_menu')->where('menu_name', '=',$menu_name)->first();
+   }
+
+
+   // skipping  pattern Dashboard.View -> get In Dashboard
+   static function patternSkipDots($string)
+   {
+      // Define a regular expression pattern to capture the first part (Dashboard)
+      $pattern = '/^([^\.]+)\./';
+
+      // Use preg_match to match the pattern
+      if (preg_match($pattern, $string, $matches)) {
+         // $matches[1] contains the captured value (Dashboard)
+         $dashboard = $matches[1];
+
+         // Use $dashboard as needed
+         return $dashboard;
+      } else {
+         // Pattern not found
+         return "";
+      }
+   }
+
+   static function EmpIdToRoleId()
+   {
+      $checkPermission = DB::table('setting_role_assign_permission')->where('emp_id', self::$LoginEmpID)->select('role_id')->first();
+      return $checkPermission;
+   }
+
+   static function ModuleIdToPermission()
+   {
+      $checkPermission = DB::table('setting_role_assign_permission')
+         ->join('setting_role_items', 'setting_role_items.role_create_id', '=', 'setting_role_assign_permission.role_id')
+         ->where('emp_id', self::$LoginEmpID)->get();
+      return $checkPermission;
+   }
+   static function RoleIdToModelId($roleId)
+   {
+      return DB::table('model_has_roles')->where('role_id', $roleId)->select('model_id', 'model_type')->first();
+   }
+   static function RoleIdToModelName($roleId)
+   {
+      return DB::table('setting_role_items')->where('role_create_id', $roleId)->select('model_name')->get();
+   }
+
    static function GetModelPermission()
    {
-      $ModelPermission = DB::table('model_has_permissions')->where(['model_id' => Session::get('login_emp_id'), 'business_id' =>  self::$BusinessID])->get();
+      $ModelPermission = DB::table('model_has_permissions')->where('model_id', self::$LoginModelID)->get();
       return $ModelPermission;
    }
 

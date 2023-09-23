@@ -23,7 +23,7 @@
                             <div class="my-auto"><a href="#">
                                     <h5 class="my-auto text-dark">Business Logo</h5>
                                 </a>
-                                <p class="my-auto">Not Added</p>
+                                <p class="my-auto">{{ $accDetail->business_logo ? 'Added' : 'Not Added' }}</p>
                             </div>
                             <div class="my-auto"><a href="#" data-bs-target="#bLogo" data-bs-toggle="modal"><i
                                         class="fa fa-angle-double-right fs-20 my-auto"></i></a>
@@ -34,6 +34,12 @@
             </div>
 
         </div>
+        @php
+            $central = new App\Helpers\Central_unit();
+            $categoryName = $central::GetBusinessCategoryName($accDetail->business_categories);
+            $businesstypeNames = $central::GetBusinessTypeName($accDetail->business_type);
+            
+        @endphp
 
         <div class="col-xl-6">
             <div class="card custom-card">
@@ -47,7 +53,7 @@
                             <div class="my-auto"><a href="#">
                                     <h5 class="my-auto text-dark">Business Category</h5>
                                 </a>
-                                <p class="my-auto">{{ $accDetail->business_name }}</p>
+                                <p class="my-auto">{{ $categoryName->name }}</p>
                                 {{-- <p class="my-auto">{{ $accDetail->business_name }}</p> --}}
                             </div>
                             <div class="my-auto"><a href="#" data-bs-target="#modaldemo4" data-bs-toggle="modal"><i
@@ -58,19 +64,19 @@
             </div>
             @php
                 $Bname = app\Helpers\Central_unit::GetBusinessCategoryName($accDetail->business_categories);
-                
             @endphp
             {{-- Logo Upload --}}
-            <form method="post" enctype="multipart/form-data" action="{{ route('upload.logo', $accDetail->id) }}">
-                @csrf
 
-                <div class="modal fade" id="bLogo">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content tx-size-sm">
-                            <div class="modal-header border-0">
-                                <h4 class="modal-title">Logo</h4><button aria-label="Close" class="btn-close"
-                                    data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                            </div>
+            <div class="modal fade" id="bLogo">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content tx-size-sm">
+                        <div class="modal-header border-0">
+                            <h4 class="modal-title">Business Logo</h4><button aria-label="Close" class="btn-close"
+                                data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <form method="post" enctype="multipart/form-data"
+                            action="{{ route('upload.logo', $accDetail->id) }}">
+                            @csrf
                             {{-- <div class="form-row border-bottom"> --}}
                             <p class=" fs-13 px-4 border-bottom " style="color: rgb(110, 104, 88)">Please upload the logo
                                 ogf
@@ -82,32 +88,32 @@
                                 {{-- </div> --}}
                                 <input type="text" name="editlogoId" value="{{ $accDetail->id }}" hidden>
                                 {{-- src="{{ asset('business_logo/' . Session::get('login_business_image')) }}" --}}
-                                <input type="file" name="image"  class="dropify" data-default-file="{{asset('business_logo/'.$accDetail->business_logo )}}" />
-{{--                               
+                                <input type="file" name="image" class="dropify"
+                                    data-default-file="{{ asset('business_logo/'. $accDetail->business_logo) }}" />
+                                {{--                               
                                 <img type="file" src="{{asset('business_logo/'.$accDetail->business_logo )}}" class="dropify" name="image" 
                                     data-default-file=""
                                     data-height="180" /> --}}
-                             
+
                             </div>
                             <div class="modal-footer py-1">
-                                <button type="" class="btn btn-danger savebtn">Cancel</button>
+                                <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
                                 <button type="submit" class="btn btn-primary savebtn me-0">Update & Continue</button>
                             </div>
-
-                        </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
             {{-- Business Name --}}
-            <form method="post" action="{{ route('sbussinessname.update', $accDetail->id) }}">
-                @csrf
-                <div class="modal fade" id="modaldemo4">
-                    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-                        <div class="modal-content tx-size-sm">
-                            <div class="modal-header">
-                                <h4 class="modal-title">Business Category</h4><button aria-label="Close" class="btn-close"
-                                    data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                            </div>
+            <div class="modal fade" id="modaldemo4">
+                <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                    <div class="modal-content tx-size-sm">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Business Category</h4><button aria-label="Close" class="btn-close"
+                                data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <form method="post" action="{{ route('sbussinessname.update', $accDetail->id) }}">
+                            @csrf
                             <div class="modal-body">
 
                                 <div class="form-group co-lg">
@@ -132,14 +138,14 @@
                                     name="business_name" value="{{ $accDetail->business_name }}">
                             </div>
                             <div class="modal-footer py-1">
-                                <button type="" class="btn btn-danger savebtn">Cancel</button>
+                                <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
                                 <button type="submit" class="btn btn-primary     savebtn me-0">Update & Continue</button>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
+            </div>
 
-            </form>
             {{--  Manage Business --}}
             <div class="modal fade" id="baddDelete">
                 <div class="modal-dialog modal-dialog-centered modal-md" role="document">
@@ -197,16 +203,17 @@
             </div>
             {{--  Name --}}
             {{-- @foreach ($branch as $item) --}}
-            <form method="post" action="{{ route('name.update', $accDetail->id) }}">
-                <div class="modal fade" id="nameUpdateModal">
-                    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-                        <div class="modal-content tx-size-sm">
-                            <div class="modal-header">
-                                <h4 class="modal-title ">Name</h4><button aria-label="Close" class="btn-close"
-                                    data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
-                                        aria-hidden="true">×</span></button>
-                            </div>
+
+            <div class="modal fade" id="nameUpdateModal">
+                <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                    <div class="modal-content tx-size-sm">
+                        <div class="modal-header">
+                            <h4 class="modal-title ">Name</h4><button aria-label="Close" class="btn-close"
+                                data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                            <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
+                                    aria-hidden="true">×</span></button>
+                        </div>
+                        <form method="post" action="{{ route('name.update') }}">
                             @csrf
                             <div class="modal-body">
                                 <p>Please add your name to continue</p>
@@ -217,15 +224,14 @@
                                     value="{{ $accDetail->client_name }}">
                             </div>
                             <div class="modal-footer py-1" style="background:#f9f8f8;">
-                                <button class="btn btn-danger savebtn" type="sumbit">Cancel</button>
-                                <button class="btn btn-primary savebtn me-0" type="sumbit">Update & Continue</button>
-                                {{-- <a href="{{ route('name.update') }}" method="post" type="sumbit" class="btn btn-primary btn-sm">Continue</a> --}}
+                                <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
+                                <button type="submit" class="btn btn-primary savebtn">Update & Continue</button>
                             </div>
-                        </div>
-
+                        </form>
                     </div>
+
                 </div>
-            </form>
+            </div>
         </div>
 
         <div class="col-xl-6">
@@ -251,18 +257,16 @@
                 </div>
             </div>
             {{--  KYB --}}
-            <form method="post" action="{{ route('sphone.update', $accDetail->id) }}">
-                @csrf
-                <div class="modal fade" id="bphone">
-                    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-                        <div class="modal-content tx-size-sm">
-                            <div class="modal-header " style="background:#f9f8f8;">
-                                <h4 class="modal-title">Phone Number</h4>
+            <div class="modal fade" id="bphone">
+                <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                    <div class="modal-content tx-size-sm">
+                        <div class="modal-header " style="background:#f9f8f8;">
+                            <h4 class="modal-title">Phone Number</h4>
 
-                                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
-                                        aria-hidden="true">&times;</span></button>
-                            </div>
-
+                            <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
+                                    aria-hidden="true">&times;</span></button>
+                        </div>
+                        <form method="post" action="{{ route('sphone.update', $accDetail->id) }}">
                             @csrf
                             <div class="modal-body">
                                 <p>Please add your phone number to continue</p>
@@ -272,14 +276,14 @@
                                     value="{{ $accDetail->mobile_no }}" maxlength="10">
                             </div>
                             <div class="modal-footer py-1" style="background:#f9f8f8;">
-                                <button class="btn btn-danger savebtn" type="cancel">Cancel</button>
+                                <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
                                 <button class="btn btn-primary savebtn me-0" type="sumbit">Update & Continue </button>
                                 {{-- <a href="{{ route('name.update') }}" method="post" type="sumbit" class="btn btn-primary btn-sm">Continue</a> --}}
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
 
         </div>
         <div class="col-xl-6">
@@ -296,9 +300,9 @@
                                 </a>
                                 <p class="my-auto">{{ $accDetail->business_email }}</p>
                             </div>
-                            <div class="my-auto"> <a href="#" data-bs-target="#emailupdateModal"
+                            {{-- <div class="my-auto"> <a href="#" data-bs-target="#emailupdateModal"
                                     data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a>
-                            </div>
+                            </div> --}}
 
                         </div>
                     </div>
@@ -321,7 +325,7 @@
                                 value="{{ $accDetail->business_email }}" readonly>
                         </div>
                         <div class="modal-footer py-1">
-                            <button class="btn btn-danger savebtn" type="">Cancel</button>
+                            <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
                             <button class="btn btn-primary savebtn me-0" type="sumbit">Update & Continue </button>
                             {{-- <a href="#" class="btn btn-primary btn-sm">Continue</a> --}}
                         </div>
@@ -342,7 +346,7 @@
                             <div class="my-auto"><a href="#">
                                     <h5 class="my-auto text-dark">Business Type</h5>
                                 </a>
-                                <p class="my-auto"></p>
+                                <p class="my-auto">{{ $businesstypeNames->name }}</p>
                             </div>
                             <div class="my-auto"> <a href="#" data-bs-target="#btypeModal"
                                     data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a>
@@ -357,15 +361,15 @@
                 $Btypename = app\Helpers\Central_unit::GetBusinessTypeName($accDetail->business_type);
                 
             @endphp
-            <form method="post" action="{{ route('sbussinesstype.update', $accDetail->id) }}">
-                @csrf
-                <div class="modal fade" id="btypeModal">
-                    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-                        <div class="modal-content tx-size-sm">
-                            <div class="modal-header">
-                                <h4 class="modal-title">Business Type</h4><button aria-label="Close" class="btn-close"
-                                    data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                            </div>
+            <div class="modal fade" id="btypeModal">
+                <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                    <div class="modal-content tx-size-sm">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Business Type</h4><button aria-label="Close" class="btn-close"
+                                data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <form method="post" action="{{ route('sbussinesstype.update', $accDetail->id) }}">
+                            @csrf
 
                             <div class="modal-body">
                                 <div class="form-group">
@@ -383,14 +387,14 @@
                                 </div>
                             </div>
                             <div class="modal-footer py-1">
-                                <button type="" class="btn btn-danger savebtn">Cancel</button>
+                                <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
                                 <button type="submit" class="btn btn-primary savebtn me-0">Update & Continue</button>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
+            </div>
 
-            </form>
             {{--  Manage Business --}}
 
         </div>
@@ -417,20 +421,20 @@
                     </div>
                 </div>
             </div>
-            <form method="post" action="{{ route('saddress.update', $accDetail->id) }}">
-                @csrf
-                <div class="modal fade" id="bAddress">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content tx-size-sm">
-                            {{-- <div>
-                                    <h4 class="modal-title ms-2">Business Address</h4><button aria-label="Close"
-                                        class="btn-close" data-bs-dismiss="modal"><span
-                                            aria-hidden="true">&times;</span></button>
-                                </div> --}}
-                            <div class="modal-header">
-                                <h4 class="modal-title">Business Address</h4><button aria-label="Close" class="btn-close"
-                                    data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                            </div>
+            <div class="modal fade" id="bAddress">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content tx-size-sm">
+                        {{-- <div>
+                            <h4 class="modal-title ms-2">Business Address</h4><button aria-label="Close"
+                            class="btn-close" data-bs-dismiss="modal"><span
+                            aria-hidden="true">&times;</span></button>
+                        </div> --}}
+                        <div class="modal-header">
+                            <h4 class="modal-title">Business Address</h4><button aria-label="Close" class="btn-close"
+                                data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <form method="post" action="{{ route('saddress.update', $accDetail->id) }}">
+                            @csrf
                             <div class="modal-body">
                                 <p>Please add your phone number to continue</p>
 
@@ -457,13 +461,13 @@
                                     value="{{ $accDetail->pin_code }}">
                             </div>
                             <div class="modal-footer d-flex py-1">
-                                <button class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</button>
+                                <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
                                 <button class="btn btn-primary savebtn me-0" type="sumbit">Update & Continue</button>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
         <div class="col-xl-6">
             <div class="card custom-card">
@@ -515,7 +519,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button class="btn btn-outline-dark cancel" data-bs-dismiss="modal">Cancel</button>
+                    <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
                     <button class="btn btn-primary savebtn">Continue</button>
                 </div>
             </div>
@@ -551,7 +555,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button class="btn btn-outline-dark cancel" data-bs-dismiss="modal">Cancel</button>
+                    <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
                     <button class="btn btn-primary savebtn">Continue</button>
                 </div>
             </div>

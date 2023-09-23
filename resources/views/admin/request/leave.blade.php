@@ -25,7 +25,7 @@
     <script src="{{ asset('assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('assets/js/datatables.js') }}"></script>
     <script src="{{ asset('assets/js/select2.js') }}"></script>
-    <script src="{{ asset('assets/js/hr/hr-emp.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/hr/hr-emp.js') }}"></script> --}}
 
 
     {{-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> --}}
@@ -35,13 +35,18 @@
 
 @endsection
 @section('content')
-<style>
-    .complete_class{
-        color:green;
-    }
-    .incomplete_class{
-        color:red;
-    }
+    <style>
+        .complete_class {
+            color: green;
+        }
+
+        .incomplete_class {
+            color: red;
+        }
+
+        #file-datatable_length{
+          padding:5px;
+        }
     </style>
     @foreach ($data as $item)
         @php
@@ -52,9 +57,9 @@
             $DepartmentName = $loaded->DepartmentName($item->department_id);
             // dd($DepartmentName);
             $DesignationName = $loaded->DasignationName($item->designation_id);
-            dd($DesignationName);
+            // dd($DesignationName);
             $BranchList = $centralUnit->BranchList();
-            dd($BranchList);
+            // dd($BranchList);
             $DepartmentList = $centralUnit->DepartmentList();
             // dd($DepartmentList);
             $DesignationList = $centralUnit->DesignationList();
@@ -153,16 +158,19 @@
                 <div class="card-body ">
                     <div class="row">
 
+
                         <div class="col-sm-12 col-xl-2">
                             <div class="form-group">
                                 <label class="form-label">Branch</label>
+                        
                                 <select name="attendance" class="form-control custom-select select2"
                                     data-placeholder="Select Branch">
                                     <option label="Select Branch"></option>
-                                    @foreach ($BranchList as $item)
-                                        <option value="{{ $item }}">{{ $item->branch_name }}</option>
-                                    @endforeach
-
+                                    @if (!(empty($BranchList)))
+                                        @foreach ($BranchList as $item)
+                                            <option value="{{ $item->id }}">{{ $item->branch_name }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                         </div>
@@ -172,9 +180,12 @@
                                 <select name="attendance" class="form-control custom-select select2"
                                     data-placeholder="Select Department">
                                     <option label="Select Department"></option>
+                                    @if (!(empty($DepartmentList)))
+                                    
                                     @foreach ($DepartmentList as $item)
                                         <option value="1">{{ $item->depart_name }}</option>
                                     @endforeach
+                                    @endif
 
                                 </select>
                             </div>
@@ -185,9 +196,12 @@
                                 <select name="attendance" class="form-control custom-select select2"
                                     data-placeholder="Select Designation">
                                     <option label="Select Designation"></option>
+                                    @if (!(empty($DesignationList)))
+                                    
                                     @foreach ($DesignationList as $item)
                                         <option value="1">{{ $item->desig_name }}</option>
                                     @endforeach
+                                    @endif
 
                                 </select>
                             </div>
@@ -259,9 +273,8 @@
                                                     class="avatar avatar-md brround me-3">{{ $item->profile_photo }}</span>
                                                 <div class="me-3 mt-0 mt-sm-1 d-block">
                                                     <h6 class=" m-0 fs-14">{{ $item->emp_name }}</h6> <span
-                                                        {{-- class="text-muted m-0 fs-12">{{ $DesignationName->desig_name? '$DesignationName->desig_name' : '' }}</span> --}}
+                                                        {{-- class="text-muted m-0 fs-12">{{ $DesignationName->desig_name? '$DesignationName->desig_name' : '' }}</span> --}} </div>
                                                 </div>
-                                            </div>
                                         </td>
                                         <td>{{ $item->emp_id }}</td>
                                         <td>{{ $item->leave_type }}</td>
@@ -270,10 +283,11 @@
                                         <td>{{ $item->days }}</td>
                                         <td>{{ $item->reason }}</td>
                                         {{-- <td>{{$item->status==1?'Approve'}}</td> --}}
-                                                        {{-- a ? b: c ? d : e ? f : g ? h : i    --}}
+                                        {{-- a ? b: c ? d : e ? f : g ? h : i    --}}
                                         {{-- <td>{{  $item->status == 1 ? 'Approve' : $item->status == 2 ? 'Rejected    ':'Approve'}}</td> --}}
-                                        <td><span class="badge badge-complete {{ $item->status ? 'complete_class' : 'incomplete_class' }}">
-                                            {{ ($item->status==1)  ? 'Approve' : 'Decline' }}</span></td>
+                                        <td><span
+                                                class="badge badge-complete {{ $item->status ? 'complete_class' : 'incomplete_class' }}">
+                                                {{ $item->status == 1 ? 'Approve' : 'Decline' }}</span></td>
                                         {{-- <td>{{ $item->profile_photo }}</td> --}}
 
                                         {{-- <td><span class="badge badge-success">{{ $item->status }}</span></td> --}}
@@ -307,137 +321,136 @@
 
     {{-- Modal --}}
     @foreach ($data as $item)
+        <div class="modal fade" id="showmodal{{ $item->id }}">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content modal-content-demo">
 
-    <div class="modal fade" id="showmodal{{ $item->id }}">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content modal-content-demo">
-
-                <div class="modal-header">
-                    <h5 class="modal-title ms-2 " id="exampleModalLongTitle">Leave Request</h5>
-                    {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <div class="modal-header">
+                        <h5 class="modal-title ms-2 " id="exampleModalLongTitle">Leave Request</h5>
+                        {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
                             </button> --}}
-                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
-                            aria-hidden="true">&times;</span></button>
-                </div>
+                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
+                                aria-hidden="true">&times;</span></button>
+                    </div>
 
-                <form action="{{ route('admin.leaveapprove', $item->id) }}" method="post">
-                    @csrf
-                    <div class="modal-body px-5 ">
-                        <div class="form-row">
-                            <div class="form-group  col-md-4">
-                                <input type="text" name="editLeaveId" value="{{ $item->id }}" hidden>
-                                <label for="inputEmail4">Branch</label>
-                                <input type="email" class="form-control" style="background-color:F1F4FB "
-                                    id="inputEmail4" placeholder="Email" value="{{ $BranchName->branch_name }}"
-                                    readonly>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="inputPassword4">Depratment</label>
-                                <input type="text" class="form-control" id="inputPassword4" placeholder="Password"
-                                    value="{{ $DepartmentName->depart_name }}" readonly>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="inputPassword4">Designation</label>
-                                {{-- <input type="text" class="form-control" id="inputPassword4" placeholder="Password"
+                    <form action="{{ route('admin.leaveapprove', $item->id) }}" method="post">
+                        @csrf
+                        <div class="modal-body px-5 ">
+                            <div class="form-row">
+                                <div class="form-group  col-md-4">
+                                    <input type="text" name="editLeaveId" value="{{ $item->id }}" hidden>
+                                    <label for="inputEmail4">Branch</label>
+                                    <input type="email" class="form-control" style="background-color:F1F4FB "
+                                        id="inputEmail4" placeholder="Email" value="{{ $BranchName->branch_name }}"
+                                        readonly>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="inputPassword4">Depratment</label>
+                                    <input type="text" class="form-control" id="inputPassword4"
+                                        placeholder="Password" value="{{ $DepartmentName->depart_name }}" readonly>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="inputPassword4">Designation</label>
+                                    {{-- <input type="text" class="form-control" id="inputPassword4" placeholder="Password"
                                     value="{{ $DesignationName->desig_name? '$DesignationName->desig_name' : '' }}" readonly> --}}
-                                {{-- placeholder="Password" value="{{$item->designation_id}}" readonly> --}}
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="inputEmail4">Employee Name</label>
-                                <input type="email" class="form-control" id="inputEmail4" placeholder="Email"
-                                    value="{{ $item->emp_name }}" readonly>
-                            </div>
-                            <div class="form-group  col-md-4">
-                                <label for="inputPassword4">Employee Id</label>
-                                <input type="text" class="form-control" id="inputPassword4" placeholder="Password"
-                                    value="{{ $item->emp_id }}" readonly>
-                            </div>
-                            <div class="form-group  col-md-4">
-                                <label for="inputPassword4">Mobile No.</label>
-                                <input type="text" class="form-control" id="inputPassword4" placeholder="Mobile No."
-                                    value="{{ $item->emp_mobile_no }}" readonly>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group  col-md-3 col-sm-3">
-                                <label for="inputPassword4">Leave Type </label>
-                                <select name="leave_type" class="form-control custom-select select2"
-                                    data-placeholder="{{ $item->leave_type }}" value="{{ $item->leave_type }}">
-                                    <option label="Select Leave Type" value="{{ $item->leave_type }}">
-                                        {{ $item->leave_type }}</option>
-                                    <option value="1">Casual Leave</option>
-                                    <option value="2">Sick Leave</option>
-                                    {{-- <option value="3"> Employee</option> --}}
-                                </select>
-                            </div>
-                            <div class="form-group    col-md-3 col-sm-3">
-                                <label for="inputPassword4">From <i class="fa fa-calendar" data-bs-toggle="tooltip"
-                                        title="" data-bs-original-title="fa fa-calendar"
-                                        aria-label="fa fa-calendar"></i></label>
-                                <input type="date" class="form-control" id="inputPassword4" name="from_date"
-                                    placeholder="time" value="{{ $item->from_date }}">
+                                    {{-- placeholder="Password" value="{{$item->designation_id}}" readonly> --}}
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="inputEmail4">Employee Name</label>
+                                    <input type="email" class="form-control" id="inputEmail4" placeholder="Email"
+                                        value="{{ $item->emp_name }}" readonly>
+                                </div>
+                                <div class="form-group  col-md-4">
+                                    <label for="inputPassword4">Employee Id</label>
+                                    <input type="text" class="form-control" id="inputPassword4"
+                                        placeholder="Password" value="{{ $item->emp_id }}" readonly>
+                                </div>
+                                <div class="form-group  col-md-4">
+                                    <label for="inputPassword4">Mobile No.</label>
+                                    <input type="text" class="form-control" id="inputPassword4"
+                                        placeholder="Mobile No." value="{{ $item->emp_mobile_no }}" readonly>
+                                </div>
                             </div>
 
-                            <div class="form-group  col-md-3 col-sm-3 ">
-                                <label for="inputPassword4">To <i class="fa fa-calendar" data-bs-toggle="tooltip"
-                                        title="" data-bs-original-title="fa fa-calendar"
-                                        aria-label="fa fa-calendar"></i></label>
-                                <input type="date" class="form-control" name="to_date" id="inputPassword4"
-                                    placeholder="Password" value="{{ $item->to_date }}">
-                            </div>
-                            <div class="form-group  col-md-3 col-sm-3 ">
-                                <label for="inputPassword4">Days</label>
-                                <input type="text" class="form-control" id="inputPassword4" name="days"
-                                    value="{{ $item->days }}" {{--
+                            <div class="form-row">
+                                <div class="form-group  col-md-3 col-sm-3">
+                                    <label for="inputPassword4">Leave Type </label>
+                                    <select name="leave_type" class="form-control custom-select select2"
+                                        data-placeholder="{{ $item->leave_type }}" value="{{ $item->leave_type }}">
+                                        <option label="Select Leave Type" value="{{ $item->leave_type }}">
+                                            {{ $item->leave_type }}</option>
+                                        <option value="1">Casual Leave</option>
+                                        <option value="2">Sick Leave</option>
+                                        {{-- <option value="3"> Employee</option> --}}
+                                    </select>
+                                </div>
+                                <div class="form-group    col-md-3 col-sm-3">
+                                    <label for="inputPassword4">From <i class="fa fa-calendar" data-bs-toggle="tooltip"
+                                            title="" data-bs-original-title="fa fa-calendar"
+                                            aria-label="fa fa-calendar"></i></label>
+                                    <input type="date" class="form-control" id="inputPassword4" name="from_date"
+                                        placeholder="time" value="{{ $item->from_date }}">
+                                </div>
+
+                                <div class="form-group  col-md-3 col-sm-3 ">
+                                    <label for="inputPassword4">To <i class="fa fa-calendar" data-bs-toggle="tooltip"
+                                            title="" data-bs-original-title="fa fa-calendar"
+                                            aria-label="fa fa-calendar"></i></label>
+                                    <input type="date" class="form-control" name="to_date" id="inputPassword4"
+                                        placeholder="Password" value="{{ $item->to_date }}">
+                                </div>
+                                <div class="form-group  col-md-3 col-sm-3 ">
+                                    <label for="inputPassword4">Days</label>
+                                    <input type="text" class="form-control" id="inputPassword4" name="days"
+                                        value="{{ $item->days }}" {{--
                                 placeholder="Password" value="{{ $item->in_time }}"> --}} placeholder="Password">
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col">
-                                <label for="inputPassword4" class="">Reason</label>
-                                {{-- <input type="text" class="form-control" id="inputPassword4" placeholder="Password"
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <label for="inputPassword4" class="">Reason</label>
+                                    {{-- <input type="text" class="form-control" id="inputPassword4" placeholder="Password"
                                 value="{{$item->in_time}}"> --}}
 
-                                <textarea class="form-control" id="" rows="2" value="{{ $item->in_time }}" readonly>{{ $item->reason }}</textarea>
+                                    <textarea class="form-control" id="" rows="2" value="{{ $item->in_time }}" readonly>{{ $item->reason }}</textarea>
+                                </div>
                             </div>
                         </div>
+                        <div class="modal-footer">
+                            <div class="d-flex me-auto ">
+                                <p class="align-middle my-2"><span><b>Mark Leave Approvel</b></span></p>
+                            </div>
+                            <div class="d-flex m-0">
+                                <button class="btn btn-danger mx-2" data-bs-dismiss="modal" type="cancel "
+                                    name="status" value="2">Decline</button>
+
+                                <button class="btn btn-success mx-2" type="submit" data-bs-toggle="modal"
+                                    data-bs-target="#" name="status" value="1">Approve</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {{-- delete confirmation --}}
+        <div class="modal fade" id="deletemodal{{ $item->id }}" data-bs-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content modal-content-demo">
+                    <div class="modal-body">
+                        <h3>Are you sure want to Update It ?</h3>
                     </div>
                     <div class="modal-footer">
-                        <div class="d-flex me-auto ">
-                            <p class="align-middle my-2"><span><b>Mark Leave Approvel</b></span></p>
-                        </div>
-                        <div class="d-flex m-0">
-                            <button class="btn btn-danger mx-2" data-bs-dismiss="modal" type="cancel " name="status"
-                                value="2">Decline</button>
+                        <button class="btn btn-danger" data-bs-dismiss="modal">Decline</button>
 
-                            <button class="btn btn-success mx-2" type="submit" data-bs-toggle="modal"
-                                data-bs-target="#" name="status" value="1">Approve</button>
-                        </div>
+                        <a href="{{ route('admin.leavedelete', $item->id) }}" class="btn btn-primary"
+                            type="submit">Approve</a>
+
+
                     </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    {{-- delete confirmation --}}
-    <div class="modal fade" id="deletemodal{{ $item->id }}" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content modal-content-demo">
-                <div class="modal-body">
-                    <h3>Are you sure want to Update It ?</h3>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-danger" data-bs-dismiss="modal">Decline</button>
-
-                    <a href="{{ route('admin.leavedelete', $item->id) }}" class="btn btn-primary"
-                        type="submit">Approve</a>
-
-
                 </div>
             </div>
         </div>
-    </div>
     @endforeach
 
     {{-- delete confirmation --}}

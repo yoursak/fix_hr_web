@@ -108,11 +108,16 @@ class LoginController extends BaseController
         if ($actualCardType === 'admin') {
             $mainloodLoad2 = DB::table('employee_personal_details')->where('business_id', $businessId)->where('emp_email', $request->session()->get('email'))->first();
             $infoBusinessDetails = DB::table('business_details_list')->where('business_id', $businessId)->first();
+            // $Get = DB::table('model_has_roles')->where('business_id', $businessId)->where('branch_id', $mainloodLoad2->branch_id)->where('role_id', $mainloodLoad2->role_id)->select('model_id', 'model_type')->first();
+            $Get = DB::table('setting_role_assign_permission')->where('emp_id', $mainloodLoad2->emp_id)->where('business_id', $businessId)->where('branch_id', $mainloodLoad2->branch_id)->first();
             if ($mainloodLoad2) {
                 Session::put('user_type', 'admin');
                 Session::put('business_id', $businessId);
                 Session::put('branch_id', $mainloodLoad2->branch_id);
-                Session::put('login_role', $mainloodLoad2->role_id);
+                Session::put('login_emp_id', $mainloodLoad2->emp_id);
+                Session::put('login_role_id', ($Get->role_id != null) ? $Get->role_id : '');
+                // Session::put('model_id', ($Get->model_id != null) ? $Get->model_id : '');
+                Session::put('login_role', $mainloodLoad2->role_id); //role table role id link model_has_role
                 Session::put('login_name', $mainloodLoad2->emp_name);
                 Session::put('login_email', $mainloodLoad2->emp_email);
                 Session::put('login_business_image', $infoBusinessDetails->business_logo);
@@ -163,13 +168,13 @@ class LoginController extends BaseController
                     ->join('business_details_list', function ($join) {
                         $join->on('business_details_list.business_id', '=', 'login_admin.business_id');
                         // $join->on('business_details_list.business_email', '=', 'login_admin.email');
-
+    
                     })
                     ->join('roles', function ($join) {
                         // $join->on('roles.business_id', '=', 'login_admin.business_id');
                         $join->on('roles.id', '=', 'login_admin.role_id');
                         // $join->on('roles.id', '=', 'login_admin.role_id');
-
+    
                     })
                     ->where('email', $check_otp->email)
                     ->select('*', 'roles.name as rolename')
@@ -208,7 +213,7 @@ class LoginController extends BaseController
                 //     ->where('employee_personal_details.branch_id', $check_otp_for_first->branch_id)
                 //     ->select('employee_personal_details.*')
                 //     ->first();
-                $cast=DB::table('roles')->where('business_id',$check_otp_for_first->business_id)->where('branch_id',$check_otp_for_first->branch_id)->first();
+                $cast = DB::table('roles')->where('business_id', $check_otp_for_first->business_id)->where('branch_id', $check_otp_for_first->branch_id)->first();
                 // dd($cast);
                 // Session::put('login_name', $LoginName);
                 // Session::put('login_email', $LoginEmail);
@@ -218,7 +223,8 @@ class LoginController extends BaseController
                     'name' => $check_otp_for_first->emp_name,
                     'email' => $check_otp_for_first->emp_email,
                     'phone' => $check_otp_for_first->emp_phone,
-                    'role_id' => $cast->id,//role_id
+                    'role_id' => $cast->id,
+                    //role_id
                     'country_code' => '+91',
                     'is_verified' => 1,
                     'created_at' => now(),

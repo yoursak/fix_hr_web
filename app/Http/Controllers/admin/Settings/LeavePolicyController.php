@@ -4,7 +4,9 @@ namespace App\Http\Controllers\admin\Settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\admin\SettingLeavePolicy;
 use App\Models\admin\LeavePolicy;
+use Session;
 use Validator;
 use DB;
 // /public_html/app/Models/admin
@@ -41,23 +43,36 @@ class LeavePolicyController extends Controller
     {
         // return $request->all();     
 
-        $request->validate([
-            'addmore.*.categoryname' => 'required',
-            // 'addmore.*.qty' => 'required',
-            // 'addmore.*.price' => 'required',
-        ]);
 
-        foreach ($request->addmore as $key => $value) {
-            // LeavePolicy::create($value);
-            $data[]= $value;
-            LeavePolicy::create($data);
-        }
+        // $request->validate([
+        //     'addmore.*.categoryname' => 'required',
+        //     // 'addmore.*.qty' => 'required',
+        //     // 'addmore.*.price' => 'required',
+        // ]);
+
+        // setting_leave_policy
+
+        $data = new SettingLeavePolicy();
+        $data->business_id = Session::get('business_id');
+        $data->policy_name = $request->policyname;
+        $data->policyname = $request->btnradio;
+        $data->leave_period_from = $request->leave_period_from;
+        $data->leave_period_to = $request->leave_period_to;
+        $data->save();
+        return back();
+        
+
+        // foreach ($request->addmore as $key => $value) {
+        //     // LeavePolicy::create($value);
+        //     $data[]= $value;
+        //     LeavePolicy::create($data);
+        // }
         // return $data;
 
         return back()->with('success', 'Record Created Successfully.');
     }
 
-    public function storess(Request $request)
+    public function stosre(Request $request)
     {
         $rules = [];
         // dd($request->all());

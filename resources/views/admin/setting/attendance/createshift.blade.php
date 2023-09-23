@@ -2,6 +2,7 @@
 @section('subtitle')
 Attendance / Create Shift
 @endsection
+
 @section('css')
 <style>
     .nav-link.icon {
@@ -270,54 +271,717 @@ Attendance / Create Shift
                     </div>
                 </div>
             </div>
-
-            {{-- <div class="card-body">
-                @foreach ($Shifts as $shift)
+        </div>
+    </div>
+    <div class="">
+        {{-- @dd($fixShift); --}}
+        @foreach ($fixShift as $fix)
+        <div class="card">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-12 col-xl-4 text-secondary my-auto">
-                        <h5>{{ $shift->shift_name }}</h5>
+
+                        <h5 class="my-auto">{{ $fix->shift_name }}</h5>
+                    </div>
+                    <div class="col-5 col-xl-3 text-muted my-auto text-center">
+                        <h6 class="my-auto text-primary">Fixed Shift</h6>
+                        <span class="my-auto">{{ $fix->shift_start }} - {{ $fix->shift_end }}</span>
                     </div>
                     <div class="col-5 col-xl-3 text-muted my-auto">
-                        <p>{{ $shift->shift_from }} - {{ $shift->shift_to }}</p>
+                        <p class="my-auto">Assigned to 15 Employees</p>
                     </div>
-                    <div class="col-5 col-xl-3 text-muted my-auto">
-                        <p>Assigned to 15 Employees</p>
-                    </div>
-                    <div class="col-2 col-xl-1 btn">
-                        <div class="dropdown header-message" id="moredrop">
-                            <div class="nav-link icon" data-bs-toggle="dropdown">
-                                <i class="fe fe-more-vertical fs-22"></i>
-                            </div>
-                            <div class="dropdown-menu dropdown-menu-end animated">
-                                <div class="header-dropdown-list message-menu" id="message-menu">
-                                    <div class=" dropdown-item d-flex align-items-center justify-content-around">
-                                        <i class="fe fe-edit fs-18"></i>
-                                        <i class="fe fe-trash-2 fs-18"></i>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="col-1 col-xl-1 btn">
+
+                        <div class="flex justify-content-between">
+                            <button type="reset" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#fixShiftEdit{{$fix->fixed_id}}"><i
+                                    class="fe fe-edit fs-18"></i></button>
+
+                            <button type="submit" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#fixDelete{{$fix->fixed_id}}"><i class="fe fe-trash fs-18"></i></button>
                         </div>
+                        {{-- </form> --}}
                     </div>
                 </div>
-                @endforeach
-            </div> --}}
+            </div>
         </div>
+
+        <div class="container">
+            {{-- create modal  --}}
+            <div class="modal fade" id="fixShiftEdit{{$fix->fixed_id}}">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header p-5">
+
+                            <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Shift Policy</h5>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
+                            </button>
+                        </div>
+                        <form action="{{route('update.shift')}}" method="post">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <input type="text" name="fixedId" value="{{ $fix->fixed_id }}" hidden>
+                                        <h3 class="card-title">Update Shift</h3>
+                                    </div>
+
+                                    <div class="card-body">
+                                        {{-- fixed shift  --}}
+
+                                        <div class="form-group">
+                                            <label class="form-label">Shift Type</label>
+                                            <select onchange="load(this.value)" name="shiftType"
+                                                class="form-control custom-select select2"
+                                                data-placeholder="Select Country" id="shifttype" disabled required>
+                                                <option value="fixed">Fixed Shift</option>
+                                                <option value="rotational">Rotational Shift</option>
+                                                <option value="open">Open Shift</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <label class="form-label">Shift Name</label>
+                                                    <input class="form-control mb-4" placeholder="Enter Shift Name"
+                                                        value="{{ $fix->shift_name }}" type="text"
+                                                        name="UpdatedFixedshiftName">
+
+                                                </div>
+                                                <div class="col-xl-3 mb-4">
+                                                    <label class="form-label">Start Time</label>
+                                                    <input class="form-control" id="updated_start_time"
+                                                        value="{{ $fix->shift_start }}"
+                                                        onchange="timeCalculate({{ $fix->fixed_id }})"
+                                                        placeholder="Set time" type="time" name="UpdatedFixShiftStart">
+                                                </div>
+                                                <div class="col-xl-3 mb-4">
+                                                    <label class="form-label">End Time</label>
+                                                    <input class="form-control" id="updated_end_time"
+                                                        value="{{ $fix->shift_end}}"
+                                                        onchange="timeCalculate({{ $fix->fixed_id }})"
+                                                        placeholder="Set time" type="time" name="UpdatedFixShiftEnd">
+                                                </div>
+                                                <div class="col-xl-3 mb-4">
+                                                    <label class="form-label">Break(Min)</label>
+                                                    <input class="form-control" id="updated_break_time"
+                                                        value="{{ $fix->break_min }}"
+                                                        onchange="timeCalculate({{ $fix->fixed_id }})"
+                                                        placeholder="Set time" type="number"
+                                                        name="UpdatedFixShiftBreak">
+                                                </div>
+                                                <div class="col-xl-3">
+                                                    <label class="form-label">Break is</label>
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            @if ($fix->is_paid==1)
+                                                            @php
+                                                            $check= 'checked';
+                                                            $uncheck='';
+                                                            @endphp
+                                                            @else
+                                                            @php
+                                                            $check= '';
+                                                            $uncheck='checked';
+                                                            @endphp
+                                                            @endif
+                                                            <label class="custom-control custom-radio">
+                                                                <input type="radio" id="updated_paid"
+                                                                    class="custom-control-input"
+                                                                    onchange="timeCalculate({{ $fix->fixed_id }})"
+                                                                    name="UpdatedFixpaid" value="1" {{$check}}>
+                                                                <span class="custom-control-label">Paid</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label class="custom-control custom-radio">
+                                                                <input type="radio" id="updated_unpaid"
+                                                                    class="custom-control-input"
+                                                                    onchange="timeCalculate({{ $fix->fixed_id }})"
+                                                                    name="UpdatedFixpaid" value="0" {{$uncheck}}>
+                                                                <span class="custom-control-label">Unpaid</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <span id="updatedFixedWorkHour{{ $fix->fixed_id }}"
+                                                        class="mb-5 fs-12 text-muted"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <script>
+                                            function timeCalculate(id) {
+                                                alert(id);
+                                            let updated_start_time = document.getElementById("updated_start_time").value;
+                                            let updated_end_time = document.getElementById("updated_end_time").value;
+                                            let updated_break_time = document.getElementById("updated_break_time").value;
+                                            // Example time inputs
+                                            const updated_startTime = updated_start_time;
+                                            const updated_endTime = updated_end_time;
+                                            const updated_breakTime = updated_break_time; // in minutes
+            
+                                            // Parse the time inputs
+                                            const [updated_startHours, updated_startMinutes] = updated_startTime.split(":").map(Number);
+                                            const [updated_endHours, updated_endMinutes] = updated_endTime.split(":").map(Number);
+            
+                                            // Calculate the time difference in minutes
+                                            let updated_differenceMinutes = (updated_endHours * 60 + updated_endMinutes) - (updated_startHours * 60 + updated_startMinutes);
+            
+                                            // Ensure the differenceMinutes is positive
+                                            if (updated_differenceMinutes < 0) {
+                                                updated_differenceMinutes += 1440; // 24 hours in minutes
+                                            }
+            
+            
+                                            if($('#updated_unpaid').is(':checked')){
+                                                // Subtract break time
+                                                updated_differenceMinutes -= updated_breakTime;
+                                            }
+            
+                                            // Ensure the result is positive
+                                            if (updated_differenceMinutes < 0) {
+                                                updated_differenceMinutes = 0;
+                                            }
+            
+                                            // Calculate the hours and minutes for the result
+                                            const updated_resultHours = Math.floor(updated_differenceMinutes / 60);
+                                            const updated_resultMinutes = updated_differenceMinutes % 60;
+            
+                                            // Format the result as "HH:MM"
+                                            const updated_formattedResult = `${String(updated_resultHours).padStart(2, '0')}:${String(updated_resultMinutes).padStart(2, '0')}`;
+                                            var updated_fixedHour = document.getElementById('UpdateFixedWorkHour'+id);
+                                            updated_fixedHour.innerHTML = `Total Work Hour: ${String(updated_resultHours).padStart(2, '0')} Hr ${String(updated_resultMinutes).padStart(2, '0')} Min`;
+                                            console.log(`Result: ${updated_formattedResult}`);
+                                            }
+                                        </script>
+
+
+                                    </div>
+                                    <!-- table-responsive -->
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-light" type="reset" data-bs-dismiss="modal">Close</button>
+                                <button class="btn btn-primary" type="submit" id="savechanges">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="fixDelete{{$fix->fixed_id}}">
+            <div class="modal-dialog modal-dialog-centered text-center" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-body text-center p-4">
+                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
+                                aria-hidden="true">&times;</span></button>
+                        <i class="fe fe-warning fs-80 text-danger lh-1 mb-5 d-inline-block"></i>
+                        <h4 class="text-danger">Delete Alert!</h4>
+                        <p class="mg-b-20 mg-x-20">Are you sure want to delete it ?</p>
+                        <form action="{{route('delete.shift',[$fix->fixed_id,'fixed'])}}" method="post">
+                            @csrf
+                            <button type="reset" aria-label="Close" class="btn btn-success pd-x-25"
+                                data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" aria-label="Close" class="btn btn-danger pd-x-25">Continue</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
+
+        @foreach ($openShift as $open)
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 col-xl-4 text-secondary my-auto">
+
+                        <h5 class="my-auto">{{ $open->shift_name }}</h5>
+                    </div>
+                    <div class="col-5 col-xl-3 text-muted my-auto text-center">
+                        <h6 class="my-auto text-primary">Open Shift</h6>
+                        <span class="my-auto">Total Work: {{ $open->shift_hr }} hr {{ $open->shift_min }} min</span>
+                    </div>
+                    <div class="col-5 col-xl-3 text-muted my-auto">
+                        <p class="my-auto">Assigned to 15 Employees</p>
+                    </div>
+                    <div class="col-2 col-xl-1 btn">
+                        {{-- <form action="{{route('delete.shift',[$open->open_id,'open'])}}" method="post">
+                        @csrf --}}
+                        <div class="flex justify-content-between">
+                            <button type="reset" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#openShiftEdit{{ $open->open_id }}"><i
+                                    class="fe fe-edit fs-18"></i></button>
+                            <button type="submit" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#openDelete{{$open->open_id}}"><i
+                                    class="fe fe-trash fs-18"></i></button>
+                        </div>
+                        {{-- </form> --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            {{-- create modal  --}}
+            <div class="modal fade" id="openShiftEdit{{ $open->open_id }}">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header p-5">
+                            <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Shift Policy</h5>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
+                            </button>
+                        </div>
+                        <form action="{{route('update.shift')}}" method="post">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <input type="text" name="openId" value="{{ $open->open_id }}" hidden>
+                                        <h3 class="card-title">Updated Shift</h3>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label class="form-label">Shift Type</label>
+                                            <select onchange="load(this.value)" name="shiftType"
+                                                class="form-control custom-select select2"
+                                                data-placeholder="Select Country" id="shifttype" disabled required>
+                                                <option value="open">Open Shift</option>
+                                                <option value="fixed">Fixed Shift</option>
+                                                <option value="rotational">Rotational Shift</option>
+                                            </select>
+                                        </div>
+
+                                        {{-- open shift  --}}
+                                        <div class="form-group" id="openShiftEdit{{ $open->open_id }}">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <label class="form-label">Shift Name</label>
+                                                    <input class="form-control mb-4" value="{{ $open->shift_name }}"
+                                                        placeholder="Enter Shift Name" type="text"
+                                                        name="updatedOpenShiftName">
+
+                                                </div>
+                                                <div class="col-xl-3">
+                                                    <label class="form-label">Hour</label>
+                                                    <input class="form-control m-0" value="{{ $open->shift_hr }}"
+                                                        placeholder="Set" type="number" name="updatedOpenHour">
+                                                </div>
+                                                <div class="col-xl-3">
+                                                    <label class="form-label">Minutes</label>
+                                                    <input class="form-control" value="{{ $open->shift_min }}"
+                                                        placeholder="Set" type="number" name="updatedOpenMin">
+                                                </div>
+                                                <div class="col-xl-3">
+                                                    <label class="form-label">Break(Min)</label>
+                                                    <input class="form-control" value="{{ $open->break_min }}"
+                                                        placeholder="Set" type="number" name="updatedOpenBreak">
+
+                                                </div>
+                                                <div class="col-xl-3">
+                                                    <label class="form-label">Break is</label>
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <label class="custom-control custom-radio">
+                                                                @if ($open->is_paid==1)
+                                                                @php
+                                                                $check= 'checked';
+                                                                $uncheck='';
+                                                                @endphp
+                                                                @else
+                                                                @php
+                                                                $check= '';
+                                                                $uncheck='checked';
+                                                                @endphp
+                                                                @endif
+                                                                <input type="radio" id="updatedOpenPaid"
+                                                                    class="custom-control-input" name="updatedOpenPaid"
+                                                                    value="1" {{$check}}>
+                                                                <span class="custom-control-label">Paid</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label class="custom-control custom-radio">
+                                                                <input type="radio" id="updatedOpenUnpaid"
+                                                                    class="custom-control-input" name="updatedOpenPaid"
+                                                                    value="0" {{$uncheck}}>
+                                                                <span class="custom-control-label">Unpaid</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    {{-- <script>
+                                                        function updatedOpenPaid() {
+                                                            document.getElementById('updatedOpenUnpaid').checked = false;
+                                                            document.getElementById('updatedOpenPaid').checked = true;
+                        
+                                                        }
+                                                        function updatedOpenUnpaid() {
+                                                            document.getElementById('updatedOpenUnpaid').checked = true;
+                                                            document.getElementById('updatedOpenPaid').checked = false;
+                                                        }
+                                                    </script> --}}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!-- table-responsive -->
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-light" type="reset" data-bs-dismiss="modal">Close</button>
+                                <button class="btn btn-primary" type="submit" id="savechanges">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="openDelete{{$open->open_id}}">
+            <div class="modal-dialog modal-dialog-centered text-center" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-body text-center p-4">
+                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
+                                aria-hidden="true">&times;</span></button>
+                        <i class="fe fe-warning fs-80 text-danger lh-1 mb-5 d-inline-block"></i>
+                        <h4 class="text-danger">Delete Alert!</h4>
+                        <p class="mg-b-20 mg-x-20">Are you sure want to delete it ?</p>
+                        <form action="{{route('delete.shift',[$open->open_id,'open'])}}" method="post">
+                            @csrf
+                            <button type="reset" aria-label="Close" class="btn btn-success pd-x-25"
+                                data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" aria-label="Close" class="btn btn-danger pd-x-25">Continue</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
+
+        @foreach ($setShift as $set)
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 col-xl-4 text-secondary my-auto">
+                        <h5 class="my-auto">{{ $set->set_name }}</h5>
+                    </div>
+
+                    <div class="col-5 col-xl-3 text-muted my-auto text-center">
+                        <h6 class="my-auto text-primary">Rotational Shift</h6>
+                        <?php
+                        foreach ($rotationalShift->where('set_id',$set->set_id) as $key => $rotation) { ?>
+                        <span class="text-dark">{{$rotation->shift_name}}</span>
+                        <span class="my-auto">{{$rotation->shift_start}}-{{$rotation->shift_end}}</span><br>
+                        <?php
+                        }
+                        ?>
+
+                    </div>
+                    <div class="col-5 col-xl-3 text-muted my-auto">
+                        <p class="my-auto">Assigned to 15 Employees</p>
+                    </div>
+                    <div class="col-2 col-xl-1 btn">
+                        {{-- <form action="{{route('delete.shift',[$set->set_id,'set'])}}" method="post">
+                        @csrf --}}
+                        <div class="flex justify-content-between">
+                            <button type="reset" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#rotationalEdit{{$set->set_id}}"><i
+                                    class="fe fe-edit fs-18"></i></button>
+                            <button type="submit" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#rotateDelete{{$set->set_id}}"><i
+                                    class="fe fe-trash fs-18"></i></button>
+                        </div>
+                        {{-- </form> --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            {{-- create modal  --}}
+            <div class="modal fade" id="rotationalEdit{{$set->set_id}}">
+
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header p-5">
+                            <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Update Shift
+                                Policy</h5>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
+                            </button>
+                        </div>
+                        <form action="{{route('update.shift')}}" method="post">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <div class="form-group">
+                                            <input type="text" name="setId" value="{{ $set->set_id }}" hidden>
+                                            <label class="form-label">Shift Type</label>
+                                            <select onchange="" name="shiftType"
+                                                class="form-control custom-select select2"
+                                                data-placeholder="Select Country" id="shifttype" disabled required>
+                                                <option value="rotational">Rotational Shift</option>
+                                                <option value="open">Open Shift</option>
+                                                <option value="fixed">Fixed Shift</option>
+                                            </select>
+                                        </div>
+
+                                        {{-- roatational shift  --}}
+                                        <div class="form-group" id="UpdateRotationalShift">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <label class="form-label"> Rotetional Shift Name</label>
+                                                    <input class="form-control mb-4" value="{{ $set->set_name }}"
+                                                        placeholder="Enter Shift Name" type="text"
+                                                        name="updatedRotationalName">
+                                                </div>
+                                            </div>
+
+                                            <div id="updateAppendField{{$set->set_id}}">
+                                                <?php
+                                                $i = 0;
+                                                foreach ($rotationalShift->where('set_id',$set->set_id) as $key => $rotation) { ?>
+                                                <?php $i++; ?>
+                                                <div class="row" id="updateRotationalField{{$i}}">
+                                                    <div class="col-xl-9">
+                                                        <div class="row">
+                                                            <div class="col-xl-3 mb-4">
+                                                                <label class="form-label">Shift Name</label>
+                                                                <input class="form-control"
+                                                                    placeholder="Enter Shift Name"
+                                                                    value="{{$rotation->shift_name}}" type="text"
+                                                                    name="updatedRotationalShiftName[]">
+                                                            </div>
+                                                            <div class="col-xl-3 mb-4">
+                                                                <label class="form-label">Start Time</label>
+                                                                <input class="form-control" id="start_time"
+                                                                    placeholder="Set time"
+                                                                    value="{{$rotation->shift_start}}" type="time"
+                                                                    name="updatedRotationalShiftStart[]">
+                                                            </div>
+                                                            <div class="col-xl-3 mb-4">
+                                                                <label class="form-label">End Time</label>
+                                                                <input class="form-control" id="end_time"
+                                                                    placeholder="Set time"
+                                                                    value="{{$rotation->shift_end}}" type="time"
+                                                                    name="updatedRotationalShiftEnd[]">
+                                                            </div>
+                                                            <div class="col-xl-3 mb-4">
+                                                                <label class="form-label">Break(Min)</label>
+                                                                <input class="form-control" id="break_time"
+                                                                    placeholder="Set time"
+                                                                    value="{{$rotation->break_min}}" type="number"
+                                                                    name="updatedRotationalShiftBreak[]">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-3">
+                                                        <label class="form-label">Break is</label>
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <label class="custom-control custom-radio">
+                                                                    @if ($rotation->is_paid==1)
+                                                                    @php
+                                                                    $check= 'checked';
+                                                                    $uncheck='';
+                                                                    @endphp
+                                                                    @else
+                                                                    @php
+                                                                    $check= '';
+                                                                    $uncheck='checked';
+                                                                    @endphp
+                                                                    @endif
+                                                                    <input type="radio" id="paid{{$i}}"
+                                                                        class="custom-control-input"
+                                                                        onchange="rotationaPaid({{$i}})"
+                                                                        name="rotationalpaid[]{{$i}}" value="1"
+                                                                        {{$check}}>
+                                                                    <span class="custom-control-label">Paid</span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <label class="custom-control custom-radio">
+                                                                    <input type="radio" id="unpaid0"
+                                                                        class="custom-control-input"
+                                                                        onchange="rotationaUnpaid({{$i}})"
+                                                                        name="rotationalpaid[]{{$i}}" value="0"
+                                                                        {{$uncheck}}>
+                                                                    <span class="custom-control-label">Unpaid</span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-3">
+                                                                <a class="btn btn-sm btn-danger" id="deleteElem0"
+                                                                    onclick="removalUpdaedElement({{$i}})"><i
+                                                                        class="fa fa-trash"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <?php
+                                            }
+                                            ?>
+                                            </div>
+                                            <div class="text-end">
+                                                <a class="btn btn-sm btn-success mt-2"
+                                                    onclick="updateRotationalField({{$i, $set->set_id}})">Add New</a>
+                                            </div>
+
+                                            <script>
+                                                function updateRotationalField(id,setId){
+                                                    let id++;
+                                                let updatedRotationalShift = '<div class="row" id="updateRotationalField'+ id +'">' +
+                                                    '<div class="col-xl-9">' +
+                                                    '<div class="row">' +
+                                                    '<div class="col-xl-3 mb-4">' +
+                                                    '<label class="form-label">Shift Name</label>' +
+                                                    '<input class="form-control" placeholder="Enter Shift Name" type="text" name="rotationalShiftName[]">' +
+                                                    '</div>' +
+                                                    '<div class="col-xl-3 mb-4">' +
+                                                    '<label class="form-label">Start Time</label>' +
+                                                    '<input class="form-control" id="start_time"  placeholder="Set time" type="time" name="rotationalShiftStart[]">' +
+                                                    '</div>' +
+                                                    '<div class="col-xl-3 mb-4">' +
+                                                    '<label class="form-label">End Time</label>' +
+                                                    '<input class="form-control" id="end_time"  placeholder="Set time" type="time" name="rotationalShiftEnd[]">' +
+                                                    '</div>' +
+                                                    '<div class="col-xl-3 mb-4">' +
+                                                    '<label class="form-label">Break(Min)</label>' +
+                                                    '<input class="form-control" id="break_time"  placeholder="Set time" type="number" name="rotationalShiftBreak[]">' +
+                                                    '</div>' +
+                                                    '</div>' +
+                                                    '</div>' +
+                                                    '<div class="col-xl-3">' +
+                                                    '<label class="form-label">Break is</label>' +
+                                                    '<div class="row">' +
+                                                    '<div class="col-4">' +
+                                                    '<label class="custom-control custom-radio">' +
+                                                    '<input type="radio" id="paid'+id+'" class="custom-control-input" onchange="rotationaPaid('+id+')" name="rotationalpaid[]'+id+'" value="1" checked>' +
+                                                    '<span class="custom-control-label">Paid</span>' +
+                                                    '</label>' +
+                                                    '</div>' +
+                                                    '<div class="col-5">' +
+                                                    '<label class="custom-control custom-radio">' +
+                                                    '<input type="radio" id="unpaid'+id+'" class="custom-control-input" onchange="rotationaUnpaid('+id+')" name="rotationalpaid[]'+id+'" value="0">' +
+                                                    '<span class="custom-control-label">Unpaid</span>' +
+                                                    '</label>' +
+                                                    '</div>' +
+                                                    '<div class="col-3">' +
+                                                    '<a class="btn btn-sm btn-danger" id="deleteElem'+id+'" onclick="removalElement('+id+')"><i class="fa fa-trash"></i></a>' +
+                                                    '</div>' +
+                                                    '</div>' +
+                                                    '<span class="mb-5 fs-12 text-muted"></span>' +
+                                                    '</div>' +
+                                                    '</div>';
+        
+                                                let parent = document.getElementById('updateAppendField'+setId);
+                                                parent.insertAdjacentHTML('beforeend', updatedRotationalShift);
+                                            }
+        
+                                            function removalUpdaedElement(id){
+                                                // alert(id);
+                                                // Get the element you want to remove by its ID
+                                                var updatedElementToRemove = document.getElementById('updateRotationalField'+id);
+        
+                                                // Check if the element exists before attempting to remove it
+                                                if (updatedElementToRemove) {
+                                                    // Remove the element
+                                                    updatedElementToRemove.remove();
+                                                } else {
+                                                    console.log("Element with ID 'field' does not exist.");
+                                                }
+                                            }
+        
+                                            function rotationaPaid(index) {
+                                                document.getElementById('unpaid'+index).checked = false;
+                                                document.getElementById('paid'+index).checked = true;
+            
+                                            }
+                                            function rotationaUnpaid(index) {
+                                                document.getElementById('unpaid'+index).checked = true;
+                                                document.getElementById('paid'+index).checked = false;
+                                            }
+                                            </script>
+                                        </div>
+
+                                    </div>
+                                    <!-- table-responsive -->
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-light" type="reset" data-bs-dismiss="modal">Close</button>
+                                <button class="btn btn-primary" type="submit" id="savechanges">Save changes</button>
+                            </div>
+                        </form>
+                        <script>
+                            function load(value) {
+                                    // alert(value);
+                                    if (value == 'fixed') {
+                                        $('#shiftname').removeClass('d-none');
+                                        $('#shiftname2').addClass('d-none');
+                                        $('#shifttime').removeClass('d-none');
+                                        $('#unpaidbreaklabel').removeClass('d-none');
+                                        $('#unpaidbreak').removeClass('d-none');
+                                        $('#workhour').addClass('d-none');
+                                        $('#additionaltbl').addClass('d-none');
+                                    } else if (value == 'rotational') {
+                                        $('#shiftname').addClass('d-none');
+                                        $('#shiftname2').removeClass('d-none');
+                                        $('#shifttime').addClass('d-none');
+                                        $('#unpaidbreaklabel').addClass('d-none');
+                                        $('#unpaidbreak').addClass('d-none');
+                                        $('#workhour').addClass('d-none');
+                                        $('#additionaltbl').removeClass('d-none');
+                                    } else {
+                                        $('#shiftname2').addClass('d-none');
+                                        $('#shiftname').removeClass('d-none');
+                                        $('#shifttime').addClass('d-none');
+                                        $('#unpaidbreaklabel').addClass('d-none');
+                                        $('#unpaidbreak').addClass('d-none');
+                                        $('#workhour').removeClass('d-none');
+                                        $('#additionaltbl').addClass('d-none');
+                                    }
+                                }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="rotateDelete{{$set->set_id}}">
+            <div class="modal-dialog modal-dialog-centered text-center" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-body text-center p-4">
+                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
+                                aria-hidden="true">&times;</span></button>
+                        <i class="fe fe-warning fs-80 text-danger lh-1 mb-5 d-inline-block"></i>
+                        <h4 class="text-danger">Delete Alert!</h4>
+                        <p class="mg-b-20 mg-x-20">Are you sure want to delete it ?</p>
+                        <form action="{{route('delete.shift',[$set->set_id,'set'])}}" method="post">
+                            @csrf
+                            <button type="reset" aria-label="Close" class="btn btn-success pd-x-25"
+                                data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" aria-label="Close" class="btn btn-danger pd-x-25">Continue</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
     </div>
 </div>
 
 {{-- add new shift --}}
-
-
-
-
-
 <div class="container">
     {{-- create modal  --}}
     <div class="modal fade" id="additionalModal">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header p-5">
-                    <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Leave Policy</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Shift Policy</h5>
                     <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
                     </button>
@@ -372,16 +1036,14 @@ Attendance / Create Shift
                                                 <div class="col-6">
                                                     <label class="custom-control custom-radio">
                                                         <input type="radio" id="paid" class="custom-control-input"
-                                                            onchange="myFunction()" name="fixpaid"
-                                                            value="1" checked>
+                                                            onchange="myFunction()" name="fixpaid" value="1" checked>
                                                         <span class="custom-control-label">Paid</span>
                                                     </label>
                                                 </div>
                                                 <div class="col-6">
                                                     <label class="custom-control custom-radio">
                                                         <input type="radio" id="unpaid" class="custom-control-input"
-                                                            onchange="myFunction()" name="fixpaid"
-                                                            value="0" checked>
+                                                            onchange="myFunction()" name="fixpaid" value="0" checked>
                                                         <span class="custom-control-label">Unpaid</span>
                                                     </label>
                                                 </div>
@@ -395,6 +1057,7 @@ Attendance / Create Shift
                                     let start_time = document.getElementById("start_time").value;
                                     let end_time = document.getElementById("end_time").value;
                                     let break_time = document.getElementById("break_time").value;
+                                    // alert('abvc')
                                     // Example time inputs
                                     const startTime = start_time;
                                     const endTime = end_time;
@@ -463,17 +1126,17 @@ Attendance / Create Shift
                                             <div class="row">
                                                 <div class="col-6">
                                                     <label class="custom-control custom-radio">
-                                                        <input type="radio" onchange="openPaid()" id="openPaid" class="custom-control-input"
-                                                            name="openPaid"
-                                                            value="1" checked>
+                                                        <input type="radio" onchange="openPaid()" id="openPaid"
+                                                            class="custom-control-input" name="openPaid" value="1"
+                                                            checked>
                                                         <span class="custom-control-label">Paid</span>
                                                     </label>
                                                 </div>
                                                 <div class="col-6">
                                                     <label class="custom-control custom-radio">
-                                                        <input type="radio" onchange="openUnpaid()" id="openUnpaid" class="custom-control-input"
-                                                             name="openPaid"
-                                                            value="0" checked>
+                                                        <input type="radio" onchange="openUnpaid()" id="openUnpaid"
+                                                            class="custom-control-input" name="openPaid" value="0"
+                                                            checked>
                                                         <span class="custom-control-label">Unpaid</span>
                                                     </label>
                                                 </div>
@@ -539,14 +1202,16 @@ Attendance / Create Shift
                                                 <div class="col-4">
                                                     <label class="custom-control custom-radio">
                                                         <input type="radio" id="paid0" class="custom-control-input"
-                                                            onchange="rotationaPaid(0)" name="rotationalpaid[]" value="1" checked>
+                                                            onchange="rotationaPaid(0)" name="rotationalpaid[]"
+                                                            value="1" checked>
                                                         <span class="custom-control-label">Paid</span>
                                                     </label>
                                                 </div>
                                                 <div class="col-5">
                                                     <label class="custom-control custom-radio">
                                                         <input type="radio" id="unpaid0" class="custom-control-input"
-                                                            onchange="rotationaUnpaid(0)" name="rotationalpaid[]" value="0">
+                                                            onchange="rotationaUnpaid(0)" name="rotationalpaid[]"
+                                                            value="0">
                                                         <span class="custom-control-label">Unpaid</span>
                                                     </label>
                                                 </div>
@@ -555,7 +1220,7 @@ Attendance / Create Shift
                                                         onclick="removalElement(0)"><i class="fa fa-trash"></i></a>
                                                 </div>
                                             </div>
-                                            <span id="fixedWorkHour" class="mb-5 fs-12 text-muted"></span>
+                                            <span class="mb-5 fs-12 text-muted"></span>
                                         </div>
                                     </div>
 
@@ -603,7 +1268,7 @@ Attendance / Create Shift
                                             '<a class="btn btn-sm btn-danger" id="deleteElem'+i+'" onclick="removalElement('+i+')"><i class="fa fa-trash"></i></a>' +
                                             '</div>' +
                                             '</div>' +
-                                            '<span id="fixedWorkHour" class="mb-5 fs-12 text-muted"></span>' +
+                                            '<span class="mb-5 fs-12 text-muted"></span>' +
                                             '</div>' +
                                             '</div>';
 
