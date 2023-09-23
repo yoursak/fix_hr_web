@@ -34,6 +34,9 @@ class LeaveRequestApiController extends Controller
             $leave->leave_type = $request->leave_type;
             $leave->from_date = $request->from_date;
             $leave->to_date = $request->to_date;
+            // $datetime1 = new DateTime($leave->from_date);
+            // $datetime2 = new DateTime($leave->to_date);
+            // $interval = $datetime1->diff($datetime2);
             $leave->days = $request->days;
             $leave->reason = $request->reason;
             $leave->status = $request->status;

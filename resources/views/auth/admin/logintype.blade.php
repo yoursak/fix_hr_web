@@ -33,111 +33,148 @@
             <div class="row align-items-center ">
                 <h3>Welcome to FixHR</h3>
                 <p>Please provide details as asked below for a unique account creation</p>
+                <?php
+                $Helper = new App\Helpers\Central_unit();
+                $root = DB::table('business_details_list')
+                    ->where('business_email', Session::get('email'))
+                    ->first();
+                
+                $adminList = DB::table('employee_personal_details')
+                    ->where('emp_email', Session::get('email'))
+                    ->get();
+                
+                // dd($root);
+                $index = 0;
+                $cardId = "card-{$index}";
+                
+                $cardType = 'owner'; // Generate a unique ID for each card
+                ?>
+                <div class="col-md-12 col-sm-6 col-lg-12  owner-card p-0" id="{{ $cardId }}">
+                    <form action="{{ route('admin.handleCard') }}" method="post">
+                        @csrf
+                        <?php if($root!=null){ 
+                              $cardBusinessID = (string) $root->business_id;
+                              $cardBusinessName=(string) $root->business_name;
+                            ?>
+                        <div class="offer offer-radius offer-primary">
+                            <div class="shape">
 
-                @foreach ($checking as $index => $item)
-                    <?php
-                    // dd($checking);
-                    $login = DB::table('login_admin')
-                        ->where('email', $item->business_id)
-                        ->get();
-                    Session::put('business_id', $item->business_id);
-                    $branchID = DB::table('branch_list')
-                        ->where('business_id', $item->business_id)
-                        ->get();
-                    
-                    // $node = DB::table('roles')
-                    //     ->where('business_id', $item->business_id)
-                    //     ->get();
-                    // dd($checking);
-                    if ($item->user == '0') {
-                        $cardType = 'owner';
-                        $cardBusinessID = (string) $item->business_id;
-                        $cardBrandID = (string) $item->branch_id;
-                    } elseif ($item->user == '1') {
-                        $cardType = 'admin';
-                        $cardBusinessID = (string) $item->business_id;
-                        $cardBrandID = (string) $item->branch_id;
-                    } elseif ($item->user == '2') {
-                        $cardType = 'superadmin';
-                        $cardBusinessID = (string) $item->business_id;
-                        $cardBrandID = (string) $item->branch_id;
-                    } elseif ($item->user == '3') {
-                        //hold
-                        $cardType = 'employee';
-                        $cardBusinessID = (string) $item->business_id;
-                        $cardBrandID = (string) $item->branch_id;
-                    }
-                    //  = $item->user == '0' ? 'owner' : 'admin';
-                    // $cardBusinessID = $item->user == '0' ? (string) $item->business_id : (string) $item->business_id;
-                    // $cardBrandID = $item->user == '0' ? (string) $item->branch_id : (string) $item->branch_id;
-                    $cardId = "card-{$index}"; // Generate a unique ID for each card
-                    ?>
-                    <div class="col-md-12 col-sm-6 col-lg-12 checking-root p-0" id="{{ $cardId }}">
-                        <form action="{{ route('admin.handleCard') }}" method="post">
-                            @csrf
-                            <div class="offer offer-radius offer-primary">
-                                <div class="shape">
-                                    <div class="shape-text">{{ $cardType }}</div>
-                                    <div class="shape-id" hidden>{{ $cardBusinessID }}</div>
-                                    {{-- <div class="shape-brandid" hidden>{{$item}}</div> --}}
-
-                                </div>
-                                <div class="offer-content">
-                                    <h3 class="lead font-weight-semibold"><b>{{ $item->business_name }}</b></h3>
-                                    <p>
-                                        @if ($item->user == '0')
-                                            To record attendance details of my employee
-                                        @else
-                                            To access attendance details of the company
-                                        @endif
-                                    </p>
-                                </div>
+                                <div class="shape-text"> {{ $cardType }}</div>
+                                <div class="shape-id" hidden>{{ $cardBusinessID }}</div>
                             </div>
-                        </form>
-                    </div>
-                @endforeach
+                            <div class="offer-content">
+                                <h3 class="lead font-weight-semibold"><b>{{ $cardBusinessName }}</b></h3>
+                                <p>
+                                    To record attendance details of my employee
+
+                                </p>
+                            </div>
+                        </div>
+                        <?php }
+                        ?>
+                    </form>
+                </div>
+                <?php
+                foreach ($adminList as $adminIndex => $adminItem) {
+                    if ($adminItem->business_id != null) {
+                        $adminCardType = 'admin';
+                        $adminBusinessID = (string) $adminItem->business_id;
+                        $adminBranchID = (string) $adminItem->branch_id;
+                        $adminBusinessName = $Helper->BusinessIdToName2($adminItem->business_id);
+                        $adminCardId = "card-admin-{$adminIndex}";
+                        ?>
+                <div class="col-md-12 col-sm-6 col-lg-12 p-0 admin-card" data-index="{{ $adminIndex }}"
+                    id="{{ $adminCardId }}">
+                    <form action="{{ route('admin.handleCard') }}" method="post">
+                        @csrf
+                        <div class="offer offer-radius offer-primary">
+                            <div class="shape">
+                                <div class="shape-text">{{ $adminCardType }}</div>
+                                <div class="shape-id" hidden>{{ $adminBusinessID }}</div>
+                                <div class="shape-brandid" hidden>{{ $adminBranchID }}</div>
+                            </div>
+                            <div class="offer-content">
+                                <h3 class="lead font-weight-semibold"><b>{{ $adminBusinessName }}</b></h3>
+                                <p>To access attendance details of the company</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <?php
+                    }
+                }
+                ?>
             </div>
         </div>
 
         <script>
-            $('.checking-root').on('click', function(event) {
+            // Handle click on owner card
+            $('.owner-card').on('click', function(event) {
                 event.preventDefault();
                 var cardType = $(this).find('.shape-text').text().toLowerCase();
                 var business_id = $(this).find('.shape-id').text();
-                var brandid = $(this).find('.shape-brandid').text();
-                // Make the AJAX request
-                $.ajax({
-                    url: "{{ route('admin.handleCard') }}", // Replace with the actual route name
-                    method: 'POST',
-                    dataType: 'json',
-                    data: {
-                        card_type: [cardType, business_id],
-                        "_token": "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        // Handle the response if needed
-                        console.log(response.root);
-                        if (response.root == 'owner') {
-                            // Redirect to the owner page
-                            window.location.href =
-                                "{{ url('/') }}"; // Replace with your actual owner route
-                        } else if (response.root == 'admin') {
-                            // Redirect to the admin page
-                            window.location.href =
-                                "{{ url('/') }}"; // Replace with your actual admin route
-                        } else if (response.root == "superadmin") {
-                            window.location.href =
-                                "{{ url('/') }}"; // Replace with your actual admin route
-                            // other case hold
-                        } else {
-                            window.location.href =
-                                "{{ url('/login') }}"; // Replace with your actual admin route
+
+                // Check if business_id is not empty or null
+                if (business_id) {
+                    $.ajax({
+                        url: "{{ route('admin.handleCard') }}",
+                        method: 'POST',
+                        dataType: 'json',
+                        data: {
+                            card_type1: [cardType, business_id],
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            console.log(response.root);
+                            if (response.root == 'owner') {
+                                window.location.href = "{{ url('/') }}";
+                            } 
+                            else {
+                                window.location.href = "{{ url('/login') }}";
+
+                            }
+                        },
+                        error: function(error) {
+                            console.log(error);
                         }
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
+                    });
+                } else {
+                    console.log("business_id is empty or null");
+                }
+            });
+
+            // Handle click on admin cards
+            $('.admin-card').on('click', function(event) {
+                event.preventDefault();
+                var cardType1 = $(this).find('.shape-text').text().toLowerCase();
+                var business_id1 = $(this).find('.shape-id').text();
+                var brandid1 = $(this).find('.shape-brandid').text();
+
+                // Check if business_id1 is not empty or null
+                if (business_id1) {
+                    $.ajax({
+                        url: "{{ route('admin.handleCard') }}",
+                        method: 'POST',
+                        dataType: 'json',
+                        data: {
+                            card_type2: [cardType1, business_id1, brandid1],
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            console.log(response.root);
+                            if (response.root == 'admin') {
+                                window.location.href = "{{ url('/') }}";
+                            }
+                             else {
+                                window.location.href = "{{ url('/login') }}";
+
+                            }
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+                    });
+                }
             });
         </script>
     </body>

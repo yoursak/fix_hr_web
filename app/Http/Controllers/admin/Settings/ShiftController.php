@@ -11,6 +11,7 @@ class ShiftController extends Controller
     public function addShift(Request $request){
 
         // dd($request->all());
+
         if($request->shiftType == 'fixed'){
             $fixShift = DB::table('shift_fixed')->insert([
                 'shift_name'=> $request->fixedshiftName,
@@ -18,6 +19,8 @@ class ShiftController extends Controller
                 'shift_end'=> $request->fixShiftEnd,
                 'break_min'=> $request->fixShiftBreak,
                 'is_paid'=> $request->fixpaid,
+                'work_hr'=> $request->f_WorkHour,
+                'work_min'=> $request->f_WorkMin,
                 'business_id'=> $request->session()->get('business_id'),
                 'branch_id'=> $request->session()->get('branch_id'),
                 'updated_at'=> now(),
@@ -55,6 +58,8 @@ class ShiftController extends Controller
                     'shift_end'=> $request->rotationalShiftEnd[$key],
                     'break_min'=> $request->rotationalShiftBreak[$key],
                     'is_paid'=> $request->rotationalpaid[$key],
+                    'work_hr'=> $request->r_WorkHour[$key],
+                    'work_min'=> $request->r_WorkMin[$key],
                     'branch_id'=> $request->session()->get('branch_id'),
                     'business_id'=> $request->session()->get('business_id'),
                     'updated_at'=> now(),
@@ -103,6 +108,8 @@ class ShiftController extends Controller
                 'shift_end'=> $request->UpdatedFixShiftEnd,
                 'break_min'=> $request->UpdatedFixShiftBreak,
                 'is_paid'=> $request->UpdatedFixpaid,
+                'work_hr'=> $request->fu_WorkHour,
+                'work_min'=> $request->fu_WorkMin,
                 'updated_at'=> now(),
             ]);
 
@@ -133,6 +140,7 @@ class ShiftController extends Controller
         }
 
         if($request->has('setId')){
+            // dd($request->all());
 
             $shift = DB::table('shift_set')->where(['business_id'=> $request->session()->get('business_id'),'set_id'=> $request->setId])->update([
                 'set_name'=> $request->updatedRotationalName,
@@ -148,7 +156,9 @@ class ShiftController extends Controller
                     'shift_start'=> $request->updatedRotationalShiftStart[$key],
                     'shift_end'=> $request->updatedRotationalShiftEnd[$key],
                     'break_min'=> $request->updatedRotationalShiftBreak[$key],
-                    'is_paid'=> $request->rotationalpaid[$key],
+                    'is_paid'=> $request->updatedRotationalpaid[$key],
+                    'work_hr'=> $request->ru_WorkHour[$key],
+                    'work_min'=> $request->ru_WorkMin[$key],
                     'branch_id'=> $request->session()->get('branch_id'),
                     'business_id'=> $request->session()->get('business_id'),
                     'updated_at'=> now(),

@@ -194,79 +194,44 @@
                 </div>
                 <div class="modal-body">
                     <div class="card">
-                        <div class="card-header  border-0">
-                            <h6 class="card-title">Auto Attendance</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-xl-11">
-                                        <label class="form-label">Mark Present By Default</label>
-                                        <span class="d-block fs-12 text-muted">Default auto present, can be changed
-                                            Manually</span>
-                                    </div>
-                                    <div class="col-xl-1 pe-0">
-                                        <label class="custom-switch">
-                                            <input type="checkbox" name="custom-switch-checkbox"
-                                                class="custom-switch-input">
-                                            <span class="custom-switch-indicator"></span>
-                                        </label>
-                                    </div>
-                                </div>
+                        <div class="card-header border-0">
+                            <label class="custom-control custom-checkbox my-auto">
+                                <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1" checked>
+                                <span class="custom-control-label"></span>
+                            </label>
+                            <h6 class="card-title" style="font-size: 1rem">In Premises</h6>
+                            <div class="d-flex mt-2">
+                                <label class="custom-control custom-radio mx-3">
+                                    <input type="radio" class="custom-control-input" name="example-radios" value="option1" checked>
+                                    <span class="custom-control-label">Auto</span>
+                                </label>
+                                <label class="custom-control custom-radio mx-3">
+                                    <input type="radio" class="custom-control-input" name="example-radios" value="option2">
+                                    <span class="custom-control-label">Manual</span>
+                                </label>
                             </div>
                         </div>
-                        <div class="card-header  border-0">
-                            <h6 class="card-title">Manual Attendance</h6>
+                        <div class="form-group mx-5">
+                            <div class="row">
+                                <div class="col-xl-11">
+                                    <label class="form-label">Mark Present By Default</label>
+                                    <span class="d-block fs-12 text-muted">Default auto present, can be changed Manually</span>
+                                </div>
+                                <div class="col-xl-1 pe-0">
+                                    <label class="custom-switch">
+                                        <input type="checkbox" name="custom-switch-checkbox"
+                                            class="custom-switch-input">
+                                        <span class="custom-switch-indicator"></span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-xl-11">
-                                        <label class="form-label">Manual Attendance</label>
-                                        <span class="d-block fs-12 text-muted">Ut enim ad minim veniam, quis nostrud
-                                            exercitation</span>
-                                    </div>
-                                    <div class="col-xl-1 pe-0">
-                                        <label class="custom-switch">
-                                            <input type="checkbox" name="custom-switch-checkbox"
-                                                class="custom-switch-input">
-                                            <span class="custom-switch-indicator"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-xl-11">
-                                        <label class="form-label">Employee Attendance with Location</label>
-                                        <span class="d-block fs-12 text-muted">Ut enim ad minim veniam, quis nostrud
-                                            exercitation</span>
-                                    </div>
-                                    <div class="col-xl-1 pe-0">
-                                        <label class="custom-switch">
-                                            <input type="checkbox" name="custom-switch-checkbox"
-                                                class="custom-switch-input">
-                                            <span class="custom-switch-indicator"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-xl-11">
-                                        <label class="form-label">Employee Attendace with Selfie & Location</label>
-                                        <span class="d-block fs-12 text-muted">Ut enim ad minim veniam, quis nostrud
-                                            exercitation</span>
-                                    </div>
-                                    <div class="col-xl-1 pe-0">
-                                        <label class="custom-switch">
-                                            <input type="checkbox" name="custom-switch-checkbox"
-                                                class="custom-switch-input">
-                                            <span class="custom-switch-indicator"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="card-header border-0">
+                            <label class="custom-control custom-checkbox my-auto">
+                                <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1" checked>
+                                <span class="custom-control-label"></span>
+                            </label>
+                            <h6 class="card-title" style="font-size: 1rem">In Premises</h6>
                         </div>
                     </div>
                 </div>

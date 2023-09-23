@@ -3,6 +3,25 @@
     Salary / Admin Setting
 @endsection
 
+@section('js')
+    <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/buttons.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/pdfmake/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/pdfmake/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/js/datatables.js') }}"></script>
+    <script src="{{ asset('assets/js/select2.js') }}"></script>
+@endsection
+
+
 @section('css')
 @endsection
 @section('content')
@@ -257,9 +276,35 @@
             }
         }
     </style>
+
+    @php
+        
+        // $Employee = App\Helpers\Central_unit::EmployeeDetails();
+        $Central = new App\Helpers\Central_unit();
+        
+        $Employee = $Central::EmployeeDetails();
+        $Department = $Central->DepartmentList();
+        $Designation = $Central::DesignationList();
+        // dd($Designation);
+        $nss = new App\Helpers\Central_unit();
+        $EmpID = $nss->EmpPlaceHolder();
+        // dd($Employee);
+        $i = 0;
+        $male = 0;
+        $female = 0;
+        foreach ($Employee as $key => $value) {
+            // dd($value);
+            $i++;
+            if ($value->emp_gender == 1) {
+                $male++;
+            } elseif ($value->emp_gender == 2) {
+                $female++;
+            }
+        }
+    @endphp
     <div class="page-header d-md-flex d-block">
         <div class="page-leftheader">
-            <div class="page-title">Leave Templates</div>
+            <div class="page-title">Leave Policy Templates</div>
             <p class="text-muted">Create Template to give leaves to staff on month if they want</p>
         </div>
         <div class="page-rightheader ms-md-auto">
@@ -289,11 +334,10 @@
                         </button>
                     </div>
                     {{-- <form action="{{ route('leave.policy') }}" method="post">   --}}
-                <form action="{{ route('admin.leavepolicySubmit') }}" method="POST">   
+                    <form action="{{ route('admin.leavepolicySubmit') }}" method="POST">
                         <div class="modal-body  m-5">
                             @csrf
                             <div class="row">
-
                                 <div class="col">
                                     <h4 class="card-title"><span>Leave Setting</span></h4>
                                 </div>
@@ -301,108 +345,127 @@
                                     <label for="inputPassword" class="col-sm-2 col-form-label">Policy Name</label>
                                     <div class="col">
                                         <input type="text" class="form-control bg-muted form-label" id="inputName"
-                                            placeholder="Enter Template Name" name="policyname">
+                                            placeholder="Enter Template Name" name="policyname" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="inputPassword" class="col-sm-2 col-form-label">Leave Policy Cycle</label>
                                     <div class="col-sm-5">
-                                        {{-- <input type="text" class="form-control bg-muted form-label" id="inputName"
-                                            placeholder="Enter Template Name" name="policyname"> --}}
                                         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                                             <input type="radio" class="btn-check" name="btnradio" id="btnradiomonth"
-                                                checked="">
-                                            <label class="btn btn-outline-dark" value="1" for="btnradiomonth">Monthly</label>
-                                            <input type="radio" class="btn-check" name="btnradio" id="btnradioyear">
-                                            <label class="btn btn-outline-dark" value="2" for="btnradioyear">Yearly</label>
+                                                value="1" checked="">
+                                            <label class="btn btn-outline-dark" for="btnradiomonth">Monthly</label>
+                                            <input type="radio" class="btn-check" name="btnradio" id="btnradioyear"
+                                                value="2">
+                                            <label class="btn btn-outline-dark" for="btnradioyear">Yearly</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="inputPassword" class="col-xl-2 col-form-label">Leave Period</label>
                                     <div class="form-row col-xl-5">
-                                        <input type="date" class="form-control col-xl-4">
+                                        <input type="date" class="form-control col-xl-4" name="leave_periodfrom"
+                                            required>
                                         <label class="col-xl-1" for="">To</label>
-                                        <input type="date" class="form-control col-xl-4 ">
+                                        <input type="date" class="form-control col-xl-4 " name="leave_periodto" required>
                                     </div>
                                 </div>
-
-
-                                {{-- <div class="form-row pt-3">
-                                    <div class="col-4 col-xl-4">
-                                        <p class="my-auto fs-15 form-label ">Policy Name</p>
-                                    </div>
-                                    <div class="col-8 col-xl-4 ">
-                                        <input type="text" class="form-control bg-muted form-label" id="inputName"
-                                            placeholder="Enter Template Name" name="policyname">
-                                    </div>
-                                </div> --}}
-
-                                {{-- <div class="form-row pt-3">
-                                        <div class="col-4 col-xl-4 ">
-                                            <p class="my-auto fs-15 form-label">Leave Policy Cycle</p>
-                                        </div>
-                                        <div class="col-8 col-xl-4 ">
-                                            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                                <input type="radio" class="btn-check" name="btnradio" id="btnradiomonth"
-                                                    checked="">
-                                                <label class="btn btn-outline-dark" for="btnradiomonth">Monthly</label>
-                                                <input type="radio" class="btn-check" name="btnradio" id="btnradioyear">
-                                                <label class="btn btn-outline-dark" for="btnradioyear">Yearly</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-                                    <div class="row pt-3">
-                                        <div class="col-xl-4">
-                                            <p class="my-auto fs-15 form-label pb-2 ">Leave Period</p>
-                                        </div>
-                                        <div class="col-xl-6 my-auto">
-                                            <div class="form-group d-flex">
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <div class="input-group-text">
-                                                            <i class="feather feather-calendar"></i>
-                                                        </div>
-                                                    </div>
-                                                    <input class="form-control fc-datepicker" name="leavefrom"
-                                                        placeholder="DD-MM-YYYY" type="date">
-                                                </div>
-                                                <label class="form-label mx-3 my-auto">To</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <div class="input-group-text">
-                                                            <i class="feather feather-calendar"></i>
-                                                        </div>
-                                                    </div><input class="form-control fc-datepicker" name="leaveto"
-                                                        placeholder="DD-MM-YYYY" type="date">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> --}}
-
-
                             </div>
 
                             <hr style="background: black" />
                             <div class="row ">
-                                <div class="d-flex col-md-10">
+                                <div class="d-flex col-sm-10">
                                     <h4 class="card-title"><span>Leave Category</span></h4>
                                     
                                 </div>
-                                <div class="col-md-2 text-end">
+                                <div class="col-sm-2 text-end">
                                     <button type="button" class="btn btn-outline-primary add_item_btn"><i
-                                            class="fe fe-plus bold"></i>
+                                        class="fe fe-plus bold"></i>
                                     </button>
                                 </div>
-
-
+                                
+                                
                                 <span id="show_item">
 
                                 </span>
-                               
+
+                            </div>
+                            <hr style="background: black" />
+                            <div class="row">
+                                <div class="d-flex col-md-9">
+                                    <h4 class="card-title"><span>Leave Policy Preference</span></h4>
+                                </div>
+                                <div class="col-md-3 d-flex text-end">
+
+                                    {{-- <div class="mb-3"> --}}
+                                    <a class="btn btn-primary mb-1" data-bs-toggle="collapse" href="#collapseExample"
+                                        role="button" aria-expanded="false" aria-controls="collapseExample">
+                                        Business
+                                    </a>
+                                    <button class="btn btn-success mb-1" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseExample" aria-expanded="false"
+                                    aria-controls="collapseExample">
+                                    Employee
+                                    </button>
+                                    {{-- </div> --}}
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="collapse" id="collapseExample">
+                                    <div class="border p-3">
+                                        In Case of Employee
+                                        <div class="row">
+                                            
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <p class="form-label">Branch</p>
+                                                    <select name='branch_id' id="country-dd" class="form-control"
+                                                    required>
+                                                    <option value="">Select Branch Name</option>
+                                                    @foreach ($BranchList as $data)
+                                                    <option value="{{ $data->branch_id }}">
+                                                        {{ $data->branch_name }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <p class="form-label">Department</p>
+                                                    <div class="form-group mb-3">
+                                                        <select id="state-dd" name="department_id" class="form-control"
+                                                        required>
+                                                        <option value="">Select Deparment Name</option>
+                                                            <option value="">Select All Department Name</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+
+                                            <div class="row">
+                                                <table name="gg">
+                                                    <thead>
+                                                        <th>S.No.</th>
+                                                        <th>Employee ID</th>
+                                                        <th>Employee Name</th>
+                                                        <th>Select All <input type="checkbox" name=""
+                                                                id=""> </th>
+                                                    </thead>
+                                                    <tbody class="mycard">
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            
+                                        </div>
+                                        {{-- Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                                                    Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? --}}
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
 
@@ -616,6 +679,60 @@
         </div>
     </div>
 
+    <!-- ROW -->
+    <div class="row row-sm">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">File Export</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table  table-vcenter text-nowrap  border-bottom " id="file-datatable">
+                            {{-- <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom"> --}}
+                            <thead>
+                                <tr>
+                                    <th class="border-bottom-0">S. No.</th>
+
+                                    <th class="border-bottom-0">Policy Name</th>
+                                    <th class="border-bottom-0">Leave</th>
+                                    <th class="border-bottom-0">Applied To</th>
+                                    <th class="border-bottom-0">Policy Preference</th>
+                                    <th class="border-bottom-0">Action</th>
+                                    {{-- <th class="border-bottom-0">Salary</th> --}}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $count = 1;
+                                    
+                                @endphp
+                                <tr>
+                                    <td>{{ $count++ }}</td>
+                                    <td>Tiger Nixon</td>
+                                    <td>System Architect</td>
+                                    <td>Edinburgh</td>
+                                    <td>61</td>
+                                    <td>2011/04/25</td>
+                                    {{-- <td>$320,800</td> --}}
+                                </tr>
+                                <tr>
+                                    <td>Donna Snider</td>
+                                    <td>Customer Support</td>
+                                    <td>New York</td>
+                                    <td>27</td>
+                                    <td>2011/01/25</td>
+                                    {{-- <td>$112,000</td> --}}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END ROW -->
+
     <div class=" text-end">
         <a href="{{ url('settings/businesssetting') }}" class="btn btn-success" id="formsave" data-bs-toggle="tooltip"
             data-bs-placement="top" title="Save">Apply Changes</a>
@@ -779,7 +896,6 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-
     <script>
         var leave_id = 1;
         $(document).ready(function() {
@@ -798,32 +914,32 @@
                         
                         <div class="card-body col-xl-3 pt-3" name="leave_id" id="' + leave_id +'" > 
                             <label for="inputCity" class="form-label">Category Name</label> 
-                            <input type="text" name="category_name[]" value="" class="form-control" id="inputCity" placeholder="Category Name"> 
+                            <input type="text" name="category_name[]" value="" class="form-control" id="inputCity" placeholder="Category Name" required> 
                         </div> 
                     <div class="col-xl-2 pt-3"> 
                         <label for="inputCity" class="form-label ">Days</label> 
-                        <input type="number" name="days[]" value="" class="form-control bg-muted" placeholder="Count"> 
+                        <input type="number" name="days[]" value="" class="form-control bg-muted" placeholder="Count" required> 
                     </div> 
                         <div class="col-xl-2 pt-3 bg-muted"> 
                             <label for="inputState" class="form-label">Unused Leave Rule</label> 
-                            <select class="form-control select2" name="leaverule[]" data-placeholder="Leave Rule"> 
+                            <select class="form-control select2" name="unused_leave_rule[]" id="leaverules" data-placeholder="Leave Rule" required> 
                                 <option label=""></option> 
                                 <option>Lapse</option> <option>Carry Forward</option> <option>Encash</option> 
                             </select> 
                         </div> 
                     <div class="col-xl-2 pt-3"> 
                         <label for="inputCity" class="form-label">Carry Forward Limit</label> 
-                        <input name="cfl[]" type="text" value="" class="form-control" id="inputCity" placeholder="Days"> 
+                        <input name="carry_forward_limit[]" type="number" value="" class="form-control" id="inputCity" placeholder="Days" required> 
                     </div> 
                     <div class="col-xl-2 pt-3"> 
                         <label for="inputState" class="form-label">Applicable To</label> 
-                        <select class="form-control select2" name="applicable[]" data-placeholder="Applicable To"> 
+                        <select class="form-control select2" name="applicable_to[]" data-placeholder="Applicable To" required> 
                             <option  label=""></option> <option>All</option> 
                             <option>Male</option> <option>Female</option>
                         </select> 
                         </div> <div class="col-xl-1 pt-3 text-end"> 
                             <label for="inputCity" class="form-label ">&nbsp;</label> 
-                            <button type="button" class="btn btn-outline-danger remove_item_btn"><i class="feather feather-trash "></i></button>  
+                            <button type="button" class="btn btn-outline-danger remove_item_btn"><i class="feather feather-trash"></i></button>  
                         </div> 
                     </div> `
                 );
@@ -861,6 +977,111 @@
                         }
                     }
                 });
+            });
+        });
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        // Create Method
+        $(document).ready(function() {
+            $('#country-dd').on('change', function() {
+                var branch_id = this.value;
+                $("#state-dd").html('');
+                $.ajax({
+                    url: "{{ url('admin/settings/business/alldepartment') }}",
+                    type: "POST",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        brand_id: branch_id
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+
+                        console.log(result);
+                        $('#state-dd').html(
+                            '<option value="" name="department">Select Department Name</option>',
+                            '<option value="" name="department">Select All Department Name</option>'
+                        );
+                        $.each(result.department, function(key, value) {
+                            $("#state-dd").append('<option name="department" value="' +
+                                value
+                                .depart_id + '">' + value.depart_name +
+                                '</option>');
+                        });
+                        $('#desig-dd').html(
+                            '<option value="">Select Designation Name</option>');
+                    }
+                });
+            });
+            $('#state-dd').on('change', function() {
+                var depart_id = this.value;
+                $("#desig-dd").html('');
+                $.ajax({
+                    url: "{{ url('admin/settings/business/alldesignation') }}",
+                    type: "POST",
+                    data: {
+                        depart_id: depart_id,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        console.log(res);
+                        $('#desig-dd').html(
+                            '<option value="">Select Designation Name</option>');
+                        $.each(res.designation, function(key, value) {
+                            $("#desig-dd").append('<option value="' + value
+                                .desig_id + '">' + value.desig_name + '</option>');
+                        });
+
+
+                        // $('#employee-dd').html(
+                        //     '<option value="">Select Employee Name</option>');
+
+                    }
+                });
+            });
+            // employee
+            $('#state-dd').on('change', function() {
+                var depart_id = this.value;
+                $("#employee-dd").html('');
+                $.ajax({
+                    url: "{{ url('admin/settings/business/allemployeefilter') }}",
+                    type: "POST",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        depart_id: depart_id,
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        // console.log(res);
+                        $('#employee-dd').html('<option value="">Select Employee</option>');
+                        $.each(res.employee, function(key, value) {
+                            $("#employee-dd").append('<option value="' + value.emp_id +
+                                '">' + value.emp_name + '</option>');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $('#state-dd').on('change', function() {
+            var check_value = this.value;
+            $("#desig-dd").html('');
+            $.ajax({
+                url: "{{ url('admin/settings/business/check') }}",
+                type: "POST",
+                data: {
+                    check_value: check_value,
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: 'json',
+                success: function(res) {
+                    // console.log(res);
+                    $('.mycard').html(res);
+
+                }
             });
         });
     </script>

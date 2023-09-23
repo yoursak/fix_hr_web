@@ -30,6 +30,7 @@ class Central_unit
       self::$BranchID = Session::get('branch_id');
       self::$LoginRole = Session::get('login_role'); //role table id : 8
       self::$LoginEmpID = Session::get('login_emp_id');
+      // login_emp_id
       // self::$LoginModelType = Session::get('model_type'); //type loginModel : admin
       self::$LoginModelID = Session::get('model_id'); //user id like : FD001
       self::$LoginName = Session::get('login_name');
@@ -38,11 +39,41 @@ class Central_unit
       // dd(self::$BusinessID,self::$UserType,self::$BranchID,self::$LoginRole,self::$LoginModelID,self::$LoginEmail,self::$LoginName);
    }
 
+   // static function BusinessName()
+   // {
+   //    $result = DB::table('business_details_list')
+   //       ->where('business_email', $email)
+   //       ->where('business_id', $businessID)->first();
+   //    // ->first(); // Get the first row as an object
+
+   //    // Check if a result was found
+   //    if ($result) {
+   //       return $result->business_name; // Access the 'business_name' property
+   //    } else {
+   //       // Handle the case where no result was found
+   //       return "No matching business found";
+   //    }
+   // }
+
    static function BusinessIdToName($email, $businessID)
    {
       $result = DB::table('business_details_list')
          ->where('business_email', $email)
-         ->where('business_id', $businessID)->get();
+         ->where('business_id', $businessID)->first();
+      // ->first(); // Get the first row as an object
+
+      // Check if a result was found
+      if ($result) {
+         return $result->business_name; // Access the 'business_name' property
+      } else {
+         // Handle the case where no result was found
+         return "No matching business found";
+      }
+   }
+
+   static function BusinessIdToName2($businessID)
+   {
+      $result = DB::table('business_details_list')->where('business_id', $businessID)->first();
       // ->first(); // Get the first row as an object
 
       // Check if a result was found
@@ -59,24 +90,37 @@ class Central_unit
    {
       // $result = DB::table('universal_roles_define')->where('role_id', $roleId)->select('role_name')->first();
 
+      $result = DB::table('setting_role_create')->where('id',  self::$LoginRole)->select('roles_name')->first();
 
-      $result = DB::table('roles')->where('id', self::$LoginRole)->select('name')->first();
-      // dd($result);
-      // Check if a result was found
+      // $result = DB::table('roles')->where('id', self::$LoginRole)->select('name')->first();
+      // // dd($result);
+      // // Check if a result was found
       if ($result) {
-         return $result->name; // Return the role_name property
+         return $result->roles_name; // Return the role_name property
       } else if (self::$LoginRole == 0) {
          return "Owner";
-      } else if (self::$LoginRole == 1) {
-         return "Admin";
-      } else if (self::$LoginRole == 2) {
-         return "Super Admin";
-      } else if (self::$LoginRole == 3) {
-         return "Employee";
-      } else {
+      }
+      //  else if (self::$LoginRole == 1) {
+      //    return "Admin";
+      // } else if (self::$LoginRole == 2) {
+      //    return "Super Admin";
+      // } else if (self::$LoginRole == 3) {
+      //    return "Employee";
+      // }
+      else {
          return 'Unknown Role'; // You can change this default value as needed
       }
    }
+   // static function findBusinessName($businessID,$branchID){
+   //    $result = DB::table('branch_list')->where('business_id',$businessID)->where('branch_id',$branchID)->first();
+
+   //    if ($result) {
+   //       return $result->business_name; // Access the 'business_name' property
+   //    } else {
+   //       // Handle the case where no result was found
+   //       return "No matching business found";
+   //    }
+   // }
 
    public static function BranchList()
    {
@@ -262,7 +306,7 @@ class Central_unit
    }
    static function sidebarMenu($menu_name)
    {
-      return DB::table('sidebar_menu')->where('menu_name', '=',$menu_name)->first();
+      return DB::table('sidebar_menu')->where('menu_name', '=', $menu_name)->first();
    }
 
 
@@ -283,6 +327,10 @@ class Central_unit
          // Pattern not found
          return "";
       }
+   }
+   static function sideBarLists()
+   {
+      return DB::table('sidebar_menu')->get();
    }
 
    static function EmpIdToRoleId()

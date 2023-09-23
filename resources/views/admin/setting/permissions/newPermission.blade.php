@@ -7,8 +7,7 @@
 @endsection
 
 @section('js')
-    <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}">
-    </script>
+    <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatable/js/buttons.bootstrap5.min.js') }}"></script>
@@ -363,7 +362,9 @@
                                             </div>
                                         </td>
                                         <td>
+
                                             <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
+                                                onclick="openEditModel(this)" data-id='<?= $item->id ?>'
                                                 data-bs-toggle="modal" data-bs-target="#showmodal">
                                                 <i class="feather feather-eye" data-bs-toggle="tooltip"
                                                     data-original-title="View/Edit"></i>
@@ -555,37 +556,33 @@
     <div class="modal fade" id="showmodal">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content modal-content-demo">
-                <form action="" method="post">
-                    @csrf
 
-                    <div class="modal-header border-0">
-                        <h4 class="modal-title ms-2">Preview Assign Users</h4><button aria-label="Close"
-                            class="btn-close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                    </div>
+                <div class="modal-header border-0">
+                    <h4 class="modal-title ms-2">Preview Assign Users</h4><button aria-label="Close" class="btn-close"
+                        data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <form action="{{url('Role-permission/role_permission_updated')}}" method="post">
+                    @csrf
                     <div class="modal-body">
+                        <input type="text" name="role" id="rolesId">
+                        {{-- <input type="text" class="form-control" id="inputValue" value=""> --}}
                         @foreach ($Modules as $module)
                             <div class="row p-4">
                                 <div class="col-lg-2">
                                     <div>
                                         {{ $module->menu_name }}
-                                        {{-- <label class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input">
-                                        <span class="custom-control-label"></span>
-                                    </label> --}}
+
                                     </div>
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="d-flex" id="permit">
-                                        {{-- <label class="custom-control custom-checkbox mx-3">
-                                        <input type="checkbox" class="custom-control-input">
-                                        <span class="custom-control-label">All</span>
-                                    </label> --}}
+
                                         @foreach ($permissions->where('module_id', $module->menu_id) as $permission)
                                             <label class="custom-control custom-checkbox mx-3 fw-20">
+
                                                 <input id="{{ $permission->id }}" type="checkbox"
                                                     class="custom-control-input allow" name="permissions[]"
-                                                    value="{{ $module->menu_name . '.' . $permission->name }}"
-                                                    onchange="givePermit(this)">
+                                                    value="{{ $module->menu_name . '.' . $permission->name }}">
                                                 <span class="custom-control-label">{{ $permission->name }}</span>
                                             </label>
                                         @endforeach
@@ -604,9 +601,35 @@
             </div>
         </div>
     </div>
+    <script>
+        function openEditModel(context) {
+            var id = $(context).data('id');
+            $('#rolesId').val(id);
+            console.log(id);
+            $.ajax({
+                url: "{{ url('Role-permission/get_assign') }}",
+                type: "post",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    role_id: id
+                },
+                dataType: 'json',
+                success: function(result) {
 
+                    result.checking.forEach(function(element) {
+                        console.log(element);
 
+                        // Get the menu_name from the element
+                        var menuName = element.model_name;
 
+                        // Find the corresponding checkbox based on menu_name and set it as checked
+                        $('input[type="checkbox"][value="' + menuName + '"]').prop('checked', true);
+                    });
+                }
+            });
+
+        }
+    </script>
     <script>
         // function for give allot permission and disallot permission 
         function check(e) {

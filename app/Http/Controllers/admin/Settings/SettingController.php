@@ -13,6 +13,7 @@ use App\Models\admin\WeeklyHolidayList;
 use App\Models\admin\SettingLeaveCategory;
 use Session;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Helpers\Central_unit;
 
 // Use Alert;
 
@@ -27,7 +28,8 @@ class SettingController extends Controller
     public function account()
     {
         $accDetail = DB::table('business_details_list')
-            ->where('business_id', Session::get('business_id'))->first();
+            ->where('business_id', Session::get('business_id'))
+            ->first();
         return view('admin.setting.account.account', compact('accDetail'));
     }
 
@@ -81,7 +83,6 @@ class SettingController extends Controller
 
     public function uploadlogo(Request $request)
     {
-
         // echo $request->file('image')->store('uploads');
 
         if ($request->image) {
@@ -95,12 +96,15 @@ class SettingController extends Controller
             $data = $request->image->move($path, $imageName);
             // return $data;
             // return $path;
-            $data = DB::table('business_details_list')->where('id', $request->editlogoId)->where('business_id', Session::get('business_id'))->update(['business_logo' => $imageName]);
+            $data = DB::table('business_details_list')
+                ->where('id', $request->editlogoId)
+                ->where('business_id', Session::get('business_id'))
+                ->update(['business_logo' => $imageName]);
             if ($data) {
                 // return $data;
                 return back();
             } else {
-                return "hasfail";
+                return 'hasfail';
             }
             // $image  = new Image();
             // $image->name = $imageName;
@@ -117,7 +121,6 @@ class SettingController extends Controller
         //  else {
         //     return response()->json(['result' => [], 'status' => false], 404);
         // }
-
 
         // echo "<pre>";
         // print_r($request->all());
@@ -219,8 +222,43 @@ class SettingController extends Controller
     }
     public function allDesignation(Request $request)
     {
-        $get = DB::table('designation_list')->where('department_id', $request->depart_id)->get();
+        $get = DB::table('designation_list')
+            ->where('department_id', $request->depart_id)
+            ->get();
         return response()->json(['designation' => $get]);
+    }
+    public function check(Request $request)
+    {
+        if ($request->ajax()) {
+            $output = '';
+            $get = DB::table('employee_personal_details')
+                ->where('department_id', $request->check_value)
+                ->get();
+            if ($get) {
+                $i = 1;
+                foreach ($get as $viewside) {
+                    $output .=
+                        '<tr>
+                            <td>' .
+                        $i .
+                        '</td>
+                            <td>' .
+                        $viewside->emp_id .
+                        '</td>
+                            <td>' .
+                        $viewside->emp_name .
+                        '</td>
+                            <td>' .
+                        '<input type="checkbox">' .
+                        '</td>
+                        </tr>
+                        ';
+                    $i++;
+                }
+                return response()->json($output);
+            }
+            // return response()->json($request->check_value);
+        }
     }
     public function allEmployeeFilter()
     {
@@ -394,7 +432,6 @@ class SettingController extends Controller
 
     public function holidayPolicy()
     {
-
         return view('admin.setting.business.holiday_policy.holiday_policy');
     }
     public function inviteEmpl()
@@ -403,22 +440,35 @@ class SettingController extends Controller
     }
     public function leavePolicy(Request $request)
     {
-        $leaveTemp = DB::table('setting_leave_policy')->where('business_id', $request->session()->get('business_id'))->get();
-        $Leaves = DB::table('setting_leave_category')->where('business_id', $request->session()->get('business_id'))->get();
-        return view('admin.setting.business.leave_policy.leave_policy', compact('leaveTemp', 'Leaves'));
+        $call = new Central_unit();
+        $BranchList = $call->BranchList();
+
+        $leaveTemp = DB::table('setting_leave_policy')
+            ->where('business_id', $request->session()->get('business_id'))
+            ->get();
+        $Leaves = DB::table('setting_leave_category')
+            ->where('business_id', $request->session()->get('business_id'))
+            ->get();
+        return view('admin.setting.business.leave_policy.leave_policy', compact('leaveTemp', 'Leaves', 'BranchList'));
     }
 
     public function DeleteLeave(Request $request)
     {
         $data = $request->state;
-        $leaveDelete = DB::table('setting_leave_category')->where('id', $data)->delete();
+        $leaveDelete = DB::table('setting_leave_category')
+            ->where('id', $data)
+            ->delete();
         return response()->json([$leaveDelete]);
     }
     public function DeleteLeaveTemp($id)
     {
         // dd($id);
-        $deleteTemp = DB::table('setting_leave_policy')->where('id', $id)->delete();
-        $deleteLeaves = DB::table('setting_leave_category')->where('leave_policy_id', $id)->delete();
+        $deleteTemp = DB::table('setting_leave_policy')
+            ->where('id', $id)
+            ->delete();
+        $deleteLeaves = DB::table('setting_leave_category')
+            ->where('leave_policy_id', $id)
+            ->delete();
 
         if ($deleteTemp) {
             Alert::success('Successfully Deleted ', '');
@@ -433,12 +483,14 @@ class SettingController extends Controller
         // dd($request->all());
 
         if ($request->has('Tempid')) {
-            $updateTemp = DB::table('setting_leave_policy')->where('id', $request->Tempid)->update([
-                'policy_name' => $request->Update_policyname,
-                'leave_policy_cycle_monthly' => $request->btnradio,
-                'leave_period_from' => $request->update_leave_periodfrom,
-                'leave_period_to' => $request->update_leave_periodto,
-            ]);
+            $updateTemp = DB::table('setting_leave_policy')
+                ->where('id', $request->Tempid)
+                ->update([
+                    'policy_name' => $request->Update_policyname,
+                    'leave_policy_cycle_monthly' => $request->btnradio,
+                    'leave_period_from' => $request->update_leave_periodfrom,
+                    'leave_period_to' => $request->update_leave_periodto,
+                ]);
         }
 
         if ($request->has('category_name')) {
@@ -467,25 +519,11 @@ class SettingController extends Controller
 
     public function leavePolicySubmit(Request $request)
     {
-// dd($request->all());
-// dd(sizeof($request->category_name));
-//         dd(sizeof($request->leave_id));
-        // dd($request->all());
-        // for ($i=0; $i < sizeof; $i++) { 
-        //     # code...
-        // }
-        // dd($request->addmore);
-        // $data = new SettingLeaveCategory();
-        // $data->category_name= $value;
-        // $data->save();
-        
-        // foreach ($request->addmore as $key => $value) {
-        //  dd($request->addmore);
-        //     SettingLeaveCategory::create($value);
-        
-        //     // $data = new SettingLeaveCategory();
-        //     // $data->category_name = $value;
-        //     // $data->save();
+        dd($request->all());
+        if (empty($request->category_name)) {
+            Alert::info('Not Added', 'Pleace Enter You Category Name, Your Leave-Policy Not Added');
+            return back();
+        }
 
         // }
         // return back();
@@ -499,9 +537,12 @@ class SettingController extends Controller
             'leave_policy_cycle_yearly' => $request->btnradio != 2 ? 0 : 2,
             'leave_period_from' => $request->leave_periodfrom,
             'leave_period_to' => $request->leave_periodto,
+            'created_at' => now('Asia/Kolkata'),
+            'updated_at' => now('Asia/Kolkata'),
         ];
-        dd($storeData);
+        // dd($storeData);
         $truechecking_id = DB::table('setting_leave_policy')->insert($storeData);
+        // dd($truechecking_id);
         if ($truechecking_id) {
             $latestID = DB::table('setting_leave_policy')
                 ->latest()
@@ -509,6 +550,7 @@ class SettingController extends Controller
                 ->first();
             if (isset($latestID)) {
                 $latestLeavePolicyID = $latestID->id; //generate policy ID run time
+                // dd($latestLeavePolicyID);
 
                 $CategoryName = $request->category_name;
                 $Days = $request->days;
@@ -517,17 +559,21 @@ class SettingController extends Controller
                 $applicationTo = $request->applicable_to;
 
                 for ($i = 0; $i < sizeof($request->category_name); $i++) {
+                    // dd($UnusedLeaveRule);
                     $collectionDataSet = [
                         'leave_policy_id' => $latestLeavePolicyID,
                         'business_id' => $BusinessID,
                         'branch_id' => $branchID,
                         'category_name' => $CategoryName[$i],
                         'days' => $Days[$i],
-                        // 'unused_leave_rule' => $UnusedLeaveRule[$i],
-                        // 'carry_forward_limit' => $carryForwardLimit[$i],
-                        // 'applicable_to' => $applicationTo[$i],
+                        'unused_leave_rule' => $UnusedLeaveRule[$i],
+                        'carry_forward_limit' => $carryForwardLimit[$i],
+                        'applicable_to' => $applicationTo[$i],
+                        'created_at' => now('Asia/Kolkata'),
+                        'updated_at' => now('Asia/Kolkata'),
                     ];
-                    print_r($collectionDataSet);
+                    // print_r($collectionDataSet);
+                    // dd($collectionDataSet);
                     DB::table('setting_leave_category')->insert($collectionDataSet);
                 }
             }
@@ -573,11 +619,18 @@ class SettingController extends Controller
     }
     public function createShift()
     {
-
-        $fixShift = DB::table('shift_fixed')->where('business_id', Session::get('business_id'))->get();
-        $openShift = DB::table('shift_open')->where('business_id', Session::get('business_id'))->get();
-        $rotationalShift = DB::table('shift_rotational')->where('business_id', Session::get('business_id'))->get();
-        $setShift = DB::table('shift_set')->where('business_id', Session::get('business_id'))->get();
+        $fixShift = DB::table('shift_fixed')
+            ->where('business_id', Session::get('business_id'))
+            ->get();
+        $openShift = DB::table('shift_open')
+            ->where('business_id', Session::get('business_id'))
+            ->get();
+        $rotationalShift = DB::table('shift_rotational')
+            ->where('business_id', Session::get('business_id'))
+            ->get();
+        $setShift = DB::table('shift_set')
+            ->where('business_id', Session::get('business_id'))
+            ->get();
         return view('admin.setting.attendance.createshift', compact('setShift', 'rotationalShift', 'openShift', 'fixShift'));
     }
 

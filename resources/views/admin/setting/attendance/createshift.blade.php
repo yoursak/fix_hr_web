@@ -329,6 +329,12 @@ Attendance / Create Shift
 
                                     <div class="card-body">
                                         {{-- fixed shift  --}}
+                                        <input type="text" id="fu_WorkHour{{ $fix->fixed_id }}" name="fu_WorkHour"
+                                            value="{{ $fix->work_hr }}" hidden>
+                                        <input type="text" id="fu_WorkMin{{ $fix->fixed_id }}" name="fu_WorkMin"
+                                            value="{{ $fix->work_min }}" hidden>
+
+                                        
 
                                         <div class="form-group">
                                             <label class="form-label">Shift Type</label>
@@ -339,6 +345,7 @@ Attendance / Create Shift
                                                 <option value="rotational">Rotational Shift</option>
                                                 <option value="open">Open Shift</option>
                                             </select>
+
                                         </div>
 
                                         <div class="form-group">
@@ -352,21 +359,24 @@ Attendance / Create Shift
                                                 </div>
                                                 <div class="col-xl-3 mb-4">
                                                     <label class="form-label">Start Time</label>
-                                                    <input class="form-control" id="updated_start_time"
+                                                    <input class="form-control"
+                                                        id="updated_start_time{{ $fix->fixed_id }}"
                                                         value="{{ $fix->shift_start }}"
                                                         onchange="timeCalculate({{ $fix->fixed_id }})"
                                                         placeholder="Set time" type="time" name="UpdatedFixShiftStart">
                                                 </div>
                                                 <div class="col-xl-3 mb-4">
                                                     <label class="form-label">End Time</label>
-                                                    <input class="form-control" id="updated_end_time"
+                                                    <input class="form-control"
+                                                        id="updated_end_time{{ $fix->fixed_id }}"
                                                         value="{{ $fix->shift_end}}"
                                                         onchange="timeCalculate({{ $fix->fixed_id }})"
                                                         placeholder="Set time" type="time" name="UpdatedFixShiftEnd">
                                                 </div>
                                                 <div class="col-xl-3 mb-4">
                                                     <label class="form-label">Break(Min)</label>
-                                                    <input class="form-control" id="updated_break_time"
+                                                    <input class="form-control"
+                                                        id="updated_break_time{{ $fix->fixed_id }}"
                                                         value="{{ $fix->break_min }}"
                                                         onchange="timeCalculate({{ $fix->fixed_id }})"
                                                         placeholder="Set time" type="number"
@@ -388,7 +398,8 @@ Attendance / Create Shift
                                                             @endphp
                                                             @endif
                                                             <label class="custom-control custom-radio">
-                                                                <input type="radio" id="updated_paid"
+                                                                <input type="radio"
+                                                                    id="updated_paid{{ $fix->fixed_id }}"
                                                                     class="custom-control-input"
                                                                     onchange="timeCalculate({{ $fix->fixed_id }})"
                                                                     name="UpdatedFixpaid" value="1" {{$check}}>
@@ -397,7 +408,8 @@ Attendance / Create Shift
                                                         </div>
                                                         <div class="col-6">
                                                             <label class="custom-control custom-radio">
-                                                                <input type="radio" id="updated_unpaid"
+                                                                <input type="radio"
+                                                                    id="updated_unpaid{{ $fix->fixed_id }}"
                                                                     class="custom-control-input"
                                                                     onchange="timeCalculate({{ $fix->fixed_id }})"
                                                                     name="UpdatedFixpaid" value="0" {{$uncheck}}>
@@ -405,52 +417,57 @@ Attendance / Create Shift
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <span id="updatedFixedWorkHour{{ $fix->fixed_id }}"
-                                                        class="mb-5 fs-12 text-muted"></span>
+                                                    <span id="UpdateFixedWorkHour{{ $fix->fixed_id }}" class="mb-5 fs-12 text-muted">Total Work Hour: {{$fix->work_hr}} Hr {{$fix->work_min}} Min</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <script>
                                             function timeCalculate(id) {
-                                                alert(id);
-                                            let updated_start_time = document.getElementById("updated_start_time").value;
-                                            let updated_end_time = document.getElementById("updated_end_time").value;
-                                            let updated_break_time = document.getElementById("updated_break_time").value;
+                                                // alert(id);
+                                            let updated_start_time = document.getElementById("updated_start_time"+id).value;
+                                            let updated_end_time = document.getElementById("updated_end_time"+id).value;
+                                            let updated_break_time = document.getElementById("updated_break_time"+id).value;
+                                            
                                             // Example time inputs
                                             const updated_startTime = updated_start_time;
                                             const updated_endTime = updated_end_time;
                                             const updated_breakTime = updated_break_time; // in minutes
-            
+                                            
                                             // Parse the time inputs
                                             const [updated_startHours, updated_startMinutes] = updated_startTime.split(":").map(Number);
                                             const [updated_endHours, updated_endMinutes] = updated_endTime.split(":").map(Number);
-            
+                                            
                                             // Calculate the time difference in minutes
+                                            
                                             let updated_differenceMinutes = (updated_endHours * 60 + updated_endMinutes) - (updated_startHours * 60 + updated_startMinutes);
-            
+                                            
                                             // Ensure the differenceMinutes is positive
                                             if (updated_differenceMinutes < 0) {
                                                 updated_differenceMinutes += 1440; // 24 hours in minutes
                                             }
-            
-            
+                                            
+                                            
                                             if($('#updated_unpaid').is(':checked')){
                                                 // Subtract break time
                                                 updated_differenceMinutes -= updated_breakTime;
                                             }
-            
+                                            
                                             // Ensure the result is positive
                                             if (updated_differenceMinutes < 0) {
                                                 updated_differenceMinutes = 0;
                                             }
-            
+                                            
                                             // Calculate the hours and minutes for the result
                                             const updated_resultHours = Math.floor(updated_differenceMinutes / 60);
                                             const updated_resultMinutes = updated_differenceMinutes % 60;
-            
+                                            
                                             // Format the result as "HH:MM"
                                             const updated_formattedResult = `${String(updated_resultHours).padStart(2, '0')}:${String(updated_resultMinutes).padStart(2, '0')}`;
+                                            // console.log(updated_formattedResult);
                                             var updated_fixedHour = document.getElementById('UpdateFixedWorkHour'+id);
+                                            document.getElementById('fu_WorkHour'+id).value = `${String(updated_resultHours).padStart(2, '0')}`;
+                                            document.getElementById('fu_WorkMin'+id).value =  `${String(updated_resultMinutes).padStart(2, '0')}`;
+                                            updated_fixedHour.innerHTML = '';
                                             updated_fixedHour.innerHTML = `Total Work Hour: ${String(updated_resultHours).padStart(2, '0')} Hr ${String(updated_resultMinutes).padStart(2, '0')} Min`;
                                             console.log(`Result: ${updated_formattedResult}`);
                                             }
@@ -613,29 +630,17 @@ Attendance / Create Shift
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    {{-- <script>
-                                                        function updatedOpenPaid() {
-                                                            document.getElementById('updatedOpenUnpaid').checked = false;
-                                                            document.getElementById('updatedOpenPaid').checked = true;
-                        
-                                                        }
-                                                        function updatedOpenUnpaid() {
-                                                            document.getElementById('updatedOpenUnpaid').checked = true;
-                                                            document.getElementById('updatedOpenPaid').checked = false;
-                                                        }
-                                                    </script> --}}
                                                 </div>
                                             </div>
-                                        </div>
 
+                                        </div>
+                                        <!-- table-responsive -->
                                     </div>
-                                    <!-- table-responsive -->
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-light" type="reset" data-bs-dismiss="modal">Close</button>
-                                <button class="btn btn-primary" type="submit" id="savechanges">Save changes</button>
-                            </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-light" type="reset" data-bs-dismiss="modal">Close</button>
+                                    <button class="btn btn-primary" type="submit" id="savechanges">Save changes</button>
+                                </div>
                         </form>
                     </div>
                 </div>
@@ -719,6 +724,7 @@ Attendance / Create Shift
                                 <div class="card">
                                     <div class="card-body">
 
+
                                         <div class="form-group">
                                             <input type="text" name="setId" value="{{ $set->set_id }}" hidden>
                                             <label class="form-label">Shift Type</label>
@@ -734,50 +740,62 @@ Attendance / Create Shift
                                         {{-- roatational shift  --}}
                                         <div class="form-group" id="UpdateRotationalShift">
                                             <div class="row">
-                                                <div class="col-12">
+                                                <div class="col-xl-11">
                                                     <label class="form-label"> Rotetional Shift Name</label>
                                                     <input class="form-control mb-4" value="{{ $set->set_name }}"
                                                         placeholder="Enter Shift Name" type="text"
                                                         name="updatedRotationalName">
                                                 </div>
+                                                <div class="col-xl-1 text-end mt-5">
+                                                    <a class="btn btn-sm btn-success mt-2"
+                                                        onclick="updateRotationalField()">Add New</a>
+                                                </div>
                                             </div>
+
 
                                             <div id="updateAppendField{{$set->set_id}}">
                                                 <?php
                                                 $i = 0;
-                                                foreach ($rotationalShift->where('set_id',$set->set_id) as $key => $rotation) { ?>
-                                                <?php $i++; ?>
-                                                <div class="row" id="updateRotationalField{{$i}}">
+                                                foreach ($rotationalShift->where('set_id',$set->set_id) as $key => $rotation) { 
+                                                    $i++;
+                                                    ?>
+                                                <div class="row" id="updateRotationalField{{$i}}" onload="updateRotateFunction({{$i}})">
                                                     <div class="col-xl-9">
                                                         <div class="row">
                                                             <div class="col-xl-3 mb-4">
                                                                 <label class="form-label">Shift Name</label>
-                                                                <input class="form-control"
+                                                                <input class="form-control" id="updateRotateName{{$i}}"
+                                                                    onchange="updateRotateFunction({{$i}})"
                                                                     placeholder="Enter Shift Name"
                                                                     value="{{$rotation->shift_name}}" type="text"
                                                                     name="updatedRotationalShiftName[]">
                                                             </div>
                                                             <div class="col-xl-3 mb-4">
                                                                 <label class="form-label">Start Time</label>
-                                                                <input class="form-control" id="start_time"
+                                                                <input class="form-control" id="updateRotateStart{{$i}}"
+                                                                    onchange="updateRotateFunction({{$i}})"
                                                                     placeholder="Set time"
                                                                     value="{{$rotation->shift_start}}" type="time"
                                                                     name="updatedRotationalShiftStart[]">
                                                             </div>
                                                             <div class="col-xl-3 mb-4">
                                                                 <label class="form-label">End Time</label>
-                                                                <input class="form-control" id="end_time"
+                                                                <input class="form-control" id="updateRotateEnd{{$i}}"
+                                                                    onchange="updateRotateFunction({{$i}})"
                                                                     placeholder="Set time"
                                                                     value="{{$rotation->shift_end}}" type="time"
                                                                     name="updatedRotationalShiftEnd[]">
                                                             </div>
                                                             <div class="col-xl-3 mb-4">
                                                                 <label class="form-label">Break(Min)</label>
-                                                                <input class="form-control" id="break_time"
+                                                                <input class="form-control" id="updateRotateBreak{{$i}}"
+                                                                    onchange="updateRotateFunction({{$i}})"
                                                                     placeholder="Set time"
                                                                     value="{{$rotation->break_min}}" type="number"
                                                                     name="updatedRotationalShiftBreak[]">
                                                             </div>
+                                                            <input type="text" id="ru_WorkHour{{$i}}" name="ru_WorkHour[]" value="{{$rotation->work_hr}}" hidden>
+                                                            <input type="text" id="ru_WorkMin{{$i}}" name="ru_WorkMin[]" value="{{$rotation->work_min}}" hidden>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-3">
@@ -796,20 +814,20 @@ Attendance / Create Shift
                                                                     $uncheck='checked';
                                                                     @endphp
                                                                     @endif
-                                                                    <input type="radio" id="paid{{$i}}"
-                                                                        class="custom-control-input"
-                                                                        onchange="rotationaPaid({{$i}})"
-                                                                        name="rotationalpaid[]{{$i}}" value="1"
+                                                                    <input type="radio" class="custom-control-input"
+                                                                        id="updateRotatePaid{{$i}}"
+                                                                        onchange="updateRotateFunction({{$i}})"
+                                                                        name="updatedRotationalpaid[]{{$i}}" value="1"
                                                                         {{$check}}>
                                                                     <span class="custom-control-label">Paid</span>
                                                                 </label>
                                                             </div>
                                                             <div class="col-5">
                                                                 <label class="custom-control custom-radio">
-                                                                    <input type="radio" id="unpaid0"
-                                                                        class="custom-control-input"
-                                                                        onchange="rotationaUnpaid({{$i}})"
-                                                                        name="rotationalpaid[]{{$i}}" value="0"
+                                                                    <input type="radio" class="custom-control-input"
+                                                                        id="updateRotateUnpaid{{$i}}"
+                                                                        onchange="updateRotateFunction({{$i}})"
+                                                                        name="updatedRotationalpaid[]{{$i}}" value="0"
                                                                         {{$uncheck}}>
                                                                     <span class="custom-control-label">Unpaid</span>
                                                                 </label>
@@ -820,38 +838,44 @@ Attendance / Create Shift
                                                                         class="fa fa-trash"></i></a>
                                                             </div>
                                                         </div>
+                                                        <span id="updateRot_fixedWorkHour{{$i}}" class="mb-5 fs-12 text-muted">Total Work Hour: {{$rotation->work_hr}} Hr {{$rotation->work_min}} Min</span>
                                                     </div>
                                                 </div>
                                                 <?php
                                             }
                                             ?>
                                             </div>
-                                            <div class="text-end">
-                                                <a class="btn btn-sm btn-success mt-2"
-                                                    onclick="updateRotationalField({{$i, $set->set_id}})">Add New</a>
-                                            </div>
 
+
+                                            <?php $load=$i ?>
                                             <script>
-                                                function updateRotationalField(id,setId){
-                                                    let id++;
-                                                let updatedRotationalShift = '<div class="row" id="updateRotationalField'+ id +'">' +
+                                                var id={{$i}};
+                                                function updateRotationalField(){
+                                                    // var id = '<?php echo $i++ ?>';
+                                                    var setId = '<?php echo $set->set_id ?>';
+                                                    var Id = ++id;
+                                                    
+                                                    console.log(Id);
+                                                let updatedRotationalShift = '<div class="row" id="updateRotationalField'+ Id +'">' +
                                                     '<div class="col-xl-9">' +
                                                     '<div class="row">' +
                                                     '<div class="col-xl-3 mb-4">' +
                                                     '<label class="form-label">Shift Name</label>' +
-                                                    '<input class="form-control" placeholder="Enter Shift Name" type="text" name="rotationalShiftName[]">' +
+                                                    '<input type="text" id="ru_WorkHour'+ Id +'" name="ru_WorkHour[]" value="" hidden>' +
+                                                    '<input type="text" id="ru_WorkMin'+ Id +'" name="ru_WorkMin[]" value="" hidden>' +
+                                                    '<input class="form-control" placeholder="Enter Shift Name" type="text" name="updatedRotationalShiftName[]">' +
                                                     '</div>' +
                                                     '<div class="col-xl-3 mb-4">' +
                                                     '<label class="form-label">Start Time</label>' +
-                                                    '<input class="form-control" id="start_time"  placeholder="Set time" type="time" name="rotationalShiftStart[]">' +
+                                                    '<input class="form-control" id="updateRotateStart'+ Id +'" onchange="updateRotateFunction('+ Id +')"  placeholder="Set time" type="time" name="updatedRotationalShiftStart[]">' +
                                                     '</div>' +
                                                     '<div class="col-xl-3 mb-4">' +
                                                     '<label class="form-label">End Time</label>' +
-                                                    '<input class="form-control" id="end_time"  placeholder="Set time" type="time" name="rotationalShiftEnd[]">' +
+                                                    '<input class="form-control" id="updateRotateEnd'+ Id +'" onchange="updateRotateFunction('+ Id +')"  placeholder="Set time" type="time" name="updatedRotationalShiftEnd[]">' +
                                                     '</div>' +
                                                     '<div class="col-xl-3 mb-4">' +
                                                     '<label class="form-label">Break(Min)</label>' +
-                                                    '<input class="form-control" id="break_time"  placeholder="Set time" type="number" name="rotationalShiftBreak[]">' +
+                                                    '<input class="form-control" id="updateRotateBreak'+ Id +'" onchange="updateRotateFunction('+ Id +')"  placeholder="Set time" type="number" name="updatedRotationalShiftBreak[]">' +
                                                     '</div>' +
                                                     '</div>' +
                                                     '</div>' +
@@ -860,26 +884,73 @@ Attendance / Create Shift
                                                     '<div class="row">' +
                                                     '<div class="col-4">' +
                                                     '<label class="custom-control custom-radio">' +
-                                                    '<input type="radio" id="paid'+id+'" class="custom-control-input" onchange="rotationaPaid('+id+')" name="rotationalpaid[]'+id+'" value="1" checked>' +
+                                                    '<input type="radio" id="updateRotatePaid'+ Id +'" onchange="updateRotateFunction('+ Id +')" class="custom-control-input"  name="updatedRotationalpaid[]'+Id+'" value="1" checked>' +
                                                     '<span class="custom-control-label">Paid</span>' +
                                                     '</label>' +
                                                     '</div>' +
                                                     '<div class="col-5">' +
                                                     '<label class="custom-control custom-radio">' +
-                                                    '<input type="radio" id="unpaid'+id+'" class="custom-control-input" onchange="rotationaUnpaid('+id+')" name="rotationalpaid[]'+id+'" value="0">' +
+                                                    '<input type="radio" id="updateRotateUnpaid'+ Id +'" onchange="updateRotateFunction('+ Id +')" class="custom-control-input"  name="updatedRotationalpaid[]'+Id+'" value="0">' +
                                                     '<span class="custom-control-label">Unpaid</span>' +
                                                     '</label>' +
                                                     '</div>' +
                                                     '<div class="col-3">' +
-                                                    '<a class="btn btn-sm btn-danger" id="deleteElem'+id+'" onclick="removalElement('+id+')"><i class="fa fa-trash"></i></a>' +
+                                                    '<a class="btn btn-sm btn-danger" id="deleteElem'+Id+'" onclick="removalUpdaedElement('+Id+')"><i class="fa fa-trash"></i></a>' +
                                                     '</div>' +
                                                     '</div>' +
-                                                    '<span class="mb-5 fs-12 text-muted"></span>' +
+                                                    '<span id="updateRot_fixedWorkHour'+Id+'" class="mb-5 fs-12 text-muted"></span>' +
                                                     '</div>' +
                                                     '</div>';
         
                                                 let parent = document.getElementById('updateAppendField'+setId);
                                                 parent.insertAdjacentHTML('beforeend', updatedRotationalShift);
+                                            }
+
+                                            function updateRotateFunction(rotId) {
+                                                    console.log(rotId);
+                                                    let updateRot_start_time = document.getElementById("updateRotateStart"+rotId).value;
+                                                    let updateRot_end_time = document.getElementById("updateRotateEnd"+rotId).value;
+                                                    let updateRot_break_time = document.getElementById("updateRotateBreak"+rotId).value;
+                                                    // alert('abvc')
+                                                    // Example time inputs
+                                                    const updateRot_startTime = updateRot_start_time;
+                                                    const updateRot_endTime = updateRot_end_time;
+                                                    const updateRot_breakTime = updateRot_break_time; // in minutes
+                    
+                                                    // Parse the time inputs
+                                                    const [updateRot_startHours, updateRot_startMinutes] = updateRot_startTime.split(":").map(Number);
+                                                    const [updateRot_endHours, updateRot_endMinutes] = updateRot_endTime.split(":").map(Number);
+                    
+                                                    // Calculate the time difference in minutes
+                                                    let updateRot_differenceMinutes = (updateRot_endHours * 60 + updateRot_endMinutes) - (updateRot_startHours * 60 + updateRot_startMinutes);
+                    
+                                                    // Ensure the differenceMinutes is positive
+                                                    if (updateRot_differenceMinutes < 0) {
+                                                        updateRot_differenceMinutes += 1440; // 24 hours in minutes
+                                                    }
+                    
+                    
+                                                    if($('#updateRotateUnpaid'+rotId).is(':checked')){
+                                                        // Subtract break time
+                                                        updateRot_differenceMinutes -= updateRot_breakTime;
+                                                    }
+                    
+                                                    // Ensure the result is positive
+                                                    if (updateRot_differenceMinutes < 0) {
+                                                        updateRot_differenceMinutes = 0;
+                                                    }
+                    
+                                                    // Calculate the hours and minutes for the result
+                                                    const updateRot_resultHours = Math.floor(updateRot_differenceMinutes / 60);
+                                                    const updateRot_resultMinutes = updateRot_differenceMinutes % 60;
+                    
+                                                    // Format the result as "HH:MM"
+                                                    const updateRot_formattedResult = `${String(updateRot_resultHours).padStart(2, '0')}:${String(updateRot_resultMinutes).padStart(2, '0')}`;
+                                                    var updateRot_fixedHour = document.getElementById('updateRot_fixedWorkHour'+rotId);
+                                                     document.getElementById('ru_WorkHour'+rotId).value = `${String(updateRot_resultHours).padStart(2, '0')}`;
+                                                     document.getElementById('ru_WorkMin'+rotId).value = `${String(updateRot_resultMinutes).padStart(2, '0')}`;
+                                                    updateRot_fixedHour.innerHTML = `Total Work Hour: ${String(updateRot_resultHours).padStart(2, '0')} Hr ${String(updateRot_resultMinutes).padStart(2, '0')} Min`;
+                                                    console.log(`Result: ${updateRot_formattedResult}`);
                                             }
         
                                             function removalUpdaedElement(id){
@@ -889,6 +960,7 @@ Attendance / Create Shift
         
                                                 // Check if the element exists before attempting to remove it
                                                 if (updatedElementToRemove) {
+                                                    console.log(id);
                                                     // Remove the element
                                                     updatedElementToRemove.remove();
                                                 } else {
@@ -896,16 +968,17 @@ Attendance / Create Shift
                                                 }
                                             }
         
-                                            function rotationaPaid(index) {
-                                                document.getElementById('unpaid'+index).checked = false;
-                                                document.getElementById('paid'+index).checked = true;
+                                            // function rotationaPaid(index) {
+                                            //     document.getElementById('unpaid'+index).checked = false;
+                                            //     document.getElementById('paid'+index).checked = true;
             
-                                            }
-                                            function rotationaUnpaid(index) {
-                                                document.getElementById('unpaid'+index).checked = true;
-                                                document.getElementById('paid'+index).checked = false;
-                                            }
+                                            // }
+                                            // function rotationaUnpaid(index) {
+                                            //     document.getElementById('unpaid'+index).checked = true;
+                                            //     document.getElementById('paid'+index).checked = false;
+                                            // }
                                             </script>
+                                            <?php   ?>
                                         </div>
 
                                     </div>
@@ -1005,6 +1078,12 @@ Attendance / Create Shift
                                         <option value="rotational">Rotational Shift</option>
                                         <option value="open">Open Shift</option>
                                     </select>
+
+                                    <input type="text" id="f_WorkHour" name="f_WorkHour" value="" hidden>
+                                    <input type="text" id="f_WorkMin" name="f_WorkMin" value="" hidden>
+
+                                    <input type="text" id="r_WorkHour0" name="r_WorkHour[]" value="" hidden>
+                                    <input type="text" id="r_WorkMin0" name="r_WorkMin[]" value="" hidden>
                                 </div>
                                 {{-- fixed shift  --}}
                                 <div class="form-group d-none" id="shifttime">
@@ -1093,6 +1172,8 @@ Attendance / Create Shift
                                     // Format the result as "HH:MM"
                                     const formattedResult = `${String(resultHours).padStart(2, '0')}:${String(resultMinutes).padStart(2, '0')}`;
                                     var fixedHour = document.getElementById('fixedWorkHour');
+                                    document.getElementById('f_WorkHour').value = `${String(resultHours).padStart(2, '0')}`;
+                                    document.getElementById('f_WorkMin').value =  `${String(resultMinutes).padStart(2, '0')}`;
                                     fixedHour.innerHTML = `Total Work Hour: ${String(resultHours).padStart(2, '0')} Hr ${String(resultMinutes).padStart(2, '0')} Min`;
                                     console.log(`Result: ${formattedResult}`);
                                     }
@@ -1181,18 +1262,21 @@ Attendance / Create Shift
                                                 </div>
                                                 <div class="col-xl-3 mb-4">
                                                     <label class="form-label">Start Time</label>
-                                                    <input class="form-control" id="start_time" placeholder="Set time"
-                                                        type="time" name="rotationalShiftStart[]">
+                                                    <input class="form-control" onchange="rotateFunction(0)"
+                                                        id="start_time0" placeholder="Set time" type="time"
+                                                        name="rotationalShiftStart[]">
                                                 </div>
                                                 <div class="col-xl-3 mb-4">
                                                     <label class="form-label">End Time</label>
-                                                    <input class="form-control" id="end_time" placeholder="Set time"
-                                                        type="time" name="rotationalShiftEnd[]">
+                                                    <input class="form-control" onchange="rotateFunction(0)"
+                                                        id="end_time0" placeholder="Set time" type="time"
+                                                        name="rotationalShiftEnd[]">
                                                 </div>
                                                 <div class="col-xl-3 mb-4">
                                                     <label class="form-label">Break(Min)</label>
-                                                    <input class="form-control" id="break_time" placeholder="Set time"
-                                                        type="number" name="rotationalShiftBreak[]">
+                                                    <input class="form-control" onchange="rotateFunction(0)"
+                                                        id="break_time0" placeholder="Set time" type="number"
+                                                        name="rotationalShiftBreak[]">
                                                 </div>
                                             </div>
                                         </div>
@@ -1201,17 +1285,17 @@ Attendance / Create Shift
                                             <div class="row">
                                                 <div class="col-4">
                                                     <label class="custom-control custom-radio">
-                                                        <input type="radio" id="paid0" class="custom-control-input"
-                                                            onchange="rotationaPaid(0)" name="rotationalpaid[]"
-                                                            value="1" checked>
+                                                        <input type="radio" id="rotatePaid0"
+                                                            class="custom-control-input" onchange="rotateFunction(0)"
+                                                            name="rotationalpaid[]" value="1" checked>
                                                         <span class="custom-control-label">Paid</span>
                                                     </label>
                                                 </div>
                                                 <div class="col-5">
                                                     <label class="custom-control custom-radio">
-                                                        <input type="radio" id="unpaid0" class="custom-control-input"
-                                                            onchange="rotationaUnpaid(0)" name="rotationalpaid[]"
-                                                            value="0">
+                                                        <input type="radio" id="rotateUnpaid0"
+                                                            class="custom-control-input" onchange="rotateFunction(0)"
+                                                            name="rotationalpaid[]" value="0">
                                                         <span class="custom-control-label">Unpaid</span>
                                                     </label>
                                                 </div>
@@ -1220,7 +1304,7 @@ Attendance / Create Shift
                                                         onclick="removalElement(0)"><i class="fa fa-trash"></i></a>
                                                 </div>
                                             </div>
-                                            <span class="mb-5 fs-12 text-muted"></span>
+                                            <span id="rot_fixedWorkHour0" class="mb-5 fs-12 text-muted"></span>
                                         </div>
                                     </div>
 
@@ -1233,19 +1317,21 @@ Attendance / Create Shift
                                             '<div class="row">' +
                                             '<div class="col-xl-3 mb-4">' +
                                             '<label class="form-label">Shift Name</label>' +
+                                            '<input type="text" id="r_WorkHour'+ i +'" name="r_WorkHour[]" value="" hidden>' +
+                                            '<input type="text" id="r_WorkMin'+ i +'" name="r_WorkMin[]" value="" hidden>' +
                                             '<input class="form-control" placeholder="Enter Shift Name" type="text" name="rotationalShiftName[]">' +
                                             '</div>' +
                                             '<div class="col-xl-3 mb-4">' +
                                             '<label class="form-label">Start Time</label>' +
-                                            '<input class="form-control" id="start_time"  placeholder="Set time" type="time" name="rotationalShiftStart[]">' +
+                                            '<input class="form-control" onchange="rotateFunction('+ i +')" id="start_time'+ i +'"  placeholder="Set time" type="time" name="rotationalShiftStart[]">' +
                                             '</div>' +
                                             '<div class="col-xl-3 mb-4">' +
                                             '<label class="form-label">End Time</label>' +
-                                            '<input class="form-control" id="end_time"  placeholder="Set time" type="time" name="rotationalShiftEnd[]">' +
+                                            '<input class="form-control" onchange="rotateFunction('+ i +')" id="end_time'+ i +'"  placeholder="Set time" type="time" name="rotationalShiftEnd[]">' +
                                             '</div>' +
                                             '<div class="col-xl-3 mb-4">' +
                                             '<label class="form-label">Break(Min)</label>' +
-                                            '<input class="form-control" id="break_time"  placeholder="Set time" type="number" name="rotationalShiftBreak[]">' +
+                                            '<input class="form-control" onchange="rotateFunction('+ i +')" id="break_time'+ i +'"  placeholder="Set time" type="number" name="rotationalShiftBreak[]">' +
                                             '</div>' +
                                             '</div>' +
                                             '</div>' +
@@ -1254,13 +1340,13 @@ Attendance / Create Shift
                                             '<div class="row">' +
                                             '<div class="col-4">' +
                                             '<label class="custom-control custom-radio">' +
-                                            '<input type="radio" id="paid'+i+'" class="custom-control-input" onchange="rotationaPaid('+i+')" name="rotationalpaid[]'+i+'" value="1" checked>' +
+                                            '<input type="radio" id="rotatePaid'+i+'" onchange="rotateFunction('+ i +')" class="custom-control-input" onchange="rotationaPaid('+i+')" name="rotationalpaid[]'+i+'" value="1" checked>' +
                                             '<span class="custom-control-label">Paid</span>' +
                                             '</label>' +
                                             '</div>' +
                                             '<div class="col-5">' +
                                             '<label class="custom-control custom-radio">' +
-                                            '<input type="radio" id="unpaid'+i+'" class="custom-control-input" onchange="rotationaUnpaid('+i+')" name="rotationalpaid[]'+i+'" value="0">' +
+                                            '<input type="radio" id="rotateUnpaid'+i+'" onchange="rotateFunction('+ i +')" class="custom-control-input" onchange="rotationaUnpaid('+i+')" name="rotationalpaid[]'+i+'" value="0">' +
                                             '<span class="custom-control-label">Unpaid</span>' +
                                             '</label>' +
                                             '</div>' +
@@ -1268,13 +1354,61 @@ Attendance / Create Shift
                                             '<a class="btn btn-sm btn-danger" id="deleteElem'+i+'" onclick="removalElement('+i+')"><i class="fa fa-trash"></i></a>' +
                                             '</div>' +
                                             '</div>' +
-                                            '<span class="mb-5 fs-12 text-muted"></span>' +
+                                            '<span id="rot_fixedWorkHour'+i+'" class="mb-5 fs-12 text-muted"></span>' +
                                             '</div>' +
                                             '</div>';
 
                                         let parent = document.getElementById('shiftname2');
                                         parent.insertAdjacentHTML('beforeend', rotationalShift);
                                     }
+
+                                    
+                                    function rotateFunction(rotId) {
+                                        let rot_start_time = document.getElementById("start_time"+rotId).value;
+                                        let rot_end_time = document.getElementById("end_time"+rotId).value;
+                                        let rot_break_time = document.getElementById("break_time"+rotId).value;
+                                        // alert('abvc')
+                                        // Example time inputs
+                                        const rot_startTime = rot_start_time;
+                                        const rot_endTime = rot_end_time;
+                                        const rot_breakTime = rot_break_time; // in minutes
+        
+                                        // Parse the time inputs
+                                        const [rot_startHours, rot_startMinutes] = rot_startTime.split(":").map(Number);
+                                        const [rot_endHours, rot_endMinutes] = rot_endTime.split(":").map(Number);
+        
+                                        // Calculate the time difference in minutes
+                                        let rot_differenceMinutes = (rot_endHours * 60 + rot_endMinutes) - (rot_startHours * 60 + rot_startMinutes);
+        
+                                        // Ensure the differenceMinutes is positive
+                                        if (rot_differenceMinutes < 0) {
+                                            rot_differenceMinutes += 1440; // 24 hours in minutes
+                                        }
+        
+        
+                                        if($('#rotateUnpaid'+rotId).is(':checked')){
+                                            // Subtract break time
+                                            rot_differenceMinutes -= rot_breakTime;
+                                        }
+        
+                                        // Ensure the result is positive
+                                        if (rot_differenceMinutes < 0) {
+                                            rot_differenceMinutes = 0;
+                                        }
+        
+                                        // Calculate the hours and minutes for the result
+                                        const rot_resultHours = Math.floor(rot_differenceMinutes / 60);
+                                        const rot_resultMinutes = rot_differenceMinutes % 60;
+        
+                                        // Format the result as "HH:MM"
+                                        const rot_formattedResult = `${String(rot_resultHours).padStart(2, '0')}:${String(rot_resultMinutes).padStart(2, '0')}`;
+                                        var rot_fixedHour = document.getElementById('rot_fixedWorkHour'+rotId);
+                                        document.getElementById('r_WorkHour'+rotId).value = `${String(rot_resultHours).padStart(2, '0')}`;
+                                        document.getElementById('r_WorkMin'+rotId).value = `${String(rot_resultMinutes).padStart(2, '0')}`;
+                                        rot_fixedHour.innerHTML = `Total Work Hour: ${String(rot_resultHours).padStart(2, '0')} Hr ${String(rot_resultMinutes).padStart(2, '0')} Min`;
+                                        console.log(`Result: ${rot_formattedResult}`);
+                                    }
+                          
 
                                     function removalElement(id){
                                         // alert(id);
@@ -1290,15 +1424,15 @@ Attendance / Create Shift
                                         }
                                     }
 
-                                    function rotationaPaid(index) {
-                                        document.getElementById('unpaid'+index).checked = false;
-                                        document.getElementById('paid'+index).checked = true;
+                                    // function rotationaPaid(index) {
+                                    //     document.getElementById('unpaid'+index).checked = false;
+                                    //     document.getElementById('paid'+index).checked = true;
     
-                                    }
-                                    function rotationaUnpaid(index) {
-                                        document.getElementById('unpaid'+index).checked = true;
-                                        document.getElementById('paid'+index).checked = false;
-                                    }
+                                    // }
+                                    // function rotationaUnpaid(index) {
+                                    //     document.getElementById('unpaid'+index).checked = true;
+                                    //     document.getElementById('paid'+index).checked = false;
+                                    // }
                                     </script>
                                 </div>
 

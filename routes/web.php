@@ -88,7 +88,9 @@ Route::middleware(['email_verified'])->group(function () {
             Route::post('/role_submit', 'createRoleSubmit')->name('SubmitRole');
             Route::post('/role_permission_submit', 'createAssignPermission')->name('submitAssignPermission');
             // new Loading loaded
-
+            Route::post('/role_permission_updated','previewAssignedUsers');
+            // ajax
+            Route::post('/get_assign','GetAssignUser');
         });
     });
 
@@ -169,6 +171,7 @@ Route::middleware(['email_verified'])->group(function () {
                 // ajax dropdown  verify usefull
                 Route::post('/alldepartment', [SettingController::class, 'allDepartment']); //save
                 Route::post('/alldesignation', [SettingController::class, 'allDesignation']);
+                Route::post('/check', [SettingController::class, 'check']);
                 Route::post('/allemployeefilter', [SettingController::class, 'allEmployeeFilter']);
                 Route::get('/all_designation_details/{id}', [SettingController::class, 'designationDetails'])->name('admin.editSetValueDesignation');
                 //update 

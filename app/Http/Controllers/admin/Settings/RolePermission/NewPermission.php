@@ -116,7 +116,14 @@ class NewPermission extends Controller
         return back();
     }
 
-    public function previewAssignedUsers($roleID){
+    public function GetAssignUser(Request $request)
+    {
+        $get = DB::table('setting_role_items')->where('role_create_id', $request->role_id)->get();
+        return  response()->json(['checking' => $get]);
+    }
 
+    public function previewAssignedUsers(Request $request)
+    {
+        dd($request->all());
     }
 }

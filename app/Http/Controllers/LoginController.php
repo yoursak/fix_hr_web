@@ -82,68 +82,78 @@ class LoginController extends BaseController
     public function handleCardClick(Request $request)
     {
 
-        $cardType = $request->input('card_type');
-        $actualCardType = $cardType[0];
-        $businessId = $cardType[1];
+        if (isset($request->card_type1)) {
 
-
-        // For example, you can check the card type and business ID:
-
-        if ($actualCardType === 'owner') {
-            // Set session data for the owner card
+            $cardType = $request->input('card_type1');
+            $actualCardType = $cardType[0];
+            $businessId = $cardType[1];
             $mainloodLoad1 = DB::table('business_details_list')->where('business_id', $businessId)->first();
-            if ($mainloodLoad1) {
-                Session::put('user_type', 'owner');
-                Session::put('business_id', $businessId);
-                Session::put('branch_id', '');
-                Session::put('login_role', 0);
-                Session::put('login_name', $mainloodLoad1->client_name);
-                Session::put('login_email', $mainloodLoad1->business_email);
-                Session::put('login_business_image', $mainloodLoad1->business_logo);
-            } else {
-                Session::put('login_business_image', 'assets/images/users/16.jpg');
-            }
-            return response()->json(['root' => $actualCardType]);
-        }
-        if ($actualCardType === 'admin') {
-            $mainloodLoad2 = DB::table('employee_personal_details')->where('business_id', $businessId)->where('emp_email', $request->session()->get('email'))->first();
-            $infoBusinessDetails = DB::table('business_details_list')->where('business_id', $businessId)->first();
-            // $Get = DB::table('model_has_roles')->where('business_id', $businessId)->where('branch_id', $mainloodLoad2->branch_id)->where('role_id', $mainloodLoad2->role_id)->select('model_id', 'model_type')->first();
-            $Get = DB::table('setting_role_assign_permission')->where('emp_id', $mainloodLoad2->emp_id)->where('business_id', $businessId)->where('branch_id', $mainloodLoad2->branch_id)->first();
-            if ($mainloodLoad2) {
-                Session::put('user_type', 'admin');
-                Session::put('business_id', $businessId);
-                Session::put('branch_id', $mainloodLoad2->branch_id);
-                Session::put('login_emp_id', $mainloodLoad2->emp_id);
-                Session::put('login_role_id', ($Get->role_id != null) ? $Get->role_id : '');
-                // Session::put('model_id', ($Get->model_id != null) ? $Get->model_id : '');
-                Session::put('login_role', $mainloodLoad2->role_id); //role table role id link model_has_role
-                Session::put('login_name', $mainloodLoad2->emp_name);
-                Session::put('login_email', $mainloodLoad2->emp_email);
-                Session::put('login_business_image', $infoBusinessDetails->business_logo);
-            } else {
-                Session::put('login_business_image', 'assets/images/users/16.jpg');
-            }
+            // model_has_permission 
+            $load = DB::table('model_has_permissions')->where('business_id', $businessId)->first();
 
-            return response()->json(['root' => $actualCardType]);
-        }
-        if ($actualCardType === 'superadmin') {
-            $mainloodLoad2 = DB::table('employee_personal_details')->where('business_id', $businessId)->where('emp_email', $request->session()->get('email'))->first();
-            $infoBusinessDetails = DB::table('business_details_list')->where('business_id', $businessId)->first();
-            if ($mainloodLoad2) {
-                Session::put('user_type', 'superadmin');
-                Session::put('business_id', $businessId);
-                Session::put('branch_id', $mainloodLoad2->branch_id);
-                Session::put('login_role', $mainloodLoad2->role_id);
-                Session::put('login_name', $mainloodLoad2->emp_name);
-                Session::put('login_email', $mainloodLoad2->emp_email);
-                Session::put('login_business_image', $infoBusinessDetails->business_logo);
-            } else {
-                Session::put('login_business_image', 'assets/images/users/16.jpg');
+            if ($actualCardType === 'owner') {
+                // Set session data for the owner card
+                if ($mainloodLoad1) {
+                    Session::put('user_type', 'owner');
+                    Session::put('business_id', $businessId);
+                    Session::put('branch_id', '');
+                    Session::put('model_id',$load->model_id);
+                    Session::put('login_role', 0);
+                    Session::put('login_name', $mainloodLoad1->client_name);
+                    Session::put('login_email', $mainloodLoad1->business_email);
+                    Session::put('login_business_image', $mainloodLoad1->business_logo);
+                } else {
+                    Session::put('login_business_image', 'assets/images/users/16.jpg');
+                }
+                return response()->json(['root' => $actualCardType]);
             }
-
-            return response()->json(['root' => $actualCardType]);
         }
+        if (isset($request->card_type2)) {
+
+            // return response()->json(['root' => $request->all()]);
+
+            $cardType1 = $request->input('card_type2');
+            $actualCardType1 = $cardType1[0];
+            $businessId1 = $cardType1[1];
+            $branchId1 = $cardType1[2];
+            if ($actualCardType1 === 'admin') {
+                $mainloodLoad2 = DB::table('employee_personal_details')->where('business_id', $businessId1)->where('emp_email', Session::get('email'))->first();
+                $infoBusinessDetails = DB::table('business_details_list')->where('business_id', $businessId1)->first();
+                if ($mainloodLoad2) {
+                    Session::put('user_type', 'admin');
+                    Session::put('business_id', $businessId1);
+                    Session::put('branch_id',  $branchId1);
+                    Session::put('login_emp_id', $mainloodLoad2->emp_id);
+                    Session::put('login_role', $mainloodLoad2->role_id); //role table role id link model_has_role
+                    Session::put('login_name', $mainloodLoad2->emp_name);
+                    Session::put('login_email', $mainloodLoad2->emp_email);
+                    Session::put('login_business_image', $infoBusinessDetails->business_logo);
+                } else {
+                    Session::put('login_business_image', 'assets/images/users/16.jpg');
+                }
+
+                return response()->json(['root' => $actualCardType1]);
+            }
+            // return response()->json(['root' => $request->all()]);
+        }
+
+        // if ($actualCardType === 'superadmin') {
+        //     $mainloodLoad2 = DB::table('employee_personal_details')->where('business_id', $businessId)->where('emp_email', $request->session()->get('email'))->first();
+        //     $infoBusinessDetails = DB::table('business_details_list')->where('business_id', $businessId)->first();
+        //     if ($mainloodLoad2) {
+        //         Session::put('user_type', 'superadmin');
+        //         Session::put('business_id', $businessId);
+        //         Session::put('branch_id', $mainloodLoad2->branch_id);
+        //         Session::put('login_role', $mainloodLoad2->role_id);
+        //         Session::put('login_name', $mainloodLoad2->emp_name);
+        //         Session::put('login_email', $mainloodLoad2->emp_email);
+        //         Session::put('login_business_image', $infoBusinessDetails->business_logo);
+        //     } else {
+        //         Session::put('login_business_image', 'assets/images/users/16.jpg');
+        //     }
+
+        //     return response()->json(['root' => $actualCardType]);
+        // }
         // if($actualCardType==='employee')//employee case hold
     }
 
@@ -164,29 +174,29 @@ class LoginController extends BaseController
             if (isset($check_otp)) {
                 // dd($email);
 
-                $checking = DB::table('login_admin')
-                    ->join('business_details_list', function ($join) {
-                        $join->on('business_details_list.business_id', '=', 'login_admin.business_id');
-                        // $join->on('business_details_list.business_email', '=', 'login_admin.email');
-    
-                    })
-                    ->join('roles', function ($join) {
-                        // $join->on('roles.business_id', '=', 'login_admin.business_id');
-                        $join->on('roles.id', '=', 'login_admin.role_id');
-                        // $join->on('roles.id', '=', 'login_admin.role_id');
-    
-                    })
-                    ->where('email', $check_otp->email)
-                    ->select('*', 'roles.name as rolename')
-                    ->get();
+                // $checking = DB::table('login_admin')
+                //     ->join('business_details_list', function ($join) {
+                //         $join->on('business_details_list.business_id', '=', 'login_admin.business_id');
+                //         // $join->on('business_details_list.business_email', '=', 'login_admin.email');
+
+                //     })
+                //     ->join('roles', function ($join) {
+                //         $join->on('roles.id', '=', 'login_admin.role_id');
+
+                //     })
+                //     ->where('email', $check_otp->email)
+                //     ->select('*', 'roles.name as rolename')
+                //     ->get();
+                // checking businessID
+
                 // dd($checking);
 
                 if (isset($check_otp)) {
                     Alert::success('Otp Aauthentication', 'Your Otp Verified Successfully');
-                    if (isset($checking)) {
-                        Alert::success('Welocme', 'To FixHr Admin Dashboard');
-                    }
-                    return view('auth.admin.logintype', compact('checking'));
+                    // if (isset($checking)) {
+                    //     Alert::success('Welocme', 'To FixHr Admin Dashboard');
+                    // }, compact('checking')
+                    return view('auth.admin.logintype');
                     // return view('auth.admin.otp');
                 } else {
                     // return redirect('/');
