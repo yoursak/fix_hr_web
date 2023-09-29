@@ -90,7 +90,7 @@
                             <div class="form-group">
                                 <label class="form-label">State</label>
                                 <select onchange="print_city('state1', this.selectedIndex);" id="sts1" name="state"
-                                     class="form-control  " required></select>
+                                    class="form-control  " required></select>
                             </div>
                         </div>
                         <div class="col-sm-4 col-md-4">
@@ -104,7 +104,7 @@
                         </div>
                         <div class="col-sm-12 col-md-6">
                             <div class="row">
-                               
+
                                 <div class="col-sm-6 col-md-12">
                                     <div class="form-group">
                                         <label class="form-label">Zip Code</label>
@@ -124,18 +124,20 @@
                         </div>
                         <div class="col-sm-12 col-md-6">
                             <div class="row">
-                                
-                                {{-- <div class="col-sm-6 col-md-6"> --}}
+
+                                <div class="col-sm-6 col-md-6">
                                     {{-- data-default-file="{{ asset('imgs/business.gif') }}" --}}
-                                    {{-- <input type="file" name="image" class="dropify" data-height="100" data-width="400" />
-                                </div> --}}
+                                    <input type="file" name="image" class="dropify" data-height="100"
+                                        data-width="400" />
+                                </div>
                                 {{-- <div class="col-sm-6 col-md-6"> --}}
                                     <div class="form-group">
                                         <label class="form-label">Address</label>
                                         <textarea rows="6" name="address" class="form-control"
                                             placeholder="Enter Business Address"></textarea>
                                     </div>
-                                {{-- </div> --}}
+                                    {{--
+                                </div> --}}
                             </div>
                         </div>
                     </div>

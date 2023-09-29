@@ -7,8 +7,8 @@ Attendance
 <!-- ROW -->
 <div class="row">
     @php
-        $AttList = App\Helpers\Central_unit::GetAttDetails();
-        // dd($AttList);
+    $root=new App\Helpers\Central_unit();
+    $AttList = $root->GetAttDetails();
     @endphp
     <div class="col-xl-9 col-md-12 col-lg-12">
         <div class="card">
@@ -53,12 +53,12 @@ Attendance
                     <label class="form-label">Pending Approvals for abc days</label>
                 </div>
                 <div class="btn-list text-center mt-5 mb-5">
-                    <a  type="submit" class="btn ripple btn-primary">Approve</a>
+                    <a type="submit" class="btn ripple btn-primary">Approve</a>
                     {{-- <a href="javascript:void(0);" class="btn ripple btn-primary disabled">Punch Out</a> --}}
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
 </div>
 <!-- END ROW -->
 
@@ -78,14 +78,16 @@ Attendance
                                             <div class="input-group-text">
                                                 <i class="feather feather-calendar"></i>
                                             </div>
-                                        </div><input class="form-control fc-datepicker" placeholder="DD-MM-YYYY" type="text">
+                                        </div><input class="form-control fc-datepicker" placeholder="DD-MM-YYYY"
+                                            type="text">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Department:</label>
-                                    <select class="form-control custom-select select2" data-placeholder="Select Department">
+                                    <select class="form-control custom-select select2"
+                                        data-placeholder="Select Department">
                                         <option label="Select Employee"></option>
                                         <option value="1">Faith Harris</option>
                                         <option value="2">Austin Bell</option>
@@ -112,7 +114,8 @@ Attendance
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Designation:</label>
-                                    <select name="attendance"  class="form-control custom-select select2" data-placeholder="Select Designation">
+                                    <select name="attendance" class="form-control custom-select select2"
+                                        data-placeholder="Select Designation">
                                         <option label="Select Month"></option>
                                         <option value="1">January</option>
                                         <option value="2">February</option>
@@ -132,7 +135,8 @@ Attendance
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Employee Name:</label>
-                                    <select name="attendance"  class="form-control custom-select select2" data-placeholder="Select Employee">
+                                    <select name="attendance" class="form-control custom-select select2"
+                                        data-placeholder="Select Employee">
                                         <option label="Select Year"></option>
                                         <option value="1">2024</option>
                                         <option value="2">2023</option>
@@ -157,7 +161,7 @@ Attendance
                     </div>
                     <div class="col-md-12 col-lg-2">
                         <div class="form-group mt-5">
-                            <a  href="javascript:void(0);" class="btn btn-primary btn-block">Search</a>
+                            <a href="javascript:void(0);" class="btn btn-primary btn-block">Search</a>
                         </div>
                     </div>
                 </div>
@@ -173,7 +177,7 @@ Attendance
                                 <th class="border-bottom-0">Punch In</th>
                                 <th class="border-bottom-0">Punch Out</th>
                                 <th class="border-bottom-0">Production Hour</th>
-                                <th class="border-bottom-0">IP Address</th>
+                                <th class="border-bottom-0">Late By</th>
                                 <th class="border-bottom-0">Working From</th>
                                 <th class="border-bottom-0">Actions</th>
                             </tr>
@@ -194,13 +198,15 @@ Attendance
                                 <td><span class="badge badge-success-light">Present</span></td>
                                 <td>{{$list->punch_in_time}}</td>
                                 <td>{{$list->punch_out_time}}</td>
-                                <td>{{$list->working_hour}}</td>
+                                <td>{{$list->total_working_hour}}</td>
                                 <td>127.0.0.1</td>
-                                <td>{{$list->working_from}}</td>
+                                <td>{{$list->working_from_mode}}</td>
                                 <td>
                                     <div class="d-flex">
-                                        <a href="{{route('attendance.detail',['emp_id'=>$list->emp_id])}}" class="action-btns1 bg-light">
-                                            <i class="feather feather-eye primary text-primary" data-bs-toggle="tooltip" data-original-title="View"></i>
+                                        <a href="{{route('attendance.detail',['emp_id'=> (($list->emp_id)?$list->emp_id:0)])}}"
+                                            class="action-btns1 bg-light">
+                                            <i class="feather feather-eye primary text-primary" data-bs-toggle="tooltip"
+                                                data-original-title="View"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -218,7 +224,8 @@ Attendance
 </div>
 <!-- END ROW -->
 
-{{-- <!-- PRESENT MODAL -->
+{{--
+<!-- PRESENT MODAL -->
 <div class="modal fade" id="presentmodal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -266,15 +273,16 @@ Attendance
             </div>
             <div class="modal-footer">
                 <a href="javascript:void(0);" class="btn btn-outline-dark" data-bs-dismiss="modal">close</a>
-                <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#editmodal" data-bs-dismiss="modal">Edit</a>
+                <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editmodal"
+                    data-bs-dismiss="modal">Edit</a>
             </div>
         </div>
     </div>
 </div>
 <!-- END PRESENT MODAL  --> --}}
 
-{{-- <!-- EDIT MODAL -->
+{{--
+<!-- EDIT MODAL -->
 <div class="modal fade" id="editmodal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

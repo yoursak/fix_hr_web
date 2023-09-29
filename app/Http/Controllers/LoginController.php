@@ -14,6 +14,7 @@ use DB;
 use Session;
 use App\Models\admin\LoginAdmin;
 use App\Helpers\Central_unit;
+use Illuminate\Support\Facades\Artisan;
 
 class LoginController extends BaseController
 {
@@ -39,15 +40,25 @@ class LoginController extends BaseController
 
             // isset($sendMail)
             if (true) {
+                // define('STDIN', fopen("php://stdin", "r"));
+                
+                // echo "calling Schedular";
+                // try {
+                // Call the Artisan command
+                // Artisan::call('otp:cleanup');
+
+                // // // Optionally, get the output of the command
+                // $output = Artisan::output();
+
                 $User->update(['otp' => $otp]);
-                Alert::success('', 'Otp has been Send Successfully to Your Register Email');
+                Alert::success('Otp has been Send Successfully to Your Register Email');
 
                 return view('auth.admin.otp');
             } else {
-                Alert::warning('', 'Email not Found, Kindly Register Your Business First');
+                Alert::warning('Email not Found, Kindly Register Your Business First');
                 return view('auth.admin.otp');
 
-                return redirect('/login');
+                // return redirect('/login');
             }
         } else {
 
@@ -61,6 +72,7 @@ class LoginController extends BaseController
 
                 // isset()
                 if (isset($sendMail)) {
+                   
                     $first = DB::table('pending_admins')->where('emp_email', $request->email)->update(['otp' => $otp]);
                     // dd($otp);
                     return view('auth.admin.otp');
@@ -97,7 +109,7 @@ class LoginController extends BaseController
                     Session::put('user_type', 'owner');
                     Session::put('business_id', $businessId);
                     Session::put('branch_id', '');
-                    Session::put('model_id',$load->model_id);
+                    Session::put('model_id', $load->model_id);
                     Session::put('login_role', 0);
                     Session::put('login_name', $mainloodLoad1->client_name);
                     Session::put('login_email', $mainloodLoad1->business_email);
@@ -116,13 +128,15 @@ class LoginController extends BaseController
             $actualCardType1 = $cardType1[0];
             $businessId1 = $cardType1[1];
             $branchId1 = $cardType1[2];
+
             if ($actualCardType1 === 'admin') {
                 $mainloodLoad2 = DB::table('employee_personal_details')->where('business_id', $businessId1)->where('emp_email', Session::get('email'))->first();
                 $infoBusinessDetails = DB::table('business_details_list')->where('business_id', $businessId1)->first();
                 if ($mainloodLoad2) {
+                    DB::table('login_admin')->where('business_id', $businessId1)->where('email', Session::get('email'))->update(['is_verified' => 1]);
                     Session::put('user_type', 'admin');
                     Session::put('business_id', $businessId1);
-                    Session::put('branch_id',  $branchId1);
+                    Session::put('branch_id', $branchId1);
                     Session::put('login_emp_id', $mainloodLoad2->emp_id);
                     Session::put('login_role', $mainloodLoad2->role_id); //role table role id link model_has_role
                     Session::put('login_name', $mainloodLoad2->emp_name);
@@ -169,72 +183,19 @@ class LoginController extends BaseController
             $check_otp = DB::table('login_admin')->where('email', $email)->where('otp', $otp)->first();
             $check_otp_for_first = DB::table('pending_admins')->where('emp_email', $email)->where('otp', $otp)->first();
             $employee_check = DB::table('employee_personal_details')->where('emp_email', $email)->first();
-            //         Alert::success('Login Otp', 'Otp is verified successfully');
 
             if (isset($check_otp)) {
-                // dd($email);
+                if ($check_otp != null) {
 
-                // $checking = DB::table('login_admin')
-                //     ->join('business_details_list', function ($join) {
-                //         $join->on('business_details_list.business_id', '=', 'login_admin.business_id');
-                //         // $join->on('business_details_list.business_email', '=', 'login_admin.email');
-
-                //     })
-                //     ->join('roles', function ($join) {
-                //         $join->on('roles.id', '=', 'login_admin.role_id');
-
-                //     })
-                //     ->where('email', $check_otp->email)
-                //     ->select('*', 'roles.name as rolename')
-                //     ->get();
-                // checking businessID
-
-                // dd($checking);
-
-                if (isset($check_otp)) {
-                    Alert::success('Otp Aauthentication', 'Your Otp Verified Successfully');
-                    // if (isset($checking)) {
-                    //     Alert::success('Welocme', 'To FixHr Admin Dashboard');
-                    // }, compact('checking')
-                    return view('auth.admin.logintype');
-                    // return view('auth.admin.otp');
-                } else {
-                    // return redirect('/');
-
-                    // return redirect('/');
-                    Alert::warning('Otp Aauthentication', 'Your Otp Aauthentication is Incorrect !');
-                    return view('auth.admin.otp');
+                    Alert::success('Otp Authentication', 'Your Otp Verified Successfully');
                 }
-            }
-
-            if (isset($check_otp_for_first)) {
-                // $BusinessID = $check_otp_for_first->business_id;
-                // $BrandID = $check_otp_for_first->branch_id;
-                // $Role = $check_otp_for_first->user;
-                // $LoginName = $check_otp_for_first->emp_name;
-                // $LoginEmail = $check_otp_for_first->emp_email;
-                // Session::put('business_id', $BusinessID);
-                // Session::put('branch_id', $BrandID);
-                // Session::put('user_type', 1);
-                // $checkingRole = DB::table('employee_personal_details')
-                //     ->join('roles', 'employee_personal_details.role_id', '=', 'roles.id')
-                //     ->where('employee_personal_details.emp_email', $check_otp_for_first->emp_email)
-                //     ->where('employee_personal_details.business_id', $check_otp_for_first->business_id)
-                //     ->where('employee_personal_details.branch_id', $check_otp_for_first->branch_id)
-                //     ->select('employee_personal_details.*')
-                //     ->first();
-                $cast = DB::table('roles')->where('business_id', $check_otp_for_first->business_id)->where('branch_id', $check_otp_for_first->branch_id)->first();
-                // dd($cast);
-                // Session::put('login_name', $LoginName);
-                // Session::put('login_email', $LoginEmail);
+                return view('auth.admin.logintype');
+            } else if (isset($check_otp_for_first)) {
                 $now_is_admin = DB::table('login_admin')->insert([
-                    'user' => 1,
                     'business_id' => $check_otp_for_first->business_id,
                     'name' => $check_otp_for_first->emp_name,
                     'email' => $check_otp_for_first->emp_email,
                     'phone' => $check_otp_for_first->emp_phone,
-                    'role_id' => $cast->id,
-                    //role_id
                     'country_code' => '+91',
                     'is_verified' => 1,
                     'created_at' => now(),
@@ -246,29 +207,18 @@ class LoginController extends BaseController
                     $approved = DB::table('pending_admins')->where('business_id', $check_otp_for_first->business_id)->where('emp_email', $check_otp_for_first->emp_email)->delete();
                     if (isset($approved)) {
                         Alert::success('Login Successfully', 'Now you are a Admin Position at FixingDots');
-
-                        if ($approved) {
-                            Alert::success('Otp Aauthentication', 'Your Otp Verified Successfully');
-                            // if ($checking) {
-                            //     Alert::success('Welocme', 'To FixHr Admin Dashboard');
-                            // }
-                            // return view('auth.admin.logintype', compact('checking'));
-                            // return view('auth.admin.otp');
-                            return redirect('/');
-                        } else {
-
-                            // return redirect('/');
-                            Alert::warning('Otp Aauthentication', 'Your Otp Aauthentication is Incorrect !');
-                            return view('auth.admin.otp');
-                        }
+                        return view('auth.admin.logintype');
+                    } else {
+                        Alert::warning('Otp Aauthentication', 'Your Otp Aauthentication is Incorrect !');
+                        return view('auth.admin.otp');
                     }
-                } else {
-                    return back();
                 }
+            } else {
+                Alert::warning('Otp Aauthentication', 'Your Otp Aauthentication is Incorrect !');
+                return view('auth.admin.otp');
             }
         }
     }
-
 
     // if (isset($email) && isset($otp)) {
 

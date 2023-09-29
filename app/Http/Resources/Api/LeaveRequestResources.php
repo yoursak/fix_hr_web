@@ -7,7 +7,6 @@ class LeaveRequestResources extends JsonResource
 {
     public function toArray($request)
     {
-
         return [
             'id' => $this->id ?? $this->id,
             'business_id' => $this->business_id ?? '',

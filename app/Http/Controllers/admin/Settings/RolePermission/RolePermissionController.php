@@ -8,6 +8,8 @@ use DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AdminMailer;
 use RealRashid\SweetAlert\Facades\Alert;
+
+use App\Helpers\Central_unit;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -38,7 +40,7 @@ class RolePermissionController extends Controller
         $admins = DB::table('login_admin')->where([
             'business_id' => $request->session()->get('business_id'),
         ])->get();
-        $roles = DB::table('roles')->where([
+        $roles = DB::table('setting_role_create')->where([
             'business_id' => $request->session()->get('business_id'),
         ])->get();
         $pendings = DB::table('pending_admins')->where([
@@ -47,14 +49,20 @@ class RolePermissionController extends Controller
         $permissions = DB::table('permissions')->where([
             'business_id' => $request->session()->get('business_id'),
         ])->get();
-        $modelHasRole = DB::table('model_has_roles')->where([
-            'business_id' => $request->session()->get('business_id'),
-        ])->get();
-        // dd($roles);
-        return view('admin.setting.permissions.AdminList', compact('admins', 'roles', 'pendings', 'modelHasRole', 'permissions'));
+        // $modelHasRole = DB::table('setting_role_items')->where([
+        //     'business_id' => $request->session()->get('business_id'),
+        // ])->get();
+        
+        $accessPermission = Central_unit::AccessPermission();
+        $moduleName = $accessPermission[0];
+        $permission = $accessPermission[1];
+
+        // dd($roles);modelHasRole
+        return view('admin.setting.permissions.AdminList', compact('moduleName','permission','admins', 'roles', 'pendings', 'permissions'));
     }
 
 
+    // assign send mail
     public function addAdmin(Request $request)
     {
         // dd($request->all());

@@ -50,10 +50,11 @@ Route::middleware(['logincheck'])->group(function () {
 });
 
 Route::get('/thankyou', [LoginController::class, 'thankyou'])->name('login.thankyou');
+Route::view('subscription', 'subscription.subscription');
 
 // Route::any('/handlecardclick',[LoginController::class,'handleCardClick'])->name('admin.handleCard');
 Route::post('/admin/handle-card', [LoginController::class, 'handleCardClick'])->name('admin.handleCard');
-Route::middleware(['email_verified'])->group(function () {
+Route::middleware(['email_verified', 'web'])->group(function () {
     Route::get('/', [DashboardController::class, 'index']);
     Route::get('/logout', [DashboardController::class, 'logout'])->name('admin.logout');
 
@@ -87,10 +88,13 @@ Route::middleware(['email_verified'])->group(function () {
             Route::get('/role_permission', 'index');
             Route::post('/role_submit', 'createRoleSubmit')->name('SubmitRole');
             Route::post('/role_permission_submit', 'createAssignPermission')->name('submitAssignPermission');
-            // new Loading loaded
-            Route::post('/role_permission_updated','previewAssignedUsers');
+            Route::post('/delete_permission', 'deletePermission')->name('deletePermissionAssign');
+            // new Loading loaded 
+            Route::post('/role_permission_updated', 'previewAssignedUsers'); //edit method
             // ajax
-            Route::post('/get_assign','GetAssignUser');
+            Route::post('/get_assign', 'GetAssignUser');
+            // Permission delete
+            Route::post('/delete_assign_admin', 'DeleteAdminAssign')->name('deleteAssign');
         });
     });
 
@@ -100,11 +104,13 @@ Route::middleware(['email_verified'])->group(function () {
         Route::prefix('/attendance')->group(function () {
             Route::get('/', [AttendanceController::class, 'index']);
             Route::get('/details/{emp_id}', [AttendanceController::class, 'details'])->name('attendance.detail');
+            Route::any('/track_in_out', [AttendanceController::class, 'submitTrackInTrackOut'])->name('attendance.trackInOut');
         });
 
         Route::prefix('/employee')->group(function () {
             Route::get('/', [EmployeeController::class, 'index']);
             Route::get('/add', [EmployeeController::class, 'add']);
+            Route::any('/employeefilter', [EmployeeController::class, 'filterEmployees'])->name('filter.employees');
             Route::get('/profile/{id}', [EmployeeController::class, 'empProfile'])->name('employeeProfile');
         });
 
@@ -174,11 +180,20 @@ Route::middleware(['email_verified'])->group(function () {
                 Route::post('/check', [SettingController::class, 'check']);
                 Route::post('/allemployeefilter', [SettingController::class, 'allEmployeeFilter']);
                 Route::get('/all_designation_details/{id}', [SettingController::class, 'designationDetails'])->name('admin.editSetValueDesignation');
+                Route::any('/all_weekly_holiday', [SettingController::class, 'allWeeklyHoliday']);
+                Route::any('/all_leave_policy', [SettingController::class, 'allLeavePolicy']);
                 //update 
                 Route::post('/updatebranch', [SettingController::class, 'UpdateBranch'])->name('admin.branchupdate');
                 Route::post('/updatedepartment', [SettingController::class, 'UpdateDepartment'])->name('admin.updatedepartment');
                 Route::post('/updatedesignation', [SettingController::class, 'UpdateDesignation'])->name('admin.designationupdate');
-
+                Route::post('/update_leave_policy', [SettingController::class, 'updateLeavePolicy']);
+                Route::post('/delete_leave_policy', [SettingController::class, 'DeleteLeavePolicy'])->name('delete.leavePolicy');
+                Route::post('/update_weekly_policy', [SettingController::class, 'updateWeeklyHoliday'])->name('update.WeeklyPolicy');
+              
+                // create
+                
+                Route::post('/create_weekly_policy', [SettingController::class, 'createWeeklyHoliday'])->name('create.CreateWeeklyPolicy');
+                Route::any('/delete_weekly_policy',[SettingController::class, 'deleteWeeklyHoliday'])->name('delete.DeleteWeeklyPolicy');
                 Route::get('/holiday_policy', [SettingController::class, 'holidayPolicy']);
                 Route::get('/invite_employee', [SettingController::class, 'inviteEmpl']);
                 Route::get('/leave_policy', [SettingController::class, 'leavePolicy']);
@@ -200,17 +215,19 @@ Route::middleware(['email_verified'])->group(function () {
 
             Route::prefix('/attendance')->group(function () {
                 Route::get('/', [SettingController::class, 'attendance']);
-                Route::get('/create_shift', [SettingController::class, 'createShift']);
+                Route::get('/create_shift', [AttendanceController::class, 'createShift']);
+                Route::get('/attendance-access', [SettingController::class, 'attendanceAccess']);
+            
+                // ajax 
+                Route::any('/get_datails',[AttendanceController::class,'getAttendaceShiftList']);
+                Route::post('/update_attendace_shift', [AttendanceController::class, 'updateAttendaceShift']);
+        
                 Route::prefix('/automation')->group(function () {
                     Route::get('/', [SettingController::class, 'automation']);
-                    Route::get('/asign_employee', [SettingController::class, 'asignEmp']);
-                    Route::get('/break_rule', [SettingController::class, 'breakRule']);
-                    Route::get('/early_exit', [SettingController::class, 'earlyExit']);
-                    Route::get('/late_entry', [SettingController::class, 'lateEntry']);
-                    Route::get('/overtime_rule', [SettingController::class, 'overtimeRule']);
-                    Route::get('/early_overtimes', [SettingController::class, 'earlyOvertimes']);
+                    Route::post('/set', [SettingController::class, 'setAutomationRule'])->name('setAutomationRule');
                 });
                 Route::get('/att_onHoliday', [SettingController::class, 'attOnHoliday']);
+                Route::post('/mode', [SettingController::class, 'setAttendaceMode'])->name('attendanceMode');
             });
 
             Route::prefix('/salary')->group(function () {
@@ -226,7 +243,7 @@ Route::middleware(['email_verified'])->group(function () {
         Route::post('/employee', [EmployeeController::class, 'UpdateEmployee'])->name('update.employee');
         Route::post('/holiday', [BusinessController::class, 'UpdateHoliday'])->name('update.holiday');
         Route::post('/leaveTemplate', [SettingController::class, 'UpdateLeaveTemp'])->name('update.leaveTemp');
-        Route::post('/shift', [ShiftController::class, 'updateShift'])->name('update.shift');
+        Route::post('/attendance-access', [SettingController::class, 'updateAttendanceAccess'])->name('update.AttendanceAccess');
     });
 
     Route::prefix('/delete')->group(function () {
@@ -235,10 +252,10 @@ Route::middleware(['email_verified'])->group(function () {
         Route::post('/designation/{id}', [SettingController::class, 'DeleteDesignation'])->name('delete.designation');
         Route::post('/employee/{id}', [EmployeeController::class, 'DeleteEmployee'])->name('delete.employee');
         Route::post('/holiday', [BusinessController::class, 'DeleteHoliday'])->name('delete.holiday');
-        Route::post('/holidayTemplate/{id}', [BusinessController::class, 'DeleteHolidayTemp'])->name('delete.holidayTemp');
+        Route::post('/holidayTemplate', [BusinessController::class, 'DeleteHolidayTemp'])->name('delete.holidayTemp');
         Route::post('/leave', [SettingController::class, 'DeleteLeave'])->name('delete.leave');
-        Route::post('/leaveTemplate/{id}', [SettingController::class, 'DeleteLeaveTemp'])->name('delete.leaveTemp');
-        Route::post('/shift/{id}', [ShiftController::class, 'deleteShift'])->name('delete.shift');
+        Route::post('/shift/{id}', [AttendanceController::class, 'deleteShift'])->name('delete.shift');
+        Route::post('/attendance-access', [SettingController::class, 'deleteAttendanceAccess'])->name('delete.AttendanceAccess');
     });
 
     Route::prefix('/add')->group(function () {
@@ -249,7 +266,8 @@ Route::middleware(['email_verified'])->group(function () {
         Route::post('/contractual-employee', [EmployeeController::class, 'AddContractualEmployee'])->name('add.employee.contractual');
         Route::post('/holiday', [BusinessController::class, 'CreateHoliday'])->name('add.holiday');
         Route::post('/manager', [BusinessController::class, 'AddManager'])->name('add.manager');
-        Route::post('/shift', [ShiftController::class, 'addShift'])->name('add.shift');
+        Route::post('/shift', [AttendanceController::class, 'addShift'])->name('add.shift');
+        Route::post('/attendance-access', [SettingController::class, 'addAttendanceAccess'])->name('add.AttendanceAccess');
     });
 });
 

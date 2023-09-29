@@ -66,9 +66,9 @@ $Helper=new Central_unit;
                             <div class="dropdown header-notify my-auto">
                                 <?php if(Session::has('business_id')){ ?>
                                 <div class="me-3 mt-0 mt-sm-1 d-block text-center">
-                                    <span class="fs-14 mb-0"><b>Mr.{{Session::get('login_name')}}</b></span><br>
+                                    <span class="fs-14 mb-0"><b><?=($Helper->GenderCheck()!='')?$Helper->GenderCheck():''?>{{Session::get('login_name')}}</b></span><br>
                                     <span class="text-muted mt-0">
-                                        <?=$Helper->RoleIdToName();?>
+                                       <b> <?=$Helper->RoleIdToName();?></b>
                                     </span>
                                 </div>
                                 <?php }else{  ?>

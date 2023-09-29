@@ -4,13 +4,15 @@ namespace App\Http\Controllers\admin\Requests;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Hash;
 use App\Helpers\ApiResponse;
 use Carbon\Carbon;
 use DateTime;
+
+use App\Helpers\Central_unit;
+use DB;
 use App\Models\employee\LeaveRequestList;
 use App\Models\employee\GatepassRequestList;
 use App\Models\employee\MisspunchList;
@@ -21,19 +23,28 @@ class RequestController extends Controller
 {
     public function leaves()
     {
+        $accessPermission = Central_unit::AccessPermission();
+        $moduleName = $accessPermission[0];
+        $permissions = $accessPermission[1];
         $data = LeaveRequestList::where('business_id', Session::get('business_id'))->get();
-        return view('admin.request.leave', compact('data'));
+        $root = compact('moduleName', 'permissions', 'data');
+        return view('admin.request.leave', $root);
     }
 
     public function gatepass()
     {
         $data = GatepassRequestList::where('business_id', Session::get('business_id'))->get();
-
+        $accessPermission = Central_unit::AccessPermission();
+        $moduleName = $accessPermission[0];
+        $permissions = $accessPermission[1];
+        // $data = LeaveRequestList::where('business_id', Session::get('business_id'))->get();
+        $root = compact('moduleName', 'permissions', 'data');
+       
         // $data = GatepassRequestList::all();
         // $data1 = BranchList::where('branch_id')
         // return $data;
         // dd($data->id);
-        return view('admin.request.gatepass', compact('data'));
+        return view('admin.request.gatepass',$root);
     }
 
     public function ApproveGatepass(Request $request)
@@ -121,10 +132,15 @@ class RequestController extends Controller
     {
         // return true;
         $data = MisspunchList::where('business_id', Session::get('business_id'))->get();
-
+        $accessPermission = Central_unit::AccessPermission();
+        $moduleName = $accessPermission[0];
+        $permissions = $accessPermission[1];
+        $data = LeaveRequestList::where('business_id', Session::get('business_id'))->get();
+        $root = compact('moduleName', 'permissions', 'data');
+       
         // $data = MisspunchList::all();
         // dd($data);
-        return view('admin.request.misspunch', compact('data'));
+        return view('admin.request.misspunch',$root);
     }
 
     /**

@@ -53,14 +53,12 @@ class BusinessController extends Controller
 
             if ($template && $holiday) {
                 Alert::success('Added Holiday Success', 'Your Holiday Template Added Successfully');
-                return redirect('/admin/settings/business/holiday_policy')->with('success', 'Holiday Created Successfully');
             } else {
 
                 Alert::error('Fail', 'Your Holiday Template Fail');
             }
         }
-
-
+        return redirect('/admin/settings/business/holiday_policy');
     }
 
     public function UpdateHoliday(Request $request)
@@ -72,10 +70,10 @@ class BusinessController extends Controller
                 'temp_id' => $request->update_temp_id,
                 'business_id' => $request->session()->get('business_id')
             ])->update([
-                        'temp_name' => $request->update_temp_name,
-                        'temp_from' => $request->update_temp_from,
-                        'temp_to' => $request->update_temp_to
-                    ]);
+                'temp_name' => $request->update_temp_name,
+                'temp_from' => $request->update_temp_from,
+                'temp_to' => $request->update_temp_to
+            ]);
 
             if ($request->has('update_name')) {
                 foreach ($request->update_name as $key => $value) {
@@ -95,10 +93,9 @@ class BusinessController extends Controller
             }
         }
 
-        
+
 
         return back();
-
     }
 
     public function DeleteHoliday(Request $request)
@@ -107,20 +104,20 @@ class BusinessController extends Controller
         $deleted = DB::table('holiday_details')->where('holiday_id', $data)->delete();
         if ($deleted) {
             // Alert::success('Deleted Successfully', '');
-            return response()->json(['res'=>$deleted]);
+            return response()->json(['res' => $deleted]);
         }
     }
 
-    public function DeleteHolidayTemp($id){
-        $holiday_template = HolidayTemplate::where(['temp_id'=>$id])->delete();
-        $holiday = HolidayDetail::where(['template_id'=>$id])->delete();
-        if ($holiday_template || $holiday) {
-            Alert::success('Deleted Successfully', '');
-            return back();
+    public function DeleteHolidayTemp(Request $request)
+    {
+        $holiday_template = HolidayTemplate::where(['temp_id' => $request->holiday_policy_id])->delete();
+        $holiday = HolidayDetail::where(['template_id' => $request->holiday_policy_id])->delete();
+        if ($holiday_template && $holiday) {
+            Alert::success('Holiday Policy Deleted Successfully');
         } else {
-            Alert::error('Fail', '');
-            return back();
+            Alert::error('Holiday Policy Not Delete!');
         }
+        return back();
     }
 
 

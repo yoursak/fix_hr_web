@@ -8,32 +8,44 @@ use App\Models\Login;
 
 class signupController extends Controller
 {
-    public function index(){
+    public function index()
+    {   
         return view('auth.admin.signup');
+
     }
 
-    public function signup_otp(){
+    public function signup_otp()
+    {
+     
         return view('auth.admin.otp2');
     }
 
-    public function business(){
+    public function business()
+    {
         return view('auth.admin.business');
     }
 
-    public function saveEmail(Request $request){
+    public function saveEmail(Request $request)
+    {
         // dd($request);
+
         return redirect('signup/otp');
+
     }
 
-    public function saveOTP(Request $request){
+    public function saveOTP(Request $request)
+    {
         // dd($request);
+
         return redirect('signup/business');
+
     }
 
-    public function saveBusiness(Request $request){
+    public function saveBusiness(Request $request)
+    {
         // dd($request);
         return redirect('/admin');
     }
 
-    
+
 }

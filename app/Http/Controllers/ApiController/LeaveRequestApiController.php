@@ -9,6 +9,8 @@ use App\Models\employee\LeaveRequestList;
 use App\Helpers\ReturnHelpers;
 use App\Http\Resources\Api\LeaveRequestResources;
 use DB;
+use Carbon\Carbon;
+
 
 class LeaveRequestApiController extends Controller
 {
@@ -34,10 +36,15 @@ class LeaveRequestApiController extends Controller
             $leave->leave_type = $request->leave_type;
             $leave->from_date = $request->from_date;
             $leave->to_date = $request->to_date;
+
+            $fromDate = Carbon::parse($request->from_date);
+            $toDate = Carbon::parse($request->to_date);
+    
+            $loaded = $toDate->diffInDays($fromDate);
             // $datetime1 = new DateTime($leave->from_date);
             // $datetime2 = new DateTime($leave->to_date);
             // $interval = $datetime1->diff($datetime2);
-            $leave->days = $request->days;
+            $leave->days = $loaded+1;
             $leave->reason = $request->reason;
             $leave->status = $request->status;
             $leave->profile_photo = $emp->profile_photo;

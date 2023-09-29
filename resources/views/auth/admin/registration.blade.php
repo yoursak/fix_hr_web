@@ -13,13 +13,13 @@
                 <form method="POST" action="{{ route('businessVerify')}}">
                     @csrf
                     <div class="input-group mb-3">
-                        <input type="email" name="email" class="form-control" placeholder="Email address">
+                        <input type="email" name="email" class="form-control" placeholder="Email address" required>
                     </div>
                     <button type="submit" class="btn btn-block btn-primary mb-4 rounded"
                         style="background-color:#0000ff">Send OTP</button>
                 </form>
-                <p class="mb-0 text-muted">Already have an account? <a href="{{url('/login')}}"
-                        class="f-w-400">Sign In</a></p>
+                <p class="mb-0 text-muted">Already have an account? <a href="{{url('/login')}}" class="f-w-400">Sign
+                        In</a></p>
             </div>
         </div>
     </div>

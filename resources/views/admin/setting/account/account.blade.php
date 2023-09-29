@@ -1,4 +1,5 @@
 @extends('admin.setting.setting')
+<script src="{{ asset('assets/js/cities.js') }}"></script>
 @section('subtitle')
     Account
 @endsection
@@ -89,7 +90,7 @@
                                 <input type="text" name="editlogoId" value="{{ $accDetail->id }}" hidden>
                                 {{-- src="{{ asset('business_logo/' . Session::get('login_business_image')) }}" --}}
                                 <input type="file" name="image" class="dropify"
-                                    data-default-file="{{ asset('business_logo/'. $accDetail->business_logo) }}" />
+                                    data-default-file="{{ asset('business_logo/' . $accDetail->business_logo) }}" required />
                                 {{--                               
                                 <img type="file" src="{{asset('business_logo/'.$accDetail->business_logo )}}" class="dropify" name="image" 
                                     data-default-file=""
@@ -97,7 +98,7 @@
 
                             </div>
                             <div class="modal-footer py-1">
-                                <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
+                                <a class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
                                 <button type="submit" class="btn btn-primary savebtn me-0">Update & Continue</button>
                             </div>
                         </form>
@@ -135,10 +136,10 @@
                                 </div>
                                 <p class="my-auto" class="mb-0 pb-0 text-dark fs-13 mt-1 ">Business Name</p>
                                 <input class="form-control" placeholder="Software Industry" type="text"
-                                    name="business_name" value="{{ $accDetail->business_name }}">
+                                    name="business_name" value="{{ $accDetail->business_name }}" required>
                             </div>
                             <div class="modal-footer py-1">
-                                <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
+                                <a class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
                                 <button type="submit" class="btn btn-primary     savebtn me-0">Update & Continue</button>
                             </div>
                         </form>
@@ -221,10 +222,10 @@
                                 <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden>
                                 <p class="my-auto" class="mb-0 pb-0 text-dark fs-13 mt-1 ">Name</p>
                                 <input class="form-control" placeholder="Enter Name" type="text" name="name"
-                                    value="{{ $accDetail->client_name }}">
+                                    value="{{ $accDetail->client_name }}" required>
                             </div>
                             <div class="modal-footer py-1" style="background:#f9f8f8;">
-                                <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
+                                <a class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
                                 <button type="submit" class="btn btn-primary savebtn">Update & Continue</button>
                             </div>
                         </form>
@@ -273,10 +274,10 @@
                                 <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden>
                                 <p class="my-auto" class="mb-0 pb-0 text-dark fs-13 mt-1 ">Phone Number</p>
                                 <input class="form-control" placeholder="Enter Name" type="text" name="phone"
-                                    value="{{ $accDetail->mobile_no }}" maxlength="10">
+                                    value="{{ $accDetail->mobile_no }}" maxlength="10" required>
                             </div>
                             <div class="modal-footer py-1" style="background:#f9f8f8;">
-                                <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
+                                <a class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
                                 <button class="btn btn-primary savebtn me-0" type="sumbit">Update & Continue </button>
                                 {{-- <a href="{{ route('name.update') }}" method="post" type="sumbit" class="btn btn-primary btn-sm">Continue</a> --}}
                             </div>
@@ -325,7 +326,7 @@
                                 value="{{ $accDetail->business_email }}" readonly>
                         </div>
                         <div class="modal-footer py-1">
-                            <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
+                            <a class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
                             <button class="btn btn-primary savebtn me-0" type="sumbit">Update & Continue </button>
                             {{-- <a href="#" class="btn btn-primary btn-sm">Continue</a> --}}
                         </div>
@@ -387,7 +388,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer py-1">
-                                <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
+                                <a class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
                                 <button type="submit" class="btn btn-primary savebtn me-0">Update & Continue</button>
                             </div>
                         </form>
@@ -450,18 +451,29 @@
 
                                 <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">State</p>
                                 <input class="form-control" placeholder="Confirm Bank Account Number" name="state"
-                                    type="text" value="{{ $accDetail->state }}">
+                                    type="text" value="{{ $accDetail->state }}" required>
+                                <select onchange="print_city('state1', this.selectedIndex);"  id="sts1"
+                                    name="state" name="stt" class="form-control w-100 border rounded"
+                                    required>
+                                    {{-- <option value="{{ $accDetail->city }}" {{$accDetail->city == ? 'selected':''}}>{{ $accDetail->city }}</option> --}}
+                                </select>
 
                                 <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">City</p>
                                 <input class="form-control" placeholder="City Name" name="city" type="text"
-                                    value="{{ $accDetail->city }}">
+                                    value="{{ $accDetail->city }}" required>
+                                <select id="state1" name="city" class="form-control w-100 border rounded"
+                                    required></select>
+                                <script language="javascript">
+                                    print_state("sts1");
+                                </script>
 
                                 <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">Pin Code</p>
                                 <input class="form-control" placeholder="Pin Code" name="pincode" type="text"
-                                    value="{{ $accDetail->pin_code }}">
+                                    value="{{ $accDetail->pin_code }}" required>
+
                             </div>
                             <div class="modal-footer d-flex py-1">
-                                <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
+                                <a class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
                                 <button class="btn btn-primary savebtn me-0" type="sumbit">Update & Continue</button>
                             </div>
                         </form>
@@ -513,13 +525,13 @@
                 <div class="modal-body">
                     <div class="col-lg">
                         <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">GST Number</p>
-                        <input class="form-control" placeholder="eg. 22XXXXXXXXA1Z5" type="text">
+                        <input class="form-control" placeholder="eg. 22XXXXXXXXA1Z5" type="text" required>
                         <p class="mb-0 pb-0 text-muted fs-12 mt-5 ">By continuing you agree to <a href="#"
                                 class="text-primary">Terms & Conditions</a></p>
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
+                    <a class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
                     <button class="btn btn-primary savebtn">Continue</button>
                 </div>
             </div>
@@ -542,20 +554,20 @@
                 <div class="modal-body">
                     <div class="col-lg">
                         <p class="mb-0 pb-0 text-dark fs-12 mt-5 ">Account Holder Name</p>
-                        <input class="form-control" placeholder="Holder Name" type="text">
+                        <input class="form-control" placeholder="Holder Name" type="text" required>
 
                         <p class="mb-0 pb-0 text-dark fs-12 mt-5 ">Account Number</p>
-                        <input class="form-control" placeholder="Bank Account Number" type="password">
+                        <input class="form-control" placeholder="Bank Account Number" type="password" required>
 
                         <p class="mb-0 pb-0 text-dark fs-12 mt-5 ">Confirm Account Number</p>
-                        <input class="form-control" placeholder="Confirm Bank Account Number" type="text">
+                        <input class="form-control" placeholder="Confirm Bank Account Number" type="text" required>
 
                         <p class="mb-0 pb-0 text-dark fs-12 mt-5 ">IFSC Code</p>
-                        <input class="form-control" placeholder="IFSC Code" type="text">
+                        <input class="form-control" placeholder="IFSC Code" type="text" required>
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <a  class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
+                    <a class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
                     <button class="btn btn-primary savebtn">Continue</button>
                 </div>
             </div>

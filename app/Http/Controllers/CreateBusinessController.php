@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use DB;
 use App\Mail\AuthMailer;
 use Illuminate\Support\Facades\Hash;
-
+use Session;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class CreateBusinessController extends Controller
@@ -19,11 +19,15 @@ class CreateBusinessController extends Controller
         // foreach ($permission as $key => $value) {
         //     dd($value);
         // }
+
+
         return view("auth.admin.registration");
+        // }
     }
 
     public function otp()
     {
+
         return view("auth.admin.otp2");
     }
 
@@ -47,9 +51,9 @@ class CreateBusinessController extends Controller
                 'title' => 'OTP Genrated',
                 'body' => ' Your FixHR Business Registration one time PIN is: ' . "$otp",
             ];
-            $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
-
-            if (isset($sendMail)) {
+            // $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
+// isset($sendMail)
+            if (true) {
 
                 $request->session()->put('firstEmail', $request->email);
                 $business = DB::table("pending_admins")->insert([
@@ -57,7 +61,15 @@ class CreateBusinessController extends Controller
                     'otp' => $otp
                 ]);
                 if ($business) {
-                    return redirect("signup/otp")->with("success", "");
+                    $load = DB::table('business_details_list')->where('business_email', Session::get('firstEmail'))->first();
+                    if (isset($load)) {
+                        Alert::warning('Email is Found, Kindly Register New Your Business  Email');
+                        return redirect("signup");
+
+                    } else {
+                        Alert::success('Otp has been Send Successfully to Your Register Email');
+                        return redirect("signup/otp")->with("success", "");
+                    }
                 }
             }
         } elseif ($request->has("otp")) {
@@ -74,67 +86,44 @@ class CreateBusinessController extends Controller
                 return back();
             }
         } elseif ($request->has("bname")) {
-            // dd($request->all());
 
-            // $validatedData = $request->validate([
-            //     'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust max size as needed
-            // ]);
-            // // Get the uploaded image file
-            // $image = $request->file('image');
-            // $path = public_path('business_logo/');
-            // $imageName = date('d-m-Y') . '_' . md5($image) . '.' . $request->image->extension();
-            // $request->image->move($path, $imageName);
+            $validatedData = $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                // Adjust max size as needed
+            ]);
+            // Get the uploaded image file
+            $image = $request->file('image');
+            $path = public_path('business_logo/');
+            $imageName = date('d-m-Y') . '_' . md5($image) . '.' . $request->image->extension();
+            $request->image->move($path, $imageName);
 
             $business_id = md5($request->name . $request->bname . $request->gst);
             $created = DB::table("business_details_list")->insert([
                 "business_id" => $business_id,
+                "business_logo" => $imageName,
                 "business_categories" => $request->businessCategory,
-                "business_type" => $request->businessType,
                 "client_name" => $request->name,
                 "business_email" => Session()->get('firstEmail'),
                 "business_name" => $request->bname,
-                "business_logo" => '',
+                "business_type" => $request->businessType,
                 "mobile_no" => $request->phone,
-                "country" => $request->country,
-                "state" => $request->state,
                 "city" => $request->city,
+                "state" => $request->state,
+                "country" => $request->country,
+                "business_address" => $request->address,
                 "pin_code" => $request->pin,
                 "gstnumber" => $request->gst,
-                "business_address" => $request->address,
             ]);
 
             $admin = DB::table("login_admin")->insert([
-                "user" => 0,
                 "business_id" => $business_id,
                 "name" => $request->name,
                 "email" => $request->Session()->get('firstEmail'),
                 "country_code" => '+91',
                 'phone' => $request->phone,
             ]);
-           $root= DB::table('roles')->insert([
-                'name'=>'Owner',
-                'business_id'=>$request->business_id
-            ]);
 
-            // $emp = DB::table('employee_personal_details')->insert([
-            //     'business_id' => $business_id,
-            //     'employee_type' => 1,
-            //     'emp_name' => $request->name,
-            //     'emp_id' => $request->bname[0].$request->bname[1].'001',
-            //     'emp_mobile_number' => $request->phone,
-            //     'emp_email' => Session()->get('firstEmail'),
-            // ]);
-
-            // $loginEmp = DB::table('login_employee')->insert([
-            //     'emp_id' => $request->bname[0] . $request->bname[1] . '001',
-            //     'business_id' => $business_id,
-            //     'name' => $request->name,
-            //     'email' => Session()->get('firstEmail'),
-            //     'country_code' => '+91',
-            //     'phone' => $request->mobile_number,
-            // ]);
-
-            //Creting Permissions
+            // Creating Roles & Permissions
             $modules = DB::table('sidebar_menu')->get();
             $permission = array('View', 'Create', 'Update', 'Delete');
 
@@ -166,15 +155,19 @@ class CreateBusinessController extends Controller
             }
 
             $pending = DB::table('pending_admins')->where('emp_email', Session()->get('firstEmail'))->delete();
-            // && $emp
-            // if ($created && $admin && $pending) {
-            //     // return redirect("/admin")->with("success","");
-            // }
+            if (isset($created)) {
+                Alert::success('Create Successfully Business', 'Now Your Business account Created');
 
+                return redirect('/login');
+            } else {
 
-            Alert::success('Create Successfully Business', 'Now Your Business account Created');
-            return redirect('/');
+                Alert::info('Not Create Business', 'Please Check Your Details!');
+                return back();
+
+            }
+            // return redirect('/');
         } else {
+
             return back();
         }
     }

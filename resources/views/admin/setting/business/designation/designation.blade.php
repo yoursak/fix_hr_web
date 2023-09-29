@@ -1,5 +1,7 @@
-@extends('admin.setting.setting')
-@section('subtitle')
+{{-- @extends('admin.setting.setting') --}}
+@extends('admin.pagelayout.master')
+
+@section('title')
     Salary / Designation Setting
 @endsection
 
@@ -40,7 +42,8 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
 @endsection
 
-@section('settings')
+
+@section('content')
     <form method="POST" action="{{ route('add.designation') }}">
         @csrf
         <div class="page-header d-md-flex d-block">
@@ -48,24 +51,22 @@
                 $root = new App\Helpers\Central_unit();
                 $Designation = $root->DesignationList();
                 $Branch = $root->BranchList();
+                
                 $Department = $root->DepartmentList();
-                // dd($Department);
-                $i = 0;
                 $j = 1;
-                foreach ($Designation as $item) {
-                    $i++;
-                }
+                
+                $designationCount = $root->CountersValue();
                 
             @endphp
             <div class="page-leftheader">
                 <div class="page-title">Designation Setting</div>
-                <p class="text-muted">{{ $i }} Active Designation</p>
+                <p class="text-muted">{{ $designationCount[2] }} Active Designation</p>
             </div>
             <div class="page-rightheader ms-md-auto">
                 <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
                     <div class="d-lg-flex d-block">
                         <div class="btn-list">
-                            <button type="reset" class="btn btn-outline-dark" data-bs-toggle="modal"
+                            <button type="reset" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#createDesignationModal">Create Designation</button>
                         </div>
                     </div>
@@ -73,7 +74,7 @@
             </div>
         </div>
 
-        <div class="row">
+        {{-- <div class="row">
             <div class="card">
                 <div class="card-header border-0 my-5">
                     <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Designations</b></span></h4>
@@ -98,7 +99,6 @@
                                         <td class="font-weight-semibold">{{ $item->depart_name }}</td>
                                         <td class="font-weight-semibold">{{ $item->desig_name }}</td>
                                         <td>
-                                            {{-- <div class="d-flex"> --}}
 
                                             <a class="btn btn-sm btn-danger" data-bs-toggle="modal"
                                                 data-bs-target="#departDeletebtn{{ $item->desig_id }}" id="BranchEditbtn"
@@ -112,7 +112,6 @@
                                                 data-bs-toggle="modal" href="#">
                                                 <i class='feather feather-edit'></i></a>
 
-                                            {{-- </div> --}}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -121,11 +120,64 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
     </form>
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Designation List</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
 
-    {{-- Designation Name Creation Modal --}}
+                    <table class="table  table-vcenter text-nowrap  border-bottom " id="file-datatable">
+                        <thead>
+                            <tr>
+                                <th class="border-bottom-0 w-10">S.No.</th>
+                                <th class="border-bottom-0">Branch Name</th>
+                                <th class="border-bottom-0">Department Name</th>
+                                <th class="border-bottom-0">Designation Name</th>
+                                <th class="border-bottom-0">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $j = 0;
+                            @endphp
+                            @foreach ($Designation as $item)
+                                <tr>
+                                    <td class="font-weight-semibold">{{ $j++ }}.</td>
+                                    <td class="font-weight-semibold">{{ $item->branch_name }}</td>
+                                    <td class="font-weight-semibold">{{ $item->depart_name }}</td>
+                                    <td class="font-weight-semibold">{{ $item->desig_name }}</td>
+                                    <td>
+
+
+
+                                        <a class="btn btn-sm btn-primary" data-bs-target="#modaldemo1"
+                                            data-value1="{{ $item->branch_name }}" data-value2="SecondValue"
+                                            data-id="{{ $item->desig_id }}" data-name="{{ $item->desig_name }}"
+                                            data-bs-toggle="modal" href="#">
+                                            <i class='feather feather-edit'></i></a>
+                                        <a class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#departDeletebtn{{ $item->desig_id }}" id="BranchEditbtn"
+                                            title="Edit">
+                                            <i class="feather feather-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
     <div class="modal fade" id="createDesignationModal">
         <div class="modal-dialog modal-dialog-centered " role="document">
             <div class="modal-content tx-size-sm">
@@ -173,8 +225,7 @@
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
                         @csrf
-                        <button type="reset" class="btn btn-outline-dark cancel"
-                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="reset" class="btn btn-outline-dark cancel" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary savebtn">Continue</button>
                     </div>
                 </form>
@@ -268,10 +319,10 @@
     @endforeach
 @endsection
 
-@section('script')
+@section('js')
     {{-- <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> --}}
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -285,14 +336,13 @@
             dom: '<"top"lfB>rtip',
             buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'],
         });
-    </script>
+    </script> --}}
     <script>
         function btnFunc(e) {
             document.getElementById("actionBtn" + e.id).classList.toggle("d-none");
             document.getElementById("actionBtn" + e.id).classList.toggle("animatedBtn");
         }
     </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         // Create Method
         $(document).ready(function() {

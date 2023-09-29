@@ -305,13 +305,16 @@
                 <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
                     <div class="d-lg-flex d-block">
                         <div class="btn-list">
-                            <a class="modal-effect btn btn-primary border-0 my-auto" data-effect="effect-scale"
-                                data-bs-toggle="modal" href="#empAssign">Assign Permission</a>
-
-                            <a class="modal-effect btn btn-primary border-0 my-auto" data-effect="effect-scale"
-                                data-bs-toggle="modal" href="#empRole">Create Role</a>
-                            {{-- <a class="modal-effect btn btn-primary border-0 my-auto" data-effect="effect-scale"
-                                data-bs-toggle="modal" href="#empPermission">Add New Permissions</a> --}}
+                            @if (in_array('Roles & Permissions.Create', $permission))
+                                <a class="modal-effect btn btn-primary border-0 my-auto" data-effect="effect-scale"
+                                    data-bs-toggle="modal" href="#empAssign">Assign Permission</a>
+                            @endif
+                            @if (in_array('Roles & Permissions.Create', $permission))
+                                <a class="modal-effect btn btn-primary border-0 my-auto" data-effect="effect-scale"
+                                    data-bs-toggle="modal" href="#empRole">Create Role</a>
+                                {{-- <a class="modal-effect btn btn-primary border-0 my-auto" data-effect="effect-scale"
+                            data-bs-toggle="modal" href="#empPermission">Add New Permissions</a> --}}
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -343,38 +346,46 @@
                                 @endphp
                                 @foreach ($RolesData as $item)
                                     <tr>
-                                        <td><?= $count++ ?></td>
-                                        <td><?= $item->roles_name ?></td>
-                                        <td><?= $item->description ?></td>
-                                        <td><?= $rooted->RoleIdToCountAssignUsers($item->id) ?></td>
                                         <td>
-                                            <div class="card">
-                                                <span class="ribbone-warning-right">
-                                                    <span><i class="fe fe-zap"></i></span>
-                                                </span>
-                                                <div class="card-body  p-6">
-                                                    <p class="card-text">
-                                                        @foreach ($rooted->RoleIdToModelName($item->id) as $model)
-                                                            {{ $model->model_name }},
-                                                        @endforeach
-                                                    </p>
-                                                </div>
-                                            </div>
+                                            <?= $count++ ?>
                                         </td>
                                         <td>
+                                            <?= $item->roles_name ?>
+                                        </td>
+                                        <td>
+                                            <?= $item->description ?>
+                                        </td>
+                                        <td>
+                                            <?= $rooted->RoleIdToCountAssignUsers($item->id) ?>
+                                        </td>
+                                        <td>
+                                            <div class="tags p-0">
+                                                @foreach ($rooted->RoleIdToModelName($item->id) as $model)
+                                                    <span class="tag tag-rounded"> {{ $model->model_name }}
+                                                    </span>
+                                                @endforeach
 
-                                            <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
-                                                onclick="openEditModel(this)" data-id='<?= $item->id ?>'
-                                                data-bs-toggle="modal" data-bs-target="#showmodal">
-                                                <i class="feather feather-eye" data-bs-toggle="tooltip"
-                                                    data-original-title="View/Edit"></i>
-                                            </a>
-                                            <a class="btn btn-danger btn-icon btn-sm" href="javascript:void(0);"
-                                                data-bs-toggle="modal" data-bs-target="#deletemodal">
-                                                <i class="feather feather-trash-2" data-bs-toggle="tooltip"
-                                                    data-original-title="View/Edit"></i>
-                                            </a>
+                                            </div>
 
+                                        </td>
+                                        <td>
+                                            @if (in_array('Roles & Permissions.Update', $permission))
+                                                <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
+                                                    onclick="openEditModel(this)" data-id='<?= $item->id ?>'
+                                                    data-bs-toggle="modal" data-bs-target="#showmodal">
+                                                    <i class="feather feather-eye" data-bs-toggle="tooltip"
+                                                        data-original-title="View/Edit"></i>
+                                                </a>
+                                            @endif
+                                            @if (in_array('Roles & Permissions.Delete', $permission))
+                                                <a class="btn btn-danger btn-icon btn-sm" href="javascript:void(0);"
+                                                    onclick="ItemDeleteModel(this)" data-id='<?= $item->id ?>'
+                                                    data-rolename='<?= $item->roles_name ?>' data-bs-toggle="modal"
+                                                    data-bs-target="#deleteConfirmationModal">
+                                                    <i class="feather feather-trash-2" data-bs-toggle="tooltip"
+                                                        data-original-title="View/Edit"></i>
+                                                </a>
+                                            @endif
                                         </td>
 
                                     </tr>
@@ -383,6 +394,34 @@
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content">
+                <form action="{{ route('deletePermissionAssign') }}" method="post">
+                    @csrf
+                    <input type="text" id="role_id" name="role_set" hidden>
+                    <div class="modal-header">
+                        {{-- <input type="text" id="rolesname" disabled> --}}
+                        <h5 class="modal-title" id="exampleModalLabel">Confirm Deletion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Role Name
+                        <h4 id="rolesname"></h4>
+                        </p>
+
+                        Are you sure you want to delete this item?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
+                    </div>
+
+                </form>
             </div>
         </div>
     </div>
@@ -403,8 +442,8 @@
                             <div class="col-12 my-2">
                                 {{-- <label class="form-label">Select Role </label>
 
-                                <input class="form-control" placeholder="Role Name" type="text" name="role_name"
-                                    required> --}}
+                            <input class="form-control" placeholder="Role Name" type="text" name="role_name" required>
+                            --}}
                                 <p class="form-label">Role Name</p>
                                 <select name='roleID' id="" class="form-control" required>
                                     <option value="">Select Role Name</option>
@@ -462,13 +501,13 @@
                                     </select>
 
                                     {{-- <select name='employee' id="" class="form-control">
-                                        <option value="">Select Employee Name</option>
-                                        @foreach ($EmployeeList as $data)
-                                            <option value="{{ $data->emp_id }}">
-                                                {{ $data->emp_id }} | {{ $data->emp_name }}
-                                            </option>
-                                        @endforeach
-                                    </select> --}}
+                                    <option value="">Select Employee Name</option>
+                                    @foreach ($EmployeeList as $data)
+                                    <option value="{{ $data->emp_id }}">
+                                        {{ $data->emp_id }} | {{ $data->emp_name }}
+                                    </option>
+                                    @endforeach
+                                </select> --}}
                                 </div>
                             </div>
                         </div>
@@ -476,8 +515,8 @@
 
                 <div class="modal-footer  border-0">
                     <div class="d-flex">
-                        <a type="reset" class="btn btn-danger btn-sm mx-3" data-bs-dismiss="modal">Cancel</a>
-                        <button type="submit" class="btn btn-primary btn-sm">Continue</button>
+                        <a type="reset" class="btn btn-danger btn-md mx-3" data-bs-dismiss="modal">Cancel</a>
+                        <button type="submit" class="btn btn-primary btn-md">Save & Apply</button>
                     </div>
                 </div>
                 </form>
@@ -511,23 +550,18 @@
                             </div>
                         </div>
                     </div>
+                    
                     @foreach ($Modules as $module)
                         <div class="row p-4">
                             <div class="col-lg-2">
                                 <div>
                                     {{ $module->menu_name }}
-                                    {{-- <label class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input">
-                                        <span class="custom-control-label"></span>
-                                    </label> --}}
+
                                 </div>
                             </div>
                             <div class="col-lg-9">
                                 <div class="d-flex" id="permit">
-                                    {{-- <label class="custom-control custom-checkbox mx-3">
-                                        <input type="checkbox" class="custom-control-input">
-                                        <span class="custom-control-label">All</span>
-                                    </label> --}}
+
                                     @foreach ($permissions->where('module_id', $module->menu_id) as $permission)
                                         <label class="custom-control custom-checkbox mx-3 fw-20">
                                             <input id="{{ $permission->id }}" type="checkbox"
@@ -561,11 +595,10 @@
                     <h4 class="modal-title ms-2">Preview Assign Users</h4><button aria-label="Close" class="btn-close"
                         data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
                 </div>
-                <form action="{{url('Role-permission/role_permission_updated')}}" method="post">
+                <form action="{{ url('Role-permission/role_permission_updated') }}" method="post">
                     @csrf
                     <div class="modal-body">
-                        <input type="text" name="role" id="rolesId">
-                        {{-- <input type="text" class="form-control" id="inputValue" value=""> --}}
+                        <input type="text" name="role" id="rolesId" hidden>
                         @foreach ($Modules as $module)
                             <div class="row p-4">
                                 <div class="col-lg-2">
@@ -602,10 +635,17 @@
         </div>
     </div>
     <script>
+        function ItemDeleteModel(context) {
+            var id = $(context).data('id');
+            var roleName = $(context).data('rolename');
+            $('#role_id').val(id);
+            $('#rolesname').text(roleName);
+        }
+
         function openEditModel(context) {
             var id = $(context).data('id');
             $('#rolesId').val(id);
-            console.log(id);
+            // console.log(id);
             $.ajax({
                 url: "{{ url('Role-permission/get_assign') }}",
                 type: "post",

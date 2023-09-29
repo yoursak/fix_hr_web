@@ -62,7 +62,6 @@
 <script src="{{ asset('assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
 <script src="{{ asset('assets/js/datatables.js') }}"></script>
 <script src="{{ asset('assets/js/select2.js') }}"></script>
-
 <!-- INTERNAL PG-CALENDAR-MASTER JS -->
 <script src={{ asset('assets/plugins/pg-calendar-master/pignose.calendar.full.min.js') }}></script>
 

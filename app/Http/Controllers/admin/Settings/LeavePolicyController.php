@@ -41,7 +41,7 @@ class LeavePolicyController extends Controller
 
     public function store(Request $request)
     {
-        // return $request->all();     
+        return $request->all();     
 
 
         // $request->validate([

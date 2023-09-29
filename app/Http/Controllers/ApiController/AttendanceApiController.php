@@ -33,7 +33,8 @@ class AttendanceApiController extends Controller
                 // Get the uploaded image file
                 $image = $request->file('image');
                 $path = public_path('upload_image/');
-                $imageName = date('d-m-Y h:i:sa') . '_' . md5($image) . '.' . $request->image->extension();
+                $imageName = date('d-m-Y') . '_' . md5($image) . '.' . $request->image->extension();
+                // $imageName = date('d-m-Y h:i:sa') . '_' . md5($image) . '.' . $request->image->extension();
                 $request->image->move($path, $imageName);
                 $data->punch_in_selfie = $imageName;
 
@@ -62,7 +63,7 @@ class AttendanceApiController extends Controller
             $data->emp_name = $emp->emp_name;
             $data->punch_in = $request->punch_in;
             // $data->punch_in_selfie = $request->punch_in_selfie;
-            $data->punch_in_time = now('Asia/Kolkata');
+            $data->punch_in_time = date('h:i:sa');
             $data->punch_in_address = $request->punch_in_address;
             $data->punch_in_latitude = $request->punch_in_latitude;
             $data->punch_in_longitude = $request->punch_in_longitude;

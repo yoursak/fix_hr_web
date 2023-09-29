@@ -1,7 +1,7 @@
 @extends('admin.pagelayout.master')
 
-@section('subtitle')
-    Salary / Department Setting
+@section('title')
+    Business / Weekly Holiday
 @endsection
 
 @section('css')
@@ -39,7 +39,7 @@
                     <h6 class="modal-title">Weekoff/Weekly Holiday</h6><button aria-label="Close" class="btn-close"
                         data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
                 </div>
-                <form method="POST" action="{{ route('holiday.policy') }}">
+                <form method="POST" action="{{ route('create.CreateWeeklyPolicy') }}">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group row  ">
@@ -98,307 +98,234 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-light" data-bs-dismiss="modal">Close</button> <button class="btn btn-primary me-0"
-                            type="submit">Save & Continue</button>
+                        <button class="btn btn-light" data-bs-dismiss="modal">Close</button> <button
+                            class="btn btn-primary me-0" type="submit">Save & Continue</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <div class="row">
-        @foreach ($data as $item)
-            {{-- @foreach ($branch as $item) --}}
-            <div class="card" id="repoerCard4">
-                <div class="card-body border-bottum-0">
-                    <div class="row">
-                        <div class="col-12 my-auto">
-                            <div class="row">
-                                <div class="col-xl-5 my-auto">
-                                    {{-- <h5 class="my-auto"></h5> --}}
-                                    <h5 class="my-auto">{{ $item->name }}</h5>
-                                </div>
-                                <div class="col-xl-5 my-auto">
-                                    {{-- <h5 class="my-auto"></h5> --}}
-                                    <h5 class="my-auto">
-                                        {{-- {{$item->days}} --}}
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Weekly Holiday List</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
 
-                                            @php
-                                                $holidays = json_decode($item->days);
-                                            @endphp
-                                            @if(is_array($holidays) || is_object($holidays))
-                                                
+                    <table class="table  table-vcenter text-nowrap  border-bottom " id="file-datatable">
+                        <thead>
+                            <tr>
+                                <th class="border-bottom-0 w-10">S.No.</th>
+                                <th class="border-bottom-0">Policy Name</th>
+
+                                <th class="border-bottom-0">Weekly</th>
+
+                                <th class="border-bottom-0">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $j = 1;
+                            @endphp
+                            @foreach ($data as $item)
+                                <tr>
+                                    <td class="font-weight-semibold">{{ $j++ }}.</td>
+                                    <td class="font-weight-semibold">{{ $item->name }}</td>
+                                    <td class="font-weight-semibold">
+
+                                        @php
+                                            $holidays = json_decode($item->days);
+                                        @endphp
+                                        @if (is_array($holidays) || is_object($holidays))
                                             @foreach ($holidays as $holiday)
-                                            {{ $holiday }}
+                                                {{ $holiday }}
                                             @endforeach
-                                            @endif
-                                    </h5>
-                                </div>
-                                <div class="col-xl-2">
-                                    <p class="my-auto text-muted text-end">
-                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="modal"
-                                            data-bs-target="#editBranchName{{ $item->id }}" id="BranchEditbtn"
-                                            {{-- data-bs-target="#editBranchName" id="BranchEditbtn" --}} title="Edit">
-                                            <i class="feather feather-edit  text-dark"></i>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
+                                            onclick="openEditModel(this)" data-id='<?= $item->id ?>'
+                                            data-bs-toggle="modal" data-bs-target="#editBranchName">
+                                            <i class="feather feather-edit" data-bs-toggle="tooltip"
+                                                data-original-title="View/Edit"></i>
                                         </a>
-                                        <a href="javascript:void(0);" class="action-btns" data-bs-toggle="modal" data-bs-target="#holidaypolicyDeletebtn{{ $item->id }}" id="BranchEditbtn" 
-                                            title="Edit">
-                                            <i class="feather feather-trash  text-dark"></i>
+
+                                        <a class="btn btn-danger btn-icon btn-sm" href="javascript:void(0);"
+                                            onclick="ItemDeleteModel(this)" data-id='<?= $item->id ?>'
+                                            data-weekly_name='<?= $item->name ?>' data-bs-toggle="modal"
+                                            data-bs-target="#editDeleteModel"><i class="feather feather-trash"></i>
                                         </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        {{-- <div class="col-1 my-auto text-end">
-                            <i class="fe fe-chevron-right fs-30 btn " id="reportBtn4"></i>
-                        </div> --}}
-                    </div>
+
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        @endforeach
+        </div>
+    </div>
+
+
+    <div class="row">
+
 
         <!-- LARGE MODAL -->
-        @foreach ($data as $item)
-            <div class="modal fade" id="editBranchName{{ $item->id }}">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content modal-content-demo">
-                        <div class="modal-header">
-                            <h6 class="modal-title">Weekoff/Weekly Holiday</h6><button aria-label="Close"
-                                class="btn-close" data-bs-dismiss="modal"><span
-                                    aria-hidden="true">&times;</span></button>
-                        </div>
-                        <form method="POST" action="{{ route('update.holidaypolicy') }}">
-                            @csrf
-                            <div class="modal-body">
-                                <div class="form-group row  ">
-                                    <input type="text" name="id" value="{{ $item->id }}" hidden>
-                                    <label for="weekname" class="col-sm-3 col-form-label fs-14">Weekly off template
-                                        name</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control" name="templatename" id="weekname"
-                                            placeholder="name" value={{ $item->name}}>
-                                    </div>
+        <div class="modal fade" id="editBranchName">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content modal-content-demo">
+                    <div class="modal-header">
+                        <h6 class="modal-title">Weekoff/Weekly Holiday</h6><button aria-label="Close" class="btn-close"
+                            data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <form action="{{ route('update.WeeklyPolicy') }}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="form-group row  ">
+                                <input type="text" name="id" id="weekly_id" hidden>
+                                <label for="weekname" class="col-sm-3 col-form-label fs-14">Weekly off template
+                                    name</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="edit_weekname" id="edit_weekname"
+                                        placeholder="name">
                                 </div>
-                                <div class="row">
-                                    <div class="col-xl-12">
-                                        <div class="form-group m-0">
-                                            <div class="fs-14 mb-4">Weekly Holiday Days</div>
-                                            <div class="custom-controls-stacked">
-                                                @php
-                                                $holidays = json_decode($item->days);
-                                            @endphp
-                                            {{-- @if(is_array($holidays) || is_object($holidays))
-                                                
-                                            @foreach ($holidays as $holiday)
-                                            {{ $holiday }}
-                                            @endforeach
-                                            @endif --}}
-
-                                           <label>
-           
-                                            </label><br>
-
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="form-group m-0">
+                                        <div class="fs-14 mb-4">Weekly Holiday Days</div>
+                                        <div class="custom-controls-stacked">
+                                            {{-- 
+                                                    {{ in_array('Monday', $days) ? 'checked' : 'null' }} --}}
                                             <label>
-                                                <input type="checkbox" name="holidays[]" value="Tuesday" {{ in_array('Tuesday', $days   ) ? 'checked' : 'null' }}>
+                                                <input type="checkbox" name="holidays[]" value="Monday">
+                                                Monday
+
+                                            </label><br>
+                                            <label>
+                                                <input type="checkbox" name="holidays[]" value="Tuesday">
                                                 Tuesday
                                             </label><br>
 
                                             <label>
-                                                <input type="checkbox" name="holidays[]" value="Wednesday" {{ in_array('Wednesday', $days) ? 'checked' : '' }}>
+                                                <input type="checkbox" name="holidays[]" value="Wednesday">
                                                 Wednesday
                                             </label><br>
 
                                             <label>
-                                                <input type="checkbox" name="holidays[]" value="Thursday" {{ in_array('Thursday', $days) ? 'checked' : '' }}>
+                                                <input type="checkbox" name="holidays[]" value="Thursday">
                                                 Thursday
                                             </label><br>
 
                                             <label>
-                                                <input type="checkbox" name="holidays[]" value="Friday" {{ in_array('Friday', $days) ? 'checked' : '' }}>
+                                                <input type="checkbox" name="holidays[]" value="Friday">
                                                 Friday
                                             </label><br>
 
                                             <label>
-                                                <input type="checkbox" name="holidays[]" value="Saturday" {{ in_array('Saturday', $days) ? 'checked' : '' }}>
+                                                <input type="checkbox" name="holidays[]" value="Saturday">
                                                 Saturday
                                             </label><br>
 
                                             <label>
-                                                <input type="checkbox" name="holidays[]" value="Sunday" {{ in_array('Sunday', $days) ? 'checked' : '' }}>
+                                                <input type="checkbox" name="holidays[]" value="Sunday">
                                                 Sunday
                                             </label><br>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-light" data-bs-dismiss="modal">Close</button> <button
-                                    class="btn btn-primary me-0" type="submit">Save & Continue</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        @endforeach
 
-        @foreach ($data as $item)
-        <div class="modal fade" id="holidaypolicyDeletebtn{{ $item->id }}" data-bs-backdrop="static">
-            <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">
-                <div class="modal-content modal-content-demo">
-                    <div class="modal-body">
-                        <h3>Are you sure want to Delete, <span class="text-primary">{{ $item->templatename }}</span> ?</h3>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-danger" data-bs-dismiss="modal">Decline</button>
-                        <form method="POST" action="{{ route('delete.holidaypolicy', $item->id) }}">
-                            @csrf
-                            <button type="submit" class="btn btn-success" data-bs-toggle="modal"
-                                data-bs-target="#">Delete</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endforeach
-
-    </div>
-    <!-- END LARGE MODAL -->
-    {{-- <div class="page-header d-md-flex d-block">
-        <div class="page-leftheader">
-            <div class="page-title">Weekly Holiday Setting</div>
-            <p class="text-muted">Assign weekly off days of your business to automatically mark attendance for those days.
-            </p>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="card">
-            <div class="card-header  border-0">
-                <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Weekly Off</b></span></h4>
-            </div>
-            <div class="card-body border-bottum-0">
-                <div class="row">
-                    <div class="col-xl-4 my-auto">
-                        <h5 class="my-auto"> Weekly Off Preferences</h5>
-                    </div>
-                    <div class="col-xl-5 my-auto">
-                        <p class="my-auto fs-13 text-muted" style="color:rgb(34, 33, 29)">Choose if you wish to keep same
-                            holidays fopr all your emplyees or different</p>
-                    </div>
-                    <div class="col-xl-3">
-                        <div class="btn-list radiobtns">
-                            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                <input type="radio" class="btn-check" name="btnradio" id="btnradioCount2"=""
-                                    data-bs-toggle="modal" data-bs-target="#businessLavel" checked>
-                                <label class="btn btn-outline-dark" for="btnradioCount2">Business</label>
-                                <input type="radio" class="btn-check" name="btnradio" id="btnradioIgnore2"
-                                    data-bs-toggle="modal" data-bs-target="#employeeLavel">
-                                <label class="btn btn-outline-dark" for="btnradioIgnore2">Employee</label>
-                            </div>
                         </div>
-                    </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-light" data-bs-dismiss="modal">Close</button> <button
+                                class="btn btn-primary me-0" type="submit">Save & Continue</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="editDeleteModel" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+
+                    <form action="{{ route('delete.DeleteWeeklyPolicy') }}" method="POST">
+                        @csrf
+                        <input type="text" id="weekly_policy_id" name="weekly_policy_id" hidden>
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Confirm Deletion</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Weekly Policy Name <b>
+                                </b></p>
+                            <h4 id="assign_emp"></h4><b>
+                            </b>
+                            <p></p>
+
+                            Are you sure you want to delete this item?
+                        </div>
+                        <div class="modal-footer">
+
+                            <a class="btn btn-light" data-bs-dismiss="modal">Close</a>
+                            <button type="submit" class="btn btn-danger" id="">Delete</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="card">
-            <div class="card-header  border-0">
-                <p class="card-title"><span style="color:rgb(104, 96, 151)"><b>Holiday Days</b></span></p>
-            </div>
-            <div class="card-body border-bottum-0">
-                <div class="row">
-                    <div class="col-xl-12 my-auto">
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1"
-                                checked>
-                            <span class="custom-control-label fs-18">Sunday</span>
-                        </label>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1">
-                            <span class="custom-control-label fs-18">Monday</span>
-                        </label>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1">
-                            <span class="custom-control-label fs-18">Tuesday</span>
-                        </label>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1">
-                            <span class="custom-control-label fs-18">Wednesday</span>
-                        </label>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1">
-                            <span class="custom-control-label fs-18">Thrusday</span>
-                        </label>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1">
-                            <span class="custom-control-label fs-18">Satureday</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class=" text-end">
-        <a href="{{ url('settings/businesssetting') }}" class="btn btn-success" id="formsave" data-bs-toggle="tooltip"
-            data-bs-placement="top" title="Save">Save</a>
-    </div>
-
-    <!-- Business Lavel MODAL -->
-    <div class="modal fade" id="businessLavel">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="p-5">
-                        <h4 class="mb-1 fs-20 font-weight-semibold">Switch To Busines Lavel</h4>
-                        <p class="my-auto fs-12 mt-5 text-muted" style="color:rgb(34, 33, 29)">Choose if you wish to keep same
-                            holidays fopr all your emplyees or different</p>
-                            <div class="d-lg-flex d-block mt-5">
-                                <div class="btn-list ms-auto">
-                                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
-                                        data-bs-target="#clockinmodal">Cancel</button>
-                                    <button type="button"  class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#clockinmodal">Switch</button>
-                                </div>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- END Business Lavel MODAL  -->
-    <!-- Business Lavel MODAL -->
-    <div class="modal fade" id="employeeLavel">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="p-5">
-                        <h4 class="mb-1 fs-20 font-weight-semibold">Switch To Employee Lavel</h4>
-                        <p class="my-auto fs-12 mt-5 text-muted" style="color:rgb(34, 33, 29)">Choose if you wish to keep same
-                            holidays fopr all your emplyees or different</p>
-                            <div class="d-lg-flex d-block mt-5">
-                                <div class="btn-list ms-auto">
-                                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
-                                        data-bs-target="#clockinmodal">Cancel</button>
-                                    <button type="button"  class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#clockinmodal">Switch</button>
-                                </div>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-    {{-- <script src="assets/plugins/jquery/jquery.min.js"></script> --}}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script>
-        $(document).ready(function () {
-           
-        });
+        function openEditModel(context) {
+            var id = $(context).data('id');
+            $('#weekly_id').val(id);
+            $.ajax({
+                url: "{{ url('/admin/settings/business/all_weekly_holiday') }}",
+                type: "POST",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    holiday_weekly_id: id
+                },
+                dataType: 'json',
+                success: function(result) {
+
+                    if (result.get[0].days && result.get[0].name) {
+                        $('#edit_weekname').val(result.get[0].name);
+                        var daysArray = JSON.parse(result.get[0].days);
+                        console.log("Parsed daysArray:", daysArray); // Debugging statement
+                        $('input[name="holidays[]"]').each(function() {
+                            var checkboxValue = $(this).val();
+                            if (daysArray.indexOf(checkboxValue) !== -1) {
+                                $(this).prop('checked', true);
+                            } else {
+                                $(this).prop('checked', false);
+                            }
+                        });
+                    } else {
+                        console.error("Invalid data structure in the response.");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX request error:", error);
+                }
+
+            });
+        }
+
+        function ItemDeleteModel(context) {
+            var id = $(context).data('id');
+            var name = $(context).data('weekly_name')
+            $('#weekly_policy_id').val(id);
+            $('#assign_emp').text(name);
+
+        }
     </script>
-    <!-- END Business Lavel MODAL  -->
 @endsection
+<!-- END Business Lavel MODAL  -->

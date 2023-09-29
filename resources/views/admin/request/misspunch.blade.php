@@ -9,64 +9,27 @@
 @endsection
 
 @section('js')
-    <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatable/js/buttons.bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatable/js/jszip.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatable/pdfmake/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatable/pdfmake/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('assets/js/datatables.js') }}"></script>
-    <script src="{{ asset('assets/js/select2.js') }}"></script>
-    <script src="{{ asset('assets/js/hr/hr-emp.js') }}"></script>
-    <script>
-        new DataTable('#example10', {
-        dom: '<"top"lfB>rtip'
-        , buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis']
-     });
-
-     function check(event) {
-      var selectElement = event.target;
-      var value = selectElement.value;
-      const get_out_time = document.getElementById('out_time');
-      const get_in_time = document.getElementById('in_time');
-      if (value=='All') {
-          get_out_time.removeAttribute('disabled');
-          get_in_time.removeAttribute('disabled');
-      }if (value=='AM') {
-          get_out_time.setAttribute('disabled', '');
-          get_in_time.removeAttribute('disabled');
-      }if (value=='PM') {
-          get_in_time.setAttribute('disabled', '');
-          get_out_time.removeAttribute('disabled');
-      }
-      }
-    </script>
+    
 
 @endsection
 @section('content')
 
-   
+
 
     <div class="">
-      
+
         <div class=" p-0 py-2">
-            
+
 
             <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
                 <li><a href="{{ url('/admin') }}">Dashboard</a></li>
                 <li><a href="{{ url('/admin/requests/misspunch') }}">Request</a></li>
-                
+
                 <li class="active"><span><b>Misspunch</b></span></li>
             </ol>
         </div>
     </div>
-   
+
 
     <div class="row row-sm">
         <div class="col-lg-12">
@@ -145,7 +108,7 @@
                                     <option label="Select Employee"></option>
                                     <option value="1">Regular Employee</option>
                                     <option value="2">Contractual Employee</option>
-                  
+
                                 </select>
                             </div>
                         </div>
@@ -198,30 +161,36 @@
                                         <td>{{ $item->emp_id }}</td>
                                         <td>{{ $item->emp_miss_date }}</td>
                                         <td>{{ $item->emp_miss_time_type }}</td>
-                                        <td>{{ $item->emp_miss_in_time}}</td>
+                                        <td>{{ $item->emp_miss_in_time }}</td>
                                         <td>{{ $item->emp_miss_out_time }}</td>
                                         <td>{{ $item->emp_working_hour }}</td>
                                         <td>{{ $item->message }}</td>
                                         <td><span class="badge badge-success">{{ $item->status }}</span></td>
                                         <td>
                                             {{-- class="action-btns1 btn-primary" --}}
-                                            <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
-                                                data-bs-toggle="modal" data-bs-target="#showmodal{{ $item->id }}">
-                                                <i class="feather feather-eye" data-bs-toggle="tooltip"
-                                                    data-original-title="View/Edit"></i>
-                                            </a>
-                                            <a class="btn btn-danger btn-icon btn-sm" href="javascript:void(0);"
-                                                data-bs-toggle="modal" data-bs-target="#deletemodal{{ $item->id }}">
-                                                <i class="feather feather-trash-2" data-bs-toggle="tooltip"
-                                                    data-original-title="View/Edit"></i>
-                                            </a>
+                                            @if (in_array('Miss Punch.Update', $permissions))
+                                                <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#showmodal{{ $item->id }}">
+                                                    <i class="feather feather-eye" data-bs-toggle="tooltip"
+                                                        data-original-title="View/Edit"></i>
+                                                </a>
+                                            @endif
+                                            @if (in_array('Miss Punch.Delete', $permissions))
+                                                <a class="btn btn-danger btn-icon btn-sm" href="javascript:void(0);"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deletemodal{{ $item->id }}">
+                                                    <i class="feather feather-trash-2" data-bs-toggle="tooltip"
+                                                        data-original-title="View/Edit"></i>
+                                                </a>
+                                            @endif
                                         </td>
-                                      
+
                                     </tr>
                                 @endforeach
                             </tbody>
 
-                        
+
                         </table>
                     </div>
                 </div>
@@ -303,12 +272,13 @@
                                                 data-bs-original-title="fa fa-calendar"
                                                 aria-label="fa fa-calendar"></i></label>
                                         <input type="text" class="form-control" id="inputPassword4"
-                                            placeholder="Password" value="{{ $item->emp_miss_date }}" >
+                                            placeholder="Password" value="{{ $item->emp_miss_date }}">
                                     </div>
                                     <div class="form-group    col-md-3 col-sm-3">
                                         <label for="inputPassword4">Time Type</label>
-                                        <select name="" class="form-control" onchange="check(event)" value="{{ $item->emp_miss_time_type}}">
-                                    <option label="{{ $item->emp_miss_time_type}}" value=""></option>
+                                        <select name="" class="form-control" onchange="check(event)"
+                                            value="{{ $item->emp_miss_time_type }}">
+                                            <option label="{{ $item->emp_miss_time_type }}" value=""></option>
                                             {{-- <option value="All">All</option> --}}
                                             <option value="">Select Time Type</option>
                                             <option value="AM">In Time</option>
@@ -317,11 +287,12 @@
                                         {{-- <input type="selected" class="form-control" id="inputPassword4"
                                             placeholder="time" value="{{ $item->going_through }}" readonly> --}}
                                     </div>
-                                    
-                                        
+
+
                                     <div class="form-group  col-md-3 col-sm-3 ">
                                         <label for="inputPassword4">In Time</label>
-                                        <input type="time" class="form-control" name="in_time" id="in_time" placeholder="time" value="{{ $item->emp_miss_in_time }}" >
+                                        <input type="time" class="form-control" name="in_time" id="in_time"
+                                            placeholder="time" value="{{ $item->emp_miss_in_time }}">
                                     </div>
                                     <div class="form-group  col-md-3 col-sm-3 ">
                                         <label for="inputPassword4">Out Time</label>
@@ -364,10 +335,10 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-danger" data-bs-dismiss="modal">Decline</button>
-                           
+
                             <a href="{{ route('admin.misspunchdelete', $item->id) }}" class="btn btn-primary"
                                 type="submit">Approve</a>
-                           
+
                         </div>
                     </div>
                 </div>

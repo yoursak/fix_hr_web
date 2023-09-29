@@ -25,15 +25,8 @@
     <script src="{{ asset('assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('assets/js/datatables.js') }}"></script>
     <script src="{{ asset('assets/js/select2.js') }}"></script>
-    {{-- <script src="{{ asset('assets/js/hr/hr-emp.js') }}"></script> --}}
-
-
-    {{-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> --}}
-    {{-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script> --}}
-    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> --}}
-
-
 @endsection
+
 @section('content')
     <style>
         .complete_class {
@@ -44,8 +37,8 @@
             color: red;
         }
 
-        #file-datatable_length{
-          padding:5px;
+        #file-datatable_length {
+            padding: 5px;
         }
     </style>
     @foreach ($data as $item)
@@ -71,10 +64,10 @@
         <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
             <li><a href="{{ url('/admin') }}">Dashboard</a></li>
             <li><a href="{{ url('/admin/requests/gatepass') }}">Request</a></li>
-            {{-- <li><a href="javascript:void(0);">Elements</a></li> --}}
             <li class="active"><span><b>Leave</b></span></li>
         </ol>
     </div>
+    {{-- <li><a href="javascript:void(0);">Elements</a></li> --}}
 
     <!-- Row -->
     <div class="row">
@@ -162,11 +155,11 @@
                         <div class="col-sm-12 col-xl-2">
                             <div class="form-group">
                                 <label class="form-label">Branch</label>
-                        
+
                                 <select name="attendance" class="form-control custom-select select2"
                                     data-placeholder="Select Branch">
                                     <option label="Select Branch"></option>
-                                    @if (!(empty($BranchList)))
+                                    @if (!empty($BranchList))
                                         @foreach ($BranchList as $item)
                                             <option value="{{ $item->id }}">{{ $item->branch_name }}</option>
                                         @endforeach
@@ -180,11 +173,11 @@
                                 <select name="attendance" class="form-control custom-select select2"
                                     data-placeholder="Select Department">
                                     <option label="Select Department"></option>
-                                    @if (!(empty($DepartmentList)))
-                                    
-                                    @foreach ($DepartmentList as $item)
-                                        <option value="1">{{ $item->depart_name }}</option>
-                                    @endforeach
+                                    @if (!empty($DepartmentList))
+
+                                        @foreach ($DepartmentList as $item)
+                                            <option value="1">{{ $item->depart_name }}</option>
+                                        @endforeach
                                     @endif
 
                                 </select>
@@ -196,11 +189,11 @@
                                 <select name="attendance" class="form-control custom-select select2"
                                     data-placeholder="Select Designation">
                                     <option label="Select Designation"></option>
-                                    @if (!(empty($DesignationList)))
-                                    
-                                    @foreach ($DesignationList as $item)
-                                        <option value="1">{{ $item->desig_name }}</option>
-                                    @endforeach
+                                    @if (!empty($DesignationList))
+
+                                        @foreach ($DesignationList as $item)
+                                            <option value="1">{{ $item->desig_name }}</option>
+                                        @endforeach
                                     @endif
 
                                 </select>
@@ -292,16 +285,22 @@
 
                                         {{-- <td><span class="badge badge-success">{{ $item->status }}</span></td> --}}
                                         <td>
-                                            <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
-                                                data-bs-toggle="modal" data-bs-target="#showmodal{{ $item->id }}">
-                                                <i class="feather feather-eye" data-bs-toggle="tooltip"
-                                                    data-original-title="View/Edit"></i>
-                                            </a>
-                                            <a class="btn btn-danger btn-icon btn-sm" href="javascript:void(0);"
-                                                data-bs-toggle="modal" data-bs-target="#deletemodal{{ $item->id }}">
-                                                <i class="feather feather-trash-2" data-bs-toggle="tooltip"
-                                                    data-original-title="View/Edit"></i>
-                                            </a>
+                                            @if (in_array('Leave.Update', $permissions))
+                                                <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#showmodal{{ $item->id }}">
+                                                    <i class="feather feather-eye" data-bs-toggle="tooltip"
+                                                        data-original-title="View/Edit"></i>
+                                                </a>
+                                            @endif
+                                            @if (in_array('Leave.Delete', $permissions))
+                                                <a class="btn btn-danger btn-icon btn-sm" href="javascript:void(0);"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deletemodal{{ $item->id }}">
+                                                    <i class="feather feather-trash-2" data-bs-toggle="tooltip"
+                                                        data-original-title="View/Edit"></i>
+                                                </a>
+                                            @endif
 
                                         </td>
 
