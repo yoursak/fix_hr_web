@@ -14,6 +14,9 @@ use DB;
 use Session;
 use App\Models\admin\LoginAdmin;
 use App\Helpers\Central_unit;
+
+use App\Helpers\MasterRulesManagement\RulesManagement;
+
 use Illuminate\Support\Facades\Artisan;
 
 class LoginController extends BaseController
@@ -36,12 +39,12 @@ class LoginController extends BaseController
                 'title' => 'OTP Genrated',
                 'body' => ' Your FixHR Admin Login one time PIN is: ' . "$otp",
             ];
-            // $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
+            $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
 
             // isset($sendMail)
-            if (true) {
+            if (isset($sendMail)) {
                 // define('STDIN', fopen("php://stdin", "r"));
-                
+
                 // echo "calling Schedular";
                 // try {
                 // Call the Artisan command
@@ -72,7 +75,7 @@ class LoginController extends BaseController
 
                 // isset()
                 if (isset($sendMail)) {
-                   
+
                     $first = DB::table('pending_admins')->where('emp_email', $request->email)->update(['otp' => $otp]);
                     // dd($otp);
                     return view('auth.admin.otp');
@@ -114,6 +117,7 @@ class LoginController extends BaseController
                     Session::put('login_name', $mainloodLoad1->client_name);
                     Session::put('login_email', $mainloodLoad1->business_email);
                     Session::put('login_business_image', $mainloodLoad1->business_logo);
+           
                 } else {
                     Session::put('login_business_image', 'assets/images/users/16.jpg');
                 }
@@ -148,6 +152,7 @@ class LoginController extends BaseController
 
                 return response()->json(['root' => $actualCardType1]);
             }
+
             // return response()->json(['root' => $request->all()]);
         }
 
@@ -218,6 +223,8 @@ class LoginController extends BaseController
                 return view('auth.admin.otp');
             }
         }
+
+
     }
 
     // if (isset($email) && isset($otp)) {

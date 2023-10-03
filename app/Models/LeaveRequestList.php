@@ -4,8 +4,7 @@
  * Created by Reliese Model.
  */
 
- namespace App\Models\employee;
-
+namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -41,34 +40,34 @@ class LeaveRequestList extends Model
 	protected $table = 'leave_request_list';
 
 	protected $casts = [
-		// 'department_id' => 'int',
-		// 'designation_id' => 'int',
-		// 'emp_type' => 'int',
-		// 'leave_category' => 'int',
-		// 'shift_type' => 'int',
-		// 'from_date' => 'datetime',
-		// 'to_date' => 'datetime',
-		// 'days' => 'int',
-		// 'status' => 'bool'
+		'department_id' => 'int',
+		'designation_id' => 'int',
+		'emp_type' => 'int',
+		'leave_category' => 'int',
+		'shift_type' => 'int',
+		'from_date' => 'datetime',
+		'to_date' => 'datetime',
+		'days' => 'int',
+		'status' => 'bool'
 	];
 
 	protected $fillable = [
-		// 'business_id',
-		// 'branch_id',
-		// 'department_id',
-		// 'designation_id',
-		// 'emp_id',
-		// 'emp_type',
-		// 'emp_name',
-		// 'emp_mobile_no',
-		// 'leave_type',
-		// 'leave_category',
-		// 'shift_type',
-		// 'from_date',
-		// 'to_date',
-		// 'days',
-		// 'reason',
-		// 'status',
-		// 'profile_photo'
+		'business_id',
+		'branch_id',
+		'department_id',
+		'designation_id',
+		'emp_id',
+		'emp_type',
+		'emp_name',
+		'emp_mobile_no',
+		'leave_type',
+		'leave_category',
+		'shift_type',
+		'from_date',
+		'to_date',
+		'days',
+		'reason',
+		'status',
+		'profile_photo'
 	];
 }

@@ -92,7 +92,7 @@ $Helper=new Central_unit;
                                         <i class="feather feather-user me-3 fs-16 my-auto"></i>
                                         <div class="mt-1">Profile</div>
                                     </a>
-                                    <a class="dropdown-item d-flex" href="profile1.html">
+                                    <a class="dropdown-item d-flex" href="{{url('/subscription')}}">
                                         <i class="feather feather-award me-3 fs-16 my-auto"></i>
                                         <div class="mt-1">Upgrade</div>
                                     </a>

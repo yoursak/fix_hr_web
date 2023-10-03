@@ -1,5 +1,5 @@
 @extends('admin.pagelayout.master')
-@section('title', 'GetePass')
+@section('title', 'Misspunch')
 
 @section('css')
     <style>
@@ -9,18 +9,41 @@
 @endsection
 
 @section('js')
-    
+
 
 @endsection
 @section('content')
 
 
 
+    @php
+        // dd($data->all());
+        
+        $centralUnit = new App\Helpers\Central_unit(); // Create an instance of the Central_unit class
+        
+        $Department = $centralUnit->DepartmentList();
+        $Branch = $centralUnit->BranchList();
+        // dd($Department);
+        // dd($Branch);
+        $i = 0;
+        $j = 1;
+        foreach ($Department as $item) {
+            $i++;
+        }
+        // dd($Branch);
+        // $central = new App\Helpers\Central_unit();
+        
+        $Employee = $centralUnit->EmployeeDetails();
+        // dd($Employee[0]->emp_id);
+        // $Department = $central::DepartmentList();
+        // $Designation = App\Helpers\Central_unit::DesignationList();
+        $nss = new App\Helpers\Central_unit();
+        $EmpID = $nss->EmpPlaceHolder();
+        
+    @endphp
+
     <div class="">
-
         <div class=" p-0 py-2">
-
-
             <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
                 <li><a href="{{ url('/admin') }}">Dashboard</a></li>
                 <li><a href="{{ url('/admin/requests/misspunch') }}">Request</a></li>
@@ -39,68 +62,44 @@
                 </div>
                 <div class="card-body ">
                     <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <p class="form-label">Branch</p>
+                                <select name='branch_id' id="country-dd" class="form-control" required>
+                                    <option value="">Select Branch Name</option>
+                                    @empty(!$Branch)
+                                        @foreach ($Branch as $data)
+                                            <option value="{{ $data->branch_id }}">
+                                                {{ $data->branch_name }}
+                                            </option>
+                                        @endforeach
+                                    @endempty
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <p class="form-label">Department</p>
+                                <div class="form-group mb-3">
+                                    <select id="state-dd" name="department_id" class="form-control" required>
+                                        <option value="">Select Deparment Name</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <p class="form-label">Designation</p>
+                                <div class="form-group mb-3">
+                                    <select id="desig-dd" name="designation_id" class="form-control" required>
+                                        <option value="">Select Designation Name</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
-                        <div class="col-sm-12 col-xl-2">
-                            <div class="form-group">
-                                <label class="form-label">Branch</label>
-                                <select name="attendance" class="form-control custom-select select2"
-                                    data-placeholder="Select Branch">
-                                    <option label="Select Branch"></option>
-                                    <option value="1">High</option>
-                                    <option value="2">Medium</option>
-                                    <option value="3">Low</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-xl-2">
-                            <div class="form-group">
-                                <label class="form-label">Department</label>
-                                <select name="attendance" class="form-control custom-select select2"
-                                    data-placeholder="Select Department">
-                                    <option label="Select Department"></option>
-                                    <option value="1">Faith Harris</option>
-                                    <option value="2">Austin Bell</option>
-                                    <option value="3">Maria Bower</option>
-                                    <option value="4">Peter Hill</option>
-                                    <option value="5">Victoria Lyman</option>
-                                    <option value="6">Adam Quinn</option>
-                                    <option value="7">Melanie Coleman</option>
-                                    <option value="8">Max Wilson</option>
-                                    <option value="9">Amelia Russell</option>
-                                    <option value="10">Justin Metcalfe</option>
-                                    <option value="11">Ryan Young</option>
-                                    <option value="12">Jennifer Hardacre</option>
-                                    <option value="13">Justin Parr</option>
-                                    <option value="14">Julia Hodges</option>
-                                    <option value="15">Michael Sutherland</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-xl-2">
-                            <div class="form-group">
-                                <label class="form-label">Designation</label>
-                                <select name="attendance" class="form-control custom-select select2"
-                                    data-placeholder="Select Designation">
-                                    <option label="Select Designation"></option>
-                                    <option value="1">Faith Harris</option>
-                                    <option value="2">Austin Bell</option>
-                                    <option value="3">Maria Bower</option>
-                                    <option value="4">Peter Hill</option>
-                                    <option value="5">Victoria Lyman</option>
-                                    <option value="6">Adam Quinn</option>
-                                    <option value="7">Melanie Coleman</option>
-                                    <option value="8">Max Wilson</option>
-                                    <option value="9">Amelia Russell</option>
-                                    <option value="10">Justin Metcalfe</option>
-                                    <option value="11">Ryan Young</option>
-                                    <option value="12">Jennifer Hardacre</option>
-                                    <option value="13">Justin Parr</option>
-                                    <option value="14">Julia Hodges</option>
-                                    <option value="15">Michael Sutherland</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-xl-2">
+                   
+                        {{-- <div class="col-sm-12 col-xl-2">
                             <div class="form-group">
                                 <label class="form-label">Employee</label>
                                 <select name="attendance" class="form-control custom-select select2"
@@ -111,7 +110,7 @@
 
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <div class="card-body p-2 ">
@@ -139,7 +138,7 @@
                                     $count = 1;
                                     
                                 @endphp
-                                @foreach ($data as $item)
+                                @foreach ($datas as $item)
                                     @php
                                         $DesignationName = App\Helpers\Layout::DasignationName($item->designation_id);
                                         
@@ -147,13 +146,13 @@
                                     <tr>
                                         <td>{{ $count++ }}</td>
                                         <td>
-                                            <div class="d-flex"> <span class="avatar avatar-md brround me-3"
-                                                    {{--
-                                                style="background-image: url(../assets/images/users/1.jpg)">{{
-                                                $item->profile_photo }}</span> --}}>{{ $item->profile_photo }}</span>
+                                            <div class="d-flex">
+                                                <span class="avatar avatar-md brround me-3"
+                                                    style="background-image: url('/employee_profile/{{ $item->profile_photo }}')"></span>
                                                 <div class="me-3 mt-0 mt-sm-1 d-block">
-                                                    <h6 class=" m-0 fs-14">{{ $item->emp_name }}</h6> <span
-                                                        class="text-muted m-0 fs-12">{{ $DesignationName->desig_name }}</span>
+                                                    <h6 class="mb-1 fs-14">{{ $item->emp_name }}</h6>
+                                                    <p class="text-muted mb-0 fs-12">
+                                                        <?= $nss->DesingationIdToName($item->designation_id) ?></p>
                                                 </div>
                                             </div>
                                         </td>
@@ -170,8 +169,7 @@
                                             {{-- class="action-btns1 btn-primary" --}}
                                             @if (in_array('Miss Punch.Update', $permissions))
                                                 <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#showmodal{{ $item->id }}">
+                                                    data-bs-toggle="modal" data-bs-target="#showmodal{{ $item->id }}">
                                                     <i class="feather feather-eye" data-bs-toggle="tooltip"
                                                         data-original-title="View/Edit"></i>
                                                 </a>
@@ -205,7 +203,7 @@
 
 
         {{-- Modal --}}
-        @foreach ($data as $item)
+        @foreach ($datas as $item)
             @php
                 $BranchName = App\Helpers\Layout::BranchName($item->branch_id);
                 // dd($BranchName);
@@ -306,7 +304,7 @@
                                         {{-- <input type="text" class="form-control" id="inputPassword4" placeholder="Password"
                                 value="{{$item->in_time}}"> --}}
 
-                                        <textarea class="form-control" id="" rows="2" value="{{ $item->in_time }}" readonly>{{ $item->message }}</textarea>
+                                        {{-- <textarea class="form-control" id="" rows="2" value="{{ $item->in_time }}" readonly>{{ $item->message }}</textarea> --}}
                                     </div>
                                 </div>
                             </div>
@@ -346,5 +344,139 @@
             {{-- delete confirmation --}}
         @endforeach
         {{-- Modal --}}
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+        <script>
+            $(document).ready(function() {
+
+                // Add event listeners to the dropdowns
+                $('#country-dd, #state-dd, #desig-dd').change(function() {
+                    // Get selected values
+                    var branchId = $('#country-dd').val();
+                    console.log(branchId);
+                    var departmentId = $('#state-dd').val();
+                    console.log(departmentId);
+                    var designationId = $('#desig-dd').val();
+                    console.log(designationId);
+
+                    // Make an AJAX request to filter employees
+                    $.ajax({
+                        type: "POST",
+                        // url: '{{ route('filter.employees') }}',
+                        url: "{{ url('admin/employee/employeefilter') }}",
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            branch_id: branchId,
+                            department_id: departmentId,
+                            designation_id: designationId
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            // Update the table body with the filtered data
+                            var tbody = $('.my_body');
+                            tbody.empty();
+
+                            $.each(data, function(index, employee) {
+                                console.log(employee);
+                                i = 1;
+                                employee.forEach(el => {
+                                    console.log(el.emp_id);
+                                    var newRow = '<tr>' +
+                                        '<td>' + i++ + '</td>' +
+                                        '<td>' + el.emp_name + '</td>' +
+                                        '<td>' + el.emp_id + '</td>' +
+                                        '<td>' + el.branch_id + '</td>' +
+                                        '<td>' + el.department_id + '</td>' +
+                                        '<td>' + el.emp_date_of_joining + '</td>' +
+                                        '<td>' + el.emp_mobile_number + '</td>' +
+                                        `<td>  </td>`
+                                    // Add your action buttons here
+                                    '</tr>';
+                                    // i++;
+                                    tbody.append(newRow);
+                                });
+
+                            });
+                        }
+                    });
+                });
+                $('#country-dd').on('change', function() {
+                    var branch_id = this.value;
+                    $("#state-dd").html('');
+                    $.ajax({
+                        url: "{{ url('admin/settings/business/alldepartment') }}",
+                        type: "POST",
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            brand_id: branch_id
+                        },
+                        dataType: 'json',
+                        success: function(result) {
+
+                            // console.log(result);
+                            $('#state-dd').html(
+                                '<option value="" name="department">Select Department Name</option>'
+                            );
+                            $.each(result.department, function(key, value) {
+                                $("#state-dd").append('<option name="department" value="' +
+                                    value
+                                    .depart_id + '">' + value.depart_name +
+                                    '</option>');
+                            });
+                            $('#desig-dd').html(
+                                '<option value="">Select Designation Name</option>');
+                        }
+                    });
+                });
+
+                $('#state-dd').on('change', function() {
+                    var depart_id = this.value;
+                    $("#desig-dd").html('');
+                    $.ajax({
+                        url: "{{ url('admin/settings/business/alldesignation') }}",
+                        type: "POST",
+                        data: {
+                            depart_id: depart_id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        dataType: 'json',
+                        success: function(res) {
+                            // console.log(res);
+                            $('#desig-dd').html(
+                                '<option value="">Select Designation Name</option>');
+                            $.each(res.designation, function(key, value) {
+                                $("#desig-dd").append('<option value="' + value
+                                    .desig_id + '">' + value.desig_name + '</option>');
+                            });
+                            // $('#employee-dd').html(
+                            //     '<option value="">Select Employee Name</option>');
+
+                        }
+                    });
+                });
+                // employee
+                $('#state-dd').on('change', function() {
+                    var depart_id = this.value;
+                    $("#employee-dd").html('');
+                    $.ajax({
+                        url: "{{ url('admin/settings/business/allemployeefilter') }}",
+                        type: "POST",
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            depart_id: depart_id,
+                        },
+                        dataType: 'json',
+                        success: function(res) {
+                            // console.log(res);
+                            $('#employee-dd').html('<option value="">Select Employee</option>');
+                            $.each(res.employee, function(key, value) {
+                                $("#employee-dd").append('<option value="' + value.emp_id +
+                                    '">' + value.emp_name + '</option>');
+                            });
+                        }
+                    });
+                });
+
+            });
+        </script>
     @endsection

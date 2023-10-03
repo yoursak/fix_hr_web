@@ -34,20 +34,23 @@ class LeaveRequestApiController extends Controller
             $leave->emp_name = $emp->emp_name;
             $leave->emp_mobile_no = $emp->emp_mobile_number;
             $leave->leave_type = $request->leave_type;
+            $leave->leave_category = $request->leave_category;
+            $leave->shift_type = $request->shift_type;
             $leave->from_date = $request->from_date;
             $leave->to_date = $request->to_date;
 
-            $fromDate = Carbon::parse($request->from_date);
-            $toDate = Carbon::parse($request->to_date);
+            // $fromDate = Carbon::parse($request->from_date);
+            // $toDate = Carbon::parse($request->to_date);
     
-            $loaded = $toDate->diffInDays($fromDate);
+            // $loaded = $toDate->diffInDays($fromDate);
             // $datetime1 = new DateTime($leave->from_date);
             // $datetime2 = new DateTime($leave->to_date);
             // $interval = $datetime1->diff($datetime2);
-            $leave->days = $loaded+1;
+            // $leave->days = $loaded+1;
+            $leave->days =  $request->days;
             $leave->reason = $request->reason;
             $leave->status = $request->status;
-            $leave->profile_photo = $emp->profile_photo;
+            // $leave->profile_photo = $emp->profile_photo;
          
 
             if ($leave->save()) {
@@ -80,6 +83,8 @@ class LeaveRequestApiController extends Controller
             $leave->emp_name = $request->emp_name ?? $leave->emp_name;
             $leave->emp_mobile_no = $request->emp_mobile_no ?? $leave->emp_mobile_no;
             $leave->leave_type = $request->leave_type ?? $leave->leave_type;
+            $leave->leave_category = $request->leave_category ?? $leave->leave_category;;
+            $leave->shift_type = $request->shift_type ?? $leave->shift_type;
             $leave->from_date = $request->from_date ?? $leave->from_date;
             $leave->to_date = $request->to_date ?? $leave->to_date;
             $leave->days = $request->days ?? $leave->days;

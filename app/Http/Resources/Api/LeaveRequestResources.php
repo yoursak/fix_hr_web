@@ -17,6 +17,8 @@ class LeaveRequestResources extends JsonResource
             'emp_name' => $this->emp_name ?? '',
             'emp_mobile_no' => $this->emp_mobile_no ?? '',
             'leave_type' => $this->leave_type ?? '',
+            'leave_category' => ($this->leave_category) ==1 ? 'Full Day': (($this->leave_category) ==2 ? 'Half Day' : '' )?? '',
+            'shift_type' => ($this->shift_type) == 1 ? '1st Half': (($this->shift_type) == 2 ?'2nd Half' : '') ?? '',
             'from_date' => $this->from_date ?? '',
             'to_date' => $this->to_date ?? '',
             'days' => (string)$this->days ?? '',

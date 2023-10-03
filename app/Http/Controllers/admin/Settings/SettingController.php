@@ -227,6 +227,11 @@ class SettingController extends Controller
         return back();
     }
 
+
+    public function subscription(Request $request){
+        return view('admin.subscription.subscription');
+    }
+
     public function nameupdate(Request $request)
     {
         // dd($request->all());
@@ -817,11 +822,14 @@ class SettingController extends Controller
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
-
+        $Track = DB::table('attendance_track_in_out')
+        ->where('business_id', Session::get('business_id'))
+        ->first();
+  
         $Modes = DB::table('attendance_mode')
             ->where('business_id', Session()->get('business_id'))
             ->first();
-        return view('admin.setting.attendance.attendance', compact('Modes', 'permissions', 'moduleName'));
+        return view('admin.setting.attendance.attendance', compact('Modes','Track', 'permissions', 'moduleName'));
     }
 
     public function attendanceAccess()
@@ -899,12 +907,91 @@ class SettingController extends Controller
     public function setAutomationRule(Request $request){
         // dd($request->all());
 
+        if($request->dataLateEntry){
+            if($request->dataLateEntry == 'true'){
+                DB::table('atten_rule_late_entry')->where('business_id', Session::get('business_id'))->update(['switch_is'=>1]);
+                return response()->json(['Updated true']);
+            }else if($request->dataLateEntry == 'false'){
+                 DB::table('atten_rule_late_entry')->where('business_id', Session::get('business_id'))->update(['switch_is'=>0]);
+                return response()->json(['Updated false']);
+            }else{
+                return response()->json($request->dataLateEntry);
+            }
+        }
+
+        if($request->breakSwitch)
+        {
+            if($request->breakSwitch == 'true'){
+                DB::table('atten_rule_break')->where('business_id', Session::get('business_id'))->update(['switch_is'=> 1]);
+                return response()->json('Updated True');
+            }else if($request->breakSwitch == 'false'){
+                DB::table('atten_rule_break')->where('business_id', Session::get('business_id'))->update(['switch_is'=> 0]);
+                return response()->json('Updated False');
+            }else{
+                return response()->json($request->breakSwitch);
+            }
+        }
+
+        if($request->earlyExitSwitch)
+        {
+            if($request->earlyExitSwitch == 'true'){
+                DB::table('atten_rule_early_exit')->where('business_id', Session::get('business_id'))->update(['switch_is'=> 1]);
+                return response()->json('Updated True');
+            }else if($request->earlyExitSwitch == 'false'){
+                DB::table('atten_rule_early_exit')->where('business_id', Session::get('business_id'))->update(['switch_is'=> 0]);
+                return response()->json('Updated False');
+            }else{
+                return response()->json($request->earlyExitSwitch);
+            }
+        }
+
+        if($request->overtimeSwitch)
+        {
+            if($request->overtimeSwitch == 'true'){
+                DB::table('atten_rule_overtime')->where('business_id', Session::get('business_id'))->update(['switch_is'=> 1]);
+                return response()->json('Updated True');
+            }else if($request->overtimeSwitch == 'false'){
+                DB::table('atten_rule_overtime')->where('business_id', Session::get('business_id'))->update(['switch_is'=> 0]);
+                return response()->json('Updated False');
+            }else{
+                return response()->json($request->overtimeSwitch);
+            }
+        }
+
+        if($request->missPunchSwitch)
+        {
+            if($request->missPunchSwitch == 'true'){
+                DB::table('atten_rule_misspunch')->where('business_id', Session::get('business_id'))->update(['switch_is'=> 1]);
+                return response()->json('Updated True');
+            }else if($request->missPunchSwitch == 'false'){
+                DB::table('atten_rule_misspunch')->where('business_id', Session::get('business_id'))->update(['switch_is'=> 0]);
+                return response()->json('Updated False');
+            }else{
+                return response()->json($request->missPunchSwitch);
+            }
+        }
+
+        if($request->gatePassSwitch)
+        {
+            if($request->gatePassSwitch == 'true'){
+                DB::table('atten_rule_gatepass')->where('business_id', Session::get('business_id'))->update(['switch_is'=> 1]);
+                return response()->json('Updated True');
+            }else if($request->gatePassSwitch == 'false'){
+                DB::table('atten_rule_gatepass')->where('business_id', Session::get('business_id'))->update(['switch_is'=> 0]);
+                return response()->json('Updated False');
+            }else{
+                return response()->json($request->gatePassSwitch);
+            }
+        }
+        
+
         
         $splitedLateEntryGraceTime = explode(':',$request->lateEntryGraceTime);
         $splitedLateEntryOccurenceHour = explode(':',$request->lateEntryOccurenceHour);
         $splitedLateEntryMarkHalfDayMinutes = explode(':',$request->lateEntryMarkHalfDayMinutes);
         $splitedGraceTime = explode(':',$request->graceTime);
         $splitedEarlyExitOccurenceHour = explode(':',$request->earlyExitOccurenceHour);
+
         $splitedEarlyExitBy = explode(':',$request->earlyExitBy);
         $splitedExtraBreakTime = explode(':',$request->extraBreakTime);
         $splitedBreakOccurenceHour = explode(':',$request->breakOccurenceHour);
@@ -923,6 +1010,7 @@ class SettingController extends Controller
             $lateEntryData = DB::table('atten_rule_late_entry')->where('business_id', Session::get('business_id'))->first();
             if(!isset($lateEntryData)){
                 $insertLateEntryData = DB::table('atten_rule_late_entry')->insert([
+                    'switch_is'=>1,
                     'grace_time_hr'=> isset($request->lateEntryGraceTime) ? $splitedLateEntryGraceTime[0]: 0 ,
                     'grace_time_min'=> isset($request->lateEntryGraceTime) ? $splitedLateEntryGraceTime[1] : 0,
                     'occurance_is'=> $request->lateEntrySelectOccurance,
@@ -962,6 +1050,7 @@ class SettingController extends Controller
             
             if(!isset($earlyExitData)){
                 $insertEarlyExitData = DB::table('atten_rule_early_exit')->insert([
+                    'switch_is'=>1,
                     'grace_time_hr'=> isset($request->graceTime) ? $splitedGraceTime[0] : 0,
                     'grace_time_min'=> isset($request->graceTime) ? $splitedGraceTime[1] : 0,
                     'occurance_is'=> $request->earlyExitSelectOccurence,
@@ -978,6 +1067,7 @@ class SettingController extends Controller
                 }
             }else {
                 $updateEarlyExitData = DB::table('atten_rule_early_exit')->where('business_id',Session::get('business_id'))->update([
+                    
                     'grace_time_hr'=> isset($request->graceTime) ? $splitedGraceTime[0] : 0,
                     'grace_time_min'=> isset($request->graceTime) ? $splitedGraceTime[1] : 0,
                     'occurance_is'=> $request->earlyExitSelectOccurence,
@@ -999,6 +1089,7 @@ class SettingController extends Controller
             $overtimeData = DB::table('atten_rule_overtime')->where('business_id', Session::get('business_id'))->first();
             if(!isset($overtimeData)){
                 $insertOvertimeData = DB::table('atten_rule_overtime')->insert([
+                    'switch_is'=>1,
                     'early_ot_hr'=> isset($request->earlyOverTime) ? $splitedEarlyOverTime[0] : 0,
                     'early_ot_min'=> isset($request->earlyOverTime) ? $splitedEarlyOverTime[1] : 0,
                     'late_ot_hr'=> isset($request->lateOverTime) ? $splitedLateOverTime[0] : 0,
@@ -1035,6 +1126,7 @@ class SettingController extends Controller
             $breakData = DB::table('atten_rule_break')->where('business_id', Session::get('business_id'))->first();
             if(!isset($breakData)){
                 $insertBreakData = DB::table('atten_rule_break')->insert([
+                    'switch_is'=>1,
                     'is_break_hr_deduct'=> $request->defaultBreak,
                     'break_extra_hr'=> isset($request->extraBreakTime) ? $splitedExtraBreakTime[0] : 0,
                     'break_extra_min'=> isset($request->extraBreakTime) ? $splitedExtraBreakTime[1] : 0,
@@ -1071,6 +1163,7 @@ class SettingController extends Controller
             
             if(!isset($missPunchData)){
                 $insertMissPunchData = DB::table('atten_rule_misspunch')->insert([
+                    'switch_is'=>1,
                     'occurance_is'=> $request->missPunchSelectOccurence,
                     'occurance_count'=> $request->missPunchOccurenceCount,
                     'occurance_hr'=> isset($request->missPunchOccurenceHour) ? $splitedMissPunchOccurenceHour[0] : 0,
@@ -1102,6 +1195,7 @@ class SettingController extends Controller
             
             if(!isset($gatePassData)){
                 $insertGatePassData = DB::table('atten_rule_gatepass')->insert([
+                    'switch_is'=>1,
                     'occurance_is'=> $request->gatePassSelectOccurence,
                     'occurance_count'=> $request->gatePassOccurenceCount,
                     'occurance_hr'=> isset($request->gatePassOccurenceHour) ? $splitedGatePassOccurenceHour[0] : 0,

@@ -1,5 +1,5 @@
 {{-- @extends('admin.setting.setting')
- --}}
+--}}
 @extends('admin.pagelayout.master')
 @section('title')
     Attendance | Create Shift
@@ -258,27 +258,50 @@
         }
     </style>
     {{-- @endsection
-  @section('settings') --}}
+@section('settings') --}}
     <?php
     
     $power = new App\Helpers\MasterRulesManagement\RulesManagement();
     
     ?>
     <div class="row">
+
         <div class="col-xl-12 col-md-12 col-lg-12">
-            <div class="card">
-                <div class="card-header  border-0">
-                    <h4 class="card-title">Create Shift</h4>
-                    <div class="page-rightheader ms-auto">
-                        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="page-header d-md-flex d-block">
+                <div class="page-leftheader">
+                    <div class="page-title">Create Shift Templates</div>
+                    <p class="text-muted">Create Template to give Shift to staff on month if they want</p>
+                </div>
+                <div class="page-rightheader ms-md-auto">
+                    <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
+                        <div class="d-lg-flex d-block">
                             <div class="btn-list d-flex">
                                 <a class="modal-effect btn btn-primary btn-block mx-3" data-effect="effect-scale"
                                     data-bs-toggle="modal" href="#additionalModal" id="btnOpen">Add New shift</a>
                             </div>
+                            {{-- <div class="btn-list">
+                            <button type="button" class="btn btn btn-primary" data-toggle="modal"
+                                data-target="#myModal">
+                                Create Templates
+                            </button>
+                        </div> --}}
                         </div>
                     </div>
                 </div>
             </div>
+            {{-- <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+                <div class="page-rightheader ms-auto">
+                    <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+                        <div class="btn-list d-flex">
+                            <a class="modal-effect btn btn-primary btn-block mx-3" data-effect="effect-scale"
+                                data-bs-toggle="modal" href="#additionalModal" id="btnOpen">Add New shift</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> --}}
         </div>
         <div class="col-lg-12">
             <div class="card">
@@ -298,21 +321,25 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                    $j = 1;
-                                @endphp
-                                @foreach ($attendaceShift as $item)
-                                    <tr>
-                                        <td class="font-weight-semibold">{{ $j++ }}.</td>
-                                        <td class="font-weight-semibold"><?= $item->shift_name ?></td>
+                                @empty(!$attendaceShift)
+                                    @php
+                                        $j = 1;
+                                    @endphp
+                                    @foreach ($attendaceShift as $item)
+                                        <tr>
+                                            <td class="font-weight-semibold">{{ $j++ }}.</td>
+                                            <td class="font-weight-semibold">
+                                                <?= $item->shift_type_name ?>
+                                            </td>
 
-                                        <td class="font-weight-semibold"><?php
+                                            <td class="font-weight-semibold">
+                                                <?php
                                           $loadss = DB::table('attendance_shift_type_items')
                                               ->where('attendance_shift_id', $item->id)
                                               ->first();
                                           
                                           if ($power->AttedanceShiftCheckItems($item->id) == 1) {
-                                              echo 'Fixed Shift<br>' . $loadss->shift_start . '-' . $loadss->shift_end;
+                                              echo 'Fixed Shift' . $power->Convert24To12($loadss->shift_start) . '-' . $power->Convert24To12($loadss->shift_end);
                                           }
                                           if ($power->AttedanceShiftCheckItems($item->id) == 2) {
                                               echo 'Rotational Shift';
@@ -323,100 +350,127 @@
                                                       ->get()
                                                   as $value
                                               ) {?>
-                                            <?= '<br>' . $value->shift_start . '-' . $value->shift_end ?>
-                                            <?php }
+                                                <?= '' . $power->Convert24To12($value->shift_start) . '-' . $power->Convert24To12($value->shift_end) ?>
+                                                <?php }
                                           }
                                           if ($power->AttedanceShiftCheckItems($item->id) == 3) {
-                                              echo 'Open Shift <br>Total Work: ' . $loadss->shift_hr . ' hr ' . $loadss->shift_min . ' min';
+                                              echo 'Open Shift Total Work: ' . $loadss->shift_hr . ' Hour ' . $loadss->shift_min . ' Min';
                                           }
-                                          ?></td>
+                                          ?>
+                                            </td>
 
-                                        <td>
+                                            <td>
 
-                                            {{-- <button type="reset" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                                  data-bs-target="#fixShiftEdit{{ $item->id }}"><i
-                                                      class="fe fe-edit fs-18"></i></button> --}}
+                                                {{-- <button type="reset" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#fixShiftEdit{{ $item->id }}"><i
+                                            class="fe fe-edit fs-18"></i></button> --}}
 
-                                            @if ($item->shift_type == 1)
-                                                <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
-                                                    onclick="openEditModel(this)" data-id='<?= $item->id ?>'
-                                                    data-shift_name='<?= $item->shift_name ?>'
+                                                @if ($item->shift_type == 1)
+                                                    <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
+                                                        onclick="openEditFixedShiftModel(this)" data-id='<?= $item->id ?>'
+                                                        data-shift_name='<?= $item->shift_type_name ?>'
+                                                        data-shift_type='<?= $power->AttedanceShiftCheckItems($item->id) ?>'
+                                                        data-shift_start='<?= $loadss->shift_start ?>'
+                                                        data-shift_end='<?= $loadss->shift_end ?>'
+                                                        data-break_min='<?= $loadss->break_min ?>'
+                                                        data-is_paid='<?= (int) $loadss->is_paid ?>'
+                                                        data-work_hr='<?= $loadss->work_hr ?>'
+                                                        data-work_min='<?= $loadss->work_min ?>' data-bs-toggle="modal"
+                                                        data-bs-target="#fixiedshift">
+                                                        <i class="feather feather-edit" data-bs-toggle="tooltip"
+                                                            data-original-title="View/Edit"></i>
+                                                    </a>
+                                                @endif
+
+                                                @if ($item->shift_type == 2)
+                                                    <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
+                                                        onclick="openEditRotationalModel(this)" data-id='<?= $item->id ?>'
+                                                        data-shift_name='<?= $item->shift_type_name ?>'
+                                                        data-shift_type='<?= $power->AttedanceShiftCheckItems($item->id) ?>'
+                                                        data-shift_start='<?= $loadss->shift_start ?>'
+                                                        data-shift_end='<?= $loadss->shift_end ?>'
+                                                        data-break_min='<?= $loadss->break_min ?>'
+                                                        data-is_paid='<?= (int) $loadss->is_paid ?>'
+                                                        data-work_hr='<?= $loadss->work_hr ?>'
+                                                        data-work_min='<?= $loadss->work_min ?>' data-bs-toggle="modal"
+                                                        data-bs-target="#openEditRotationalModel">
+                                                        <i class="feather feather-edit" data-bs-toggle="tooltip"
+                                                            data-original-title="View/Edit"></i>
+                                                    </a>
+                                                @endif
+
+
+
+
+                                                @if ($item->shift_type == 3)
+                                                    <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
+                                                        onclick="openEditOpenShiftModel(this)" data-id='<?= $item->id ?>'
+                                                        data-shift_name='<?= $item->shift_type_name ?>'
+                                                        data-shift_type='<?= $power->AttedanceShiftCheckItems($item->id) ?>'
+                                                        data-shift_hour='<?= $loadss->shift_hr ?>'
+                                                        data-shift_min='<?= $loadss->shift_min ?>'
+                                                        data-break_min='<?= $loadss->break_min ?>'
+                                                        data-is_paid='<?= (int) $loadss->is_paid ?>'
+                                                        data-work_hr='<?= $loadss->work_hr ?>'
+                                                        data-work_min='<?= $loadss->work_min ?>' data-bs-toggle="modal"
+                                                        data-bs-target="#openshiftModel">
+                                                        <i class="feather feather-edit" data-bs-toggle="tooltip"
+                                                            data-original-title="View/Edit"></i>
+                                                    </a>
+                                                @endif
+                                                <a class="btn btn-danger btn-icon btn-sm" href="javascript:void(0);"
                                                     data-shift_type='<?= $power->AttedanceShiftCheckItems($item->id) ?>'
-                                                    data-shift_start='<?= $loadss->shift_start ?>'
-                                                    data-shift_end='<?= $loadss->shift_end ?>'
-                                                    data-break_min='<?= $loadss->break_min ?>'
-                                                    data-is_paid='<?= (int) $loadss->is_paid ?>'
-                                                    data-work_hr='<?= $loadss->work_hr ?>'
-                                                    data-work_min='<?= $loadss->work_min ?>' data-bs-toggle="modal"
-                                                    data-bs-target="#fixiedshift">
-                                                    <i class="feather feather-edit" data-bs-toggle="tooltip"
+                                                    onclick="DeleteModel(this)" data-bs-toggle="modal"
+                                                    data-id='<?= $item->id ?>'
+                                                    data-shift_type_name='<?= $item->shift_type_name ?>'
+                                                    data-bs-target="#deleteModal">
+                                                    <i class="feather feather-trash" data-bs-toggle="tooltip"
                                                         data-original-title="View/Edit"></i>
                                                 </a>
-                                            @endif
 
-                                            @if ($item->shift_type == 2)
-                                                <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
-                                                    onclick="openEditRotationalModel(this)" data-id='<?= $item->id ?>'
-                                                    data-shift_name='<?= $item->shift_name ?>'
-                                                    data-shift_type='<?= $power->AttedanceShiftCheckItems($item->id) ?>'
-                                                    data-shift_start='<?= $loadss->shift_start ?>'
-                                                    data-shift_end='<?= $loadss->shift_end ?>'
-                                                    data-break_min='<?= $loadss->break_min ?>'
-                                                    data-is_paid='<?= (int) $loadss->is_paid ?>'
-                                                    data-work_hr='<?= $loadss->work_hr ?>'
-                                                    data-work_min='<?= $loadss->work_min ?>' data-bs-toggle="modal"
-                                                    data-bs-target="#openEditRotationalModel">
-                                                    <i class="feather feather-edit" data-bs-toggle="tooltip"
-                                                        data-original-title="View/Edit"></i>
-                                                </a>
-                                            @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endempty
 
-
-
-
-
-                                        </td>
-                                    </tr>
-                                @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="container">
             <div class="modal fade" id="fixiedshift">
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header p-5">
-                            <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Shift Policy
+                            <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Fixed Shift Policy
                             </h5>
                             <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
                             </button>
                         </div>
-                        <form action="{{ url('/') }}" method="post">
+                        <form action="{{ url('admin/settings/attendance/update_attendace_shift') }}" method="POST">
                             @csrf
                             <div class="modal-body">
                                 <div class="card">
                                     <div class="card-header">
-                                        <input type="text" id="fixedId" name="fixedId">
                                         <h3 class="card-title">Update Shift</h3>
                                     </div>
 
                                     <div class="card-body">
-                                        <input type="text" id="fu_WorkHour" name="fu_WorkHour">
-                                        <input type="text" id="fu_WorkMin" name="fu_WorkMin">
+                                        <input type="text" id="fixedId" name="fixedshiftId" hidden>
+                                        <input type="text" id="fu_WorkHour" name="fu_WorkHour" hidden>
+                                        <input type="text" id="fu_WorkMin" name="fu_WorkMin" hidden>
 
                                         <div class="form-group">
                                             <label class="form-label">Shift Type</label>
-                                            <select onchange="load(this.value)" name="shiftType"
-                                                class="form-control custom-select select2" data-placeholder="Select Country"
-                                                id="shift_ftype" disabled required>
-                                                <option value="1">Fixed Shift</option>
-                                                <option value="2">Rotational Shift</option>
-                                                <option value="3">Open Shift</option>
+                                            {{-- onchange="load(this.value)" --}}
+                                            <select onchange="load(this.value)" name="fixiedshifttype"
+                                                class="form-control custom-select select2"
+                                                data-placeholder="Select Country" id="shift_ftype" aria-readonly="true"
+                                                required>
+                                                <option value="1" selected required>Fixed Shift</option>
                                             </select>
 
                                         </div>
@@ -426,27 +480,27 @@
                                                 <div class="col-12">
                                                     <label class="form-label">Shift Name</label>
                                                     <input id="shift_fname" class="form-control mb-4"
-                                                        placeholder="Enter Shift Name" value="" type="text"
-                                                        name="UpdatedFixedshiftName">
+                                                        placeholder="Enter Shift Name" type="text"
+                                                        name="editfixedshiftname" required>
 
                                                 </div>
                                                 <div class="col-xl-3 mb-4">
                                                     <label class="form-label">Start Time</label>
                                                     <input class="form-control" id="updated_start_time" value=""
                                                         onchange="timeCalculate()" placeholder="Set time" type="time"
-                                                        name="UpdatedFixShiftStart">
+                                                        name="UpdatedFixShiftStart" required>
                                                 </div>
                                                 <div class="col-xl-3 mb-4">
                                                     <label class="form-label">End Time</label>
                                                     <input class="form-control" id="updated_end_time" value=""
                                                         onchange="timeCalculate()" placeholder="Set time" type="time"
-                                                        name="UpdatedFixShiftEnd">
+                                                        name="UpdatedFixShiftEnd" required>
                                                 </div>
                                                 <div class="col-xl-3 mb-4">
                                                     <label class="form-label">Break(Min)</label>
                                                     <input class="form-control" id="updated_break_time" value=""
                                                         onchange="timeCalculate()" placeholder="Set time" type="number"
-                                                        name="UpdatedFixShiftBreak">
+                                                        name="UpdatedFixShiftBreak" required>
                                                 </div>
                                                 <div class="col-xl-3">
                                                     <label class="form-label">Break is</label>
@@ -466,7 +520,8 @@
                                                                 <input type="radio" id="updated_unpaid"
                                                                     class="custom-control-input"
                                                                     onchange="timeCalculate()" name="UpdatedFixpaid"
-                                                                    value="0" {{-- {{ $uncheck }} --}}>
+                                                                    value="0" {{-- {{ $uncheck }}
+                                                                --}}>
                                                                 <span class="custom-control-label">Unpaid</span>
                                                             </label>
                                                         </div>
@@ -481,7 +536,8 @@
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-light" type="reset" data-bs-dismiss="modal">Close</button>
-                                <button class="btn btn-primary" type="submit" id="savechanges">Save
+                                <button class="btn btn-primary" name="EditShiftFixedShiftSubmit" value="FixedSubmit"
+                                    type="submit" id="savechanges">Save
                                     changes</button>
                             </div>
                         </form>
@@ -501,29 +557,25 @@
                                 <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
                             </button>
                         </div>
-                        {{-- <form action="{{ route('update.shift') }}" method="post">
-                            @csrf --}}
                         <div class="modal-body">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <input type="text" id="setId" name="setId" value="">
+                                        <input type="text" id="setId" name="setId" value="" hidden>
                                         <label class="form-label">Shift Type</label>
                                         <select onchange="" name="shiftType"
                                             class="form-control custom-select select2" data-placeholder="Select Country"
-                                            id="shifttype" disabled required>
-                                            <option value="rotational">Rotational Shift</option>
-                                            <option value="open">Open Shift</option>
-                                            <option value="fixed">Fixed Shift</option>
+                                            id="shifttype" aria-readonly="true" >
+                                            <option value="2">Rotational Shift</option>
                                         </select>
                                     </div>
                                     <div class="form-group" id="UpdateRotationalShift">
                                         <div class="row">
                                             <div class="col-xl-11">
-                                                <label class="form-label"> Rotetional Shift Name</label>
-                                                <input class="form-control mb-4" value=""
-                                                    placeholder="Enter Shift Name" type="text"
-                                                    name="updatedRotationalName">
+                                                <label class="form-label"> Rotational Shift Name</label>
+                                                <input class="form-control mb-4" id="updatedRotationalName"
+                                                    value="" placeholder="Enter Shift Name" type="text"
+                                                    name="rotationName" >
                                             </div>
                                             <div class="col-xl-1 text-end mt-5">
                                                 <button type="button"
@@ -547,87 +599,451 @@
                             <button class="btn btn-primary" type="submit" id="updateButton">Save
                                 changes</button>
                         </div>
-                        {{-- </form> --}}
 
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="container">
+            <div class="modal fade" id="openshiftModel">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header p-5">
+                            <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Edit Open Shift
+                                Policy
+                            </h5>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
+                            </button>
+                        </div>
+                        <form action="{{ url('admin/settings/attendance/update_attendace_shift') }}" method="POST">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Update Open Shift</h3>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <input type="text" id="editopenshiftId" name="openshiftId" hidden>
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label class="form-label">Shift Type</label>
+                                                {{-- onchange="load(this.value)" --}}
+                                                <select name="editshifttype" class="form-control custom-select select2"
+                                                    data-placeholder="Select Shift Type" id="shift_ttype"
+                                                    aria-readonly="true">
+                                                    <option value="3" selected>Open Shift</option>
+                                                </select>
+
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">Shift Name</label>
+                                                <input class="form-control mb-4" id="editshift_tname"
+                                                    placeholder="Enter Shift Name" type="text"
+                                                    name="editopenShiftName" required>
+
+                                            </div>
+                                            <div class="col-xl-3">
+                                                <label class="form-label">Hour</label>
+                                                <input class="form-control m-0" id="editshift_hour" placeholder="Set"
+                                                    type="number" name="editopenHour" required>
+                                            </div>
+                                            <div class="col-xl-3">
+                                                <label class="form-label">Minutes</label>
+                                                <input class="form-control" id="editshift_min" placeholder="Set"
+                                                    type="number" name="editopenMin" required>
+                                            </div>
+                                            <div class="col-xl-3">
+                                                <label class="form-label">Break(Min)</label>
+                                                <input class="form-control" id="editshift_breack" placeholder="Set"
+                                                    type="number" name="editopenBreak" required>
+                                            </div>
+                                            <div class="col-xl-3">
+                                                <label class="form-label">Break is</label>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <label class="custom-control custom-radio">
+                                                            <input type="radio" onchange="openPaid()" id="editopenPaid"
+                                                                class="custom-control-input" name="editopenPaid"
+                                                                value="1" checked>
+                                                            <span class="custom-control-label">Paid</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label class="custom-control custom-radio">
+                                                            <input type="radio" onchange="openUnpaid()"
+                                                                id="editopenUnpaid" class="custom-control-input"
+                                                                name="editopenPaid" value="0" checked>
+                                                            <span class="custom-control-label">Unpaid</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <script>
+                                                    function openPaid() {
+                                                        document.getElementById('openUnpaid').checked = false;
+                                                        document.getElementById('openPaid').checked = true;
+
+                                                    }
+
+                                                    function openUnpaid() {
+                                                        document.getElementById('openUnpaid').checked = true;
+                                                        document.getElementById('openPaid').checked = false;
+                                                    }
+                                                </script>
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </div>
+                                    <!-- table-responsive -->
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-light" type="reset" data-bs-dismiss="modal">Close</button>
+                                <button class="btn btn-primary" name="EditShiftOpenShiftSubmit" value="OpenSubmit"
+                                    type="submit" id="savechanges">Save
+                                    changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+
+                    <form action="{{ route('delete.shift') }}" method="post">
+                        @csrf
+                        <input type="text" id="shift_id" name="shift_id" hidden>
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Confirm Deletion</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Type Name <b>
+                                </b></p>
+                            <h4 id="load_type_name"></h4><b>
+                            </b>
+
+                            <p>Policy Name <b>
+                                </b></p>
+                            <h4 id="load_name"></h4><b>
+                            </b>
+                            <p></p>
+
+                            Are you sure you want to delete this item?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="close" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function DeleteModel(context) {
+                var id = $(context).data('id');
+                var shift_ttype = $(context).data('shift_type');
+                var shift_type_name = $(context).data('shift_type_name');
+                $('#shift_id').val(id);
+
+                // $('#load_type_name').text(shift_ttype);
+                // console.log(shift_type_name);
+                $('#load_name').text(shift_type_name);
+
+                if (shift_ttype === 1) {
+                    $('#load_type_name').text('Fixing Type');
+                } else if (shift_ttype === 2) {
+                    $('#load_type_name').text('Rotational Type');
+                } else if (shift_ttype === 3) {
+                    $('#load_type_name').text('Open Type');
+                } else {
+                    // Handle other cases or provide a default
+                    $('#load_type_name').text('Unknown Type');
+                }
+            }
+        </script>
+
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-            function openEditRotationalModel(context) {
-                var id = $(context).data('id');
-                var shift_name = $(context).data('shift_name');
-                var shift_ftype = $(context).data('shift_type');
-                var shift_fstart = $(context).data('shift_start');
-                var shift_fend = $(context).data('shift_end');
-                var work_hr = $(context).data('work_hr');
-                var work_min = $(context).data('work_min');
-                var shift_fbreak = $(context).data('break_min');
-                var shift_fisPaid = $(context).data('is_paid');
+            // Initialize a counter for unique row IDs
 
+            function openEditRotationalModel(context) {
+                let id = $(context).data('id');
+                let shift_name = $(context).data('shift_name');
+                let shift_ftype = $(context).data('shift_type');
+
+                // Set values for the input fields
                 $('#setId').val(id);
                 $('#updatedRotationalName').val(shift_name);
                 $('#shifttype').val(shift_ftype);
-                console.log(shift_ftype);
-                // Create a document fragment to hold the new elements
+
 
                 $.ajax({
                     url: "{{ url('/admin/settings/attendance/get_datails') }}",
                     type: "get",
                     data: {
                         _token: '{{ csrf_token() }}',
-                        id
+                        id: id
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+
+                        // Clear existing items
+                        $('#show_item_edit').empty();
+                        console.log(result);
+                        $.each(result.get, function(index, item) {
+                            appendEditFormItem(item, index);
+                            updateRotateFunction(item.id);
+                        });
+                    }
+                });
+            }
+            let rowCounter = 0;
+
+            function appendEditFormItem(item, index) {
+
+                rowCounter++;
+                let radioGroupId = `radioGroup_${index}`;
+                let rowId = `row_${index}`;
+                let newItemHtml = `
+            <div class="row" id="${rowId}">
+                <div class="col-xl-9">
+                    <div class="row">
+                        <div class="col-xl-3 mb-4">
+                            <label class="form-label">Shift Name</label>
+                            <input class="form-control" id="updateRotateName${item.id}" placeholder="Enter Shift Name" value="${item.shift_name}" type="text" name="editshiftname[]" required>
+                        </div>
+                        <div class="col-xl-3 mb-4">
+                            <label class="form-label">Start Time</label>
+                            <input class="form-control" id="updateRotateStart${item.id}" onchange="updateRotateFunction(${item.id})" placeholder="Set time" value="${item.shift_start}" type="time" name="editstartshift[]" required>
+                        </div>
+                        <div class="col-xl-3 mb-4">
+                            <label class="form-label">End Time</label>
+                            <input class="form-control" id="updateRotateEnd${item.id}" onchange="updateRotateFunction(${item.id})" placeholder="Set time" value="${item.shift_end}" type="time" name="editshiftTimeend[]" required>
+                        </div>
+                        <div class="col-xl-3 mb-4">
+                            <label class="form-label">Break(Min)</label>
+                            <input class="form-control" id="updateRotateBreak${item.id}"  onkeyup="updateRotateFunction(${item.id})" placeholder="Set time" value="${item.break_min}" type="number" value="${item.break_min}" name="updatedRotationalShiftBreak[]" required>
+                        </div>
+                        <input class="form-control"  type="text" id="ru_WorkHour${item.id}" name="ru_WorkHour[]" value="${item.work_hr}" hidden>
+                        <input class="form-control"  type="text" id="ru_WorkMin${item.id}" name="ru_WorkMin[]" value="${item.work_min}" hidden>
+                    </div>
+                </div>
+                <div class="col-xl-3">
+                    <label class="form-label">Break is</label>
+                    <div class="row">
+                        <div class="col-4">
+                            <label class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" id="updateRotatePaid${item.id}"  onclick="updateRotateFunction(${item.id})" name="${radioGroupId}_isPaid[]" value="1" ${(item.is_paid == 1) ? 'checked' : ''}>
+                                <span class="custom-control-label">Paid</span>
+                            </label>
+                        </div>
+                        <div class="col-5">
+                            <label class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" id="updateRotateUnpaid${item.id}"  onclick="updateRotateFunction(${item.id})" name="${radioGroupId}_isPaid[]" value="0" ${(item.is_paid == 0) ? 'checked' : ''}>
+                                <span class="custom-control-label">Unpaid</span>
+                            </label>
+                        </div>
+                        <div class="col-3">
+                            <button type="button" class="btn btn-outline-danger remove_item_btn_edit" data-row-id="${rowId}"><i class="feather feather-trash"></i></button>
+                        </div>
+                    </div>
+                    <span class="mb-5 fs-12 text-muted" id="updateRot_fixedWorkHour${item.id}" name="totalworkhour[]" value="${item.total_working_hour}">Total Work Hour: Min</span>
+                </div>
+            </div>`;
+
+                $('#show_item_edit').append(newItemHtml);
+
+            }
+
+
+            $('#updateButton').click(function() {
+                console.log('update btn call');
+                // Gather the updated data from the edited items
+                var updatedItems = [];
+                // var isValid = true; // Flag to track if all fields are valid
+                var isValid = true; // Initialize the validation flag as true
+
+                $('#show_item_edit .row').each(function(index) {
+                    var row = $(this);
+                    var shiftName = row.find('input[name="editshiftname[]"]').val();
+                    var startTimeShift = row.find('input[name="editstartshift[]"]').val();
+                    var endTimeShift = row.find('input[name="editshiftTimeend[]"]').val();
+                    var breakMin = row.find('input[name="updatedRotationalShiftBreak[]"]').val();
+                    var isPaid = row.find('input[name^="radioGroup_"][name$="_isPaid[]"]:checked').val();
+                    var workHour = row.find('input[name="ru_WorkHour[]"]').val();
+                    var workMin = row.find('input[name="ru_WorkMin[]"]').val();
+                    var totalworkhour = row.find('input[name="totalworkhour[]"]').val();
+
+
+                    if (!shiftName || !endTimeShift || !startTimeShift || shiftName === '' || startTimeShift ===
+                        '' || endTimeShift === '' || breakMin === '' || isPaid === '' || workHour === '') {
+                        // isValid = false; // Set the flag to false if any field is empty
+                        // return false; // Exit the loop
+
+                        return; // Skip this row if any field is empty or isPaid is undefined
+                    }
+
+
+                    var loaditem = {
+                        shift_name: shiftName,
+                        start_time: startTimeShift,
+                        end_time: endTimeShift,
+                        break_min: breakMin,
+                        is_paid: isPaid,
+                        work_hr: workHour,
+                        work_min: workMin
+                    };
+                    // Assuming updatedItems is your array
+                    updatedItems = updatedItems.filter(function(item) {
+                        // Set the flag to false if any field is empty
+                        isValid = false; // Set the flag to false if any field is empty
+
+                        // Check if the item has all the required properties and none of them are undefined or empty
+                        return (
+                            item.shift_name !== undefined &&
+                            item.start_time !== undefined &&
+                            item.end_time !== undefined &&
+                            item.break_min !== undefined &&
+                            item.is_paid !== undefined &&
+                            item.work_hr !== undefined &&
+                            item.work_min !== undefined
+                        );
+                    });
+                    // updatedItems = updatedItems.filter(function(item) {
+                    //     // Check if is_paid is defined and at least one other property is defined
+                    //     var definedProperties = Object.keys(item).filter(function(key) {
+                    //         return item[key] !== undefined;
+                    //     });
+
+                    //     return definedProperties.includes('is_paid') && definedProperties.length > 1;
+                    // });
+                    // updatedItems = updatedItems.filter(function(item) {
+                    //     // Check if the item has at least one property other than is_paid
+                    //     return Object.keys(item).some(function(key) {
+                    //         return key !== 'is_paid';
+                    //     });
+                    // });
+
+                    // Now, updatedItems contains only items with properties other than is_paid
+                    updatedItems.push(loaditem);
+                    console.log(updatedItems);
+
+                    // console.log(updatedItems);
+                });
+
+                // if (!isValid) {
+                //     console.log(isValid);
+                //     // Show an alert if any field is empty
+                //     Swal.fire({
+                //         title: 'Empty Fields',
+                //         text: 'Please fill in all fields for each item before updating.',
+                //         icon: 'error',
+                //     });
+                //     return false; // Prevent form submission
+                // }
+
+                $.ajax({
+                    url: "{{ url('admin/settings/attendance/update_attendace_shift') }}",
+                    type: "POST",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id: $('#setId').val(),
+                        shift_type: $('#shifttype').val(),
+                        shift_rotation_name: $('#updatedRotationalName').val(),
+                        updated_items: updatedItems // Send the array of updated items to the server
                     },
                     dataType: 'json',
                     success: function(result) {
                         console.log(result);
-                        $('#show_item_edit').empty(); // Clear existing items
-                        $.each(result.get, function(index, item) {
-                            appendEditFormItem(item);
-                        });
+                        if (result.root != false) {
+                            Swal.fire({
+                                timer: 2000,
+                                timerProgressBar: true,
+                                title: 'Update Successful',
+                                text: 'Rotational Shift is Updated Successfully.',
+                                icon: 'success',
+                            }).then(() => {
+                                // Reload the page after the alert is closed
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Update Failed',
+                                timer: 3000,
+                                timerProgressBar: true,
+                                text: 'Rotational Shift is Not Updated',
+                                icon: 'error',
+                            });
+                        }
+
+                        // Handle the AJAX success response as needed
                     }
                 });
+            });
 
-            }
-            let rowCounter = 0; // Initialize a counter for unique row IDs
+            $(document).ready(function() {
+                $(".add_item_btn_edit").click(function(e) {
+                    rowCounter++; // Increment rowCounter
+                    var radioGroupId = `radioGroup_${rowCounter}`;
+                    var rowId = `row_${rowCounter}`; // rowCounter-1;
 
-            function appendEditFormItem(item) {
+                    var shiftNameInput = $('#updateRotateName');
+                    var startTimeInput = $('#updateRotateStart');
+                    var endTimeInput = $('#updateRotateEnd');
+                    var breakMinInput = $('#updateRotateBreak');
 
-                console.log(item);
-                rowCounter++;
+                    // var breakMinInput = $('#updateRotateBreak');
+                    // var breakMinInput = $('#updateRotateBreak');
 
-                // Extract values from the 'item' object
-                var shift_name = item.shift_name;
-                var shift_start = item.shift_start;
-                var shift_end = item.shift_end;
-                var shift_break = item.break_min;
-                var is_paid = item.is_paid;
-                let radioGroupId = 'radioGroup_' + Date.now();
-                let rowId = 'row_' + rowCounter;
+                    if (
+                        shiftNameInput.val() === '' ||
+                        startTimeInput.val() === '' ||
+                        endTimeInput.val() === '' ||
+                        breakMinInput.val() === ''
+                    ) {
+                        alert('Please fill in all fields for the new item before adding.');
+                        return;
+                    }
 
-                var newItemHtml = `
-                                <div class="row" id="${rowId}">
+                    // Add the new row only if all fields are filled
+
+                    // var radioGroupId = `radioGroup_${rowCounter}`;
+                    // var rowId = `row_${rowCounter}`;
+                    // updateRotateFunction(rowCounter);
+
+                    $("#show_item_edit").append(`
+                <div class="row" id="${rowId}">
                     <div class="col-xl-9">
                         <div class="row">
                             <div class="col-xl-3 mb-4">
                                 <label class="form-label">Shift Name</label>
-                                <input class="form-control" id="updateRotateName" placeholder="Enter Shift Name" value="${shift_name}" type="text" name="updatedRotationalShiftName[]">
+                                <input class="form-control" id="updateRotateName${rowCounter}" placeholder="Enter Shift Name" type="text" name="editshiftname[]" required>
                             </div>
                             <div class="col-xl-3 mb-4">
                                 <label class="form-label">Start Time</label>
-                                <input class="form-control" id="updateRotateStart" placeholder="Set time" value="${shift_start}" type="time" name="updatedRotationalShiftStart[]">
+                                <input class="form-control" id="updateRotateStart${rowCounter}" onchange="updateRotateFunction(${rowCounter})" placeholder="Set time" type="time" name="editstartshift[]" required>
                             </div>
                             <div class="col-xl-3 mb-4">
                                 <label class="form-label">End Time</label>
-                                <input class="form-control" id="updateRotateEnd" placeholder="Set time" value="${shift_end}" type="time" name="updatedRotationalShiftEnd[]">
+                                <input class="form-control" id="updateRotateEnd${rowCounter}" onchange="updateRotateFunction(${rowCounter})" placeholder="Set time" type="time" name="editshiftTimeend[]" required>
                             </div>
                             <div class="col-xl-3 mb-4">
                                 <label class="form-label">Break(Min)</label>
-                                <input class="form-control" id="updateRotateBreak" placeholder="Set time" value="${shift_break}" type="number" name="updatedRotationalShiftBreak[]">
+                                <input class="form-control" id="updateRotateBreak${rowCounter}" onkeyup="updateRotateFunction(${rowCounter})" placeholder="Set time" type="number" name="updatedRotationalShiftBreak[]" required>
                             </div>
-                            <input type="text" id="ru_WorkHour" name="ru_WorkHour[]" value="" hidden="">
-                            <input type="text" id="ru_WorkMin" name="ru_WorkMin[]" value="" hidden="">
+                            <input class="form-control"  type="text" id="ru_WorkHour${rowCounter}" name="ru_WorkHour[]" hidden >
+                            <input class="form-control"  type="text" id="ru_WorkMin${rowCounter}" name="ru_WorkMin[]"  hidden>
                         </div>
                     </div>
                     <div class="col-xl-3">
@@ -635,181 +1051,35 @@
                         <div class="row">
                             <div class="col-4">
                                 <label class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" id="updateRotatePaid" name"${radioGroupId}_isPaid[]" value="1" ${(is_paid === 1) ? 'checked' : ''}>
+                                    <input type="radio" class="custom-control-input"  id="updateRotatePaid${rowCounter}" onclick="updateRotateFunction(${rowCounter})"  name="${radioGroupId}_isPaid[]" value="1"  checked>
                                     <span class="custom-control-label">Paid</span>
                                 </label>
                             </div>
                             <div class="col-5">
                                 <label class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" id="updateRotateUnpaid" name="${radioGroupId}_isPaid[]" value="0" ${(is_paid === 0) ? 'checked' : ''}>
+                                    <input type="radio" class="custom-control-input"  id="updateRotateUnpaid${rowCounter}"   onclick="updateRotateFunction(${rowCounter})" name="${radioGroupId}_isPaid[]" value="0">
                                     <span class="custom-control-label">Unpaid</span>
                                 </label>
                             </div>
                             <div class="col-3">
-                                <button type="button" class="btn btn-outline-danger  remove_item_btn_edit" data-row-id="${rowId}"><i class="feather feather-trash"></i></button>  
-                
+                                <button type="button" class="btn btn-outline-danger remove_item_btn_edit" data-row-id="${rowId}"><i class="feather feather-trash"></i></button>
                             </div>
                         </div>
-                        <span id="updateRot_fixedWorkHour" class="mb-5 fs-12 text-muted">Total Work Hour: Min</span>
+                        <span class="mb-5 fs-12 text-muted"  id="updateRot_fixedWorkHour${rowCounter}" name="totalworkhour[]">Total Work Hour: Min</span>
                     </div>
-                </div>`;
-
-                $('#show_item_edit').append(newItemHtml);
-            }
-            $('#updateButton').click(function() {
-
-                // Gather the updated data from the edited items
-                var updatedItems = [];
-                var isValid = true; // Flag to track if all fields are valid
-
-                $('#show_item_edit .row').each(function(index) {
-                    var categoryName = $(this).find('input[name="category_name_edit[]"]').val();
-                    var days = $(this).find('input[name="days_edit[]"]').val();
-                    var unusedLeaveRule = $(this).find('select[name="unused_leave_rule_edit[]"]').val();
-                    var carryForwardLimit = $(this).find('input[name="carry_forward_limit_edit[]"]').val();
-                    var applicableTo = $(this).find('select[name="applicable_to_edit[]"]').val();
-                    if (!categoryName || !days || !unusedLeaveRule || !carryForwardLimit || !applicableTo) {
-                        isValid = false; // Set the flag to false if any field is empty
-                        return false; // Exit the loop
-                    }
-                    // Create an object to represent the updated item
-                    var updatedItem = {
-                        category_name: categoryName,
-                        days: days,
-                        unused_leave_rule: unusedLeaveRule,
-                        carry_forward_limit: carryForwardLimit,
-                        applicable_to: applicableTo
-                    };
-
-                    updatedItems.push(updatedItem);
-                });
-
-                if (!isValid) {
-                    // Show an alert if any field is empty
-                    Swal.fire({
-                        title: 'Empty Fields',
-                        text: 'Please fill in all fields for each item before updating.',
-                        icon: 'error',
-                    });
-                    return false; // Prevent form submission
-                }
-
-                // Send the updated data to the server via AJAX
-                $.ajax({
-                    url: "{{ url('admin/settings/attendance/update_attendace_shift') }}",
-                    type: "POST",
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        leave_policy_id: $('#rolesId').val(),
-                        leave_name: $('#edit_policy').val(),
-                        updated_items: updatedItems // Send the array of updated items to the server
-                    },
-                    dataType: 'json',
-                    success: function(result) {
-                        console.log(result);
-                        // if (result.message != false) {
-                        //     Swal.fire({
-                        //         timer: 2000,
-                        //         timerProgressBar: true,
-                        //         title: 'Update Successful',
-                        //         text: 'Your data has been updated successfully.',
-                        //         icon: 'success',
-                        //     }).then(() => {
-                        //         // Reload the page after the alert is closed
-                        //         location.reload();
-                        //     });
-                        // } else {
-                        //     Swal.fire({
-                        //         title: 'Update Failed',
-                        //         timer: 3000,
-                        //         timerProgressBar: true,
-                        //         text: 'There was an error updating your data.',
-                        //         icon: 'error',
-                        //     });
-                        // }
-
-
-                    }
-                });
-            });
-
-            // temporary clone data set
-            $(document).ready(function() {
-                let rowCounter = 0; // Initialize a counter for unique row IDs
-
-                $(".add_item_btn_edit").click(function(e) {
-                    rowCounter++;
-
-                    let categoryname_edit = $('#categoryname_edit').val();
-                    let days_edit = $('#days_edit').val();
-                    let leaverule_edit = $('#leaverule_edit').val();
-                    let cfl_edit = $('#cfl_edit').val();
-                    let applicable_edit = $('#applicable_edit').val();
-                    let radioGroupId = 'radioGroup_' + Date.now();
-                    let rowId = 'row_' + rowCounter;
-
-
-                    $("#show_item_edit").append(
-                        `<div class="row"  id="${rowId}">
-                    <div class="col-xl-9">
-                        <div class="row">
-                            <div class="col-xl-3 mb-4">
-                                <label class="form-label">Shift Name</label>
-                                <input class="form-control" id="updateRotateName" placeholder="Enter Shift Name" type="text" name="updatedRotationalShiftName[]">
-                            </div>
-                            <div class="col-xl-3 mb-4">
-                                <label class="form-label">Start Time</label>
-                                <input class="form-control" id="updateRotateStart" placeholder="Set time" type="time" name="updatedRotationalShiftStart[]">
-                            </div>
-                            <div class="col-xl-3 mb-4">
-                                <label class="form-label">End Time</label>
-                                <input class="form-control" id="updateRotateEnd" placeholder="Set time"  type="time" name="updatedRotationalShiftEnd[]">
-                            </div>
-                            <div class="col-xl-3 mb-4">
-                                <label class="form-label">Break(Min)</label>
-                                <input class="form-control" id="updateRotateBreak" placeholder="Set time"  type="number" name="updatedRotationalShiftBreak[]">
-                            </div>
-                            <input type="text" id="ru_WorkHour" name="ru_WorkHour[]" value="" hidden="">
-                            <input type="text" id="ru_WorkMin" name="ru_WorkMin[]" value="" hidden="">
-                        </div>
-                    </div>
-                    <div class="col-xl-3">
-                    <label class="form-label">Break is</label>
-                    <div class="row">
-                        <div class="col-4">
-                            <label class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" id="updateRotatePaid" name="${radioGroupId}_isPaid[]" value="1">
-                                <span class="custom-control-label">Paid</span>
-                            </label>
-                        </div>
-                        <div class="col-5">
-                            <label class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" id="updateRotateUnpaid" name="${radioGroupId}_isPaid[]" value="0" checked>
-                                <span class="custom-control-label">Unpaid</span>
-                            </label>
-                        </div>
-                        <div class="col-3">
-                            <button type="button" class="btn btn-outline-danger remove_item_btn_edit" data-row-id="${rowId}"><i class="feather feather-trash"></i></button>  
-                        </div>
-                    </div>
-                    <span  class="mb-5 fs-12 text-muted">Total Work Hour: Min</span>
-                     </div>
-                </div>`
-                    );
+                </div>`);
                 });
 
                 $(document).on('click', '.remove_item_btn_edit', function(e) {
-                    let rowIdToRemove = $(this).data(
-                        'row-id'); // Get the row ID associated with the clicked button
-                    $('#' + rowIdToRemove).remove(); // Remove the corresponding row
+                    let rowIdToRemove = $(this).data('row-id');
+                    $('#' + rowIdToRemove).remove();
                 });
-
             });
         </script>
 
 
         <script>
-            function openEditModel(context) {
+            function openEditFixedShiftModel(context) {
                 var id = $(context).data('id');
                 var shift_name = $(context).data('shift_name');
                 var shift_ftype = $(context).data('shift_type');
@@ -838,6 +1108,33 @@
 
 
                 console.log(shift_fisPaid);
+            }
+
+            function openEditOpenShiftModel(context) {
+
+                var id = $(context).data('id');
+                var shift_ttype = $(context).data('shift_type');
+                var shift_name = $(context).data('shift_name');
+                var shift_hour = $(context).data('shift_hour');
+                var shift_min = $(context).data('shift_min');
+                var shift_break_min = $(context).data('break_min');
+                var shift_tisPaid = $(context).data('is_paid');
+                $('#editopenshiftId').val(id);
+                $('#shift_ttype').val(shift_ttype);
+                $('#editshift_tname').val(shift_name);
+                $('#editshift_hour').val(shift_hour);
+                $('#editshift_min').val(shift_min);
+                $('#editshift_breack').val(shift_break_min);
+
+                if (shift_tisPaid == 1) {
+                    $('#editopenPaid').prop('checked', true);
+                } else {
+                    $('#editopenUnpaid').prop('checked', true);
+                }
+
+                // timeCalculate();
+
+
             }
 
 
@@ -895,68 +1192,68 @@
             }
         </script>
         <script>
-            function updateRotationalField() {
+            // function updateRotationalField() {
 
-                // console.log(Id);
-                // let updatedRotationalShift = '<div class="row" id="updateRotationalField' + Id + '">' +
-                //     '<div class="col-xl-9">' +
-                //     '<div class="row">' +
-                //     '<div class="col-xl-3 mb-4">' +
-                //     '<label class="form-label">Shift Name</label>' +
-                //     '<input type="text" id="ru_WorkHour' + Id + '" name="ru_WorkHour[]" value="" hidden>' +
-                //     '<input type="text" id="ru_WorkMin' + Id + '" name="ru_WorkMin[]" value="" hidden>' +
-                //     '<input class="form-control" placeholder="Enter Shift Name" type="text" name="updatedRotationalShiftName[]">' +
-                //     '</div>' +
-                //     '<div class="col-xl-3 mb-4">' +
-                //     '<label class="form-label">Start Time</label>' +
-                //     '<input class="form-control" id="updateRotateStart' + Id + '" onchange="updateRotateFunction(' + Id +
-                //     ')"  placeholder="Set time" type="time" name="updatedRotationalShiftStart[]">' +
-                //     '</div>' +
-                //     '<div class="col-xl-3 mb-4">' +
-                //     '<label class="form-label">End Time</label>' +
-                //     '<input class="form-control" id="updateRotateEnd' + Id + '" onchange="updateRotateFunction(' + Id +
-                //     ')"  placeholder="Set time" type="time" name="updatedRotationalShiftEnd[]">' +
-                //     '</div>' +
-                //     '<div class="col-xl-3 mb-4">' +
-                //     '<label class="form-label">Break(Min)</label>' +
-                //     '<input class="form-control" id="updateRotateBreak' + Id + '" onchange="updateRotateFunction(' + Id +
-                //     ')"  placeholder="Set time" type="number" name="updatedRotationalShiftBreak[]">' +
-                //     '</div>' +
-                //     '</div>' +
-                //     '</div>' +
-                //     '<div class="col-xl-3">' +
-                //     '<label class="form-label">Break is</label>' +
-                //     '<div class="row">' +
-                //     '<div class="col-4">' +
-                //     '<label class="custom-control custom-radio">' +
-                //     '<input type="radio" id="updateRotatePaid' + Id + '" onchange="updateRotateFunction(' + Id +
-                //     ')" class="custom-control-input"  name="updatedRotationalpaid[]' + Id + '" value="1" checked>' +
-                //     '<span class="custom-control-label">Paid</span>' +
-                //     '</label>' +
-                //     '</div>' +
-                //     '<div class="col-5">' +
-                //     '<label class="custom-control custom-radio">' +
-                //     '<input type="radio" id="updateRotateUnpaid' + Id + '" onchange="updateRotateFunction(' + Id +
-                //     ')" class="custom-control-input"  name="updatedRotationalpaid[]' + Id + '" value="0">' +
-                //     '<span class="custom-control-label">Unpaid</span>' +
-                //     '</label>' +
-                //     '</div>' +
-                //     '<div class="col-3">' +
-                //     '<a class="btn btn-sm btn-danger" id="deleteElem' + Id + '" onclick="removalUpdaedElement(' + Id +
-                //     ')"><i class="fa fa-trash"></i></a>' +
-                //     '</div>' +
-                //     '</div>' +
-                //     '<span id="updateRot_fixedWorkHour' + Id + '" class="mb-5 fs-12 text-muted"></span>' +
-                //     '</div>' +
-                //     '</div>';
+            // console.log(Id);
+            // let updatedRotationalShift = '<div class="row" id="updateRotationalField' + Id + '">' +
+            //     '<div class="col-xl-9">' +
+            //     '<div class="row">' +
+            //     '<div class="col-xl-3 mb-4">' +
+            //     '<label class="form-label">Shift Name</label>' +
+            //     '<input type="text" id="ru_WorkHour' + Id + '" name="ru_WorkHour[]" value="" hidden>' +
+            //     '<input type="text" id="ru_WorkMin' + Id + '" name="ru_WorkMin[]" value="" hidden>' +
+            //     '<input class="form-control" placeholder="Enter Shift Name" type="text" name="editshiftname[]">' +
+            //     '</div>' +
+            //     '<div class="col-xl-3 mb-4">' +
+            //     '<label class="form-label">Start Time</label>' +
+            //     '<input class="form-control" id="updateRotateStart' + Id + '" onchange="updateRotateFunction(' + Id +
+            //     ')"  placeholder="Set time" type="time" name="editstartshift[]">' +
+            //     '</div>' +
+            //     '<div class="col-xl-3 mb-4">' +
+            //     '<label class="form-label">End Time</label>' +
+            //     '<input class="form-control" id="updateRotateEnd' + Id + '" onchange="updateRotateFunction(' + Id +
+            //     ')"  placeholder="Set time" type="time" name="updatedRotationalShiftEnd[]">' +
+            //     '</div>' +
+            //     '<div class="col-xl-3 mb-4">' +
+            //     '<label class="form-label">Break(Min)</label>' +
+            //     '<input class="form-control" id="updateRotateBreak' + Id + '" onchange="updateRotateFunction(' + Id +
+            //     ')"  placeholder="Set time" type="number" name="updatedRotationalShiftBreak[]">' +
+            //     '</div>' +
+            //     '</div>' +
+            //     '</div>' +
+            //     '<div class="col-xl-3">' +
+            //     '<label class="form-label">Break is</label>' +
+            //     '<div class="row">' +
+            //     '<div class="col-4">' +
+            //     '<label class="custom-control custom-radio">' +
+            //     '<input type="radio" id="updateRotatePaid' + Id + '" onchange="updateRotateFunction(' + Id +
+            //     ')" class="custom-control-input"  name="updatedRotationalpaid[]' + Id + '" value="1" checked>' +
+            //     '<span class="custom-control-label">Paid</span>' +
+            //     '</label>' +
+            //     '</div>' +
+            //     '<div class="col-5">' +
+            //     '<label class="custom-control custom-radio">' +
+            //     '<input type="radio" id="updateRotateUnpaid' + Id + '" onchange="updateRotateFunction(' + Id +
+            //     ')" class="custom-control-input"  name="updatedRotationalpaid[]' + Id + '" value="0">' +
+            //     '<span class="custom-control-label">Unpaid</span>' +
+            //     '</label>' +
+            //     '</div>' +
+            //     '<div class="col-3">' +
+            //     '<a class="btn btn-sm btn-danger" id="deleteElem' + Id + '" onclick="removalUpdaedElement(' + Id +
+            //     ')"><i class="fa fa-trash"></i></a>' +
+            //     '</div>' +
+            //     '</div>' +
+            //     '<span id="updateRot_fixedWorkHour' + Id + '" class="mb-5 fs-12 text-muted"></span>' +
+            //     '</div>' +
+            //     '</div>';
 
-                // let parent = document.getElementById('updateAppendField' + setId);
-                // parent.insertAdjacentHTML('beforeend', updatedRotationalShift);
-            }
+            // let parent = document.getElementById('updateAppendField' + setId);
+            // parent.insertAdjacentHTML('beforeend', updatedRotationalShift);
+            // }
 
-            function updateRotateFunction() {
-                rotId = 1;
-                console.log(rotId);
+            function updateRotateFunction(rotId) {
+                // rotId = 1;
+                // console.log(rotId);
                 let updateRot_start_time = document.getElementById("updateRotateStart" + rotId).value;
                 let updateRot_end_time = document.getElementById("updateRotateEnd" + rotId).value;
                 let updateRot_break_time = document.getElementById("updateRotateBreak" + rotId).value;
@@ -1065,162 +1362,125 @@
         <div class="">
 
 
-            @foreach ($fixShift as $fix)
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12 col-xl-4 text-secondary my-auto">
+            {{-- <div class="container">
+            <div class="modal fade" id="fixShiftEdit{{ $fix->fixed_id }}">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header p-5">
 
-                                <h5 class="my-auto">{{ $fix->shift_name }}</h5>
-                            </div>
-                            <div class="col-5 col-xl-3 text-muted my-auto text-center">
-                                <h6 class="my-auto text-primary">Fixed Shift</h6>
-                                <span class="my-auto">{{ $fix->shift_start }} - {{ $fix->shift_end }}</span>
-                            </div>
-                            <div class="col-5 col-xl-3 text-muted my-auto">
-                                <p class="my-auto">Assigned to 15 Employees</p>
-                            </div>
-                            <div class="col-1 col-xl-1 btn">
-
-                                <div class="flex justify-content-between">
-                                    {{-- <button type="reset" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                          data-bs-target="#fixShiftEdit{{ $fix->fixed_id }}"><i
-                                              class="fe fe-edit fs-18"></i></button> --}}
-
-                                    <button type="submit" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#fixDelete{{ $fix->fixed_id }}"><i
-                                            class="fe fe-trash fs-18"></i></button>
-                                </div>
-                            </div>
+                            <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Shift
+                                Policy
+                            </h5>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
+                            </button>
                         </div>
-                    </div>
-                </div>
+                        <form action="{{ route('update.shift') }}" method="post">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <input type="text" name="fixedId" value="{{ $fix->fixed_id }}" hidden>
+                                        <h3 class="card-title">Update Shift</h3>
+                                    </div>
 
-                {{-- <div class="container">
-                    <div class="modal fade" id="fixShiftEdit{{ $fix->fixed_id }}">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header p-5">
-
-                                    <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Shift
-                                        Policy
-                                    </h5>
-                                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
-                                    </button>
-                                </div>
-                                <form action="{{ route('update.shift') }}" method="post">
-                                    @csrf
-                                    <div class="modal-body">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <input type="text" name="fixedId" value="{{ $fix->fixed_id }}" hidden>
-                                                <h3 class="card-title">Update Shift</h3>
-                                            </div>
-
-                                            <div class="card-body">
-                                                <input type="text" id="fu_WorkHour{{ $fix->fixed_id }}"
-                                                    name="fu_WorkHour" value="{{ $fix->work_hr }}" hidden>
-                                                <input type="text" id="fu_WorkMin{{ $fix->fixed_id }}"
-                                                    name="fu_WorkMin" value="{{ $fix->work_min }}" hidden>
+                                    <div class="card-body">
+                                        <input type="text" id="fu_WorkHour{{ $fix->fixed_id }}" name="fu_WorkHour"
+                                            value="{{ $fix->work_hr }}" hidden>
+                                        <input type="text" id="fu_WorkMin{{ $fix->fixed_id }}" name="fu_WorkMin"
+                                            value="{{ $fix->work_min }}" hidden>
 
 
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Shift Type</label>
-                                                    <select onchange="load(this.value)" name="shiftType"
-                                                        class="form-control custom-select select2"
-                                                        data-placeholder="Select Country" id="shifttype" disabled
-                                                        required>
-                                                        <option value="1">Fixed Shift</option>
-                                                        <option value="2">Rotational Shift</option>
-                                                        <option value="3">Open Shift</option>
-                                                    </select>
+                                        <div class="form-group">
+                                            <label class="form-label">Shift Type</label>
+                                            <select onchange="load(this.value)" name="shiftType"
+                                                class="form-control custom-select select2"
+                                                data-placeholder="Select Country" id="shifttype" disabled required>
+                                                <option value="1">Fixed Shift</option>
+                                                <option value="2">Rotational Shift</option>
+                                                <option value="3">Open Shift</option>
+                                            </select>
+
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <label class="form-label">Shift Name</label>
+                                                    <input class="form-control mb-4" placeholder="Enter Shift Name"
+                                                        value="{{ $fix->shift_name }}" type="text"
+                                                        name="UpdatedFixedshiftName">
 
                                                 </div>
-
-                                                <div class="form-group">
+                                                <div class="col-xl-3 mb-4">
+                                                    <label class="form-label">Start Time</label>
+                                                    <input class="form-control"
+                                                        id="updated_start_time{{ $fix->fixed_id }}"
+                                                        value="{{ $fix->shift_start }}"
+                                                        onchange="timeCalculate({{ $fix->fixed_id }})"
+                                                        placeholder="Set time" type="time" name="UpdatedFixShiftStart">
+                                                </div>
+                                                <div class="col-xl-3 mb-4">
+                                                    <label class="form-label">End Time</label>
+                                                    <input class="form-control"
+                                                        id="updated_end_time{{ $fix->fixed_id }}"
+                                                        value="{{ $fix->shift_end }}"
+                                                        onchange="timeCalculate({{ $fix->fixed_id }})"
+                                                        placeholder="Set time" type="time" name="UpdatedFixShiftEnd">
+                                                </div>
+                                                <div class="col-xl-3 mb-4">
+                                                    <label class="form-label">Break(Min)</label>
+                                                    <input class="form-control"
+                                                        id="updated_break_time{{ $fix->fixed_id }}"
+                                                        value="{{ $fix->break_min }}"
+                                                        onchange="timeCalculate({{ $fix->fixed_id }})"
+                                                        placeholder="Set time" type="number"
+                                                        name="UpdatedFixShiftBreak">
+                                                </div>
+                                                <div class="col-xl-3">
+                                                    <label class="form-label">Break is</label>
                                                     <div class="row">
-                                                        <div class="col-12">
-                                                            <label class="form-label">Shift Name</label>
-                                                            <input class="form-control mb-4"
-                                                                placeholder="Enter Shift Name"
-                                                                value="{{ $fix->shift_name }}" type="text"
-                                                                name="UpdatedFixedshiftName">
-
+                                                        <div class="col-6">
+                                                            @if ($fix->is_paid == 1)
+                                                            @php
+                                                            $check = 'checked';
+                                                            $uncheck = '';
+                                                            @endphp
+                                                            @else
+                                                            @php
+                                                            $check = '';
+                                                            $uncheck = 'checked';
+                                                            @endphp
+                                                            @endif
+                                                            <label class="custom-control custom-radio">
+                                                                <input type="radio"
+                                                                    id="updated_paid{{ $fix->fixed_id }}"
+                                                                    class="custom-control-input"
+                                                                    onchange="timeCalculate({{ $fix->fixed_id }})"
+                                                                    name="UpdatedFixpaid" value="1" {{ $check }}>
+                                                                <span class="custom-control-label">Paid</span>
+                                                            </label>
                                                         </div>
-                                                        <div class="col-xl-3 mb-4">
-                                                            <label class="form-label">Start Time</label>
-                                                            <input class="form-control"
-                                                                id="updated_start_time{{ $fix->fixed_id }}"
-                                                                value="{{ $fix->shift_start }}"
-                                                                onchange="timeCalculate({{ $fix->fixed_id }})"
-                                                                placeholder="Set time" type="time"
-                                                                name="UpdatedFixShiftStart">
-                                                        </div>
-                                                        <div class="col-xl-3 mb-4">
-                                                            <label class="form-label">End Time</label>
-                                                            <input class="form-control"
-                                                                id="updated_end_time{{ $fix->fixed_id }}"
-                                                                value="{{ $fix->shift_end }}"
-                                                                onchange="timeCalculate({{ $fix->fixed_id }})"
-                                                                placeholder="Set time" type="time"
-                                                                name="UpdatedFixShiftEnd">
-                                                        </div>
-                                                        <div class="col-xl-3 mb-4">
-                                                            <label class="form-label">Break(Min)</label>
-                                                            <input class="form-control"
-                                                                id="updated_break_time{{ $fix->fixed_id }}"
-                                                                value="{{ $fix->break_min }}"
-                                                                onchange="timeCalculate({{ $fix->fixed_id }})"
-                                                                placeholder="Set time" type="number"
-                                                                name="UpdatedFixShiftBreak">
-                                                        </div>
-                                                        <div class="col-xl-3">
-                                                            <label class="form-label">Break is</label>
-                                                            <div class="row">
-                                                                <div class="col-6">
-                                                                    @if ($fix->is_paid == 1)
-                                                                        @php
-                                                                            $check = 'checked';
-                                                                            $uncheck = '';
-                                                                        @endphp
-                                                                    @else
-                                                                        @php
-                                                                            $check = '';
-                                                                            $uncheck = 'checked';
-                                                                        @endphp
-                                                                    @endif
-                                                                    <label class="custom-control custom-radio">
-                                                                        <input type="radio"
-                                                                            id="updated_paid{{ $fix->fixed_id }}"
-                                                                            class="custom-control-input"
-                                                                            onchange="timeCalculate({{ $fix->fixed_id }})"
-                                                                            name="UpdatedFixpaid" value="1"
-                                                                            {{ $check }}>
-                                                                        <span class="custom-control-label">Paid</span>
-                                                                    </label>
-                                                                </div>
-                                                                <div class="col-6">
-                                                                    <label class="custom-control custom-radio">
-                                                                        <input type="radio"
-                                                                            id="updated_unpaid{{ $fix->fixed_id }}"
-                                                                            class="custom-control-input"
-                                                                            onchange="timeCalculate({{ $fix->fixed_id }})"
-                                                                            name="UpdatedFixpaid" value="0"
-                                                                            {{ $uncheck }}>
-                                                                        <span class="custom-control-label">Unpaid</span>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <span id="UpdateFixedWorkHour{{ $fix->fixed_id }}"
-                                                                class="mb-5 fs-12 text-muted">Total Work Hour:
-                                                                {{ $fix->work_hr }} Hr {{ $fix->work_min }} Min</span>
+                                                        <div class="col-6">
+                                                            <label class="custom-control custom-radio">
+                                                                <input type="radio"
+                                                                    id="updated_unpaid{{ $fix->fixed_id }}"
+                                                                    class="custom-control-input"
+                                                                    onchange="timeCalculate({{ $fix->fixed_id }})"
+                                                                    name="UpdatedFixpaid" value="0" {{ $uncheck }}>
+                                                                <span class="custom-control-label">Unpaid</span>
+                                                            </label>
                                                         </div>
                                                     </div>
+                                                    <span id="UpdateFixedWorkHour{{ $fix->fixed_id }}"
+                                                        class="mb-5 fs-12 text-muted">Total Work Hour:
+                                                        {{ $fix->work_hr }} Hr {{ $fix->work_min }} Min</span>
                                                 </div>
-                                                <script>
-                                                    function timeCalculate(id) {
+                                            </div>
+                                        </div>
+                                        <script>
+                                            function timeCalculate(id) {
                                                         // alert(id);
                                                         let updated_start_time = document.getElementById("updated_start_time" + id).value;
                                                         let updated_end_time = document.getElementById("updated_end_time" + id).value;
@@ -1272,277 +1532,37 @@
                                                             `Total Work Hour: ${String(updated_resultHours).padStart(2, '0')} Hr ${String(updated_resultMinutes).padStart(2, '0')} Min`;
                                                         console.log(`Result: ${updated_formattedResult}`);
                                                     }
-                                                </script>
+                                        </script>
 
 
-                                            </div>
-                                            <!-- table-responsive -->
-                                        </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-light" type="reset"
-                                            data-bs-dismiss="modal">Close</button>
-                                        <button class="btn btn-primary" type="submit" id="savechanges">Save
-                                            changes</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
-
-
-                <div class="modal fade" id="fixDelete{{ $fix->fixed_id }}">
-                    <div class="modal-dialog modal-dialog-centered text-center" role="document">
-                        <div class="modal-content tx-size-sm">
-                            <div class="modal-body text-center p-4">
-                                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
-                                        aria-hidden="true">&times;</span></button>
-                                <i class="fe fe-warning fs-80 text-danger lh-1 mb-5 d-inline-block"></i>
-                                <h4 class="text-danger">Delete Alert!</h4>
-                                <p class="mg-b-20 mg-x-20">Are you sure want to delete it ?</p>
-                                <form action="{{ route('delete.shift', [$fix->fixed_id, 'fixed']) }}" method="post">
-                                    @csrf
-                                    <button type="reset" aria-label="Close" class="btn btn-success pd-x-25"
-                                        data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" aria-label="Close"
-                                        class="btn btn-danger pd-x-25">Continue</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-
-            @foreach ($openShift as $open)
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12 col-xl-4 text-secondary my-auto">
-
-                                <h5 class="my-auto">{{ $open->shift_name }}</h5>
-                            </div>
-                            <div class="col-5 col-xl-3 text-muted my-auto text-center">
-                                <h6 class="my-auto text-primary">Open Shift</h6>
-                                <span class="my-auto">Total Work: {{ $open->shift_hr }} hr {{ $open->shift_min }}
-                                    min</span>
-                            </div>
-                            <div class="col-5 col-xl-3 text-muted my-auto">
-                                <p class="my-auto">Assigned to 15 Employees</p>
-                            </div>
-                            <div class="col-2 col-xl-1 btn">
-                                <div class="flex justify-content-between">
-                                    <button type="reset" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#openShiftEdit{{ $open->open_id }}"><i
-                                            class="fe fe-edit fs-18"></i></button>
-                                    <button type="submit" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#openDelete{{ $open->open_id }}"><i
-                                            class="fe fe-trash fs-18"></i></button>
+                                    <!-- table-responsive -->
                                 </div>
                             </div>
-                        </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-light" type="reset" data-bs-dismiss="modal">Close</button>
+                                <button class="btn btn-primary" type="submit" id="savechanges">Save
+                                    changes</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                {{-- <div class="container">
-                    <div class="modal fade" id="openShiftEdit{{ $open->open_id }}">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header p-5">
-                                    <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Shift
-                                        Policy</h5>
-                                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
-                                    </button>
-                                </div>
-                                <form action="{{ route('update.shift') }}" method="post">
-                                    @csrf
-                                    <div class="modal-body">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <input type="text" name="openId" value="{{ $open->open_id }}"
-                                                    hidden>
-                                                <h3 class="card-title">Updated Shift</h3>
-                                            </div>
+            </div>
+        </div> --}}
 
-                                            <div class="card-body">
-                                                <div class="form-group">
-                                                    <label class="form-label">Shift Type</label>
-                                                    <select onchange="load(this.value)" name="shiftType"
-                                                        class="form-control custom-select select2"
-                                                        data-placeholder="Select Country" id="shifttype" disabled
-                                                        required>
-                                                        <option value="open">Open Shift</option>
-                                                        <option value="fixed">Fixed Shift</option>
-                                                        <option value="rotational">Rotational Shift</option>
-                                                    </select>
-                                                </div>
 
-                                                <div class="form-group" id="openShiftEdit{{ $open->open_id }}">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <label class="form-label">Shift Name</label>
-                                                            <input class="form-control mb-4"
-                                                                value="{{ $open->shift_name }}"
-                                                                placeholder="Enter Shift Name" type="text"
-                                                                name="updatedOpenShiftName">
-
-                                                        </div>
-                                                        <div class="col-xl-3">
-                                                            <label class="form-label">Hour</label>
-                                                            <input class="form-control m-0" value="{{ $open->shift_hr }}"
-                                                                placeholder="Set" type="number" name="updatedOpenHour">
-                                                        </div>
-                                                        <div class="col-xl-3">
-                                                            <label class="form-label">Minutes</label>
-                                                            <input class="form-control" value="{{ $open->shift_min }}"
-                                                                placeholder="Set" type="number" name="updatedOpenMin">
-                                                        </div>
-                                                        <div class="col-xl-3">
-                                                            <label class="form-label">Break(Min)</label>
-                                                            <input class="form-control" value="{{ $open->break_min }}"
-                                                                placeholder="Set" type="number" name="updatedOpenBreak">
-
-                                                        </div>
-                                                        <div class="col-xl-3">
-                                                            <label class="form-label">Break is</label>
-                                                            <div class="row">
-                                                                <div class="col-6">
-                                                                    <label class="custom-control custom-radio">
-                                                                        @if ($open->is_paid == 1)
-                                                                            @php
-                                                                                $check = 'checked';
-                                                                                $uncheck = '';
-                                                                            @endphp
-                                                                        @else
-                                                                            @php
-                                                                                $check = '';
-                                                                                $uncheck = 'checked';
-                                                                            @endphp
-                                                                        @endif
-                                                                        <input type="radio" id="updatedOpenPaid"
-                                                                            class="custom-control-input"
-                                                                            name="updatedOpenPaid" value="1"
-                                                                            {{ $check }}>
-                                                                        <span class="custom-control-label">Paid</span>
-                                                                    </label>
-                                                                </div>
-                                                                <div class="col-6">
-                                                                    <label class="custom-control custom-radio">
-                                                                        <input type="radio" id="updatedOpenUnpaid"
-                                                                            class="custom-control-input"
-                                                                            name="updatedOpenPaid" value="0"
-                                                                            {{ $uncheck }}>
-                                                                        <span class="custom-control-label">Unpaid</span>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <!-- table-responsive -->
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button class="btn btn-light" type="reset"
-                                                data-bs-dismiss="modal">Close</button>
-                                            <button class="btn btn-primary" type="submit" id="savechanges">Save
-                                                changes</button>
-                                        </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
-                <div class="modal fade" id="openDelete{{ $open->open_id }}">
-                    <div class="modal-dialog modal-dialog-centered text-center" role="document">
-                        <div class="modal-content tx-size-sm">
-                            <div class="modal-body text-center p-4">
-                                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
-                                        aria-hidden="true">&times;</span></button>
-                                <i class="fe fe-warning fs-80 text-danger lh-1 mb-5 d-inline-block"></i>
-                                <h4 class="text-danger">Delete Alert!</h4>
-                                <p class="mg-b-20 mg-x-20">Are you sure want to delete it ?</p>
-                                <form action="{{ route('delete.shift', [$open->open_id, 'open']) }}" method="post">
-                                    @csrf
-                                    <button type="reset" aria-label="Close" class="btn btn-success pd-x-25"
-                                        data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" aria-label="Close"
-                                        class="btn btn-danger pd-x-25">Continue</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-
-            @foreach ($setShift as $set)
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12 col-xl-4 text-secondary my-auto">
-                                <h5 class="my-auto">{{ $set->set_name }}</h5>
-                            </div>
-
-                            <div class="col-5 col-xl-3 text-muted my-auto text-center">
-                                <h6 class="my-auto text-primary">Rotational Shift</h6>
-                                <?php
-                          foreach ($rotationalShift->where('set_id',$set->set_id) as $key => $rotation) { ?>
-                                <span class="text-dark">{{ $rotation->shift_name }}</span>
-                                <span class="my-auto">{{ $rotation->shift_start }}-{{ $rotation->shift_end }}</span><br>
-                                <?php
-                          }
-                          ?>
-
-                            </div>
-                            <div class="col-5 col-xl-3 text-muted my-auto">
-                                <p class="my-auto">Assigned to 15 Employees</p>
-                            </div>
-                            <div class="col-2 col-xl-1 btn">
-                                <div class="flex justify-content-between">
-                                    <button type="reset" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#rotationalEdit{{ $set->set_id }}"><i
-                                            class="fe fe-edit fs-18"></i></button>
-                                    <button type="submit" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#rotateDelete{{ $set->set_id }}"><i
-                                            class="fe fe-trash fs-18"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade" id="rotateDelete{{ $set->set_id }}">
-                    <div class="modal-dialog modal-dialog-centered text-center" role="document">
-                        <div class="modal-content tx-size-sm">
-                            <div class="modal-body text-center p-4">
-                                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
-                                        aria-hidden="true">&times;</span></button>
-                                <i class="fe fe-warning fs-80 text-danger lh-1 mb-5 d-inline-block"></i>
-                                <h4 class="text-danger">Delete Alert!</h4>
-                                <p class="mg-b-20 mg-x-20">Are you sure want to delete it ?</p>
-                                <form action="{{ route('delete.shift', [$set->set_id, 'set']) }}" method="post">
-                                    @csrf
-                                    <button type="reset" aria-label="Close" class="btn btn-success pd-x-25"
-                                        data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" aria-label="Close"
-                                        class="btn btn-danger pd-x-25">Continue</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
         </div>
     </div>
 
     {{-- add new shift --}}
     <div class="container">
-        {{-- create modal  --}}
+        {{-- create modal --}}
         <div class="modal fade" id="additionalModal">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header p-5">
-                        <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Shift Policy</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Create Shift Policy
+                        </h5>
                         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
                         </button>
@@ -1559,9 +1579,9 @@
                                     <div class="form-group">
                                         <label class="form-label">Shift Type</label>
                                         <select onchange="load(this.value)" name="shiftType"
-                                            class="form-control custom-select select2" data-placeholder="Select Country"
+                                            class="form-control custom-select select2" data-placeholder="Select Shift"
                                             id="shifttype" required>
-                                            <option label="Select Country"></option>
+                                            <option label="Select Shift"></option>
                                             <option value="1">Fixed Shift</option>
                                             <option value="2">Rotational Shift</option>
                                             <option value="3">Open Shift</option>
@@ -1574,7 +1594,7 @@
                                             hidden>
                                         <input type="text" id="r_WorkMin0" name="r_WorkMin[]" value="" hidden>
                                     </div>
-                                    {{-- fixed shift  --}}
+                                    {{-- fixed shift --}}
                                     <div class="form-group d-none" id="shifttime">
                                         <div class="row">
                                             <div class="col-12">
@@ -1671,7 +1691,7 @@
                                         }
                                     </script>
 
-                                    {{-- open shift  --}}
+                                    {{-- open shift --}}
                                     <div class="form-group d-none" id="workhour">
                                         <div class="row">
                                             <div class="col-12">
@@ -1731,17 +1751,21 @@
                                         </div>
                                     </div>
 
-                                    {{-- roatational shift  --}}
+                                    {{-- roatational shift --}}
                                     <div class="form-group d-none" id="shiftname2">
                                         <div class="row">
                                             <div class="col-11">
                                                 <label class="form-label"> Rotetional Shift Name</label>
                                                 <input class="form-control mb-4" placeholder="Enter Shift Name"
-                                                    type="text" name="rotationalName">
+                                                    type="text" name="rotationalName" >
                                             </div>
-                                            <div class="col-1 mt-5">
-                                                <a class="btn btn-sm btn-success mt-2" onclick="addRotationalField()">Add
-                                                    New</a>
+                                            <div class="col-1 mt-4">
+                                                <button type="button" class="btn btn-outline-primary  mt-3"
+                                                    onclick="addRotationalField()"><i class="fe fe-plus bold"></i>
+                                                </button>
+                                                {{-- <a class="btn btn-outline-primary mt-2"
+                                                onclick="addRotationalField()">Add
+                                                New</a> --}}
                                             </div>
                                         </div>
 
@@ -1793,9 +1817,13 @@
                                                             <span class="custom-control-label">Unpaid</span>
                                                         </label>
                                                     </div>
-                                                    <div class="col-3">
-                                                        <a class="btn btn-sm btn-danger" id="deleteElem0"
-                                                            onclick="removalElement(0)"><i class="fa fa-trash"></i></a>
+                                                    <div class="col-md-3">
+                                                        {{-- <a class="btn btn-sm btn-danger" id="deleteElem0"
+                                                        onclick="removalElement(0)"><i class="fa fa-trash"></i></a> --}}
+
+                                                        <button type="button" id="deleteElem0"
+                                                            class="btn btn-outline-danger" onclick="removalElement(0)"><i
+                                                                class="feather feather-trash"></i></button>
                                                     </div>
                                                 </div>
                                                 <span id="rot_fixedWorkHour0" class="mb-5 fs-12 text-muted"></span>
@@ -1814,22 +1842,22 @@
                                                     '<label class="form-label">Shift Name</label>' +
                                                     '<input type="text" id="r_WorkHour' + i + '" name="r_WorkHour[]" value="" hidden>' +
                                                     '<input type="text" id="r_WorkMin' + i + '" name="r_WorkMin[]" value="" hidden>' +
-                                                    '<input class="form-control" placeholder="Enter Shift Name" type="text" name="rotationalShiftName[]">' +
+                                                    '<input class="form-control" placeholder="Enter Shift Name" type="text" name="rotationalShiftName[]" required>' +
                                                     '</div>' +
                                                     '<div class="col-xl-3 mb-4">' +
                                                     '<label class="form-label">Start Time</label>' +
                                                     '<input class="form-control" onchange="rotateFunction(' + i + ')" id="start_time' + i +
-                                                    '"  placeholder="Set time" type="time" name="rotationalShiftStart[]">' +
+                                                    '"  placeholder="Set time" type="time" name="rotationalShiftStart[]" required>' +
                                                     '</div>' +
                                                     '<div class="col-xl-3 mb-4">' +
                                                     '<label class="form-label">End Time</label>' +
                                                     '<input class="form-control" onchange="rotateFunction(' + i + ')" id="end_time' + i +
-                                                    '"  placeholder="Set time" type="time" name="rotationalShiftEnd[]">' +
+                                                    '"  placeholder="Set time" type="time" name="rotationalShiftEnd[]" required>' +
                                                     '</div>' +
                                                     '<div class="col-xl-3 mb-4">' +
                                                     '<label class="form-label">Break(Min)</label>' +
                                                     '<input class="form-control" onchange="rotateFunction(' + i + ')" id="break_time' + i +
-                                                    '"  placeholder="Set time" type="number" name="rotationalShiftBreak[]">' +
+                                                    '"  placeholder="Set time" type="number" name="rotationalShiftBreak[]" required>' +
                                                     '</div>' +
                                                     '</div>' +
                                                     '</div>' +
@@ -1853,8 +1881,8 @@
                                                     '</label>' +
                                                     '</div>' +
                                                     '<div class="col-3">' +
-                                                    '<a class="btn btn-sm btn-danger" id="deleteElem' + i + '" onclick="removalElement(' + i +
-                                                    ')"><i class="fa fa-trash"></i></a>' +
+                                                    '<a class="btn btn-outline-danger" id="deleteElem' + i + '" onclick="removalElement(' + i +
+                                                    ')"><i class="feather feather-trash"></i></a>' +
                                                     '</div>' +
                                                     '</div>' +
                                                     '<span id="rot_fixedWorkHour' + i + '" class="mb-5 fs-12 text-muted"></span>' +

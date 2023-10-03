@@ -20,6 +20,7 @@ use App\Http\Controllers\admin\Settings\NotificationController;
 use App\Http\Controllers\admin\Settings\LocalizationController;
 use App\Http\Controllers\admin\Settings\ShiftController;
 use App\Http\Controllers\admin\Settings\RolePermission\NewPermission;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -50,7 +51,7 @@ Route::middleware(['logincheck'])->group(function () {
 });
 
 Route::get('/thankyou', [LoginController::class, 'thankyou'])->name('login.thankyou');
-Route::view('subscription', 'subscription.subscription');
+Route::get('/subscription', [SettingController::class, 'subscription'])->name('subscription');
 
 // Route::any('/handlecardclick',[LoginController::class,'handleCardClick'])->name('admin.handleCard');
 Route::post('/admin/handle-card', [LoginController::class, 'handleCardClick'])->name('admin.handleCard');
@@ -105,12 +106,19 @@ Route::middleware(['email_verified', 'web'])->group(function () {
             Route::get('/', [AttendanceController::class, 'index']);
             Route::get('/details/{emp_id}', [AttendanceController::class, 'details'])->name('attendance.detail');
             Route::any('/track_in_out', [AttendanceController::class, 'submitTrackInTrackOut'])->name('attendance.trackInOut');
+            // endgames rules
+            Route::get('/active_mode_set',[AttendanceController::class,'ActiveMode'])->name('attendance.activeMode');
+            Route::post('/endgames', [AttendanceController::class, 'FinalStartRuleEndGame'])->name('attendance.endgameSubmit');
+            
+            // Route::get('/submit_endgames', [AttendanceController::class, 'FinalStartRuleEndGame']);
+     
         });
 
         Route::prefix('/employee')->group(function () {
             Route::get('/', [EmployeeController::class, 'index']);
             Route::get('/add', [EmployeeController::class, 'add']);
             Route::any('/employeefilter', [EmployeeController::class, 'filterEmployees'])->name('filter.employees');
+            Route::any('/all_employee', [EmployeeController::class, 'allEmployee']);
             Route::get('/profile/{id}', [EmployeeController::class, 'empProfile'])->name('employeeProfile');
         });
 
@@ -189,11 +197,11 @@ Route::middleware(['email_verified', 'web'])->group(function () {
                 Route::post('/update_leave_policy', [SettingController::class, 'updateLeavePolicy']);
                 Route::post('/delete_leave_policy', [SettingController::class, 'DeleteLeavePolicy'])->name('delete.leavePolicy');
                 Route::post('/update_weekly_policy', [SettingController::class, 'updateWeeklyHoliday'])->name('update.WeeklyPolicy');
-              
+
                 // create
-                
+
                 Route::post('/create_weekly_policy', [SettingController::class, 'createWeeklyHoliday'])->name('create.CreateWeeklyPolicy');
-                Route::any('/delete_weekly_policy',[SettingController::class, 'deleteWeeklyHoliday'])->name('delete.DeleteWeeklyPolicy');
+                Route::any('/delete_weekly_policy', [SettingController::class, 'deleteWeeklyHoliday'])->name('delete.DeleteWeeklyPolicy');
                 Route::get('/holiday_policy', [SettingController::class, 'holidayPolicy']);
                 Route::get('/invite_employee', [SettingController::class, 'inviteEmpl']);
                 Route::get('/leave_policy', [SettingController::class, 'leavePolicy']);
@@ -217,11 +225,11 @@ Route::middleware(['email_verified', 'web'])->group(function () {
                 Route::get('/', [SettingController::class, 'attendance']);
                 Route::get('/create_shift', [AttendanceController::class, 'createShift']);
                 Route::get('/attendance-access', [SettingController::class, 'attendanceAccess']);
-            
+
                 // ajax 
-                Route::any('/get_datails',[AttendanceController::class,'getAttendaceShiftList']);
+                Route::any('/get_datails', [AttendanceController::class, 'getAttendaceShiftList']);
                 Route::post('/update_attendace_shift', [AttendanceController::class, 'updateAttendaceShift']);
-        
+
                 Route::prefix('/automation')->group(function () {
                     Route::get('/', [SettingController::class, 'automation']);
                     Route::post('/set', [SettingController::class, 'setAutomationRule'])->name('setAutomationRule');
@@ -250,11 +258,11 @@ Route::middleware(['email_verified', 'web'])->group(function () {
         Route::post('/branch/{id}', [SettingController::class, 'DeleteBranch'])->name('delete.branch');
         Route::post('/department/{id}', [SettingController::class, 'DeleteDepartment'])->name('delete.department');
         Route::post('/designation/{id}', [SettingController::class, 'DeleteDesignation'])->name('delete.designation');
-        Route::post('/employee/{id}', [EmployeeController::class, 'DeleteEmployee'])->name('delete.employee');
+        Route::post('/employee', [EmployeeController::class, 'DeleteEmployee'])->name('delete.employee');
         Route::post('/holiday', [BusinessController::class, 'DeleteHoliday'])->name('delete.holiday');
         Route::post('/holidayTemplate', [BusinessController::class, 'DeleteHolidayTemp'])->name('delete.holidayTemp');
         Route::post('/leave', [SettingController::class, 'DeleteLeave'])->name('delete.leave');
-        Route::post('/shift/{id}', [AttendanceController::class, 'deleteShift'])->name('delete.shift');
+        Route::post('/shift', [AttendanceController::class, 'deleteShift'])->name('delete.shift');
         Route::post('/attendance-access', [SettingController::class, 'deleteAttendanceAccess'])->name('delete.AttendanceAccess');
     });
 

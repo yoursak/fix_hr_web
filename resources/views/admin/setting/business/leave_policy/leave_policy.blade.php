@@ -829,6 +829,7 @@ $EmpID = $nss->EmpPlaceHolder();
             };
 
             updatedItems.push(updatedItem);
+            console.log(updatedItems);
         });
 
         if (!isValid) {

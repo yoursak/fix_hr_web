@@ -46,7 +46,7 @@
                             <label for="weekname" class="col-sm-3 col-form-label fs-14">Weekly off template name</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" name="templatename" id="weekname"
-                                    placeholder="name">
+                                    placeholder="Enter Week Off Policy Name">
                             </div>
                         </div>
                         <div class="row">

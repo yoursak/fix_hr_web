@@ -2,6 +2,13 @@
 @section('subtitle')
     Attendance / Automation Rule
 @endsection
+@section('css')
+    <style>
+        input {
+            text-align: center;
+        }
+    </style>
+@endsection
 @section('settings')
     @php
         $lateEntryData;
@@ -41,45 +48,41 @@
                             <div class="d-flex justify-content-between">
                                 <div class="my-auto">
                                     <a class="font-weight-semibold fs-18 ms-3">Late Entry Rule</a>
-                                    <p class="mb-0 pb-0 text-muted fs-12 ms-3 mt-1">You can define rule by selecting any of
-                                        the
-                                        box
-                                    </p>
                                 </div>
-                                <div class="d-flex my-auto">
+                                <div class="d-flex">
                                     <label class="custom-switch ms-auto">
-                                        <?php if($lateEntryData != null){ ?>
                                         <input type="checkbox" name="lateEntry" onchange="showLateEntryContent()"
-                                            id="lateEntryBtn" class="custom-switch-input" checked>
-                                        <?php }else{ ?>
-                                        <input type="checkbox" name="lateEntry" onchange="showLateEntryContent()"
-                                            id="lateEntryBtn" class="custom-switch-input">
-                                        <?php } ?>
+                                            id="lateEntryBtn" class="custom-switch-input"
+                                            {{ $lateEntryData != null && $lateEntryData->switch_is !=0 ? 'checked' : '' }}>
                                         <span class="custom-switch-indicator"></span>
                                     </label>
                                 </div>
                             </div>
-                            <div class="my-3 mx-5 " id="lateEntryContent" disabled>
+                            <p class="mb-0 pb-0 text-muted fs-12 ms-3 mt-1">You can define rule by selecting any of the box
+                            </p>
+                            <div class="my-3" id="lateEntryContent" disabled>
                                 <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <?php if(($lateEntryData != null) && $lateEntryData->grace_time_hr != 0 || $lateEntryData->grace_time_min != 0){ ?>
-                                        <input type="checkbox" class="custom-control-input"
-                                            onchange="lateEntryGraceTimefunc()" name="lateEntryGrace" id="lateEntryGraceBtn"
-                                            value="1" checked>
-                                        <?php }else{ ?>
-                                        <input type="checkbox" class="custom-control-input"
-                                            onchange="lateEntryGraceTimefunc()" name="lateEntryGrace" id="lateEntryGraceBtn"
-                                            value="1">
-                                        <?php } ?>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Grace time for late coming</label>
-                                    <div class="col-1">
+                                    <div class="col-8">
+                                        <label class="custom-control custom-checkbox">
+                                            <?php if($lateEntryData != null && ($lateEntryData->grace_time_hr != 0 || $lateEntryData->grace_time_min != 0)){ ?>
+                                            <input type="checkbox" class="custom-control-input"
+                                                onchange="lateEntryGraceTimefunc()" name="lateEntryGrace"
+                                                id="lateEntryGraceBtn" value="1" checked>
+                                            <?php }else{ ?>
+                                            <input type="checkbox" class="custom-control-input"
+                                                onchange="lateEntryGraceTimefunc()" name="lateEntryGrace"
+                                                id="lateEntryGraceBtn" value="1">
+                                            <?php } ?>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Grace time for late coming</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-4 d-flex justify-content-end">
                                         <input class="mb-4 d-none"
-                                            value="{{ $lateEntryData->grace_time_hr }}:{{ $lateEntryData->grace_time_min }}"
+                                            value="{{ $lateEntryData ? $lateEntryData->grace_time_hr : '' }}:{{ $lateEntryData ? $lateEntryData->grace_time_min : '' }}"
                                             id="lateEntryGraceTime" name="lateEntryGraceTime" type="text"
-                                            placeholder="HH:MM" maxlength="5" oninput="formatTime(this)"
-                                            style="width: 5rem">
+                                            placeholder="HH:MM" class="text-center"" maxlength="5"
+                                            oninput="formatTime(this)" style="width: 5rem; height: 1.5rem">
                                     </div>
                                 </div>
                                 <script>
@@ -96,54 +99,68 @@
                                     }
                                 </script>
 
-                                <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <?php if(($lateEntryData != null) && $lateEntryData->occurance_is != 0){ ?>
-                                        <input type="checkbox" class="custom-control-input"
-                                            onchange="lateEntryOccurenceContent()" name="lateEntryOccurence"
-                                            id="lateEntryOccurenceBtn" value="1" checked>
-                                        <?php }else{ ?>
-                                        <input type="checkbox" class="custom-control-input"
-                                            onchange="lateEntryOccurenceContent()" name="lateEntryOccurence"
-                                            id="lateEntryOccurenceBtn" value="1">
-                                        <?php } ?>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Set Occurence</label>
-                                    <div class="d-none" id="lateEntryOccurenceContent">
-                                        <div class="row">
-                                            <div class="col-6">
+                                <div class="my-1">
+                                    <div class="col-12">
+                                        <label class="custom-control custom-checkbox">
+                                            <?php if(($lateEntryData != null) && $lateEntryData->occurance_is != 0){ ?>
+                                            <input type="checkbox" class="custom-control-input"
+                                                onchange="lateEntryOccurenceContent()" name="lateEntryOccurence"
+                                                id="lateEntryOccurenceBtn" value="1" checked>
+                                            <?php }else{ ?>
+                                            <input type="checkbox" class="custom-control-input"
+                                                onchange="lateEntryOccurenceContent()" name="lateEntryOccurence"
+                                                id="lateEntryOccurenceBtn" value="1">
+                                            <?php } ?>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Set Occurence</label>
+                                        </label>
+                                    </div>
+                                    <div class="d-none col-12" id="lateEntryOccurenceContent">
+                                        {{-- <div class="d-flex justify-content-end"> --}}
+                                        <div class="row d-flex justify-content-between">
+                                            <div class="col-7 text-end">
                                                 <select style="width: 5rem; height:1.5rem" id="lateEntrySelectOccurance"
                                                     onchange="countHour()" name="lateEntrySelectOccurance">
-                                                    <option value="0" {{$lateEntryData->occurance_is == '0' ? 'selected' : ''}}>Select</option>
-                                                    <option value="1" {{$lateEntryData->occurance_is == '1' ? 'selected' : ''}}>Count</option>
-                                                    <option value="2" {{$lateEntryData->occurance_is == '2' ? 'selected' : ''}}>Hour</option>
+                                                    <option value="0"
+                                                        {{ $lateEntryData != null && $lateEntryData->occurance_is == '0' ? 'selected' : '' }}>
+                                                        Select</option>
+                                                    <option value="1"
+                                                        {{ $lateEntryData != null && $lateEntryData->occurance_is == '1' ? 'selected' : '' }}>
+                                                        Count</option>
+                                                    <option value="2"
+                                                        {{ $lateEntryData != null && $lateEntryData->occurance_is == '2' ? 'selected' : '' }}>
+                                                        Hour</option>
                                                 </select>
                                             </div>
-                                            <div class="col-6 d-flex">
-                                                <?php if($lateEntryData->occurance_count != 0 || null){ ?>
-                                                <input class="mb-4 " value="{{ $lateEntryData->occurance_count }}"
+                                            <div class="col-5 d-flex">
+                                                <?php if($lateEntryData != null && $lateEntryData->occurance_count != 0 || null){ ?>
+                                                <input class="mb-4 ms-auto"
+                                                    value="{{ $lateEntryData ? $lateEntryData->occurance_count : '' }}"
                                                     name="lateEntryOccurenceCount" id="lateEntryOccurenceCount"
-                                                    type="text" placeholder="Count" style="width: 3.2rem">
+                                                    type="text" placeholder="Times" style="width: 5rem; height: 1.5rem">
                                                 <?php }else{ ?>
-                                                <input class="mb-4 d-none" value="{{ $lateEntryData->occurance_count }}"
+                                                <input class="mb-4 ms-auto d-none"
+                                                    value="{{ $lateEntryData != null ? $lateEntryData->occurance_count : '' }}"
                                                     name="lateEntryOccurenceCount" id="lateEntryOccurenceCount"
-                                                    type="text" placeholder="Count" style="width: 3.2rem">
+                                                    type="text" placeholder="Times" style="width: 5rem; height: 1.5rem">
                                                 <?php } ?>
 
-                                                <?php if($lateEntryData->occurance_hr != 0 || $lateEntryData->occurance_min != 0){ ?>
-                                                <input class="mb-4"
-                                                    value="{{ $lateEntryData->occurance_hr }}:{{ $lateEntryData->occurance_min }}"
+                                                <?php if($lateEntryData!= null && ($lateEntryData->occurance_hr != 0 || $lateEntryData->occurance_min != 0)){ ?>
+                                                <input class="mb-4 ms-auto"
+                                                    value="{{ $lateEntryData != null ? $lateEntryData->occurance_hr : '' }}:{{ $lateEntryData != null ? $lateEntryData->occurance_min : '' }}"
                                                     name="lateEntryOccurenceHour" id="lateEntryOccurenceHour"
-                                                    type="text" placeholder="HH:MM" maxlength="5"
-                                                    oninput="formatTime(this)" style="width: 3.2rem"><?php }else{ ?>
-                                                <input class="mb-4 d-none"
-                                                    value="{{ $lateEntryData->occurance_hr }}:{{ $lateEntryData->occurance_min }}"
+                                                    type="text" placeholder="HH:MM" class="text-center""
+                                                    maxlength="5" oninput="formatTime(this)"
+                                                    style="width: 5rem; height: 1.5rem"><?php }else{ ?>
+                                                <input class="mb-4 ms-auto d-none"
+                                                    value="{{ $lateEntryData != null ? $lateEntryData->occurance_hr : '' }}:{{ $lateEntryData != null ? $lateEntryData->occurance_min : '' }}"
                                                     name="lateEntryOccurenceHour" id="lateEntryOccurenceHour"
-                                                    type="text" placeholder="HH:MM" maxlength="5"
-                                                    oninput="formatTime(this)" style="width: 3.2rem"><?php } ?>
+                                                    type="text" placeholder="HH:MM" class="text-center"" class
+                                                    maxlength="5" oninput="formatTime(this)"
+                                                    style="width: 5rem; height: 1.5rem"><?php } ?>
                                             </div>
                                         </div>
+                                        {{-- </div> --}}
                                     </div>
                                 </div>
 
@@ -185,25 +202,33 @@
                                 </script>
 
                                 <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <?php if($lateEntryData->absent_is != 0){ ?>
-                                        <input type="checkbox" class="custom-control-input"
-                                            onchange="lateEntryDeductionPeriodContent()" name="lateEntryDeduction"
-                                            id="lateEntryDeductionBtn" value="1" checked><?php }else{ ?>
-                                        <input type="checkbox" class="custom-control-input"
-                                            onchange="lateEntryDeductionPeriodContent()" name="lateEntryDeduction"
-                                            id="lateEntryDeductionBtn" value="1"><?php } ?>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Mark Absent</label>
-                                    <div class="d-none" id="lateEntryDeductionPeriodContent">
+                                    <div class="col-6">
+                                        <label class="custom-control custom-checkbox">
+                                            <?php if($lateEntryData!=null && $lateEntryData->absent_is != 0){ ?>
+                                            <input type="checkbox" class="custom-control-input"
+                                                onchange="lateEntryDeductionPeriodContent()" name="lateEntryDeduction"
+                                                id="lateEntryDeductionBtn" value="1" checked><?php }else{ ?>
+                                            <input type="checkbox" class="custom-control-input"
+                                                onchange="lateEntryDeductionPeriodContent()" name="lateEntryDeduction"
+                                                id="lateEntryDeductionBtn" value="1"><?php } ?>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Mark Absent</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-6 d-none" id="lateEntryDeductionPeriodContent">
                                         <div class="row">
-                                            <div class="col-6">
+                                            <div class="text-end">
                                                 <select style="width: 5rem; height:1.5rem" id="lateEntrySelectAbsent"
                                                     name="lateEntrySelectAbsent">
-                                                    <option value="0" {{$lateEntryData->absent_is == '0' ? 'selected' : ''}}>Select</option>
-                                                    <option value="1" {{$lateEntryData->absent_is == '1' ? 'selected' : ''}}>Half Day</option>
-                                                    <option value="2" {{$lateEntryData->absent_is == '2' ? 'selected' : ''}}>Full DAy</option>
+                                                    <option value="0"
+                                                        {{ $lateEntryData != null && $lateEntryData->absent_is == '0' ? 'selected' : '' }}>
+                                                        Select</option>
+                                                    <option value="1"
+                                                        {{ $lateEntryData != null && $lateEntryData->absent_is == '1' ? 'selected' : '' }}>
+                                                        Half Day</option>
+                                                    <option value="2"
+                                                        {{ $lateEntryData != null && $lateEntryData->absent_is == '2' ? 'selected' : '' }}>
+                                                        Full Day</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -224,22 +249,26 @@
                                 </script>
 
                                 <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <?php if(($lateEntryData != null) && $lateEntryData->mark_half_day_hr != 0 || $lateEntryData->mark_half_day_min != 0){ ?>
-                                        <input type="checkbox" class="custom-control-input"
-                                            onchange="lateEntryMarkHalfDayMinutesfunc()" name="lateEntryMarkHalfDay"
-                                            id="lateEntryMarkHalfDayBtn" value="1" checked><?php }else{ ?>
+                                    <div class="col-8">
+                                        <label class="custom-control custom-checkbox">
+                                            <?php if($lateEntryData != null && ($lateEntryData->mark_half_day_hr != 0 || $lateEntryData->mark_half_day_min != 0)){ ?>
                                             <input type="checkbox" class="custom-control-input"
-                                            onchange="lateEntryMarkHalfDayMinutesfunc()" name="lateEntryMarkHalfDay"
-                                            id="lateEntryMarkHalfDayBtn" value="1"><?php } ?>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Mark half day if late by</label>
-                                    <div class="col-1">
-                                        <input class="mb-4 d-none"  name="lateEntryMarkHalfDayMinutes"
-                                            id="lateEntryMarkHalfDayMinutes" value="{{$lateEntryData->mark_half_day_hr}}:{{$lateEntryData->mark_half_day_min}}" type="text" placeholder="HH:MM"
-                                            maxlength="5" oninput="formatTime(this)" min="0"
-                                            style="width: 3.2rem">
+                                                onchange="lateEntryMarkHalfDayMinutesfunc()" name="lateEntryMarkHalfDay"
+                                                id="lateEntryMarkHalfDayBtn" value="1" checked><?php }else{ ?>
+                                            <input type="checkbox" class="custom-control-input"
+                                                onchange="lateEntryMarkHalfDayMinutesfunc()" name="lateEntryMarkHalfDay"
+                                                id="lateEntryMarkHalfDayBtn" value="1"><?php } ?>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Mark Half if late by</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-4 d-flex justify-content-end">
+                                        <input class="mb-4 d-none" name="lateEntryMarkHalfDayMinutes"
+                                            id="lateEntryMarkHalfDayMinutes"
+                                            value="{{ $lateEntryData ? $lateEntryData->mark_half_day_hr : '' }}:{{ $lateEntryData ? $lateEntryData->mark_half_day_min : '' }}"
+                                            type="text" placeholder="HH:MM" class="text-center"" maxlength="5"
+                                            oninput="formatTime(this)" min="0"
+                                            style="width: 5rem; height: 1.5rem">
                                     </div>
                                 </div>
 
@@ -266,7 +295,7 @@
                                     var lateEntrySelect = lateEntryContent.querySelectorAll('select');
                                     var lateEntryinputs = lateEntryContent.querySelectorAll('[type="number"]');
 
-                                    console.log(lateEntrySelect);
+                                    // console.log(lateEntrySelect);
 
                                     if (lateEntryBtn.checked == true) {
                                         lateEntryenableFields(lateEntrycheckboxes);
@@ -284,6 +313,21 @@
                                     lateEntryDeductionPeriodContent();
                                     lateEntryOccurenceContent();
                                     lateEntryGraceTimefunc();
+
+                                    var switchBtn = lateEntryBtn.checked;
+                                    $.ajax({
+                                        url: "{{ url('admin/settings/attendance/automation/set') }}",
+                                        type: "POST",
+                                        data: {
+                                            dataLateEntry: switchBtn,
+                                            _token: '{{ csrf_token() }}'
+                                        },
+                                        dataType: 'json',
+                                        success: function(result) {
+                                            console.log(result);
+
+                                        }
+                                    });
 
                                 }
 
@@ -327,38 +371,44 @@
                             <div class="d-flex justify-content-between">
                                 <div class="my-auto">
                                     <a class="font-weight-semibold fs-18 ms-3">Early Exit Rule</a>
-                                    <p class="mb-0 pb-0 text-muted fs-12 ms-3 mt-1">You can define rule by selecting any of
-                                        the
-                                        box
-                                    </p>
                                 </div>
-                                <div class="d-flex my-auto">
+                                <div class="d-flex">
                                     <label class="custom-switch ms-auto">
-                                        <?php if($earlyExitData != null){ ?>
+                                        <?php if($earlyExitData != null && $earlyExitData->switch_is !=0){ ?>
                                         <input type="checkbox" onchange="earlyExitContent()" name="earlyExitBtn"
-                                            onchange="" id="earlyExitBtn" class="custom-switch-input" checked><?php }else{ ?>
+                                            onchange="" id="earlyExitBtn" class="custom-switch-input"
+                                            checked><?php }else{ ?>
                                         <input type="checkbox" onchange="earlyExitContent()" name="earlyExitBtn"
-                                            onchange="" id="earlyExitBtn" class="custom-switch-input"><?php } ?>
+                                            onchange="" id="earlyExitBtn"
+                                            class="custom-switch-input"><?php } ?>
                                         <span class="custom-switch-indicator"></span>
                                     </label>
                                 </div>
                             </div>
+                            <p class="mb-0 pb-0 text-muted fs-12 ms-3 mt-1">You can define rule by selecting any of the box
+                            </p>
 
-                            <div class="my-3 mx-5" id="earlyExitContent">
+                            <div class="my-3" id="earlyExitContent">
                                 <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <?php if(($earlyExitData != null) && $earlyExitData->grace_time_hr != 0 || $earlyExitData->grace_time_min != 0){ ?>
-                                        <input type="checkbox" onchange="graceTimefunc()" class="custom-control-input"
-                                            name="graceTimeBtn" id="graceTimeBtn" value="1" checked><?php }else{ ?>
-                                                <input type="checkbox" onchange="graceTimefunc()" class="custom-control-input"
-                                            name="graceTimeBtn" id="graceTimeBtn" value="1"><?php }?>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Grace time for early exit</label>
-                                    <div class="col-1">
-                                        <input class="mb-4 d-none" value="{{$earlyExitData->grace_time_hr}}:{{$earlyExitData->grace_time_min}}" name="graceTime" id="graceTime"
-                                            type="text" placeholder="HH:MM" maxlength="5" oninput="formatTime(this)"
-                                            style="width: 3.2rem">
+                                    <div class="col-8">
+                                        <label class="custom-control custom-checkbox">
+                                            <?php if(($earlyExitData != null) && ($earlyExitData->grace_time_hr != 0 || $earlyExitData->grace_time_min != 0)){ ?>
+                                            <input type="checkbox" onchange="graceTimefunc()"
+                                                class="custom-control-input" name="graceTimeBtn" id="graceTimeBtn"
+                                                value="1" checked><?php }else{ ?>
+                                            <input type="checkbox" onchange="graceTimefunc()"
+                                                class="custom-control-input" name="graceTimeBtn" id="graceTimeBtn"
+                                                value="1"><?php }?>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Grace time for early exit</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-4 d-flex justify-content-end">
+                                        <input class="mb-4 d-none"
+                                            value="{{ $earlyExitData ? $earlyExitData->grace_time_hr : '' }}:{{ $earlyExitData ? $earlyExitData->grace_time_min : '' }}"
+                                            name="graceTime" id="graceTime" type="text" placeholder="HH:MM"
+                                            class="text-center" maxlength="5" oninput="formatTime(this)"
+                                            style="width: 5rem; height: 1.5rem">
                                     </div>
                                 </div>
 
@@ -377,44 +427,62 @@
                                     }
                                 </script>
 
-                                <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <?php if(($earlyExitData != null) && $earlyExitData->occurance_is != 0){ ?>
-                                        <input type="checkbox" onchange="earlyExitOccurenceContent()"
-                                            class="custom-control-input" name="earlyExitOccurence"
-                                            id="earlyExitOccurenceBtn" value="1" checked><?php }else{ ?>
-                                                <input type="checkbox" onchange="earlyExitOccurenceContent()"
-                                            class="custom-control-input" name="earlyExitOccurence"
-                                            id="earlyExitOccurenceBtn" value="1"><?php } ?>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Set Occurence</label>
-                                    <div class="d-none" id="earlyExitOccurenceContent">
-                                        <div class="row">
-                                            <div class="col-6">
+                                <div class="my-1">
+                                    <div class="col-12">
+                                        <label class="custom-control custom-checkbox">
+                                            <?php if(($earlyExitData != null) && $earlyExitData->occurance_is != 0){ ?>
+                                            <input type="checkbox" onchange="earlyExitOccurenceContent()"
+                                                class="custom-control-input" name="earlyExitOccurence"
+                                                id="earlyExitOccurenceBtn" value="1" checked><?php }else{ ?>
+                                            <input type="checkbox" onchange="earlyExitOccurenceContent()"
+                                                class="custom-control-input" name="earlyExitOccurence"
+                                                id="earlyExitOccurenceBtn" value="1"><?php } ?>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Set Occurence</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-12 d-none" id="earlyExitOccurenceContent">
+                                        <div class="row d-flex justify-content-around">
+                                            <div class="col-7 text-end">
                                                 <select onchange="earlyExitcountHour()" style="width: 5rem; height:1.5rem"
                                                     id="earlyExitSelectOccurence" name="earlyExitSelectOccurence">
-                                                    <option value="0" {{$earlyExitData->occurance_is == '0' ? 'selected' : 0}}>Select</option>
-                                                    <option value="1" {{$earlyExitData->occurance_is == '1' ? 'selected' : 0}}>Count</option>
-                                                    <option value="2" {{$earlyExitData->occurance_is == '2' ? 'selected' : 0}}>Hour</option>
+                                                    <option value="0"
+                                                        {{ $earlyExitData != null && $earlyExitData->occurance_is == '0' ? 'selected' : 0 }}>
+                                                        Select</option>
+                                                    <option value="1"
+                                                        {{ $earlyExitData != null && $earlyExitData->occurance_is == '1' ? 'selected' : 0 }}>
+                                                        Count</option>
+                                                    <option value="2"
+                                                        {{ $earlyExitData != null && $earlyExitData->occurance_is == '2' ? 'selected' : 0 }}>
+                                                        Hour</option>
                                                 </select>
                                             </div>
-                                            <div class="col-6">
+                                            <div class="col-5 d-flex">
                                                 <?php if(($earlyExitData != null) && $earlyExitData->occurance_is == 1){ ?>
-                                                <input class="mb-4" value="{{$earlyExitData->occurance_count}}" name="earlyExitOccurenceCount"
-                                                    id="earlyExitOccurenceCount" placeholder="Enter" type="number"
-                                                    min="0" style="width: 3.2rem"><?php }else{ ?>
-                                                <input class="mb-4 d-none" value="{{$earlyExitData->occurance_count}}" name="earlyExitOccurenceCount"
-                                                    id="earlyExitOccurenceCount" placeholder="Enter" type="number"
-                                                    min="0" style="width: 3.2rem"><?php } ?>
+                                                <input class="mb-4 ms-auto"
+                                                    value="{{ $earlyExitData ? $earlyExitData->occurance_count : '' }}"
+                                                    name="earlyExitOccurenceCount" id="earlyExitOccurenceCount"
+                                                    placeholder="Times" type="number" min="0"
+                                                    style="width: 5rem; height: 1.5rem"><?php }else{ ?>
+                                                <input class="mb-4 ms-auto d-none"
+                                                    value="{{ $earlyExitData ? $earlyExitData->occurance_count : '' }}"
+                                                    name="earlyExitOccurenceCount" id="earlyExitOccurenceCount"
+                                                    placeholder="Times" type="number" min="0"
+                                                    style="width: 5rem; height: 1.5rem"><?php } ?>
 
-                                                    <?php if(($earlyExitData != null) && $earlyExitData->occurance_is == 2){ ?>
-                                                <input class="mb-4 " value="{{$earlyExitData->occurance_hr}}:{{$earlyExitData->occurance_min}}" name="earlyExitOccurenceHour"
-                                                    id="earlyExitOccurenceHour" type="text" placeholder="HH:MM"
-                                                    maxlength="5" oninput="formatTime(this)" style="width: 3.2rem"><?php }else{ ?>
-                                                <input class="mb-4 d-none" value="{{$earlyExitData->occurance_hr}}:{{$earlyExitData->occurance_min}}" name="earlyExitOccurenceHour"
-                                                    id="earlyExitOccurenceHour" type="text" placeholder="HH:MM"
-                                                    maxlength="5" oninput="formatTime(this)" style="width: 3.2rem"><?php } ?>
+                                                <?php if(($earlyExitData != null) && $earlyExitData->occurance_is == 2){ ?>
+                                                <input class="mb-4 ms-auto "
+                                                    value="{{ $earlyExitData->occurance_hr }}:{{ $earlyExitData->occurance_min }}"
+                                                    name="earlyExitOccurenceHour" id="earlyExitOccurenceHour"
+                                                    type="text" placeholder="HH:MM" class="text-center""
+                                                    maxlength="5" oninput="formatTime(this)"
+                                                    style="width: 5rem; height: 1.5rem"><?php }else{ ?>
+                                                <input class="mb-4 ms-auto d-none"
+                                                    value="{{ $earlyExitData ? $earlyExitData->occurance_hr : '' }}:{{ $earlyExitData ? $earlyExitData->occurance_min : '' }}"
+                                                    name="earlyExitOccurenceHour" id="earlyExitOccurenceHour"
+                                                    type="text" placeholder="HH:MM" class="text-center""
+                                                    maxlength="5" oninput="formatTime(this)"
+                                                    style="width: 5rem; height: 1.5rem"><?php } ?>
                                             </div>
                                         </div>
                                     </div>
@@ -436,7 +504,7 @@
                                     }
 
                                     function earlyExitcountHour() {
-                                        // <input class="mb-4 d-none" value="" name="lateEntryOccurenceHour" id="lateEntryOccurenceHour" type="text" placeholder="HH:MM" maxlength="5" oninput="formatTime(this)" style="width: 3.2rem">
+                                        // <input class="mb-4 d-none" value="" name="lateEntryOccurenceHour" id="lateEntryOccurenceHour" type="text" placeholder="HH:MM" class="text-center"" maxlength="5" oninput="formatTime(this)" style="width: 5rem; height: 1.5rem">
                                         var earlyExitSelectOccurence = document.getElementById('earlyExitSelectOccurence');
                                         var earlyExitOccurenceHour = document.getElementById('earlyExitOccurenceHour');
                                         var earlyExitOccurenceCount = document.getElementById('earlyExitOccurenceCount');
@@ -460,25 +528,33 @@
                                 </script>
 
                                 <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <?php if(($earlyExitData != null) && $earlyExitData->absent_is != 0){ ?>
-                                        <input type="checkbox" onchange="earlyExitDeductionPeriodContent()"
-                                            class="custom-control-input" name="earlyExitDeduction"
-                                            id="earlyExitDeductionBtn" value="1" checked><?php }else{ ?>
-                                                <input type="checkbox" onchange="earlyExitDeductionPeriodContent()"
-                                            class="custom-control-input" name="earlyExitDeduction"
-                                            id="earlyExitDeductionBtn" value="1"><?php } ?>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Mark Absent</label>
-                                    <div class="d-none" id="earlyExitDeductionPeriodContent">
+                                    <div class="col-6">
+                                        <label class="custom-control custom-checkbox">
+                                            <?php if(($earlyExitData != null) && $earlyExitData->absent_is != 0){ ?>
+                                            <input type="checkbox" onchange="earlyExitDeductionPeriodContent()"
+                                                class="custom-control-input" name="earlyExitDeduction"
+                                                id="earlyExitDeductionBtn" value="1" checked><?php }else{ ?>
+                                            <input type="checkbox" onchange="earlyExitDeductionPeriodContent()"
+                                                class="custom-control-input" name="earlyExitDeduction"
+                                                id="earlyExitDeductionBtn" value="1"><?php } ?>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Mark Absent</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-6 d-none" id="earlyExitDeductionPeriodContent">
                                         <div class="row">
-                                            <div class="col-6">
+                                            <div class="text-end">
                                                 <select style="width: 5rem; height:1.5rem" id="earlyExitSelectAbsent"
                                                     name="earlyExitSelectAbsent">
-                                                    <option value="0" {{$earlyExitData->absent_is == '0' ? 'selected' : ''}}>Select</option>
-                                                    <option value="1" {{$earlyExitData->absent_is == '1' ? 'selected' : ''}}>Half Day</option>
-                                                    <option value="2" {{$earlyExitData->absent_is == '2' ? 'selected' : ''}}>Full Day</option>
+                                                    <option value="0"
+                                                        {{ $earlyExitData != null && $earlyExitData->absent_is == '0' ? 'selected' : '' }}>
+                                                        Select</option>
+                                                    <option value="1"
+                                                        {{ $earlyExitData != null && $earlyExitData->absent_is == '1' ? 'selected' : '' }}>
+                                                        Half Day</option>
+                                                    <option value="2"
+                                                        {{ $earlyExitData != null && $earlyExitData->absent_is == '2' ? 'selected' : '' }}>
+                                                        Full Day</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -500,21 +576,29 @@
                                 </script>
 
                                 <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <?php if(($earlyExitData != null) && $earlyExitData->mark_half_day_hr != 0 || $earlyExitData->mark_half_day_min != 0){ ?>
-                                        <input type="checkbox" onchange="earlyExitByBtnfunc()"
-                                            class="custom-control-input" name="exitMarkHalfDay" id="exitMarkHalfDayBtn"
-                                            value="1" checked><?php }else{ ?>
-                                                <input type="checkbox" onchange="earlyExitByBtnfunc()"
-                                            class="custom-control-input" name="exitMarkHalfDay" id="exitMarkHalfDayBtn"
-                                            value="1"><?php } ?>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Mark half day if early going by:</label>
-                                    <div class="col-1">
-                                        <input class="mb-4 d-none" value="{{$earlyExitData->mark_half_day_hr}}:{{$earlyExitData->mark_half_day_min }}" name="earlyExitBy" id="earlyExitByBtn"
-                                            type="text" placeholder="HH:MM" maxlength="5" oninput="formatTime(this)"
-                                            style="width: 3.2rem">
+                                    <div class="col-8">
+                                        <label class="custom-control custom-checkbox">
+                                            <?php if(($earlyExitData != null) && ($earlyExitData->mark_half_day_hr != 0 || $earlyExitData->mark_half_day_min != 0)){ ?>
+                                            <input type="checkbox" onchange="earlyExitByBtnfunc()"
+                                                class="custom-control-input" name="exitMarkHalfDay"
+                                                id="exitMarkHalfDayBtn" value="1" checked><?php }else{ ?>
+                                            <input type="checkbox" onchange="earlyExitByBtnfunc()"
+                                                class="custom-control-input" name="exitMarkHalfDay"
+                                                id="exitMarkHalfDayBtn" value="1"><?php } ?>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Mark Half if early going:</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-4 d-flex justify-content-end">
+                                        <?php //dd($earlyExitData->mark_half_day_hr);
+                                        ?>
+
+                                        <input class="mb-4 d-none"
+                                            value="<?= $earlyExitData != null && ($earlyExitData->mark_half_day_hr != 0 || $earlyExitData->mark_half_day_min != 0) ? "$earlyExitData->mark_half_day_hr:$earlyExitData->mark_half_day_min"
+                                        : '' ?>"
+                                        name="earlyExitBy" id="earlyExitByBtn" type="text" placeholder="HH:MM"
+                                        class="text-center" maxlength="5" oninput="formatTime(this)"
+                                        style="width: 5rem; height: 1.5rem">
                                     </div>
                                 </div>
 
@@ -562,6 +646,21 @@
                             earlyExitDeductionPeriodContent();
                             earlyExitOccurenceContent();
                             graceTimefunc();
+
+                            var switchBtn = earlyExitBtn.checked;
+                            $.ajax({
+                                url: "{{ url('admin/settings/attendance/automation/set') }}",
+                                type: "POST",
+                                data: {
+                                    earlyExitSwitch: switchBtn,
+                                    _token: '{{ csrf_token() }}'
+                                },
+                                dataType: 'json',
+                                success: function(result) {
+                                    console.log(result);
+
+                                }
+                            });
                         }
 
                         function earlyExitUnSelect(elements) {
@@ -601,41 +700,47 @@
                             <div class="d-flex justify-content-between">
                                 <div class="my-auto">
                                     <a class="font-weight-semibold fs-18 ms-3">Break Rule</a>
-                                    <p class="mb-0 pb-0 text-muted fs-12 ms-3 mt-1">You can define rule by selecting any of
-                                        the
-                                        box
-                                    </p>
                                 </div>
                                 <div class="d-flex my-auto">
                                     <label class="custom-switch ms-auto">
                                         <input type="checkbox" name="breakBtn" onchange="breakContent()" id="breakBtn"
-                                            class="custom-switch-input" {{$breakData != null ? 'checked' : ''}}>
+                                            class="custom-switch-input" {{ $breakData != null && $breakData->switch_is !=0 ? 'checked' : '' }}>
                                         <span class="custom-switch-indicator"></span>
                                     </label>
                                 </div>
                             </div>
+                            <p class="mb-0 pb-0 text-muted fs-12 ms-3 mt-1">You can define rule by selecting any of the box
+                            </p>
 
-                            <div class="my-3 mx-5" id="breakContent">
-                                <div class="d-flex my-1">
+                            <div class="my-3" id="breakContent">
+                                {{-- <div class="d-flex my-1">
                                     <label class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" name="defaultBreak"
                                             id="defaultBreakBtn" value="1" {{$breakData != null && $breakData->is_break_hr_deduct != 0 ? 'checked' : ''}}>
                                         <span class="custom-control-label"></span>
                                     </label>
                                     <label class="form-label mx-1">Deduct Break hour from work hour </label>
-                                </div>
+                                </div> --}}
 
                                 <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input"
-                                            onchange="extraTimeForBreakBtnfunc()" id="extraBreakTimeBtn" value="1" {{$breakData != null && $breakData->break_extra_hr != 0 || $breakData->break_extra_min != 0 ? 'checked' : ''}}>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Extra time for break </label>
-                                    <div class="col-1">
-                                        <input class="mb-4 d-none" value="{{$breakData->break_extra_hr}} : {{$breakData->break_extra_min}}" id="extraTimeForBreakBtn"
-                                            name="extraBreakTime" type="text" placeholder="HH:MM" maxlength="5"
-                                            oninput="formatTime(this)" style="width: 3.2rem">
+                                    <div class="col-8">
+                                        <label class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input"
+                                                onChange="extraTimeForBreakBtnfunc()" id="extraBreakTimeBtn"
+                                                value="1"
+                                                {{ $breakData != null && ($breakData->break_extra_hr != 0 || $breakData->break_extra_min != 0) ? 'checked' : '' }}>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Extra time for break </label>
+                                        </label>
+                                    </div>
+                                    <div class="col-4 d-flex justify-content-end">
+                                        <?php //dd($breakData->break_extra_hr);
+                                        ?>
+                                        <input class="mb-4 d-none"
+                                            value="<?= $breakData != null ? $breakData->break_extra_hr . ' : ' . $breakData->break_extra_min : '' ?>"
+                                            id="extraTimeForBreakBtn" name="extraBreakTime" type="text"
+                                            placeholder="HH:MM" class="text-center" maxlength="5"
+                                            oninput="formatTime(this)" style="width: 5rem; height: 1.5rem">
                                     </div>
 
                                     <script>
@@ -644,6 +749,7 @@
                                             var extraTimeForBreakBtn = document.getElementById('extraTimeForBreakBtn');
 
                                             if (extraBreakTimeBtn.checked == true) {
+                                                console.log(extraTimeForBreakBtn);
                                                 extraTimeForBreakBtn.classList.remove('d-none');
                                             } else {
                                                 extraTimeForBreakBtn.classList.add('d-none');
@@ -653,37 +759,52 @@
                                     </script>
                                 </div>
 
-                                <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <input type="checkbox" onchange="breakOccurenceContent()"
-                                            class="custom-control-input" name="breakOccurence" id="breakOccurenceBtn"
-                                            value="1" {{$breakData != null && $breakData->occurance_is != 0 ? 'checked' : ''}}>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Set Occurence </label>
-                                    <div class="d-none" id="breakOccurenceContent">
-                                        <div class="row">
-                                            <div class="col-6">
+                                <div class="my-1">
+                                    <div class="col-12">
+                                        <label class="custom-control custom-checkbox">
+                                            <input type="checkbox" onchange="breakOccurenceContent()"
+                                                class="custom-control-input" name="breakOccurence" id="breakOccurenceBtn"
+                                                value="1"
+                                                {{ $breakData != null && $breakData->occurance_is != 0 ? 'checked' : '' }}>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Set Occurence </label>
+                                        </label>
+                                    </div>
+                                    <div class="col-12 d-none" id="breakOccurenceContent">
+                                        <div class="row d-flex- justify-content-around">
+                                            <div class="col-7 text-end">
                                                 <select onchange="breakCountHour()" style="width: 5rem; height:1.5rem"
                                                     id="breakSelectOccurence" name="breakSelectOccurence">
-                                                    <option value="0" {{$breakData != null && $breakData->occurance_is == 0 ? 'selected' : ''}}>Select</option>
-                                                    <option value="1" {{$breakData != null && $breakData->occurance_is == 1 ? 'selected' : ''}}>Count</option>
-                                                    <option value="2" {{$breakData != null && $breakData->occurance_is == 2 ? 'selected' : ''}}>Hour</option>
+                                                    <option value="0"
+                                                        {{ $breakData != null && $breakData->occurance_is == 0 ? 'selected' : '' }}>
+                                                        Select</option>
+                                                    <option value="1"
+                                                        {{ $breakData != null && $breakData->occurance_is == 1 ? 'selected' : '' }}>
+                                                        Count</option>
+                                                    <option value="2"
+                                                        {{ $breakData != null && $breakData->occurance_is == 2 ? 'selected' : '' }}>
+                                                        Hour</option>
                                                 </select>
                                             </div>
-                                            <div class="col-6">
-                                                <input class="mb-4 {{$breakData != null && $breakData->occurance_is == 1 ? '' : 'd-none'}}" value="{{$breakData->occurance_count}}" name="breakOccurenceCount"
-                                                    id="breakOccurenceCount" placeholder="Enter" type="number"
-                                                    min="0" style="width: 3.2rem">
-                                                <input class="mb-4 {{$breakData != null && $breakData->occurance_is == 2 ? '' : 'd-none'}}" value="{{$breakData->occurance_hr}}:{{$breakData->occurance_min}}" name="breakOccurenceHour"
-                                                    id="breakOccurenceHour" type="text" placeholder="HH:MM"
-                                                    maxlength="5" oninput="formatTime(this)" style="width: 3.2rem">
+                                            <div class="col-5 d-flex">
+                                                <input
+                                                    class="mb-4 ms-auto {{ $breakData != null && $breakData->occurance_is == 1 ? '' : 'd-none' }}"
+                                                    value="{{ $breakData ? $breakData->occurance_count : '' }}"
+                                                    name="breakOccurenceCount" id="breakOccurenceCount"
+                                                    placeholder="Times" type="number" min="0"
+                                                    style="width: 5rem; height: 1.5rem">
+                                                <input
+                                                    class="mb-4 ms-auto {{ $breakData != null && $breakData->occurance_is == 2 ? '' : 'd-none' }}"
+                                                    value="{{ $breakData ? $breakData->occurance_hr : '' }}:{{ $breakData ? $breakData->occurance_min : '' }}"
+                                                    name="breakOccurenceHour" id="breakOccurenceHour" type="text"
+                                                    placeholder="HH:MM" class="text-center"" maxlength="5"
+                                                    oninput="formatTime(this)" style="width: 5rem; height: 1.5rem">
                                             </div>
                                         </div>
                                     </div>
                                     <script>
                                         function breakCountHour() {
-                                            // <input class="mb-4 d-none" value="" name="lateEntryOccurenceHour" id="lateEntryOccurenceHour" type="text" placeholder="HH:MM" maxlength="5" oninput="formatTime(this)" style="width: 3.2rem">
+                                            // <input class="mb-4 d-none" value="" name="lateEntryOccurenceHour" id="lateEntryOccurenceHour" type="text" placeholder="HH:MM" class="text-center"" maxlength="5" oninput="formatTime(this)" style="width: 5rem; height: 1.5rem">
                                             var breakSelectOccurence = document.getElementById('breakSelectOccurence');
                                             var breakOccurenceHour = document.getElementById('breakOccurenceHour');
                                             var breakOccurenceCount = document.getElementById('breakOccurenceCount');
@@ -721,21 +842,30 @@
                                     </script>
                                 </div>
                                 <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <input type="checkbox" onchange="breakDeductionPeriodContent()"
-                                            class="custom-control-input" name="breakDeductSalary"
-                                            id="breakDeductSalaryBtn" value="1" {{$breakData != null && $breakData->absent_is != 0 ? 'checked' : ''}}>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Mark Absent</label>
-                                    <div class="d-none" id="breakDeductionPeriodContent">
+                                    <div class="col-6">
+                                        <label class="custom-control custom-checkbox">
+                                            <input type="checkbox" onchange="breakDeductionPeriodContent()"
+                                                class="custom-control-input" name="breakDeductSalary"
+                                                id="breakDeductSalaryBtn" value="1"
+                                                {{ $breakData != null && $breakData->absent_is != 0 ? 'checked' : '' }}>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Mark Absent</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-6 d-none" id="breakDeductionPeriodContent">
                                         <div class="row">
-                                            <div class="col-6">
+                                            <div class="text-end">
                                                 <select style="width: 5rem; height:1.5rem" id="breakSelectAbsent"
                                                     name="breakSelectAbsent">
-                                                    <option value="0" {{$breakData != null && $breakData->absent_is == 0 ? 'selected' : ''}}>Select</option>
-                                                    <option value="1" {{$breakData != null && $breakData->absent_is == 1 ? 'selected' : ''}}>Half Day</option>
-                                                    <option value="2" {{$breakData != null && $breakData->absent_is == 2 ? 'selected' : ''}}>Full Day</option>
+                                                    <option value="0"
+                                                        {{ $breakData != null && $breakData->absent_is == 0 ? 'selected' : '' }}>
+                                                        Select</option>
+                                                    <option value="1"
+                                                        {{ $breakData != null && $breakData->absent_is == 1 ? 'selected' : '' }}>
+                                                        Half Day</option>
+                                                    <option value="2"
+                                                        {{ $breakData != null && $breakData->absent_is == 2 ? 'selected' : '' }}>
+                                                        Full Day</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -782,6 +912,21 @@
                             breakDeductionPeriodContent();
                             breakOccurenceContent();
                             extraTimeForBreakBtnfunc();
+
+                            var switchBtn = breakBtn.checked;
+                            $.ajax({
+                                url: "{{ url('admin/settings/attendance/automation/set') }}",
+                                type: "POST",
+                                data: {
+                                    breakSwitch: switchBtn,
+                                    _token: '{{ csrf_token() }}'
+                                },
+                                dataType: 'json',
+                                success: function(result) {
+                                    console.log(result);
+
+                                }
+                            });
                         }
 
                         function breakUnSelect(elements) {
@@ -820,34 +965,38 @@
                             <div class="d-flex justify-content-between">
                                 <div class="my-auto">
                                     <a class="font-weight-semibold fs-18 ms-3">Overtime Rule</a>
-                                    <p class="mb-0 pb-0 text-muted fs-12 ms-3 mt-1">You can define rule by selecting any of
-                                        the
-                                        box
-                                    </p>
                                 </div>
                                 <div class="d-flex my-auto">
                                     <label class="custom-switch ms-auto">
                                         <input type="checkbox" onchange="overtimeContent()" name="overtime"
-                                             id="overtimeBtn" class="custom-switch-input" {{$overtimeData != null ? 'checked' : ''}}>
+                                            id="overtimeBtn" class="custom-switch-input"
+                                            {{ $overtimeData != null && $overtimeData->switch_is !=0 ? 'checked' : '' }}>
                                         <span class="custom-switch-indicator"></span>
                                     </label>
                                 </div>
                             </div>
+                            <p class="mb-0 pb-0 text-muted fs-12 ms-3 mt-1">You can define rule by selecting any of the box
+                            </p>
 
-                            <div class="my-3 mx-5" id="overtimeContent">
+                            <div class="my-3" id="overtimeContent">
 
                                 <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input"
-                                            onchange="earlyOverTimefunc()" name="allowEarlyOverTime"
-                                            id="allowEarlyOverTimeBtn" value="1" {{$overtimeData != null && $overtimeData->early_ot_hr != 0 || $overtimeData->early_ot_min != 0 ? 'checked' : ''}}>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Allow Overtime for early comming</label>
-                                    <div class="col-1">
-                                        <input class="mb-4 d-none" value="{{$overtimeData->early_ot_hr}}:{{$overtimeData->early_ot_min}}" name="earlyOverTime"
-                                            id="earlyOverTimeBtn" type="text" placeholder="HH:MM" maxlength="5"
-                                            oninput="formatTime(this)" style="width: 3.2rem">
+                                    <div class="col-8">
+                                        <label class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input"
+                                                onchange="earlyOverTimefunc()" name="allowEarlyOverTime"
+                                                id="allowEarlyOverTimeBtn" value="1"
+                                                {{ $overtimeData != null && ($overtimeData->early_ot_hr != 0 || $overtimeData->early_ot_min != 0) ? 'checked' : '' }}>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Allow Overtime for early comming</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-4 d-flex justify-content-end">
+                                        <input class="mb-4 d-none"
+                                            value="{{ $overtimeData ? $overtimeData->early_ot_hr : '' }}:{{ $overtimeData ? $overtimeData->early_ot_min : '' }}"
+                                            name="earlyOverTime" id="earlyOverTimeBtn" type="text"
+                                            placeholder="HH:MM" class="text-center"" maxlength="5"
+                                            oninput="formatTime(this)" style="width: 5rem; height: 1.5rem">
                                     </div>
                                 </div>
 
@@ -867,16 +1016,22 @@
                                 </script>
 
                                 <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <input type="checkbox" onchange="lateOverTimefunc()" class="custom-control-input"
-                                            name="allowLateOverTime" id="allowLateOverTimeBtn" value="1" {{$overtimeData != null && $overtimeData->late_ot_hr != 0 || $overtimeData->late_ot_min != 0 ? 'checked' : ''}}>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Allow Overtime for late going</label>
-                                    <div class="col-1">
-                                        <input class="mb-4 d-none" value="{{$overtimeData->late_ot_hr}}:{{$overtimeData->late_ot_min}}" name="lateOverTime"
-                                            id="lateOverTimeBtn" type="text" placeholder="HH:MM" maxlength="5"
-                                            oninput="formatTime(this)" style="width: 3.2rem">
+                                    <div class="col-8">
+                                        <label class="custom-control custom-checkbox">
+                                            <input type="checkbox" onchange="lateOverTimefunc()"
+                                                class="custom-control-input" name="allowLateOverTime"
+                                                id="allowLateOverTimeBtn" value="1"
+                                                {{ $overtimeData != null && ($overtimeData->late_ot_hr != 0 || $overtimeData->late_ot_min != 0) ? 'checked' : '' }}>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Allow Overtime for late going</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-4 d-flex justify-content-end">
+                                        <input class="mb-4 d-none"
+                                            value="{{ $overtimeData ? $overtimeData->late_ot_hr : '' }}:{{ $overtimeData ? $overtimeData->late_ot_min : '' }}"
+                                            name="lateOverTime" id="lateOverTimeBtn" type="text" placeholder="HH:MM"
+                                            class="text-center"" maxlength="5" oninput="formatTime(this)"
+                                            style="width: 5rem; height: 1.5rem">
                                     </div>
                                 </div>
 
@@ -895,30 +1050,35 @@
                                     }
                                 </script>
 
-                                <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <input type="checkbox" onchange="minMaxOverTimeBtnContent()"
-                                            class="custom-control-input" name="minMaxOverTime" id="minMaxOverTimeBtn"
-                                            value="1"
-                                            {{$overtimeData != null && $overtimeData->min_ot_hr !=0 ||  $overtimeData->min_ot_min !=0 || $overtimeData->max_ot_hr !=0 || $overtimeData->max_ot_min !=0 ? 'checked' : ''}}
-                                            >
+                                <div class="my-1">
+                                    <div class="col-8">
+                                        <label class="custom-control custom-checkbox">
+                                            <input type="checkbox" onchange="minMaxOverTimeBtnContent()"
+                                                class="custom-control-input" name="minMaxOverTime" id="minMaxOverTimeBtn"
+                                                value="1"
+                                                {{ $overtimeData != null && ($overtimeData->min_ot_hr != 0 || $overtimeData->min_ot_min != 0 || $overtimeData->max_ot_hr != 0 || $overtimeData->max_ot_min != 0) ? 'checked' : '' }}>
 
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Allow Overtime</label>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Allow Overtime</label>
+                                        </label>
+                                    </div>
                                     <div class="d-none" id="minMaxOverTimeBtnContent">
-                                        <div class="d-flex my-1">
-                                            <label class="form-label mx-1">Min</label>
+                                        <div class="d-flex justify-content-center my-1">
                                             <div class="mx-2">
-                                                <input class="mb-4" value="{{$overtimeData->min_ot_hr}}: {{$overtimeData->min_ot_min}}" name="minOverTime"
-                                                    id="minOverTimeBtn" type="text" placeholder="HH:MM"
-                                                    maxlength="5" oninput="formatTime(this)" style="width: 3.2rem">
+                                                <label class="form-label mx-1">Min</label>
+                                                <input class="mb-4"
+                                                    value="{{ $overtimeData ? $overtimeData->min_ot_hr : '' }}: {{ $overtimeData ? $overtimeData->min_ot_min : '' }}"
+                                                    name="minOverTime" id="minOverTimeBtn" type="text"
+                                                    placeholder="HH:MM" class="text-center"" maxlength="5"
+                                                    oninput="formatTime(this)" style="width: 5rem; height: 1.5rem">
                                             </div>
-                                            <label class="form-label mx-1">Max</label>
                                             <div class="mx-2">
-                                                <input class="mb-4" value="{{$overtimeData->max_ot_hr}}:{{$overtimeData->max_ot_min }}" name="maxOverTime"
-                                                    id="maxOverTimeBtn" type="text" placeholder="HH:MM"
-                                                    maxlength="5" oninput="formatTime(this)" style="width: 3.2rem">
+                                                <label class="form-label mx-1">Max</label>
+                                                <input class="mb-4"
+                                                    value="{{ $overtimeData ? $overtimeData->max_ot_hr : '' }}:{{ $overtimeData ? $overtimeData->max_ot_min : '' }}"
+                                                    name="maxOverTime" id="maxOverTimeBtn" type="text"
+                                                    placeholder="HH:MM" class="text-center"" maxlength="5"
+                                                    oninput="formatTime(this)" style="width: 5rem; height: 1.5rem">
                                             </div>
                                         </div>
                                     </div>
@@ -970,6 +1130,21 @@
                             minMaxOverTimeBtnContent();
                             lateOverTimefunc();
                             earlyOverTimefunc();
+
+                            var switchBtn = overtimeBtn.checked;
+                            $.ajax({
+                                url: "{{ url('admin/settings/attendance/automation/set') }}",
+                                type: "POST",
+                                data: {
+                                    overtimeSwitch: switchBtn,
+                                    _token: '{{ csrf_token() }}'
+                                },
+                                dataType: 'json',
+                                success: function(result) {
+                                    console.log(result);
+
+                                }
+                            });
                         }
 
                         function overtimeUnSelect(elements) {
@@ -1009,54 +1184,70 @@
                             <div class="d-flex justify-content-between">
                                 <div class="my-auto">
                                     <a class="font-weight-semibold fs-18 ms-3">Miss Punch Rule</a>
-                                    <p class="mb-0 pb-0 text-muted fs-12 ms-3 mt-1">You can define rule by selecting any of
-                                        the
-                                        box
-                                    </p>
                                 </div>
                                 <div class="d-flex my-auto">
                                     <label class="custom-switch ms-auto">
                                         <input type="checkbox" onchange="missPunchContent()" name="missPunch"
-                                            onchange="" id="missPunchBtn" class="custom-switch-input" 
-                                            {{$missPunchData != null ? 'checked' : ''}}>
+                                            onchange="" id="missPunchBtn" class="custom-switch-input"
+                                            {{ $missPunchData != null && $missPunchData->switch_is !=0 ? 'checked' : '' }}>
                                         <span class="custom-switch-indicator"></span>
                                     </label>
                                 </div>
                             </div>
+                            <p class="mb-0 pb-0 text-muted fs-12 ms-3 mt-1">You can define rule by selecting any of
+                                the
+                                box
+                            </p>
 
-                            <div class="my-3 mx-5" id="missPunchContent">
-                                <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <input type="checkbox" onchange="missPunchOccurenceContent()"
-                                            class="custom-control-input" name="missPunchOccurence"
-                                            id="missPunchOccurenceBtn" value="1"
-                                            {{$missPunchData != null && $missPunchData->occurance_is != 0 ? 'checked' : ''}}>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Set Occurence</label>
-                                    <div class="d-none" id="missPunchOccurenceContent">
-                                        <div class="row">
-                                            <div class="col-6">
+                            <div class="my-3" id="missPunchContent">
+
+                                <div class="my-1">
+                                    <div class="col-12">
+                                        <label class="custom-control custom-checkbox">
+                                            <input type="checkbox" onchange="missPunchOccurenceContent()"
+                                                class="custom-control-input" name="missPunchOccurence"
+                                                id="missPunchOccurenceBtn" value="1"
+                                                {{ $missPunchData != null && $missPunchData->occurance_is != 0 ? 'checked' : '' }}>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Set Occurence</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-12 d-none" id="missPunchOccurenceContent">
+                                        <div class="row d-flex justify-content-around">
+                                            <div class="col-7 text-end">
                                                 <select onchange="missPunchCountHour()" style="width: 5rem; height:1.5rem"
                                                     id="missPunchSelectOccurence" name="missPunchSelectOccurence">
-                                                    <option value="0" {{$missPunchData != null && $missPunchData->occurance_is == 0 ? 'selected' : ''}}>Select</option>
-                                                    <option value="1" {{$missPunchData != null && $missPunchData->occurance_is == 1 ? 'selected' : ''}}>Count</option>
-                                                    <option value="2" {{$missPunchData != null && $missPunchData->occurance_is == 2 ? 'selected' : ''}}>Hour</option>
+                                                    <option value="0"
+                                                        {{ $missPunchData != null && $missPunchData->occurance_is == 0 ? 'selected' : '' }}>
+                                                        Select</option>
+                                                    <option value="1"
+                                                        {{ $missPunchData != null && $missPunchData->occurance_is == 1 ? 'selected' : '' }}>
+                                                        Count</option>
+                                                    <option value="2"
+                                                        {{ $missPunchData != null && $missPunchData->occurance_is == 2 ? 'selected' : '' }}>
+                                                        Hour</option>
                                                 </select>
                                             </div>
-                                            <div class="col-6">
-                                                <input class="mb-4 {{$missPunchData != null && $missPunchData->occurance_is == 1 ? '' : 'd-none'}}" value="{{$missPunchData->occurance_count}}" name="missPunchOccurenceCount"
-                                                    id="missPunchOccurenceCount" placeholder="Enter" type="number"
-                                                    min="0" style="width: 3.2rem">
-                                                <input class="mb-4 {{$missPunchData != null && $missPunchData->occurance_is == 2 ? '' : 'd-none'}}" value="{{$missPunchData->occurance_hr}}:{{$missPunchData->occurance_min}}" name="missPunchOccurenceHour"
-                                                    id="missPunchOccurenceHour" type="text" placeholder="HH:MM"
-                                                    maxlength="5" oninput="formatTime(this)" style="width: 3.2rem">
+                                            <div class="col-5 d-flex">
+                                                <input
+                                                    class="mb-4 ms-auto {{ $missPunchData != null && $missPunchData->occurance_is == 1 ? '' : 'd-none' }}"
+                                                    value="{{ $missPunchData ? $missPunchData->occurance_count : '' }}"
+                                                    name="missPunchOccurenceCount" id="missPunchOccurenceCount"
+                                                    placeholder="Times" type="number" min="0"
+                                                    style="width: 5rem; height: 1.5rem">
+                                                <input
+                                                    class="mb-4 ms-auto {{ $missPunchData != null && $missPunchData->occurance_is == 2 ? '' : 'd-none' }}"
+                                                    value="{{ $missPunchData ? $missPunchData->occurance_hr : '' }}:{{ $missPunchData ? $missPunchData->occurance_min : '' }}"
+                                                    name="missPunchOccurenceHour" id="missPunchOccurenceHour"
+                                                    type="text" placeholder="HH:MM" class="text-center""
+                                                    maxlength="5" oninput="formatTime(this)"
+                                                    style="width: 5rem; height: 1.5rem">
                                             </div>
                                         </div>
                                     </div>
                                     <script>
                                         function missPunchCountHour() {
-                                            // <input class="mb-4 d-none" value="" name="lateEntryOccurenceHour" id="lateEntryOccurenceHour" type="text" placeholder="HH:MM" maxlength="5" oninput="formatTime(this)" style="width: 3.2rem">
+                                            // <input class="mb-4 d-none" value="" name="lateEntryOccurenceHour" id="lateEntryOccurenceHour" type="text" placeholder="HH:MM" class="text-center"" maxlength="5" oninput="formatTime(this)" style="width: 5rem; height: 1.5rem">
                                             var missPunchSelectOccurence = document.getElementById('missPunchSelectOccurence');
                                             var missPunchOccurenceHour = document.getElementById('missPunchOccurenceHour');
                                             var missPunchOccurenceCount = document.getElementById('missPunchOccurenceCount');
@@ -1095,23 +1286,30 @@
                                 </div>
 
                                 <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        
-                                        <input type="checkbox" onchange="missPunchDeductionPeriodContent()"
-                                            class="custom-control-input" name="missPunchDeduction"
-                                            id="missPunchDeductionBtn" value="1"
-                                            {{$missPunchData != null && $missPunchData->absent_is != 0 ? 'checked' : ''}}>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Mark Absent</label>
-                                    <div class="d-none" id="missPunchDeductionPeriodContent">
+                                    <div class="col-6">
+                                        <label class="custom-control custom-checkbox">
+                                            <input type="checkbox" onchange="missPunchDeductionPeriodContent()"
+                                                class="custom-control-input" name="missPunchDeduction"
+                                                id="missPunchDeductionBtn" value="1"
+                                                {{ $missPunchData != null && $missPunchData->absent_is != 0 ? 'checked' : '' }}>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Mark Absent</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-6 d-none" id="missPunchDeductionPeriodContent">
                                         <div class="row">
-                                            <div class="col-6">
+                                            <div class="text-end">
                                                 <select style="width: 5rem; height:1.5rem" id="missPunchSelectAbsent"
                                                     name="missPunchSelectAbsent">
-                                                    <option value="0" {{$missPunchData != null && $missPunchData->absent_is == 0 ? 'selected' : ''}}>Select</option>
-                                                    <option value="1" {{$missPunchData != null && $missPunchData->absent_is == 1 ? 'selected' : ''}}>Half Day</option>
-                                                    <option value="2" {{$missPunchData != null && $missPunchData->absent_is == 2 ? 'selected' : ''}}>Full Day</option>
+                                                    <option value="0"
+                                                        {{ $missPunchData != null && $missPunchData->absent_is == 0 ? 'selected' : '' }}>
+                                                        Select</option>
+                                                    <option value="1"
+                                                        {{ $missPunchData != null && $missPunchData->absent_is == 1 ? 'selected' : '' }}>
+                                                        Half Day</option>
+                                                    <option value="2"
+                                                        {{ $missPunchData != null && $missPunchData->absent_is == 2 ? 'selected' : '' }}>
+                                                        Full Day</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -1157,6 +1355,21 @@
                             }
                             missPunchOccurenceContent();
                             missPunchDeductionPeriodContent();
+
+                            var switchBtn = missPunchBtn.checked;
+                            $.ajax({
+                                url: "{{ url('admin/settings/attendance/automation/set') }}",
+                                type: "POST",
+                                data: {
+                                    missPunchSwitch: switchBtn,
+                                    _token: '{{ csrf_token() }}'
+                                },
+                                dataType: 'json',
+                                success: function(result) {
+                                    console.log(result);
+
+                                }
+                            });
                         }
 
                         function missPunchUnSelect(elements) {
@@ -1197,55 +1410,68 @@
                             <div class="d-flex justify-content-between">
                                 <div class="my-auto">
                                     <a class="font-weight-semibold fs-18 ms-3">Gate Pass Rule</a>
-                                    <p class="mb-0 pb-0 text-muted fs-12 ms-3 mt-1">You can define rule by selecting any of
-                                        the
-                                        box
-                                    </p>
+
                                 </div>
                                 <div class="d-flex my-auto">
                                     <label class="custom-switch ms-auto">
                                         <input type="checkbox" onchange="gatePassContent()" name="gatePass"
                                             onchange="" id="gatePassBtn" class="custom-switch-input"
-                                            {{$gatePassData != null ? 'checked' : ''}}>
+                                            {{ $gatePassData != null && $gatePassData->switch_is != 0  ? 'checked' : '' }}>
                                         <span class="custom-switch-indicator"></span>
                                     </label>
                                 </div>
                             </div>
+                            <p class="mb-0 pb-0 text-muted fs-12 ms-3 mt-1">You can define rule by selecting any of
+                                the
+                                box
+                            </p>
 
-                            <div class="my-3 mx-5" id="gatePassContent">
+                            <div class="my-3" id="gatePassContent">
 
-                                <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <input type="checkbox" onchange="gatePassOccurenceContent()"
-                                            class="custom-control-input" name="gatePassOccurence"
-                                            id="gatePassOccurenceBtn" value="1"
-                                            {{$gatePassData != null && $gatePassData->occurance_is != 0 ? 'checked' : ''}}>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Set Occurence</label>
-                                    <div class="d-none" id="gatePassOccurenceContent">
-                                        <div class="row">
-                                            <div class="col-6">
+                                <div class="my-1">
+                                    <div class="col-12">
+                                        <label class="custom-control custom-checkbox">
+                                            <input type="checkbox" onchange="gatePassOccurenceContent()"
+                                                class="custom-control-input" name="gatePassOccurence"
+                                                id="gatePassOccurenceBtn" value="1"
+                                                {{ $gatePassData != null && $gatePassData->occurance_is != 0 ? 'checked' : '' }}>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Set Occurence</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-12 d-none" id="gatePassOccurenceContent">
+                                        <div class="row d-flex justify-content-around">
+                                            <div class="col-7 text-end">
                                                 <select onchange="gatePassCountHour()" style="width: 5rem; height:1.5rem"
                                                     id="gatePassSelectOccurence" name="gatePassSelectOccurence">
-                                                    <option value="0" {{$gatePassData != null && $gatePassData->occurance_is == 0 ? 'selected' : ''}}>Select</option>
-                                                    <option value="1" {{$gatePassData != null && $gatePassData->occurance_is == 1 ? 'selected' : ''}}>Count</option>
-                                                    <option value="2" {{$gatePassData != null && $gatePassData->occurance_is == 2 ? 'selected' : ''}}>Hour</option>
+                                                    <option value="0"
+                                                        {{ $gatePassData != null && $gatePassData->occurance_is == 0 ? 'selected' : '' }}>
+                                                        Select</option>
+                                                    <option value="1"
+                                                        {{ $gatePassData != null && $gatePassData->occurance_is == 1 ? 'selected' : '' }}>
+                                                        Count</option>
+                                                    <option value="2"
+                                                        {{ $gatePassData != null && $gatePassData->occurance_is == 2 ? 'selected' : '' }}>
+                                                        Hour</option>
                                                 </select>
                                             </div>
-                                            <div class="col-6">
-                                                <input class="mb-4 {{$gatePassData != null && $gatePassData->occurance_is == 1 ? '' : 'd-none'}}" value="{{ $gatePassData->occurance_count}}" name="gatePassOccurenceCount"
-                                                    id="gatePassOccurenceCount" placeholder="Enter" type="number"
-                                                    min="0" style="width: 3.2rem" ">
-                                                <input class="mb-4 {{$gatePassData != null && $gatePassData->occurance_is == 2 ? '' : 'd-none'}}" value="{{ $gatePassData->occurance_hr}}:{{$gatePassData->occurance_min}}" name="gatePassOccurenceHour"
-                                                    id="gatePassOccurenceHour" type="text" placeholder="HH:MM"
-                                                    maxlength="5" oninput="formatTime(this)" style="width: 3.2rem">
+                                            <div class="col-5 d-flex">
+                                                <input
+                                                    class="mb-4 ms-auto {{ $gatePassData != null && $gatePassData->occurance_is == 1 ? '' : 'd-none' }}"
+                                                    value="{{ $gatePassData != null && $gatePassData->occurance_count }}"
+                                                    name="gatePassOccurenceCount" id="gatePassOccurenceCount"
+                                                    placeholder="Times" type="number" min="0"
+                                                    style="width: 5rem; height: 1.5rem" ">
+                                                                            <input class="mb-4 ms-auto {{ $gatePassData != null && $gatePassData->occurance_is == 2 ? '' : 'd-none' }}" value="{{ $gatePassData ? $gatePassData->occurance_hr : '' }}:{{ $gatePassData ? $gatePassData->occurance_min : '' }}" name="gatePassOccurenceHour"
+                                                                                id="gatePassOccurenceHour" type="text" placeholder="HH:MM" class="text-center""
+                                                    maxlength="5" oninput="formatTime(this)"
+                                                    style="width: 5rem; height: 1.5rem">
                                             </div>
                                         </div>
                                     </div>
                                     <script>
                                         function gatePassCountHour() {
-                                            // <input class="mb-4 d-none" value="" name="lateEntryOccurenceHour" id="lateEntryOccurenceHour" type="text" placeholder="HH:MM" maxlength="5" oninput="formatTime(this)" style="width: 3.2rem">
+                                            // <input class="mb-4 d-none" value="" name="lateEntryOccurenceHour" id="lateEntryOccurenceHour" type="text" placeholder="HH:MM" class="text-center"" maxlength="5" oninput="formatTime(this)" style="width: 5rem; height: 1.5rem">
                                             var gatePassSelectOccurence = document.getElementById('gatePassSelectOccurence');
                                             var gatePassOccurenceHour = document.getElementById('gatePassOccurenceHour');
                                             var gatePassOccurenceCount = document.getElementById('gatePassOccurenceCount');
@@ -1285,22 +1511,30 @@
                                 </div>
 
                                 <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <input type="checkbox" onchange="gatePassDeductionPeriodContent()"
-                                            class="custom-control-input" name="gatePassDeduction"
-                                            id="gatePassDeductionBtn" value="1"
-                                            {{$gatePassData != null && $gatePassData->absent_is != 0 ? 'checked' : ''}}>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Mark Absent</label>
-                                    <div class="d-none" id="gatePassDeductionPeriodContent">
+                                    <div class="col-6">
+                                        <label class="custom-control custom-checkbox">
+                                            <input type="checkbox" onchange="gatePassDeductionPeriodContent()"
+                                                class="custom-control-input" name="gatePassDeduction"
+                                                id="gatePassDeductionBtn" value="1"
+                                                {{ $gatePassData != null && $gatePassData->absent_is != 0 ? 'checked' : '' }}>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Mark Absent</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-6 d-none" id="gatePassDeductionPeriodContent">
                                         <div class="row">
-                                            <div class="col-6">
+                                            <div class="text-end">
                                                 <select style="width: 5rem; height:1.5rem" id="gatePasSelectAbsent"
                                                     name="gatePasSelectAbsent">
-                                                    <option value="0" {{$gatePassData != null && $gatePassData->absent_is == 0 ? 'selected' : ''}}>Select</option>
-                                                    <option value="1" {{$gatePassData != null && $gatePassData->absent_is == 1 ? 'selected' : ''}}>Half Day</option>
-                                                    <option value="2" {{$gatePassData != null && $gatePassData->absent_is == 2 ? 'selected' : ''}}>Full Day</option>
+                                                    <option value="0"
+                                                        {{ $gatePassData != null && $gatePassData->absent_is == 0 ? 'selected' : '' }}>
+                                                        Select</option>
+                                                    <option value="1"
+                                                        {{ $gatePassData != null && $gatePassData->absent_is == 1 ? 'selected' : '' }}>
+                                                        Half Day</option>
+                                                    <option value="2"
+                                                        {{ $gatePassData != null && $gatePassData->absent_is == 2 ? 'selected' : '' }}>
+                                                        Full Day</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -1347,7 +1581,22 @@
                             }
 
                             gatePassOccurenceContent();
-                            gatePassDeductionPeriodContent()
+                            gatePassDeductionPeriodContent();
+
+                            var switchBtn = gatePassBtn.checked;
+                            $.ajax({
+                                url: "{{ url('admin/settings/attendance/automation/set') }}",
+                                type: "POST",
+                                data: {
+                                    gatePassSwitch: switchBtn,
+                                    _token: '{{ csrf_token() }}'
+                                },
+                                dataType: 'json',
+                                success: function(result) {
+                                    console.log(result);
+
+                                }
+                            });
                         }
 
                         function gatePassUnSelect(elements) {
@@ -1395,7 +1644,10 @@
             </script>
 
             <div class="col-12 text-end">
-                <button type="submit" class="btn btn-md btn-success"> Save and Continoue</button>
+                <div class="d-flex">
+                    <a href="" class="btn btn-danger">Cancel</a>
+                    <button type="submit" class="btn btn-md btn-success"> Save and Apply</button>
+                </div>
             </div>
         </div>
 

@@ -1,6 +1,37 @@
-@extends('admin.layout.master')
+@extends('admin.pagelayout.master')
 @section('title', 'Dashboard')
-@section('contents')
+@section('css')
+<style>
+    .pignose-calendar .pignose-calendar-unit a{
+        width: 1.5rem;
+        height: 1.5rem;
+        line-height: 1.5rem;
+    }
+    .pignose-calendar .pignose-calendar-unit{
+        height: 2.3rem;
+    }
+
+    .pignose-calendar .pignose-calendar-top{
+        padding: 0.8rem 0 0.8rem 0;
+    }
+
+    .pignose-calendar .pignose-calendar-top .pignose-calendar-top-date{
+        top: -6px;
+    }
+    .pignose-calendar .pignose-calendar-top .pignose-calendar-top-month{
+        font-size: 100%;
+    }
+    .pignose-calendar .pignose-calendar-top .pignose-calendar-top-year{
+        font-size: 100%;
+    }
+    .pignose-calendar .pignose-calendar-header .pignose-calendar-week{
+        height: 2em;
+        line-height: 2em;
+    }
+    
+</style>
+@endsection
+@section('content')
     <div class="container-fluid">
         @php
             // dd(Session::get('Fail'));
@@ -105,46 +136,251 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3">
-                <div class="row">
-                    <div class="col-xl-12 col-md-6 col-lg-12">
-                        <div class="card">
-                            <div class="card-header border-bottom-0">
-                                <div class="card-title">
-                                    Thinks To Do
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="list-group list-group-transparent mb-0 mail-inbox">
-                                    <a href="#"
-                                        class="list-group-item list-group-item-action d-flex align-items-center px-0 py-2">
-                                        <div class="spinner1">
-                                            <div class="double-bounce1 bg-danger"></div>
-                                            <div class="double-bounce2 bg-danger"></div>
-                                        </div>
-                                        <b>Manage Attendance</b>
-                                        <span class="ms-auto badge bg-primary">12</span>
-                                    </a>
-                                    <a href="#"
-                                        class="list-group-item list-group-item-action d-flex align-items-center px-0 py-2">
-                                        <div class="spinner1">
-                                            <div class="double-bounce1 bg-success"></div>
-                                            <div class="double-bounce2 bg-success"></div>
-                                        </div>
-                                        </span> <b>Manage Miss Punch</b> <span class="ms-auto badge bg-success">12</span>
-                                    </a>
-                                    <a href="#"
-                                        class="list-group-item list-group-item-action d-flex align-items-center px-0 py-2">
-                                        <div class="spinner1">
-                                            <div class="double-bounce1 bg-success"></div>
-                                            <div class="double-bounce2 bg-success"></div>
-                                        </div>
-                                        </span> <b>Manage Leaves</b> <span class="ms-auto badge bg-secondary">2</span>
-                                    </a>
-                                </div>
-                            </div>
+            <div class="col-xl-3 col-md-12 col-lg-123">
+                <div class="card">
+                    <div class="card-header border-bottom-0">
+                        <div class="card-title">
+                            Notice Board
                         </div>
                     </div>
+                    <div class="mb-4">
+                        <ul class="vertical-scroll">
+                            <li class="item">
+                                <div class="card p-4 ">
+                                    <div class="d-flex">
+                                        <img src="assets/images/users/16.jpg" alt="img"
+                                            class="avatar avatar-md bradius me-3">
+                                        <div class="me-3 mt-0 mt-sm-1 d-block">
+                                            <h6 class="mb-1">Vanessa James</h6>
+                                            <span class="clearfix"></span>
+                                            <small>Birthday on Feb 16</small>
+                                        </div>
+                                        <span class="avatar bg-primary ms-auto bradius mt-1"> <i
+                                                class="feather feather-mail text-white"></i> </span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="item">
+                                <div class="card p-4 ">
+                                    <div class="d-flex comming_events calendar-icon icons">
+                                        <span class="date_time bg-success-transparent bradius me-3"><span
+                                                class="date fs-18">21</span>
+                                            <span class="month fs-10">Feb</span>
+                                        </span>
+                                        <div class="me-3 mt-0 mt-sm-1 d-block">
+                                            <h6 class="mb-1">Anniversary</h6>
+                                            <span class="clearfix"></span>
+                                            <small>3rd Anniversary on 21st Feb</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="item">
+                                <div class="card p-4 ">
+                                    <div class="d-flex">
+                                        <img src="assets/images/users/4.jpg" alt="img"
+                                            class="avatar avatar-md bradius me-3">
+                                        <div class="me-3 mt-0 mt-sm-1 d-block">
+                                            <h6 class="mb-1">Faith Harris</h6>
+                                            <span class="clearfix"></span>
+                                            <small>Smart Device Trade Show</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="item">
+                                <div class="card p-4 ">
+                                    <div class="d-flex comming_events calendar-icon icons">
+                                        <span class="date_time bg-pink-transparent bradius me-3"><span
+                                                class="date fs-18">25</span>
+                                            <span class="month fs-10">Mar</span>
+                                        </span>
+                                        <div class="me-3 mt-0 mt-sm-1 d-block">
+                                            <h6 class="mb-1">Meeting</h6>
+                                            <span class="clearfix"></span>
+                                            <small>It will be held in meeting room</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-3 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header border-bottom-0">
+                        <div class="card-title">
+                            Thinks To Do
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-transparent mb-0 mail-inbox">
+                            <a href="#"
+                                class="list-group-item list-group-item-action d-flex align-items-center px-0 py-2">
+                                <div class="spinner1">
+                                    <div class="double-bounce1 bg-danger"></div>
+                                    <div class="double-bounce2 bg-danger"></div>
+                                </div>
+                                <b>Manage Attendance</b>
+                                <span class="ms-auto badge bg-primary">12</span>
+                            </a>
+                            <a href="#"
+                                class="list-group-item list-group-item-action d-flex align-items-center px-0 py-2">
+                                <div class="spinner1">
+                                    <div class="double-bounce1 bg-success"></div>
+                                    <div class="double-bounce2 bg-success"></div>
+                                </div>
+                                </span> <b>Manage Miss Punch</b> <span class="ms-auto badge bg-success">12</span>
+                            </a>
+                            <a href="#"
+                                class="list-group-item list-group-item-action d-flex align-items-center px-0 py-2">
+                                <div class="spinner1">
+                                    <div class="double-bounce1 bg-success"></div>
+                                    <div class="double-bounce2 bg-success"></div>
+                                </div>
+                                </span> <b>Manage Leaves</b> <span class="ms-auto badge bg-secondary">2</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="p-0">
+                        <div class="calendar p-1 pt-0"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-12 col-lg-12">
+                <div class="mb-4">
+                    <div class="card-header border-bottom-0 pt-2 ps-0">
+                        <h4 class="card-title">Upcomming Holidays</h4>
+                    </div>
+                    <ul class="vertical-scroll">
+                        <li class="item">
+                            <div class="card p-4 ">
+                                <div class="d-flex">
+                                    <img src="assets/images/users/16.jpg" alt="img"
+                                        class="avatar avatar-md bradius me-3">
+                                    <div class="me-3 mt-0 mt-sm-1 d-block">
+                                        <h6 class="mb-1">Vanessa James</h6>
+                                        <span class="clearfix"></span>
+                                        <small>Birthday on Feb 16</small>
+                                    </div>
+                                    <span class="avatar bg-primary ms-auto bradius mt-1"> <i
+                                            class="feather feather-mail text-white"></i> </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item">
+                            <div class="card p-4 ">
+                                <div class="d-flex comming_events calendar-icon icons">
+                                    <span class="date_time bg-success-transparent bradius me-3"><span
+                                            class="date fs-18">21</span>
+                                        <span class="month fs-10">Feb</span>
+                                    </span>
+                                    <div class="me-3 mt-0 mt-sm-1 d-block">
+                                        <h6 class="mb-1">Anniversary</h6>
+                                        <span class="clearfix"></span>
+                                        <small>3rd Anniversary on 21st Feb</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item">
+                            <div class="card p-4 ">
+                                <div class="d-flex">
+                                    <img src="assets/images/users/4.jpg" alt="img"
+                                        class="avatar avatar-md bradius me-3">
+                                    <div class="me-3 mt-0 mt-sm-1 d-block">
+                                        <h6 class="mb-1">Faith Harris</h6>
+                                        <span class="clearfix"></span>
+                                        <small>Smart Device Trade Show</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item">
+                            <div class="card p-4 ">
+                                <div class="d-flex comming_events calendar-icon icons">
+                                    <span class="date_time bg-pink-transparent bradius me-3"><span
+                                            class="date fs-18">25</span>
+                                        <span class="month fs-10">Mar</span>
+                                    </span>
+                                    <div class="me-3 mt-0 mt-sm-1 d-block">
+                                        <h6 class="mb-1">Meeting</h6>
+                                        <span class="clearfix"></span>
+                                        <small>It will be held in meeting room</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-12 col-lg-12">
+                <div class="mb-4">
+                    <div class="card-header border-bottom-0 pt-2 ps-0">
+                        <h4 class="card-title">Upcomming Birthdays</h4>
+                    </div>
+                    <ul class="vertical-scroll">
+                        <li class="item">
+                            <div class="card p-4 ">
+                                <div class="d-flex">
+                                    <img src="assets/images/users/16.jpg" alt="img" class="avatar avatar-md bradius me-3">
+                                    <div class="me-3 mt-0 mt-sm-1 d-block">
+                                        <h6 class="mb-1">Vanessa James</h6>
+                                        <span class="clearfix"></span>
+                                        <small>Birthday on Feb 16</small>
+                                    </div>
+                                    <span class="avatar bg-primary ms-auto bradius mt-1"> <i class="feather feather-mail text-white"></i> </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item">
+                            <div class="card p-4 ">
+                                <div class="d-flex comming_events calendar-icon icons">
+                                    <span class="date_time bg-success-transparent bradius me-3"><span class="date fs-18">21</span>
+                                        <span class="month fs-10">Feb</span>
+                                    </span>
+                                    <div class="me-3 mt-0 mt-sm-1 d-block">
+                                        <h6 class="mb-1">Anniversary</h6>
+                                        <span class="clearfix"></span>
+                                        <small>3rd Anniversary on 21st Feb</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item">
+                            <div class="card p-4 ">
+                                <div class="d-flex">
+                                    <img src="assets/images/users/4.jpg" alt="img" class="avatar avatar-md bradius me-3">
+                                    <div class="me-3 mt-0 mt-sm-1 d-block">
+                                        <h6 class="mb-1">Faith Harris</h6>
+                                        <span class="clearfix"></span>
+                                        <small>Smart Device Trade Show</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item">
+                            <div class="card p-4 ">
+                                <div class="d-flex comming_events calendar-icon icons">
+                                    <span class="date_time bg-pink-transparent bradius me-3"><span class="date fs-18">25</span>
+                                        <span class="month fs-10">Mar</span>
+                                    </span>
+                                    <div class="me-3 mt-0 mt-sm-1 d-block">
+                                        <h6 class="mb-1">Meeting</h6>
+                                        <span class="clearfix"></span>
+                                        <small>It will be held in meeting room</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -158,7 +394,8 @@
                         <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
                             <div class="btn-list d-flex">
                                 <div>
-                                    <button class="btn btn-outline-primary mx-3 border-0" href="#">Expand All</button>
+                                    <button class="btn btn-outline-primary mx-3 border-0" href="#">Expand
+                                        All</button>
                                 </div>
 
                                 <div>
@@ -242,9 +479,12 @@
     </div>
 @endsection
 
+@section('js')
+    <script src="{{ asset('assets/plugins/vertical-scroll/jquery.bootstrap.newsbox.js') }}"></script>
+    <script src="{{ asset('assets/plugins/vertical-scroll/vertical-scroll.js') }}"></script>
 
-@section('script')
-    <style>
+    <!-- INTERNAL PG-CALENDAR-MASTER JS -->
+    <script src="{{ asset('assets/plugins/pg-calendar-master/pignose.calendar.full.min.js') }}"></script>
+    <script src="{{ asset('assets/js/index2.js') }}"></script>
 
-    </style>
 @endsection

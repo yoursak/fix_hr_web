@@ -31,6 +31,8 @@
     <link href="{{asset('assets/switcher/css/switcher.css')}}" rel="stylesheet" />
     <link href="{{asset('assets/switcher/demo.css')}}" rel="stylesheet" />
 
+    <!----hatasactahy -->
+    @yield('css')
 </head>
 
 <body class="app sidebar-mini ltr">
@@ -334,7 +336,7 @@
             <!-- APP-SIDEBAR CLOSED -->
 
             <div class="app-content main-content mt-0">
-                <div class="side-app main-container pt-0">
+                <div class="side-app main-container pt-3">
 
                     <!-- PAGE HEADER -->
                     @include('admin.layout.breadcrumb')
@@ -359,13 +361,13 @@
     <!-- BACK TO TOP -->
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    @yield('js');
+    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> ignor --}}
+    <script src="{{asset('assets/plugins/jquery/jquery.min.js')}}"></script>
+    @yield('js')
 
     {{-- external link --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- JQUERY JS -->
-    <script src="{{asset('assets/plugins/jquery/jquery.min.js')}}"></script>
 
     <!-- BOOTSTRAP JS -->
     <script src="{{asset('assets/plugins/bootstrap/js/popper.min.js')}}"></script>

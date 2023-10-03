@@ -51,9 +51,9 @@ class CreateBusinessController extends Controller
                 'title' => 'OTP Genrated',
                 'body' => ' Your FixHR Business Registration one time PIN is: ' . "$otp",
             ];
-            // $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
+            $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
 // isset($sendMail)
-            if (true) {
+            if (isset($sendMail)) {
 
                 $request->session()->put('firstEmail', $request->email);
                 $business = DB::table("pending_admins")->insert([

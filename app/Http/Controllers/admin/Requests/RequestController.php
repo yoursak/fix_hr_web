@@ -21,50 +21,37 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class RequestController extends Controller
 {
-    public function leaves()
-    {
-        $accessPermission = Central_unit::AccessPermission();
-        $moduleName = $accessPermission[0];
-        $permissions = $accessPermission[1];
-        $data = LeaveRequestList::where('business_id', Session::get('business_id'))->get();
-        $root = compact('moduleName', 'permissions', 'data');
-        return view('admin.request.leave', $root);
-    }
+    
 
     public function gatepass()
     {
-        $data = GatepassRequestList::where('business_id', Session::get('business_id'))->get();
+        $datas = GatepassRequestList::where('business_id', Session::get('business_id'))->get();
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
-        // $data = LeaveRequestList::where('business_id', Session::get('business_id'))->get();
-        $root = compact('moduleName', 'permissions', 'data');
-       
-        // $data = GatepassRequestList::all();
-        // $data1 = BranchList::where('branch_id')
-        // return $data;
-        // dd($data->id);
-        return view('admin.request.gatepass',$root);
+        $root = compact('moduleName', 'permissions', 'datas');
+
+        return view('admin.request.gatepass', $root);
     }
 
     public function ApproveGatepass(Request $request)
     {
-        // dd($request->all());
-
         $branch = DB::table('gatepass_request_list')
             ->where('id', $request->editGatepassId)
             ->where('business_id', Session::get('business_id'))
             ->update(['in_time' => $request->in_time, 'status' => $request->approve]);
-        return back();
+        // return back();
         if ($branch) {
-            Alert::success('Data Updated', 'Updated  Created');
+            Alert::success('Gatepass Reaquest Approve', 'Updated  Created');
+            return back();
+        } else {
+            Alert::error('Not Updated', 'Your Gatepass Detail Updation is Fail');
+            return back();
         }
     }
 
     public function ApproveLeave(Request $request)
     {
-        // dd($request->all());
-
         $toDate = Carbon::parse($request->to_date);
         $fromDate = Carbon::parse($request->from_date);
 
@@ -74,7 +61,7 @@ class RequestController extends Controller
             ->where('business_id', Session::get('business_id'))
             ->update(['leave_type' => $request->leave_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $loaded, 'status' => $request->status]);
         if ($branch) {
-            Alert::success('Data Updated', 'Updated  Created');
+            Alert::success('Data Updated', 'Leave Request Approve Successfully');
         }
         return back();
     }
@@ -135,12 +122,23 @@ class RequestController extends Controller
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
-        $data = LeaveRequestList::where('business_id', Session::get('business_id'))->get();
-        $root = compact('moduleName', 'permissions', 'data');
-       
+        $datas = DB::table('misspunch_list')->where('business_id', Session::get('business_id'))->get();
+        $root = compact('moduleName', 'permissions', 'datas');
+
         // $data = MisspunchList::all();
         // dd($data);
-        return view('admin.request.misspunch',$root);
+        return view('admin.request.misspunch', $root);
+    }
+
+    public function leaves()
+    {
+        $datas = DB::table('leave_request_list')->where('business_id', Session::get('business_id'))->get();
+        $accessPermission = Central_unit::AccessPermission();
+        $moduleName = $accessPermission[0];
+        $permissions = $accessPermission[1];
+        // dd($data);
+        $root = compact('moduleName', 'permissions', 'datas');
+        return view('admin.request.leave', $root);
     }
 
     /**

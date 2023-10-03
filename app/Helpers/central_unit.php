@@ -42,6 +42,8 @@ class Central_unit
       self::$LoginEmail = Session::get('login_email');
       self::$LoginBusinessImage = Session::get('login_business_image'); //bimg
       // dd(self::$BusinessID,self::$UserType,self::$BranchID,self::$LoginRole,self::$LoginModelID,self::$LoginEmail,self::$LoginName);
+  
+
    }
    // LOAD ANY LOGIN CHECK ACCESS-PERMISSION JAY
    public static function AccessPermission()
@@ -360,9 +362,9 @@ class Central_unit
       $holidayCount = DB::table('holiday_template')->where('business_id', Session::get('business_id'))->count();
       $leaveCount = DB::table('setting_leave_policy')->where('business_id', Session::get('business_id'))->count();
       $weeklyholidayCount = DB::table('weekly_holiday_list')->where('business_id', Session::get('business_id'))->count();
-      
+
       // attendance side
-      
+
       if (($branch != null) || ($department != null) || ($designation != null) || ($adminCount != null) || ($holidayCount != null) || ($leaveCount != null) || ($weeklyholidayCount != null)) {
          return [$branch, $department, $designation, $adminCount, $holidayCount, $leaveCount, $weeklyholidayCount];
       } else {

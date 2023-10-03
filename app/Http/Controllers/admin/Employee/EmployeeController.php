@@ -29,10 +29,18 @@ class EmployeeController extends Controller
         // $moduleName = $accessPermission[0];
         // $permissions = $accessPermission[1];
         // $root= compact('moduleName', 'permissions');
+        // $itemt = DB::table('employee_personal_details')
+        //     ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+        //     ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+        //     ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+        //     ->get();
+        // ->select('employee_personal_details.*', 'branch_list.branch_name', 'designation_list.desig_name')->get();
+        // dd($itemt);
         $DATA = DB::table('employee_personal_details')
-            ->where('business_id', Session::get('business_id'))
+            ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+            ->where('employee_personal_details.business_id', Session::get('business_id'))
             ->get();
-        // dd($data->all());
+        // dd($DATA);
         return view('admin.employees.employee', compact('DATA', 'Branch', 'moduleName', 'permissions'));
     }
 
@@ -57,6 +65,14 @@ class EmployeeController extends Controller
     {
         // dd($request->all());
         // Validate the request data
+        if($request->emp_id){
+            $itemm = DB::table('employee_personal_details')->where('emp_id',$request->emp_id)->get();
+            Alert::error('Employee Not Added', 'Employee Id is alerady exist.');
+            // return redirect('admin/employee');
+            return back();
+           
+        }
+        
         $validatedData = $request->validate([
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             // Adjust max size as needed
@@ -76,20 +92,23 @@ class EmployeeController extends Controller
             'business_id' => $request->session()->get('business_id'),
             'employee_type' => 1,
             'emp_name' => $request->name,
-            'emp_id' => $request->emp_id,
+            'emp_mname' => $request->mName,
+            'emp_lname' => $request->lName,
             'emp_mobile_number' => $request->mobile_number,
-            'emp_email' => $request->email,
-            'branch_id' => $request->branch,
-            'department_id' => $request->department,
-            'designation_id' => $request->designation,
+            'emp_email' => $request->email_sd,
             'emp_date_of_birth' => $request->dob,
-            'emp_date_of_joining' => $request->doj,
             'emp_gender' => $request->gender,
-            'emp_address' => $request->address,
             'emp_country' => $request->country,
             'emp_state' => $request->state,
             'emp_city' => $request->city,
             'emp_pin_code' => $request->pincode,
+            'emp_address' => $request->address,
+            'emp_id' => $request->emp_id,
+            'emp_shift_type' => $request->shift_type,
+            'branch_id' => $request->branch_id1,
+            'department_id' => $request->department_id1,
+            'designation_id' => $request->designation_id1,
+            'emp_date_of_joining' => $request->doj,
             'profile_photo' => $imageName,
         ]);
 
@@ -166,9 +185,10 @@ class EmployeeController extends Controller
 
     public function UpdateEmployee(Request $request)
     {
+        // dd ($request->all());
         // Validate the request data
         $validatedData = $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             // Adjust max size as needed
         ]);
 
@@ -189,7 +209,7 @@ class EmployeeController extends Controller
                 'branch_id' => $request->branch,
                 'employee_type' => $request->employee_type,
                 'emp_id' => $request->emp_id,
-                'emp_name' => $request->name,
+                'emp_name' => $request->first_name,
                 'department_id' => $request->department,
                 'designation_id' => $request->designation,
                 'emp_mobile_number' => $request->mobile_number,
@@ -216,12 +236,16 @@ class EmployeeController extends Controller
 
     public function DeleteEmployee(Request $request)
     {
-        // dd($request->id);
-        echo $request->id;
-        DB::table('employee_personal_details')
-            ->where('emp_id', $request->id)
+        // dd($request->all());
+        // echo $request->delete_employesd;
+        $dataDelete = DB::table('employee_personal_details')
+            ->where('emp_id', $request->weekly_policy_id)
             ->delete();
-        Alert::success('Deleted Successfully', 'Success Message');
+        if ($dataDelete) {
+            Alert::success('Deleted Successfully', 'Success Message');
+        } else {
+            Alert::error('Failed');
+        }
         return redirect('admin/employee');
     }
 
@@ -236,18 +260,35 @@ class EmployeeController extends Controller
 
         // // Use the selected filter values to query your database and retrieve the filtered data
         $filteredData = DB::table('employee_personal_details')
+            ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+            ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+            ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
             ->when($branchId, function ($query) use ($branchId) {
-                $query->where('branch_id', $branchId);
+                $query->where('employee_personal_details.branch_id', $branchId);
             })
             ->when($departmentId, function ($query) use ($departmentId) {
-                $query->where('department_id', $departmentId);
+                $query->where('employee_personal_details.department_id', $departmentId);
             })
             ->when($designationId, function ($query) use ($designationId) {
-                $query->where('designation_id', $designationId);
+                $query->where('employee_personal_details.designation_id', $designationId);
             })
             ->get();
 
         // Return the filtered data as JSON response
         return response()->json(['get' => $filteredData]);
+    }
+
+    public function allEmployee(Request $request)
+    {
+        // return true;
+        // dd($request->all());
+        $days =  DB::table('employee_personal_details')
+            ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+            ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+            ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+            ->where('employee_personal_details.business_id', Session::get('business_id'))
+            ->where('employee_personal_details.emp_id', $request->employee_id)
+            ->get();
+        return response()->json(['get' => $days]);
     }
 }

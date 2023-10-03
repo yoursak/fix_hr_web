@@ -12,8 +12,10 @@ class LocalizationController extends Controller
     {   $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
-     
-        
         return view('admin.setting.localization.localization',compact('permissions','moduleName'));
+    }
+    public function submitLocalization()
+    {
+        
     }
 }
