@@ -1,40 +1,43 @@
 @extends('admin.pagelayout.master')
 @section('title', 'Dashboard')
 @section('css')
-<style>
-    .pignose-calendar .pignose-calendar-unit a{
-        width: 1.5rem;
-        height: 1.5rem;
-        line-height: 1.5rem;
-    }
-    .pignose-calendar .pignose-calendar-unit{
-        height: 2.3rem;
-    }
+    <style>
+        .pignose-calendar .pignose-calendar-unit a {
+            width: 1.5rem;
+            height: 1.5rem;
+            line-height: 1.5rem;
+        }
 
-    .pignose-calendar .pignose-calendar-top{
-        padding: 0.8rem 0 0.8rem 0;
-    }
+        .pignose-calendar .pignose-calendar-unit {
+            height: 2.3rem;
+        }
 
-    .pignose-calendar .pignose-calendar-top .pignose-calendar-top-date{
-        top: -6px;
-    }
-    .pignose-calendar .pignose-calendar-top .pignose-calendar-top-month{
-        font-size: 100%;
-    }
-    .pignose-calendar .pignose-calendar-top .pignose-calendar-top-year{
-        font-size: 100%;
-    }
-    .pignose-calendar .pignose-calendar-header .pignose-calendar-week{
-        height: 2em;
-        line-height: 2em;
-    }
-    
-</style>
+        .pignose-calendar .pignose-calendar-top {
+            padding: 1rem 0 1rem 0;
+        }
+
+        .pignose-calendar .pignose-calendar-top .pignose-calendar-top-date {
+            top: -6px;
+        }
+
+        .pignose-calendar .pignose-calendar-top .pignose-calendar-top-month {
+            font-size: 100%;
+        }
+
+        .pignose-calendar .pignose-calendar-top .pignose-calendar-top-year {
+            font-size: 100%;
+        }
+
+        .pignose-calendar .pignose-calendar-header .pignose-calendar-week {
+            height: 2em;
+            line-height: 2em;
+        }
+    </style>
 @endsection
 @section('content')
     <div class="container-fluid">
         @php
-            // dd(Session::get('Fail'));
+            // dd($Emp);
         @endphp
         <div class="page-header d-md-flex d-block">
             <div class="page-leftheader">
@@ -136,79 +139,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-md-12 col-lg-123">
-                <div class="card">
-                    <div class="card-header border-bottom-0">
-                        <div class="card-title">
-                            Notice Board
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <ul class="vertical-scroll">
-                            <li class="item">
-                                <div class="card p-4 ">
-                                    <div class="d-flex">
-                                        <img src="assets/images/users/16.jpg" alt="img"
-                                            class="avatar avatar-md bradius me-3">
-                                        <div class="me-3 mt-0 mt-sm-1 d-block">
-                                            <h6 class="mb-1">Vanessa James</h6>
-                                            <span class="clearfix"></span>
-                                            <small>Birthday on Feb 16</small>
-                                        </div>
-                                        <span class="avatar bg-primary ms-auto bradius mt-1"> <i
-                                                class="feather feather-mail text-white"></i> </span>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="item">
-                                <div class="card p-4 ">
-                                    <div class="d-flex comming_events calendar-icon icons">
-                                        <span class="date_time bg-success-transparent bradius me-3"><span
-                                                class="date fs-18">21</span>
-                                            <span class="month fs-10">Feb</span>
-                                        </span>
-                                        <div class="me-3 mt-0 mt-sm-1 d-block">
-                                            <h6 class="mb-1">Anniversary</h6>
-                                            <span class="clearfix"></span>
-                                            <small>3rd Anniversary on 21st Feb</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="item">
-                                <div class="card p-4 ">
-                                    <div class="d-flex">
-                                        <img src="assets/images/users/4.jpg" alt="img"
-                                            class="avatar avatar-md bradius me-3">
-                                        <div class="me-3 mt-0 mt-sm-1 d-block">
-                                            <h6 class="mb-1">Faith Harris</h6>
-                                            <span class="clearfix"></span>
-                                            <small>Smart Device Trade Show</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="item">
-                                <div class="card p-4 ">
-                                    <div class="d-flex comming_events calendar-icon icons">
-                                        <span class="date_time bg-pink-transparent bradius me-3"><span
-                                                class="date fs-18">25</span>
-                                            <span class="month fs-10">Mar</span>
-                                        </span>
-                                        <div class="me-3 mt-0 mt-sm-1 d-block">
-                                            <h6 class="mb-1">Meeting</h6>
-                                            <span class="clearfix"></span>
-                                            <small>It will be held in meeting room</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
             <div class="col-xl-3 col-md-12 col-lg-12">
                 <div class="card">
                     <div class="card-header border-bottom-0">
@@ -247,11 +177,68 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-xl-3 col-md-12 col-lg-12">
+                <div class="card-header border-bottom-0 pt-2 ps-0">
+                    <h4 class="card-title">Calendar</h4>
+                </div>
                 <div class="card">
                     <div class="p-0">
                         <div class="calendar p-1 pt-0"></div>
                     </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-12 col-lg-12">
+                <div class="mb-4">
+                    <div class="card-header border-bottom-0 pt-2 ps-0">
+                        <h4 class="card-title">Upcomming Birthdays</h4>
+                    </div>
+                    <ul class="vertical-scroll">
+                        @foreach ($Emp as $emp)
+                            <?php 
+                            $birth_y = date('Y', strtotime($emp->emp_date_of_birth));
+                            $birth_d = date('d', strtotime($emp->emp_date_of_birth));
+                            $birth_m = date('F', strtotime($emp->emp_date_of_birth));
+                            // $dob = {{$birth_m'-'$birth_d}} 
+                        if($birth_m == date('F')){ ?>
+                            <li class="item">
+                                <div class="card p-4 ">
+                                    <div class="d-flex comming_events calendar-icon icons">
+                                        <span class="date_time bg-success-transparent bradius me-3"><span
+                                                class="date fs-18">{{ date('d', strtotime($emp->emp_date_of_birth)) }}</span>
+                                            <span
+                                                class="month fs-12">{{ date('M', strtotime($emp->emp_date_of_birth)) }}</span>
+                                        </span>
+                                        <?php
+                                        $current_y = date('Y');
+                                        $year = $current_y - $birth_y;
+                                        ?>
+
+                                        @if (date('m', strtotime($emp->emp_date_of_birth)) == date('m') && date('d', strtotime($emp->emp_date_of_birth)) == date('d'))
+                                            <div class="me-3 mt-0 mt-sm-1 d-block">
+                                                <h6 class="mb-1">Today is {{ $emp->emp_name }}'s Birthday</h6>
+                                                <span class="clearfix"></span>
+                                                <small>{{ $year }}th Birthday Celebration</small>
+                                            </div>
+                                            <a href="#"><span class="avatar bg-primary ms-auto bradius mt-1"> <i class="feather feather-mail text-white"></i> </span></a>
+                                        @else
+                                            <div class="me-3 mt-0 mt-sm-1 d-block">
+                                                <h6 class="mb-1">{{ $emp->emp_name }}'s Birthday</h6>
+                                                <span class="clearfix"></span>
+
+                                                <small>{{ $year }}th Birthday on
+                                                    {{ date('d', strtotime($emp->emp_date_of_birth)) }}th of
+                                                    {{ date('M', strtotime($emp->emp_date_of_birth)) }}</small>
+                                                    {{-- <small>{{$birth_m'-'$birth_d}}</small> --}}
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </li>
+                            <?php }?>
+                        @endforeach
+                    </ul>
                 </div>
             </div>
             <div class="col-xl-3 col-md-12 col-lg-12">
@@ -324,26 +311,29 @@
             <div class="col-xl-3 col-md-12 col-lg-12">
                 <div class="mb-4">
                     <div class="card-header border-bottom-0 pt-2 ps-0">
-                        <h4 class="card-title">Upcomming Birthdays</h4>
+                        <h4 class="card-title">Notice Board</h4>
                     </div>
                     <ul class="vertical-scroll">
                         <li class="item">
                             <div class="card p-4 ">
                                 <div class="d-flex">
-                                    <img src="assets/images/users/16.jpg" alt="img" class="avatar avatar-md bradius me-3">
+                                    <img src="assets/images/users/16.jpg" alt="img"
+                                        class="avatar avatar-md bradius me-3">
                                     <div class="me-3 mt-0 mt-sm-1 d-block">
                                         <h6 class="mb-1">Vanessa James</h6>
                                         <span class="clearfix"></span>
                                         <small>Birthday on Feb 16</small>
                                     </div>
-                                    <span class="avatar bg-primary ms-auto bradius mt-1"> <i class="feather feather-mail text-white"></i> </span>
+                                    <span class="avatar bg-primary ms-auto bradius mt-1"> <i
+                                            class="feather feather-mail text-white"></i> </span>
                                 </div>
                             </div>
                         </li>
                         <li class="item">
                             <div class="card p-4 ">
                                 <div class="d-flex comming_events calendar-icon icons">
-                                    <span class="date_time bg-success-transparent bradius me-3"><span class="date fs-18">21</span>
+                                    <span class="date_time bg-success-transparent bradius me-3"><span
+                                            class="date fs-18">21</span>
                                         <span class="month fs-10">Feb</span>
                                     </span>
                                     <div class="me-3 mt-0 mt-sm-1 d-block">
@@ -357,7 +347,8 @@
                         <li class="item">
                             <div class="card p-4 ">
                                 <div class="d-flex">
-                                    <img src="assets/images/users/4.jpg" alt="img" class="avatar avatar-md bradius me-3">
+                                    <img src="assets/images/users/4.jpg" alt="img"
+                                        class="avatar avatar-md bradius me-3">
                                     <div class="me-3 mt-0 mt-sm-1 d-block">
                                         <h6 class="mb-1">Faith Harris</h6>
                                         <span class="clearfix"></span>
@@ -369,7 +360,8 @@
                         <li class="item">
                             <div class="card p-4 ">
                                 <div class="d-flex comming_events calendar-icon icons">
-                                    <span class="date_time bg-pink-transparent bradius me-3"><span class="date fs-18">25</span>
+                                    <span class="date_time bg-pink-transparent bradius me-3"><span
+                                            class="date fs-18">25</span>
                                         <span class="month fs-10">Mar</span>
                                     </span>
                                     <div class="me-3 mt-0 mt-sm-1 d-block">
@@ -443,32 +435,37 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="text-center">
-                                        <div class="btn btn-light btn-icon btn-sm" id="calenderbtn"
-                                            data-bs-toggle="tooltip" data-original-title="View">
-                                            <i class="feather feather-eye"></i>
-                                        </div>
-                                    </td>
-                                    <td>FD22311</td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <span class="avatar avatar brround me-3"
-                                                style="background-image: url(imgs/user.png)"></span>
-                                            <div class="me-3 mt-0 mt-sm-2 d-block">
-                                                <h6 class=" fs-14"><a href="{{ url('/emprofile') }}">Aman Sahu</a></h6>
+                                @foreach ($Emp as $emp)
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="btn btn-light btn-icon btn-sm" id="calenderbtn"
+                                                data-bs-toggle="tooltip" data-original-title="View">
+                                                <i class="feather feather-eye"></i>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">5</td>
-                                    <td class="text-center">2</td>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center">-</td>
-                                    <td class="text-center">-</td>
-                                    <td class="text-center">-</td>
-                                    <td class="text-center">-</td>
-                                    <td class="text-center">5</td>
-                                </tr>
+                                        </td>
+                                        <td>FD22311</td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <span class="avatar avatar brround me-3"
+                                                    style="background-image: url(imgs/user.png)"></span>
+                                                <div class="me-3 mt-0 mt-sm-2 d-block">
+                                                    <h6 class=" fs-14"><a
+                                                            href="{{ url('/emprofile') }}">{{ $emp->emp_name }}</a>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">5</td>
+                                        <td class="text-center">2</td>
+                                        <td class="text-center">1</td>
+                                        <td class="text-center">-</td>
+                                        <td class="text-center">-</td>
+                                        <td class="text-center">-</td>
+                                        <td class="text-center">-</td>
+                                        <td class="text-center">5</td>
+                                    </tr>
+                                @endforeach
+
                             </tbody>
                         </table>
                     </div>
@@ -480,8 +477,8 @@
 @endsection
 
 @section('js')
-    <script src="{{ asset('assets/plugins/vertical-scroll/jquery.bootstrap.newsbox.js') }}"></script>
-    <script src="{{ asset('assets/plugins/vertical-scroll/vertical-scroll.js') }}"></script>
+    <script src="{{ asset('assets/plugins/vertical-scroll/jquery.bootstrap.newsbox.js?v=0.1') }}"></script>
+    <script src="{{ asset('assets/plugins/vertical-scroll/vertical-scroll.js?v=0.1') }}"></script>
 
     <!-- INTERNAL PG-CALENDAR-MASTER JS -->
     <script src="{{ asset('assets/plugins/pg-calendar-master/pignose.calendar.full.min.js') }}"></script>

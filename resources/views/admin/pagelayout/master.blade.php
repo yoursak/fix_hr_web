@@ -16,11 +16,11 @@
     <script src="{{ config('app.cdn') }}"></script>
 
     <!-- FAVICON -->
-    <link rel="icon" href="{{asset('assets/images/brand/favicon.ico')}}" type="image/x-icon" />
+    <link rel="icon" href={{ asset('assets/logo/f_fav.png?v=0.2') }} type="image/x-icon" />
     <!-- BOOTSTRAP CSS -->
     <link href="{{asset('assets/plugins/bootstrap/css/bootstrap.css')}}" rel="stylesheet" />
     <!-- STYLE CSS -->
-    <link href="{{asset('assets/css/style.css')}}" rel="stylesheet" />
+    <link href="{{asset('assets/css/style.css?v=2.1')}}" rel="stylesheet" />
     <link href="{{asset('assets/css/plugins.css')}}" rel="stylesheet" />
     <!-- ANIMATE CSS -->
     <link href="{{asset('assets/css/animated.css')}}" rel="stylesheet" />

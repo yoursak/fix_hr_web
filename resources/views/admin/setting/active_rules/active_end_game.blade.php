@@ -266,8 +266,8 @@
 
 <head>
     <link href="{{asset('assets/css/plugins.css')}}" rel="stylesheet" />
-    <link href="{{asset('assets/css/style.css')}}" rel="stylesheet" />
-    <link href="{{asset('assets/css/plugins.css')}}" rel="stylesheet" />
+<link href="{{asset('assets/css/style.css')}}" rel="stylesheet" />
+<link href="{{asset('assets/css/plugins.css')}}" rel="stylesheet" />
 
 </head> --}}
 
@@ -376,8 +376,8 @@
                                                 </div>
                                             </div>
 
-                                            <h4>Created Leave Policy</h4>
-                                            <div class="col-md-4">
+                                            <h4>Created Policy</h4>
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label class="form-label"> Leave Policy List</label>
                                                     <select class="form-control select2" name="leavepolicy[]"
@@ -396,7 +396,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label class="form-label"> Holiday Policy List</label>
                                                     <select class="form-control select2" name="holidaypolicy[]"
@@ -417,7 +417,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label class="form-label"> Weekly Policy List</label>
                                                     <select class="form-control select2" name="weeklypolicy[]"
@@ -437,8 +437,7 @@
                                                 </div>
                                             </div>
 
-                                            <h4>Created Attendance Policy</h4>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label class="form-label">Shift Settings List</label>
                                                     <select class="form-control select2" name="shiftsetting[]"
@@ -457,128 +456,8 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group ">
-                                                    <label class="form-label">Attendance Mode</label>
-                                                    <select class="form-control select2" name="attendancemode[]"
-                                                        data-placeholder="Choose Attendance Mode" multiple required>
-                                                        <option label="Choose Attendance Mode">
-                                                        </option>
-                                                        @empty(!$attendanceModePolicy)
-                                                            @foreach ($attendanceModePolicy as $item)
-                                                                <?php  
-                                                                    if($item->in_premises_auto!=null && $item->in_premises_auto!=0){
-                                                                    ?>
-                                                                <option value="1">Office&nbsp;|&nbsp;Auto</option>
-                                                                <?php  
-                                                                    } if(($item->in_premises_qr!=null && $item->in_premises_qr!=0) || ($item->in_premises_face_id!=null && $item->in_premises_face_id!=0) || ($item->in_premises_selfie!=null && $item->in_premises_selfie!=0)){
-                                                                    ?>
-                                                                <option value="1">Office|Manual</option>
-                                                                <?php  }
-                                                                    if($item->outdoor_auto!=null && $item->outdoor_auto!=0){?>
-                                                                <option value="2">Out Door&nbsp;|&nbsp;Auto</option>
-                                                                <?php }if($item->outdoor_selfie!=null && $item->outdoor_selfie!=0){
-                                                                    ?>
-                                                                <option value="2">Out Door&nbsp;|&nbsp;Manual</option>
 
-                                                                <?php }if($item->wfh_auto!=null && $item->wfh_auto!=0){
-                                                                        ?>
-                                                                <option value="3">Remote&nbsp;|&nbsp;Auto</option>
-                                                                <?php  
-                                                                    }if($item->wfh_auto!=null && $item->wfh_auto!=0){
-                                                                    ?>
-                                                                <option value="3">Remote&nbsp;|&nbsp;Manual</option>
 
-                                                                <?php }?>
-                                                            @endforeach
-                                                        @endempty
-
-                                                    </select>
-                                                </div>
-                                                {{-- <div class="form-group">
-                                                <label class="form-label">Attendance Mode</label>
-                                                <select class="form-control select2" name="weeklypolicy[]"
-                                                    data-placeholder="Choose Weekly Policy" multiple>
-                                                    @php
-                                                    $no=1;
-                                                    @endphp
-                                                    @empty(!$attendanceModePolicy)
-                                                    @foreach ($attendanceModePolicy as $item)
-                                                    <option value="<?= $item->id ?>">
-                                                        <?= $no++ ?>&nbsp;|&nbsp;
-                                                        <?= $item->in_premises_auto ?>&nbsp;
-                                                        <?= $item->in_premises_qr ?>&nbsp;
-                                                        <?= $item->in_premises_face_id ?>&nbsp;
-                                                        <?= $item->in_premises_selfie ?>&nbsp;
-                                                        <?= $item->outdoor_auto ?>&nbsp;
-                                                        <?= $item->outdoor_selfie ?>&nbsp;
-                                                        <?= $item->wfh_auto ?>&nbsp;
-                                                        <?= $item->wfh_selfie ?>&nbsp;
-                                                    </option>
-                                                    @endforeach
-                                                    @endempty
-                                                </select>
-                                            </div> --}}
-                                            </div>
-
-                                            {{-- <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="form-label">Automation Rules List</label>
-                                                <select class="form-control select2" name="automationrules[]"
-                                                    data-placeholder="Choose Weekly Policy" multiple>
-                                                    @php
-                                                    $no=1;
-                                                    @endphp
-                                                    @empty(!$weeklyPolicy)
-                                                    @foreach ($weeklyPolicy as $item)
-                                                    <option value="<?= $item->id ?>">
-                                                        <?= $no++ ?>&nbsp;|&nbsp;
-                                                        <?= $item->name ?>&nbsp;
-                                                    </option>
-                                                    @endforeach
-                                                    @endempty
-                                                </select>
-                                            </div>
-                                        </div> --}}
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label class="form-label">Track PunchIn/Out List</label>
-                                                    <select class="form-control select2" name="trackpunch[]"
-                                                        data-placeholder="Choose Weekly Policy" multiple required>
-                                                        @empty(!$attendanceTrackInOut->id)
-                                                            <option value="1">
-                                                                <?php if($attendanceTrackInOut->track_in_out!=null && $attendanceTrackInOut->track_in_out!=0){?>
-                                                                <?= 'Track In & Out Time' ?>&nbsp;
-                                                                <?php }?>
-                                                            </option>
-                                                            <option value="2">
-                                                                <?php if($attendanceTrackInOut->no_attendace_without_punch!=null && $attendanceTrackInOut->no_attendace_without_punch!=0){?>
-                                                                <?= 'No Attendance without punch' ?>&nbsp;
-                                                                <?php }?>
-                                                            </option>
-                                                        @endempty
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            {{-- <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="form-label">Attendance Access List</label>
-                                                <select class="form-control select2" name="weeklypolicy[]"
-                                                    data-placeholder="Choose Weekly Policy" multiple>
-                                                    @php
-                                                    $no=1;
-                                                    @endphp
-                                                    @empty(!$weeklyPolicy)
-                                                    @foreach ($weeklyPolicy as $item)
-                                                    <option value="<?= $item->id ?>">
-                                                        <?= $no++ ?>&nbsp;|&nbsp;
-                                                        <?= $item->name ?>&nbsp;
-                                                    </option>
-                                                    @endforeach
-                                                    @endempty
-                                                </select>
-                                            </div>
-                                        </div> --}}
                                         </div>
 
 
@@ -633,6 +512,7 @@
                                     <th class="border-bottom-0">Weekly Policy List</th>
                                     <th class="border-bottom-0">Shift Policy List</th>
                                     <th class="border-bottom-0">Attendace Policy List</th>
+                                    <th class="border-bottom-0">Track Policy List</th>
                                     <th class="border-bottom-0">Action</th>
                                 </tr>
                             </thead>
@@ -646,11 +526,161 @@
                                         <td class="font-weight-semibold"><?= $item->method_name ?></td>
                                         <td class="font-weight-semibold"><?= $item->policy_name ?></td>
                                         <td class="font-weight-semibold"><?= $item->level_name ?></td>
-                                        <td class="font-weight-semibold"><?= $item->leave_policy_ids_list ?></td>
-                                        <td class="font-weight-semibold"><?= $item->holiday_policy_ids_list ?></td>
-                                        <td class="font-weight-semibold"><?= $item->weekly_policy_ids_list ?></td>
-                                        <td class="font-weight-semibold"><?= $item->shift_settings_ids_list ?></td>
-                                        <td class="font-weight-semibold"><?= $item->attendance_mode_list ?></td>
+                                        <td class="font-weight-semibold"><?php
+                                        // Decode the JSON string into an array of IDs
+                                        $holidayPolicyIds = json_decode($item->leave_policy_ids_list);
+                                        
+                                        if ($holidayPolicyIds !== null) {
+                                            // Check if the decoded JSON is not null (i.e., it's valid JSON)
+                                            // Loop through the IDs and display the corresponding names
+                                            foreach ($holidayPolicyIds as $id) {
+                                                // Call the GetValues function to retrieve the object
+                                                $load = $power->GetValues($id)[0];
+                                        
+                                                if ($load !== null) {
+                                                    // Check if the object is not null
+                                                    echo $load->policy_name . ', '; // Add a comma and space between names if needed
+                                                } else {
+                                                    // Handle cases where an object is not found
+                                                    echo 'Unknown'; // You can use a default value or an appropriate message here
+                                                }
+                                            }
+                                        } else {
+                                            // Handle cases where the JSON is invalid or empty
+                                            echo 'Unknown'; // You can use a default value or an appropriate message here
+                                        }
+                                        ?></td>
+                                        <td class="font-weight-semibold">
+                                            <?php
+                                            if ($item->holiday_policy_ids_list ?? false) {
+                                                // Decode the JSON string into an array of IDs
+                                                $holidayPolicyIds = json_decode($item->holiday_policy_ids_list);
+                                            
+                                                if ($holidayPolicyIds !== null) {
+                                                    // Check if the decoded JSON is not null (i.e., it's valid JSON)
+                                                    // Loop through the IDs and display the corresponding names
+                                                    foreach ($holidayPolicyIds as $id) {
+                                                        // Call the GetValues function to retrieve the object
+                                                        $load = $power->GetValues($id)[1];
+                                            
+                                                        if ($load !== null) {
+                                                            // Check if the object is not null
+                                                            echo $load->temp_name . ', '; // Add a comma and space between names if needed
+                                                        } else {
+                                                            // Handle cases where an object is not found
+                                                            echo 'Unknown'; // You can use a default value or an appropriate message here
+                                                        }
+                                                    }
+                                                } else {
+                                                    // Handle cases where the JSON is invalid or empty
+                                                    echo 'Unknown'; // You can use a default value or an appropriate message here
+                                                }
+                                            }
+                                            ?>
+                                        </td>
+
+
+
+                                        <td class="font-weight-semibold"><?php
+                                        if ($item->weekly_policy_ids_list ?? false) {
+                                            // Decode the JSON string into an array of IDs
+                                            $holidayPolicyIds = json_decode($item->weekly_policy_ids_list);
+                                        
+                                            if ($holidayPolicyIds !== null) {
+                                                // Check if the decoded JSON is not null (i.e., it's valid JSON)
+                                                // Loop through the IDs and display the corresponding names
+                                                foreach ($holidayPolicyIds as $id) {
+                                                    // Call the GetValues function to retrieve the object
+                                                    $load = $power->GetValues($id)[2];
+                                        
+                                                    if ($load !== null) {
+                                                        // Check if the object is not null
+                                                        echo $load->name . ', '; // Add a comma and space between names if needed
+                                                    } else {
+                                                        // Handle cases where an object is not found
+                                                        echo 'Unknown'; // You can use a default value or an appropriate message here
+                                                    }
+                                                }
+                                            } else {
+                                                // Handle cases where the JSON is invalid or empty
+                                                echo 'Unknown'; // You can use a default value or an appropriate message here
+                                            }
+                                        }
+                                        ?></td>
+                                        <td class="font-weight-semibold"><?php
+                                        // Decode the JSON string into an array of IDs
+                                        if ($item->shift_settings_ids_list ?? false) {
+                                            $holidayPolicyIds = json_decode($item->shift_settings_ids_list);
+                                        
+                                            if ($holidayPolicyIds !== null) {
+                                                // Check if the decoded JSON is not null (i.e., it's valid JSON)
+                                                // Loop through the IDs and display the corresponding names
+                                                foreach ($holidayPolicyIds as $id) {
+                                                    // Call the GetValues function to retrieve the object
+                                                    $load = $power->GetValues($id)[3];
+                                        
+                                                    if ($load !== null) {
+                                                        // Check if the object is not null
+                                                        echo $load->shift_type_name . ', '; // Add a comma and space between names if needed
+                                                    } else {
+                                                        // Handle cases where an object is not found
+                                                        echo 'Unknown'; // You can use a default value or an appropriate message here
+                                                    }
+                                                }
+                                            } else {
+                                                // Handle cases where the JSON is invalid or empty
+                                                echo 'Unknown'; // You can use a default value or an appropriate message here
+                                            }
+                                        }
+                                        ?></td>
+                                        <td class="font-weight-semibold">
+                                            @empty(!$attendanceModePolicy)
+                                                @foreach ($attendanceModePolicy as $item)
+                                                    <?php
+                                                    if ($item->in_premises_auto != null && $item->in_premises_auto != 0) {
+                                                    ?>
+                                                    <small>Office&nbsp;|&nbsp;Auto</small>
+                                                    <?php
+                                                    }
+                                                    if (($item->in_premises_qr != null && $item->in_premises_qr != 0) || ($item->in_premises_face_id != null && $item->in_premises_face_id != 0) || ($item->in_premises_selfie != null && $item->in_premises_selfie != 0)) {
+                                                    ?>
+                                                    <small>Office&nbsp;|&nbsp;Manual</small>
+                                                    <?php  }
+                                                    if ($item->outdoor_auto != null && $item->outdoor_auto != 0) { ?>
+                                                    <small> Out Door&nbsp;|&nbsp;Auto</small>
+                                                    <?php }
+                                                    if ($item->outdoor_selfie != null && $item->outdoor_selfie != 0) {
+                                                    ?>
+                                                    <small>Out Door&nbsp;|&nbsp;Manual</small>
+
+                                                    <?php }
+                                                    if ($item->wfh_auto != null && $item->wfh_auto != 0) {
+                                                    ?>
+                                                    <small> Remote&nbsp;|&nbsp;Auto</small>
+                                                    <?php
+                                                    }
+                                                    if ($item->wfh_selfie != null && $item->wfh_selfie != 0) {
+                                                    ?>
+                                                    <small> Remote&nbsp;|&nbsp;Manual</small>
+
+                                                    <?php } ?>
+                                                @endforeach
+                                            @endempty
+                                        </td>
+                                        <td class="font-weight-semibold">
+                                            @empty(!$attendanceTrackInOut->id)
+                                                <option value="1">
+                                                    <?php if ($attendanceTrackInOut->track_in_out != null && $attendanceTrackInOut->track_in_out != 0) { ?>
+                                                    <?= 'Track In & Out Time' ?>&nbsp;
+                                                    <?php } ?>
+                                                </option>
+                                                <option value="2">
+                                                    <?php if ($attendanceTrackInOut->no_attendace_without_punch != null && $attendanceTrackInOut->no_attendace_without_punch != 0) { ?>
+                                                    <?= 'No Attendance without punch' ?>&nbsp;
+                                                    <?php } ?>
+                                                </option>
+                                            @endempty
+                                        </td>
 
                                         <td>
 

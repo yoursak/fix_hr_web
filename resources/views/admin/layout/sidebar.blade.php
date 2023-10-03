@@ -19,11 +19,12 @@ $Helper1 = new App\Helpers\Layout();
     <aside class="app-sidebar ">
         <div class="app-sidebar__logo">
             <a class="header-brand" href="index.html">
-                <img src="{{ asset('assets/logo/FixHR.png') }}" class="header-brand-img desktop-lgo" alt="FixingDotslogo">
-                <img src="{{ asset('assets/logo/FixHR.png') }}" class="header-brand-img dark-logo" alt="FixingDotslogo">
-                <img src="{{ asset('assets/logo/FixHR.png') }}" class="header-brand-img mobile-logo"
+                <img src="{{ asset('assets/logo/FixHR.png?v=0.2') }}" class="header-brand-img desktop-lgo" alt="FixingDotslogo">
+                <img src="{{ asset('assets/logo/Fix_HR_Dark.png?v=0.10') }}" class="header-brand-img dark-logo" style="transform:translateY(-5px);max-width: 70%;
+}" alt="FixingDotslogo">
+                <img src="{{ asset('assets/logo/Fix_HR_Dark.png?v=0.10') }}" class="header-brand-img mobile-logo"
                     alt="FixingDotslogo">
-                <img src="{{ asset('assets/logo/FixHR.png') }}" class="header-brand-img darkmobile-logo"
+                <img src="{{ asset('assets/logo/Fix_HR_Dark.png?v=0.10') }}" class="header-brand-img darkmobile-logo"
                     alt="FixingDotslogo">
             </a>
         </div>

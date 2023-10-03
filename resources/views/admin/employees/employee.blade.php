@@ -332,8 +332,9 @@
                                         <td>
                                             @if (in_array('Employee.Update', $permissions))
                                                 <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
-                                                    onclick="openEditModel(this)" data-id='<?= $item->emp_id ?>'
-                                                    data-bs-toggle="modal" data data-bs-target="#updateempmodal">
+                                                    id="edit_btn_modal" onclick="openEditModel(this)"
+                                                    data-id='<?= $item->emp_id ?>' data-bs-toggle="modal" data
+                                                    data-bs-target="#updateempmodal">
                                                     <i class="feather feather-edit" data-bs-toggle="tooltip"
                                                         data-original-title="View"></i>
                                                 </a>
@@ -668,7 +669,8 @@
                                             <div class="col-12">
                                                 {{-- <input type="file" id="image_sd" name="image"
                                                     class="dropify image_sdd" data-height="180" /> --}}
-                                                <input type="file" id="image_sd" name="image" class="" />
+                                                <input type="file" id="image_sd" name="image" class=""
+                                                    data-default-file="" />
 
                                             </div>
                                             {{-- <div class="mt-2" id="avatar"> --}}
@@ -822,9 +824,9 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <p class="form-label">Brasdfnch</p>
-                                                    <select name='branch_id2' id="country-dd2"
+                                                    <select name="branch_id2" id="country-dd2"
                                                         class="update_branchname_sddd form-control" required>
-                                                        <option value="" class="update_branchname_sddd">Select
+                                                        <option value="" class="">Select
                                                             Branch Name</option>
                                                         @foreach ($Branch as $data)
                                                             <option value="{{ $data->branch_id }}">
@@ -840,7 +842,7 @@
                                                     <div class="form-group mb-3">
                                                         <select id="state-dd2" name="department_id"
                                                             class="update_departmentname_sddd form-control" required>
-                                                            <option value="" class="update_departmentname_sddd">
+                                                            <option value="" class="">
                                                                 Select Deparment Name</option>
                                                         </select>
                                                     </div>
@@ -852,7 +854,7 @@
                                                     <p class="form-label">Designation</p>
                                                     <div class="form-group mb-3">
                                                         <select id="desig-dd2" name="designation_id1"
-                                                            class="update_designationname_sddd form-control" required>
+                                                            class="update_department_sddd form-control" required>
                                                             <option value="">Select Designation Name</option>
                                                         </select>
                                                     </div>
@@ -1016,12 +1018,14 @@
         }
 
         function openEditModel(context) {
-            $('.dropify').dropify();
+            // $('.dropify').dropify();
             var id = $(context).data('id');
             $('#setId').val(id);
             // console
             // let shift_name = $(context).data('shift_name');
             // let shift_ftype = $(context).data('shift_type');
+
+
 
             // console.log(id);
             $.ajax({
@@ -1051,15 +1055,26 @@
                         $('.update_address_sddd').val(result.get[0].emp_address);
                         $('.update_shifttype_sddd').val(result.get[0].emp_shift_type);
                         $('.update_empid_sddd').val(result.get[0].emp_id);
-                        $('.update_branchname_sddd').val(result.get[0].branch_id);
+                        // $('#country-dd2').val(result.get[0].branch_id);
+                        console.log(result.get[0].branch_id);
                         $('.update_department_sddd').val(result.get[0].department_id);
+                        console.log(result.get[0].branch_name);
+                        console.log(result.get[0].depart_name);
+                        // depart_name
+                        // $('.update_department_sddd').trigger(change());
+                        change(result.get[0].branch_id, result.get[0].department_id);
                         $('#state-dd2').val(result.get[0].depart_name);
                         $('.update_designationname_sddd').val(result.get[0].desig_name);
                         $('.update_doj_dd').val(result.get[0].emp_date_of_joining);
-                        const imageUrl = `{{ asset('employee_profile/${result.get[0].profile_photo}') }}`;
-                        $('#image_sd').attr("data-default-file", imageUrl);
-                        $('#image_sd').dropify();
-                        console.log(result.get[0].profile_photo);
+                        drofiyimage(result.get[0].profile_photo);
+                        // const imageUrl = `{{ asset('employee_profile/${result.get[0].profile_photo}') }}`;
+                        // $('#image_sd').attr("data-default-file", imageUrl);
+                        // $('#image_sd').dropify();
+                        // console.log(result.get[0].profile_photo);
+                        // Ensure that Dropify elements are refreshed (in case of dynamic content)
+                        // $('#image_sd').each(function() {
+                        //     $(this).dropify();
+                        // });
 
                     } else {
 
@@ -1070,8 +1085,141 @@
                 //     console.error("AJAX request error:", error);
                 // }
 
+
             });
         }
+
+        function drofiyimage(a) {
+            console.log("gaya image function mak    ");
+            const imageUrl = `{{ asset('employee_profile/${a}') }}`;
+            $('#image_sd').attr("data-default-file", imageUrl);
+            $('#image_sd').dropify();
+            // console.log(result.get[
+        }
+
+        function change(a, b) {
+            console.log("change chal raha hai");
+            console.log(a);
+            console.log(b);
+
+            // console.log(b);
+            // $('#country-dd2').trigger('change', function() {
+            var branch_id = a;
+            $("#state-dd2").html('');
+            console.log(branch_id);
+            // console.log(brand_id);
+            $.ajax({
+                url: "{{ url('admin/settings/business/alldepartment') }}",
+                type: "POST",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    brand_id: branch_id
+                },
+                dataType: 'json',
+                success: function(result) {
+                    console.log(result);
+
+                    // console.log(result);
+                    $('#state-dd2').html(
+                        '<option value="" name="department">Select Department Name</option>'
+                    );
+                    $.each(result.department, function(key, value) {
+                        // console.log(result.department);
+                        const optionText = (value.depart_id == b) ? b : value
+                        //     .depart_name;
+                        var defaultValue = b;
+
+                        const isSelected = (value.depart_id ==
+                                defaultValue) ? 'selected' :
+                            'Nhi Selected'; // Set defaultValue to the desired depart_id
+                        console.log(isSelected);
+                        // if(isSelected == selected){
+                        //     break();
+                        // }
+                        if (value.depart_id == 'selected') {
+
+                            $("#state-dd2").append(
+                                '<option name="department" value="' +
+                                value.depart_id + '"' + isSelected +
+                                '>' + value.depart_name +
+                                '</option>');
+                            console.log(value.depart_id);
+                        }
+                    });
+                    $('#desig-dd2').html(
+                        '<option value="">Select Designation Name</option>');
+
+                    // $('#state-dd2').html(
+                    //     '<option value="" name="department">Select Department Name</option>'
+                    // );
+                    // $.each(result.department, function(key, value) {
+                    //     const optionText = (value.depart_id == 6) ? "6" : value
+                    //         .depart_name;
+                    //     $("#state-dd2").append('<option name="department" value="' +
+                    //         value
+                    //         .depart_id + '">' + optionText +
+                    //         '</option>');
+                    // });
+                    // $('#desig-dd2').html(
+                    //     '<option value="">Select Designation Name</option>');
+                }
+            });
+            // });
+            return true;
+
+            // $('#state-dd2').trigger('change', function() {
+            //     var depart_id = this.value;
+            //     $("#desig-dd2").html('');
+            //     $.ajax({
+            //         url: "{{ url('admin/settings/business/alldesignation') }}",
+            //         type: "POST",
+            //         data: {
+            //             depart_id: depart_id,
+            //             _token: '{{ csrf_token() }}'
+            //         },
+            //         dataType: 'json',
+            //         success: function(res) {
+            //             // console.log(res);
+            //             $('#desig-dd2').html(
+            //                 '<option value="">Select Designation Name</option>');
+            //             $.each(res.designation, function(key, value) {
+            //                 $("#desig-dd2").append('<option value="' + value
+            //                     .desig_id + '">' + value.desig_name +
+            //                     '</option>');
+            //             });
+            //             // $('#employee-dd').html(
+            //             //     '<option value="">Select Employee Name</option>');
+
+            //         }
+            //     });
+            // });
+        }
+        $('#state-dd2').on('change', function() {
+            var depart_id = this.value;
+            $("#desig-dd2").html('');
+            $.ajax({
+                url: "{{ url('admin/settings/business/alldesignation') }}",
+                type: "POST",
+                data: {
+                    depart_id: depart_id,
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: 'json',
+                success: function(res) {
+                    // console.log(res);
+                    $('#desig-dd2').html(
+                        '<option value="">Select Designation Name</option>');
+                    $.each(res.designation, function(key, value) {
+                        $("#desig-dd2").append('<option value="' + value
+                            .desig_id + '">' + value.desig_name +
+                            '</option>');
+                    });
+                    // $('#employee-dd').html(
+                    //     '<option value="">Select Employee Name</option>');
+
+                }
+            });
+        });
     </script>
 
     <script>
@@ -1273,86 +1421,84 @@
                     }
                 });
             });
-            $('#edit_btn_modal').on('click', function() {
-                console.log("hii");
-                $('#country-dd2').on('change', function() {
-                    var branch_id = this.value;
-                    $("#state-dd2").html('');
-                    $.ajax({
-                        url: "{{ url('admin/settings/business/alldepartment') }}",
-                        type: "POST",
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            brand_id: branch_id
-                        },
-                        dataType: 'json',
-                        success: function(result) {
+            // console.log("hii");
+            // $('#country-dd2').on('change', function() {
+            //     var branch_id = this.value;
+            //     $("#state-dd2").html('');
+            //     $.ajax({
+            //         url: "{{ url('admin/settings/business/alldepartment') }}",
+            //         type: "POST",
+            //         data: {
+            //             _token: '{{ csrf_token() }}',
+            //             brand_id: branch_id
+            //         },
+            //         dataType: 'json',
+            //         success: function(result) {
 
-                            console.log(result);
-                            $('#state-dd2').html(
-                                '<option value="" name="department">Select Department Name</option>'
-                            );
-                            $.each(result.department, function(key, value) {
-                                // const optionText = (value.depart_id == 6) ? "6" : value
-                                //     .depart_name;
-                                var defaultValue = 6;
-                                const isSelected = (value.depart_id ==
-                                        defaultValue) ?
-                                    'selected' :
-                                    ''; // Set defaultValue to the desired depart_id
-                                $("#state-dd2").append(
-                                    '<option name="department" value="' +
-                                    value.depart_id + '"' + isSelected +
-                                    '>' + value.depart_name +
-                                    '</option>');
-                            });
-                            $('#desig-dd2').html(
-                                '<option value="">Select Designation Name</option>');
+            //             console.log(result);
+            //             $('#state-dd2').html(
+            //                 '<option value="" name="department">Select Department Name</option>'
+            //             );
+            //             $.each(result.department, function(key, value) {
+            //                 // const optionText = (va   lue.depart_id == 6) ? "6" : value
+            //                 //     .depart_name;
+            //                 var defaultValue = b;
+            //                 const isSelected = (value.depart_id ==
+            //                         defaultValue) ?
+            //                     'selected' :
+            //                     ''; // Set defaultValue to the desired depart_id
+            //                 $("#state-dd2").append(
+            //                     '<option name="department" value="' +
+            //                     value.depart_id + '"' + isSelected +
+            //                     '>' + value.depart_name +
+            //                     '</option>');
+            //             });
+            //             $('#desig-dd2').html(
+            //                 '<option value="">Select Designation Name</option>');
 
-                            // $('#state-dd2').html(
-                            //     '<option value="" name="department">Select Department Name</option>'
-                            // );
-                            // $.each(result.department, function(key, value) {
-                            //     const optionText = (value.depart_id == 6) ? "6" : value
-                            //         .depart_name;
-                            //     $("#state-dd2").append('<option name="department" value="' +
-                            //         value
-                            //         .depart_id + '">' + optionText +
-                            //         '</option>');
-                            // });
-                            // $('#desig-dd2').html(
-                            //     '<option value="">Select Designation Name</option>');
-                        }
-                    });
-                });
+            //             // $('#state-dd2').html(
+            //             //     '<option value="" name="department">Select Department Name</option>'
+            //             // );
+            //             // $.each(result.department, function(key, value) {
+            //             //     const optionText = (value.depart_id == 6) ? "6" : value
+            //             //         .depart_name;
+            //             //     $("#state-dd2").append('<option name="department" value="' +
+            //             //         value
+            //             //         .depart_id + '">' + optionText +
+            //             //         '</option>');
+            //             // });
+            //             // $('#desig-dd2').html(
+            //             //     '<option value="">Select Designation Name</option>');
+            //         }
+            //     });
+            // });
 
-                $('#state-dd2').on('change', function() {
-                    var depart_id = this.value;
-                    $("#desig-dd2").html('');
-                    $.ajax({
-                        url: "{{ url('admin/settings/business/alldesignation') }}",
-                        type: "POST",
-                        data: {
-                            depart_id: depart_id,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        dataType: 'json',
-                        success: function(res) {
-                            // console.log(res);
-                            $('#desig-dd2').html(
-                                '<option value="">Select Designation Name</option>');
-                            $.each(res.designation, function(key, value) {
-                                $("#desig-dd2").append('<option value="' + value
-                                    .desig_id + '">' + value.desig_name +
-                                    '</option>');
-                            });
-                            // $('#employee-dd').html(
-                            //     '<option value="">Select Employee Name</option>');
+            // $('#state-dd2').on('change', function() {
+            //     var depart_id = this.value;
+            //     $("#desig-dd2").html('');
+            //     $.ajax({
+            //         url: "{{ url('admin/settings/business/alldesignation') }}",
+            //         type: "POST",
+            //         data: {
+            //             depart_id: depart_id,
+            //             _token: '{{ csrf_token() }}'
+            //         },
+            //         dataType: 'json',
+            //         success: function(res) {
+            //             // console.log(res);
+            //             $('#desig-dd2').html(
+            //                 '<option value="">Select Designation Name</option>');
+            //             $.each(res.designation, function(key, value) {
+            //                 $("#desig-dd2").append('<option value="' + value
+            //                     .desig_id + '">' + value.desig_name +
+            //                     '</option>');
+            //             });
+            //             // $('#employee-dd').html(
+            //             //     '<option value="">Select Employee Name</option>');
 
-                        }
-                    });
-                });
-            })
-        });
+            //         }
+            //     });
+            // });
+        })
     </script>
 @endsection

@@ -8,7 +8,7 @@
 <meta name="keywords" content="" />
 <script src="{{ config('app.cdn') }}"></script>
 <!-- FAVICON -->
-<link rel="icon" href={{ asset('assets/logo/fav.png') }} type="image/x-icon" />
+<link rel="icon" href={{ asset('assets/logo/f_fav.png?v=0.2') }} type="image/x-icon" />
 
 <!-- BOOTSTRAP CSS -->
 <link href={{ asset('assets/plugins/bootstrap/css/bootstrap.css') }} rel="stylesheet" />
@@ -47,3 +47,6 @@
 {{-- data table buttons for print, copy, export, and etc  --}}
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+
+
+
