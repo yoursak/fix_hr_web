@@ -109,16 +109,39 @@ class RulesManagement
 
         // Rule List
         // $lateentry;
-        $finalEndGameRule = DB::table('master_endgame_method')   
-        ->join('attendance_endgame_policypreference','master_endgame_method.policy_preference','=','attendance_endgame_policypreference.id')
-        ->join('attendance_endgame_level','master_endgame_method.policy_preference','=','attendance_endgame_level.policypreference_level_id')
-        ->join('setting_leave_policy','master_endgame_method.business_id','=','setting_leave_policy.business_id')
-        ->where('master_endgame_method.business_id', self::allValueGet()[1])->get();
-        dd($finalEndGameRule);
+        $finalEndGameRule = DB::table('master_endgame_method')
+            ->join('attendance_endgame_policypreference', 'master_endgame_method.policy_preference', '=', 'attendance_endgame_policypreference.id')
+            ->join('attendance_endgame_level', 'master_endgame_method.policy_preference', '=', 'attendance_endgame_level.policypreference_level_id')
+            ->join('attendance_shift_settings', 'master_endgame_method.business_id', '=', 'attendance_shift_settings.business_id')
+            ->where('master_endgame_method.business_id', self::allValueGet()[1])->get();
+        // dd($finalEndGameRule);
         if (($finalEndGameRule != null) != null || ($businessLoad != null) || ($branchList != null) || ($leavePolicy != null) || ($holidayPolicy != null) || ($weeklyPolicy != null) || ($attendanceMode != null) || ($attendanceShiftSettings != null) || ($attendanceTrackPunchInOROut != null)) {
             return array($finalEndGameRule, $businessLoad, $branchList, $leavePolicy, $holidayPolicy, $weeklyPolicy, $attendanceMode, $attendanceShiftSettings, $attendanceTrackPunchInOROut);
         } else {
             return array(0, 0, 0, 0, 0, 0, 0, 0, 0);
+        }
+    }
+    // first list
+    static function GetValues($id)
+    {
+        // $branch = DB::table('branch_list')
+        //     ->where('business_id', self::allValueGet()[1])->count();
+        // || ($department != null) || ($designation != null) || ($adminCount != null) || ($holidayCount != null) || ($leaveCount != null) || ($weeklyholidayCount != null)
+
+        $leavesettingsList = DB::table('setting_leave_policy')->where('id', $id)->where('business_id', self::allValueGet()[1])->first();
+        $holidaypolicyList = DB::table('holiday_template')->where('temp_id', $id)->where('business_id', self::allValueGet()[1])->first();
+        $weeklyPolicyList = DB::table('weekly_holiday_list')->where('id', $id)->where('business_id', self::allValueGet()[1])->first();
+
+        // attendance
+        $AttendaceShiftPolicyList = DB::table('attendance_shift_settings')->where('id', $id)->where('business_id', self::allValueGet()[1])->first();
+        $attendanceModeList = DB::table('attendance_mode')->where('business_id', self::allValueGet()[1])->first();
+
+
+
+        if (($leavesettingsList != null) || ($holidaypolicyList != null) || ($weeklyPolicyList != null) || ($AttendaceShiftPolicyList != null) || ($attendanceModeList != null)) {
+            return [$leavesettingsList, $holidaypolicyList, $weeklyPolicyList, $AttendaceShiftPolicyList, $attendanceModeList];
+        } else {
+            return [0, 0, 0, 0, 0];
         }
     }
 

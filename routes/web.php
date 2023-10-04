@@ -229,7 +229,12 @@ Route::middleware(['email_verified', 'web'])->group(function () {
                 // ajax 
                 Route::any('/get_datails', [AttendanceController::class, 'getAttendaceShiftList']);
                 Route::post('/update_attendace_shift', [AttendanceController::class, 'updateAttendaceShift']);
-
+                // ajax masterrules policy ajax 
+                Route::any('get_master_rule',[AttendanceController::class,'getMasterRules']);
+                Route::post('edit_master_rule',[AttendanceController::class,'editMasterRules']);
+                Route::any('mode_master_rule',[AttendanceController::class,'modeMasterRules']);
+                Route::post('delete_master_rule',[AttendanceController::class,'deleteMasterRules']);
+                
                 Route::prefix('/automation')->group(function () {
                     Route::get('/', [SettingController::class, 'automation']);
                     Route::post('/set', [SettingController::class, 'setAutomationRule'])->name('setAutomationRule');

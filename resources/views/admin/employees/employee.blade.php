@@ -1,6 +1,6 @@
 @extends('admin.pagelayout.master')
 {{-- @extends('admin.layout.master') --}}
-<script src="{{ asset('assets/js/cities.js?v=2') }}"></script>
+<script src="{{ asset('assets/js/cities.js?v=2.1') }}"></script>
 @section('title')
     Employee
 @endsection
@@ -786,7 +786,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Pin Code</label>
-                                                <input id="pincode_sd" type="text"
+                                                <input id="pincode_sd" type="text" 
                                                     class="update_pcode_sddd form-control" placeholder="Postal PIN"
                                                     name="pincode">
                                             </div>
@@ -824,7 +824,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <p class="form-label">Brasdfnch</p>
-                                                    <select name="branch_id2" id="country-dd2"
+                                                    <select name="branch_id2" id="country-dd2" onclick="change()"
                                                         class="update_branchname_sddd form-control" required>
                                                         <option value="" class="">Select
                                                             Branch Name</option>
@@ -1055,18 +1055,19 @@
                         $('.update_address_sddd').val(result.get[0].emp_address);
                         $('.update_shifttype_sddd').val(result.get[0].emp_shift_type);
                         $('.update_empid_sddd').val(result.get[0].emp_id);
-                        // $('#country-dd2').val(result.get[0].branch_id);
+                        $('#country-dd2').val(result.get[0].branch_id);
                         console.log(result.get[0].branch_id);
+                        // console.log(result.get[0].branch_name);
                         $('.update_department_sddd').val(result.get[0].department_id);
                         console.log(result.get[0].branch_name);
                         console.log(result.get[0].depart_name);
                         // depart_name
                         // $('.update_department_sddd').trigger(change());
-                        change(result.get[0].branch_id, result.get[0].department_id);
+                        // change(result.get[0].branch_id, result.get[0].department_id);
                         $('#state-dd2').val(result.get[0].depart_name);
                         $('.update_designationname_sddd').val(result.get[0].desig_name);
                         $('.update_doj_dd').val(result.get[0].emp_date_of_joining);
-                        drofiyimage(result.get[0].profile_photo);
+                        drofiyimage(result.get[0].emp_id);
                         // const imageUrl = `{{ asset('employee_profile/${result.get[0].profile_photo}') }}`;
                         // $('#image_sd').attr("data-default-file", imageUrl);
                         // $('#image_sd').dropify();
@@ -1089,11 +1090,52 @@
             });
         }
 
-        function drofiyimage(a) {
-            console.log("gaya image function mak    ");
-            const imageUrl = `{{ asset('employee_profile/${a}') }}`;
-            $('#image_sd').attr("data-default-file", imageUrl);
-            $('#image_sd').dropify();
+        function drofiyimage(id) {
+            console.log("gaya image function make");
+            // const imageUrl = `{{ asset('employee_profile/${a}') }}`;
+            // $('#image_sd').attr("data-default-file", imageUrl);
+            // $('#image_sd').dropify();
+            $.ajax({
+                url: "{{ url('/admin/employee/all_employee') }}",
+                type: "POST",
+                
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    employee_id: id
+                },
+                dataType: 'json',
+                success: function(result) {
+                    console.log(result);
+                    if (result.get[0].emp_id) {
+                       
+                     
+                        // depart_name
+                        // $('.update_department_sddd').trigger(change());
+                        // change(result.get[0].branch_id, result.get[0].department_id);
+                        // $('#state-dd2').val(result.get[0].depart_name);
+                        // $('.update_designationname_sddd').val(result.get[0].desig_name);
+                        // $('.update_doj_dd').val(result.get[0].emp_date_of_joining);
+                        // drofiyimage(result.get[0].profile_photo);
+                        const imageUrl = `{{ asset('employee_profile/${result.get[0].profile_photo}') }}`;
+                        $('#image_sd').attr("data-default-file", imageUrl);
+                        $('#image_sd').dropify();
+                        // console.log(result.get[0].profile_photo);
+                        // Ensure that Dropify elements are refreshed (in case of dynamic content)
+                        // $('#image_sd').each(function() {
+                        //     $(this).dropify();
+                        // });
+
+                    } else {
+
+                        // console.log("Nhi ja raha hai");
+                    }
+                },
+                // error: function(xhr, status, error) {
+                //     console.error("AJAX request error:", error);
+                // }
+
+
+            });
             // console.log(result.get[
         }
 

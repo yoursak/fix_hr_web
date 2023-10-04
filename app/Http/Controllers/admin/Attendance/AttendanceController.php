@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Session;
 use App\Helpers\Central_unit;
-
+use App\Models\admin\setupsettings\MasterEndGameModel;
 use App\Helpers\MasterRulesManagement\RulesManagement;
 use Alert;
 
@@ -532,6 +532,7 @@ class AttendanceController extends Controller
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
         $List = RulesManagement::ALLPolicyTemplates();
+
         $FinalEndGameRule = $List[0];
         $BusinessDetails = $List[1];
         $BranchList = $List[2];
@@ -543,7 +544,7 @@ class AttendanceController extends Controller
         $attendanceTrackInOut = $List[8];
         // dd($attendanceTrackInOut)
         // $attendaceShift = DB::table('attendance_shift_settings')->get();
-        
+
         // dd($LeavePolicy);
         $root = compact('moduleName', 'permissions', 'BusinessDetails', 'FinalEndGameRule', 'BranchList', 'LeavePolicy', 'HolidayPolicy', 'weeklyPolicy', 'attendanceModePolicy', 'attendanceShiftPolicy', 'attendanceTrackInOut');
         return view('admin.setting.active_rules.active_end_game', $root);
@@ -551,28 +552,108 @@ class AttendanceController extends Controller
     // End Games Rule Submit form
     public function FinalStartRuleEndGame(Request $request)
     {
-        $data = [
-            'business_id' => $request->b_id,
-            'branch_id' => json_encode($request->input("branhcid")),
-            'method_name' => $request->methodname,
-            'policy_preference' => $request->policypreference,
-            'level_type' => 1,
-            'leave_policy_ids_list' => json_encode($request->input("leavepolicy")),
-            'holiday_policy_ids_list' => json_encode($request->input("holidaypolicy")),
-            'weekly_policy_ids_list' => json_encode($request->input("weeklypolicy")),
-            'shift_settings_ids_list' => json_encode($request->input("shiftsetting")),
-            'attendance_mode_list' => json_encode($request->input("attendancemode")),
-            'track_in_out_ids_list' => json_encode($request->input("trackpunch"))
-        ];
-        $load =  DB::table('master_endgame_method')->insert($data);
-        if (isset($load)) {
-            Alert::success('Create Final Rules is Successfully');
+        $checking = DB::table('master_endgame_method')->where('business_id', $request->b_id)->first();
+        if (isset($checking)) {
+            Alert::error('Failed Final Rules Already Created!');
         } else {
-            Alert::error('Failed Final Rules Created!');
+            $data = [
+                'business_id' => $request->b_id,
+                'branch_id' => json_encode($request->input("branhcid")),
+                'method_name' => $request->methodname,
+                'method_switch' => 0,
+                'policy_preference' => $request->policypreference,
+                'level_type' => 1,
+                'leave_policy_ids_list' => json_encode($request->input("leavepolicy")),
+                'holiday_policy_ids_list' => json_encode($request->input("holidaypolicy")),
+                'weekly_policy_ids_list' => json_encode($request->input("weeklypolicy")),
+                'shift_settings_ids_list' => json_encode($request->input("shiftsetting")),
+            ];
+            //  'attendance_mode_list' => json_encode($request->input("attendancemode")),
+            //'track_in_out_ids_list' => json_encode($request->input("trackpunch"))
+
+            $load = DB::table('master_endgame_method')->insert($data);
+            if (isset($load)) {
+                Alert::success('Create Final Rules is Successfully');
+            } else {
+                Alert::error('Failed Final Rules Created!');
+            }
         }
+
         // 'depart_id	' => json_decode($request->input("depart_id")),
         // 'automation_rules_list' => json_encode($request->input("automationrules")),
         return redirect()->to('admin/attendance/active_mode_set');
         // dd($leavePolicyIds);
+    }
+
+    // ajax getMasterRules
+    public function getMasterRules(Request $request)
+    {
+        $load = DB::table('master_endgame_method')->where('business_id', $request->b_id)->get();
+
+        return response()->json($load);
+    }
+    // edit_master_rule
+    public function editMasterRules(Request $request)
+    {
+        // Start a database transaction
+        DB::beginTransaction();
+        try {
+            // Find and delete the existing record based on business_id
+            MasterEndGameModel::where('business_id', $request->b_id)->delete();
+
+            // Create an array with the new data
+            $data = [
+                'business_id' => $request->b_id,
+                'branch_id' => json_encode($request->input("editbranhcid")),
+                'method_switch' => 1,//($request->switch != 0) ? $request->switch : 0
+                'method_name' => $request->edit_mname,
+                'policy_preference' => $request->editpolicypreference,
+                'level_type' => 1,
+                'leave_policy_ids_list' => json_encode($request->input("editleavepolicy")),
+                'holiday_policy_ids_list' => json_encode($request->input("editholidaypolicy")),
+                'weekly_policy_ids_list' => json_encode($request->input("editweeklypolicy")),
+                'shift_settings_ids_list' => json_encode($request->input("editshiftsetting")),
+            ];
+
+            // Insert the new data into the database
+            DB::table('master_endgame_method')->insert($data);
+            // Commit the transaction if all operations were successful
+            DB::commit();
+            Alert::success('success', 'Updated Rule Method Successfully');
+
+            // Redirect to a success page or return a response
+            return redirect()->back();
+
+        } catch (\Exception $e) {
+            // Handle any exceptions and rollback the transaction if an error occurs
+            DB::rollback();
+
+            Alert::info('failed', 'Not Updating this record!' . $e->getMessage());
+            // Handle the error, log it, or return an error response
+            return redirect()->back();
+        }
+
+
+    }
+
+    // mode_master_rule switch ON/OFF
+    public function modeMasterRules(Request $request)
+    {
+        DB::table('master_endgame_method')->where('business_id', Session::get('business_id'))->update(['method_switch' => $request->checked]);
+        return response()->json($request->all());
+    }
+
+    // parament delete_set
+    public function deleteMasterRules(Request $request)
+    {
+        // dd($request->all());
+        $load = DB::table('master_endgame_method')->where('business_id', $request->bid)->delete();
+        if (isset($load)) {
+            Alert::success('Delete Final Rules is Successfully');
+        } else {
+            Alert::error('Failed Final Rules Not Deleted!');
+        }
+        return redirect()->back();
+
     }
 }

@@ -320,41 +320,47 @@ Attendance
                                             // $attendaceMode = AttendanceActiveModesCheck(); // Assuming this function returns an array
                                             if ($attendaceMode[0] ?? false) {
                                                 if ($attendaceMode[0]->in_premises_auto != 0 || $attendaceMode[0]->in_premises_auto != null || ($attendaceMode[0]->in_premises_qr != null || $attendaceMode[0]->in_premises_face_id != null || $attendaceMode[0]->in_premises_selfie != null)) {
-                                                    echo '<b>Office </b>';
-                                            
-                                                    if ($attendaceMode[0]->in_premises_auto != 0) {
-                                                        echo 'Employee with Auto Attendance';
-                                                        echo $attendaceMode[0]->in_premises_auto != 0 ? 'Mark Present By Default' : '';
+                                                  
+                                                    if ($attendaceMode[0]->in_premises_auto != 0) 
+                                                    {
+                                                        echo '<b>( Office </b><small><b>Auto</b>),</small>';
+                                                        // echo 'Employee with Auto Attendance';
+                                                        // echo $attendaceMode[0]->in_premises_auto != 0 ? 'Mark Present By Default' : '';
                                                     }
                                             
-                                                    if ($attendaceMode[0]->in_premises_qr != null || $attendaceMode[0]->in_premises_face_id != null || $attendaceMode[0]->in_premises_selfie != null) {
-                                                        echo $attendaceMode[0]->in_premises_qr != 0 ? 'Manual Attendance QR & Geo Location' : '';
-                                                        echo $attendaceMode[0]->in_premises_face_id != 0 ? '<br>Manual Attendance Face Id & Geo Location' : '';
-                                                        echo $attendaceMode[0]->in_premises_selfie != 0 ? '<br>Manual Attendance Selfie & Geo Location' : '';
+                                                    if ($attendaceMode[0]->in_premises_qr != 0 || $attendaceMode[0]->in_premises_face_id != 0 || $attendaceMode[0]->in_premises_selfie != 0) {
+                                                       echo '<b>( Office </b><small><b>Manual)</b>,</small>';
+                                                        // echo $attendaceMode[0]->in_premises_qr != 0 ? 'Manual' : '';//  QR & Geo Location
+                                                        // echo $attendaceMode[0]->in_premises_face_id != 0 ? '<br>Manual' : '';//  Face Id & Geo Location
+                                                        // echo $attendaceMode[0]->in_premises_selfie != 0 ? '<br>Manual' : '';//  Selfie & Geo Location
                                                     }
                                                 }
                                                 if ($attendaceMode[0]->outdoor_auto != 0 || $attendaceMode[0]->outdoor_selfie != null) {
-                                                    echo '<br><b>Out Door </b>';
+                                                    // echo '<b>(  Out Door </b>';
                                             
                                                     if ($attendaceMode[0]->outdoor_auto != 0) {
-                                                        echo 'Employee with Auto Attendance';
-                                                        echo $attendaceMode[0]->outdoor_auto != 0 ? 'Mark Present By Default' : '';
+                                                        echo '<b>(  Out Door </b><small><b>Auto )</b>,</small>';
+                                                       
+                                                        // echo 'Employee with Auto Attendance';
+                                                        // echo $attendaceMode[0]->outdoor_auto != 0 ? 'Mark Present By Default' : '';
                                                     }
                                             
                                                     if ($attendaceMode[0]->outdoor_selfie != null) {
-                                                        echo $attendaceMode[0]->outdoor_selfie != 0 ? 'Manual Selfie & Geo Location' : '';
+                                                        echo $attendaceMode[0]->outdoor_selfie != 0 ? '<b>(  Out Door </b><small><b>Manual)</b>,</small>' : '';// Selfie & Geo Location
                                                     }
                                                 }
                                                 if ($attendaceMode[0]->wfh_auto != null && $attendaceMode[0]->wfh_selfie != null) {
-                                                    echo '<br><b>Remote </b>';
+                                                    // echo '<b>( Remote </b>';
                                             
                                                     if ($attendaceMode[0]->wfh_auto == 1) {
-                                                        echo 'Employee with Auto Attendance';
-                                                        echo $attendaceMode[0]->wfh_auto == 1 ? 'Mark Present By Default' : '';
+                                                        echo '<b>( Remote </b><small><b>Auto )</b></small>';
+                                                     
+                                                        // echo 'Employee with Auto Attendance';
+                                                        // echo $attendaceMode[0]->wfh_auto == 1 ? 'Mark Present By Default' : '';
                                                     }
                                             
                                                     if ($attendaceMode[0]->wfh_selfie == 1) {
-                                                        echo $attendaceMode[0]->wfh_selfie == 1 ? 'Manual  Selfie & Geo Location' : '';
+                                                        echo $attendaceMode[0]->wfh_selfie == 1 ? '<b>( Remote </b><small><b>Manual)</b>,</small>' : '';//Selfie & Geo Location
                                                     }
                                                 } else {
                                                     echo 'Off Attendance Mode.';

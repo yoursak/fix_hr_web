@@ -21,7 +21,8 @@ class DashboardController extends Controller
         $accessPermission = Central_unit::AccessPermission();
         $moduleName=$accessPermission[0];
         $permissions=$accessPermission[1];
-        $root= compact('moduleName', 'permissions');
+        $Emp = DB::table("employee_personal_details")->where('business_id',Session::get('business_id'))->get();
+        $root= compact('moduleName', 'permissions','Emp');
         return view('admin.dashboard.dashboard',$root);
     }
 
