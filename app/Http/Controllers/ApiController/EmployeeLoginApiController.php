@@ -11,17 +11,57 @@ use App\Mail\AuthMailer;
 use Carbon\Carbon;
 use App\Models\employee\LoginEmployee;
 use App\Http\Resources\Api\EmployeeLoginResource;
-use App\Helpers\ReturnHelpers;   
+use App\Helpers\ReturnHelpers;
+use App\Helpers\MasterRulesManagement\RulesManagement;
 
 
 class EmployeeLoginApiController extends Controller
 {
     public function login(Request $request)
     {
-        $admin = LoginEmployee::where('phone', $request->phone)->first();
+        $admin = DB::table('login_employee')->where('phone', $request->phone)->first();
         // return $admin;
-        if($admin){
-                return ReturnHelpers::jsonApiReturn(EmployeeLoginResource::collection([LoginEmployee::find($admin->id)])->all());
+        $rulesMangement = new RulesManagement();
+        $checkRules = $rulesMangement->ALLPolicyTemplatesByIDCall($admin->business_id);
+        // dd($chckRules);
+        if ($admin) {
+            
+            // $request = DB::table('login_employee')->where('id',$admin->id)->all();
+            // return $request;
+            // return response()->json(['result'=>["EmployeeDetail" =>[$admin],"MasterRule" => $checkRules[0], "AttendanceMode" => $checkRules[6]], 'status' => true]);
+            // , [$checkRules[0], $checkRules[6]
+            return ReturnHelpers::jsonApiReturn(EmployeeLoginResource::collection([DB::table('login_employee')->where('emp_id', $admin->emp_id)->first()]));
+        }
+        return response()->json(['result' => [], 'status' => false]);
+    }
+
+
+    public function MasterRule(Request $request)
+    {
+        $rulesMangement = new RulesManagement();
+        $checkRules = $rulesMangement->ALLPolicyTemplatesByIDCall($request->business_id);
+        if ($checkRules) {
+
+            return response()->json(['result' => $checkRules[0], 'status' => true]);
+        }
+        return response()->json(['result' => [], 'status' => false]);
+    }
+
+    public function AttendanceMode(Request $request)
+    {
+        $rulesMangement = new RulesManagement();
+        $checkRules = $rulesMangement->ALLPolicyTemplatesByIDCall($request->business_id);
+        if ($checkRules) {
+            return response()->json(['result' => $checkRules[6], 'status' => true]);
+        }
+        return response()->json(['result' => [], 'status' => false]);
+    }
+    public function ShiftTypeList(Request $request)
+    {
+        $rulesMangement = new RulesManagement();
+        $checkRules = $rulesMangement->ALLPolicyTemplatesByIDCall($request->business_id);
+        if ($checkRules) {
+            return response()->json(['result' => $checkRules[7], 'status' => true]);
         }
         return response()->json(['result' => [], 'status' => false]);
     }
@@ -117,4 +157,3 @@ class EmployeeLoginApiController extends Controller
     // {
     //     //
     // }
-

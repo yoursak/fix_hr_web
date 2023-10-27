@@ -12,22 +12,26 @@ $Helper1 = new App\Helpers\Layout();
         $accessPermission = $Helper->AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
-        
+
         // print_r($SideBarList);
-        
+
     @endphp
     <aside class="app-sidebar ">
         <div class="app-sidebar__logo">
             <a class="header-brand" href="index.html">
-                <img src="{{ asset('assets/logo/FixHR.png?v=0.2') }}" class="header-brand-img desktop-lgo" alt="FixingDotslogo">
-                <img src="{{ asset('assets/logo/Fix_HR_Dark.png?v=0.10') }}" class="header-brand-img dark-logo" style="transform:translateY(-5px);max-width: 70%;
-}" alt="FixingDotslogo">
+                <img src="{{ asset('assets/logo/FixHR.png?v=0.2') }}" class="header-brand-img desktop-lgo"
+                    alt="FixingDotslogo">
+                <a href="{{ url('/admin') }}">
+                    <img src="{{ asset('assets/logo/Fix_HR_Dark.png?v=0.10') }}" class="header-brand-img dark-logo"
+                        style="transform:translateY(-5px);max-width: 70%;
+}" alt="FixingDotslogo"></a>
                 <img src="{{ asset('assets/logo/Fix_HR_Dark.png?v=0.10') }}" class="header-brand-img mobile-logo"
                     alt="FixingDotslogo">
                 <img src="{{ asset('assets/logo/Fix_HR_Dark.png?v=0.10') }}" class="header-brand-img darkmobile-logo"
                     alt="FixingDotslogo">
             </a>
         </div>
+        {{-- style="background-color:  #1034A6; --}}
         <div class="app-sidebar3">
             <div class="main-menu">
                 <div class="slide-left disabled" id="slide-left"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191"
@@ -44,6 +48,7 @@ $Helper1 = new App\Helpers\Layout();
                             <span class="side-menu__label">Dashboard</span>
                         </a>
                     </li>
+
                     <li class="slide">
                         <a class="side-menu__item" href="{{ url('/admin/employee') }}">
                             <i class="feather feather-users sidemenu_icon"></i>
@@ -51,11 +56,31 @@ $Helper1 = new App\Helpers\Layout();
                         </a>
                     </li>
 
-                    <li class="slide">
+                    {{-- <li class="slide">
                         <a class="side-menu__item" href="{{ url('/admin/attendance') }}">
                             <i class="feather feather-user-check sidemenu_icon"></i>
                             <span class="side-menu__label">Attendance</span>
                         </a>
+                    </li> --}}
+                    <li class="slide">
+                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                            <i class="feather feather-user-check sidemenu_icon"></i>
+                            <span class="side-menu__label">Attendance</span><i class="angle fa fa-angle-right"></i></a>
+                        <ul class="slide-menu" style="background-color:  #1034A6; border-radius:7px;">
+                            {{-- <li class="side-menu-label1"><a href="{{ url('/admin/attendance') }}"></a></li> --}}
+
+                            <li><a href="{{ url('/admin/attendance') }}" class="slide-item">Daily Attendance</a></li>
+
+                            <li>
+                                <a href="{{ url('/admin/attendance/details') }}" class="slide-item">Monthly Attendance</a>
+                            </li>
+                            <li>
+                                <a href="{{ url('/admin/attendance/month-summary') }}" class="slide-item">Attendance Summary</a>
+                            </li>
+
+                            {{-- <li><a href="{{ url('/admin/attendance/byemployee') }}" class="slide-item">Attendance By Employee</a></li> --}}
+
+                        </ul>
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
@@ -65,7 +90,6 @@ $Helper1 = new App\Helpers\Layout();
                             <li class="side-menu-label1"><a href="{{ url('/admin/leave') }}">Leave</a></li>
 
                             <li><a href="{{ url('/admin/requests/leaves') }}" class="slide-item"> Leave </a></li>
-
 
                             <li><a href="{{ url('/admin/requests/misspunch') }}" class="slide-item"> Miss Punch </a>
                             </li>
@@ -82,7 +106,6 @@ $Helper1 = new App\Helpers\Layout();
                         </a>
                     </li> --}}
 
-
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                             <i class="feather feather-file-text sidemenu_icon"></i>
@@ -92,12 +115,11 @@ $Helper1 = new App\Helpers\Layout();
 
                             <li><a href="{{ url('Role-permission/role_permission') }}" class="slide-item"> Role &
                                     Permission List </a></li>
-
-
-
                             <li><a href="{{ url('/Role-permission/admin-list') }}" class="slide-item"> Admin List
                                 </a>
                             </li>
+                            <li><a href="{{ url('/Role-permission/approval_settings') }}" class="slide-item"> Approval
+                                    Setup</a></li>
 
                         </ul>
                     </li>
@@ -108,27 +130,34 @@ $Helper1 = new App\Helpers\Layout();
                             <span class="side-menu__label">Settings</span><i class="angle fa fa-angle-right"></i></a>
                         <ul class="slide-menu" style="background-color:  #1034A6; border-radius:7px;">
 
-                            {{-- <li class="side-menu-label1"><a href="{{ url('settings/attendancesetting') }}">Attendance
+                            {{-- <li class="side-menu-label1"><a
+                                    href="{{ url('settings/attendancesetting') }}">Attendance
                                     Setting</a></li> --}}
-
-                            <li><a href="{{ url('admin/settings/attendance') }}" class="slide-item"> Attendance
-                                    Setting</a></li>
+                            <li><a href="{{ url('admin/settings/account') }}" class="slide-item"> Account Setting
+                                </a>
+                            </li>
 
                             <li><a href="{{ url('admin/settings/business') }}" class="slide-item"> Business
                                     Setting</a>
                             </li>
 
-                            <li><a href="{{ url('admin/settings/account') }}" class="slide-item"> Account Setting
-                                </a>
-                            </li>
-
-                            <li><a href="{{ url('admin/settings/localization') }}" class="slide-item"> Localization
-                                    Setting </a></li>
-
+                            <li><a href="{{ url('admin/settings/attendance') }}" class="slide-item"> Attendance
+                                    Setting</a></li>
+                            <li><a href="{{ url('admin/attendance/active_mode_set') }}" class="slide-item">Setup
+                                    Activation</a></li>
+                            {{-- <li><a href="{{ url('admin/settings/localization') }}" class="slide-item"> Localization
+                                    Setting </a></li> --}}
+                            {{-- 
                             <li><a href="{{ url('admin/settings/notification') }}" class="slide-item"> Notification
-                                    Setting </a></li>
+                                    Setting </a></li> --}}
 
                         </ul>
+                    </li>
+                    <li class="slide">
+                        <a class="side-menu__item" href="{{ url('/subscription') }}">
+                            <i class="feather feather-lock sidemenu_icon"></i>
+                            <span class="side-menu__label">Subscription</span>
+                        </a>
                     </li>
 
                     <?php }else{?>
@@ -189,7 +218,6 @@ $Helper1 = new App\Helpers\Layout();
                     </li>
                 @endif
 
-
                 @if (in_array('Report.View', $permissions))
                     <li class="slide">
                         <a class="side-menu__item" href="{{ url('/admin/report') }}">
@@ -199,9 +227,16 @@ $Helper1 = new App\Helpers\Layout();
                     </li>
                 @endif
 
-
                 @php
-                    $subItems = [['url' => '/Role-permission/role_permission', 'label' => 'Roles & Permissions.View', 'name' => 'Roles & Permissions'], ['url' => '/Role-permission/admin-list', 'label' => 'Admin List.View', 'name' => 'Admin List']];
+                    $subItems = [
+                        ['url' => '/Role-permission/role_permission', 'label' => 'Roles & Permissions.View', 'name' => 'Roles & Permissions'],
+                        [
+                            'url' => '/Role-permission/admin-list',
+                            'label' => 'Admin
+                    List.View',
+                            'name' => 'Admin List',
+                        ],
+                    ];
                     $showRequestsMenu = false; // Initialize a flag variable
                 @endphp
 
@@ -234,7 +269,26 @@ $Helper1 = new App\Helpers\Layout();
             @endif
 
             @php
-                $settingsSubItems = [['url' => 'admin/settings/attendance', 'label' => 'Attendance Setting.View', 'name' => 'Attendance Setting'], ['url' => 'admin/settings/business', 'label' => 'Business Setting.View', 'name' => 'Business Setting'], ['url' => 'admin/settings/account', 'label' => 'Account Setting.View', 'name' => 'Account Setting'], ['url' => 'admin/settings/localization', 'label' => 'Localization Setting.View', 'name' => 'Localization Setting'], ['url' => 'admin/settings/notification', 'label' => 'Notification Setting.View', 'name' => 'Notification Setting']];
+                //  <li><a href="{{ url('admin/attendance/active_mode_set') }}" class="slide-item"> Setup
+                //                     Activation</a></li>
+                $settingsSubItems = [
+                    ['url' => 'admin/settings/account', 'label' => 'Account Setting.View', 'name' => 'Account Setting'],
+                    [
+                        'url' => 'admin/settings/business',
+                        'label' => 'Business
+                    Setting.View',
+                        'name' => 'Business Setting',
+                    ],
+                    ['url' => 'admin/settings/attendance', 'label' => 'Attendance Setting.View', 'name' => 'Attendance Setting'],
+                    ['url' => 'admin/attendance/active_mode_set', 'label' => 'Attendance Setting.View', 'name' => 'Setup Activation'],
+                    // ['url' => 'admin/settings/localization', 'label' => 'Localization Setting.View', 'name' => 'Localization Setting'],
+                    // [
+                    //     'url' => 'admin/settings/notification',
+                    //     'label' => 'Notification Setting.View',
+                    //     'name' => 'Notification
+    // Setting',
+                    // ],
+                ];
                 $showSettingsMenu = false; // Initialize a flag variable
             @endphp
 
@@ -289,7 +343,9 @@ $Helper1 = new App\Helpers\Layout();
     <i class="fe fe-alert-triangle fs-50"></i>
     <h4 class="text-primary fs-20 font-weight-semibold mt-2">Logout Alert</h4>
     <p class="mb-4 mx-4">Are you sure want to log out ???</p>
-    <a href="{{ url('/logout') }}" class="btn btn-danger px-5">Log Out</a>
+
+    <a href="{{ url('/logout') }}" class="btn btn-danger px-5" id="logoutButton">Log Out</a>
+
     <a aria-label="Close" class="btn btn-primary px-5 text-white" data-bs-dismiss="modal">StayLogedin</a>
 </div>
 </div>

@@ -259,6 +259,18 @@
     </style>
     {{-- @endsection
 @section('settings') --}}
+
+<div class=" p-0 mt-3">
+    <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
+        <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+        <li><a href="{{ url('admin/settings/attendance')}}">Settings</a></li>
+        <li><a href="{{ url('admin/settings/attendance')}}">Attendace Setting</a></li>
+        {{-- <li><a href="{{ url('/admin/requests/misspunch') }}">Request</a></li> --}}
+
+        <li class="active"><span><b>Create Shift Templates</b></span></li>
+    </ol>
+</div>
+
     <?php
     
     $power = new App\Helpers\MasterRulesManagement\RulesManagement();
@@ -366,7 +378,8 @@
                                             class="fe fe-edit fs-18"></i></button> --}}
 
                                                 @if ($item->shift_type == 1)
-                                                    <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
+                                                {{-- @dd($item->shift_weekly_repeat); --}}
+                                                    <a class="btn action-btns  btn-primary btn-icon btn-sm" href="javascript:void(0);"
                                                         onclick="openEditFixedShiftModel(this)" data-id='<?= $item->id ?>'
                                                         data-shift_name='<?= $item->shift_type_name ?>'
                                                         data-shift_type='<?= $power->AttedanceShiftCheckItems($item->id) ?>'
@@ -383,9 +396,10 @@
                                                 @endif
 
                                                 @if ($item->shift_type == 2)
-                                                    <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
+                                                    <a class="btn action-btns  btn-primary btn-icon btn-sm" href="javascript:void(0);"
                                                         onclick="openEditRotationalModel(this)" data-id='<?= $item->id ?>'
                                                         data-shift_name='<?= $item->shift_type_name ?>'
+                                                        data-weekly_repeat={{$item->shift_weekly_repeat}}
                                                         data-shift_type='<?= $power->AttedanceShiftCheckItems($item->id) ?>'
                                                         data-shift_start='<?= $loadss->shift_start ?>'
                                                         data-shift_end='<?= $loadss->shift_end ?>'
@@ -403,7 +417,7 @@
 
 
                                                 @if ($item->shift_type == 3)
-                                                    <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
+                                                    <a class="btn action-btns  btn-primary btn-icon btn-sm" href="javascript:void(0);"
                                                         onclick="openEditOpenShiftModel(this)" data-id='<?= $item->id ?>'
                                                         data-shift_name='<?= $item->shift_type_name ?>'
                                                         data-shift_type='<?= $power->AttedanceShiftCheckItems($item->id) ?>'
@@ -418,7 +432,7 @@
                                                             data-original-title="View/Edit"></i>
                                                     </a>
                                                 @endif
-                                                <a class="btn btn-danger btn-icon btn-sm" href="javascript:void(0);"
+                                                <a class="btn action-btns  btn-danger btn-icon btn-sm" href="javascript:void(0);"
                                                     data-shift_type='<?= $power->AttedanceShiftCheckItems($item->id) ?>'
                                                     onclick="DeleteModel(this)" data-bs-toggle="modal"
                                                     data-id='<?= $item->id ?>'
@@ -571,6 +585,9 @@
                                     </div>
                                     <div class="form-group" id="UpdateRotationalShift">
                                         <div class="row">
+                                            <div class="col-11">
+                                                <label class="form-label">Repeat Shift in Every <input id="updateWeekRepeat" class="mx-2 text-center" type="number" name="update_repeat_week" min="1" max="6" style="width: 3rem" required>Weeks</label>
+                                            </div>
                                             <div class="col-xl-11">
                                                 <label class="form-label"> Rotational Shift Name</label>
                                                 <input class="form-control mb-4" id="updatedRotationalName"
@@ -781,11 +798,12 @@
                 let id = $(context).data('id');
                 let shift_name = $(context).data('shift_name');
                 let shift_ftype = $(context).data('shift_type');
-
+                let weekly_repeat = $(context).data('weekly_repeat');
                 // Set values for the input fields
                 $('#setId').val(id);
                 $('#updatedRotationalName').val(shift_name);
                 $('#shifttype').val(shift_ftype);
+                $('#updateWeekRepeat').val(weekly_repeat);
 
 
                 $.ajax({
@@ -1755,7 +1773,10 @@
                                     <div class="form-group d-none" id="shiftname2">
                                         <div class="row">
                                             <div class="col-11">
-                                                <label class="form-label"> Rotetional Shift Name</label>
+                                                <label class="form-label">Repeat Shift in Every <input class="mx-2 text-center" type="number" name="repeat_week" min="1" max="6" style="width: 3rem" required>Weeks</label>
+                                            </div>
+                                            <div class="col-11">
+                                                <label class="form-label"> Rotational Shift Name</label>
                                                 <input class="form-control mb-4" placeholder="Enter Shift Name"
                                                     type="text" name="rotationalName" >
                                             </div>

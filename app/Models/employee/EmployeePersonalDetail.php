@@ -46,6 +46,7 @@ class EmployeePersonalDetail extends Model
 {
 	protected $table = 'employee_personal_details';
 
+	protected $primary_key = 'id';
 	protected $casts = [
 		'employee_type' => 'int',
 		'emp_branch' => 'int',

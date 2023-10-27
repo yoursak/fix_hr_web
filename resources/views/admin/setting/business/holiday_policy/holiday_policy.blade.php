@@ -255,6 +255,15 @@
         }
     }
 </style>  
+
+<div class=" p-0 mt-3">
+    <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
+        <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+        <li><a href="{{ url('admin/settings/business')}}">Settings</a></li>
+        <li><a href="{{ url('admin/settings/business')}}">Business Setting</a></li>
+        <li class="active"><span><b>Holiday Templates</b></span></li>
+    </ol>
+</div>
 <div class="page-header d-md-flex d-block">
         @php
             $centralUnit = new App\Helpers\Central_unit();
@@ -266,22 +275,21 @@
         @endphp
         <div class="page-leftheader">
             <div class="page-title">Holiday Templates</div>
-            <p class="text-muted">Create Template to give automatic paid leaves to staff on public holidays</p>
+            <p class="text-muted m-0">Create Template to give automatic paid leaves to staff on public holidays</p>
         </div>
         <div class="page-rightheader ms-auto">
             <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
                 <div class="d-lg-flex d-block">
                     <div class="btn-list">
-                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
-                            data-bs-target="#createTemplate">Create
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTemplate">Create
                             Templates</button>
+                       
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Holiday Policy List</h3>
@@ -315,7 +323,7 @@
                                     ?>
                                     </td>
                                     <td>
-                                         <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);" id="editTempBtn{{ $item->temp_id }}"
+                                         <a class="btn action-btns btn-primary btn-icon btn-sm" href="javascript:void(0);" id="editTempBtn{{ $item->temp_id }}"
                                             onclick="openEditModel(this)"  data-bs-toggle="modal"
                                             data-bs-target="#updateTemplate{{ $item->temp_id }}">
                                             <i class="feather feather-edit" data-bs-toggle="tooltip"
@@ -330,7 +338,7 @@
                                         {{-- <a class="btn text-primary" id="editTempBtn{{ $item->temp_id }}" data-bs-toggle="modal"
                                             data-bs-target="#updateTemplate{{ $item->temp_id }}"><b>Edit</b></a> --}}
 
-                                            <a class="btn btn-danger btn-icon btn-sm" href="javascript:void(0);"
+                                            <a class="btn action-btns  btn-danger btn-icon btn-sm" href="javascript:void(0);"
                                             onclick="ItemDeleteModel(this)" data-id='<?=  $item->temp_id ?>'
                                             data-temp_name='<?= $item->temp_name ?>' data-bs-toggle="modal"
                                             data-bs-target="#editDeleteModel"><i class="feather feather-trash"></i>
@@ -345,7 +353,6 @@
                 </div>
             </div>
         </div>
-    </div>
    
     <div class="modal fade" id="editDeleteModel" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
     aria-hidden="true">
@@ -651,10 +658,12 @@
                                                 </div>
                                             </div>
                                             <div class="col-xl-1 pt-4 col-md-1 append-buttons">
-                                                <button type="button" onclick="addSetData()"
+                                                <button type="button" onclick="addSetData()" class="btn btn-outline-primary add_item_btn"><i class="fe fe-plus bold"></i>
+                                                </button>
+                                                {{-- <button type="button" 
                                                     class="btn btn-primary btn-sm mb-2 text-uppercase shadow-sm"><i
                                                         class="fa fa-plus fa-fw"></i>
-                                                </button>
+                                                </button> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -685,7 +694,7 @@
                                 <div class=" text-end">
                                     <button type="reset" class="btn btn-outline-dark" id="tempSave"
                                         data-bs-toggle="tooltip" data-bs-placement="top" title="Reset">Reset</button>
-                                    <button type="submit" class="btn btn-outline-success" id="tempSave"
+                                    <button type="submit" class="btn btn-outline-primary" id="tempSave"
                                         data-bs-toggle="tooltip" data-bs-placement="top" title="Save">Apply
                                         Template</button>
                                 </div>
@@ -787,11 +796,15 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-xl-1 pt-4 col-md-1 append-buttons">
-                                                    <button type="button" id="{{ $template->temp_id }}"
+                                                    
+                                                    <button type="button"  id="{{ $template->temp_id }}" onclick="updateAppend(this.id)" class="btn btn-outline-primary add_item_btn"><i class="fe fe-plus bold"></i>
+                                                    </button>
+                                               
+                                                    {{-- <button type="button" id="{{ $template->temp_id }}"
                                                         onclick="updateAppend(this.id)"
                                                         class="btn btn-primary btn-sm mb-2 text-uppercase shadow-sm"><i
                                                             class="fa fa-plus fa-fw"></i>
-                                                    </button>
+                                                    </button> --}}
                                                 </div>
                                             </div>
                                         </div>
@@ -814,9 +827,12 @@
                                                             <td>{{ $holiday->holiday_name }}</td>
                                                             <td>{{ $holiday->holiday_date }}</td>
                                                             <td>{{ $holiday->day }}</td>
-                                                            <td><button type="button" id="{{ $holiday->holiday_id }}"
+                                                            <td>
+                                                                <button type="button" id="{{ $holiday->holiday_id }}" onclick="deleteHolidayOnly(this.id,{{ $template->temp_id }})" class="btn btn-outline-danger remove_item_btn_edit" ><i class="feather feather-trash"></i></button>
+                                                                {{-- <button type="button"  class="btn btn-danger btn-sm" >Delete</button> --}}
+                                                                {{-- <button type="button" id="{{ $holiday->holiday_id }}"
                                                                     class="btn btn-danger btn-sm"
-                                                                    onclick="deleteHolidayOnly(this.id,{{ $template->temp_id }})">Delete</button>
+                                                                    onclick="deleteHolidayOnly(this.id,{{ $template->temp_id }})">Delete</button> --}}
                                                             </td>
                                                         </tr>
                                                     @endforeach
@@ -851,11 +867,11 @@
                                     </div>
 
                                     <div class=" text-end">
-                                        <button type="reset" class="btn btn-outline-dark" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Reset">Reset</button>
-                                        <button type="submit" class="btn btn-outline-success" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Save">Apply
-                                            Template</button>
+                                        <a class="btn btn-outline-dark cancel" data-bs-dismiss="modal">Cancel</a>
+                                        {{-- <button type="reset" class="btn btn-outline-dark" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="Reset">Reset</button> --}}
+                                        <button type="submit" class="btn btn-outline-primary" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="Save">Apply</button>
                                     </div>
                                 </div>
                         </form>
@@ -918,8 +934,10 @@
             cell1.innerHTML = name;
             cell2.innerHTML = date;
             cell3.innerHTML = day;
+            
+                                                               
             cell4.innerHTML =
-                '<button type="button" class="btn btn-danger btn-sm" onclick="deleteHoliday(this)">Delete</button>';
+                '<button type="button"  onclick="deleteHoliday(this)" class="btn btn-outline-danger " ><i class="feather feather-trash"></i></button>';
 
             // Add the holiday data to the array
             holidayData.push({
@@ -995,8 +1013,7 @@
             cell1.innerHTML = name;
             cell2.innerHTML = date;
             cell3.innerHTML = day;
-            cell4.innerHTML =
-                '<button type="button" class="btn btn-danger btn-sm" onclick="deleteHoliday(this)">Delete</button>';
+            cell4.innerHTML ='<button type="button"  onclick="deleteHoliday(this)" class="btn btn-outline-danger " ><i class="feather feather-trash"></i></button>';
 
             // Add the holiday data to the array
             holidayUpdateData.push({

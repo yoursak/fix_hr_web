@@ -6,6 +6,7 @@
     <title>FixHR - @yield('title')</title>
     @include('auth/admin/authlayout.head_simple')
     @yield('css')
+    @livewireStyles
 
     <script src="{{ config('app.cdn') }}"></script>
 </head>
@@ -55,10 +56,10 @@
     <script src="{{ asset('assets/plugins/fancyuploder/jquery.iframe-transport.js') }}"></script>
     <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
     <script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
-
     <!-- INTERNAL FILE-UPLOADS JS -->
     <script src="{{ asset('assets/plugins/fileupload/js/dropify.js') }}"></script>
     <script src="{{ asset('assets/js/filupload.js') }}"></script>
+    @livewireScripts
 
 </body>
 

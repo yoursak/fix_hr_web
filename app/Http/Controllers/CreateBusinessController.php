@@ -52,7 +52,7 @@ class CreateBusinessController extends Controller
                 'body' => ' Your FixHR Business Registration one time PIN is: ' . "$otp",
             ];
             $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
-// isset($sendMail)
+            // isset($sendMail)
             if (isset($sendMail)) {
 
                 $request->session()->put('firstEmail', $request->email);
@@ -63,16 +63,15 @@ class CreateBusinessController extends Controller
                 if ($business) {
                     $load = DB::table('business_details_list')->where('business_email', Session::get('firstEmail'))->first();
                     if (isset($load)) {
-                        Alert::warning('Email is Found, Kindly Register New Your Business  Email');
+                        Alert::warning('', 'Email is Found Kindly Register New Your Business  Email');
                         return redirect("signup");
-
                     } else {
-                        Alert::success('Otp has been Send Successfully to Your Register Email');
-                        return redirect("signup/otp")->with("success", "");
+                        Alert::success('', 'Otp has been Send Successfully to Your Register Email');
+                        return redirect("signup/otp");
                     }
                 }
             }
-        } elseif ($request->has("otp")) {
+        } else if ($request->has("otp")) {
             $pending = DB::table("pending_admins")->where([
                 "emp_email" => $request->session()->get('firstEmail'),
                 'otp' => $request->otp
@@ -80,10 +79,16 @@ class CreateBusinessController extends Controller
 
             // dd($pending);
             if (isset($pending)) {
-                return redirect("signup/create")->with("success", "");
+                // Alert::success('', '');
+
+                return redirect("signup/create");
             } else {
                 $request->session()->flash('top');
                 return back();
+                // return redirect("signup");
+                // return redirect("signup/otp");
+
+
             }
         } elseif ($request->has("bname")) {
 
@@ -156,14 +161,13 @@ class CreateBusinessController extends Controller
 
             $pending = DB::table('pending_admins')->where('emp_email', Session()->get('firstEmail'))->delete();
             if (isset($created)) {
-                Alert::success('Create Successfully Business', 'Now Your Business account Created');
+                Alert::success('', "Create Successfully Business \n Now Your Business account Created");
 
                 return redirect('/login');
             } else {
 
-                Alert::info('Not Create Business', 'Please Check Your Details!');
+                Alert::info('', "Not Create Business \n Please Check Your Details!");
                 return back();
-
             }
             // return redirect('/');
         } else {

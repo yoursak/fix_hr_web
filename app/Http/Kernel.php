@@ -14,15 +14,12 @@ class Kernel extends HttpKernel
      * @var array<int, class-string|string>
      */
     protected $middleware = [
-            // \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
         \Illuminate\Http\Middleware\HandleCors::class,
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        // \App\Http\Middleware\ForceJsonResponse::class,
-        // \App\Http\Middleware\Cors::class,
     ];
 
     /**
@@ -30,6 +27,9 @@ class Kernel extends HttpKernel
      *
      * @var array<string, array<int, class-string|string>>
      */
+    //     \Illuminate\Session\Middleware\StartSession::class,
+    // \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+
     protected $middlewareGroups = [
         'web' => [
             \App\Http\Middleware\EncryptCookies::class,
@@ -42,7 +42,7 @@ class Kernel extends HttpKernel
 
         'api' => [
                 // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-                // \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -62,14 +62,14 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+        'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'logincheck' => \App\Http\Middleware\LoginCheck::class,
         'email_verified' => \App\Http\Middleware\EmailVerifiedMiddleware::class,
-        // 'cors' => \App\Http\Middleware\Cors::class,
-        // 'json.response' => \App\Http\Middleware\ForceJsonResponse::class,
         'apilogincheck' => \App\Http\Middleware\ApiLoginCheck::class,
+        'payment.completed' => \App\Http\Middleware\PaymentCompletedMiddleware::class,
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,

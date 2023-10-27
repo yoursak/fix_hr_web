@@ -1,6 +1,10 @@
-@extends('admin.setting.setting')
-@section('subtitle')
+{{-- @extends('admin.setting.setting')
+--}}
+@extends('admin.pagelayout.master')
+@section('title')
     Attendance Access
+@endsection
+@section('js')
 @endsection
 @section('css')
     <style>
@@ -253,354 +257,355 @@
                 max-width: 1140px
             }
         }
-
-        .activeBtn {
-            background: #fff;
-            color:
-        }
     </style>
 @endsection
-@section('settings')
-    @php
-        $Branch = new App\Helpers\Central_unit();
-        $BranchList = $Branch->BranchList();
-        // $Department = App\Helpers\Central_unit::DepartmentList();
-        // dd($BranchList);
-    @endphp
-    <div class="page-header d-md-flex d-block">
-        <div class="page-leftheader">
-            <div class="page-title">Attendance Access</div>
-        </div>
-        <div class="page-rightheader ms-auto">
-            <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-                <div class="d-lg-flex d-block">
-                    <div class="btn-list">
-                        <a type="button" class="modal-effect btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#createAccess">Create Access</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
+@section('content')
+
+<div class=" p-0 pt-2">
+    <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
+        <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+        <li><a href="{{ url('admin/settings/attendance')}}">Settings</a></li>
+        <li><a href="{{ url('admin/settings/attendance')}}">Attendace Setting</a></li>
+
+        <li class="active"><span><b>Attendance Access</b></span></li>
+    </ol>
+</div>
+    {{--
+
+
+
+    {{-- @endsection
+@section('settings') --}}
+    <?php
+    
+    $power = new App\Helpers\MasterRulesManagement\RulesManagement();
+    
+    ?>
 
     <div class="row">
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-vcenter text-nowrap border-bottom" id="file-datatable">
-                        <thead>
-                            <tr>
-                                <th class="border-bottom-0">S.No.</th>
-                                <th class="border-bottom-0">Template Name</th>
-                                <th class="border-bottom-0">Mode</th>
-                                <th class="border-bottom-0">Department</th>
-                                <th class="border-bottom-0">Branch</th>
-                                <th class="border-bottom-0">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($Temp as $key => $temp)
-                                <tr>
-                                    <th class="border-bottom-0">{{ $key }}</th>
-                                    <th class="border-bottom-0">{{ $temp->temp_name }}</th>
-                                    <?php if($temp->attendance_mode == 0){ ?>
-                                    <th class="border-bottom-0">Office</th>
-                                    <?php }else if($temp->attendance_mode == 1){ ?>
-                                    <th class="border-bottom-0">Out Door</th>
-                                    <?php }else{ ?>
-                                    <th class="border-bottom-0">Work From Office</th>
-                                    <?php }?>
-                                    <th class="border-bottom-0">{{ $temp->department_id }}</th>
-                                    <th class="border-bottom-0">{{ $temp->branch_id }}</th>
-                                    <th class="border-bottom-0">
-                                        <div class="d-flex">
-                                            <a class="btn btn-sm btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#updateAccess">Edit</a>
-                                            <a class="btn btn-sm btn-danger mx-1">Delete</a>
-                                        </div>
-                                    </th>
-                                </tr>
-                            @endforeach
-                            <!-- Add more table rows as needed -->
-                        </tbody>
-                    </table>
+        <div class="col-xl-12 col-md-12 col-lg-12">
+            <div class="page-header d-md-flex d-block">
+                <div class="page-leftheader">
+                    <div class="page-title"> Attendance Access</div>
+                    <p class="text-muted">Create want Started all method working Mode</p>
                 </div>
-            </div>
-        </div>
-    </div>
+                <div class="page-rightheader ms-md-auto">
+                    <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
+                        <div class="d-lg-flex d-block">
+                            {{-- <div class="btn-list d-flex">
+                                <a class="modal-effect btn btn-primary btn-block mx-3" data-effect="effect-scale"
+                                    data-bs-toggle="modal" href="#additionalModals" id="btnOpen">Add New Active Method</a>
+                            </div> --}}
 
-
-    {{-- attendance mode modal --}}
-    
-
-
-    {{-- create attendance mode modal --}}
-    <div class="container">
-        <div class="modal fade" id="createAccess">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header p-5">
-                        <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Attendance Access</h5>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
-                        </button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <label class="form-label">Template Name</label>
-                                        <input class="form-control mb-4" value="" id="accessTempName"
-                                            placeholder="Enter Template Name" type="text" name="accessTempName" required>
-
-                                    </div>
-                                    <div class="col-12 d-flex my-2">
-                                        <label class="form-label">Attendance Mode :</label>
-                                        <div class="row mx-2">
-                                            {{-- @dd($AttMode) --}}
-
-                                            <?php if($AttMode->in_premises_auto == 1 || $AttMode->in_premises_qr == 1 || $AttMode->in_premises_face_id == 1 || $AttMode->in_premises_selfie == 1){ ?>
-                                            <label class="custom-control custom-radio mx-2">
-                                                <input type="radio" class="custom-control-input" name="tempMode"
-                                                    id="inPremises" value="0">
-                                                <span class="custom-control-label"><b>Office</b></span>
-                                            </label>
-
-                                            <?php } if($AttMode->outdoor_auto == 1 || $AttMode->outdoor_selfie == 1){ ?>
-                                            <label class="custom-control custom-radio mx-2">
-                                                <input type="radio" class="custom-control-input" name="tempMode"
-                                                    id="outDoor" value="1">
-                                                <span class="custom-control-label"><b>Out Door</b></span>
-                                            </label>
-                                            <?php } if($AttMode->wfh_auto == 1 || $AttMode->wfh_selfie == 1){ ?>
-                                            <label class="custom-control custom-radio mx-2">
-                                                <input type="radio" class="custom-control-input" name="tempMode"
-                                                    id="wfh" value="2">
-                                                <span class="custom-control-label"><b>Work From Home</b></span>
-                                            </label>
-                                            <?php } ?>
-
-                                            <?php if($AttMode->in_premises_auto != 1 && $AttMode->in_premises_qr != 1 && $AttMode->in_premises_face_id != 1 && $AttMode->in_premises_selfie != 1){ ?>
-                                                <span class="text-primary">Attendance Mode is Not Seted Yet. <br><span class="text-muted fs-12">Attendance Setting > Attendance Mode</span></span>
-                                                <?php }else{ ?>''<?php } ?>
-
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="col-12 my-2 rounded">
-                                        <div class="d-flex sm-d-block justify-content-between">
-                                            <label class="form-label my-auto">Attendance Preference :</label>
-                                            <div class="d-flex bg-primary p-1 rounded">
-                                                <button class="btn btn-sm activeBtn text-primary" id="businessBtn"
-                                                    onclick="businessBtn()"><b>Business</b></button>
-                                                <button class="btn btn-sm text-light" id="employeeBtn"
-                                                    onclick="employeeBtn()"><b>Employee</b></button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12 my-2 d-none" id="empElem">
-                                        <label class="form-label">Applied to your Business : <span
-                                                class="text-primary">{{ $BusinessDetails->business_name }}</span></label>
-                                        <input type="text" name="businessName"
-                                            value="{{ $BusinessDetails->business_id }}" hidden />
-                                        <div class="text-end">
-                                            <a type="submit" class="btn btn-sm btn-primary" onclick="submitBusiness()">
-                                                save
-                                                & continoue</a>
-                                        </div>
-                                        <script>
-                                            function submitBusiness() {
-                                                var accessTempName = document.getElementById('accessTempName').value;
-
-                                                var inPremises = document.getElementById('inPremises');
-                                                var outDoor = document.getElementById('outDoor');
-                                                var wfh = document.getElementById('wfh');
-
-                                                if (inPremises.checked == true) {
-                                                    var mode = 0;
-                                                } else if (outDoor.checked == true) {
-                                                    var mode = 1;
-                                                } else {
-                                                    var mode = 2;
-                                                }
-
-                                                $.ajax({
-                                                    url: "{{ url('add/attendance-access') }}",
-                                                    type: "POST",
-                                                    data: {
-                                                        _token: '{{ csrf_token() }}',
-                                                        accessTempName,
-                                                        mode,
-                                                        'branchId': 'all',
-                                                        'departmentId': 'all'
-                                                    },
-                                                    dataType: 'json',
-                                                    success: function(result) {
-
-                                                        location.reload();
-                                                        console.log(result);
-
-                                                    }
-                                                });
-                                            }
-                                        </script>
-                                    </div>
-
-                                    <div class="row my-2 d-none" id="busiElem">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <p class="form-label">Branch</p>
-                                                <select name='branch_id' onchange="getDepartment(this)" id="country-dd"
-                                                    class="form-control" required>
-                                                    <option value="">Select Branch Name</option>
-                                                    @foreach ($BranchList as $data)
-                                                        <option value="{{ $data->branch_id }}">
-                                                            {{ $data->branch_name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <p class="form-label">Department</p>
-                                                <div class="form-group mb-3">
-                                                    <select id="state-dd" onchange="printDepartment(this)"
-                                                        name="department_id" class="form-control" required>
-                                                        <option value="">Select Deparment Name</option>
-                                                        <option value="">Select All Department Name</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="form-label">Applied to : <span class="text-primary"
-                                                    id="DepartmentName"></span></label>
-                                        </div>
-                                        <div class="text-end">
-                                            <a type="submit" class="btn btn-sm btn-primary" onclick="submitEmployee()">
-                                                save
-                                                & continoue</a>
-                                        </div>
-                                        <script>
-                                            function submitEmployee() {
-                                                var accessTempName = document.getElementById('accessTempName').value;
-                                                var branchId = document.getElementById('country-dd').value;
-                                                var departmentId = document.getElementById('state-dd').value;
-
-                                                var inPremises = document.getElementById('inPremises');
-                                                var outDoor = document.getElementById('outDoor');
-                                                var wfh = document.getElementById('wfh');
-
-                                                if (inPremises.checked == true) {
-                                                    var mode = 0;
-                                                } else if (outDoor.checked == true) {
-                                                    var mode = 1;
-                                                } else {
-                                                    var mode = 2;
-                                                }
-
-                                                $.ajax({
-                                                    url: "{{ url('add/attendance-access') }}",
-                                                    type: "POST",
-                                                    data: {
-                                                        _token: '{{ csrf_token() }}',
-                                                        accessTempName,
-                                                        branchId,
-                                                        departmentId,
-                                                        mode
-                                                    },
-                                                    dataType: 'json',
-                                                    success: function(result) {
-
-                                                        location.reload();
-                                                        console.log(result);
-
-                                                    }
-                                                });
-                                            }
-
-
-                                            function printDepartment(e) {
-                                                var printElem = document.getElementById('DepartmentName');
-                                                console.log(e);
-                                                printElem.innerHTML = '';
-                                                printElem.innerHTML = e.options[e.selectedIndex].text;
-
-                                            }
-
-                                            function getDepartment(e) {
-                                                var branch_id = e.value;
-                                                // alert(branch_id);
-                                                $("#state-dd").html('');
-                                                $.ajax({
-                                                    url: "{{ url('admin/settings/business/alldepartment') }}",
-                                                    type: "POST",
-                                                    data: {
-                                                        _token: '{{ csrf_token() }}',
-                                                        brand_id: branch_id
-                                                    },
-                                                    dataType: 'json',
-                                                    success: function(result) {
-
-                                                        console.log(result.department[0].branch_id);
-                                                        $('#state-dd').html(
-                                                            '<option value="all" name="department">All Department</option>'
-                                                        );
-                                                        $.each(result.department, function(key, value) {
-                                                            $("#state-dd").append('<option name="department" value="' +
-                                                                value
-                                                                .depart_id + '">' + value.depart_name +
-                                                                '</option>');
-                                                        });
-                                                        $('#desig-dd').html(
-                                                            '<option value="">Select Designation Name</option>');
-                                                    }
-                                                });
-                                            }
-                                        </script>
-                                    </div>
-
-                                    <script>
-                                        function businessBtn() {
-                                            var businessBtn = document.getElementById('businessBtn');
-                                            var employeeBtn = document.getElementById('employeeBtn');
-                                            businessBtn.classList.add('activeBtn', 'text-primary');
-                                            businessBtn.classList.remove('text-light');
-                                            employeeBtn.classList.add('text-light');
-                                            employeeBtn.classList.remove('activeBtn', 'text-primary');
-
-                                            var empElem = document.getElementById('empElem').classList.remove('d-none');
-                                            var busiElem = document.getElementById('busiElem').classList.add('d-none');
-
-
-                                        }
-
-                                        function employeeBtn() {
-                                            var businessBtn = document.getElementById('businessBtn');
-                                            var employeeBtn = document.getElementById('employeeBtn');
-
-
-                                            employeeBtn.classList.add('activeBtn', 'text-primary');
-                                            employeeBtn.classList.remove('text-light');
-                                            businessBtn.classList.remove('activeBtn', 'text-primary');
-                                            businessBtn.classList.add('text-light');
-
-                                            var empElem = document.getElementById('empElem').classList.add('d-none');
-                                            var busiElem = document.getElementById('busiElem').classList.remove('d-none');
-                                        }
-                                    </script>
-                                </div>
-                            </div>
                         </div>
                     </div>
-                    <div class="modal-footer"></div>
+                </div>
+            </div>
+
+        </div>
+
+        {{-- create Method apply --}}
+        <div class="container">
+            <div class="modal fade" id="additionalModals">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header p-5">
+                            <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Create Method
+                            </h5>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
+                            </button>
+                        </div>
+                        <form action="{{ route('attendance.endgameSubmit') }}" method="post">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Create Active Mode</h3>
+                                    </div>
+
+                                    <div class="card-body">
+
+                                        <div class="row justify-content-center align-items-center g-2">
+
+
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-light" type="reset" data-bs-dismiss="modal">Close</button>
+                                <button class="btn btn-primary" type="submit" id="savechanges">Create Method
+                                    Apply</button>
+                            </div>
+                        </form>
+
+                    </div>
                 </div>
             </div>
         </div>
+
+        {{-- table view --}}
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Attendance Access</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+
+                        <table class="table  table-vcenter text-nowrap  border-bottom " id="file-datatable">
+                            <thead>
+                                <tr>
+                                    <th class="border-bottom-0 w-10">S.No.</th>
+                                    <th class="border-bottom-0">Emp ID</th>
+                                    <th class="border-bottom-0">Emp Name</th>
+                                    <th class="border-bottom-0">Mode Name</th>
+                                    <th class="border-bottom-0">Shift Name</th>
+
+                                    <th class="border-bottom-0">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $j = 1;
+                                    // dd($EmployeeInfomation);
+                                @endphp
+                                @foreach ($EmployeeInfomation as $item)
+                                    <tr>
+                                        <td class="font-weight-semibold">{{ $j++ }}.</td>
+                                        <td class="font-weight-semibold">{{ $item->emp_id }}
+                                        </td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <span class="avatar avatar-md brround me-3 rounded-circle"
+                                                    style="background-image: url('/employee_profile/{{ $item->profile_photo }}')"></span>
+                                                <div class="me-3 mt-0 mt-sm-1 d-block">
+                                                    <h6 class="mb-1 fs-14">{{ $item->emp_name }}</h6>
+                                                    <p class="text-muted mb-0 fs-12">
+                                                        <?=$item->depart_name ?> |<?= $item->desig_name ?></p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        {{-- <td class="font-weight-semibold">{{$item->emp_name}}
+                                        </td> --}}
+                                        <td class="font-weight-semibold">{{ $item->method_name }}
+                                        </td>
+                                        <td class="font-weight-semibold">{{ $item->name }}
+                                        </td>
+
+                                        <td>
+                                            <?php $ID = $item->emp_id; ?>
+
+                                            <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
+                                                onclick="openEditMasterPolicy(this)" data-id='<?= $ID ?>'
+                                                data-b_id='<?= $item->business_id ?>'
+                                                data-switch='<?= $item->method_switch ?? false && $item->method_switch != 0 ? $item->method_switch : 0 ?>'
+                                                data-bs-toggle="modal" data-bs-target="#editMasterCreated">
+                                                <i class="feather feather-edit" data-bs-toggle="tooltip"
+                                                    data-original-title="View/Edit"></i>
+                                            </a>
+                                            <a class="btn btn-danger btn-icon btn-sm" href="javascript:void(0);"
+                                                onclick="DeleteMasterModel(this)" data-ids='<?= $ID ?>'
+                                                data-b_id='<?= $item->business_id ?>'
+                                                data-loaded='<?= $method_name ?? false ? $method_name : '' ?>'
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#editdeleteModal">
+                                                <i class="feather feather-trash" data-bs-toggle="tooltip"
+                                                    data-original-title="View/Edit"></i>
+                                            </a>
+
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- edit section created --}}
+
+
+
+        <div class="modal fade" id="editdeleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+
+                    <form action="{{ url('admin/settings/attendance/delete_master_rule') }}" method="post">
+                        @csrf
+                        <input type="text" id="shiftid" name="id" hidden>
+
+                        <input type="text" id="bl" name="bid" hidden>
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Confirm Deletion</h5>
+                            <a type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</a>
+                        </div>
+                        <div class="modal-body">
+
+                            <p>Method Name <b>
+                                </b></p>
+                            <h4 id="load_name"></h4><b>
+                            </b>
+                            <p></p>
+
+                            Are you sure you want to delete this item?
+                        </div>
+                        <div class="modal-footer">
+                            <a type="close" class="btn  btn-secondary" data-bs-dismiss="modal">Cancel</a>
+                            <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function DeleteMasterModel(context) {
+            var idss = $(context).data('ids');
+            var b_id = $(context).data('b_id');
+            var asdd = $(context).data('loaded');
+            // console.log(asdd);
+            $('#shiftid').val(idss);
+            $('#bl').val(b_id);
+            $('#load_name').text(asdd);
+        }
+    </script>
+    <script>
+        document.getElementById("branchleavel").style.display = "none";
 
+        function LoadPolicyPreference() {
+            document.getElementById("businessleavel").style.display = "none";
+            var selectedValue = document.getElementById("policypreference").value;
+
+            if (selectedValue === "1") {
+                document.getElementById("businessleavel").style.display = "block";
+                document.getElementById("branchleavel").style.display = "none";
+            }
+            if (selectedValue === "2") {
+                document.getElementById("businessleavel").style.display = "none";
+                document.getElementById("branchleavel").style.display = "block";
+            }
+        }
+    </script>
+
+    <script>
+        document.getElementById("editbranchleavel").style.display = "none";
+
+        function LoadPolicyPreference() {
+            document.getElementById("editbusinessleavel").style.display = "none";
+            var selectedValue = document.getElementById("editpolicypreference").value;
+
+            if (selectedValue === "1") {
+                document.getElementById("editbusinessleavel").style.display = "block";
+                document.getElementById("editbranchleavel").style.display = "none";
+            }
+            if (selectedValue === "2") {
+                document.getElementById("editbusinessleavel").style.display = "none";
+                document.getElementById("editbranchleavel").style.display = "block";
+            }
+        }
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#custom-switch-checkbox').on('change', function() {
+                if ($(this).is(':checked')) {
+                    // Checkbox is checked, show a SweetAlert2 success alert
+                    Swal.fire({
+                        timer: 2000,
+                        timerProgressBar: true,
+                        title: 'Method is Active Mode!',
+                        icon: 'success'
+                    }).then(function() {
+                        callBack(1);
+                        // Reload the page
+                        window.location.reload(true);
+                    });
+                } else {
+                    // Checkbox is unchecked, show a SweetAlert2 info alert
+                    Swal.fire({
+                        timer: 2000,
+                        timerProgressBar: true,
+                        title: 'Method is Deactive Mode!',
+                        icon: 'info'
+                    }).then(function() {
+                        callBack(0);
+                        window.location.reload(true);
+
+                        // Reload the page
+                    });
+                }
+
+            });
+
+
+        });
+
+        function openEditMasterPolicy(context) {
+            var id = $(context).data('id');
+            var bID = $(context).data('b_id');
+            var switchload = $(context).data('switch');
+            console.log(bID);
+
+            $.ajax({
+                url: "{{ url('admin/settings/attendance/get_master_rule') }}",
+                type: "get",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: id,
+                    b_id: bID,
+                    switch: switchload
+                },
+                dataType: 'json',
+                success: function(result) {
+                    console.log(result);
+
+                    if (result[0] != null) {
+                        $('#edit_mname').val(result[0].method_name);
+                        $('#b_id').val(result[0].business_id);
+                        // Parse JSON-encoded strings into JavaScript arrays for multiple selects
+                        var selectedLeavePolicies = JSON.parse(result[0].leave_policy_ids_list);
+                        var selectedHolidayPolicies = JSON.parse(result[0].holiday_policy_ids_list);
+                        var selectedWeeklyPolicies = JSON.parse(result[0].weekly_policy_ids_list);
+                        var selectedShiftSettings = JSON.parse(result[0].shift_settings_ids_list);
+
+                        $('#editleavepolicy').val(selectedLeavePolicies);
+                        $('#editholidaypolicy').val(selectedHolidayPolicies);
+                        $('#editweeklypolicy').val(selectedWeeklyPolicies);
+                        $('#editshiftsetting').val(selectedShiftSettings);
+                        $('#editleavepolicy,#editholidaypolicy, #editweeklypolicy, #editshiftsetting').trigger(
+                            'change');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX request error:", error);
+                }
+            });
+        }
+
+        function callBack(load) {
+
+            $.ajax({
+                url: "{{ url('admin/settings/attendance/mode_master_rule') }}",
+                type: "get",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    checked: load
+                },
+                dataType: 'json',
+                success: function(result) {
+                    console.log(result);
+                }
+            });
+        }
+    </script>
 @endsection

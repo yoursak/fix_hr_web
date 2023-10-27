@@ -9,6 +9,8 @@ use App\Models\employee\MisspunchList;
 use App\Helpers\ReturnHelpers;
 use App\Http\Resources\Api\MisspunchRequestResources;
 use Carbon\Carbon;
+use App\Http\Resources\Api\UserSideResponse\UserMisspunchIdToDataResources;
+use DB;
 
 class MisspuchApiController extends Controller
 {
@@ -36,7 +38,7 @@ class MisspuchApiController extends Controller
             $data->emp_miss_out_time = $request->out_time;
             $data->emp_working_hour = $request->working_hour;
             $data->message = $request->message;
-            $data->status = $request->status;
+            $data->status = 0;
 
             if ($data->save()) {
                 return ReturnHelpers::jsonApiReturn(MisspunchRequestResources::collection([MisspunchList::find($data->id)])->all());
@@ -44,6 +46,34 @@ class MisspuchApiController extends Controller
             return response()->json(['result' => [], 'status' => false]);
         }
         return response()->json(['result' => [], 'status' => false], 404);
+    }
+
+        // // if($misspunch!=null){
+        // //     return "kya andha hai";
+        // // }
+        // // if (isset($misspunch) &&  !empty($misspunch)) {
+        //     if (empty($yourArray)) {
+        //     return 'The array is not null and not empty.';
+        // } else {
+        //     return 'The array is null or empty.';
+        // }
+
+    public function misspunchIdToData($id)
+    {
+        $emp = DB::table('employee_personal_details')
+            ->where('emp_id', $id)
+            ->first();
+        $misspunch = DB::table('misspunch_list')
+            ->where('emp_id', $id)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        if ($emp!=null  &&(count($misspunch) != 0)) {
+            // return $misspunch;
+            return ReturnHelpers::jsonApiReturn(UserMisspunchIdToDataResources::collection($misspunch)->all());
+        } else {
+            return response()->json(['result' => [], 'status' => false], 404);
+        }
     }
 
     public function show($id)

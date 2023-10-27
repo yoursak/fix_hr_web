@@ -19,6 +19,14 @@
     </style>
 @endsection
 @section('content')
+    <div class=" p-0 mt-3">
+        <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
+            <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+            <li><a href="{{ url('admin/settings/business') }}">Settings</a></li>
+            <li><a href="{{ url('admin/settings/business') }}">Business Setting</a></li>
+            <li class="active"><span><b>Branch Setting</b></span></li>
+        </ol>
+    </div>
     <div class="page-header d-md-flex d-block">
         @php
             $root = new App\Helpers\Central_unit();
@@ -32,7 +40,7 @@
         @endphp
         <div class="page-leftheader">
             <div class="page-title">Branch Setting</div>
-            <p class="text-muted"><?= $branchCount[0] ?> Active Branch</p>
+            <p class="text-muted m-0"><?= $branchCount[0] ?> Active Branch</p>
         </div>
         <div class="page-rightheader ms-md-auto">
             <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
@@ -48,59 +56,59 @@
 
 
     {{-- <div class="row row-sm"> --}}
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Branch List</h3>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
 
-                    <table class="table  table-vcenter text-nowrap  border-bottom " id="file-datatable">
-                        <thead>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Branch List</h3>
+        </div>
+        <div class="card-body p-2">
+            <div class="table-responsive">
+
+                <table class="table  table-vcenter text-nowrap  border-bottom " id="file-datatable">
+                    <thead>
+                        <tr>
+                            <th class="border-bottom-0">S. No.</th>
+                            <th class="border-bottom-0">Branch Name</th>
+
+                            <th class="border-bottom-0">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            
+                            $count = 1;
+                        @endphp
+                        @foreach ($branch as $item)
                             <tr>
-                                <th class="border-bottom-0">S. No.</th>
-                                <th class="border-bottom-0">Branch Name</th>
+                                <td>{{ $count++ }}</td>
+                                <td>{{ $item->branch_name }}</td>
 
-                                <th class="border-bottom-0">Action</th>
+                                <td>
+                                    <div class="d-flex">
+                                        @if (in_array('Employee.Update', $permissions))
+                                            <a class="action-btns btn btn-sm btn-primary" data-bs-toggle="modal"
+                                                data-bs-target="#editBranchName{{ $item->id }}" id="BranchEditbtn"
+                                                title="Edit">
+                                                <i class="feather feather-edit"></i>
+                                            </a>
+                                        @endif
+                                        @if (in_array('Employee.Delete', $permissions))
+                                            <a class="action-btns btn btn-sm btn-danger" data-bs-toggle="modal"
+                                                data-bs-target="#branchDeletebtn{{ $item->id }}" id="BranchEditbtn"
+                                                title="Edit">
+                                                <i class="feather feather-trash "></i>
+                                            </a>
+                                        @endif
+                                    </div>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                
-                                $count = 1;
-                            @endphp
-                            @foreach ($branch as $item)
-                                <tr>
-                                    <td>{{ $count++ }}</td>
-                                    <td>{{ $item->branch_name }}</td>
-
-                                    <td>
-                                        <div class="d-flex">
-                                            @if (in_array('Employee.Update', $permissions))
-                                                <a class="action-btns btn btn-sm btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#editBranchName{{ $item->id }}" id="BranchEditbtn"
-                                                    title="Edit">
-                                                    <i class="feather feather-edit"></i>
-                                                </a>
-                                            @endif
-                                            @if (in_array('Employee.Delete', $permissions))
-                                                <a class="action-btns btn btn-sm btn-danger" data-bs-toggle="modal"
-                                                    data-bs-target="#branchDeletebtn{{ $item->id }}" id="BranchEditbtn"
-                                                    title="Edit">
-                                                    <i class="feather feather-trash "></i>
-                                                </a>
-                                            @endif
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+
 
     @foreach ($branch as $item)
         {{-- Edit Branch Name --}}
@@ -120,6 +128,11 @@
                                 <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Branch Name</p>
                                 <input class="form-control" placeholder="Branch Name" type="text"
                                     value="{{ $item->branch_name }}" name="editbranch">
+                                <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Address Name</p>
+
+                                <input class="form-control" placeholder="Address Name" type="text" value=""
+                                    name="editaddress">
+
                                 <p class="mb-0 pb-0 text-muted fs-12 mt-5 ">By continuing you agree to <a href="#"
                                         class="text-primary">Terms & Conditions</a></p>
                             </div>
@@ -146,13 +159,19 @@
                         <div class="col-lg">
                             <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Branch Name</p>
                             <input class="form-control" name="branch" placeholder="Branch Name" type="text" required>
+
+                            <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Address Name</p>
+                            <input class="form-control" placeholder="Address Name" type="text" value=""
+                                name="address">
+
                             <p class="mb-0 pb-0 text-muted fs-12 mt-5 ">By continuing you agree to <a href="#"
                                     class="text-primary">Terms & Conditions</a></p>
                         </div>
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
                         @csrf
-                        <button type="reset" class="btn btn-outline-dark cancel" data-bs-dismiss="modal">Cancel</button>
+                        <button type="reset" class="btn btn-outline-dark cancel"
+                            data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary savebtn">Continue</button>
                     </div>
                 </form>

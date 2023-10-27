@@ -15202,7 +15202,6 @@ au {
 }
 
 .select2-results__option {
-  padding: 0.5rem;
   -moz-user-select: none;
    -ms-user-select: none;
        user-select: none;

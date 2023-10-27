@@ -42,7 +42,7 @@
         }
 
         input:checked+.slider {
-            background-color: #2196F3;
+            background-color: #1877f2;
         }
 
         input:focus+.slider {
@@ -63,26 +63,30 @@
         .slider.round:before {
             border-radius: 50%;
         }
+        /* .breadcrumb-arrow li a:after {
+            border-left: 25px rgb(10, 4, 4);
+        } */
+        .breadcrumb-arrow li a{
+            border-left: 20px rgb(123, 255, 0);
+        }
+
     </style>
 @endsection
 @section('settings')
+
+<div class=" p-0 mt-3 mb-5">
+    <ol class="breadcrumb breadcrumb-arrow  m-0 p-0" style="background: none; color:red">
+        <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+        <li><a href="{{ url('admin/settings/notification')}}">Settings</a></li>
+        <li class="active"><span><b>Notification Setting</b></span></li>
+    </ol>
+</div>
     <div class="row row-sm d-flex justify-content-center">
         <div class="col-xl-12">
-            <div class="page-header d-md-flex d-block">
-                <div class="page-leftheader">
-                    <div class="page-title">Settings    </div>
-                    <div aria-label="breadcrumb ">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ url('/admin') }}">Dashboard</a></li>
-                            {{-- <li >/</li> --}}
-                            <li class="breadcrumb-item" aria-current="page"><a href="">Notification </a></li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
+            
             <div class="card custom-card">
                 <div class="card-body">
-                    <h4>Notification
+                    <h4>Basic Notification Settings
                     </h4>
                     <div class="card-body">
                         <ul class="list-group ">

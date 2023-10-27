@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Helpers\MasterRulesManagement\RulesManagement;
 use App\Models\admin\SidebarMenu;
 use App\Models\admin\Branch_list;
 use App\Models\employee\EmployeePersonalDetail;
@@ -57,14 +58,31 @@ class ApiResponse
     // business_id to all branch
     public static function allBranch($parameter)
     {
-        $branch = BranchList::where('business_id', $parameter)->get();
-        return response()->json(['result'=>$branch]);
+        $mode = RulesManagement::ALLPolicyTemplatesByIDCall($parameter); //businessID
+        // $branch = BranchList::where('business_id', $parameter)->get();
+        $branch = $mode[2];
+        return response()->json(['result' => $branch]);
+    }
+
+    // branch to all department
+    public static function branchtoallDepartment($parameter)
+    {
+        // $mode = RulesManagement::ALLPolicyTemplatesByIDCall($parameter); //businessID
+        // // $branch = BranchList::where('business_id', $parameter)->get();
+        // $deparment = $mode[10];
+
+        $depart = DepartmentList::where('branch_id', $parameter)->get();
+        return response()->json(["result" => $depart]);
     }
 
     // business_id to all employee
     public static function allEmployee($parameter)
     {
-        $emp = EmployeePersonalDetail::where('business_id', $parameter)->get();
+        $emp = EmployeePersonalDetail::where('business_id', $parameter)
+            ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+            ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+            ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+            ->get();
         return response()->json($emp);
     }
 
@@ -72,23 +90,26 @@ class ApiResponse
     // branch to all employee
     public static function branchtoallEmployee($parameter)
     {
-        $emp = EmployeePersonalDetail::where('branch_id', $parameter)->get();
-        return response()->json(["result"=>$emp]);
+        $emp = EmployeePersonalDetail::where('branch_id', $parameter)
+            ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+            ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+            ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+            ->get();
+        return response()->json(["result" => $emp]);
         // return response()->json($parameter);
     }
 
-    // branch to all department
-    public static function branchtoallDepartment($parameter)
-    {
-        $depart = DepartmentList::where('branch_id', $parameter)->get();
-        return response()->json(["result"=>$depart]);
-    }
 
     // department to all employee list
     public static function departmenttoallEmployeeList($parameter)
     {
-        $emp = EmployeePersonalDetail::where('department_id', $parameter)->get();
-        return response()->json($emp);
+        $emp = DB::table('employee_personal_details')
+            ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+            ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+            ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+            ->where('department_id', $parameter)
+            ->get();
+        return response()->json(["result" => $emp]);
     }
 
     // public static function allEmployeeByBranchDepartment($parameter)

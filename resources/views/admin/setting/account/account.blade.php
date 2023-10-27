@@ -4,6 +4,13 @@
     Account
 @endsection
 @section('settings')
+    <div class=" p-0 mt-3 mb-5">
+        <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
+            <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+            <li><a href="{{ url('admin/settings/account') }}">Settings</a></li>
+            <li class="active"><span><b>Account Setting</b></span></li>
+        </ol>
+    </div>
     <div class="row row-sm">
         @php
             $BType = app\Helpers\Central_unit::GetBusinessType();
@@ -90,7 +97,8 @@
                                 <input type="text" name="editlogoId" value="{{ $accDetail->id }}" hidden>
                                 {{-- src="{{ asset('business_logo/' . Session::get('login_business_image')) }}" --}}
                                 <input type="file" name="image" class="dropify"
-                                    data-default-file="{{ asset('business_logo/' . $accDetail->business_logo) }}" required />
+                                    data-default-file="{{ asset('business_logo/' . $accDetail->business_logo) }}"
+                                    required />
                                 {{--                               
                                 <img type="file" src="{{asset('business_logo/'.$accDetail->business_logo )}}" class="dropify" name="image" 
                                     data-default-file=""
@@ -415,69 +423,70 @@
                                 <p class="my-auto">{{ $accDetail->business_address }}</p>
                                 {{-- <p class="my-auto">Fixingdots,Keshar Earth Solution Building, Ring Road No-2, Raipur</p> --}}
                             </div>
-                            <div class="my-auto"> <a href="#" data-bs-target="#bAddress" data-bs-toggle="modal"><i
-                                        class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
+                            <div class="my-auto"> <a href="#" onclick="openEditModel(this)"
+                                    data-id='<?= $accDetail->id ?>' data-bs-target="#updateempmodal"
+                                    data-bs-toggle="modal"><i class="fa fa-angle-double-right fs-20 my-auto"></i></a>
+                            </div>
 
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="modal fade" id="bAddress">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content tx-size-sm">
-                        {{-- <div>
-                            <h4 class="modal-title ms-2">Business Address</h4><button aria-label="Close"
-                            class="btn-close" data-bs-dismiss="modal"><span
-                            aria-hidden="true">&times;</span></button>
-                        </div> --}}
-                        <div class="modal-header">
-                            <h4 class="modal-title">Business Address</h4><button aria-label="Close" class="btn-close"
-                                data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                        </div>
-                        <form method="post" action="{{ route('saddress.update', $accDetail->id) }}">
-                            @csrf
-                            <div class="modal-body">
-                                <p>Please add your phone number to continue</p>
+        </div>
+        <div class="modal fade" id="bAddress">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content tx-size-sm">
+                    {{-- <div>
+                        <h4 class="modal-title ms-2">Business Address</h4><button aria-label="Close"
+                        class="btn-close" data-bs-dismiss="modal"><span
+                        aria-hidden="true">&times;</span></button>
+                    </div> --}}
+                    <div class="modal-header">
+                        <h4 class="modal-title">Business Address</h4><button aria-label="Close" class="btn-close"
+                            data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <form method="post" action="{{ route('saddress.update', $accDetail->id) }}">
+                        @csrf
+                        <div class="modal-body">
+                            <p>Please add your phone number to continue</p>
 
-                                <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden>
+                            <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden>
 
-                                <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">Address Line</p>
-                                <textarea class="form-control " placeholder="Address Line 1" rows="3" name="address" maxlength="100">{{ $accDetail->business_address }}</textarea>
+                            <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">Address Line</p>
+                            <textarea class="form-control " id="" placeholder="Address Line 1" rows="3" name="address" maxlength="100"></textarea>
 
 
-                                <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">Country</p>
-                                <input class="form-control" placeholder="Confirm Bank Account Number" name="country"
-                                    type="text" value="India" readonly>
+                            <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">Country</p>
+                            <input class="form-control" placeholder="Confirm Bank Account Number" name="country"
+                                type="text" value="India" readonly>
 
-                                <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">State</p>
-                                <input class="form-control" placeholder="Confirm Bank Account Number" name="state"
-                                    type="text" value="{{ $accDetail->state }}" required>
-                                <select onchange="print_city('state1', this.selectedIndex);"  id="sts1"
-                                    name="state" name="stt" class="form-control w-100 border rounded"
-                                    required>
-                                    {{-- <option value="{{ $accDetail->city }}" {{$accDetail->city == ? 'selected':''}}>{{ $accDetail->city }}</option> --}}
-                                </select>
+                            <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">State</p>
+                            {{-- <input class="form-control" placeholder="Confirm Bank Account Number" name="state"
+                                type="text" value="{{ $accDetail->state }}" required readonly> --}}
+                            <select onchange="print_city('state1', this.selectedIndex);" id="" name="state"
+                                class=" sts1 form-control w-100 border rounded" required>
+                                {{-- <option value="{{ $accDetail->city }}" {{$accDetail->city == ? 'selected':''}}>{{ $accDetail->city }}</option> --}}
+                            </select>
 
-                                <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">City</p>
-                                <input class="form-control" placeholder="City Name" name="city" type="text"
-                                    value="{{ $accDetail->city }}" required>
-                                <select id="state1" name="city" class="form-control w-100 border rounded"
-                                    required></select>
+                            <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">City</p>
+                            <input class="form-control" placeholder="City Name" name="city" type="text"
+                                value="{{ $accDetail->city }}" required>
+                                {{-- <select id="" name="city" class="state1 form-control w-100 border rounded"
+                                    required readonly></select>
                                 <script language="javascript">
                                     print_state("sts1");
-                                </script>
+                                </script> --}}
 
-                                <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">Pin Code</p>
-                                <input class="form-control" placeholder="Pin Code" name="pincode" type="text"
-                                    value="{{ $accDetail->pin_code }}" required>
+                            <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">Pin Code</p>
+                            <input class="form-control" placeholder="Pin Code" id="" name="pincode" type="text"
+                                value="" required>
 
-                            </div>
-                            <div class="modal-footer d-flex py-1">
-                                <a class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
-                                <button class="btn btn-primary savebtn me-0" type="sumbit">Update & Continue</button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="modal-footer d-flex py-1">
+                            <a class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
+                            <button class="btn btn-primary savebtn me-0" type="sumbit">Update & Continue</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -507,6 +516,8 @@
 
 
     {{--  Email --}}
+
+
 
     {{--  Type --}}
 
@@ -574,6 +585,211 @@
         </div>
     </div>
 
+    <!-- LARGE MODAL -->
+    <div class="modal fade " id="updateempmodal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content tx-size-sm">
+                {{-- <div>
+            <h4 class="modal-title ms-2">Business Address</h4><button aria-label="Close"
+            class="btn-close" data-bs-dismiss="modal"><span
+            aria-hidden="true">&times;</span></button>
+        </div> --}}
+                <div class="modal-header">
+                    <h4 class="modal-title">Business Address</h4><button aria-label="Close" class="btn-close"
+                        data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <form method="post" action="{{ route('saddress.update', $accDetail->id) }}">
+                    @csrf
+                    <div class="modal-body">
+                        <p>Please add your address to continue</p>
+{{-- <input type="text" id="emialllllll"> --}}
+                        {{-- <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden> --}}
+
+                        <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">Address Line</p>
+                        <textarea class="form-control" id="upateAddressLine" placeholder="Address Line 1" rows="3" name="address" maxlength="100"></textarea>
+
+
+                        <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">Country</p>
+                        <input class="form-control" placeholder="Confirm Bank Account Number" name="country"
+                            type="text" value="India" readonly>
+
+                        <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">State</p>
+                        {{-- <input class="form-control" placeholder="Confirm Bank Account Number" name="state"
+                            type="text" value="{{ $accDetail->state }}" required readonly> --}}
+                        <label class="form-label mb-0 mt-2">State</label>
+                        <select id="sts2" onchange="print_city('state2', selectedIndex);" name="state"
+                            class="sts2 form-control w-100 border rounded" required></select>
+
+                        <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">City</p>
+                        {{-- <input class="form-control" placeholder="City Name" name="city" type="text"
+                            value="{{ $accDetail->city }}" required> --}}
+                        <select id="state24" name="city" class="state2 updatecity form-control w-100 border rounded"
+                            required></select>
+                        <script language="javascript">
+                            print_state("sts2");
+                        </script>
+
+                        <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">Pin Code</p>
+                        <input class="form-control" placeholder="Pin Code" id="updatePinCode" name="pincode" id="" type="text"
+                            value="" required>
+
+                    </div>
+                    <div class="modal-footer d-flex py-1">
+                        <a class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
+                        <button class="btn btn-primary savebtn me-0" type="sumbit">Update & Continue</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- END LARGE MODAL -->
 
     {{-- Business Address detail --}}
+    <script src="{{ asset('https://code.jquery.com/jquery-3.6.0.min.js') }}"></script>
+
+    <script>
+        function openEditModel(context) {
+            // $('.dropify').dropify();
+            $("#updateempmodal").modal("show");
+
+            // var id = $(context).data('id');
+            // $('#setId').val(id);
+            // console
+            // let shift_name = $(context).data('shift_name');
+            // let shift_ftype = $(context).data('shift_type');
+
+            // console.log(id);
+            $.ajax({
+                url: "{{ url('admin/settings/account/businessdetail') }}",
+                type: "GET",
+                async: true,
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    // employee_id: id
+                },
+                dataType: 'json',
+                cache: true,
+                success: function(result) {
+                    $('#emialllllll').val(result.get.business_email);
+                    $('#upateAddressLine').val(result.get.business_address);
+                    console.log(result.get.business_address);
+                    $('#updatePinCode').val(result.get.pin_code);
+                    console.log("hiadisjf", result)
+                    // console.log("dfasf",result.get.business_email);
+                    // console.log("Edit modal" + result.get[0].profile_photo);
+                    // console.log("businessemail"+result.get[0].business_email);
+
+                    // $("input[name='update_gender']").filter("[value='" + result.get[0]
+                    //     .emp_gender + "']").prop(
+                    //     'checked', true);
+                    // console.log("city: " + result.get[0].emp_city);
+                    // Set the "State" dropdown value
+                    $('#sts2').val(result.get.state);
+
+                    // Set the "City" dropdown value
+                    var dataat = $('#sts2').trigger('change');
+                    // console.log("Dad: " + dataat.state2);
+                    $('#state24').val(result.get.city);
+
+
+
+                },
+            });
+        }
+
+        // function openEditModel(context) {
+        //     // $('.dropify').dropify();
+        //     $("#updateempmodal").modal("show");
+
+        //     // var id = $(context).data('id');
+        //     // $('#setId').val(id);
+        //     // console
+        //     // let shift_name = $(context).data('shift_name');
+        //     // let shift_ftype = $(context).data('shift_type');
+
+        //     // console.log(id);
+        //     $.ajax({
+        //                         url: "{{ url('admin/settings/account/businessdetail') }}",
+
+        //         type: "GET",
+        //         async: true,
+        //         data: {
+        //             _token: '{{ csrf_token() }}',
+        //             // employee_id: id
+        //         },
+        //         dataType: 'json',
+        //         cache: true,
+        //         success: function(result) {
+
+        //             console.log("Edit modal" + result.get[0].profile_photo);
+        //             // if (result.get[0].id) {
+        //                 $("input[name='update_gender']").filter("[value='" + result.get[0]
+        //                     .emp_gender + "']").prop(
+        //                     'checked', true);
+        //                 // console.log("city: " + result.get[0].emp_city);
+        //                 // Set the "State" dropdown value
+        //                 consol.log(result.get[0].state);
+        //                 $('#sts2').val(result.get[0].state);
+
+        //                 // Set the "City" dropdown value
+        //                 var dataat = $('#sts2').trigger('change');
+        //                 // console.log("Dad: " + dataat.state2);
+        //                 $('#state24').val(result.get[0].emp_city);
+        //                 // console.log("city" + result.get[0].emp_city);
+        //                 // // sts2
+        //                 // // var hii = print_city_update('state2', result.get[0].emp_state);
+        //                 // // console.log("hii: "+hii);;
+        //                 // $('#sts2').val(result.get[0].emp_state);
+        //                 // // $('.state2').val(result.get[0].emp_city);
+        //                 // // $('.updatecity').val(result.get[0].emp_city);
+        //                 // // updatecity
+        //                 // $('#state24').val(result.get[0].emp_city);
+        //                 // setTimeout(function() {
+        //                 //     $('#state24').val(result.get[0].emp_city);
+        //                 // }, 500);
+        //                 // $('#sts2,#state24').trigger('change');
+
+        //                 // $('#edit_state').val(depart_id);
+        //                 // $('#editName').val(desig_name);
+        //                 // setTimeout(function() {
+        //                 //     $('#edit_state').val(depart_id);
+        //                 // }, 500);
+        //                 // $('#editbranch-dd,#edit_state').trigger('change');
+
+
+
+        //                 $('.update_name_sd').val(result.get[0].emp_name);
+        //                 $('.update_mname_sddd').val(result.get[0].emp_mname);
+        //                 $('.update_lname_sddd').val(result.get[0].emp_lname);
+        //                 $('.update_cnumber_sddd').val(result.get[0].emp_mobile_number);
+        //                 $('.update_email_sddd').val(result.get[0].emp_email);
+        //                 $('.update_dob_sddd').val(result.get[0].emp_date_of_birth);
+        //                 $('.update_country_sddd').val(result.get[0].emp_country);
+
+        //                 $('.update_city_sddd').val(result.get[0].emp_city);
+        //                 $('.update_pcode_sddd').val(result.get[0].emp_pin_code);
+        //                 // $('.sts1').val(result.get[0].emp_state);
+        //                 $('.update_address_sddd').val(result.get[0].emp_address);
+        //                 $('.update_shifttype_sddd').val(result.get[0].emp_shift_type).change();
+        //                 $('.update_attendance_method').val(result.get[0].emp_attendance_method).change();
+        //                 $('.update_empid_sddd').val(result.get[0].id);
+        //                 $('.update_branchname_sddd').val(result.get[0].branch_id);
+        //                 $('.update_department_sddd').val(result.get[0].department_id);
+        //                 $('.update_designationname_sddd').val(result.get[0].desig_name);
+        //                 $('.update_doj_dd').val(result.get[0].emp_date_of_joining);
+        //                 const imageUrl = `{{ asset('employee_profile/${result.get[0].profile_photo}') }}`;
+        //                 $('.image_sdd').attr("data-default-file", imageUrl);
+        //                 $('.image_sdd').dropify('destroy');
+        //                 $('.image_sdd').dropify();
+        //                 change(result.get[0].branch_id, result.get[0].department_id, result.get[0]
+        //                     .designation_id);
+
+        //             // } else {
+
+        //             //     // console.log("Nhi ja raha hai");
+        //             // }
+        //         },
+        //     });
+        // }
+    </script>
 @endsection

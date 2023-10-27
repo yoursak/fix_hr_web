@@ -5,6 +5,6 @@
 <meta name="keywords" content="">
 <meta name="author" content="" />
 <!-- Favicon icon -->
-<link rel="icon" href="{{asset('assets/images/favicon.png')}}" type="image/x-icon">
+<link rel="icon" href="{{asset('assets/logo/f_fav.png')}}" type="image/x-icon">
 <!-- vendor css -->
 <link rel="stylesheet" href="{{asset('wavetemplate/css/style.css')}}">

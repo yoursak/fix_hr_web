@@ -22,7 +22,10 @@ class DashboardController extends Controller
         $moduleName=$accessPermission[0];
         $permissions=$accessPermission[1];
         $Emp = DB::table("employee_personal_details")->where('business_id',Session::get('business_id'))->get();
-        $root= compact('moduleName', 'permissions','Emp');
+        $Holiday = DB::table("holiday_details")->where('business_id',Session::get('business_id'))->get();
+        $Notice = DB::table("admin_notices")->where('business_id',Session::get('business_id'))->get();
+
+        $root= compact('moduleName', 'permissions','Emp','Holiday','Notice');
         return view('admin.dashboard.dashboard',$root);
     }
 

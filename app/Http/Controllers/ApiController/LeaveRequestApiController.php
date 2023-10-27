@@ -9,6 +9,8 @@ use App\Models\employee\LeaveRequestList;
 use App\Helpers\ReturnHelpers;
 use App\Http\Resources\Api\LeaveRequestResources;
 use DB;
+use App\Http\Resources\Api\UserSideResponse\UserLeaveIdToDataResources;
+
 use Carbon\Carbon;
 
 
@@ -22,7 +24,8 @@ class LeaveRequestApiController extends Controller
 
     public function store(Request $request)
     {
-        $emp = EmployeePersonalDetail::where('emp_id', $request->emp_id)->first();
+        $emp = EmployeePersonalDetail::where('emp_id', $request->emp_id)->where('business_id', $request->business_id)->first();
+        // return $emp;
         if ($emp) {
             $leave = new LeaveRequestList();
             $leave->business_id = $emp->business_id;
@@ -49,16 +52,33 @@ class LeaveRequestApiController extends Controller
             // $leave->days = $loaded+1;
             $leave->days =  $request->days;
             $leave->reason = $request->reason;
-            $leave->status = $request->status;
-            // $leave->profile_photo = $emp->profile_photo;
+            $leave->status = 0;
          
 
             if ($leave->save()) {
-                return ReturnHelpers::jsonApiReturn(LeaveRequestResources::collection([LeaveRequestList::find($leave->id)])->all());
+                // return $leave;
+                return ReturnHelpers::jsonApiReturn(UserLeaveIdToDataResources::collection([LeaveRequestList::find($leave->id)])->all());
             }
             return response()->json(['result' => [], 'status' => false]);
         }
         return response()->json(['result' => [], 'status' => false], 404);
+    }
+
+    public function leaveIdToData($id)
+    {
+        $emp = DB::table('employee_personal_details')
+            ->where('emp_id', $id)
+            ->first();
+        $leave = DB::table('leave_request_list')
+            ->where('emp_id', $id)
+            ->orderBy('id', 'desc')
+            ->get();
+        if ($emp!=null  &&(count($leave) != 0)) {
+            // return $leave;
+            return ReturnHelpers::jsonApiReturn(UserLeaveIdToDataResources::collection($leave)->all());
+        } else {
+            return response()->json(['result' => [], 'status' => false], 404);
+        }
     }
 
     public function show($id)

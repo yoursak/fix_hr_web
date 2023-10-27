@@ -1,13 +1,4 @@
-﻿/*
- * jQuery Bootstrap News Box v1.0.1
- * 
- * Copyright 2014, Dragan Mitrovic
- * email: gagi270683@gmail.com
- * Free to use and abuse under the MIT license.
- * http://www.opensource.org/licenses/mit-license.php
- */
-
-//Utility
+﻿
 if (typeof Object.create !== 'function') {
     //Douglas Crockford inheritance function
     Object.create = function (obj) {

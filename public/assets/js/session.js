@@ -1,7 +1,6 @@
-/******/ () => {
-    // webpackBootstrap
-    var __webpack_exports__ = {};
-    /*------------------------------------------------------------------
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*------------------------------------------------------------------
 
 Project        :   FixHr
 Version        :   V.1
@@ -11,19 +10,19 @@ Author         :   Aman Sahu
 Support	       :   support@spruko.com
 
 -------------------------------------------------------------------*/
-    $(document).ready(function () {
-        "use strict"; //  Modal
+$(function () {
+  'use strict'; //  Modal
 
-        $("#myModal").modal("show");
-        setTimeout(function (e) {
-            $("#myModal").modal("hide");
-        }, 20000000);
-        setInterval(function () {
-            var progress = document.getElementById("custom-bar");
+  $("#myModal").modal('show');
+  setTimeout(function (e) {
+    $('#myModal').modal('hide');
+  }, 20000000);
+  setInterval(function () {
+    var progress = document.getElementById('custom-bar');
 
-            if (progress.value < progress.max) {
-                progress.value += 10;
-            }
-        }, 1000);
-    });
-};
+    if (progress.value < progress.max) {
+      progress.value += 10;
+    }
+  }, 1000);
+});
+

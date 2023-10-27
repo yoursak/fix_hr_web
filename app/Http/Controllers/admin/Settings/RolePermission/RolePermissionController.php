@@ -52,15 +52,14 @@ class RolePermissionController extends Controller
         // $modelHasRole = DB::table('setting_role_items')->where([
         //     'business_id' => $request->session()->get('business_id'),
         // ])->get();
-        
+
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permission = $accessPermission[1];
 
         // dd($roles);modelHasRole
-        return view('admin.setting.permissions.AdminList', compact('moduleName','permission','admins', 'roles', 'pendings', 'permissions'));
+        return view('admin.setting.permissions.AdminList', compact('moduleName', 'permission', 'admins', 'roles', 'pendings', 'permissions'));
     }
-
 
     // assign send mail
     public function addAdmin(Request $request)
@@ -174,10 +173,10 @@ class RolePermissionController extends Controller
         $check = DB::table('model_has_roles')->where('model_id', $request->model)->first();
 
         if (isset($check)) {
-            $model_has_role1 = DB::table('model_has_roles')->where('model_id',$request->model)->update([
+            $model_has_role1 = DB::table('model_has_roles')->where('model_id', $request->model)->update([
                 'role_id' => $request->role,
             ]);
-           
+
             if (isset($model_has_role1)) {
                 // $model_has_role->assignRole($model_has_role);
                 $update_employee = DB::table('employee_personal_details')->where([
@@ -217,4 +216,7 @@ class RolePermissionController extends Controller
 
         return redirect('/Role-permission/admin-list');
     }
+
+
+
 }

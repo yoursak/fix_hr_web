@@ -26,6 +26,11 @@ class LoginController extends BaseController
         return view('auth.admin.login');
     }
 
+    public function demoPage()
+    {
+        return view('auth.welcome');
+    }
+
     public function login_otp(Request $request)
     {
         $request->session()->put('email', $request->email);
@@ -54,11 +59,10 @@ class LoginController extends BaseController
                 // $output = Artisan::output();
 
                 $User->update(['otp' => $otp]);
-                Alert::success('Otp has been Send Successfully to Your Register Email');
-
+                Alert::success('', 'Otp has been Send Successfully to Your Registered Email Id');
                 return view('auth.admin.otp');
             } else {
-                Alert::warning('Email not Found, Kindly Register Your Business First');
+                Alert::warning('', "Email Id not Found  Kindly Register Your Business First");
                 return view('auth.admin.otp');
 
                 // return redirect('/login');
@@ -81,7 +85,7 @@ class LoginController extends BaseController
                     return view('auth.admin.otp');
                 }
             } else {
-                Alert::warning('', 'Email not Found, Kindly Register Your Business First');
+                Alert::warning('', "Email Id not Found  Kindly Register Your Business First");
                 return redirect('/login');
             }
         }
@@ -117,7 +121,6 @@ class LoginController extends BaseController
                     Session::put('login_name', $mainloodLoad1->client_name);
                     Session::put('login_email', $mainloodLoad1->business_email);
                     Session::put('login_business_image', $mainloodLoad1->business_logo);
-           
                 } else {
                     Session::put('login_business_image', 'assets/images/users/16.jpg');
                 }
@@ -192,7 +195,9 @@ class LoginController extends BaseController
             if (isset($check_otp)) {
                 if ($check_otp != null) {
 
-                    Alert::success('Otp Authentication', 'Your Otp Verified Successfully');
+                    Alert::success('', "Your Otp has been Verified Successfully");
+
+                    // Alert::success('Otp Authentication', 'Your Otp Verified Successfully');
                 }
                 return view('auth.admin.logintype');
             } else if (isset($check_otp_for_first)) {
@@ -211,20 +216,24 @@ class LoginController extends BaseController
 
                     $approved = DB::table('pending_admins')->where('business_id', $check_otp_for_first->business_id)->where('emp_email', $check_otp_for_first->emp_email)->delete();
                     if (isset($approved)) {
-                        Alert::success('Login Successfully', 'Now you are a Admin Position at FixingDots');
+                        Alert::success('', "Login Successfully  Now you are an Admin at FixingDots");
+
+                        // Alert::success('Login Successfully', 'Now you are a Admin Position at FixingDots');
                         return view('auth.admin.logintype');
                     } else {
-                        Alert::warning('Otp Aauthentication', 'Your Otp Aauthentication is Incorrect !');
+                        Alert::warning('', " Your Otp Authentication is Incorrect !");
+
+                        // Alert::warning('Otp Aauthentication', 'Your Otp Aauthentication is Incorrect !');
                         return view('auth.admin.otp');
                     }
                 }
             } else {
-                Alert::warning('Otp Aauthentication', 'Your Otp Aauthentication is Incorrect !');
+                Alert::warning('', " Your Otp Authentication is Incorrect !");
+
+                // Alert::warning('Otp Aauthentication', 'Your Otp Aauthentication is Incorrect !');
                 return view('auth.admin.otp');
             }
         }
-
-
     }
 
     // if (isset($email) && isset($otp)) {
@@ -283,7 +292,9 @@ class LoginController extends BaseController
 
     public function thankyou(Request $request)
     {
+        Session::flush(); // removes all session data
         Session()->flush();
-        return view('auth.admin.thanks');
+        return  redirect('login');//->to();
+        // return view('auth.admin.thanks');
     }
 }

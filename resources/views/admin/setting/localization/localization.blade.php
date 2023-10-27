@@ -10,24 +10,22 @@ Attendance | Localization
 @endsection
 
 @section('content')
+
+<div class=" p-0 mt-3 mb-5">
+    <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
+        <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+        <li><a href="{{ url('admin/settings/localization')}}">Settings</a></li>
+        <li class="active"><span><b>Localization Setting</b></span></li>
+    </ol>
+</div>
+
 <div class="row row-sm d-flex justify-content-center">
     <div class="col-xl-12">
-        <div class="page-header d-md-flex d-block">
-            <div class="page-leftheader">
-                <div class="page-title">Settings </div>
-                <div aria-label="breadcrumb ">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ url('/admin') }}">Dashboard</a></li>
-                        {{-- <li>/</li> --}}
-                        <li class="breadcrumb-item" aria-current="page"><a href="">Localization </a></li>
-                    </ol>
-                </div>
-            </div>
-        </div>
+        
         <div class="card custom-card">
 
             <div class="card-body">
-                <h4>Basic Settings
+                <h4>Localization Settings
                 </h4>
                 <form>
                     <div class="card-body">

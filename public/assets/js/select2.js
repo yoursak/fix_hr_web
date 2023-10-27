@@ -10,7 +10,7 @@ Author         :   Aman Sahu
 Support	       :   support@spruko.com
 
 -------------------------------------------------------------------*/
-$(function () {
+$(document).ready(function () {
   'use strict'; // Select2
 
   $('.select2').select2({

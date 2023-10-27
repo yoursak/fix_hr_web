@@ -10,7 +10,9 @@ use App\Models\admin\BranchList;
 use App\Models\admin\DepartmentList;
 use App\Models\admin\DesignationList;
 use App\Http\Resources\Api\GatepassRequestResources;
+use App\Http\Resources\Api\UserSideResponse\UserGatepassIdToDataResources;
 use App\Helpers\ReturnHelpers;
+use DB;
 
 class GatePassApiController extends Controller
 {
@@ -29,15 +31,15 @@ class GatePassApiController extends Controller
             $data->department_id = $emp->department_id;
             $data->designation_id = $emp->designation_id;
             $data->emp_id = $request->emp_id;
-            $data->emp_name = $emp->emp_name;
-            $data->emp_type = $emp->employee_type;
-            $data->emp_mobile_no = $emp->emp_mobile_number;
+            // $data->emp_name = $emp->emp_name;
+            // $data->emp_type = $emp->employee_type;
+            // $data->emp_mobile_no = $emp->emp_mobile_number;
             $data->date = $request->date;
             $data->going_through = $request->going_through;
             $data->in_time = $request->in_time;
             $data->out_time = $request->out_time;
             $data->reason = $request->reason;
-            $data->status = $request->status;
+            $data->status = 0;
             if ($data->save()) {
                 return ReturnHelpers::jsonApiReturn(GatepassRequestResources::collection([GatepassRequestList::find($data->id)])->all());
             }
@@ -46,15 +48,31 @@ class GatePassApiController extends Controller
         return response()->json(['result' => [], 'status' => false], 404);
     }
 
-    public function show($id)
+
+    public function gatepasssIdToData($id)
     {
-        $data = GatepassRequestList::find($id);
-        if ($data) {
-            return ReturnHelpers::jsonApiReturn(GatepassRequestResources::collection([$data])->all());
+        // return "key";
+        $emp = DB::table('employee_personal_details')->where('emp_id', $id)->first();
+        $gatepass = DB::table('gatepass_request_list')->where('emp_id', $id)
+        ->orderBy('id','desc')
+        ->get();
+        if (($emp!= null) && (count($gatepass) != 0)) {
+            // return $gatepass;
+            // return response()->json(['result' => $gatepass, 'status' => true]);
+            return ReturnHelpers::jsonApiReturn(UserGatepassIdToDataResources::collection($gatepass)->all());
         } else {
             return response()->json(['result' => [], 'status' => false], 404);
         }
     }
+    // public function show($id)
+    // {
+    //     $data = GatepassRequestList::where($id);
+    //     if ($data) {
+    //         return ReturnHelpers::jsonApiReturn(GatepassRequestResources::collection([$data])->all());
+    //     } else {
+    //         return response()->json(['result' => [], 'status' => false], 404);
+    //     }
+    // }
 
     public function update(Request $request, $id)
     {

@@ -31,8 +31,8 @@ class AttendenceResources extends JsonResource
 
 
             
+            // 'working_from_mode' => $this->working_from_mode ?? '',
             'id' => $this->id ?? $this->attendance_list->id,
-            'working_from_mode' => $this->working_from_mode ?? '',
             'punch_mode' => $this->punch_mode ?? '',
             'emp_id' => $this->emp_id ?? '',
             'emp_type' => (string)$this->emp_type ?? '',

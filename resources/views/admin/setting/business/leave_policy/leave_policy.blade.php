@@ -283,10 +283,19 @@ $EmpID = $nss->EmpPlaceHolder();
 // }
 // }
 @endphp
+
+<div class=" p-0 mt-3">
+    <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
+        <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+        <li><a href="{{ url('admin/settings/business')}}">Settings</a></li>
+        <li><a href="{{ url('admin/settings/business')}}">Business Setting</a></li>
+        <li class="active"><span><b>Leave Policy Templates</b></span></li>
+    </ol>
+</div>
 <div class="page-header d-md-flex d-block">
     <div class="page-leftheader">
         <div class="page-title">Leave Policy Templates</div>
-        <p class="text-muted">Create Template to give leaves to staff on month if they want</p>
+        <p class="text-muted m-0">Create Template to give leaves to staff on month if they want</p>
     </div>
     <div class="page-rightheader ms-md-auto">
         <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
@@ -387,7 +396,7 @@ $EmpID = $nss->EmpPlaceHolder();
 </div>
 
 {{-- modal --}}
-<div class="col-lg-12">
+{{-- <div class="col-lg-12"> --}}
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Leave Policy List</h3>
@@ -431,7 +440,7 @@ $EmpID = $nss->EmpPlaceHolder();
                             </td>
 
                             <td>
-                                <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
+                                <a class="btn action-btns  btn-primary btn-icon btn-sm" href="javascript:void(0);"
                                     onclick="openEditModel(this)" data-id='<?= $item->id ?>'
                                     data-policy_name='<?= $item->policy_name ?>'
                                     data-leave_policy_cycle_monthly='<?= $item->leave_policy_cycle_monthly ?>'
@@ -443,7 +452,7 @@ $EmpID = $nss->EmpPlaceHolder();
                                         data-original-title="View/Edit"></i>
                                 </a>
 
-                                <button id="deleteButton" class="btn btn-danger btn-icon btn-sm" data-toggle="modal" onclick="ItemDeleteModel(this)"
+                                <button id="deleteButton" class="btn action-btns  btn-danger btn-icon btn-sm" data-toggle="modal" onclick="ItemDeleteModel(this)"
                                     data-id='<?= $item->id ?>' data-policy_name='<?= $item->policy_name ?>'
                                     data-target="#deleteModal" data-id="1"><i class="feather feather-trash"></i></button>
 
@@ -461,7 +470,7 @@ $EmpID = $nss->EmpPlaceHolder();
             </div>
         </div>
     </div>
-</div>
+{{-- </div> --}}
 
 <div class="container">
     <!-- Button to Open the Modal -->

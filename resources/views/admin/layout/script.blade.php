@@ -900,3 +900,5 @@
  *
  *
  */ --}}
+ @livewireScripts
+ {{-- loaded --}}

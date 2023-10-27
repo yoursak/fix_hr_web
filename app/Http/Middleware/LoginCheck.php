@@ -22,10 +22,11 @@ class LoginCheck
     {
         if (Session::get('business_id') != null && Session::get('user_type') != null) {
             return redirect('/login');
-        } else if (Session::get('business_id') != null && Session::get('user_type') != null && Session::get('branch_id') != null) {
-            return redirect('/login');
         } else {
             return $next($request);
         }
+        // else if (Session::get('business_id') != null && Session::get('user_type') != null && Session::get('branch_id') != null) {
+        //     return redirect('/login');
+        // } 
     }
 }

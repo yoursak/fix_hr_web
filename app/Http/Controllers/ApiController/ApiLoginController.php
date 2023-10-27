@@ -44,7 +44,8 @@ class ApiLoginController extends BaseController
             if ($sendMail) {
                 $updateset = LoginAdmin::where('email', $request->email)->update([
                     'otp' => $otp,
-                    'otp_created_at' => Carbon::now(), // Store the OTP creation time
+                    'otp_created_at' => Carbon::now(),
+                    // Store the OTP creation time
                 ]);
 
                 if ($updateset) {
@@ -161,6 +162,8 @@ class ApiLoginController extends BaseController
     public function branchList($request)
     {
         return ApiResponse::allBranch($request);
+
+        // return response()->json(['result' => $request->all()]);
     }
     public function departmentList($request)
     {
@@ -169,27 +172,38 @@ class ApiLoginController extends BaseController
 
     public function employeeList(Request $request)
     {
-        $query = EmployeePersonalDetail::query();
+        $query = DB::table('employee_personal_details')
+            ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+            ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+            ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id');
 
-        if (isset($request->branch_id)) {
-            $query->where('branch_id', $request->branch_id);
+        // Check for filter criteria and add WHERE clauses
+        if ($request->has('branch_id') && $request->branch_id !== null) {
+            $query->where('employee_personal_details.branch_id', '=', $request->branch_id);
+        }
+        
+        if ($request->has('department_id') && $request->department_id !== null) {
+            $query->where('employee_personal_details.department_id', '=', $request->department_id);
+        }
+        
+        if ($request->has('business_id') && $request->business_id !== null) {
+            $query->where('employee_personal_details.business_id', '=', $request->business_id);
         }
 
-        if (isset($request->department_id)) {
-            $query->where('department_id', $request->department_id);
-        }
+        // Execute the query and get the results
+        $employees = $query->get();
 
-        if (isset($request->business_id)) {
-            $query->where('business_id', $request->business_id);
-        }
-
-        $emp = $query->get();
-
-        if ($emp->isEmpty()) {
+        // Check if there are any results
+        if ($employees->isEmpty()) {
             return response()->json(['success' => false, 'msg' => 'No employees found'], 401);
         }
 
-        return ReturnHelpers::jsonApiReturn(EmployeeResource::collection($emp));
+        // Return the filtered employees
+        // return response()->json(['success' => true, 'data' => $employees], 200);
+        // EmployeeResource::collection($emp)
+
+        return ReturnHelpers::jsonApiReturn(EmployeeResource::collection($employees));
+        // return response()->json(['success' => true, 'data' => $request->all()], 200);
     }
     public function attendence(Request $request)
     {
@@ -198,11 +212,12 @@ class ApiLoginController extends BaseController
             'emp_id' => 'required',
             'business_id' => 'required',
             'branch_id' => 'required',
-            'mode' => 'required', // Assuming mode is an integer
+            'mode' => 'required',
             'latitude' => 'required',
             'longitude' => 'required',
             'address' => 'required'
         ]);
+        // Assuming mode is an integer
 
         // Check if validation fails
         if ($validator->fails()) {
@@ -220,15 +235,15 @@ class ApiLoginController extends BaseController
                 ->whereDate('created_at', $today)
                 ->orderBy('created_at', 'desc')
                 ->first();
-            
-               $empInfo= DB::table('employee_personal_details')->where('emp_id',$request->input('emp_id'))->first();
+
+            $empInfo = DB::table('employee_personal_details')->where('emp_id', $request->input('emp_id'))->first();
             if (!$latestRecord) {
                 // If no record exists for today, it's the first action of the day, so mark punch_in
                 $attendanceData = [
                     'emp_id' => $request->input('emp_id'),
                     'emp_today_current_status' => 'punch_in',
                     'punch_in' => 1,
-                    'emp_name'=>$empInfo->emp_name,
+                    'emp_name' => $empInfo->emp_name,
                     'business_id' => $request->business_id,
                     'branch_id' => $request->branch_id,
                     'punch_in_latitude' => $request->latitude,

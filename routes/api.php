@@ -7,6 +7,7 @@ use App\Http\Controllers\ApiController\BusinessController;
 use App\Http\Controllers\MigrationController;
 use App\Http\Controllers\admin\Employee\EmployeeController;
 use App\Http\Controllers\admin\Requests\RequestController;
+use App\Http\Controllers\ApiController\AdminController\Attendance\AttendanceController;
 use App\Http\Controllers\ApiController\ApiLoginController;
 use App\Http\Controllers\ApiController\EmployeeLoginApiController;
 use App\Http\Controllers\ApiController\EmployeeApiController;
@@ -16,6 +17,10 @@ use App\Http\Controllers\ApiController\LeaveRequestApiController;
 use App\Http\Controllers\ApiController\MisspuchApiController;
 use App\Http\Controllers\ApiController\GatePassApiController;
 use App\Http\Controllers\ApiController\UploadImageApiController;
+use App\Http\Controllers\ApiController\UserController\UserAttendanceDetailApiController;
+
+// use App\Http\Controllers\ApiController\UserController\EmployeeLoginApiController;
+
 // use App\Http\Middleware\LoginMiddleware\ApiLoginCheck;
 /*
 |--------------------------------------------------------------------------
@@ -28,44 +33,72 @@ use App\Http\Controllers\ApiController\UploadImageApiController;
 |
 */
 
-Route::prefix('image')->group(function () {
-        Route::post('upload',[UploadImageApiController::class, 'uploadImage']);
+// Full Employee Section *****************************************************
+Route::prefix('user')->group(function () {
+    Route::prefix('/employee')->group(function () {
+        Route::post('/login', [EmployeeLoginApiController::class, 'login']);
+        Route::any('/verify_otp', [EmployeeLoginApiController::class, 'VerifiedOtp']);
+
+        Route::any('/master_rule', [EmployeeLoginApiController::class, 'MasterRule']);
+        Route::any('/attendance_mode', [EmployeeLoginApiController::class, 'AttendanceMode']);
+        Route::any('/shift_type_list', [EmployeeLoginApiController::class, 'ShiftTypeList']);
+        Route::prefix('attendance')->group(function () {
+            // Route::get('/detail', [AttendanceApiController::class, 'index']); 
+            Route::any('/current_attendances_status', [AttendanceApiController::class, 'currentAttendanceStatus']);
+            Route::post('/detail', [AttendanceApiController::class, 'store']);
+            Route::post('attendance_store', [AttendanceApiController::class, 'storeAttendance']);
+            Route::get('detail/{id}', [AttendanceApiController::class, 'show']);
+            Route::any('filter_attendance', [UserAttendanceDetailApiController::class, 'filterAttenDetail']);
+            Route::any('attendance_detail', [UserAttendanceDetailApiController::class, 'attendanceDetail']);
+            Route::put('detail/{id}', [AttendanceApiController::class, 'update']);
+            Route::delete('detail/{id}', [AttendanceApiController::class, 'destroy']);
+        });
+
+        // Route::prefix('/')->group(function () {
+        Route::post('employee_details', [EmployeeApiController::class, 'show']);
+        // });
+
+        // Leave Request
+        Route::prefix('leaverequest')->group(function () {
+            // Route::get('detail',[LeaveRequestApiController::class, 'index']);
+            Route::post('detail', [LeaveRequestApiController::class, 'store']);
+            Route::get('detail/{id}', [LeaveRequestApiController::class, 'show']);
+            Route::get('leaveidtodata/{id}', [LeaveRequestApiController::class, 'leaveIdToData']);
+            Route::put('detail/{id}', [LeaveRequestApiController::class, 'update']);
+            Route::delete('detail/{id}', [LeaveRequestApiController::class, 'destroy']);
+        });
+        // Gate Pass Request
+        Route::prefix('gatepassrequest')->group(function () {
+            // Route::get('detail',[GatePassApiController::class, 'index']);
+            Route::post('detail', [GatePassApiController::class, 'store']);
+            Route::get('gatepassidtodata/{id}', [GatePassApiController::class, 'gatepasssIdToData']);
+            Route::get('detail/{id}', [GatePassApiController::class, 'show']);
+            Route::put('detail/{id}', [GatePassApiController::class, 'update']);
+            Route::delete('detail/{id}', [GatePassApiController::class, 'destroy']);
+        });
+
+        // Miss Punch Request
+        Route::prefix('misspuchrequest')->group(function () {
+            // Route::get('detail',[MisspuchApiController::class, 'index']);
+            Route::get('detail/{id}', [MisspuchApiController::class, 'show']);
+            Route::get('mispunchidtodata/{id}', [MisspuchApiController::class, 'misspunchIdToData']);
+            Route::post('detail', [MisspuchApiController::class, 'store']);
+            Route::put('detail/{id}', [MisspuchApiController::class, 'update']);
+            Route::delete('detail/{id}', [MisspuchApiController::class, 'destroy']);
+
+            // Route::delete('detail/{id}',[MisspuchApiController::class, 'destroy'])
+        });
+    });
 });
+// End Employee Section ***********************************************************
 
-// Employee Section 
-Route::prefix('employee')->group(function () {
-    // Leave Request
-    Route::prefix('leaverequest')->group(function () {
-        // Route::get('detail',[LeaveRequestApiController::class, 'index']);
-        Route::post('detail',[LeaveRequestApiController::class, 'store']);
-        Route::get('detail/{id}',[LeaveRequestApiController::class, 'show']);
-        Route::put('detail/{id}',[LeaveRequestApiController::class, 'update']);
-        Route::delete('detail/{id}', [LeaveRequestApiController::class, 'destroy']);
-    });
-
-    // Gate Pass Request
-    Route::prefix('gatepassrequest')->group(function () {
-        // Route::get('detail',[GatePassApiController::class, 'index']);
-        Route::post('detail',[GatePassApiController::class, 'store']);
-        Route::get('detail/{id}',[GatePassApiController::class, 'show']);
-        Route::put('detail/{id}',[GatePassApiController::class, 'update']);
-        Route::delete('detail/{id}', [GatePassApiController::class, 'destroy']);
-    });
-
-    // Miss Punch Request
-    Route::prefix('misspuchrequest')->group(function () {
-        // Route::get('detail',[MisspuchApiController::class, 'index']);
-        Route::get('detail/{id}', [MisspuchApiController::class, 'show']);
-        Route::post('detail',[MisspuchApiController::class, 'store']);
-        Route::put('detail/{id}',[MisspuchApiController::class, 'update']);
-        Route::delete('detail/{id}',[MisspuchApiController::class, 'destroy']);
-        
-        // Route::delete('detail/{id}',[MisspuchApiController::class, 'destroy'])
-    });
+Route::prefix('image')->group(function () {
+    Route::post('upload', [UploadImageApiController::class, 'uploadImage']);
 });
 
 Route::any('/bussinesscheck', [CommonApiController::class, 'businesscheck']);
 
+// Admin Call
 Route::prefix('admin')->group(function () {
     Route::post('/login', [ApiLoginController::class, 'login']);
     Route::any('/verify_otp', [ApiLoginController::class, 'VerifiedOtp']);
@@ -74,44 +107,30 @@ Route::prefix('admin')->group(function () {
     Route::get('/departmentlist/{id}', [ApiLoginController::class, 'departmentList']);
     Route::any('/allemployee', [ApiLoginController::class, 'employeeList']);
 
+    Route::get('/attendance_list/{id}', [AttendanceController::class, 'allAttendanceList']);
     Route::any('/attend', [ApiLoginController::class, 'attendence']); //Mode attendances
     Route::get('/business_name/{business_id}', [ApiLoginController::class, 'nameBusiness']); //Mode attendances
     Route::get('/brand_name/{brand_id}', [ApiLoginController::class, 'nameBrand']); //Mode attendances
     Route::get('/totalbranddetails/{business_id}', [ApiLoginController::class, 'nameTotalBrand']); //Mode attendances
 
-    Route::prefix('employee')->group(function () {
-        Route::get('detail/{id}', [EmployeeApiController::class, 'show']);
-    });
-    Route::group(['middleware' => 'apilogincheck'], function () {
-        Route::prefix('employee')->group(function () {
-            Route::get('/detail', [EmployeeApiController::class, 'index']);
-            Route::post('/detail', [EmployeeApiController::class, 'store']);
-            // Route::get('detail/{id}', [EmployeeApiController::class, 'show']);
-            Route::put('detail/{id}', [EmployeeApiController::class, 'update']);
-            Route::delete('detail/{id}', [EmployeeApiController::class, 'destroy']);
-            Route::get('detailall/{id}', [EmployeeApiController::class, 'bemployee']);
-        });
-        Route::prefix('attendance')->group(function () {
-            Route::get('/detail', [AttendanceApiController::class, 'index']);
-            Route::post('/detail', [AttendanceApiController::class, 'store']);
-            Route::get('detail/{id}', [AttendanceApiController::class, 'show']);
-            Route::put('detail/{id}', [AttendanceApiController::class, 'update']);
-            Route::delete('detail/{id}', [AttendanceApiController::class, 'destroy']);
-        });
-    });
-});
-
-// Employee login section
-Route::prefix('employee')->group(function () {
-    Route::post('/login', [EmployeeLoginApiController::class, 'login']);
-    Route::any('/verify_otp', [EmployeeLoginApiController::class, 'VerifiedOtp']);
-    Route::prefix('attendance')->group(function () {
-            Route::get('/detail', [AttendanceApiController::class, 'index']);
-            Route::post('/detail', [AttendanceApiController::class, 'store']);
-            Route::get('detail/{id}', [AttendanceApiController::class, 'show']);
-            Route::put('detail/{id}', [AttendanceApiController::class, 'update']);
-            Route::delete('detail/{id}', [AttendanceApiController::class, 'destroy']);
-        });
+    // Route::prefix('employee')->group(function () {});
+    // Route::group(['middleware' => 'apilogincheck'], function () {
+    //     Route::prefix('employee')->group(function () {
+    //         Route::get('/detail', [EmployeeApiController::class, 'index']);
+    //         Route::post('/detail', [EmployeeApiController::class, 'store']);
+    //         // Route::get('detail/{id}', [EmployeeApiController::class, 'show']);
+    //         Route::put('detail/{id}', [EmployeeApiController::class, 'update']);
+    //         Route::delete('detail/{id}', [EmployeeApiController::class, 'destroy']);
+    //         Route::get('detailall/{id}', [EmployeeApiController::class, 'bemployee']);
+    //     });
+    //     Route::prefix('attendance')->group(function () {
+    //         Route::get('/detail', [AttendanceApiController::class, 'index']);
+    //         Route::post('/detail', [AttendanceApiController::class, 'store']);
+    //         Route::get('detail/{id}', [AttendanceApiController::class, 'show']);
+    //         Route::put('detail/{id}', [AttendanceApiController::class, 'update']);
+    //         Route::delete('detail/{id}', [AttendanceApiController::class, 'destroy']);
+    //     });
+    // });
 });
 
 Route::controller(BusinessController::class)->group(function () {

@@ -7,10 +7,18 @@
 @section('css')
 @endsection
 @section('content')
+<div class=" p-0 mt-3">
+    <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
+        <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+        <li><a href="{{ url('admin/settings/business')}}">Settings</a></li>
+        <li><a href="{{ url('admin/settings/business')}}">Business Setting</a></li>
+        <li class="active"><span><b>Weekly Holiday Setting</b></span></li>
+    </ol>
+</div>
     <div class="page-header d-md-flex d-block">
         <div class="page-leftheader">
             <div class="page-title">Weekly Holiday Setting</div>
-            <p class="text-muted">Assign weekly off days of your business to automatically mark attendance for those days.
+            <p class="text-muted m-0">Assign weekly off days of your business to automatically mark attendance for those days.
             </p>
         </div>
         <div class="page-rightheader ms-md-auto">
@@ -106,7 +114,6 @@
         </div>
     </div>
 
-    <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Weekly Holiday List</h3>
@@ -145,14 +152,14 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
+                                        <a class="btn action-btns  btn-primary btn-icon btn-sm" href="javascript:void(0);"
                                             onclick="openEditModel(this)" data-id='<?= $item->id ?>'
                                             data-bs-toggle="modal" data-bs-target="#editBranchName">
                                             <i class="feather feather-edit" data-bs-toggle="tooltip"
                                                 data-original-title="View/Edit"></i>
                                         </a>
 
-                                        <a class="btn btn-danger btn-icon btn-sm" href="javascript:void(0);"
+                                        <a class="btn action-btns  btn-danger btn-icon btn-sm" href="javascript:void(0);"
                                             onclick="ItemDeleteModel(this)" data-id='<?= $item->id ?>'
                                             data-weekly_name='<?= $item->name ?>' data-bs-toggle="modal"
                                             data-bs-target="#editDeleteModel"><i class="feather feather-trash"></i>
@@ -166,7 +173,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
 
     <div class="row">

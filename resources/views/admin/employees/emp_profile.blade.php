@@ -1,6 +1,8 @@
-@extends('admin.layout.master')
+@extends('admin.pagelayout.master')
+<script src="{{ asset('assets/js/cities.js?v=2.34') }}"></script>
+
 @section('title')
-    <i class="fa fa-user mx-2"></i>Employee Profile
+    Employee Profile
 @endsection
 
 @section('css')
@@ -12,433 +14,149 @@
     </style>
 @endsection
 
-@section('contents')
-    <div class="row">
+@section('content')
+    @php
+        $centralUnit = new App\Helpers\Central_unit(); // Create an instance of the Central_unit class
+        $Department = $centralUnit->DepartmentList();
+        $Branch = $centralUnit->BranchList();
+        $Employee = $centralUnit->EmployeeDetails();
+        $nss = new App\Helpers\Central_unit();
+        $EmpID = $nss->EmpPlaceHolder();
+    @endphp
+
+    {{-- @foreach ($DATA as $item)
         @php
-            $Details = App\Helpers\Central_unit::EmployeeDetails()
-                ->where('emp_id', $id)
-                ->first();
-            // dd($Details)
-        @endphp
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-2">
-                        <img class="mx-auto d-block" src="{{ asset('imgs/user.png') }}" alt="">
-                    </div>
-                    <div class="col-xl-3">
-                        <ul>
-                            <li class="my-4"><span class="h1"><b>{{ $Details->emp_name }}</b></span>
-                                <p><span class="fs-16" style="color: #97928e"><b>{{ $Details->designation_id }}</b></span></p>
-                            </li>
-                            <li class="my-5"><span class="fs-16"><b><i
-                                            class="fa fa-briefcase mx-3"></i>Department:</b></span><span
-                                    class="fs-16 mx-2">{{ $Details->department_id }}</span></li>
-                            <li class="my-5"><span class="fs-16"><b><i class="fa fa-briefcase mx-3"></i>Emp
-                                        ID:</b></span><span class="fs-16 mx-2">{{ $Details->emp_id }}</span></li>
-                            <li class="my-5"><span class="fs-16"><b><i class="fa fa-calendar mx-3"></i>Date of
-                                        Joining:</b></span><span
-                                    class="fs-16 mx-2">{{ $Details->emp_date_of_joining }}</span>
-                            </li>
-                            <li class="my-5"><span class="fs-16"><b><i class="fa fa-envelope mx-3"></i>Reports
-                                        to:</b></span><span class="fs-16 mx-2"><span class="avatar avatar-sm brround mx-2"
-                                        style="background-image: url(assets/images/users/15.jpg)"></span>Dilip Sahu</span>
-                            </li>
-                            <li class="btn btn-outline-primary"><a
-                                    href="mailto:{{ $Details->emp_email }}?subject = Feedback&body = Message">
-                                    Send Mail
-                                </a></li>
+            $centralUnit = new App\Helpers\Central_unit();
+            $branch = $centralUnit::Branchget($item->branch_id);
+            $depart = $centralUnit::Departmentget($item->department_id);
+        @endphp --}}
+    {{-- <div class=""> --}}
 
-                        </ul>
-                    </div>
-                    <div class="col-xl-7 bl">
-                        <ul class="ps-4" style="border-left:dashed 2px #97928e;">
-                            <li class="my-5"><span class="fs-16"><b><i
-                                            class="fa fa-phone mx-3"></i>Phone:</b></span><span class="fs-16 mx-2">+91
-                                    {{ $Details->emp_mobile_number }}</span></li>
-                            <li class="my-5"><span class="fs-16"><b><i
-                                            class="fa fa-envelope mx-3"></i>Email:</b></span><span
-                                    class="fs-16 mx-2">{{ $Details->emp_email }}</span></li>
-                            <li class="my-5"><span class="fs-16"><b><i class="fa fa-calendar mx-3"></i>Date of
-                                        Birth:</b></span><span class="fs-16 mx-2">{{ $Details->emp_date_of_birth }}</span>
-                            </li>
-                            <li class="my-5"><span class="fs-16"><b><i
-                                            class="fa fa-street-view mx-3"></i>Gender:</b></span><span class="fs-16 mx-2">
-                                    @if ($Details->emp_gender == 1)
-                                        Male
-                                    @endif
-                                    @if ($Details->emp_gender == 2)
-                                        Female
-                                    @endif
-                                    @if ($Details->emp_gender == 3)
-                                        Other
-                                    @endif
-                                </span></li>
-                            <li class="my-5"><span class="fs-16"><b><i
-                                            class="fa fa-address-card mx-3"></i>Address:</b></span><span
-                                    class="fs-16 mx-2">{{ $Details->emp_address , }}{{ $Details->emp_city , }}{{ $Details->emp_state ,}}{{ $Details->emp_country }},{{ $Details->emp_pin_code }}</span>
-                            </li>
-                        </ul>
-                    </div>
-                    {{-- @dd($Details); --}}
+        {{-- @dd($DATA); --}}
+
+    <div class=" p-0 pb-4">
+        <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
+            <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+
+            <li class="active"><span><b>Employee Profile</b></span></li>
+        </ol>
+    </div>
+    <div class="card">
+        {{-- <div class="row"> --}}
+        <div class="row">
+            <div class="col-md-2 my-md-5">
+                <div class="widget-user-image mt-5 text-center">
+                    <span class="avatar avatar-md brround me-3 rounded-circle"
+                        style="height: 100px; width: 100px; background-image: url('/employee_profile/{{ $DATA->profile_photo ?? '' }}')"></span>
                 </div>
+
+            </div>
+            <div class="col-md-4 my-md-5">
+                <ul class="ps-5">
+
+                    <li class="my-4"><span class="h1"><b></b></span>
+
+                        <p><span class="fs-16" style="color: #97928e"><b></b></span></p>
+                    </li>
+                    <li class="my-5"><span
+                            class="fs-16"><b>{{ $DATA->emp_name ?? '' }}&nbsp;{{ $DATA->emp_mname ?? '' }}&nbsp;{{ $DATA->emp_lname ?? '' }}</b></span><span
+                            class="fs-16 mx-2"></span></li>
+                    <li class="my-5"><span class="fs-16">{{ $DATA->desig_name ?? '' }}</span><span class="fs-16 mx-2"></span>
+                    </li>
+                    <li class="my-5"><span class="fs-16"><b>Employee ID :
+                                {{ $DATA->emp_id ?? '' }}</b></span><span class="fs-16 mx-2"></span></li>
+                    <li class="my-5"><span class="fs-16">Date of Joining :
+                            {{ $DATA->emp_date_of_joining ?? '' }}</span><span class="fs-16 mx-2"></span></li>
+
+                </ul>
+            </div>
+            <div class="col-md-4 my-md-5">
+                {{-- <ul class="ps-4" style="border-left:dashed 2px #97928e;"> --}}
+                <ul class="ps-5" style="">
+                    {{-- <i class="fa fa-phone mx-3"></i> --}}
+                    <li class="my-5"><span class="fs-16"><b>Phone:</b></span><span class="fs-16 mx-2">+91
+                            {{ $DATA->emp_mobile_number ?? '' }}
+                        </span></li>
+
+                    {{-- <i class="fa fa-envelope mx-3"></i> --}}
+                    <li class="my-5"><span class="fs-16"><b>Email:</b></span><span class="fs-16 mx-2">
+                            {{ $DATA->emp_email ?? '' }}
+                        </span></li>
+                    {{-- <i class="fa fa-calendar mx-3"></i> --}}
+                    <li class="my-5"><span class="fs-16"><b>Date of
+
+                                Birth:</b></span><span class="fs-16 mx-2">{{ $DATA->emp_date_of_birth ?? '' }}</span>
+                    </li>
+                    {{-- <i class="fa fa-street-view mx-3"></i> --}}
+                    <li class="my-5"><span class="fs-16"><b>Gender:</b></span><span class="fs-16 mx-2">
+                            @if ($DATA->emp_gender == 1)
+                                Male
+                            @endif
+                            @if ($DATA->emp_gender == 2)
+                                Female
+                            @endif
+                            @if ($DATA->emp_gender == 3)
+                                Other
+                            @endif
+                        </span></li>
+                    <li class="my-5"><span class="fs-16"><b>Address:</b></span><span
+                            class="fs-16 mx-2">{{ $DATA->emp_address ?? '' }}</span>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
 
-    <div class="page-header d-sm-flex d-block">
-        <div class="page-leftheader">
-            <div class="page-title"><i class="fa fa-bank mx-2"></i>Bank Acount Details<span
-                    class="font-weight-normal text-muted ms-2"></span></div>
-        </div>
-        <div class="page-rightheader ms-md-auto">
-            <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-                <div class="d-flex">
-                </div>
-                <div class="d-lg-flex d-block">
-                    <div class="btn-list my-auto">
-                        <h6 class="btn btn-outline-primary border-0 btn-sm"><i class="fa fa-edit"></i>Edit</h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="row">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-6">
-                        <div class="card mx-3">
-                            <div class="card-body">
-                                <ul class="pe-4" style="border-right:dashed 2px #97928e;">
-                                    <li class="my-5"><span class="fs-24"><b>Bank Details</b></span></li>
-                                    <li class="my-5"><span class="fs-16"><b>A/c Holder Name:</b></span><span
-                                            class="fs-16 mx-2">Aman Sahu</span></li>
-                                    <li class="my-5"><span class="fs-16"><b>A/c Number:</b></span><span
-                                            class="fs-16 mx-2">XXXX XXXX XX18</span></li>
-                                    <li class="my-5"><span class="fs-16"><b>IFSC Number:</b></span><span
-                                            class="fs-16 mx-2">INDBI0005466</span></li>
-                                    <li class="my-5"><span class="fs-16"><b>Bank Name:</b></span><span
-                                            class="fs-16 mx-2">Indus Bank</span></li>
-                                    <li class="my-5"><span class="fs-16"><b>Branch:</b></span><span
-                                            class="fs-16 mx-2">Shankar Nagar, Raipur</span></li>
-                                    <li class="my-5"><span class="fs-16"><b>Address:</b></span><span
-                                            class="fs-16 mx-2">Ring
-                                            Road No. - 2 Opposite Dixit Doers, Gondwara, Bilaspur
-                                            Rd, Bhanpuri, Raipur, Chhattisgarh 492001</span></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-6">
-                        <div class="card mx-3">
-                            <div class="card-body">
-                                <ul>
-                                    <li class="my-5"><span class="fs-24"><b>UPI Details</b></span></li>
-                                    <li class="my-5"><span class="fs-16"><b>UPI Holder Name:</b></span><span
-                                            class="fs-16 mx-2">Aman Sahu</span></li>
-                                    <li class="my-5"><span class="fs-16"><b>UPI ID:</b></span><span
-                                            class="fs-16 mx-2">83XXXXXX66@ybl</span></li>
-                                    <li class="my-5"><span class="fs-16"><b>Phone:</b></span><span
-                                            class="fs-16 mx-2">8319151766</span></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+
+        <div class="col-xl-6"">
+            <div class="card">
+                <div class="card-body ms-xl-5">
+                    <ul class="pe-4" style="">
+                        {{-- <ul class="pe-4" style="border-right:dashed 2px #97928e;"> --}}
+                        <li class="my-5"><span class="fs-24"><b>Residential Information</b></span></li>
+                        <li class="my-5"><span class="fs-16"><b>Country:</b></span><span class="fs-16 mx-2">
+                                @if ($DATA->emp_country == 1)
+                                    India
+                                @endif
+                                @if ($DATA->emp_gender == 2)
+                                    USA
+                                @endif
+                            </span></li>
+                        <li class="my-5"><span class="fs-16"><b>State:</b></span><span class="fs-16 mx-2"
+                            onload="print_state($DATA->emp_state)" id="printState">Chhattishgarh</span></li>
+                        <li class="my-5"><span class="fs-16"><b>City:</b></span><span
+                                class="fs-16 mx-2" onload="print_city($DATA->emp_city,$DATA->emp_state)" id="printCity">Raipur</span></li>
+                        <li class="my-5"><span class="fs-16"><b>Zip Code:</b></span><span
+                                class="fs-16 mx-2">{{ $DATA->emp_pin_code }}</span></li>
+                        <li class="my-5"><span class="fs-16"><b>Address:</b></span><span
+                                class="fs-16 mx-2">{{ $DATA->emp_address }}</span></li>
+                    </ul>
                 </div>
             </div>
         </div>
+        <div class="col-xl-6">
+            <div class="card">
+                <div class="card-body ms-xl-5">
+                    <ul>
+                        <li class="my-5"><span class="fs-24"><b>Company Information</b></span></li>
+                        <li class="my-5"><span class="fs-16"><b>Branch:</b></span><span
+                                class="fs-16 mx-2">{{ $DATA->branch_name ?? ' ' }}</span></li>
+                        <li class="my-5"><span class="fs-16"><b>Department:</b></span><span
+                                class="fs-16 mx-2">{{ $DATA->depart_name }}</span></li>
+                        <li class="my-5"><span class="fs-16"><b>Designation:</b></span><span
+                                class="fs-16 mx-2">{{ $DATA->desig_name }}</span></li>
+                        <li class="my-5"><span class="fs-16"><b>Shift Type:</b></span><span
+                                class="fs-16 mx-2">{{ $DATA->shift_type_name ?? 'Not Allotted' }}</span></li>
+                        <li class="my-5"><span class="fs-16"><b>Attendance Method:</b></span><span
+                                class="fs-16 mx-2">{{ $DATA->method_name }}</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <div class="page-header d-sm-flex d-block">
-        <div class="page-leftheader">
-            <div class="page-title"><i class="fa fa-file-text mx-2"></i>Summary<span
-                    class="font-weight-normal text-muted ms-2"></span></div>
-        </div>
-        <div class="page-rightheader ms-md-auto">
-            <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-                <div class="d-flex">
-                </div>
-                <div class="d-lg-flex d-block">
-                    <div class="btn-list">
-                        <h6></h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="card">
-            <div class="card-body">
-                <div class="row text-center">
-                    <div id="selected_btn1" class="col-xl-3 btn btn-outline-dark selected">
-                        <h4 class="mt-3"><i class="fa fa-file-text mx-2"></i>Summary</h4>
-                    </div>
-                    <a href="{{ url('/employee-attendance') }}" class="col-xl-3 btn btn-outline-dark">
-                        <h4 class="mt-3"><i class="fa fa-user me-2"></i>Attendance</h4>
-                    </a>
-                    <div id="selected_btn3" class="col-xl-3 btn btn-outline-dark">
-                        <h4 class="mt-3"><i class="fa fa-inr me-2"></i>Payment</h4>
-                    </div>
-                    <a id="selected_btn4" class="modal-effect col-xl-3 btn btn-outline-dark text-dark"
-                        data-bs-toggle="modal" data-bs-target="#salarySlip">
-                        <h4 class="mt-3"><i class="fa fa-file me-2"></i>Salary Slip</h4>
-                    </a>
-                    <div id="selected_btn5" class="col-xl-3 btn btn-outline-dark">
-                        <h4 class="mt-3"><i class="fa fa-hourglass me-2"></i>Overtime</h4>
-                    </div>
-                    <div id="selected_btn6" class="col-xl-3 btn btn-outline-dark">
-                        <h4 class="mt-3"><i class="fa fa-truck me-2"></i>Allowance Bonus</h4>
-                    </div>
-                    <div id="selected_btn7" class="col-xl-3 btn btn-outline-dark">
-                        <h4 class="mt-3"><i class="fa fa-scissors me-2"></i>Deduction</h4>
-                    </div>
-                    <div id="selected_btn8" class="col-xl-3 btn btn-outline-dark">
-                        <h4 class="mt-3"><i class="fa fa-taxi me-2"></i>Leaves</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="card-header border-0">
-                <h4 class="title"><i class="fa fa-chevron-right"></i>Augest 2023</h4>
-                <div class="page-rightheader ms-md-auto">
-                    <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
-                        <div class="btn-list d-flex">
-                            <a class="modal-effect btn btn-outline-primary btn-sm" data-effect="effect-scale"
-                                data-bs-toggle="modal" href="#empType">Add Payment</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body border-bottum-0">
-                <div class="row my-3">
-                    <div class="col-xl-3 my-auto">
-                        <h4 class="my-auto">Augest Net Salary</h4>
-                    </div>
-                    <div class="col-xl-3 my-auto">
-                        <p class="my-auto" style="color::rgb(34, 33, 29)"><i class="fa fa-calendar mx-2"></i>Aug 1 - Aug
-                            4</p>
-                    </div>
-                    <div class="col-xl-6 my-auto">
-                        <p class="my-auto" style="color:rgb(63, 61, 55)"><b><i class="fa fa-inr mx-2"></i>1200</b></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="page-header d-sm-flex d-block">
-        <div class="page-leftheader">
-            <div class="page-title"><i class="fa fa-cogs mx-2"></i>Employee Setting<span
-                    class="font-weight-normal text-muted ms-2"></span></div>
-        </div>
-        <div class="page-rightheader ms-md-auto">
-            <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-                <div class="d-flex">
-                </div>
-                <div class="d-lg-flex d-block">
-                    <div class="btn-list">
-                        <h6></h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-6 my-auto">
-                        <h5 class="my-auto">Shift Hour</h5>
-                    </div>
-                    <div class="col-xl-6 my-auto">
-                        <p class="my-auto text-muted" style="color:rgb(34, 33, 29)">08:00</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-6 my-auto">
-                        <h5 class="my-auto">Staff Weekly Holiday</h5>
-                    </div>
-                    <div class="col-xl-6 my-auto">
-                        <p class="my-auto text-muted" style="color:rgb(34, 33, 29)">Sunday</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-6 my-auto">
-                        <h5 class="my-auto">Holiday Policy</h5>
-                    </div>
-                    <div class="col-xl-6 my-auto">
-                        <p class="my-auto text-muted" style="color:rgb(34, 33, 29)">FY 23-24</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-6 my-auto">
-                        <h5 class="my-auto">Leave Policy</h5>
-                    </div>
-                    <div class="col-xl-6 my-auto">
-                        <p class="my-auto text-muted" style="color:rgb(34, 33, 29)">FD_Leave Policy</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-6 my-auto">
-                        <h5 class="my-auto">Salary Cycle</h5>
-                    </div>
-                    <div class="col-xl-6 my-auto">
-                        <p class="my-auto text-muted" style="color:rgb(34, 33, 29)">1 to 1 Even Month</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-12 my-auto">
-                        <h5 class="my-auto">Salary Structure Details</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-3 p-3 m-3 border">
-                        <div class="row">
-                            <div class="col-xl-9">
-                                <p><b>Earnings</b></p>
-                            </div>
-                            <div class="col-xl-3">
-                                <p><b><i class="fa fa-inr mx-1"></i>4/Mo</b></p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-9">
-                                <p>Basic + DA</p>
-                            </div>
-                            <div class="col-xl-3">
-                                <p><i class="fa fa-inr mx-1"></i>1</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-9">
-                                <p>HRA</p>
-                            </div>
-                            <div class="col-xl-3">
-                                <p><i class="fa fa-inr mx-1"></i>1</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-9">
-                                <p>Medical Allowance</p>
-                            </div>
-                            <div class="col-xl-3">
-                                <p><i class="fa fa-inr mx-1"></i>1</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-9">
-                                <p>Special Allowance</p>
-                            </div>
-                            <div class="col-xl-3">
-                                <p><i class="fa fa-inr mx-1"></i>1</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 p-3 m-3 border">
-                        <div class="row">
-                            <div class="col-xl-9">
-                                <p><b>Deductions</b></p>
-                            </div>
-                            <div class="col-xl-3">
-                                <p><b><i class="fa fa-inr mx-1"></i>1/Mo</b></p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-9">
-                                <p>Employee State Insurance(ESI)</p>
-                            </div>
-                            <div class="col-xl-3">
-                                <p><i class="fa fa-inr mx-1"></i>1</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 p-3 m-3 border">
-                        <div class="row">
-                            <div class="col-xl-9">
-                                <p><b>Contributions</b></p>
-                            </div>
-                            <div class="col-xl-3">
-                                <p><b><i class="fa fa-inr mx-1"></i>1/Mo</b></p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-9">
-                                <p>Employee State Insurance(ESI)</p>
-                            </div>
-                            <div class="col-xl-3">
-                                <p><i class="fa fa-inr mx-1"></i>1</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="page-header d-sm-flex d-block">
-        <div class="page-leftheader">
-            <div class="page-title">Others<span class="font-weight-normal text-muted ms-2"></span></div>
-        </div>
-        <div class="page-rightheader ms-md-auto">
-            <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-                <div class="d-flex">
-                </div>
-                <div class="d-lg-flex d-block">
-                    <div class="btn-list">
-                        <h6></h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-6 my-auto">
-                        <p class="my-auto" style="color:rgb(34, 33, 29)"><b>Self
-                                Attendance</b>
-                        </p>
-                    </div>
-                    <div class="col-xl-4 my-auto">
-                        <p class="my-auto fs-14 text-muted" style="color:rgb(34, 33, 29)">Allowing Self Attendance</p>
-                    </div>
-                    <div class="col-xl-2 my-auto">
-                        <label class="custom-switch ">
-                            <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                            <span class="custom-switch-indicator"></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-6 my-auto">
-                        <p class="my-auto" style="color:rgb(34, 33, 29)"><b>Delete Employee</b>
-                        </p>
-                    </div>
-                    <div class="col-xl-4 my-auto">
-                        <p class="my-auto fs-14 text-muted" style="color:rgb(34, 33, 29)">Parmanent Delete Employee</p>
-                    </div>
-                    <div class="col-xl-2 my-auto">
-                        <a href="#" class="btn btn-outline-danger btn-sm">Delete</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     </div>
 
     {{-- Employee Salary Slip --}}

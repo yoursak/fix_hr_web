@@ -6,15 +6,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AdminMailer;
 use App\Helpers\Layout;
+use Illuminate\Support\Facades\DB;
 use Session;
-use Alert;
-
 use App\Helpers\Central_unit;
-
+use App\Models\admin\setupsettings\MasterEndGameModel;
+use Illuminate\Support\Facades\Route;
+use App\Helpers\MasterRulesManagement\RulesManagement;
+use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Redirect;
+// use Alert;
 
 class NewPermission extends Controller
 {
@@ -142,7 +145,7 @@ class NewPermission extends Controller
                     if (isset($truechecking_id)) {
                         $details = [
                             'name' => $get->emp_name,
-                            'title' => 'You have assigned as '.Central_unit::RoleIdToName2($roleID).' from FixingDots',
+                            'title' => 'You have assigned as ' . Central_unit::RoleIdToName2($roleID) . ' from FixingDots',
                             'body' => 'Your FixHR Admin Login Credential is your Mail: ' . "$get->emp_email",
                         ];
                         $sendMail = Mail::to($get->emp_email)->send(new AdminMailer($details));
@@ -344,5 +347,65 @@ class NewPermission extends Controller
         }
 
         return back();
+    }
+
+
+
+
+    public function ApprovalSetings()
+    {
+        // echo "SDF";
+        $accessPermission = Central_unit::AccessPermission();
+
+        $moduleName = $accessPermission[0];
+        $permissions = $accessPermission[1];
+        $List = RulesManagement::ALLPolicyTemplates();
+
+        $FinalEndGameRule = $List[0];
+        $BusinessDetails = $List[1];
+        $BranchList = $List[2];
+        $LeavePolicy = $List[3];
+        $HolidayPolicy = $List[4];
+        $weeklyPolicy = $List[5];
+        $attendanceModePolicy = $List[6];
+        $attendanceShiftPolicy = $List[7];
+        $attendanceTrackInOut = $List[8];
+        // dd($attendanceTrackInOut)
+        // $attendaceShift = DB::table('attendance_shift_settings')->get();
+        // alert()->success('Success Title', 'Success Message');
+
+        // alert()->success('Success Title', 'Success Message');
+        // alert()->success('Success Title', 'Success Message');
+        // Alert::success('Success', 'Updated Rule Method Successfully');
+
+        // dd($LeavePolicy);
+        $root = compact('moduleName', 'permissions', 'BusinessDetails', 'FinalEndGameRule', 'BranchList', 'LeavePolicy', 'HolidayPolicy', 'weeklyPolicy', 'attendanceModePolicy', 'attendanceShiftPolicy', 'attendanceTrackInOut');
+
+        // return redirect('/admin/setting/permissions/approval_management');
+        return view('admin/setting/permissions/approval_management', $root);
+    }
+    public function ApprovalSubmit(Request $request)
+    {
+        // dd($request->all());
+        $point = DB::table('approval_management_cycle')->where('business_id', Session::get('business_id'))->first();
+
+        if ($point??false) {
+            $save = DB::table('approval_management_cycle')->insert([
+                'business_id' => Session::get('business_id'),
+                'cycle_type' => $request->btnradio,
+                'role_id' => json_encode($request->input("approval_select")),
+            ]);
+            if (isset($save)) {
+                Alert::success("Submit Approval ");
+            } else {
+                Alert::info("Not Approval ");
+            }
+        } else {
+            Alert::info("All ready Approval create this business ID");
+        
+        }
+        // dd($request->all());
+        return back();
+        // return  response()->json($request->all());
     }
 }

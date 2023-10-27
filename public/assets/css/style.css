@@ -637,12 +637,14 @@ hr {
   border-color: transparent #e3b113 transparent transparent;
 }
 
+
+  /* //-47px; */
 .shape-text {
   color: #fff;
   font-size: 12px;
   font-weight: bold;
   position: relative;
-  right: -47px;
+  right:-37px; 
   top: 0px;
   white-space: nowrap;
   transform: rotate(30deg);
@@ -18083,7 +18085,9 @@ ul.timeline > li.success:before {
 }
 
 .vertical-scroll {
-  height: 187px !important;
+  /* changes */
+  /* height: 187px !important; */
+  height: 290px !important;
 }
 
 #chartLine {

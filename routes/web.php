@@ -19,8 +19,16 @@ use App\Http\Controllers\admin\Settings\HolidayPolicyController;
 use App\Http\Controllers\admin\Settings\NotificationController;
 use App\Http\Controllers\admin\Settings\LocalizationController;
 use App\Http\Controllers\admin\Settings\ShiftController;
+use App\Http\Controllers\admin\setupController\setupController;
 use App\Http\Controllers\admin\Settings\RolePermission\NewPermission;
 
+// payment-Gateways Load
+use App\Http\Controllers\paymentGateway\PhonepeController;
+
+
+//used as Live-wire add by jay
+use App\Http\Livewire\EmployeeJoiningForm;
+use App\Http\Livewire\BusinessRegistration\GstValidation; //live-wire
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,7 +42,12 @@ use App\Http\Controllers\admin\Settings\RolePermission\NewPermission;
 
 
 
-Route::middleware(['logincheck'])->group(function () {
+Route::get('/thankyou', [LoginController::class, 'thankyou'])->name('login.thankyou');
+Route::get('/companies', [SettingController::class, 'companyDetails']);
+
+// Route::any('/handlecardclick',[LoginController::class,'handleCardClick'])->name('admin.handleCard');
+
+Route::middleware(['web', 'logincheck'])->group(function () {
     Route::prefix('login')->group(function () {
         Route::get('/', [LoginController::class, 'index'])->name('login');
         Route::any('/otp', [LoginController::class, 'login_otp'])->name('login.otp');
@@ -42,22 +55,59 @@ Route::middleware(['logincheck'])->group(function () {
         Route::any('/submit', [LoginController::class, 'submit'])->name('login.submit');
     });
 
+    Route::get('/gst-validation', GstValidation::class);
     Route::prefix('signup')->group(function () {
         Route::get('/', [CreateBusinessController::class, 'index'])->name('signup');
         Route::get('/otp', [CreateBusinessController::class, 'otp'])->name('signup.otp');
         Route::get('/create', [CreateBusinessController::class, 'create'])->name('createBusiness');
         Route::post('/verify', [CreateBusinessController::class, 'verify'])->name('businessVerify');
     });
+    Route::post('/admin/handle-card', [LoginController::class, 'handleCardClick'])->name('admin.handleCard');
 });
 
-Route::get('/thankyou', [LoginController::class, 'thankyou'])->name('login.thankyou');
-Route::get('/subscription', [SettingController::class, 'subscription'])->name('subscription');
 
-// Route::any('/handlecardclick',[LoginController::class,'handleCardClick'])->name('admin.handleCard');
-Route::post('/admin/handle-card', [LoginController::class, 'handleCardClick'])->name('admin.handleCard');
-Route::middleware(['email_verified', 'web'])->group(function () {
+// Route::middleware(['web'])->get('/custom-route', [CustomController::class, 'customAction']);
+Route::middleware(['web'])->any('response', [SettingController::class, 'responseSubmit'])->name('responseses');
+
+
+// , 'web'
+
+// Route::group(['middleware' => ['web', 'email_verified']], function () {
+Route::middleware(['web', 'email_verified'])->group(function () {
+    // Route::group(['middleware' => ['email_verified']], function () {
+    // Route::middleware(['email_verified','web'])->group(function () {
+
     Route::get('/', [DashboardController::class, 'index']);
     Route::get('/logout', [DashboardController::class, 'logout'])->name('admin.logout');
+
+    Route::middleware(['web'])->get('subscription', [SettingController::class, 'subscription'])->name('subscription');
+    Route::middleware(['web'])->get('phonepe', [SettingController::class, 'phonePe'])->name('phonepe');
+    
+    Route::prefix('/setup')->group(function () {
+        Route::get('/employee', [setupController::class, 'index']);
+        Route::get('/account-settings', [setupController::class, 'accountSetup']);
+        Route::get('/set-all-mode', [setupController::class, 'ActiveModeSetup']);
+        Route::get('/subscription', [setupController::class, 'subscription']);
+        Route::prefix('/business-settings')->group(function () {
+            Route::get('/', [setupController::class, 'businessSetup']);
+            Route::get('/branches', [setupController::class, 'branchesSetup']);
+            Route::get('/department', [setupController::class, 'departmentSetup']);
+            Route::get('/designation', [setupController::class, 'designationSetup']);
+            Route::get('/holiday', [setupController::class, 'holidayPolicySetup']);
+            Route::get('/leave', [setupController::class, 'leavePolicySetup']);
+            Route::get('/notice', [setupController::class, 'noticeSetup']);
+            Route::get('/weekly-holiday', [setupController::class, 'weeklyHolidaySetup']);
+        });
+
+        Route::prefix('/attendance-settings')->group(function () {
+            Route::get('/', [setupController::class, 'attendanceSetup']);
+            Route::get('/attendance-access', [setupController::class, 'attendanceAccessSetup']);
+            Route::get('/automation', [setupController::class, 'automationSetup']);
+            Route::get('/camera-access', [setupController::class, 'cameraAccessSetup']);
+        });
+
+
+    });
 
     Route::prefix('/Role-permission')->group(function () {
         Route::controller(PermissionController::class)->group(function () {
@@ -80,9 +130,6 @@ Route::middleware(['email_verified', 'web'])->group(function () {
             Route::post('/assign-role-to-model', 'assignRoleToModel')->name('assign.role');
             Route::post('/get-permissions', 'getPermissions')->name('getPermissions');
             Route::post('/remove-permission', 'removePermission')->name('removePermissions');
-
-            // new Loading loaded
-
         });
 
         Route::controller(NewPermission::class)->group(function () {
@@ -96,30 +143,49 @@ Route::middleware(['email_verified', 'web'])->group(function () {
             Route::post('/get_assign', 'GetAssignUser');
             // Permission delete
             Route::post('/delete_assign_admin', 'DeleteAdminAssign')->name('deleteAssign');
+
+
+            // Approval Management
+            Route::get('/approval_settings', 'ApprovalSetings');
+            Route::post('/approval_submit', 'ApprovalSubmit')->name('approval_submit');
         });
     });
 
-    Route::prefix('/admin')->group(function () {
+    Route::prefix('/admin')->group(function () { 
         Route::any('/', [DashboardController::class, 'index']);
 
         Route::prefix('/attendance')->group(function () {
             Route::get('/', [AttendanceController::class, 'index']);
-            Route::get('/details/{emp_id}', [AttendanceController::class, 'details'])->name('attendance.detail');
+            Route::get('/month-summary', [AttendanceController::class, 'attendanceSummary']);
+            Route::any('/attendance_mark', [AttendanceController::class, 'attendanceMark'])->name('attendanceMark.checkboxUpdate');
+            Route::any('/attendace_update', [AttendanceController::class, 'attendanceUpdate'])->name('attendance.update'); // modal attendace update route
+            Route::any('/attendance_list_filter', [AttendanceController::class, 'attendanceListFilter']);
+            Route::get('/details', [AttendanceController::class, 'details'])->name('attendance.detail');
+            Route::get('/byemployee/{id}', [AttendanceController::class, 'byemployee'])->name('attendance.byemployee');
+
+            // Route::get('/details/{emp_id}', [AttendanceController::class, 'details'])->name('attendance.detail');
             Route::any('/track_in_out', [AttendanceController::class, 'submitTrackInTrackOut'])->name('attendance.trackInOut');
             // endgames rules
-            Route::get('/active_mode_set',[AttendanceController::class,'ActiveMode'])->name('attendance.activeMode');
+            Route::get('/active_mode_set', [AttendanceController::class, 'ActiveMode'])->name('attendance.activeMode');
             Route::post('/endgames', [AttendanceController::class, 'FinalStartRuleEndGame'])->name('attendance.endgameSubmit');
-            
+
             // Route::get('/submit_endgames', [AttendanceController::class, 'FinalStartRuleEndGame']);
-     
+
         });
 
         Route::prefix('/employee')->group(function () {
             Route::get('/', [EmployeeController::class, 'index']);
+            Route::get('/export_file', [EmployeeController::class, 'ExportFileEmpDetails']);
+            Route::any('/import_file', [EmployeeController::class, 'ImportAddEmployeeDetails']);
             Route::get('/add', [EmployeeController::class, 'add']);
             Route::any('/employeefilter', [EmployeeController::class, 'filterEmployees'])->name('filter.employees');
             Route::any('/all_employee', [EmployeeController::class, 'allEmployee']);
+            Route::any('/emp_id', [EmployeeController::class, 'empId']);
+            Route::any('/emp_id_check', [EmployeeController::class, 'empIdCheck']);
             Route::get('/profile/{id}', [EmployeeController::class, 'empProfile'])->name('employeeProfile');
+
+            // included live-wire add
+            // Route::get('/',EmployeeJoiningForm::class);
         });
 
         Route::prefix('/onlinepay')->group(function () {
@@ -136,13 +202,20 @@ Route::middleware(['email_verified', 'web'])->group(function () {
         Route::prefix('/requests')->group(function () {
             Route::get('/leaves', [RequestController::class, 'leaves']);
             Route::get('/gatepass', [RequestController::class, 'gatepass']);
+            Route::any('/gatepass/detail', [RequestController::class, 'show']);
+            Route::any('/gatepassemployeefilter', [RequestController::class, 'gatepassEmployeeFilter']);
+
             // Route::post('/gatepassupdate/{id}', [RequestController::class, 'UpdateGatepass'])->name('admin.gatepassupdate');
-            Route::any('/gatepassdelete/{id}', [RequestController::class, 'DestroyGatepass'])->name('admin.gatepassdelete');
+            Route::any('/gatepassdelete', [RequestController::class, 'DestroyGatepass'])->name('admin.gatepassdelete');
             Route::any('/leavedelete/{id}', [RequestController::class, 'DestroyLeave'])->name('admin.leavedelete');
             Route::any('/misspunchdelete/{id}', [RequestController::class, 'DestroyMisspunch'])->name('admin.misspunchdelete');
-            Route::post('/gatepassapprove/{id}', [RequestController::class, 'ApproveGatepass'])->name('admin.gatepassapprove');
-            Route::post('/misspunchapprove/{id}', [RequestController::class, 'ApproveMisspunch'])->name('admin.misspunchapprove');
-            Route::post('/leaveapprove/{id}', [RequestController::class, 'ApproveLeave'])->name('admin.leaveapprove');
+            Route::any('/misspunch/detail', [RequestController::class, 'EditMisspunchDataGet']);
+            Route::any('/leave/detail', [RequestController::class, 'EditLeaveDataGet']);
+            Route::any('/mispunchemployeefilter', [RequestController::class, 'MispunchEmployeeFilter']);
+            Route::any('/leaveemployeefilter', [RequestController::class, 'LeaveEmployeeFilter']);
+            Route::post('/gatepassapprove', [RequestController::class, 'ApproveGatepass'])->name('admin.gatepassapprove');
+            Route::post('/misspunchapprove', [RequestController::class, 'ApproveMisspunch'])->name('admin.misspunchapprove');
+            Route::post('/leaveupdate', [RequestController::class, 'ApproveLeave'])->name('admin.leaveapprove');
 
             Route::get('/misspunch', [RequestController::class, 'misspunch']);
         });
@@ -162,6 +235,7 @@ Route::middleware(['email_verified', 'web'])->group(function () {
 
             Route::prefix('/account')->group(function () {
                 Route::get('/', [SettingController::class, 'account']);
+                Route::any('/businessdetail', [SettingController::class, 'BusinessDetail']);
                 // Route::put('/gatepassapprove/{id}', [RequestController::class, 'ApproveGatepass'])->name('admin.gatepassapprove');
 
                 Route::post('/name', [SettingController::class, 'nameupdate'])->name('name.update');
@@ -198,6 +272,7 @@ Route::middleware(['email_verified', 'web'])->group(function () {
                 Route::post('/delete_leave_policy', [SettingController::class, 'DeleteLeavePolicy'])->name('delete.leavePolicy');
                 Route::post('/update_weekly_policy', [SettingController::class, 'updateWeeklyHoliday'])->name('update.WeeklyPolicy');
 
+
                 // create
 
                 Route::post('/create_weekly_policy', [SettingController::class, 'createWeeklyHoliday'])->name('create.CreateWeeklyPolicy');
@@ -208,6 +283,8 @@ Route::middleware(['email_verified', 'web'])->group(function () {
                 Route::get('/manage_emp', [SettingController::class, 'manageEmpDetails']);
                 Route::get('/manager', [SettingController::class, 'manager']);
                 Route::get('/weekly_holiday', [SettingController::class, 'weeklyHoliday']);
+                Route::get('/notice', [SettingController::class, 'notice']);
+                Route::post('/create_notice', [SettingController::class, 'createNotice'])->name('create.notice');
             });
 
             Route::prefix('/business')->group(function () {
@@ -225,22 +302,26 @@ Route::middleware(['email_verified', 'web'])->group(function () {
                 Route::get('/', [SettingController::class, 'attendance']);
                 Route::get('/create_shift', [AttendanceController::class, 'createShift']);
                 Route::get('/attendance-access', [SettingController::class, 'attendanceAccess']);
+                Route::get('/camera-access', [SettingController::class, 'cameraAccess']);
+                Route::post('/set-camera-access', [SettingController::class, 'accessCamera'])->name('accessCamera');
+                Route::post('/remove-camera-access/{id}', [SettingController::class, 'removeCamera'])->name('removeCamera');
+                Route::post('/updateCameraAccess', [SettingController::class, 'updateCamera'])->name('updateCamera');
 
                 // ajax 
                 Route::any('/get_datails', [AttendanceController::class, 'getAttendaceShiftList']);
                 Route::post('/update_attendace_shift', [AttendanceController::class, 'updateAttendaceShift']);
                 // ajax masterrules policy ajax 
-                Route::any('get_master_rule',[AttendanceController::class,'getMasterRules']);
-                Route::post('edit_master_rule',[AttendanceController::class,'editMasterRules']);
-                Route::any('mode_master_rule',[AttendanceController::class,'modeMasterRules']);
-                Route::post('delete_master_rule',[AttendanceController::class,'deleteMasterRules']);
-                
+                Route::any('get_master_rule', [AttendanceController::class, 'getMasterRules']);
+                Route::post('edit_master_rule', [AttendanceController::class, 'editMasterRules']);
+                Route::any('mode_master_rule', [AttendanceController::class, 'modeMasterRules']);
+                Route::post('delete_master_rule', [AttendanceController::class, 'deleteMasterRules']);
+
                 Route::prefix('/automation')->group(function () {
                     Route::get('/', [SettingController::class, 'automation']);
                     Route::post('/set', [SettingController::class, 'setAutomationRule'])->name('setAutomationRule');
                 });
                 Route::get('/att_onHoliday', [SettingController::class, 'attOnHoliday']);
-                Route::post('/mode', [SettingController::class, 'setAttendaceMode'])->name('attendanceMode');
+                Route::any('/mode', [SettingController::class, 'setAttendaceMode'])->name('attendanceMode');
             });
 
             Route::prefix('/salary')->group(function () {
@@ -251,6 +332,7 @@ Route::middleware(['email_verified', 'web'])->group(function () {
             });
         });
     });
+
 
     Route::prefix('/update')->group(function () {
         Route::post('/employee', [EmployeeController::class, 'UpdateEmployee'])->name('update.employee');
@@ -269,13 +351,16 @@ Route::middleware(['email_verified', 'web'])->group(function () {
         Route::post('/leave', [SettingController::class, 'DeleteLeave'])->name('delete.leave');
         Route::post('/shift', [AttendanceController::class, 'deleteShift'])->name('delete.shift');
         Route::post('/attendance-access', [SettingController::class, 'deleteAttendanceAccess'])->name('delete.AttendanceAccess');
+        Route::post('/delete_notice/{id}', [SettingController::class, 'deleteNotice'])->name('delete.notice');
     });
 
     Route::prefix('/add')->group(function () {
         Route::post('/branch', [SettingController::class, 'AddBranch'])->name('add.branch');
         Route::post('/department', [SettingController::class, 'AddDepartment'])->name('add.department');
         Route::post('/designation', [SettingController::class, 'AddDesignation'])->name('add.designation');
-        Route::post('/employee', [EmployeeController::class, 'AddEmployee'])->name('add.employee');
+        // Route::post('/employee', [EmployeeController::class, 'AddEmployee'])->name('add.employee');
+        Route::post('/employee', [EmployeeJoiningForm::class, 'AddEmployee'])->name('add.employee'); //call by live-wire
+
         Route::post('/contractual-employee', [EmployeeController::class, 'AddContractualEmployee'])->name('add.employee.contractual');
         Route::post('/holiday', [BusinessController::class, 'CreateHoliday'])->name('add.holiday');
         Route::post('/manager', [BusinessController::class, 'AddManager'])->name('add.manager');
@@ -283,6 +368,10 @@ Route::middleware(['email_verified', 'web'])->group(function () {
         Route::post('/attendance-access', [SettingController::class, 'addAttendanceAccess'])->name('add.AttendanceAccess');
     });
 });
+
+
+// Stronger Route Controller Permanent Method SET LIKE
+
 
 // temprary routes
 

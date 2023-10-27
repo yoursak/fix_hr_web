@@ -16,6 +16,15 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
 @endsection
 @section('content')
+
+    <div class=" p-0 mt-3">
+        <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
+            <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+            <li><a href="{{ url('admin/settings/business') }}">Settings</a></li>
+            <li><a href="{{ url('admin/settings/business') }}">Business Setting</a></li>
+            <li class="active"><span><b>Department Setting</b></span></li>
+        </ol>
+    </div>
     <form method="POST" action="{{ route('add.department') }}">
         @csrf
         <div class="page-header d-md-flex d-block">
@@ -34,7 +43,7 @@
             @endphp
             <div class="page-leftheader">
                 <div class="page-title">Department Setting</div>
-                <p class="text-muted">
+                <p class="text-muted m-0">
                     <?= $deparmtnetCount[1] ?> Active Department
                 </p>
             </div>
@@ -54,57 +63,67 @@
 
     </form>
 
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Department List</h3>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Department List</h3>
+        </div>
+        <div class="card-body p-2">
+            <div class="table-responsive">
 
-                    <table class="table  table-vcenter text-nowrap  border-bottom " id="file-datatable">
-                        <thead>
+                <table class="table  table-vcenter text-nowrap  border-bottom " id="file-datatable">
+                    <thead>
+                        <tr>
+                            <th class="border-bottom-0 w-10">S.No.</th>
+                            {{-- <th class="border-bottom-0">Branch Name</th> --}}
+                            <th class="border-bottom-0">Deparment Name</th>
+                            <th class="border-bottom-0">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $count = 1;
+                        $Departments = $centralUnit->DepartmentList(); ?>
+
+                        {{-- {{$branchList}} --}}
+                        @foreach ($Departments as $items)
                             <tr>
-                                <th class="border-bottom-0 w-10">S.No.</th>
-                                <th class="border-bottom-0">Branch Name</th>
-                                <th class="border-bottom-0">Deparment Name</th>
-                                <th class="border-bottom-0">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php $count = 1;
-                            $Departments = $centralUnit->DepartmentList(); ?>
-
-                            {{-- {{$branchList}} --}}
-                            @foreach ($Departments as $items)
-                                <tr>
-                                    <td class="font-weight-semibold">{{ $count++ }}</td>
-                                    <td class="font-weight-semibold">{{ $items->branch_name }}</td>
-                                    <td class="font-weight-semibold">{{ $items->depart_name }}</td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div id="actionBtn{{ $count }}" class="">
-                                                <a class="btn btn-sm btn-primary" data-bs-target="#modaldemo2"
+                                <td class="font-weight-semibold">{{ $count++ }}</td>
+                                {{-- <td class="font-weight-semibold">{{ $items->branch_name }}</td> --}}
+                                <td class="font-weight-semibold">{{ $items->depart_name }}</td>
+                                <td>
+                                    <div class="d-flex">
+                                        {{-- {{ $count }} --}}
+                                        <div id="actionBtn" class="">
+                                            {{-- <a class="btn btn-sm btn-primary" data-bs-target="#modaldemo2"
                                                     data-value1="{{ $items->branch_name }}"
                                                     data-value2="{{ $items->depart_name }}"
-                                                    data-id="{{ $items->depart_id }}"
-                                                    data-name="{{ $items->depart_name }}" data-bs-toggle="modal"
-                                                    href="#"><i class='feather feather-edit'></i>
-                                                </a>
+                                                    data-id="{{ $items->depart_id }}" data-name="{{ $items->depart_name }}"
+                                                    data-bs-toggle="modal" href="#"><i
+                                                        class='feather feather-edit'></i>
+                                                </a> --}}
 
-                                                <a class="action-btn btn btn-sm btn-danger" data-bs-toggle="modal"
-                                                    data-bs-target="#departDeletebtn{{ $items->depart_id }}"
-                                                    id="BranchEditbtn"><i class="feather feather-trash"></i>
-                                                </a>
-                                            </div>
+                                            {{-- btn btn-sm btn-primary --}}
+                                            <a class="btn btn-primary btn-icon action-btns btn-sm"
+                                                href="javascript:void(0);" onclick="openEditMasterPolicy(this)"
+                                                data-id='<?= $items->depart_id ?>'
+                                                data-depart_name='<?= $items->depart_name ?>'
+                                                data-branch_id='<?= $items->branch_id ?>' data-bs-toggle="modal"
+                                                data-bs-target="#modaldemo2">
+                                                <i class="feather feather-edit" data-bs-toggle="tooltip"
+                                                    data-original-title="View/Edit"></i>
+                                            </a>
+
+                                            <a class="action-btns btn btn-sm btn-danger" data-bs-toggle="modal"
+                                                data-bs-target="#departDeletebtn{{ $items->depart_id }}"
+                                                id="BranchEditbtn"><i class="feather feather-trash"></i>
+                                            </a>
                                         </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                            <?php ?>
-                        </tbody>
-                    </table>
-                </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                        <?php ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -175,27 +194,26 @@
                 <form method="POST" action="{{ route('admin.updatedepartment') }}">
                     @csrf
                     <div class="modal-body">
-                        <input type="text" class="form-control" id="editId" name="editid" value="" hidden>
+                        <input type="text" class="form-control" id="editId" name="editid" hidden>
 
-                        <div class="col-md-12 col-xl-12">
+                        {{-- <div class="col-md-12 col-xl-12">
                             <div class="form-group">
                                 <p class="form-label">Branch</p>
-                                <input type="text" class="form-control" id="value1" readonly hidden>
-                                <select name='editbranch' class="form-control select2" data-placeholder="Branch"
-                                    required>
+                                <select id="editbranchs" name='editbranch' class="form-control select2"
+                                    data-placeholder="Branch" required>
                                     @foreach ($Branch as $branch)
                                         <option value="{{ $branch->branch_id }}">{{ $branch->branch_name }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="col-md-12 col-xl-12">
                             <div class="form-group">
                                 <div class="form-group">
                                     <p class="form-label">Department's Name</p>
-                                    <input name='editdepartment' id="value2" type="text" class="form-control"
-                                        placeholder="Enter Name" aria-label="Search" tabindex="1" required>
+                                    <input name='editdepartment' id="editdepart" type="text" class="form-control"
+                                        placeholder="Enter Department Name" aria-label="Search" tabindex="1" required>
                                 </div>
 
                             </div>
@@ -225,7 +243,7 @@
                     @csrf
                     <div class="modal-body">
                         <div class="row mx-3">
-                            <div class="col-12">
+                            {{-- <div class="col-12">
                                 <div class="form-group">
                                     <p class="form-label">Branch</p>
                                     <select name='branch' class="form-control select2" data-placeholder="Branch"
@@ -236,12 +254,12 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-12">
                                 <div class="form-group">
                                     <p class="form-label">Department's Name</p>
                                     <input name='department' type="text" class="form-control" value=""
-                                        placeholder="Enter Name" aria-label="Search" tabindex="1" required>
+                                        placeholder="Enter Department Name" aria-label="Search" tabindex="1" required>
                                     <p class="mb-0 pb-0 text-muted fs-12 mt-5 ">By continuing you agree to <a
                                             href="#" class="text-primary">Terms & Conditions</a></p>
                                 </div>
@@ -280,7 +298,19 @@
             </div>
         </div>
     @endforeach
+    <script>
+        function openEditMasterPolicy(context) {
+            var id = $(context).data('id');
+            var depart_name = $(context).data('depart_name');
+            var branch_id = $(context).data('branch_id');
 
+            $('#editId').val(id);
+            $('#editbranchs').val(branch_id);
+            $('#editdepart').val(depart_name);
+            $('#editbranchs').trigger('change');
+
+        }
+    </script>
 @section('script')
     {{-- <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> --}}
@@ -309,23 +339,6 @@
             document.getElementById("actionBtn" + e.id).classList.toggle("d-none");
             document.getElementById("actionBtn" + e.id).classList.toggle("animatedBtn");
         }
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('#modaldemo2').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget);
-                var id = button.data('id');
-                var name = button.data('name');
-                var value1 = button.data('value1');
-                var value2 = button.data('value2');
-                console.log(value1);
-                $('#value1').val(value1);
-                $('#value2').val(value2);
-
-                $('#editId').val(id);
-                $('#editName').val(name);
-            });
-        });
     </script>
 @endsection
 @endsection

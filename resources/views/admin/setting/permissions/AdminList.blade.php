@@ -1,32 +1,44 @@
 @extends('admin.setting.setting')
-@section('subtitle')
-Admin List
+@section('title')
+    Admin List
 @endsection
 @section('settings')
-<div class="row">
-    @php
-    $rooted = new App\Helpers\Central_unit();
-    $Branch = $rooted->BranchList();
-    $Department = $rooted->DepartmentList();
-    $Employee = $rooted->EmployeeDetails();
-    $AdminCount=$rooted->CountersValue();
-    $Roles = $rooted->GetRoles();
-    $Onwer = DB::table('business_details_list')
-    ->where('business_id', Session::get('business_id'))
-    ->get();
-    // dd($Employee);
-    // $Permission = App\Helpers\Central_unit::GetModelPermission();
-    // $Permission->where('permission_name','Employee.View')->all()!= null
-    @endphp
-    <div class="page-header d-md-flex d-block">
-        <div class="page-leftheader">
-            <div class="page-title">Admin List</div>
-            <p class="text-muted"><b><?=$AdminCount[3]?></b> Admins Including You</p>
-        </div>
-        <div class="page-rightheader ms-auto">
-            <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
 
-                {{-- <div class="d-lg-flex d-block">
+<div class=" p-0  ">
+    <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
+        <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+        <li><a href="{{ url('/Role-permission/role_permission') }}">Role & Permission</a></li>
+        {{-- <li><a href="{{ url('/requests/misspunch') }}">Request</a></li> --}}
+
+        <li class="active"><span><b>Admin List</b></span></li>
+    </ol>
+</div>
+    <div class="row">
+        @php
+            $rooted = new App\Helpers\Central_unit();
+            $Branch = $rooted->BranchList();
+            $Department = $rooted->DepartmentList();
+            $Employee = $rooted->EmployeeDetails();
+            $AdminCount = $rooted->CountersValue();
+            $Roles = $rooted->GetRoles();
+            $Onwer = DB::table('business_details_list')
+                ->where('business_id', Session::get('business_id'))
+                ->get();
+            // dd($Employee);
+            // $Permission = App\Helpers\Central_unit::GetModelPermission();
+            // $Permission->where('permission_name','Employee.View')->all()!= null
+        @endphp
+        <div class="col-lg-12">
+
+            <div class="page-header d-md-flex p-0 d-block">
+                <div class="page-leftheader">
+                    <div class="page-title">Admin List</div>
+                    <p class="text-muted m-0"><b><?= $AdminCount[3] ?></b> Admins Including You</p>
+                </div>
+                <div class="page-rightheader  ms-auto">
+                    <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
+
+                        {{-- <div class="d-lg-flex d-block">
                     @if (in_array('Admin List.Create', $permission))
                     <div class="btn-list">
                         <a class="modal-effect btn btn-primary border-0 my-auto" data-effect="effect-scale"
@@ -34,38 +46,42 @@ Admin List
                     </div>
                     @endif
                 </div> --}}
-            </div>
-        </div>
-    </div>
-</div>
-
-@foreach ($Onwer as $admin)
-<div class="row">
-    <div class="card">
-        <div class="card-header  border-0">
-            <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Owner</b></span></h4>
-        </div>
-        <div class="card-body border-bottum-0">
-            <div class="row">
-                <div class="col-xl-3 my-auto">
-                    <h5 class="my-auto">{{ $admin->client_name }}</h5>
-                </div>
-                <div class="col-6 col-xl-3 my-auto">
-                    <p class="my-auto" style="color:rgb(34, 33, 29)"><i class="fe fe-mail me-2"></i>{{
-                        $admin->business_email }}
-                    </p>
-                </div>
-                <div class="col-6 col-xl-3 my-auto">
-                    <p class="my-auto " style="color:rgb(34, 33, 29)"><i class="fe fe-phone mx-2"></i>{{
-                        $admin->mobile_no }}</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-@endforeach
 
-{{-- @foreach ($pendings as $pending)
+    @foreach ($Onwer as $admin)
+        <div class="row row-sm">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-header  border-0">
+                        <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Owner</b></span></h4>
+                    </div>
+                    <div class="card-body border-bottum-0">
+                        <div class="row">
+                            <div class="col-xl-3 my-auto">
+                                <h5 class="my-auto">{{ $admin->client_name }}</h5>
+                            </div>
+                            <div class="col-6 col-xl-3 my-auto">
+                                <p class="my-auto" style="color:rgb(34, 33, 29)"><i
+                                        class="fe fe-mail me-2"></i>{{ $admin->business_email }}
+                                </p>
+                            </div>
+                            <div class="col-6 col-xl-3 my-auto">
+                                <p class="my-auto " style="color:rgb(34, 33, 29)"><i
+                                        class="fe fe-phone mx-2"></i>{{ $admin->mobile_no }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+    {{-- @foreach ($pendings as $pending)
 <div class="card-body border-bottum-0">
     <div class="row">
         <div class="col-xl-3 my-auto">
@@ -90,27 +106,28 @@ Admin List
 @endforeach --}}
 
 
-<div class="row">
-    <div class="card">
-        @empty(!$Employee)
+    <div class="row row-sm">
+        <div class="col-lg-12">
 
-        <div class="card-header  border-0">
-            <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Assigned Roles</b></span></h4>
-        </div>
+        <div class="card">
+            @empty(!$Employee)
+                <div class="card-header  border-0">
+                    <h4 class="card-title"><span style="color:rgb(104, 96, 151)"><b>Assigned Roles</b></span></h4>
+                </div>
 
-        @foreach ($Employee->where('role_id', '!=', null)->where('role_id', '!=', 0) as $admin)
-        <div class="card-body border-bottum-0">
-            <div class="row">
-                <div class="col-xl-3 my-auto">
-                    <h5 class="my-auto">{{ $admin->emp_name }}</h5>
-                </div>
-                <div class="col-6 col-xl-3 my-auto">
-                    <p class="my-auto" style="color:rgb(34, 33, 29)"><i class="fe fe-mail me-2"></i>{{ $admin->emp_email
-                        }}
-                    </p>
-                </div>
-                <div class="col-6 col-xl-3 my-auto">
-                    <?php
+                @foreach ($Employee->where('role_id', '!=', null)->where('role_id', '!=', 0) as $admin)
+                    <div class="card-body border-bottum-0">
+                        <div class="row">
+                            <div class="col-xl-3 my-auto">
+                                <h5 class="my-auto">{{ $admin->emp_name }}</h5>
+                            </div>
+                            <div class="col-6 col-xl-3 my-auto">
+                                <p class="my-auto" style="color:rgb(34, 33, 29)"><i
+                                        class="fe fe-mail me-2"></i>{{ $admin->emp_email }}
+                                </p>
+                            </div>
+                            <div class="col-6 col-xl-3 my-auto">
+                                <?php
                     if ($admin->emp_id !== null) {
                         $Role_id = DB::table('setting_role_assign_permission')
                             ->where('emp_id', $admin->emp_id)
@@ -123,11 +140,11 @@ Admin List
                                 ->where('business_id', Session::get('business_id'))
                                 ->where('id', '=', $Role_id->role_id)
                                 ->first(); ?>
-                    <p class="my-auto " style="color:rgb(34, 33, 29)"><i class="fe fe-user mx-2"></i>
-                        <?= $Rolee != '' ? $Rolee->roles_name : 'Role Name : null' ?>
-                    </p>
+                                <p class="my-auto " style="color:rgb(34, 33, 29)"><i class="fe fe-user mx-2"></i>
+                                    <?= $Rolee != '' ? $Rolee->roles_name : 'Role Name : null' ?>
+                                </p>
 
-                    <?php
+                                <?php
                             // Continue with your code using $Role_id and $Rolee if necessary
                         } else {
                             // Handle the case where $Role_id is null
@@ -138,106 +155,106 @@ Admin List
                         // You can set a default value or display an error message
                     }
                     ?>
-                </div>
-                {{-- @else --}}
-                {{-- <a class="modal-effect btn btn-primary btn-sm border-0 my-auto" data-effect="effect-scale"
+                            </div>
+                            {{-- @else --}}
+                            {{-- <a class="modal-effect btn btn-primary btn-sm border-0 my-auto" data-effect="effect-scale"
                     data-bs-toggle="modal" href="#asignAdmin{{ $admin->id }}">Assign</a> --}}
-                {{-- @endif --}}
+                            {{-- @endif --}}
 
-                <div class="col-xl-3">
-                    <p class="my-auto text-muted text-end">
-                        @if (in_array('Admin List.Update', $permission))
-                        {{-- <a class="btn text-primary" id="" href="#"><i class="fe fe-edit"></i></a> --}}
-                        @endif
+                            <div class="col-xl-3">
+                                <p class="my-auto text-muted text-end">
+                                    @if (in_array('Admin List.Update', $permission))
+                                        {{-- <a class="btn text-primary" id="" href="#"><i class="fe fe-edit"></i></a> --}}
+                                    @endif
 
-                        @if (in_array('Admin List.Delete', $permission))
-                        {{-- <a class="btn text-primary" id="" href="#"><i data-rolename='<?=// $item->roles_name ?>'
-                                class="fe fe-trash"></i></a> --}}
-                        <a class="btn btn-danger btn-icon btn-sm" href="javascript:void(0);"
-                            onclick="ItemDeleteModel(this)" data-id='<?= $admin->emp_id ?>'
-                            data-emp_name='<?= $admin->emp_name ?>' data-bs-toggle="modal"
-                            data-bs-target="#deleteConfirmationModal">
-                            <i class="feather feather-trash-2" data-bs-toggle="tooltip"
-                                data-original-title="View/Edit"></i>
-                        </a>
-                        @endif
-                    </p>
-                </div>
-            </div>
-        </div>
-        @endforeach
-        @endempty
-
-    </div>
-</div>
-
-<div class="modal fade" id="addNewAdmin" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-
-        <div class="modal-content modal-content-demo">
-            <div class="modal-header border-0">
-                <h4 class="modal-title ms-2">Add New Admin</h4><button aria-label="Close" class="btn-close"
-                    data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-            </div>
-            <form action="{{ route('add.admin') }}" method="post">
-                @csrf
-                <div class="modal-body">
-                    <div class="row p-3">
-                        <div class="col-12 my-2">
-                            <div class="form-group">
-                                <label class="form-label">Branch</label>
-                                <select name="branch" class="form-control custom-select select2"
-                                    data-placeholder="Select Branch" required>
-                                    @foreach ($Branch as $branch)
-                                    <option value="{{ $branch->branch_id }}">{{ $branch->branch_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-12 my-2">
-                            <div class="form-group">
-                                <label class="form-label">Department</label>
-                                <select name="department" class="form-control custom-select select2"
-                                    data-placeholder="Department Name" required>
-                                    @foreach ($Department as $department)
-                                    <option value="{{ $department->depart_id }}">{{ $department->depart_name }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-12 my-2">
-                            <div class="form-group">
-                                <label class="form-label">Employee</label>
-                                <select name="employee" class="form-control custom-select select2"
-                                    data-placeholder="Employee Name" required>
-                                    @foreach ($Employee as $employee)
-                                    <option value="{{ $employee->emp_id }}"><b>{{ $employee->emp_name }}</b>
-                                        ({{ $employee->emp_id }})
-                                    </option>
-                                    @endforeach
-                                </select>
+                                    @if (in_array('Admin List.Delete', $permission))
+                                        <a class="btn btn-danger btn-icon btn-sm" href="javascript:void(0);"
+                                            onclick="ItemDeleteModel(this)" data-id='<?= $admin->emp_id ?>'
+                                            data-emp_name='<?= $admin->emp_name ?>' data-bs-toggle="modal"
+                                            data-bs-target="#deleteConfirmationModal">
+                                            <i class="feather feather-trash-2" data-bs-toggle="tooltip"
+                                                data-original-title="View/Edit"></i>
+                                        </a>
+                                    @endif
+                                </p>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer  border-0">
-                    <div class="d-flex">
-                        <button type="reset" class="btn btn-danger btn-sm mx-3" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
-                    </div>
-                </div>
-            </form>
+                @endforeach
+            @endempty
+
+        </div>
         </div>
     </div>
-</div>
 
-@foreach ($admins as $admin)
-@php
-$Emp_Id = $Employee->where('emp_email', $admin->email)->first();
-// dd($Emp_Id->emp_id);
-@endphp
-{{-- <div class="modal fade" id="asignAdmin{{ $admin->id }}" data-bs-backdrop="static">
+    <div class="modal fade" id="addNewAdmin" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+
+            <div class="modal-content modal-content-demo">
+                <div class="modal-header border-0">
+                    <h4 class="modal-title ms-2">Add New Admin</h4><button aria-label="Close" class="btn-close"
+                        data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <form action="{{ route('add.admin') }}" method="post">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row p-3">
+                            <div class="col-12 my-2">
+                                <div class="form-group">
+                                    <label class="form-label">Branch</label>
+                                    <select name="branch" class="form-control custom-select select2"
+                                        data-placeholder="Select Branch" required>
+                                        @foreach ($Branch as $branch)
+                                            <option value="{{ $branch->branch_id }}">{{ $branch->branch_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 my-2">
+                                <div class="form-group">
+                                    <label class="form-label">Department</label>
+                                    <select name="department" class="form-control custom-select select2"
+                                        data-placeholder="Department Name" required>
+                                        @foreach ($Department as $department)
+                                            <option value="{{ $department->depart_id }}">{{ $department->depart_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 my-2">
+                                <div class="form-group">
+                                    <label class="form-label">Employee</label>
+                                    <select name="employee" class="form-control custom-select select2"
+                                        data-placeholder="Employee Name" required>
+                                        @foreach ($Employee as $employee)
+                                            <option value="{{ $employee->emp_id }}"><b>{{ $employee->emp_name }}</b>
+                                                ({{ $employee->emp_id }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer  border-0">
+                        <div class="d-flex">
+                            <button type="reset" class="btn btn-danger btn-sm mx-3"
+                                data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @foreach ($admins as $admin)
+        @php
+            $Emp_Id = $Employee->where('emp_email', $admin->email)->first();
+            // dd($Emp_Id->emp_id);
+        @endphp
+        {{-- <div class="modal fade" id="asignAdmin{{ $admin->id }}" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
         <div class="modal-content modal-content-demo">
             <div class="modal-header border-0">
@@ -296,32 +313,32 @@ $Emp_Id = $Employee->where('emp_email', $admin->email)->first();
         </div>
     </div>
 </div> --}}
-@endforeach
+    @endforeach
 
-<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md">
-        <div class="modal-content">
-            <form action="{{ route('deleteAssign') }}" method="post">
-                @csrf
-                <input type="text" id="emp_id" name="emp_id" hidden>
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Confirm Deletion</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Assing Name <b>
-                            <h4 id="assign_emp"></h4>
-                        </b> </p>
+    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content">
+                <form action="{{ route('deleteAssign') }}" method="post">
+                    @csrf
+                    <input type="text" id="emp_id" name="emp_id" hidden>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Confirm Deletion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Assing Name <b>
+                                <h4 id="assign_emp"></h4>
+                            </b> </p>
 
-                    Are you sure you want to delete this item?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
-                </div>
-
-            </form>
+                        Are you sure you want to delete this item?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -329,11 +346,10 @@ $Emp_Id = $Employee->where('emp_email', $admin->email)->first();
     <script>
         function ItemDeleteModel(context) {
             var id = $(context).data('id');
-            var assign=$(context).data('emp_name');
+            var assign = $(context).data('emp_name');
             console.log(assign);
             $('#emp_id').val(id);
             $('#assign_emp').text(assign);
         }
-
     </script>
-    @endsection
+@endsection

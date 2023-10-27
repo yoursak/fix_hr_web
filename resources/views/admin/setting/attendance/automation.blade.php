@@ -10,6 +10,17 @@
     </style>
 @endsection
 @section('settings')
+
+<div class=" p-0 pt-2">
+    <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
+        <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+        <li><a href="{{ url('admin/settings/attendance')}}">Settings</a></li>
+        <li><a href="{{ url('admin/settings/attendance')}}">Attendace Setting</a></li>
+        <li class="active"><span><b>Automation Rules</b></span></li>
+    </ol>
+</div>
+
+
     @php
         $lateEntryData;
         $earlyExitData;
@@ -23,7 +34,7 @@
     @endphp
     <div class="page-header d-md-flex d-block">
         <div class="page-leftheader">
-            <div class="page-title">Atutomation Rules</div>
+            <div class="page-title">Automation Rules</div>
         </div>
         {{-- <div class="page-rightheader ms-auto">
         <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
