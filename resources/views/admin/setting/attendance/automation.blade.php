@@ -14,7 +14,7 @@
 <div class=" p-0 pt-2">
     <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
         <li><a href="{{ url('/admin') }}">Dashboard</a></li>
-        <li><a href="{{ url('admin/settings/attendance')}}">Settings</a></li>
+        {{-- <li><a href="{{ url('admin/settings/attendance')}}">Settings</a></li> --}}
         <li><a href="{{ url('admin/settings/attendance')}}">Attendace Setting</a></li>
         <li class="active"><span><b>Automation Rules</b></span></li>
     </ol>
@@ -35,6 +35,9 @@
     <div class="page-header d-md-flex d-block">
         <div class="page-leftheader">
             <div class="page-title">Automation Rules</div>
+            
+                <p class="text-muted">Create rules to automate attemndance</p>
+            
         </div>
         {{-- <div class="page-rightheader ms-auto">
         <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
@@ -1654,10 +1657,10 @@
                 }
             </script>
 
-            <div class="col-12 text-end">
+            <div class="col-12">
                 <div class="d-flex">
-                    <a href="" class="btn btn-danger">Cancel</a>
-                    <button type="submit" class="btn btn-md btn-success"> Save and Apply</button>
+                    <a href="" class="btn btn-danger ms-auto">Cancel</a>
+                    <button type="submit" class="btn btn-md btn-primary mx-5">Save and Apply</button>
                 </div>
             </div>
         </div>

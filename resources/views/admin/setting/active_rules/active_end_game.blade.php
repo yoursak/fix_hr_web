@@ -279,11 +279,11 @@
     <div class=" p-0 mt-3">
         <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
             <li><a href="{{ url('/admin') }}">Dashboard</a></li>
-            <li><a href="{{ url('admin/settings/attendance') }}">Settings</a></li>
-            <li><a href="{{ url('admin/settings/attendance') }}">Attendace Setting</a></li>
+            {{-- <li><a href="{{ url('admin/settings/attendance') }}">Settings</a></li> --}}
+            {{-- <li><a href="{{ url('admin/settings/attendance') }}">Attendace Setting</a></li> --}}
             {{-- <li><a href="{{ url('/admin/requests/misspunch') }}">Request</a></li> --}}
 
-            <li class="active"><span><b>Create Started Templates</b></span></li>
+            <li class="active"><span><b>Setup Activation</b></span></li>
         </ol>
     </div>
     <div class="row">
@@ -292,22 +292,21 @@
         <div class="col-xl-12 col-md-12 col-lg-12">
             <div class="page-header d-md-flex d-block">
                 <div class="page-leftheader">
-                    <div class="page-title">Create Started Templates</div>
-                    <p class="text-muted">Create want Started all method working Mode</p>
+                    {{-- <div class="page-title">Create Started Templates</div> --}}
+                    <p class="text-muted">Create and activate all your business and policy settings</p>
                 </div>
-                <div class="page-rightheader ms-md-auto">
-                    <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-                        <div class="d-lg-flex d-block">
+                <div class="page-rightheader ms-auto">
+                    {{-- <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
+                        <div class="d-lg-flex d-block"> --}}
                             <div class="btn-list d-flex">
-                                <a class="modal-effect btn btn-primary btn-block mx-3" data-effect="effect-scale"
-                                    data-bs-toggle="modal" href="#additionalModals" id="btnOpen">Add New Active Method</a>
+                                <a class="modal-effect btn btn-primary mx-3 ms-auto" data-effect="effect-scale"
+                                    data-bs-toggle="modal" href="#additionalModals" id="btnOpen">Create Active Method</a>
                             </div>
 
-                        </div>
-                    </div>
+                        {{-- </div>
+                    </div> --}}
                 </div>
             </div>
-
         </div>
 
         {{-- create Method apply --}}
@@ -492,7 +491,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Final Rule Method Setting</h3>
+                    <h3 class="card-title">Final Rule Method Settings</h3>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

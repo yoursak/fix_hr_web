@@ -259,9 +259,9 @@
 <div class=" p-0 mt-3">
     <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
         <li><a href="{{ url('/admin') }}">Dashboard</a></li>
-        <li><a href="{{ url('admin/settings/business')}}">Settings</a></li>
+        {{-- <li><a href="{{ url('admin/settings/business')}}">Settings</a></li> --}}
         <li><a href="{{ url('admin/settings/business')}}">Business Setting</a></li>
-        <li class="active"><span><b>Holiday Templates</b></span></li>
+        <li class="active"><span><b>Holiday Policy</b></span></li>
     </ol>
 </div>
 <div class="page-header d-md-flex d-block">
@@ -274,15 +274,14 @@
             $j = 0;
         @endphp
         <div class="page-leftheader">
-            <div class="page-title">Holiday Templates</div>
-            <p class="text-muted m-0">Create Template to give automatic paid leaves to staff on public holidays</p>
+            <div class="page-title">Holiday Policy</div>
+            <p class="text-muted m-0">Create template to give automatic paid leaves to staff on public holidays</p>
         </div>
         <div class="page-rightheader ms-auto">
             <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-                <div class="d-lg-flex d-block">
+                <div class="d-lg-flex d-block ms-auto">
                     <div class="btn-list">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTemplate">Create
-                            Templates</button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTemplate">Create Holiday</button>
                        
                     </div>
                 </div>

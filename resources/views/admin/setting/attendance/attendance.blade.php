@@ -263,14 +263,16 @@ Attendance | Create Shift
     }
 </style>
 
-<div class=" p-0 pb-4">
+<div class="my-3">
     <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
         <li><a href="{{ url('/admin') }}">Dashboard</a></li>
-        <li><a href="">Settings</a></li>
-        <li class="active"><span><b>Attendance Setting</b></span></li>
+        {{-- <li><a href="">Settings</a></li> --}}
+        <li class="active"><span><b>Attendance Settings</b></span></li>
     </ol>
 </div>
-
+<div class="">
+    <p class="text-muted">Create and update your attendance settings</p>
+</div>
 
 
 

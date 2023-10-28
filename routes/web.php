@@ -156,6 +156,7 @@ Route::middleware(['web', 'email_verified'])->group(function () {
 
         Route::prefix('/attendance')->group(function () {
             Route::get('/', [AttendanceController::class, 'index']);
+            Route::get('/pending_attendance_approve', [AttendanceController::class, 'pendingAttendanceApprove']);
             Route::get('/month-summary', [AttendanceController::class, 'attendanceSummary']);
             Route::any('/attendance_mark', [AttendanceController::class, 'attendanceMark'])->name('attendanceMark.checkboxUpdate');
             Route::any('/attendace_update', [AttendanceController::class, 'attendanceUpdate'])->name('attendance.update'); // modal attendace update route

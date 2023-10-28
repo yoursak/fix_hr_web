@@ -22,7 +22,7 @@
     <div class=" p-0 mt-3">
         <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
             <li><a href="{{ url('/admin') }}">Dashboard</a></li>
-            <li><a href="{{ url('admin/settings/business') }}">Settings</a></li>
+            {{-- <li><a href="{{ url('admin/settings/business') }}">Settings</a></li> --}}
             <li><a href="{{ url('admin/settings/business') }}">Business Setting</a></li>
             <li class="active"><span><b>Branch Setting</b></span></li>
         </ol>
@@ -44,10 +44,10 @@
         </div>
         <div class="page-rightheader ms-md-auto">
             <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-                <div class="d-lg-flex d-block">
+                <div class="d-lg-flex d-block ms-auto">
                     <div class="btn-list">
-                        <button type="button" id="addNewBranch" class="btn btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#branchName">Create Branch</button>
+                        <a id="addNewBranch" class="btn btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#branchName">Create Branch</a>
                     </div>
                 </div>
             </div>

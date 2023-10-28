@@ -287,19 +287,19 @@ $EmpID = $nss->EmpPlaceHolder();
 <div class=" p-0 mt-3">
     <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
         <li><a href="{{ url('/admin') }}">Dashboard</a></li>
-        <li><a href="{{ url('admin/settings/business')}}">Settings</a></li>
+        {{-- <li><a href="{{ url('admin/settings/business')}}">Settings</a></li> --}}
         <li><a href="{{ url('admin/settings/business')}}">Business Setting</a></li>
-        <li class="active"><span><b>Leave Policy Templates</b></span></li>
+        <li class="active"><span><b>Leave Policy</b></span></li>
     </ol>
 </div>
 <div class="page-header d-md-flex d-block">
     <div class="page-leftheader">
-        <div class="page-title">Leave Policy Templates</div>
+        <div class="page-title">Leave Policy</div>
         <p class="text-muted m-0">Create Template to give leaves to staff on month if they want</p>
     </div>
     <div class="page-rightheader ms-md-auto">
         <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-            <div class="d-lg-flex d-block">
+            <div class="d-lg-flex d-block ms-auto">
                 <div class="btn-list">
                     <button type="button" class="btn btn btn-primary" data-toggle="modal" data-target="#myModal">
                         Create Templates

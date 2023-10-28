@@ -9,7 +9,7 @@
 <div class=" p-0 mt-3">
     <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
         <li><a href="{{ url('/admin') }}">Dashboard</a></li>
-        <li><a href="{{ url('admin/settings/business')}}">Settings</a></li>
+        {{-- <li><a href="{{ url('admin/settings/business')}}">Settings</a></li> --}}
         <li><a href="{{ url('admin/settings/business')}}">Business Setting</a></li>
         <li class="active"><span><b>Notice Board</b></span></li>
     </ol>
@@ -23,7 +23,7 @@
             <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
                 <div class="btn-list">
                     <a href="javascript:void(0);" class="btn btn-primary me-3" data-bs-toggle="modal"
-                        data-bs-target="#addnoticemodal">Add New Notice</a>
+                        data-bs-target="#addnoticemodal">Create New Notice</a>
                     <button class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title="E-mail"> <i
                             class="feather feather-mail"></i> </button>
                     <button class="btn btn-light" data-bs-placement="top" data-bs-toggle="tooltip" title="Contact"> <i

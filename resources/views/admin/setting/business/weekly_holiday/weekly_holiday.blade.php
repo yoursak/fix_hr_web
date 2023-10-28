@@ -10,26 +10,26 @@
 <div class=" p-0 mt-3">
     <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
         <li><a href="{{ url('/admin') }}">Dashboard</a></li>
-        <li><a href="{{ url('admin/settings/business')}}">Settings</a></li>
+        {{-- <li><a href="{{ url('admin/settings/business')}}">Settings</a></li> --}}
         <li><a href="{{ url('admin/settings/business')}}">Business Setting</a></li>
-        <li class="active"><span><b>Weekly Holiday Setting</b></span></li>
+        <li class="active"><span><b>Weekly Holiday</b></span></li>
     </ol>
 </div>
     <div class="page-header d-md-flex d-block">
         <div class="page-leftheader">
-            <div class="page-title">Weekly Holiday Setting</div>
+            <div class="page-title">Weekly Holiday</div>
             <p class="text-muted m-0">Assign weekly off days of your business to automatically mark attendance for those days.
             </p>
         </div>
         <div class="page-rightheader ms-md-auto">
             <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-                <div class="d-lg-flex d-block">
+                <div class="d-lg-flex d-block ms-auto">
                     <div class="btn-list">
                         {{-- <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-bs-target="#modaldemo3"   data-target="#modaldemo3">
                         Create Templates
                     </button> --}}
                         <a class="btn btn-primary" data-bs-target="#modaldemo3" data-bs-toggle="modal" href="#">Create
-                            Template</a>
+                            Week Off</a>
 
                     </div>
                 </div>

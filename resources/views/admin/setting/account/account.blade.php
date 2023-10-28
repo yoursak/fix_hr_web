@@ -4,13 +4,17 @@
     Account
 @endsection
 @section('settings')
-    <div class=" p-0 mt-3 mb-5">
+    <div class=" p-0 my-3">
         <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
             <li><a href="{{ url('/admin') }}">Dashboard</a></li>
-            <li><a href="{{ url('admin/settings/account') }}">Settings</a></li>
-            <li class="active"><span><b>Account Setting</b></span></li>
+            {{-- <li><a href="{{ url('admin/settings/account') }}">Settings</a></li> --}}
+            <li class="active"><span><b>Account Settings</b></span></li>
         </ol>
     </div>
+    <div class="">
+        <p class="text-muted">Change your profile and account settings</p>
+    </div>
+
     <div class="row row-sm">
         @php
             $BType = app\Helpers\Central_unit::GetBusinessType();

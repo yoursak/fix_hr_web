@@ -14,29 +14,76 @@ use App\Helpers\MasterRulesManagement\RulesManagement;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Redirect;
 // use Alert;
+use Carbon\Carbon;
+
 class AttendanceController extends Controller
 {
     public function index()
     {
+        $currentDate = now();
+
+        // $results = YourModel::where('from_date_column', '<=', $currentDate)
+        //     ->where('to_date_column', '>=', $currentDate)
+        //     ->get();
+
+        $Leave = DB::table('leave_request_list')
+
+        // ->where('id',70)
+        ->where('leave_category', '0')
+            ->whereDate('from_date', '<=' , $currentDate)   
+            ->whereDate('to_date', '>=' , $currentDate)               
+            // ->join('attendance_list', 'attendance_list.emp_id', '=', 'attendance_list.emp_id')
+            // ->join('employee_personal_details', 'employee_personal_details.emp_id', '=', 'attendance_list.emp_id')
+            // ->join('master_endgame_method', 'master_endgame_method.id', '=' ,'employee_personal_details.master_endgame_id')
+            // ->whereBetween( 'attendance_list.punch_date', ['leave_request_list.from_date', 'leave_request_list.to_date'] )
+            // ->
+
+            //         $results = YourModel::whereBetween('date_column', [$range1StartDate, $range1EndDate])
+            // ->orWhereBetween('date_column', [$range2StartDate, $range2EndDate])
+            // ->get();
+
+            // ->join('attendance_shift_type_items', 'attendance_shift_type_items.attendance_shift_id', '=', 'employee_personal_details.emp_shift_type')
+            // ->whereRaw("TIME(attendance_list.punch_in_time) > TIME(attendance_shift_type_items.shift_start)")
+            // ->where('attendance_shift_type_items.is_active','1')
+            // ->select('attendance_list.id', 'attendance_list.punch_in_time', 'attendance_shift_type_items.shift_start')
+            // ->select('id')
+            // ->distinct()    
+            ->get();
+
+        // dd($Leave);
+        // $LateDaysCount =  count($LateDays);
+
+        //     dd($LateDaysCount);
+
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
         // session()->forget('custom_success_message');
+        $distinctPunchDates = DB::table('attendance_list')
+            ->where('attendance_status', '0')
+            ->select('punch_date', 'attendance_status')
+            ->distinct()
+            ->pluck('punch_date');
+        // dd($distinctPunchDates);
+        $approvalPendingCount = count($distinctPunchDates);
+
+        $pendingApproval = DB::table('attendance_list')->get();
         $DATA = DB::table('attendance_list')
             ->join('employee_personal_details', 'attendance_list.emp_id', '=', 'employee_personal_details.emp_id')
             ->join('attendance_methods', 'attendance_list.working_from_method', '=', 'attendance_methods.id')
             ->join('atten_rule_late_entry', 'attendance_list.business_id', '=', 'atten_rule_late_entry.business_id')
             ->join('atten_rule_break', 'attendance_list.business_id', '=', 'atten_rule_break.business_id')
-            // atten_rule_break
+            // // atten_rule_break
             ->join('attendance_shift_type_items', 'employee_personal_details.emp_shift_type', '=', 'attendance_shift_type_items.attendance_shift_id')
             ->join('master_endgame_method', 'employee_personal_details.master_endgame_id', '=', 'master_endgame_method.id')
-            // ->whereRaw('JSON_CONTAINS(master_endgame_method.shift_settings_ids_list, JSON_QUOTE(employee_personal_details.emp_shift_type))')
-            // ->where('master_endgame_method.method_switch', 1)
+            // // ->whereRaw('JSON_CONTAINS(master_endgame_method.shift_settings_ids_list, JSON_QUOTE(employee_personal_details.emp_shift_type))')
+            // // ->where('master_endgame_method.method_switch', 1)
+            ->where('attendance_shift_type_items.is_active', 1)
             ->where('atten_rule_late_entry.switch_is', 1)
             ->where('attendance_list.punch_date', date('Y-m-d'))
             ->where('employee_personal_details.business_id', Session::get('business_id'))
             ->select('attendance_list.*', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.profile_photo', 'employee_personal_details.designation_id', 'employee_personal_details.emp_lname', 'employee_personal_details.department_id', 'attendance_shift_type_items.shift_start', 'attendance_shift_type_items.shift_end', 'attendance_methods.method_name', 'atten_rule_late_entry.grace_time_min', 'atten_rule_late_entry.grace_time_hr', 'atten_rule_break.break_extra_hr', 'atten_rule_break.break_extra_min', 'attendance_shift_type_items.break_min')
-            // ->select('attendance_list.*')
+            // // ->select('attendance_list.*')
             ->orderBy('attendance_list.id', 'desc')
 
             ->get();
@@ -45,19 +92,21 @@ class AttendanceController extends Controller
             'labels' => ['Work', 'Break', 'Meetings'],
             'data' => [40, 20, 10], // Example data in hours
         ];
-        $root = compact('moduleName', 'permissions', 'DATA', 'data');
+        $root = compact('moduleName', 'permissions', 'DATA', 'data', 'approvalPendingCount');
         return view('admin.attendance.attendance', $root);
     }
 
     function attendanceSummary()
     {
-        $Emp = DB::table('employee_personal_details')->where('business_id', Session::get('business_id'))->get();
+        $Emp = DB::table('employee_personal_details')
+            ->where('business_id', Session::get('business_id'))
+            ->get();
         return view('admin.attendance.summary', compact('Emp'));
     }
 
     public function attendanceMark(Request $request)
     {
-        // dd($request->all())  ;
+        dd($request->all());
         $user_id_array = $request->input('id');
         $keys = 0;
         foreach ($user_id_array as $key => $value) {
@@ -104,73 +153,59 @@ class AttendanceController extends Controller
         $branchId = $request->branch_id;
         $departmentId = $request->input('department_id');
         $designationId = $request->input('designation_id');
-        $dateSelectValue = $request->input('date_select_value');
+        $dateSelectValue = $request->input('date_select_value') ? $request->input('date_select_value') : date('Y-m-d');
+        // return $branchId;
 
-        // $fromDate = $request->input('from_date');
-        // $toDate = $request->input('to_date');
-        // $empId = $request->input('emp_id');
-
-        // Use the selected filter values to query your database and retrieve the filtered data
-        // $filteredData = DB::table('attendance_list')
-        // ->join('branch_list', 'attendance_list.branch_id', '=', 'branch_list.branch_id')
-        // ->join('employee_personal_details', 'attendance_list.emp_id', '=', 'employee_personal_details.emp_id')
-        // ->join('attendance_shift_type', 'attendance_list.working_from_method', '=', 'attendance_shift_type.id')
-        // ->join('attendance_shift_settings', 'employee_personal_details.emp_shift_type', '=', 'attendance_shift_settings.shift_type')
-        // ->join('attendance_shift_type_items', 'attendance_shift_settings.id', '=', 'attendance_shift_type_items.attendance_shift_id')
-        // ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
-        // ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
-        // ->when($branchId, function ($query) use ($branchId) {
-        //     $query->where('attendance_list.branch_id', $branchId);
-        // })
-        // ->when($departmentId, function ($query) use ($departmentId) {
-        //     $query->where('employee_personal_details.department_id', $departmentId);
-        // })
-        // ->when($designationId, function ($query) use ($designationId) {
-        //     $query->where('employee_personal_details.designation_id', $designationId);
-        // })
-        // // ->when($empId, function ($query) use ($empId) {
-        // //     $query->where('attendance_list.emp_id', $empId);
-        // // })
-        // ->when($fromDate, function ($query) use ($fromDate) {
-        //     $query->where('attendance_list.punch_date', '>=', $fromDate);
-        // })
-        // ->when($toDate, function ($query) use ($toDate) {
-        //     $query->where('attendance_list.punch_date', '<=', $toDate);
-        // })
-        // ->select('attendance_list.*', 'branch_list.branch_name', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.department_id', 'employee_personal_details.profile_photo', 'department_list.depart_name', 'designation_list.desig_name', 'attendance_shift_type.name', 'attendance_shift_type_items.shift_start')
-        // // ->select('attendance_list.*')
-        // ->orderBy('attendance_list.id', 'DESC')
-
-        // ->get();
+        // return $dateSelectValue;
+        $currentDate = Carbon::now();
+        // return $currentDate;
         $filteredData = DB::table('attendance_list')
             ->join('employee_personal_details', 'attendance_list.emp_id', '=', 'employee_personal_details.emp_id')
             ->join('attendance_methods', 'attendance_list.working_from_method', '=', 'attendance_methods.id')
             ->join('atten_rule_late_entry', 'attendance_list.business_id', '=', 'atten_rule_late_entry.business_id')
             ->join('atten_rule_break', 'attendance_list.business_id', '=', 'atten_rule_break.business_id')
-            // atten_rule_break
             ->join('attendance_shift_type_items', 'employee_personal_details.emp_shift_type', '=', 'attendance_shift_type_items.attendance_shift_id')
             ->join('master_endgame_method', 'employee_personal_details.master_endgame_id', '=', 'master_endgame_method.id')
+            // // ->whereRaw('JSON_CONTAINS(master_endgame_method.shift_settings_ids_list, JSON_QUOTE(employee_personal_details.emp_shift_type))')
+            // // ->where('master_endgame_method.method_switch', 1)
+            ->where('attendance_shift_type_items.is_active', 1)
+            ->where('atten_rule_late_entry.switch_is', 1)
+            ->where('attendance_list.punch_date', isset($dateSelectValue) ? $dateSelectValue : date('Y-m-d'))
+            ->where('employee_personal_details.business_id', Session::get('business_id'))
+            // ->join('employee_personal_details', 'attendance_list.emp_id', '=', 'employee_personal_details.emp_id')
+            // ->join('attendance_methods', 'attendance_list.working_from_method', '=', 'attendance_methods.id')
+            // ->join('atten_rule_late_entry', 'attendance_list.business_id', '=', 'atten_rule_late_entry.business_id')
+            // ->join('atten_rule_break', 'attendance_list.business_id', '=', 'atten_rule_break.business_id')
+            // // atten_rule_break
+            // ->join('attendance_shift_type_items', 'employee_personal_details.emp_shift_type', '=', 'attendance_shift_type_items.attendance_shift_id')
+            // ->join('master_endgame_method', 'employee_personal_details.master_endgame_id', '=', 'master_endgame_method.id')
             ->join('branch_list', 'attendance_list.branch_id', '=', 'branch_list.branch_id')
             ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
             ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
             // ->whereRaw('JSON_CONTAINS(master_endgame_method.shift_settings_ids_list, JSON_QUOTE(employee_personal_details.emp_shift_type))')
             // ->where('master_endgame_method.method_switch', 1)
-            ->where('atten_rule_late_entry.switch_is', 1)
+            // ->where('atten_rule_late_entry.switch_is', 1)
             // ->where('attendance_list.punch_date', date('Y-m-d'))
             ->where('employee_personal_details.business_id', Session::get('business_id'))
             ->when($branchId, function ($query) use ($branchId) {
                 $query->where('attendance_list.branch_id', $branchId);
+                // ->whereDate('attendance_list.punch_date',$dateSelectValue);
+                // return $dateSelectValue;
             })
             ->when($departmentId, function ($query) use ($departmentId) {
                 $query->where('employee_personal_details.department_id', $departmentId);
+                // ->whereDate('attendance_list.punch_date',Carbon::now());
             })
             ->when($designationId, function ($query) use ($designationId) {
                 $query->where('employee_personal_details.designation_id', $designationId);
+                // ->whereDate('attendance_list.punch_date',Carbon::now());
             })
             ->when($dateSelectValue, function ($query) use ($dateSelectValue) {
                 $query->where('attendance_list.punch_date', $dateSelectValue);
             })
-            ->select('attendance_list.*', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.profile_photo', 'employee_personal_details.designation_id',  'designation_list.desig_name', 'employee_personal_details.emp_lname', 'employee_personal_details.department_id', 'attendance_shift_type_items.shift_start', 'attendance_shift_type_items.shift_end', 'attendance_methods.method_name', 'atten_rule_late_entry.grace_time_min', 'atten_rule_late_entry.grace_time_hr', 'atten_rule_break.break_extra_hr', 'atten_rule_break.break_extra_min', 'attendance_shift_type_items.break_min')
+            ->select('attendance_list.*', 'employee_personal_details.emp_name', 'designation_list.desig_name', 'employee_personal_details.emp_mname', 'employee_personal_details.profile_photo', 'employee_personal_details.designation_id', 'employee_personal_details.emp_lname', 'employee_personal_details.department_id', 'attendance_shift_type_items.shift_start', 'attendance_shift_type_items.shift_end', 'attendance_methods.method_name', 'atten_rule_late_entry.grace_time_min', 'atten_rule_late_entry.grace_time_hr', 'atten_rule_break.break_extra_hr', 'atten_rule_break.break_extra_min', 'attendance_shift_type_items.break_min')
+
+            // ->select('attendance_list.*', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.profile_photo', 'employee_personal_details.designation_id',  'designation_list.desig_name', 'employee_personal_details.emp_lname', 'employee_personal_details.department_id', 'attendance_shift_type_items.shift_start', 'attendance_shift_type_items.shift_end', 'attendance_methods.method_name', 'atten_rule_late_entry.grace_time_min', 'atten_rule_late_entry.grace_time_hr', 'atten_rule_break.break_extra_hr', 'atten_rule_break.break_extra_min', 'attendance_shift_type_items.break_min')
             // ->select('attendance_list.*')
             ->orderBy('attendance_list.id', 'desc')
             ->get();
@@ -314,11 +349,12 @@ class AttendanceController extends Controller
         if ($request->shiftType == 1) {
             // : (($request->rotationalName!=null)?$request->rotationalName: $request->openShiftName);
 
+            // dd($request->all());
+
             $load_first = DB::table('attendance_shift_settings')->insert([
                 'business_id' => Session::get('business_id'),
                 'shift_type' => $request->shiftType,
                 'shift_type_name' => $request->fixedshiftName,
-                'shift_weekly_repeat' => $request->repeat_week,
             ]);
             if (isset($load_first)) {
                 $firstload = DB::getPdo()->lastInsertId();
@@ -332,7 +368,7 @@ class AttendanceController extends Controller
                     'is_paid' => $request->fixpaid,
                     'work_hr' => $request->f_WorkHour,
                     'work_min' => $request->f_WorkMin,
-                    'is_active'=>1,
+                    'is_active' => 1,
                     'business_id' => $request->session()->get('business_id'),
                     'branch_id' => $request->session()->get('branch_id'),
                     'updated_at' => now(),
@@ -349,6 +385,7 @@ class AttendanceController extends Controller
                 'business_id' => Session::get('business_id'),
                 'shift_type' => $request->shiftType,
                 'shift_type_name' => $request->rotationalName,
+                'shift_weekly_repeat' => $request->repeat_week,
             ]);
             if (isset($load_second)) {
                 $secondload = DB::getPdo()->lastInsertId();
@@ -363,7 +400,7 @@ class AttendanceController extends Controller
                         'is_paid' => $request->rotationalpaid[$key],
                         'work_hr' => $request->r_WorkHour[$key],
                         'work_min' => $request->r_WorkMin[$key],
-                        'is_active' => ($key == 0) ? 1 : 0,
+                        'is_active' => $key == 0 ? 1 : 0,
                         'branch_id' => $request->session()->get('branch_id'),
                         'business_id' => $request->session()->get('business_id'),
                         'updated_at' => now(),
@@ -393,7 +430,7 @@ class AttendanceController extends Controller
                     'shift_min' => $request->openMin,
                     'break_min' => $request->openBreak,
                     'is_paid' => $request->openPaid,
-                    'is_active'=>1,
+                    'is_active' => 1,
                     'branch_id' => $request->session()->get('branch_id'),
                     'business_id' => $request->session()->get('business_id'),
                     'updated_at' => now(),
@@ -494,9 +531,7 @@ class AttendanceController extends Controller
 
     public function updateAttendaceShift(Request $request)
     {
-        $updatedAttendaceShift = false;
-
-        dd($request->all());
+        $updatedAttendanceShift = false;
 
         if ($request->ajax()) {
             if ($request->shift_type == 2) {
@@ -527,7 +562,6 @@ class AttendanceController extends Controller
                             'is_paid' => $isPaid,
                             'work_hr' => $workHour,
                             'work_min' => $workMin,
-
                         ];
                     }
                 }
@@ -540,7 +574,7 @@ class AttendanceController extends Controller
                 if (isset($load)) {
                     DB::table('attendance_shift_settings')
                         ->where('id', $load->id)
-                        ->update(['shift_type_name' => $request->shift_rotation_name]);
+                        ->update(['shift_type_name' => $request->shift_rotation_name, 'shift_weekly_repeat' => $request->update_week_repeat]);
                     $loadItems = DB::table('attendance_shift_type_items')
                         ->where('attendance_shift_id', $load->id)
                         ->where('business_id', Session::get('business_id'))
@@ -549,17 +583,17 @@ class AttendanceController extends Controller
                         $loadedChecked = DB::table('attendance_shift_type_items')->insert($shiftData);
                         // if (isset($loadedChecke/d)) {
 
-                        $updatedAttendaceShift = true;
+                        $updatedAttendanceShift = true;
                         // }
                     }
                 } else {
-                    $updatedAttendaceShift = false;
+                    $updatedAttendanceShift = false;
                 }
                 // dd($load);
                 // DB::table('attendance_shift_type_items')->where('business_id',Session::get('business_id'))->get();
                 // Now $shiftData contains the cleaned data with all required properties
             }
-            return response()->json(['root' => $updatedAttendaceShift]);
+            return response()->json(['root' => $updatedAttendanceShift]);
         }
         if ($request->EditShiftFixedShiftSubmit === 'FixedSubmit') {
             $load_first = DB::table('attendance_shift_settings')

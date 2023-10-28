@@ -105,7 +105,8 @@
             $Employee = $centralUnit->EmployeeDetails();
             $nss = new App\Helpers\Central_unit();
             $EmpID = $nss->EmpPlaceHolder();
-            $Count = $centralUnit->GetCount();
+            $Count = $centralUnit->AttendacnceGetCount();
+            // dd($Count[4]);
         @endphp
         <!-- ROW -->
 
@@ -143,7 +144,7 @@
                             </div>
                             <div class="col-6 col-md-4 col-sm-6 col-xl-2 text-center py-5">
                                 <span
-                                    class="avatar avatar-md bradius fs-20 bg-danger-transparent">{{ $Count[4] }}</span>
+                                    class="avatar avatar-md bradius fs-20 bg-danger-transparent">{{ $Count[2] }}</span>
                                 <h5 class="mb-0 mt-3">Absent</h5>
                             </div>
                             <div class="col-6 col-md-4 col-sm-6 col-xl-2 text-center py-5">
@@ -151,7 +152,7 @@
                                 <h5 class="mb-0 mt-3">Half Days</h5>
                             </div>
                             <div class="col-6 col-md-4 col-sm-6 col-xl-2 text-center py-5 ">
-                                <span class="avatar avatar-md bradius fs-20 bg-orange-transparent">0</span>
+                                <span class="avatar avatar-md bradius fs-20 bg-orange-transparent">{{ $Count[4] }}</span>
                                 <h5 class="mb-0 mt-3">Late</h5>
                             </div>
                             <div class="col-6 col-md-4 col-sm-6 col-xl-2 text-center py-5">
@@ -167,12 +168,14 @@
                     <div class="card-body ">
                         <div class="countdowntimer mt-3">
                             <span id="clocktimer2" class="border-0"></span>
-                            <label class="form-label">Pending Approvals for abc days</label>
+                            <label class="form-label">Pending Approvals for {{ $approvalPendingCount }} days</label>
                         </div>
-                        <div class="btn-list text-center mt-5 mb-5">
-                            <a type="submit" class="btn ripple btn-primary">Approve</a>
-                            {{-- <a href="javascript:void(0);" class="btn ripple btn-primary disabled">Punch Out</a> --}}
-                        </div>
+                        <form action="{{ url('admin/attendance/pending_attendance_approve') }}" method="POST">
+                            <div class="btn-list text-center mt-5 mb-5">
+                                <button type="submit" class="btn ripple btn-primary">Approve</button>
+                                {{-- <a href="javascript:void(0);" class="btn ripple btn-primary disabled">Punch Out</a> --}}
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -298,7 +301,7 @@
                                                 $grachTimeMin = $item->grace_time_min;
                                                 $shiftStart = $item->shift_start;
                                                 $timeDifference = $centralUnit->CalculateTimeDifference($inTime, $outTime);
-                                                $resCode = $centralUnit->getEmpAttSumm(['emp_id' => 'IT009', 'punch_date' => date('2023-10-27') ]);
+                                                $resCode = $centralUnit->getEmpAttSumm(['emp_id' => 'IT009', 'punch_date' => date('2023-10-27')]);
                                                 // dd(date('Y-m-d',strtotime($item->punch_date)));
                                                 $lateBy = $ruleMange->CalculateLateBy($shiftStart, $inTime, $grachTimeHr, $grachTimeMin);
                                                 $hours = str_pad($timeDifference->h, 2, '0', STR_PAD_LEFT);
@@ -314,12 +317,12 @@
                                                 @if ($item->attendance_status == 0)
                                                     <input type="text" name="myAttendanceCheck[]"
                                                         id="myAttendanceCheck{{ $item->id }}"
-                                                        class="myAttendanceCheck"
-                                                        value="<?= $item->attendance_status != 0 ? '1' : '0' ?>">
+                                                        class="myAttendanceCheck" onclick="setCheckboxValue(this, 1)"
+                                                        value="<?= $item->attendance_status != 0 ? '1' : '0' ?>" hidden>
                                                 @else
                                                     <input type="text" name="myAttendanceCheck[]"
                                                         id="myAttendanceCheck{{ $item->id }}" class=""
-                                                        value="<?= $item->attendance_status != 0 ? '1' : '0' ?>">
+                                                        value="<?= $item->attendance_status != 0 ? '1' : '0' ?>" hidden>
                                                 @endif
                                                 <td>{{ $count++ }}</td>
                                                 <td>
@@ -340,38 +343,39 @@
                                                 </td>
                                                 <td>{{ $item->emp_id }}</td>
                                                 <td>
-                                                        @php
-                                                            $statusLabels = [
-                                                                0 =>'Method Not Allowed',
-                                                                1 => 'Present',
-                                                                2 => 'Absent',
-                                                                3 => 'Present',
-                                                                4 => 'Mispunch',
-                                                                5 => 'Early',
-                                                                6 => 'Holiday',
-                                                                7 => 'Week Off',
-                                                                8 => 'Halfday',
-                                                                9 => 'Present',
-                                                            ];
-                                                            $badgeColors = [
-                                                                0 =>'danger',
-                                                                1 => 'success',
-                                                                2 => 'danger',
-                                                                3 => 'success',
-                                                                4 => 'secondary',
-                                                                5 => 'Not Marked',
-                                                                6 => 'primary',
-                                                                7 => 'primary',
-                                                                8 => 'danger',
-                                                                9 => 'success',
-                                                            ];
-                                                        @endphp
-        
-                                                        <span id="statusLabelView" class="badge badge-{{ $badgeColors[$status] }}-light">{{ $statusLabels[$status] }}</span>
+                                                    @php
+                                                        $statusLabels = [
+                                                            0 => 'Method Not Allowed',
+                                                            1 => 'Present',
+                                                            2 => 'Absent',
+                                                            3 => 'Present',
+                                                            4 => 'Mispunch',
+                                                            5 => 'Early',
+                                                            6 => 'Holiday',
+                                                            7 => 'Week Off',
+                                                            8 => 'Halfday',
+                                                            9 => 'Present',
+                                                        ];
+                                                        $badgeColors = [
+                                                            0 => 'danger',
+                                                            1 => 'success',
+                                                            2 => 'danger',
+                                                            3 => 'success',
+                                                            4 => 'secondary',
+                                                            5 => 'Not Marked',
+                                                            6 => 'primary',
+                                                            7 => 'primary',
+                                                            8 => 'danger',
+                                                            9 => 'success',
+                                                        ];
+                                                    @endphp
+
+                                                    <span id="statusLabelView"
+                                                        class="badge badge-{{ $badgeColors[$status] }}-light">{{ $statusLabels[$status] }}</span>
                                                 </td>
                                                 <td>{{ $item->punch_date }}</td>
                                                 <td><?= $ruleMange->Convert24To12($item->punch_in_time) ?></td>
-                                                <td><?= $item->punch_out_time != '00:00:00' ? $ruleMange->Convert24To12($item->punch_out_time) : '' ?>
+                                                <td><?= $item->emp_today_current_status == '2' ? $ruleMange->Convert24To12($item->punch_out_time) : '' ?>
                                                 </td>
                                                 <td><?= $item->total_working_hour !== null && $item->total_working_hour != 'undefined' ? date('H:i', strtotime($item->total_working_hour)) . ' Min.' : '' ?>
                                                 </td>
@@ -396,8 +400,7 @@
                                                                     onclick="checkboxcheck(this, {{ $item->id }})"
                                                                     type="checkbox"
                                                                     class="checkbox-checkbox custom-control-input-success"
-                                                                    name="checkbox" value=""
-                                                                    <?= $item->attendance_status != 0 ? 'checked' : '' ?>>
+                                                                    name="checkbox[]" value="1">
                                                                 <span class="custom-control-label-md success"></span>
                                                             </label>
                                                         @endif
@@ -432,7 +435,7 @@
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button class="btn btn-primary float-end" id="#approveAll" type="submit">Approve
+                            <button class="btn btn-primary float-end" id="approveAll" type="submit">Approve
                                 All</button>
                         </div>
                     </form>
@@ -674,11 +677,10 @@
             </div>
         </div> --}}
         <script>
-              function myAttendacneFun() {
+            function myAttendacneFun() {
                 alert('Hello from my JavaScript function!');
                 console.log("heelo");
             }
-
         </script>
         <!-- PUNCH OUT IMAGE EDIT MODAL -->
         <!-- INTERNAL APEXCHART JS -->
@@ -689,18 +691,20 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
         <script>
-          
             $(document).ready(function() {
                 $('#country-dd, #state-dd, #desig-dd, #dateselect-dd').change(function() {
                     var branchId = $('#country-dd').val();
+                    console.log(branchId);
                     var departmentId = $('#state-dd').val();
                     var designationId = $('#desig-dd').val();
                     // var dateSelectValue =;
                     var formattedDate = moment($('#dateselect-dd').val(), "DD MMMM YYYY").format(
                         "YYYY-MM-DD");
-                    console.log(formattedDate);
 
-                    console.log(formattedDate);
+                    // console.log(formattedDate);
+
+                    // console.log(formattedDate);
+
                     $.ajax({
                         type: "POST",
                         url: "{{ url('admin/attendance/attendance_list_filter') }}",
@@ -708,65 +712,79 @@
                             _token: '{{ csrf_token() }}',
                             branch_id: branchId,
                             department_id: departmentId,
-                            designation_id: designationId
-                            // date_select_value: dateSelectValue;
+                            designation_id: designationId,
+                            date_select_value: formattedDate
                         },
                         success: function(data) {
                             var tbody = $('.my_body');
                             tbody.empty();
                             console.log(data);
                             $.each(data, function(index, employee) {
-                                console.log(employee);
-                                let i = 1;
-                                employee.forEach(el => {
-                                    // console.log("employee aa", el);
-                                    $('#myAttendanceCheck' + el.id).val(el
-                                        .attendance_status);
-                                    var lateTime = calculateLateBy(el.shift_start,
-                                        el.punch_in_time, el.grace_time_hr, el
-                                        .grace_time_min);
-                                    var newRow = '<tr>' +
-                                        '<td>' + i++ + '</td>' +
+                                console.log("employee ", employee);
 
-                                        '<td>' + `<div class="d-flex">
+                                if (employee !== null && Array.isArray(employee) && employee
+                                    .length != []) {
+                                    console.log("ja raha hai");
+                                    let i = 1;
+
+                                    employee.forEach(el => {
+                                        // console.log("employee aa", el);
+                                        $('#myAttendanceCheck' + el.id).val(el
+                                            .attendance_status);
+                                        var lateTime = calculateLateBy(el
+                                            .shift_start,
+                                            el.punch_in_time, el.grace_time_hr,
+                                            el
+                                            .grace_time_min);
+                                        var newRow = '<tr>' +
+                                            '<td>' + i++ + '</td>' +
+
+                                            '<td>' + `<div class="d-flex">
                                             <span class="avatar avatar-md brround me-3 rounded-circle"
                                                 style="background-image: url('/employee_profile/` + el
-                                        .profile_photo + `')"></span>
+                                            .profile_photo + `')"></span>
                                             <div class="me-3 mt-0 mt-sm-1 d-block">
                                                 <h6 class="mb-1 fs-14">` + el.emp_name + ' ' + (el.emp_mname != null ?
-                                            el.emp_mname : '') + ' ' + el
-                                        .emp_lname + `</h6>
+                                                el.emp_mname : '') + ' ' + el
+                                            .emp_lname + `</h6>
                                                 <p class="text-muted mb-0 fs-12">
                                                     ` + el.desig_name + `</p>
                                             </div>
                                         </div>` + '</td>' +
-                                        '<td>' + el.emp_id + '</td>' +
-                                        '<td>' + '' + '</td>' +
-                                        '<td>' + el.punch_date + '</td>' +
-                                        '<td>' + convert24To12(el.punch_in_time) +
-                                        '</td>' +
-                                        '<td>' + (el.punch_out_time != '00:00:00' ?
-                                            convert24To12(el.punch_out_time) : '') +
-                                        '</td>' +
-                                        '<td>' + ((el.total_working_hour !== null &&
-                                                el
-                                                .total_working_hour != undefined) ?
-                                            (el.total_working_hour.split(":").slice(
-                                                0, 2).join(":")) + ' ' + 'Min.' : ''
-                                        ) + '</td>' +
-                                        '<td>' + lateTime + '</td>' +
-                                        // '<td>' + el.shift_start + el.shift_end + el.grace_time_hr + el.grace_time_min+ '</td>' +
-                                        '<td>' + el.method_name + '</td>' +
-                                        '<td>' + (el.attendance_status == 0 ?
-                                            `<span class="badge badge-danger">Pending</span>` :
-                                            (el.attendance_status == 1 ?
-                                                `<span class="badge badge-success">Approved</span>` :
-                                                '')) + '</td>' +
+                                            '<td>' + el.emp_id + '</td>' +
+                                            '<td>' + '' + '</td>' +
+                                            '<td>' + el.punch_date + '</td>' +
+                                            '<td>' + convert24To12(el
+                                            .punch_in_time) +
+                                            '</td>' +
+                                            '<td>' + (el.emp_today_current_status ==
+                                                '2' ?
+                                                convert24To12(el.punch_out_time) :
+                                                '') +
+                                            '</td>' +
+                                            '<td>' + ((el.total_working_hour !==
+                                                    null &&
+                                                    el
+                                                    .total_working_hour != undefined
+                                                    ) ?
+                                                (el.total_working_hour.split(":")
+                                                    .slice(
+                                                        0, 2).join(":")) + ' ' +
+                                                'Min.' : ''
+                                            ) + '</td>' +
+                                            '<td>' + lateTime + '</td>' +
+                                            // '<td>' + el.shift_start + el.shift_end + el.grace_time_hr + el.grace_time_min+ '</td>' +
+                                            '<td>' + el.method_name + '</td>' +
+                                            '<td>' + (el.attendance_status == 0 ?
+                                                `<span class="badge badge-danger">Pending</span>` :
+                                                (el.attendance_status == 1 ?
+                                                    `<span class="badge badge-success">Approved</span>` :
+                                                    '')) + '</td>' +
 
-                                        '<td><div class="d-flex justify-content-end">'
-                                    newRow += el.attendance_status != 1 ?
+                                            '<td><div class="d-flex justify-content-end">'
+                                        newRow += el.attendance_status != 1 ?
 
-                                        `<label class="custom-control custom-checkbox-md me-5 p-0 ">
+                                            `<label class="custom-control custom-checkbox-md me-5 p-0 ">
                                             <input id="check_my_data${el.id}"
                                                  data-my_id="${el.id}" 
                                                 onclick="checkboxcheck(this, ${el.id})"
@@ -776,7 +794,7 @@
                                             <span class="custom-control-label-md success"></span>
                                         </label>
                                         ` : '';
-                                    newRow += `<a class="btn btn-light btn-icon btn-sm"
+                                        newRow += `<a class="btn btn-light btn-icon btn-sm"
                                                     data-bs-target="#presentmodal" data-id="${el.id}" 
                                                     data-in="${el.punch_in_time}" data-out="${el.punch_out_time}"
                                                     data-attendance_shift_type_items_break_min="${el.break_min}"
@@ -786,7 +804,7 @@
                                                     data-shiftname="${el.emp_id}"
                                                     data-breakhr="${el.break_extra_hr}"
                                                     data-breakmin="${el.break_extra_min}"
-                                                    // data-overtime="${el.emp_id}"'<?= $item->emp_id ?>'
+                                                    // data-overtime="${el.emp_id}"
                                                     data-punchinselfie="${el.punch_in_selfie}"
                                                     data-punchoutselfie="${el.punch_out_selfie}"
                                                     data-worFroMeth="${el.working_from_method}"
@@ -799,15 +817,22 @@
                                                         data-original-title="View"></i>
                                                 </a>`;
 
-                                    //                 newRow += `<a href="javascript:void(0);" class="btn btn-danger btn-icon btn-sm"
-                            //     data-bs-toggle="modal" onclick="ItemDeleteModel(this)" data-id="${el.emp_id}" 
-                            //     data-bs-target="#deletemodal">
-                            //     <i class="feather feather-trash-2" data-bs-toggle="tooltip"
-                            //         data-original-title="View"></i>
-                            // </a>`;
-                                    newRow += '</div></td></tr>';
-                                    tbody.append(newRow);
-                                });
+                                        //                 newRow += `<a href="javascript:void(0);" class="btn btn-danger btn-icon btn-sm"
+                                //     data-bs-toggle="modal" onclick="ItemDeleteModel(this)" data-id="${el.emp_id}" 
+                                //     data-bs-target="#deletemodal">
+                                //     <i class="feather feather-trash-2" data-bs-toggle="tooltip"
+                                //         data-original-title="View"></i>
+                                // </a>`;
+                                        newRow += '</div></td></tr>';
+                                        tbody.append(newRow);
+                                    });
+                                    $('#approveAll').prop('disabled', false);
+                                } else {
+                                    console.log("kY");
+                                    $('#approveAll').prop('disabled', true);
+                                }
+                                // $(document).ready(function() {
+                                // });
                             });
 
                         }

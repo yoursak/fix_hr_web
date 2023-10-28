@@ -578,6 +578,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Date Of Joining</label>
                                                 <input type="date" class="form-control fc-datepicker update_doj_dd"
@@ -598,6 +599,7 @@
 
                                         </div>
                                     </div>
+
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-9">
@@ -615,6 +617,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                
                                 <div id="step-12" class="">
                                     <div class="form-group mb-0 justify-content-end">
                                         <div class="">

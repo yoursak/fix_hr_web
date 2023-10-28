@@ -4,12 +4,15 @@
 @endsection
 
 @section('content')
-    <div class=" p-0 pb-4">
+    <div class=" p-0 my-3">
         <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
-            <li><a href="{{ url('/admin') }}">Settings</a></li>
-            <li><a href="">Attendance Settings</a></li>
+            {{-- <li><a href="{{ url('/admin') }}">Settings</a></li> --}}
+            <li><a href="{{url('/admin/settings/attendance')}}">Attendance Settings</a></li>
             <li class="active"><span><b>Camera Access</b></span></li>
         </ol>
+    </div>
+    <div class="">
+        <p class="text-muted">Create and activate camera access to track attendance</p>
     </div>
 
     <div class="row">

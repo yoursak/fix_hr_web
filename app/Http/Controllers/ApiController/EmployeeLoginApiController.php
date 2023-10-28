@@ -21,10 +21,10 @@ class EmployeeLoginApiController extends Controller
     {
         $admin = DB::table('login_employee')->where('phone', $request->phone)->first();
         // return $admin;
-        $rulesMangement = new RulesManagement();
-        $checkRules = $rulesMangement->ALLPolicyTemplatesByIDCall($admin->business_id);
         // dd($chckRules);
         if ($admin) {
+            $rulesMangement = new RulesManagement();
+            $checkRules = $rulesMangement->ALLPolicyTemplatesByIDCall($admin->business_id);
             
             // $request = DB::table('login_employee')->where('id',$admin->id)->all();
             // return $request;
@@ -32,7 +32,7 @@ class EmployeeLoginApiController extends Controller
             // , [$checkRules[0], $checkRules[6]
             return ReturnHelpers::jsonApiReturn(EmployeeLoginResource::collection([DB::table('login_employee')->where('emp_id', $admin->emp_id)->first()]));
         }
-        return response()->json(['result' => [], 'status' => false]);
+        return response()->json(['result' => [], 'status' => false], 404);
     }
 
 

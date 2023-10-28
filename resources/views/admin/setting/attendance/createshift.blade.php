@@ -260,16 +260,16 @@
     {{-- @endsection
 @section('settings') --}}
 
-<div class=" p-0 mt-3">
-    <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
-        <li><a href="{{ url('/admin') }}">Dashboard</a></li>
-        <li><a href="{{ url('admin/settings/attendance')}}">Settings</a></li>
-        <li><a href="{{ url('admin/settings/attendance')}}">Attendace Setting</a></li>
-        {{-- <li><a href="{{ url('/admin/requests/misspunch') }}">Request</a></li> --}}
+    <div class=" p-0 mt-3">
+        <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
+            <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+            {{-- <li><a href="{{ url('admin/settings/attendance') }}">Settings</a></li> --}}
+            <li><a href="{{ url('admin/settings/attendance') }}">Attendace Setting</a></li>
+            {{-- <li><a href="{{ url('/admin/requests/misspunch') }}">Request</a></li> --}}
 
-        <li class="active"><span><b>Create Shift Templates</b></span></li>
-    </ol>
-</div>
+            <li class="active"><span><b>Shift Setting</b></span></li>
+        </ol>
+    </div>
 
     <?php
     
@@ -284,12 +284,12 @@
                     <div class="page-title">Create Shift Templates</div>
                     <p class="text-muted">Create Template to give Shift to staff on month if they want</p>
                 </div>
-                <div class="page-rightheader ms-md-auto">
-                    <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-                        <div class="d-lg-flex d-block">
+                <div class="page-rightheader">
+                    <div class="d-flex align-items-end flex-wrap my-auto breadcrumb-end">
+                        <div class="d-flex ms-auto">
                             <div class="btn-list d-flex">
                                 <a class="modal-effect btn btn-primary btn-block mx-3" data-effect="effect-scale"
-                                    data-bs-toggle="modal" href="#additionalModal" id="btnOpen">Add New shift</a>
+                                    data-bs-toggle="modal" href="#additionalModal" id="btnOpen">Create shift</a>
                             </div>
                             {{-- <div class="btn-list">
                             <button type="button" class="btn btn btn-primary" data-toggle="modal"
@@ -362,7 +362,8 @@
                                                       ->get()
                                                   as $value
                                               ) {?>
-                                                <?= '' . $power->Convert24To12($value->shift_start) . '-' . $power->Convert24To12($value->shift_end) ?>
+                                                <?= '' . $power->Convert24To12($value->shift_start) . '-' .
+                                                $power->Convert24To12($value->shift_end) ?>
                                                 <?php }
                                           }
                                           if ($power->AttedanceShiftCheckItems($item->id) == 3) {
@@ -378,9 +379,10 @@
                                             class="fe fe-edit fs-18"></i></button> --}}
 
                                                 @if ($item->shift_type == 1)
-                                                {{-- @dd($item->shift_weekly_repeat); --}}
-                                                    <a class="btn action-btns  btn-primary btn-icon btn-sm" href="javascript:void(0);"
-                                                        onclick="openEditFixedShiftModel(this)" data-id='<?= $item->id ?>'
+                                                    {{-- @dd($item->shift_weekly_repeat); --}}
+                                                    <a class="btn action-btns  btn-primary btn-icon btn-sm"
+                                                        href="javascript:void(0);" onclick="openEditFixedShiftModel(this)"
+                                                        data-id='<?= $item->id ?>'
                                                         data-shift_name='<?= $item->shift_type_name ?>'
                                                         data-shift_type='<?= $power->AttedanceShiftCheckItems($item->id) ?>'
                                                         data-shift_start='<?= $loadss->shift_start ?>'
@@ -396,10 +398,11 @@
                                                 @endif
 
                                                 @if ($item->shift_type == 2)
-                                                    <a class="btn action-btns  btn-primary btn-icon btn-sm" href="javascript:void(0);"
-                                                        onclick="openEditRotationalModel(this)" data-id='<?= $item->id ?>'
+                                                    <a class="btn action-btns  btn-primary btn-icon btn-sm"
+                                                        href="javascript:void(0);" onclick="openEditRotationalModel(this)"
+                                                        data-id='<?= $item->id ?>'
                                                         data-shift_name='<?= $item->shift_type_name ?>'
-                                                        data-weekly_repeat={{$item->shift_weekly_repeat}}
+                                                        data-weekly_repeat={{ $item->shift_weekly_repeat }}
                                                         data-shift_type='<?= $power->AttedanceShiftCheckItems($item->id) ?>'
                                                         data-shift_start='<?= $loadss->shift_start ?>'
                                                         data-shift_end='<?= $loadss->shift_end ?>'
@@ -413,12 +416,10 @@
                                                     </a>
                                                 @endif
 
-
-
-
                                                 @if ($item->shift_type == 3)
-                                                    <a class="btn action-btns  btn-primary btn-icon btn-sm" href="javascript:void(0);"
-                                                        onclick="openEditOpenShiftModel(this)" data-id='<?= $item->id ?>'
+                                                    <a class="btn action-btns  btn-primary btn-icon btn-sm"
+                                                        href="javascript:void(0);" onclick="openEditOpenShiftModel(this)"
+                                                        data-id='<?= $item->id ?>'
                                                         data-shift_name='<?= $item->shift_type_name ?>'
                                                         data-shift_type='<?= $power->AttedanceShiftCheckItems($item->id) ?>'
                                                         data-shift_hour='<?= $loadss->shift_hr ?>'
@@ -432,7 +433,8 @@
                                                             data-original-title="View/Edit"></i>
                                                     </a>
                                                 @endif
-                                                <a class="btn action-btns  btn-danger btn-icon btn-sm" href="javascript:void(0);"
+                                                <a class="btn action-btns  btn-danger btn-icon btn-sm"
+                                                    href="javascript:void(0);"
                                                     data-shift_type='<?= $power->AttedanceShiftCheckItems($item->id) ?>'
                                                     onclick="DeleteModel(this)" data-bs-toggle="modal"
                                                     data-id='<?= $item->id ?>'
@@ -579,20 +581,23 @@
                                         <label class="form-label">Shift Type</label>
                                         <select onchange="" name="shiftType"
                                             class="form-control custom-select select2" data-placeholder="Select Country"
-                                            id="shifttype" aria-readonly="true" >
+                                            id="shifttype" aria-readonly="true">
                                             <option value="2">Rotational Shift</option>
                                         </select>
                                     </div>
                                     <div class="form-group" id="UpdateRotationalShift">
                                         <div class="row">
-                                            <div class="col-11">
-                                                <label class="form-label">Repeat Shift in Every <input id="updateWeekRepeat" class="mx-2 text-center" type="number" name="update_repeat_week" min="1" max="6" style="width: 3rem" required>Weeks</label>
+                                            <div class="col-11 my-1 mb-3">
+                                                <label class="form-label">Repeat Shift in Every <input
+                                                        id="updateWeekRepeat" class="mx-2 text-center" type="number"
+                                                        name="update_repeat_week" min="1" max="6"
+                                                        style="width: 3rem" required>Weeks</label>
                                             </div>
                                             <div class="col-xl-11">
                                                 <label class="form-label"> Rotational Shift Name</label>
                                                 <input class="form-control mb-4" id="updatedRotationalName"
                                                     value="" placeholder="Enter Shift Name" type="text"
-                                                    name="rotationName" >
+                                                    name="rotationName">
                                             </div>
                                             <div class="col-xl-1 text-end mt-5">
                                                 <button type="button"
@@ -711,9 +716,6 @@
                                                 </script>
                                             </div>
                                         </div>
-
-
-
 
                                     </div>
                                     <!-- table-responsive -->
@@ -979,6 +981,7 @@
                         id: $('#setId').val(),
                         shift_type: $('#shifttype').val(),
                         shift_rotation_name: $('#updatedRotationalName').val(),
+                        update_week_repeat: $('#updateWeekRepeat').val(),
                         updated_items: updatedItems // Send the array of updated items to the server
                     },
                     dataType: 'json',
@@ -1094,7 +1097,6 @@
                 });
             });
         </script>
-
 
         <script>
             function openEditFixedShiftModel(context) {
@@ -1375,12 +1377,9 @@
             }
         </script>
 
+        {{-- <div class=""> --}}
 
-
-        <div class="">
-
-
-            {{-- <div class="container">
+        {{-- <div class="container">
             <div class="modal fade" id="fixShiftEdit{{ $fix->fixed_id }}">
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
@@ -1568,8 +1567,7 @@
             </div>
         </div> --}}
 
-
-        </div>
+    </div>
     </div>
 
     {{-- add new shift --}}
@@ -1772,17 +1770,22 @@
                                     {{-- roatational shift --}}
                                     <div class="form-group d-none" id="shiftname2">
                                         <div class="row">
-                                            <div class="col-11">
-                                                <label class="form-label">Repeat Shift in Every <input class="mx-2 text-center" type="number" name="repeat_week" min="1" max="6" style="width: 3rem" required>Weeks</label>
+                                            <div class="col-11 my-1 mb-3">
+                                                <label class="form-label">Repeat Shift in Every <input
+                                                        class="mx-2 text-center" type="number" name="repeat_week"
+                                                        min="1" max="6" style="width: 3rem"
+                                                        required>Weeks</label>
                                             </div>
-                                            <div class="col-11">
+                                            <div class="col-10 col-xl-11">
                                                 <label class="form-label"> Rotational Shift Name</label>
                                                 <input class="form-control mb-4" placeholder="Enter Shift Name"
-                                                    type="text" name="rotationalName" >
+                                                    type="text" name="rotationalName">
                                             </div>
                                             <div class="col-1 mt-4">
-                                                <button type="button" class="btn btn-outline-primary  mt-3"
-                                                    onclick="addRotationalField()"><i class="fe fe-plus bold"></i>
+                                                <button type="button"
+                                                    class="btn btn-outline-primary mt-3 ms-xl-5 ms-auto"
+                                                    onclick="addRotationalField()" style="transform: translateX(-6px)"><i
+                                                        class="fe fe-plus bold"></i>
                                                 </button>
                                                 {{-- <a class="btn btn-outline-primary mt-2"
                                                 onclick="addRotationalField()">Add
@@ -1838,7 +1841,7 @@
                                                             <span class="custom-control-label">Unpaid</span>
                                                         </label>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-3">
                                                         {{-- <a class="btn btn-sm btn-danger" id="deleteElem0"
                                                         onclick="removalElement(0)"><i class="fa fa-trash"></i></a> --}}
 

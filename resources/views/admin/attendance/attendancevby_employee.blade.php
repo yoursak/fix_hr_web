@@ -90,9 +90,17 @@
 @endsection
 
 @section('content')
+
+<div class=" p-0 py-2">
+    <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
+        <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+        <li><a href="{{ url('/admin/requests/leaves') }}">Attendance</a></li>
+        <li class="active"><span><b>Attendance By</b></span></li>
+    </ol>
+</div>
     @php
         $root = new App\Helpers\Central_unit();
-        // $root->getEmpAttSumm(['emp_id' => $emp->emp_id, 'punch_date' => date('Y-m-21')]);
+        $root->getEmpAttSumm(['emp_id' =>'IT009', 'punch_date' => date('Y-m-04')]);
     @endphp
 
     <!-- PAGE HEADER -->
@@ -208,7 +216,7 @@
                 </div>
                 <div class="card-body ">
                     <div class="table-responsive">
-                        <table class="table  table-vcenter text-nowrap border-bottom " id="file-datatable">
+                        <table class="table  table-vcenter text-nowrap border " id="file-datatable">
                             <thead>
                                 <tr>
                                     <th class="border-bottom-0">S.No.</th>

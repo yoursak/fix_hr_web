@@ -1,13 +1,13 @@
 <?php use App\Helpers\Central_unit;
-$Helper=new Central_unit;
+$Helper = new Central_unit();
 ?>
 <div class="app-header header sticky">
     <div class="container-fluid main-container">
         <div class="d-flex">
             <a class="header-brand" href="index.html">
-                <img src={{ asset("assets/images/brand/logo.png")}} class="header-brand-img desktop-lgo"
+                <img src={{ asset('assets/images/brand/logo.png') }} class="header-brand-img desktop-lgo"
                     alt="FixingDotslogo">
-                <img src={{ asset("assets/images/brand/logo-white.png")}} class="header-brand-img dark-logo"
+                <img src={{ asset('assets/images/brand/logo-white.png') }} class="header-brand-img dark-logo"
                     alt="FixingDotslogo">
                 <img src="{{ asset('assets/logo/FixHR.png?v=0.1') }}" class="header-brand-img mobile-logo"
                     alt="FixingDotslogo">
@@ -45,7 +45,7 @@ $Helper=new Central_unit;
                             </div>
                             <div class="dropdown header-flags">
                                 <a class="nav-link icon" data-bs-toggle="dropdown">
-                                    <img src={{ asset("assets/images/flags/flag-png/india.png")}} class="h-24"
+                                    <img src={{ asset('assets/images/flags/flag-png/india.png') }} class="h-24"
                                         alt="img">
                                 </a>
                             </div>
@@ -56,55 +56,58 @@ $Helper=new Central_unit;
                                         class="feather feather-minimize fullscreen-button exit-fullscreen header-icons"></i>
                                 </a>
                             </div>
-
                             <div class="dropdown header-notify">
                                 <a class="nav-link icon" data-bs-toggle="sidebar-right" data-bs-target=".sidebar-right">
                                     <i class="feather feather-bell header-icon"></i>
                                     <span class="bg-dot"></span>
                                 </a>
                             </div>
-                            <div class="dropdown header-notify my-auto">
-                                <?php if(Session::has('business_id')){ ?>
-                                <div class="me-3 mt-0 mt-sm-1 d-block text-center">
-                                    <span class="fs-14 mb-0"><b><?=($Helper->GenderCheck()!='')?$Helper->GenderCheck():''?>{{Session::get('login_name')}}</b></span><br>
-                                    <span class="text-muted mt-0">
-                                       <b> <?=$Helper->RoleIdToName();?></b>
-                                    </span>
-                                </div>
-                                <?php }else{  ?>
-                                <div class="mt-0 mt-sm-1 d-block text-center">
-                                    <span class="fs-14 mb-0">Login User</span><br>
-                                    <span class="text-muted mt-0">Designation</span>
-                                </div>
-                                <?php } ?>
+                            <div class="d-flex" style="transform: translateX(20px);">
 
-                            </div>
-                            <div class="dropdown profile-dropdown">
-                                <a href="javascript:void(0);" class="nav-link  ps-0 leading-none"
-                                    data-bs-toggle="dropdown">
-                                    <span>
-                                        <img src="{{ asset('business_logo/' . Session::get('login_business_image')) }}"
-                                            alt="img" class="avatar avatar-md rounded-circle">
-                                    </span>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated">
-                                    <a class="dropdown-item d-flex" href="profile1.html">
-                                        <i class="feather feather-user me-3 fs-16 my-auto"></i>
-                                        <div class="mt-1">Profile</div>
+                                <div class="dropdown header-notify my-auto ms-5">
+                                    <?php if(Session::has('business_id')){ ?>
+                                    <div class="me-3 mt-0 mt-sm-1 d-block text-center">
+                                        <span
+                                            class="fs-14 mb-0"><b><?= $Helper->GenderCheck() != '' ? $Helper->GenderCheck() : '' ?>{{ Session::get('login_name') }}</b></span><br>
+                                        <span class="text-muted mt-0">
+                                            <b> <?= $Helper->RoleIdToName() ?></b>
+                                        </span>
+                                    </div>
+                                    <?php }else{  ?>
+                                    <div class="mt-0 mt-sm-1 d-block text-center">
+                                        <span class="fs-14 mb-0">Login User</span><br>
+                                        <span class="text-muted mt-0">Designation</span>
+                                    </div>
+                                    <?php } ?>
+                                </div>
+
+                                <div class="dropdown profile-dropdown">
+                                    <a href="javascript:void(0);" class="nav-link  ps-0 leading-none"
+                                        data-bs-toggle="dropdown">
+                                        <span>
+                                            <img src="{{ asset('business_logo/' . Session::get('login_business_image')) }}"
+                                                alt="img" class="avatar avatar-md rounded-circle">
+                                        </span>
                                     </a>
-                                    <a class="dropdown-item d-flex" href="{{url('/subscription')}}">
-                                        <i class="feather feather-award me-3 fs-16 my-auto"></i>
-                                        <div class="mt-1">Upgrade</div>
-                                    </a>
-                                    <a class="dropdown-item d-flex" href="editprofile.html">
-                                        <i class="feather feather-settings me-3 fs-16 my-auto"></i>
-                                        <div class="mt-1">Settings</div>
-                                    </a>
-                                    </a>
-                                    <a class="dropdown-item d-flex" href="{{url('/logout')}}">
-                                        <i class="feather feather-power me-3 fs-16 my-auto"></i>
-                                        <div class="mt-1">Log Out</div>
-                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated">
+                                        <a class="dropdown-item d-flex" href="profile1.html">
+                                            <i class="feather feather-user me-3 fs-16 my-auto"></i>
+                                            <div class="mt-1">Profile</div>
+                                        </a>
+                                        <a class="dropdown-item d-flex" href="{{ url('/subscription') }}">
+                                            <i class="feather feather-award me-3 fs-16 my-auto"></i>
+                                            <div class="mt-1">Upgrade</div>
+                                        </a>
+                                        <a class="dropdown-item d-flex" href="editprofile.html">
+                                            <i class="feather feather-settings me-3 fs-16 my-auto"></i>
+                                            <div class="mt-1">Settings</div>
+                                        </a>
+                                        </a>
+                                        <a class="dropdown-item d-flex" href="{{ url('/logout') }}">
+                                            <i class="feather feather-power me-3 fs-16 my-auto"></i>
+                                            <div class="mt-1">Log Out</div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
