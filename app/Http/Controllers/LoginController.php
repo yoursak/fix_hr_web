@@ -12,11 +12,14 @@ use App\Mail\AuthMailer;
 use App\Helpers\Layout;
 use DB;
 use Session;
-use App\Models\admin\LoginAdmin;
 use App\Helpers\Central_unit;
-
+use App\Models\LoginAdmin;
+use App\Models\LoginEmployee;
+use App\Models\PendingAdmin;
+use App\Models\ModelHasPermission;
+use App\Models\BusinessDetailsList;
+use App\Models\EmployeePersonalDetail;
 use App\Helpers\MasterRulesManagement\RulesManagement;
-
 use Illuminate\Support\Facades\Artisan;
 
 class LoginController extends BaseController
@@ -36,7 +39,7 @@ class LoginController extends BaseController
         $request->session()->put('email', $request->email);
         $User = LoginAdmin::where('email', $request->email)->first();
         // dd($request->all());
-        $first_login = DB::table('pending_admins')->where('emp_email', $request->email)->first();
+        $first_login = PendingAdmin::where('emp_email', $request->email)->first();
         $otp = rand(100000, 999999);
         if (isset($User) != false) {
             $details = [
@@ -80,7 +83,7 @@ class LoginController extends BaseController
                 // isset()
                 if (isset($sendMail)) {
 
-                    $first = DB::table('pending_admins')->where('emp_email', $request->email)->update(['otp' => $otp]);
+                    $first = PendingAdmin::where('emp_email', $request->email)->update(['otp' => $otp]);
                     // dd($otp);
                     return view('auth.admin.otp');
                 }
@@ -106,9 +109,9 @@ class LoginController extends BaseController
             $cardType = $request->input('card_type1');
             $actualCardType = $cardType[0];
             $businessId = $cardType[1];
-            $mainloodLoad1 = DB::table('business_details_list')->where('business_id', $businessId)->first();
+            $mainloodLoad1 = BusinessDetailsList::where('business_id', $businessId)->first();
             // model_has_permission 
-            $load = DB::table('model_has_permissions')->where('business_id', $businessId)->first();
+            $load = ModelHasPermission::where('business_id', $businessId)->first();
 
             if ($actualCardType === 'owner') {
                 // Set session data for the owner card
@@ -137,8 +140,8 @@ class LoginController extends BaseController
             $branchId1 = $cardType1[2];
 
             if ($actualCardType1 === 'admin') {
-                $mainloodLoad2 = DB::table('employee_personal_details')->where('business_id', $businessId1)->where('emp_email', Session::get('email'))->first();
-                $infoBusinessDetails = DB::table('business_details_list')->where('business_id', $businessId1)->first();
+                $mainloodLoad2 = EmployeePersonalDetail::where('business_id', $businessId1)->where('emp_email', Session::get('email'))->first();
+                $infoBusinessDetails = BusinessDetailsList::where('business_id', $businessId1)->first();
                 if ($mainloodLoad2) {
                     DB::table('login_admin')->where('business_id', $businessId1)->where('email', Session::get('email'))->update(['is_verified' => 1]);
                     Session::put('user_type', 'admin');
@@ -160,8 +163,8 @@ class LoginController extends BaseController
         }
 
         // if ($actualCardType === 'superadmin') {
-        //     $mainloodLoad2 = DB::table('employee_personal_details')->where('business_id', $businessId)->where('emp_email', $request->session()->get('email'))->first();
-        //     $infoBusinessDetails = DB::table('business_details_list')->where('business_id', $businessId)->first();
+        //     $mainloodLoad2 = EmployeePersonalDetail::where('business_id', $businessId)->where('emp_email', $request->session()->get('email'))->first();
+        //     $infoBusinessDetails = BusinessDetailsList::where('business_id', $businessId)->first();
         //     if ($mainloodLoad2) {
         //         Session::put('user_type', 'superadmin');
         //         Session::put('business_id', $businessId);
@@ -189,8 +192,8 @@ class LoginController extends BaseController
         if (isset($email) && isset($otp)) {
 
             $check_otp = DB::table('login_admin')->where('email', $email)->where('otp', $otp)->first();
-            $check_otp_for_first = DB::table('pending_admins')->where('emp_email', $email)->where('otp', $otp)->first();
-            $employee_check = DB::table('employee_personal_details')->where('emp_email', $email)->first();
+            $check_otp_for_first = PendingAdmin::where('emp_email', $email)->where('otp', $otp)->first();
+            $employee_check = EmployeePersonalDetail::where('emp_email', $email)->first();
 
             if (isset($check_otp)) {
                 if ($check_otp != null) {
@@ -214,7 +217,7 @@ class LoginController extends BaseController
 
                 if (isset($now_is_admin)) {
 
-                    $approved = DB::table('pending_admins')->where('business_id', $check_otp_for_first->business_id)->where('emp_email', $check_otp_for_first->emp_email)->delete();
+                    $approved = PendingAdmin::where('business_id', $check_otp_for_first->business_id)->where('emp_email', $check_otp_for_first->emp_email)->delete();
                     if (isset($approved)) {
                         Alert::success('', "Login Successfully  Now you are an Admin at FixingDots");
 
@@ -244,11 +247,11 @@ class LoginController extends BaseController
     //     ->where('email', $email)
     //      ->get();
     //     // ->select('universal_roles_define.*')->get();
-    //     $businessIDtoName = DB::table('business_details_list')->where('business_email', $email)->first();
+    //     $businessIDtoName = BusinessDetailsList::where('business_email', $email)->first();
 
     //     $check_otp = DB::table('login_admin')->where('email', $email)->where('otp', $otp)->first();
-    //     $check_otp_for_first = DB::table('pending_admins')->where('emp_email', $email)->where('otp', $otp)->first();
-    //     $employee_check = DB::table('employee_personal_details')->where('emp_email', $email)->first();
+    //     $check_otp_for_first = PendingAdmin::where('emp_email', $email)->where('otp', $otp)->first();
+    //     $employee_check = EmployeePersonalDetail::where('emp_email', $email)->first();
     //     if (isset($check_otp)) {
 
 
@@ -294,7 +297,7 @@ class LoginController extends BaseController
     {
         Session::flush(); // removes all session data
         Session()->flush();
-        return  redirect('login');//->to();
+        return  redirect('login'); //->to();
         // return view('auth.admin.thanks');
     }
 }

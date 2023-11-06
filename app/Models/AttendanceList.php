@@ -14,10 +14,16 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property int $id
  * @property bool $working_from_method
- * @property bool $punch_selfie_mode
- * @property bool $punch_qr_mode
- * @property bool $punch_location_tab_mode
+ * @property bool $method_auto
+ * @property bool $method_manual
+ * @property bool $marked_in_mode
+ * @property bool $marked_out_mode
+ * @property bool $active_qr_mode
+ * @property bool $active_selfie_mode
+ * @property bool $active_face_mode
+ * @property bool $active_location_tab_mode
  * @property bool $attendance_status
+ * @property string|null $attendance_shift
  * @property Carbon|null $punch_date
  * @property string|null $emp_id
  * @property string|null $business_id
@@ -45,23 +51,34 @@ class AttendanceList extends Model
 {
 	protected $table = 'attendance_list';
 
-	protected $casts = [
-		'working_from_method' => 'bool',
-		'punch_selfie_mode' => 'bool',
-		'punch_qr_mode' => 'bool',
-		'punch_location_tab_mode' => 'bool',
-		'attendance_status' => 'bool',
-		'punch_date' => 'datetime',
-		'punch_in_time' => 'datetime',
-		'punch_out_time' => 'datetime'
-	];
+	// protected $casts = [
+	// 	'working_from_method' => 'bool',
+	// 	'method_auto' => 'bool',
+	// 	'method_manual' => 'bool',
+	// 	'marked_in_mode' => 'bool',
+	// 	'marked_out_mode' => 'bool',
+	// 	'active_qr_mode' => 'bool',
+	// 	'active_selfie_mode' => 'bool',
+	// 	'active_face_mode' => 'bool',
+	// 	'active_location_tab_mode' => 'bool',
+	// 	'attendance_status' => 'bool',
+	// 	'punch_date' => 'datetime',
+	// 	'punch_in_time' => 'datetime',
+	// 	'punch_out_time' => 'datetime'
+	// ];
 
 	protected $fillable = [
 		'working_from_method',
-		'punch_selfie_mode',
-		'punch_qr_mode',
-		'punch_location_tab_mode',
+		'method_auto',
+		'method_manual',
+		'marked_in_mode',
+		'marked_out_mode',
+		'active_qr_mode',
+		'active_selfie_mode',
+		'active_face_mode',
+		'active_location_tab_mode',
 		'attendance_status',
+		'attendance_shift',
 		'punch_date',
 		'emp_id',
 		'business_id',

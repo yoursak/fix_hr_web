@@ -22,11 +22,11 @@ use App\Models\admin\DesignationList;
  Class Layout
  {
     public static function  SidebarList(){
-       $title = DB::table("sidebar")->where("status",1)->get();
+       $title = DB::table("static_sidebar")->where("status",1)->get();
       return $title;
     }
     public static function  SidebarMenu(){
-      $menu = DB::table("sidebar_menu")->where('status',1)->get();
+      $menu = DB::table("static_sidebar_menu")->where('status',1)->get();
       return $menu;
     }
 

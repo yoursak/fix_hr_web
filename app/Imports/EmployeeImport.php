@@ -17,9 +17,11 @@ class EmployeeImport implements ToCollection, WithStyles, WithHeadings
 {
     public function collection(Collection $rows)
     {
+        dd($rows);  
         // Skip the first row (header row) and start from the second row (index 1)
         foreach ($rows->skip(1) as $row) {
-            $genderType = $row[2]; // Assuming gender_type is in the third column
+            $genderType = $row[6]; // Assuming gender_type is in the third column
+            // dd($genderType);
 
             // Look up the id value from the employee_gender table
             $load = DB::table('employee_gender')

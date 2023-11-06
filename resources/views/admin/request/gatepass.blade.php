@@ -12,7 +12,7 @@
         $Branch = $centralUnit->BranchList();
         $i = 0;
         $j = 1;
-       
+
         // foreach ($Department as $item) {
         //     $i++;
         // }
@@ -37,7 +37,7 @@
                 </div>
                 <div class="card-body ">
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-lg-2">
                             <div class="form-group">
                                 <p class="form-label">Branch</p>
                                 <select name='branch_id' id="country-dd" class="form-control" required>
@@ -52,22 +52,22 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-lg-2">
                             <div class="form-group">
                                 <p class="form-label">Department</p>
                                 <div class="form-group mb-3">
                                     <select id="state-dd" name="department_id" class="form-control" required>
                                         <option value="">--- Select Deparment ---</option>
                                         @foreach ($Department as $data)
-                                        <option value="{{ $data->depart_id }}">
-                                            {{ $data->depart_name }}
-                                        </option>
-                                    @endforeach
+                                            <option value="{{ $data->depart_id }}">
+                                                {{ $data->depart_name }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-lg-2">
                             <div class="form-group">
                                 <p class="form-label">Designation</p>
                                 <div class="form-group mb-3">
@@ -114,7 +114,7 @@
                                     @endphp
                                     <tr>
                                         <style>
-                                            td{
+                                            td {
                                                 font-size: 14px;
                                             }
                                         </style>
@@ -126,9 +126,9 @@
 
                                                 <div class="me-3 mt-0 mt-sm-1 d-block">
                                                     <h6 class="mb-1 fs-14">
-                                                        <a href="{{route('employeeProfile',[$item->emp_id])}}">
-                                                        {{ $item->emp_name }}&nbsp;{{ $item->emp_mname }}&nbsp;{{ $item->emp_lname }}
-                                                    </a>
+                                                        <a href="{{ route('employeeProfile', [$item->emp_id]) }}">
+                                                            {{ $item->emp_name }}&nbsp;{{ $item->emp_mname }}&nbsp;{{ $item->emp_lname }}
+                                                        </a>
                                                     </h6>
                                                     <p class="text-muted mb-0 fs-12">
                                                         <?= $nss->DesingationIdToName($item->designation_id) ?></p>
@@ -156,8 +156,8 @@
                                             @if (in_array('Miss Punch.Update', $permissions))
                                                 <a class="btn btn-primary btn-icon btn-sm " href="javascript:void(0);"
                                                     id="edit_btn_modal" onclick="openEditModel(this)"
-                                                    data-id='<?= $item->id ?>' data-status='<?= $item->status ?>' data-bs-toggle="modal" data
-                                                    data-bs-target="#updateempmodal">
+                                                    data-id='<?= $item->id ?>' data-status='<?= $item->status ?>'
+                                                    data-bs-toggle="modal" data data-bs-target="#opendEditModelId">
                                                     <i class="feather feather-edit" data-bs-toggle="tooltip"
                                                         data-original-title="View"></i>
                                                 </a>
@@ -194,7 +194,7 @@
                     <h5 class="modal-title ms-2 " id="exampleModalLongTitle">Gatepass Request</h5>
                     <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
                             aria-hidden="true">&times;</span></button>
-                </div>  
+                </div>
                 <form action="{{ route('admin.gatepassapprove') }}" method="post">
                     @csrf
                     <input type="text" id="editGatepassId" name="id" hidden>
@@ -203,8 +203,8 @@
                         <div class="form-row">
                             <div class="form-group  col-md-4">
                                 <label for="inputEmail4">Branch</label>
-                                <input type="email" class="form-control" style="background-color:F1F4FB "
-                                    id="editBranch" placeholder="Email" value="" readonly>
+                                <input type="email" class="form-control" style="background-color:F1F4FB " id="editBranch"
+                                    placeholder="Email" value="" readonly>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="inputPassword4">Depratment</label>
@@ -233,29 +233,56 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group  col-md-3 col-sm-3">
+                            <div class="form-group  col-md-4">
                                 <label for="inputPassword4">Date <i class="fa fa-calendar" data-bs-toggle="tooltip"
                                         title="" data-bs-original-title="fa fa-calendar"
                                         aria-label="fa fa-calendar"></i></label>
                                 <input type="text" class="form-control" id="editDate" placeholder="" value=""
                                     readonly>
                             </div>
-                            <div class="form-group    col-md-3 col-sm-3">
+                            {{-- <div class="form-group    col-md-3 col-sm-3">
                                 <label for="inputPassword4">Going Through</label>
                                 <input type="text" class="form-control" id="editGoingThrough" placeholder=""
                                     value="" readonly>
-                            </div>
+                            </div> --}}
 
-                            <div class="form-group  col-md-3 col-sm-3 ">
+                            <div class="form-group  col-md-4">
                                 <label for="inputPassword4">Out Time</label>
-                                <input type="time" class="form-control" id="editOutTime" placeholder=""
-                                    value="" readonly>
+                                <input type="time" name="out_time" class="form-control" id="editOutTime"
+                                    placeholder="" value="">
                             </div>
-                            <div class="form-group  col-md-3 col-sm-3 ">
+                            <div class="form-group  col-md-4">
                                 <label for="inputPassword4">In Time</label>
                                 <input type="time" class="form-control" id="editInTime" name="in_time"
                                     value="" placeholder="">
                             </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="inputPassword4">Going Through</label>
+                                {{-- <input type="text" class="form-control" id="editGoingThrough" placeholder=""
+                                    value="" readonly> --}}
+                                    <select name="time_type" class="form-control" 
+                                    value="" id="editGoingThrough">
+                                    <option value="">Select Type</option>
+                                    @foreach ($going_through as $goingthrough)
+                                        <option value="{{ $goingthrough->id }}">
+                                            {{ $goingthrough->going_through }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="inputPassword4">Source </label>
+                                <input type="text" class="form-control" id="editSource" placeholder=""
+                                    value="" readonly>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="inputPassword4">Destination </label>
+                                <input type="text" class="form-control" id="editDestination" placeholder=""
+                                    value="" readonly>
+                            </div>
+
                         </div>
                         <div class="form-row">
                             <div class="form-group col">
@@ -324,15 +351,15 @@
             $("#opendEditModelId").modal("show");
             var id = $(context).data('id');
             var status = $(context).data('status');
- 
+
             $('#editGatepassId').val(id);
             $('#status').val(status);
-           
-            if(status==1){
+
+            if (status == 1) {
                 $('#editModalFooter').addClass('d-none');
                 $('#remarks').addClass('d-none');
-                $('#RemarkTextarea').attr('readonly', true);  
-            }else if(status==2){ 
+                $('#RemarkTextarea').attr('readonly', true);
+            } else if (status == 2) {
                 $('#remarks').removeClass('d-none');
                 $('#editModalFooter').addClass('d-none');
                 $('#RemarkTextarea').attr('readonly', true);
@@ -340,7 +367,7 @@
             } else {
                 $('#editModalFooter').removeClass('d-none');
                 $('#remarks').addClass('d-none');
-                $('#RemarkTextarea').attr('readonly', false);   
+                $('#RemarkTextarea').attr('readonly', false);
                 $('#editInTime').attr('readonly', false);
             }
             $.ajax({
@@ -356,17 +383,20 @@
                 success: function(result) {
                     console.log(result);
                     if (result.get.id) {
-                        var FullName = 
-                        $('#editBranch').val(result.get.branch_name);
+                        var FullName =
+                            $('#editBranch').val(result.get.branch_name);
                         $('#editDepratment').val(result.get.depart_name);
                         $('#editDesignation').val(result.get.desig_name);
                         $('#editDesignation').val(result.get.desig_name);
-                        $('#editEmpName').val(result.get.emp_name+' '+(result.get.emp_mname !=null ? result.get.emp_mname:'')+' '+result.get.emp_lname);
+                        $('#editEmpName').val(result.get.emp_name + ' ' + (result.get.emp_mname != null ? result
+                            .get.emp_mname : '') + ' ' + result.get.emp_lname);
                         $('#editEmpId').val(result.get.emp_id);
                         $('#editMobileNo').val(result.get.emp_mobile_no);
                         $('#editDate').val(result.get.date);
                         $('#editGoingThrough').val(result.get.going_through);
                         $('#editMobileNo').val(result.get.emp_mobile_number);
+                        $('#editSource').val(result.get.source);
+                        $('#editDestination').val(result.get.destination);
                         // editMobileNo
                         $('#editOutTime').val(result.get.out_time);
                         $('#editInTime').val(result.get.in_time);
@@ -378,6 +408,7 @@
                 },
             });
         }
+
         function remark() {
             $('#remarks').removeClass('d-none');
             $('#CancelBtn_MGA').addClass('d-none');
@@ -460,13 +491,13 @@
                                         (el.status == 1 ?
                                             '<span class="badge badge-success-light">Approved</span>' :
                                             (el.status == 2 ?
-                                            `<span class="badge badge-warning-light">Declined</span>` :
+                                                `<span class="badge badge-warning-light">Declined</span>` :
                                                 ' <span class="badge badge-primary-light">Requested</span>'
                                             ))) + '</td>' +
                                     '<td>'
                                 newRow += `<a class="btn btn-primary m-1 btn-icon btn-sm" href="javascript:void(0);"
                             onclick="openEditModel(this)" data-id="${el.id}"  data-status="${el.status}"
-                            data-bs-toggle="modal" data-bs-target="#updateempmodal">
+                            data-bs-toggle="modal" data-bs-target="#opendEditModelId">
                             <i class="feather feather-edit" data-bs-toggle="tooltip"
                                 data-original-title="View"></i>
                            </a>`;

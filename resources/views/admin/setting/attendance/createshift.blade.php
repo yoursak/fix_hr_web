@@ -335,7 +335,8 @@
                             <tbody>
                                 @empty(!$attendaceShift)
                                     @php
-                                        $j = 1;
+                                    
+                                       $j = 1;
                                     @endphp
                                     @foreach ($attendaceShift as $item)
                                         <tr>
@@ -346,17 +347,21 @@
 
                                             <td class="font-weight-semibold">
                                                 <?php
-                                          $loadss = DB::table('attendance_shift_type_items')
+                                          $loadss = DB::table('policy_attendance_shift_type_items')
                                               ->where('attendance_shift_id', $item->id)
                                               ->first();
-                                          
+                                              $ShiftHour=(int)($loadss->shift_hr??0);
+                                              $ShiftMin=(int)($loadss->shift_min??0);
+                                            //   print_r($ShiftMin);
+                                    
+                                        //   dd($ShiftMin);  
                                           if ($power->AttedanceShiftCheckItems($item->id) == 1) {
                                               echo 'Fixed Shift' . $power->Convert24To12($loadss->shift_start) . '-' . $power->Convert24To12($loadss->shift_end);
                                           }
                                           if ($power->AttedanceShiftCheckItems($item->id) == 2) {
                                               echo 'Rotational Shift';
                                               foreach (
-                                                  DB::table('attendance_shift_type_items')
+                                                  DB::table('policy_attendance_shift_type_items')
                                                       ->where('attendance_shift_id', $item->id)
                                                       ->where('business_id', Session::get('business_id'))
                                                       ->get()
@@ -367,7 +372,7 @@
                                                 <?php }
                                           }
                                           if ($power->AttedanceShiftCheckItems($item->id) == 3) {
-                                              echo 'Open Shift Total Work: ' . $loadss->shift_hr . ' Hour ' . $loadss->shift_min . ' Min';
+                                              echo 'Open Shift Total Work: ' . $ShiftHour . ' Hour ' . $ShiftMin. ' Min';
                                           }
                                           ?>
                                             </td>
@@ -388,8 +393,8 @@
                                                         data-shift_start='<?= $loadss->shift_start ?>'
                                                         data-shift_end='<?= $loadss->shift_end ?>'
                                                         data-break_min='<?= $loadss->break_min ?>'
-                                                        data-is_paid='<?= (int) $loadss->is_paid ?>'
-                                                        data-work_hr='<?= $loadss->work_hr ?>'
+                                                        data-is_paid='<?= (int) $loadss->is_paid ?? 0 ?>'
+                                                      data-work_hr='<?= $loadss->work_hr ?>'
                                                         data-work_min='<?= $loadss->work_min ?>' data-bs-toggle="modal"
                                                         data-bs-target="#fixiedshift">
                                                         <i class="feather feather-edit" data-bs-toggle="tooltip"
@@ -402,14 +407,14 @@
                                                         href="javascript:void(0);" onclick="openEditRotationalModel(this)"
                                                         data-id='<?= $item->id ?>'
                                                         data-shift_name='<?= $item->shift_type_name ?>'
-                                                        data-weekly_repeat={{ $item->shift_weekly_repeat }}
+                                                        data-weekly_repeat='<?= $item->shift_weekly_repeat ?>'
                                                         data-shift_type='<?= $power->AttedanceShiftCheckItems($item->id) ?>'
-                                                        data-shift_start='<?= $loadss->shift_start ?>'
-                                                        data-shift_end='<?= $loadss->shift_end ?>'
-                                                        data-break_min='<?= $loadss->break_min ?>'
-                                                        data-is_paid='<?= (int) $loadss->is_paid ?>'
-                                                        data-work_hr='<?= $loadss->work_hr ?>'
-                                                        data-work_min='<?= $loadss->work_min ?>' data-bs-toggle="modal"
+                                                        data-shift_start='<?= $loadss->shift_start ?? 0 ?>'
+                                                        data-shift_end='<?= $loadss->shift_end ?? 0 ?>'
+                                                        data-break_min='<?= $loadss->break_min ?? 0 ?>'
+                                                       data-is_paid='<?= $loadss->is_paid ?? 0  ?>'
+                                                        data-work_hr='<?= $loadss->work_hr ?? 0 ?>'
+                                                        data-work_min='<?= $loadss->work_min ?? 0 ?>' data-bs-toggle="modal"
                                                         data-bs-target="#openEditRotationalModel">
                                                         <i class="feather feather-edit" data-bs-toggle="tooltip"
                                                             data-original-title="View/Edit"></i>
@@ -420,14 +425,13 @@
                                                     <a class="btn action-btns  btn-primary btn-icon btn-sm"
                                                         href="javascript:void(0);" onclick="openEditOpenShiftModel(this)"
                                                         data-id='<?= $item->id ?>'
-                                                        data-shift_name='<?= $item->shift_type_name ?>'
+                                                        data-shift_name='<?= $item->shift_type_name ?? 0 ?>'
                                                         data-shift_type='<?= $power->AttedanceShiftCheckItems($item->id) ?>'
-                                                        data-shift_hour='<?= $loadss->shift_hr ?>'
-                                                        data-shift_min='<?= $loadss->shift_min ?>'
-                                                        data-break_min='<?= $loadss->break_min ?>'
-                                                        data-is_paid='<?= (int) $loadss->is_paid ?>'
-                                                        data-work_hr='<?= $loadss->work_hr ?>'
-                                                        data-work_min='<?= $loadss->work_min ?>' data-bs-toggle="modal"
+                                                        data-shift_hour='<?= $ShiftHour ?>' data-shift_min='<?= $ShiftMin ?>'
+                                                        data-break_min='<?= $loadss->break_min ?? 0 ?>'
+                                                        data-is_paid='<?= $loadss->is_paid ?? 0?>'
+                                                        data-work_hr='<?= $loadss->work_hr ?? 0 ?>'
+                                                        data-work_min='<?= $loadss->work_min ?? 0 ?>' data-bs-toggle="modal"
                                                         data-bs-target="#openshiftModel">
                                                         <i class="feather feather-edit" data-bs-toggle="tooltip"
                                                             data-original-title="View/Edit"></i>
@@ -591,7 +595,7 @@
                                                 <label class="form-label">Repeat Shift in Every <input
                                                         id="updateWeekRepeat" class="mx-2 text-center" type="number"
                                                         name="update_repeat_week" min="1" max="6"
-                                                        style="width: 3rem" required>Weeks</label>
+                                                        value="0" style="width: 3rem">Weeks</label>
                                             </div>
                                             <div class="col-xl-11">
                                                 <label class="form-label"> Rotational Shift Name</label>
@@ -1773,8 +1777,7 @@
                                             <div class="col-11 my-1 mb-3">
                                                 <label class="form-label">Repeat Shift in Every <input
                                                         class="mx-2 text-center" type="number" name="repeat_week"
-                                                        min="1" max="6" style="width: 3rem"
-                                                        required>Weeks</label>
+                                                        min="1" max="6" style="width: 3rem">Weeks</label>
                                             </div>
                                             <div class="col-10 col-xl-11">
                                                 <label class="form-label"> Rotational Shift Name</label>

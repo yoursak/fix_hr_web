@@ -105,8 +105,11 @@
             $Employee = $centralUnit->EmployeeDetails();
             $nss = new App\Helpers\Central_unit();
             $EmpID = $nss->EmpPlaceHolder();
-            $Count = $centralUnit->AttendacnceGetCount();
+            $Count = $centralUnit->AttendanceGetCount();
+
+            // dd($Count);
             // dd($Count[4]);
+
         @endphp
         <!-- ROW -->
 
@@ -119,6 +122,10 @@
         </div>
         <div class="row">
             @php
+                use App\Models\PolicySettingRoleAssignPermission;
+                use App\Models\PolicySettingRoleCreate;
+                use App\Models\StaticStatusAttendance;
+
                 $root = new App\Helpers\Central_unit();
                 $AttList = $root->GetAttDetails();
                 $nss = new App\Helpers\Central_unit();
@@ -148,15 +155,17 @@
                                 <h5 class="mb-0 mt-3">Absent</h5>
                             </div>
                             <div class="col-6 col-md-4 col-sm-6 col-xl-2 text-center py-5">
-                                <span class="avatar avatar-md bradius fs-20 bg-warning-transparent">0</span>
+                                <span
+                                    class="avatar avatar-md bradius fs-20 bg-warning-transparent">{{ $Count[3] }}</span>
                                 <h5 class="mb-0 mt-3">Half Days</h5>
                             </div>
                             <div class="col-6 col-md-4 col-sm-6 col-xl-2 text-center py-5 ">
-                                <span class="avatar avatar-md bradius fs-20 bg-orange-transparent">{{ $Count[4] }}</span>
+                                <span
+                                    class="avatar avatar-md bradius fs-20 bg-orange-transparent">{{ $Count[4] }}</span>
                                 <h5 class="mb-0 mt-3">Late</h5>
                             </div>
                             <div class="col-6 col-md-4 col-sm-6 col-xl-2 text-center py-5">
-                                <span class="avatar avatar-md bradius fs-20 bg-pink-transparent">{{ $LeaveCount[3] }}</span>
+                                <span class="avatar avatar-md bradius fs-20 bg-pink-transparent">{{ $Count[5] }}</span>
                                 <h5 class="mb-0 mt-3">Leave</h5>
                             </div>
                         </div>
@@ -170,9 +179,11 @@
                             <span id="clocktimer2" class="border-0"></span>
                             <label class="form-label">Pending Approvals for {{ $approvalPendingCount }} days</label>
                         </div>
-                        <form action="{{ url('admin/attendance/pending_attendance_approve') }}" method="POST">
+                        <form action="{{ route('attendanceMark.checkboxUpdate') }}" method="POST">
+                            @csrf
                             <div class="btn-list text-center mt-5 mb-5">
-                                <button type="submit" class="btn ripple btn-primary">Approve</button>
+                                <button type="submit" class="btn ripple btn-primary" name="pendingAll"
+                                    value="{{ $approvalPendingCount }}">Approve</button>
                                 {{-- <a href="javascript:void(0);" class="btn ripple btn-primary disabled">Punch Out</a> --}}
                             </div>
                         </form>
@@ -277,6 +288,7 @@
                                             <th class="border-bottom-0">Status</th>
                                             <th class="border-bottom-0">Date</th>
                                             <th class="border-bottom-0">Punch In</th>
+                                            <th class="border-bottom-0">Atten-Mode</th>
                                             <th class="border-bottom-0">Punch Out</th>
                                             <th class="border-bottom-0">Working Hour</th>
                                             <th class="border-bottom-0">Late By</th>
@@ -295,14 +307,14 @@
                                                 $centralUnit = new App\Helpers\Central_unit();
                                                 $ruleMange = new App\Helpers\MasterRulesManagement\RulesManagement();
                                                 $inTime = $item->punch_in_time;
-                                                // dd($item->punch_in_time);
+                                                // dd($item);
                                                 $outTime = $item->punch_out_time;
                                                 $grachTimeHr = $item->grace_time_hr;
                                                 $grachTimeMin = $item->grace_time_min;
                                                 $shiftStart = $item->shift_start;
                                                 $timeDifference = $centralUnit->CalculateTimeDifference($inTime, $outTime);
-                                                $resCode = $centralUnit->getEmpAttSumm(['emp_id' => 'IT009', 'punch_date' => date('2023-10-27')]);
-                                                // dd(date('Y-m-d',strtotime($item->punch_date)));
+                                                $resCode = $centralUnit->getEmpAttSumm(['emp_id' => $item->emp_id, 'punch_date' => date('Y-m-d', strtotime($item->punch_date))]);
+                                                // dd($resCode);
                                                 $lateBy = $ruleMange->CalculateLateBy($shiftStart, $inTime, $grachTimeHr, $grachTimeMin);
                                                 $hours = str_pad($timeDifference->h, 2, '0', STR_PAD_LEFT);
                                                 $minutes = str_pad($timeDifference->i, 2, '0', STR_PAD_LEFT);
@@ -312,17 +324,20 @@
                                                 // dd($status);
                                             @endphp
                                             <tr>
-                                                <input type="text" name="id[]" id="id"
-                                                    value="{{ $item->id }}" hidden>
+
+                                                <input type="text" name="emp_id[]" id="id"
+                                                    value="{{ $item->emp_id }}" hidden>
+
+
                                                 @if ($item->attendance_status == 0)
                                                     <input type="text" name="myAttendanceCheck[]"
                                                         id="myAttendanceCheck{{ $item->id }}"
-                                                        class="myAttendanceCheck" onclick="setCheckboxValue(this, 1)"
+                                                        class="myAttendanceCheck"
                                                         value="<?= $item->attendance_status != 0 ? '1' : '0' ?>" hidden>
                                                 @else
                                                     <input type="text" name="myAttendanceCheck[]"
                                                         id="myAttendanceCheck{{ $item->id }}" class=""
-                                                        value="<?= $item->attendance_status != 0 ? '1' : '0' ?>" hidden>
+                                                        value="<?= $item->attendance_status != 0 ? '1' : '0' ?>">
                                                 @endif
                                                 <td>{{ $count++ }}</td>
                                                 <td>
@@ -345,28 +360,30 @@
                                                 <td>
                                                     @php
                                                         $statusLabels = [
-                                                            0 => 'Method Not Allowed',
                                                             1 => 'Present',
                                                             2 => 'Absent',
                                                             3 => 'Present',
                                                             4 => 'Mispunch',
-                                                            5 => 'Early',
+                                                            5 => 'Working',
                                                             6 => 'Holiday',
                                                             7 => 'Week Off',
                                                             8 => 'Halfday',
                                                             9 => 'Present',
+                                                            10 => 'Paid Leave',
+                                                            11 => 'Unpaid Leave',
                                                         ];
                                                         $badgeColors = [
-                                                            0 => 'danger',
                                                             1 => 'success',
                                                             2 => 'danger',
                                                             3 => 'success',
                                                             4 => 'secondary',
-                                                            5 => 'Not Marked',
+                                                            5 => 'secondary',
                                                             6 => 'primary',
                                                             7 => 'primary',
                                                             8 => 'danger',
                                                             9 => 'success',
+                                                            10 => 'success',
+                                                            11 => 'danger',
                                                         ];
                                                     @endphp
 
@@ -375,6 +392,26 @@
                                                 </td>
                                                 <td>{{ $item->punch_date }}</td>
                                                 <td><?= $ruleMange->Convert24To12($item->punch_in_time) ?></td>
+                                                <td>
+                                                    @if ($item->marked_in_mode == 1)
+                                                        <span class="">QR Code</span>
+                                                    @endif
+                                                    @if ($item->marked_in_mode == 2)
+                                                        <span class="">Face ID </span>
+                                                    @endif
+                                                    @if ($item->marked_in_mode == 3)
+                                                        <span class="">Selfie </span>
+                                                    @endif
+                                                    @if ($item->marked_out_mode == 1)
+                                                        <span class=""> | QR Code</span>
+                                                    @endif
+                                                    @if ($item->marked_out_mode == 2)
+                                                        <span class=""> | Face ID</span>
+                                                    @endif
+                                                    @if ($item->marked_out_mode == 3)
+                                                        <span class=""> | Selfie</span>
+                                                    @endif
+                                                </td>
                                                 <td><?= $item->emp_today_current_status == '2' ? $ruleMange->Convert24To12($item->punch_out_time) : '' ?>
                                                 </td>
                                                 <td><?= $item->total_working_hour !== null && $item->total_working_hour != 'undefined' ? date('H:i', strtotime($item->total_working_hour)) . ' Min.' : '' ?>
@@ -391,6 +428,9 @@
                                                     @endif
                                                 </td>
                                                 <td>
+                                                    <input type="text" name="id[]" id="id"
+                                                        value="{{ $item->id }}" hidden>
+
                                                     {{-- <input type="text" name="leBhaiId" value="{{ $item->id }}" hidden> --}}
                                                     <div class="d-flex justify-content-end">
                                                         @if ($item->attendance_status == 0)
@@ -400,7 +440,7 @@
                                                                     onclick="checkboxcheck(this, {{ $item->id }})"
                                                                     type="checkbox"
                                                                     class="checkbox-checkbox custom-control-input-success"
-                                                                    name="checkbox[]" value="1">
+                                                                    name="checkbox[]" value="{{ $item->id }}">
                                                                 <span class="custom-control-label-md success"></span>
                                                             </label>
                                                         @endif
@@ -428,6 +468,7 @@
                                                         </a>
                                                     </div>
                                                 </td>
+
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -435,7 +476,8 @@
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button class="btn btn-primary float-end" id="approveAll" type="submit">Approve
+                            <button class="btn btn-primary float-end" name="approveAll" value="1" id="approveAll"
+                                type="submit">Approve
                                 All</button>
                         </div>
                     </form>
@@ -755,7 +797,7 @@
                                             '<td>' + '' + '</td>' +
                                             '<td>' + el.punch_date + '</td>' +
                                             '<td>' + convert24To12(el
-                                            .punch_in_time) +
+                                                .punch_in_time) +
                                             '</td>' +
                                             '<td>' + (el.emp_today_current_status ==
                                                 '2' ?
@@ -766,7 +808,7 @@
                                                     null &&
                                                     el
                                                     .total_working_hour != undefined
-                                                    ) ?
+                                                ) ?
                                                 (el.total_working_hour.split(":")
                                                     .slice(
                                                         0, 2).join(":")) + ' ' +
@@ -790,7 +832,7 @@
                                                 onclick="checkboxcheck(this, ${el.id})"
                                                 type="checkbox"
                                                 class="checkbox-checkbox custom-control-input-success"
-                                                name="checkbox" value="">
+                                                name="checkbox[]" value="${el.id}">
                                             <span class="custom-control-label-md success"></span>
                                         </label>
                                         ` : '';
@@ -1037,13 +1079,13 @@
             function checkbox_dd(context) {
                 if ($('.custom-control-input-success').prop('checked')) {
                     $('.checkbox-checkbox').prop('checked', true); // Check the checkboxes
-                    $('.checkbox-checkbox').val("1");
-                    $('.myAttendanceCheck').val("1");
+                    // $('.checkbox-checkbox').val("1");
+                    // $('.myAttendanceCheck').val("1");
                     console.log("Universal Check");
                 } else {
                     $('.checkbox-checkbox').prop('checked', false); // Uncheck the checkboxes
-                    $('.checkbox-checkbox').val("0");
-                    $('.myAttendanceCheck').val("0");
+                    // $('.checkbox-checkbox').val("0");
+                    // $('.myAttendanceCheck').val("0");
 
                 }
             }

@@ -67,22 +67,57 @@ Route::middleware(['web', 'logincheck'])->group(function () {
 
 
 // Route::middleware(['web'])->get('/custom-route', [CustomController::class, 'customAction']);
-Route::middleware(['web'])->any('response', [SettingController::class, 'responseSubmit'])->name('responseses');
+Route::get('/payment', function () {
+    return <<<HTML
+<html>
+<head>
+<style>
+  body, html {
+    height: 100%;
+    margin-left: 20%;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
+</head>
+<body>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var iframe = document.createElement("iframe");
+      iframe.src = "https://phplaravel-1083191-3790162.cloudwaysapps.com/phonepe";
+      iframe.style.border = "none";
+      iframe.style.width = "40%";
+      iframe.style.height = "100%";
 
+      document.body.appendChild(iframe);
+
+      document.body.style.overflow = "hidden";
+    });
+  </script>
+</body>
+</html>
+HTML;
+})->name('payment');
+
+
+Route::any('phonepe', [PhonepeController::class, 'phonePe'])->name('phonepe');
+Route::any('response', [PhonepeController::class, 'responseSubmit']);
 
 // , 'web'
 
 // Route::group(['middleware' => ['web', 'email_verified']], function () {
-Route::middleware(['web', 'email_verified'])->group(function () {
+    Route::middleware(['web', 'email_verified'])->group(function () {
     // Route::group(['middleware' => ['email_verified']], function () {
     // Route::middleware(['email_verified','web'])->group(function () {
 
     Route::get('/', [DashboardController::class, 'index']);
     Route::get('/logout', [DashboardController::class, 'logout'])->name('admin.logout');
-
-    Route::middleware(['web'])->get('subscription', [SettingController::class, 'subscription'])->name('subscription');
-    Route::middleware(['web'])->get('phonepe', [SettingController::class, 'phonePe'])->name('phonepe');
     
+    Route::get('subscription', [SettingController::class, 'subscription'])->name('subscription');
+    
+    Route::get('/razorpay_payment', [PhonepeController::class, 'index']);
+    Route::post('/submit_payment', [PhonepeController::class, 'razorpaystore']);
+
     Route::prefix('/setup')->group(function () {
         Route::get('/employee', [setupController::class, 'index']);
         Route::get('/account-settings', [setupController::class, 'accountSetup']);
@@ -105,8 +140,6 @@ Route::middleware(['web', 'email_verified'])->group(function () {
             Route::get('/automation', [setupController::class, 'automationSetup']);
             Route::get('/camera-access', [setupController::class, 'cameraAccessSetup']);
         });
-
-
     });
 
     Route::prefix('/Role-permission')->group(function () {
@@ -146,12 +179,13 @@ Route::middleware(['web', 'email_verified'])->group(function () {
 
 
             // Approval Management
-            Route::get('/approval_settings', 'ApprovalSetings');
+            Route::get('/approval_settings', 'ApprovalSettings');
             Route::post('/approval_submit', 'ApprovalSubmit')->name('approval_submit');
+            Route::get('/approval_get_set/{id}','SetApprovalSectionData');//ajax
         });
     });
 
-    Route::prefix('/admin')->group(function () { 
+    Route::prefix('/admin')->group(function () {
         Route::any('/', [DashboardController::class, 'index']);
 
         Route::prefix('/attendance')->group(function () {
@@ -161,14 +195,16 @@ Route::middleware(['web', 'email_verified'])->group(function () {
             Route::any('/attendance_mark', [AttendanceController::class, 'attendanceMark'])->name('attendanceMark.checkboxUpdate');
             Route::any('/attendace_update', [AttendanceController::class, 'attendanceUpdate'])->name('attendance.update'); // modal attendace update route
             Route::any('/attendance_list_filter', [AttendanceController::class, 'attendanceListFilter']);
+            Route::post('/attendance_calculation', [AttendanceController::class, 'allAttendanceCalculationAjax']);
+            Route::post('/monthly_attendance_calculation', [AttendanceController::class, 'monthlyAtendanceAjax']);
             Route::get('/details', [AttendanceController::class, 'details'])->name('attendance.detail');
             Route::get('/byemployee/{id}', [AttendanceController::class, 'byemployee'])->name('attendance.byemployee');
 
             // Route::get('/details/{emp_id}', [AttendanceController::class, 'details'])->name('attendance.detail');
             Route::any('/track_in_out', [AttendanceController::class, 'submitTrackInTrackOut'])->name('attendance.trackInOut');
             // endgames rules
-            Route::get('/active_mode_set', [AttendanceController::class, 'ActiveMode'])->name('attendance.activeMode');
-            Route::post('/endgames', [AttendanceController::class, 'FinalStartRuleEndGame'])->name('attendance.endgameSubmit');
+            Route::get('/active_mode_set', [SettingController::class, 'ActiveMode'])->name('attendance.activeMode');
+            Route::post('/endgames', [SettingController::class, 'FinalStartRuleEndGame'])->name('attendance.endgameSubmit');
 
             // Route::get('/submit_endgames', [AttendanceController::class, 'FinalStartRuleEndGame']);
 
@@ -177,13 +213,14 @@ Route::middleware(['web', 'email_verified'])->group(function () {
         Route::prefix('/employee')->group(function () {
             Route::get('/', [EmployeeController::class, 'index']);
             Route::get('/export_file', [EmployeeController::class, 'ExportFileEmpDetails']);
-            Route::any('/import_file', [EmployeeController::class, 'ImportAddEmployeeDetails']);
+            Route::any('/import_file', [EmployeeController::class, 'ImportAddEmployeeDetails'])->name('import');;
             Route::get('/add', [EmployeeController::class, 'add']);
             Route::any('/employeefilter', [EmployeeController::class, 'filterEmployees'])->name('filter.employees');
             Route::any('/all_employee', [EmployeeController::class, 'allEmployee']);
             Route::any('/emp_id', [EmployeeController::class, 'empId']);
             Route::any('/emp_id_check', [EmployeeController::class, 'empIdCheck']);
             Route::get('/profile/{id}', [EmployeeController::class, 'empProfile'])->name('employeeProfile');
+            Route::post('/shift_check', [EmployeeController::class, 'shiftCheck']);
 
             // included live-wire add
             // Route::get('/',EmployeeJoiningForm::class);
@@ -203,22 +240,22 @@ Route::middleware(['web', 'email_verified'])->group(function () {
         Route::prefix('/requests')->group(function () {
             Route::get('/leaves', [RequestController::class, 'leaves']);
             Route::get('/gatepass', [RequestController::class, 'gatepass']);
-            Route::any('/gatepass/detail', [RequestController::class, 'show']);
+            Route::any('/gatepass/detail', [RequestController::class, 'EditGatepassDataGet']);
             Route::any('/gatepassemployeefilter', [RequestController::class, 'gatepassEmployeeFilter']);
 
             // Route::post('/gatepassupdate/{id}', [RequestController::class, 'UpdateGatepass'])->name('admin.gatepassupdate');
             Route::any('/gatepassdelete', [RequestController::class, 'DestroyGatepass'])->name('admin.gatepassdelete');
             Route::any('/leavedelete/{id}', [RequestController::class, 'DestroyLeave'])->name('admin.leavedelete');
-            Route::any('/misspunchdelete/{id}', [RequestController::class, 'DestroyMisspunch'])->name('admin.misspunchdelete');
-            Route::any('/misspunch/detail', [RequestController::class, 'EditMisspunchDataGet']);
+            Route::any('/mispunchdelete/{id}', [RequestController::class, 'Destroymispunch'])->name('admin.mispunchdelete');
+            Route::any('/mispunch/detail', [RequestController::class, 'EditMispunchDataGet']);
             Route::any('/leave/detail', [RequestController::class, 'EditLeaveDataGet']);
             Route::any('/mispunchemployeefilter', [RequestController::class, 'MispunchEmployeeFilter']);
             Route::any('/leaveemployeefilter', [RequestController::class, 'LeaveEmployeeFilter']);
             Route::post('/gatepassapprove', [RequestController::class, 'ApproveGatepass'])->name('admin.gatepassapprove');
-            Route::post('/misspunchapprove', [RequestController::class, 'ApproveMisspunch'])->name('admin.misspunchapprove');
+            Route::post('/mispunchapprove', [RequestController::class, 'Approvemispunch'])->name('admin.mispunchapprove');
             Route::post('/leaveupdate', [RequestController::class, 'ApproveLeave'])->name('admin.leaveapprove');
 
-            Route::get('/misspunch', [RequestController::class, 'misspunch']);
+            Route::get('/mispunch', [RequestController::class, 'mispunch']);
         });
 
         Route::prefix('/settings')->group(function () {
@@ -312,10 +349,10 @@ Route::middleware(['web', 'email_verified'])->group(function () {
                 Route::any('/get_datails', [AttendanceController::class, 'getAttendaceShiftList']);
                 Route::post('/update_attendace_shift', [AttendanceController::class, 'updateAttendaceShift']);
                 // ajax masterrules policy ajax 
-                Route::any('get_master_rule', [AttendanceController::class, 'getMasterRules']);
-                Route::post('edit_master_rule', [AttendanceController::class, 'editMasterRules']);
-                Route::any('mode_master_rule', [AttendanceController::class, 'modeMasterRules']);
-                Route::post('delete_master_rule', [AttendanceController::class, 'deleteMasterRules']);
+                Route::any('get_master_rule', [SettingController::class, 'getMasterRules']);
+                Route::post('edit_master_rule', [SettingController::class, 'editMasterRules']);
+                Route::any('mode_master_rule', [SettingController::class, 'modeMasterRules']);
+                Route::post('delete_master_rule', [SettingController::class, 'deleteMasterRules']);
 
                 Route::prefix('/automation')->group(function () {
                     Route::get('/', [SettingController::class, 'automation']);

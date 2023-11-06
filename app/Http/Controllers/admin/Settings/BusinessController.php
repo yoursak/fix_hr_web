@@ -17,11 +17,36 @@ namespace App\Http\Controllers\admin\Settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\admin\HolidayTemplate;
-use App\Models\admin\HolidayDetail;
-use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\DB;
 use Session;
+use RealRashid\SweetAlert\Facades\Alert;
+use App\Models\ModelHasPermission;
+use App\Models\AdminNotice;
+use App\Models\BusinessDetailsList;
+use App\Models\RequestLeaveList;
+use App\Models\RequestMispunchList;
+use App\Models\BranchList;
+use App\Models\RequestGatepassList;
+use App\Models\DesignationList;
+use App\Models\AttendanceList;
+use App\Models\EmployeePersonalDetail;
+use App\Models\StaticSidebarMenu;
+use App\Models\PolicyAttendanceShiftSetting;
+use App\Models\PolicySettingRoleCreate;
+use App\Models\DepartmentList;
+use App\Models\PolicyAttenRuleBreak;
+use App\Models\PolicyAttenRuleEarlyExit;
+use App\Models\PolicyAttenRuleGatepass;
+use App\Models\PolicyAttenRuleLateEntry;
+use App\Models\PolicyAttenRuleMisspunch;
+use App\Models\PolicyAttenRuleOvertime;
+use App\Models\PolicyHolidayTemplate;
+use App\Models\PolicyPolicyHolidayDetail;
+use App\Models\PolicySettingRoleItem;
+use App\Models\PolicySettingLeavePolicy;
+use App\Models\PolicySettingRoleAssignPermission;
+use App\Models\PolicyAttendanceShiftTypeItem;
+use App\Models\PolicyHolidayDetail;
 
 class BusinessController extends Controller
 {
@@ -30,18 +55,18 @@ class BusinessController extends Controller
     {
         // dd($request->holiday_day[0]);
         if ($request->has("temp_name")) {
-            $template = HolidayTemplate::create([
+            $template = PolicyHolidayTemplate::create([
                 "temp_name" => $request->temp_name,
                 "temp_from" => $request->temp_from,
                 "temp_to" => $request->temp_to,
                 "business_id" => $request->session()->get('business_id')
             ]);
-            $temp_id = HolidayTemplate::where(['temp_name' => $request->temp_name, 'temp_from' => $request->temp_from, 'temp_to' => $request->temp_to, 'business_id' => $request->session()->get('business_id')])->first();
+            $temp_id = PolicyHolidayTemplate::where(['temp_name' => $request->temp_name, 'temp_from' => $request->temp_from, 'temp_to' => $request->temp_to, 'business_id' => $request->session()->get('business_id')])->first();
 
 
             $i = 0;
             foreach ($request->holiday_name as $key => $holiday) {
-                $holiday = HolidayDetail::create([
+                $holiday = PolicyHolidayDetail::create([
                     'holiday_name' => $request->holiday_name[$i],
                     'day' => $request->holiday_day[$i],
                     'holiday_date' => $request->holiday_date[$i],
@@ -66,7 +91,7 @@ class BusinessController extends Controller
 
         // dd($request->all());
         if ($request->has('update_temp_name')) {
-            $updateTemp = DB::table('holiday_template')->where([
+            $updateTemp = PolicyHolidayTemplate::where([
                 'temp_id' => $request->update_temp_id,
                 'business_id' => $request->session()->get('business_id')
             ])->update([
@@ -77,7 +102,7 @@ class BusinessController extends Controller
 
             if ($request->has('update_name')) {
                 foreach ($request->update_name as $key => $value) {
-                    $holiday = DB::table('holiday_details')->insert([
+                    $holiday = PolicyHolidayDetail::insert([
                         'holiday_name' => $request->update_name[$key],
                         'day' => $request->update_day[$key],
                         'holiday_date' => $request->update_date[$key],
@@ -101,7 +126,7 @@ class BusinessController extends Controller
     public function DeleteHoliday(Request $request)
     {
         $data = $request->state;
-        $deleted = DB::table('holiday_details')->where('holiday_id', $data)->delete();
+        $deleted = PolicyHolidayDetail::where('holiday_id', $data)->delete();
         if ($deleted) {
             // Alert::success('Deleted Successfully', '');
             return response()->json(['res' => $deleted]);
@@ -110,8 +135,8 @@ class BusinessController extends Controller
 
     public function DeleteHolidayTemp(Request $request)
     {
-        $holiday_template = HolidayTemplate::where(['temp_id' => $request->holiday_policy_id])->delete();
-        $holiday = HolidayDetail::where(['template_id' => $request->holiday_policy_id])->delete();
+        $holiday_template = PolicyHolidayTemplate::where(['temp_id' => $request->holiday_policy_id])->delete();
+        $holiday = PolicyHolidayDetail::where(['template_id' => $request->holiday_policy_id])->delete();
         if ($holiday_template && $holiday) {
             Alert::success('Holiday Policy Deleted Successfully');
         } else {

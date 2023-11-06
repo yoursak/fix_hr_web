@@ -14,6 +14,13 @@
 {{-- Employee Type --}}
 <form id="myForm" action="{{ route('add.employee') }}" method="post" enctype="multipart/form-data">
     @csrf
+   
+    <style>
+        .custom-width {
+            width: 100px;
+            /* Set the desired width here */
+        }
+    </style>
     <div>
         <div class="modal fade" id="empType" data-bs-backdrop="static">
             <div class="modal-dialog modal-dialog-centered " role="document">
@@ -30,7 +37,8 @@
                             <div class="col-sm-10 justify-content-center">
                                 <p class="form-label">Select Employee Type</p>
                                 <div class="form-group ">
-                                    <select id="openAddNewEmployeeMod" name="employee_type" class="form-control" required>
+                                    <select id="openAddNewEmployeeMod" name="employee_type" class="form-control"
+                                        required>
                                         <<option value="" selected>Select Employee Type</option>
                                             <option value="1">Regular Employee</option>
                                             <option value="2">Contractual Employee</option>
@@ -62,6 +70,7 @@
                                     <button type="submit" class="btn btn-outline-primary my-2 border-0"> <b>Upload
                                             Employees</b></button>
                                 </form>
+
 
                             </div>
                         </div>
@@ -115,22 +124,23 @@
                     <div class="card-body" style="overflow-y:auto">
                         <!-- ROW OPEN -->
                         <div class="smartwizard-3">
-                            <ul>
-                                <li><a href="#step-10">Personal Detail</a></li>
-                                <li><a href="#step-11">Comapany Detail</a></li>
+                            <ul class="d-none">
+                                <li><a href="#step-10">Personal Details</a></li>
+                                <li><a href="#step-11">Communcation Details</a></li>
+                                <li><a href="#step-12">Comapany Details</a></li>
 
                             </ul>
                             <div>
                                 <div id="step-10" class="">
 
-                                    <h4 class="mb-2 font-weight-bold">Basic</h4>
+                                    <h4 class="mb-2 font-weight-bold">Personal Details</h4>
 
                                     <div class="form-group d-flex justify-content-center">
                                         <div class="row">
                                             <div class="col-12">
-
                                                 <input type="file" id="image_sd" name="image"
-                                                    class="dropify image_sdd" data-height="180" />
+                                                    class="dropify image_sdd" data-height="60" data-width="100"
+                                                    data-min-width="100">
                                             </div>
                                         </div>
                                     </div>
@@ -138,17 +148,15 @@
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">First Name</label>
-                                                <input id="name_sd" type="text"
-                                                    class=" form-control mb-md-0 mb-5" placeholder="First Name"
-                                                    name="name" required>
+                                                <input id="name_sd" type="text" class=" form-control"
+                                                    placeholder="First Name" name="name" required>
                                                 <span class="text-muted"></span>
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Middle Name</label>
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <input id="" type="text"
-                                                            class="form-control mb-md-0 mb-5"
+                                                        <input id="" type="text" class="form-control"
                                                             placeholder="Middle Name" name="mName">
                                                         <span class="text-muted"></span>
                                                     </div>
@@ -158,9 +166,8 @@
                                                 <label id="last_id" class="form-label mb-0 mt-2">Last Name</label>
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <input id="last_sd" type="text"
-                                                            class=" form-control mb-md-0 mb-5" placeholder="Last Name"
-                                                            name="lName" required>
+                                                        <input id="last_sd" type="text" class=" form-control"
+                                                            placeholder="Last Name" name="lName" required>
                                                         <span class="text-muted"></span>
                                                     </div>
                                                 </div>
@@ -178,49 +185,123 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Date Of Birth</label>
-                                                <input type="date" class="form-control fc-datepicker"
-                                                    placeholder="DD-MM-YYY" id="dateofbirth_sd" name="dob"
+                                                <input type="date" class="form-control fc-datepicker" 
+                                                    placeholder="DD-MM-YYY" id="dateofbirth_sd" name="dob_dd"
                                                     required>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-sm-12 col-md-4">
                                                 <label class="form-label mb-0 mt-2">Gender</label>
-                                                <div class="custom-controls-stacked d-md-flex">
+                                                <select class="form-control update_gender_sddd" aria-label="Type" id=""
+                                                    name="gender" required>
+                                                    <option value="">Select Gender</option>
+                                                    @foreach ($staticGender as $gender)
+                                                        <option value="{{ $gender->id }}">{{ $gender->gender_type }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                {{-- <div class="custom-controls-stacked d-md-flex">
                                                     <label class="custom-control custom-radio me-4">
                                                         <input type="radio" class="custom-control-input"
-                                                            name="gender" value="1">
+                                                            name="gender" value="1" required>
                                                         <span class="custom-control-label">Male</span>
                                                     </label>
                                                     <label class="custom-control custom-radio me-4">
                                                         <input type="radio" class="custom-control-input"
-                                                            name="gender" value="2">
+                                                            name="gender" value="2" required>
                                                         <span class="custom-control-label">Female</span>
                                                     </label>
                                                     <label class="custom-control custom-radio me-4">
                                                         <input type="radio" class="custom-control-input"
-                                                            name="gender" value="3">
+                                                            name="gender" value="3" required>
                                                         <span class="custom-control-label">Other</span>
                                                     </label>
-                                                </div>
+                                                </div> --}}
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label mb-0 mt-2">Marital Status</label>
+                                                <select class="form-control" aria-label="Type" id="marital_status_dd"
+                                                    name="marital_satatus_dd" required>
+                                                    <option value="">Select Marital Status</option>
+                                                    < @foreach ($staticMarital as $martial)
+                                                    <option value="{{ $martial->id }}">{{ $martial->marital_type }}
+                                                    </option>
+                                                @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label mb-0 mt-2">Category</label>
+                                                <select class="form-control" aria-label="Type" name="caste_dd" id="caste_dd"
+                                                    name="country" required>
+                                                    <option value="">Select Category</option>
+                                                    @foreach ($statciCategory as $category)
+                                                    <option value="{{ $category->id }}">{{ $category->caste_category }}
+                                                    </option>
+                                                @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label mb-0 mt-2">Blood Group</label>
+                                                <select class="form-control" name="blood_group_dd" aria-label="Type" id="blood_group_dd"
+                                                    name="country" required>
+                                                    <option value="">Select Blood Group</option>
+                                                    @foreach ($staticbloodGroup as $bloodgroup)
+                                                    <option value="{{ $bloodgroup->id }}">{{ $bloodgroup->blood_group }}
+                                                    </option>
+                                                @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label mb-0 mt-2">Select Id</label>
+                                                <select class="form-control" aria-label="Type" id="select_id_dd" name="select_id_dd"
+                                                    name="country" required>
+                                                    <option value="">Select Any Goverment Id</option>
+                                                    @foreach ($staticGovId as $govId)
+                                                    <option value="{{ $govId->id }}">{{ $govId->govt_type }}
+                                                    </option>
+                                                @endforeach 
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label mb-0 mt-2">Id Number</label>
+                                                <input type="text" class="form-control" id="id_number_dd" name="id_number_dd" required>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div id="step-11" class="" style="height: 448px">
+                                    <h4 class="mb-2 font-weight-bold">Communication Details</h4>
+                                    <div class="form-group">
+                                        <div class="row pt-5">
+                                            <div class="col-md-4">
+                                                <label class="form-label mb-0 mt-2">Nationality</label>
+                                                <input type="text" class="form-control" id="nationality_dd" name="nationality_dd" required>
+                                                {{-- <select class="form-control" name="nationality_dd" aria-label="Type" id="nationality_dd"
+                                                   required>
+                                                    <option value="">Select Nationality</option>
+                                                    <option value="1">India</option>
+                                                    <option value="2">USA</option>
+                                                </select> --}}
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Country</label>
-                                                <select class="form-select" aria-label="Type" id="country_sd"
-                                                    name="country" required>
+                                                <select class="form-control" aria-label="Type" id="country_dd"
+                                                    name="country_dd" required>
                                                     <option value="">Select Country</option>
-                                                    <option value="1">India</option>
-                                                    <option value="2">USA</option>
+                                                    <option value="1" selected>India</option>
+                                                    {{-- <option value="2">USA</option> --}}
                                                 </select>
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">State</label>
                                                 <select id="sts1"
                                                     onchange="print_city('state1', this.selectedIndex);"
-                                                    name="state" class="sts1 form-control w-100 border rounded"
+                                                    name="state_dd" class="sts1 form-control w-100 border rounded"
                                                     required></select>
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">City</label>
-                                                <select id="state1" name="city"
+                                                <select id="state1" name="city_dd"
                                                     class="state1 form-control w-100 border rounded" required></select>
                                                 <script language="javascript">
                                                     print_state("sts1");
@@ -228,21 +309,46 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Pin Code</label>
-                                                <input id="pincode_sd" type="text" class="form-control"
-                                                    placeholder="Postal PIN" name="pincode">
-                                            </div>
-                                            <div class="col-md-8">
+                                                <input id="pincode_dd" type="text" class="form-control"
+                                                    placeholder="Postal PIN" name="pincode_dd">
+                                            </div> 
+                                            <div class="col-md-12 col-xl-12">
                                                 <label class="form-label mb-0 mt-2">Address Line 1</label>
-                                                <input id="address_sd" type="text" class="form-control"
-                                                    placeholder="Address" name="address">
+                                                <textarea id="address_dd" type="text" class="form-control" placeholder="Address" name="address_dd" 
+                                                   cols="30" rows="2" required></textarea>
+                                                {{-- <input id="address_sd" type="text" class="form-control"
+                                                placeholder="Address" name="address"> --}}
                                             </div>
+
                                         </div>
                                     </div>
+                                    {{-- <div class="form-group mt-7">
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                <label class="form-label">Manual Attendance with Location,
+                                                    FaceId And QR Code:</label>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="custom-switch">
+                                                    <input type="checkbox" name="custom-switch-checkbox"
+                                                        class="custom-switch-input">
+                                                    <span class="custom-switch-indicator"></span>
+                                                    <span class="custom-switch-description">Active/Inactive</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div> --}}
 
                                 </div>
-                                <div id="step-11" class="">
-                                    <div class="form-group">
-                                        <div class="row">
+                                <div id="step-12" class="" style="height: 448px">
+                                    <h4 class="mb-2 font-weight-bold">Comapany Details</h4>
+                                    <div class="form-group mb-0 justify-content-end">
+                                        <div class="row pt-5">
+                                            <div class="col-md-4">
+                                                <label class="form-label mb-0 mt-2">Date Of Joining</label>
+                                                <input type="date" class="form-control fc-datepicker"
+                                                    id="doj_dd" placeholder="DD-MM-YYYY" name="doj" required>
+                                            </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Employee ID <a
                                                         id="fetchEmpId-data-button"
@@ -256,16 +362,29 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Select Shift Type</label>
-                                                <select name="shift_type" id="shift_type_sd" aria-label="Type"
+                                                <select name="shift_type" id="shift_type_sd" aria-label="Type" onchange="selectShiftType(this.value)"
                                                     class="form-control custom-select" data-placeholder="Select Type">
                                                     <option value="">Select Shift Type</option>
                                                     @foreach ($shiftAttendance as $shiftset)
-                                                        <option value="{{ $shiftset->attendance_id }}">
-                                                            {{ $shiftset->shift_type_name }} | {{ $shiftset->attendance_shift_type_name }}</option>
+                                                        <option   value="{{ $shiftset->attendance_id }}">
+                                                            {{ $shiftset->shift_type_name }} |
+                                                            {{ $shiftset->static_attendance_shift_type_name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
 
+                                            <div class="col-md-4">
+                                                <label class="form-label mb-0 mt-2">Select Rotational Type</label>
+                                                <select name="update_shift_type" id="shift_type_sd" aria-label="Type"
+                                                    class="update_shifttype_sddd form-control custom-select"
+                                                    data-placeholder="Select Type">
+                                                    <option value="">Select Rotational Type</option>
+                                                    @foreach ($shiftAttendance as $shiftset)
+                                                        <option value="{{ $shiftset->attendance_id }}">
+                                                            {{ $shiftset->shift_type_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <p class="form-label">Branch</p>
@@ -313,11 +432,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label mb-0 mt-2">Date Of Joining</label>
-                                                <input type="date" class="form-control fc-datepicker"
-                                                    id="doj_sd" placeholder="DD-MM-YYYY" name="doj" required>
-                                            </div>
+
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Assign Attendance Mathod</label>
                                                 <select name="attendance_method" aria-label="Type" id="attendance_sd"
@@ -333,28 +448,12 @@
                                                 </select>
                                             </div>
 
-                                        </div>
-                                    </div>
-                                    {{-- <div class="form-group mt-7">
-                                        <div class="row">
-                                            <div class="col-md-9">
-                                                <label class="form-label">Manual Attendance with Location,
-                                                    FaceId And QR Code:</label>
+                                            <div class="col-md-4">
+                                                <label class="form-label mb-0 mt-2">Reporting Manager</label>
+                                                <input type="text" name="reporting_manager_dd" id="reporting_manager_dd" class="form-control" required>
                                             </div>
-                                            <div class="col-md-3">
-                                                <label class="custom-switch">
-                                                    <input type="checkbox" name="custom-switch-checkbox"
-                                                        class="custom-switch-input">
-                                                    <span class="custom-switch-indicator"></span>
-                                                    <span class="custom-switch-description">Active/Inactive</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div> --}}
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-md-9">
-                                                <label class="custom-control custom-checkbox">
+                                            <div class="col-sm-12">
+                                                <label class="custom-control mt-5 custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input"
                                                         name="example-checkbox1" value="option1">
                                                     <span class="custom-control-label"><b>Send SMS
@@ -364,20 +463,29 @@
                                                                 Conditions</a></b>
                                                     </span>
                                                 </label>
+
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-12">
+
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div id="step-12" class="">
-                                    <div class="form-group mb-0 justify-content-end">
-                                        <div class="">
+                                        {{-- <div class="form-group"> --}}
+                                        {{-- <div class="row"> --}}
+                                        {{-- <div class="col-md-9">
                                             <label class="custom-control custom-checkbox">
                                                 <input type="checkbox" class="custom-control-input"
-                                                    name="example-checkbox2" value="option2">
-                                                <span class="custom-control-label">I agree terms &
-                                                    Conditions</span>
+                                                    name="example-checkbox1" value="option1">
+                                                <span class="custom-control-label"><b>Send SMS
+                                                        Employee</b></span>
+                                                <span class="fs-11">By continuing you agree to <b><a href="#"
+                                                            class="text-primary">Tearm &
+                                                            Conditions</a></b>
+                                                </span>
                                             </label>
-                                        </div>
+                                        </div> --}}
+                                        {{-- </div> --}}
+                                        {{-- </div> --}}
                                     </div>
                                 </div>
                             </div>

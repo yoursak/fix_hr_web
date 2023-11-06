@@ -37,12 +37,11 @@ CREATE TABLE `admin_notices` (
 
 INSERT INTO `admin_notices` (`id`, `title`, `date`, `file`, `business_id`, `branch_id`, `description`, `updated_at`, `created_at`) VALUES
 (14,	'Dussehra Notice',	'2023-10-24',	'04-10-2023_09912cab8e1376abc2d96f5f56bf987d.pdf',	'bd545732e12addf17c34a231d24a3814',	'',	'Exciting Bonus Announcement',	'2023-10-04 12:31:19',	'0000-00-00 00:00:00'),
-(15,	'Navratri Leave Notice',	'2023-10-24',	'10-10-2023_2c3a94f67b08026dba42aeacf4c6d54c.xlsx',	'e3d64177e51bdff82b499e116796fe74',	'',	'Leave For Dashehara',	'2023-10-10 04:51:57',	'0000-00-00 00:00:00'),
-(16,	'Diwali Leave 1',	'2023-11-13',	'10-10-2023_c57682ef4f1e7fe79d7a2df6c998be5d.csv',	'e3d64177e51bdff82b499e116796fe74',	'',	'Diwali Leave Notice',	'2023-10-10 04:52:49',	'0000-00-00 00:00:00'),
 (17,	'Diwali Leave 2',	'2023-11-15',	'10-10-2023_83ee562894e4d8e230c26637f17eab0c.xlsx',	'e3d64177e51bdff82b499e116796fe74',	'',	'Diwali Leave Notice',	'2023-10-10 04:53:14',	'0000-00-00 00:00:00'),
 (18,	'Diwali Leave 3',	'2023-11-15',	'10-10-2023_d9eabd0b15b6a7d66d87104b8661129c.pdf',	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	'2023-10-10 04:53:37',	'0000-00-00 00:00:00'),
 (19,	'Next Leave Notice',	'2023-10-17',	'10-10-2023_2ff7184653fd77b0e906fc7068e8607e.pdf',	'e3d64177e51bdff82b499e116796fe74',	'',	'Next Leave Notice',	'2023-10-10 04:54:24',	'0000-00-00 00:00:00'),
-(20,	'Previous',	'2023-10-08',	'10-10-2023_52760533d30e5876f6a1752190ae7283.pdf',	'e3d64177e51bdff82b499e116796fe74',	'',	'Previous Notice',	'2023-10-10 04:59:59',	'0000-00-00 00:00:00');
+(20,	'Previous',	'2023-10-08',	'10-10-2023_52760533d30e5876f6a1752190ae7283.pdf',	'e3d64177e51bdff82b499e116796fe74',	'',	'Previous Notice',	'2023-10-10 04:59:59',	'0000-00-00 00:00:00'),
+(21,	'fsdgsdfgd',	'2023-11-03',	'02-11-2023_cae4ec5aecddb5d1b038f1f612d221c9.pdf',	'e3d64177e51bdff82b499e116796fe74',	'',	'hndfgbhdfcb',	'2023-11-02 10:11:56',	'0000-00-00 00:00:00');
 
 SET NAMES utf8mb4;
 
@@ -55,62 +54,14 @@ CREATE TABLE `approval_management_cycle` (
   `desgination_id` longtext DEFAULT NULL,
   `cycle_type` tinyint(1) DEFAULT NULL,
   `role_id` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`role_id`)),
-  `checked_status` tinyint(1) DEFAULT 1,
-  `initial_status` tinyint(1) DEFAULT 0,
-  `current_status` tinyint(1) DEFAULT 0,
+  `checked_status` tinyint(1) NOT NULL DEFAULT 1,
+  `initial_status` tinyint(1) NOT NULL DEFAULT 0,
+  `current_status` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `approval_management_cycle` (`id`, `business_id`, `branch_id`, `department_id`, `desgination_id`, `cycle_type`, `role_id`, `checked_status`, `initial_status`, `current_status`, `created_at`, `updated_at`) VALUES
-(21,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	NULL,	2,	'[\"2\",\"5\",\"3\"]',	1,	0,	0,	'2023-10-07 13:39:12',	'2023-10-07 13:39:12');
-
-DROP TABLE IF EXISTS `attendance_access`;
-CREATE TABLE `attendance_access` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `temp_name` varchar(255) DEFAULT NULL,
-  `attendance_mode` varchar(255) DEFAULT NULL,
-  `department_id` varchar(255) DEFAULT NULL,
-  `branch_id` longtext DEFAULT NULL,
-  `business_id` longtext NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `attendance_access` (`id`, `temp_name`, `attendance_mode`, `department_id`, `branch_id`, `business_id`, `updated_at`, `created_at`) VALUES
-(3,	'Abc',	'1',	'all',	'all',	'e3d64177e51bdff82b499e116796fe74',	'2023-09-26 08:27:48',	'0000-00-00 00:00:00'),
-(4,	'Abc',	'2',	'all',	'all',	'e3d64177e51bdff82b499e116796fe74',	'2023-09-26 08:47:36',	'0000-00-00 00:00:00'),
-(5,	'Abc',	'0',	'all',	'all',	'e3d64177e51bdff82b499e116796fe74',	'2023-09-26 08:47:50',	'0000-00-00 00:00:00'),
-(6,	'Abc',	'1',	'all',	'all',	'e3d64177e51bdff82b499e116796fe74',	'2023-09-26 08:48:11',	'0000-00-00 00:00:00'),
-(7,	'Abc',	'1',	'1',	'd845e2bc8a80f01f71ea5699a91308228',	'e3d64177e51bdff82b499e116796fe74',	'2023-09-26 08:48:46',	'0000-00-00 00:00:00'),
-(8,	'Abc',	'2',	'all',	'd845e2bc8a80f01f71ea5699a91308228',	'e3d64177e51bdff82b499e116796fe74',	'2023-09-26 08:49:00',	'0000-00-00 00:00:00'),
-(9,	'Attendance Policy for Office',	'0',	'all',	'all',	'e3d64177e51bdff82b499e116796fe74',	'2023-09-26 10:18:30',	'0000-00-00 00:00:00');
-
-DROP TABLE IF EXISTS `attendance_endgame_level`;
-CREATE TABLE `attendance_endgame_level` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `policypreference_level_id` bigint(11) DEFAULT NULL,
-  `level_name` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `attendance_endgame_level` (`id`, `policypreference_level_id`, `level_name`) VALUES
-(1,	1,	'Business Level');
-
-DROP TABLE IF EXISTS `attendance_endgame_policypreference`;
-CREATE TABLE `attendance_endgame_policypreference` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `policy_name` varchar(200) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `updated_at` timestamp NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `attendance_endgame_policypreference` (`id`, `policy_name`, `created_at`, `updated_at`) VALUES
-(1,	'Business',	'2023-10-03 05:16:43',	'2023-10-03 05:16:43'),
-(2,	'Employee',	'2023-10-03 05:17:55',	'2023-10-03 05:17:55');
 
 DROP TABLE IF EXISTS `attendance_list`;
 CREATE TABLE `attendance_list` (
@@ -150,280 +101,53 @@ CREATE TABLE `attendance_list` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `attendance_list` (`id`, `working_from_method`, `method_auto`, `method_manual`, `marked_in_mode`, `marked_out_mode`, `active_qr_mode`, `active_selfie_mode`, `active_face_mode`, `active_location_tab_mode`, `attendance_status`, `attendance_shift`, `punch_date`, `emp_id`, `business_id`, `branch_id`, `emp_today_current_status`, `punch_in_selfie`, `punch_in_time`, `punch_in_location_tag`, `punch_in_address`, `punch_in_latitude`, `punch_in_longitude`, `punch_out_selfie`, `punch_out_time`, `punch_out_address`, `punch_out_latitude`, `punch_out_longitude`, `punch_out_location_tag`, `total_working_hour`, `created_at`, `updated_at`) VALUES
-(34,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	NULL,	'2023-09-30',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'0',	'12-10-2023_6aaa2c1c7dd6e84d92361626b346a6d0.jpg',	'09:00:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896106',	'81.6236888',	'28-09-2023_f9d2f832006a6f5afe263dfb32a5d3d3.jpg',	'18:00:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	NULL,	NULL,	NULL,	'09:10:00',	'2023-10-27 10:04:02',	'2023-10-12 17:18:40'),
-(35,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	NULL,	'2023-10-09',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'0',	'16-10-2023_4402de8dc6f1943c696f38ecd7506b28.jpg',	'09:48:08',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896371',	'81.6236837',	NULL,	'17:48:08',	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-23 07:25:00',	'2023-10-16 16:48:09'),
-(37,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	NULL,	'2023-10-05',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'0',	'17-10-2023_6a3f31964e04f41b064ceb356547d1e4.jpg',	'10:00:20',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896224',	'81.6236877',	NULL,	'04:00:20',	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-23 07:25:00',	'2023-10-17 12:00:21'),
-(38,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	NULL,	'2023-10-17',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'0',	'17-10-2023_a1a3a44cfbd6650d2e6d6e98d595ac95.jpg',	'12:00:38',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896319',	'81.6236855',	NULL,	'01:00:38',	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-23 07:25:00',	'2023-10-17 12:00:39'),
-(39,	1,	0,	0,	0,	0,	0,	1,	0,	0,	0,	NULL,	'2023-10-13',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'0',	'12-10-2023_6aaa2c1c7dd6e84d92361626b346a6d0.jpg',	'11:00:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896106',	'81.6236888',	NULL,	'18:20:00',	NULL,	NULL,	NULL,	NULL,	'04:10:00',	'2023-10-23 07:25:00',	'2023-10-12 17:18:40'),
-(40,	1,	0,	0,	0,	0,	0,	1,	0,	0,	0,	NULL,	'2023-10-11',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'0',	'12-10-2023_6aaa2c1c7dd6e84d92361626b346a6d0.jpg',	'08:40:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896106',	'81.6236888',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'09:10:00',	'2023-10-23 07:25:00',	'2023-10-12 17:18:40'),
-(41,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	NULL,	'2023-10-16',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'0',	'12-10-2023_6aaa2c1c7dd6e84d92361626b346a6d0.jpg',	'09:20:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896106',	'81.6236888',	NULL,	'18:50:00',	NULL,	NULL,	NULL,	NULL,	'09:30:00',	'2023-10-23 07:25:00',	'2023-10-12 17:18:40'),
-(42,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	NULL,	'2023-10-18',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'0',	'18-10-2023_517ffc3646ccb8bf87ea9efccad8a867.jpg',	'17:33:34',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896349',	'81.6236796',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-23 07:25:00',	'2023-10-18 17:33:36'),
-(43,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	NULL,	'2023-10-18',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'0',	'18-10-2023_9fa4bb87e6ff79f106466b3af75336bb.png',	'17:41:03',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896774',	'81.6236399',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-23 07:25:00',	'2023-10-18 17:43:06'),
-(44,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	NULL,	'2023-10-18',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'0',	'18-10-2023_9fa4bb87e6ff79f106466b3af75336bb.png',	'17:41:03',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896774',	'81.6236399',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-23 07:25:00',	'2023-10-18 17:57:35'),
-(45,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	NULL,	'2023-10-18',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'0',	'18-10-2023_54545722f5bccb0f50ec1278c425cafa.jpg',	'18:00:17',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896773',	'81.623636',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-23 07:25:00',	'2023-10-18 18:00:19'),
-(47,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	NULL,	'2023-10-10',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'0',	'12-10-2023_6aaa2c1c7dd6e84d92361626b346a6d0.jpg',	'13:40:02',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896106',	'81.6236888',	NULL,	'18:00:00',	NULL,	NULL,	NULL,	NULL,	'04:10:00',	'2023-10-23 07:25:00',	'2023-10-12 17:18:40'),
-(48,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	NULL,	'2023-10-17',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'0',	'12-10-2023_6aaa2c1c7dd6e84d92361626b346a6d0.jpg',	'10:00:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896106',	'81.6236888',	NULL,	'18:10:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	NULL,	NULL,	NULL,	'09:10:00',	'2023-10-23 07:25:00',	'2023-10-12 17:18:40'),
-(67,	1,	0,	1,	0,	0,	1,	0,	0,	0,	0,	NULL,	'2023-10-19',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	NULL,	'23:54:49',	NULL,	'7J7F+92F, , Raipur Division, 492001',	'21.2634089',	'81.6229431',	NULL,	'23:57:57',	'7J7F+92F, , Raipur Division, 492001',	'21.2634089',	'81.6229431',	NULL,	NULL,	'2023-10-23 07:25:00',	'2023-10-19 23:54:49'),
-(70,	1,	0,	1,	0,	0,	1,	0,	0,	0,	1,	NULL,	'2023-10-20',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	NULL,	'00:11:00',	NULL,	'7J7F+92F, , Raipur Division, 492001',	'21.2634073',	'81.6229435',	NULL,	'10:17:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896901',	'81.6236308',	NULL,	'10:06:00',	'2023-10-23 07:25:00',	'2023-10-20 00:11:11'),
-(155,	1,	0,	1,	3,	1,	0,	1,	0,	0,	0,	NULL,	'2023-10-23',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'23-10-2023_80f8baee4acbef6a871d422c04ebd8d7.png',	'10:01:11',	NULL,	'Jay',	'21.111245',	'81.152525',	NULL,	'10:55:11',	'adsd sd',	'21.1255',	'82.1222',	NULL,	'00:54:00',	'2023-10-23 17:36:41',	'2023-10-23 23:06:30'),
-(156,	1,	0,	1,	3,	1,	0,	1,	0,	0,	1,	NULL,	'2023-10-23',	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'23-10-2023_bd12b180fdf7cb7047f4fddcf4af2e70.png',	'10:01:11',	NULL,	'Jay',	'21.111245',	'81.152525',	NULL,	'10:55:11',	'adsd sd',	'21.1255',	'82.1222',	NULL,	'00:54:00',	'2023-10-25 07:40:58',	'2023-10-23 23:21:37'),
-(157,	1,	0,	1,	1,	3,	1,	0,	0,	0,	1,	NULL,	'2023-10-23',	'IT008',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	NULL,	'10:01:11',	NULL,	'Jay',	'21.111245',	'81.152525',	'23-10-2023_403379d73aa9ae97d8a9cae6a3241bd7.png',	'10:55:11',	'adsd sd',	'21.1255',	'82.1222',	NULL,	'00:54:00',	'2023-10-25 07:22:13',	'2023-10-23 23:28:16'),
-(173,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	NULL,	'2023-10-25',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'25-10-2023_8bd1eab5484d21b52d6db254b6054508.jpg',	'15:17:27',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896911',	'81.6236483',	'25-10-2023_2967aa13e56ebbf5820dbffa22facd91.jpg',	'18:52:34',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896879',	'81.6236558',	NULL,	'03:35:07',	'2023-10-25 13:22:36',	'2023-10-25 15:17:29'),
-(175,	1,	0,	1,	3,	3,	0,	1,	0,	0,	1,	'84',	'2023-10-25',	'IT119',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'25-10-2023_c6b67069f3b3338e6d72758015cd5d69.jpg',	'09:41:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896881',	'81.6236544',	'25-10-2023_3ec081e32ffbaa60b2198e8ef3e9c57e.jpg',	'17:30:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896898',	'81.6236505',	NULL,	'07:49:00',	'2023-10-25 16:03:22',	'2023-10-25 16:40:54'),
-(179,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	NULL,	'2023-10-25',	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'25-10-2023_2f2dcba346ce20f4a6d1ea738398a6dc.jpg',	'23:56:21',	NULL,	'7J7F+92F, , Raipur Division, 492001',	'21.2633997',	'81.6229689',	'25-10-2023_e4c105f9c1a134d1380d1e0aee47b0e7.jpg',	'23:56:47',	'7J7F+92F, , Raipur Division, 492001',	'21.2634006',	'81.6229679',	NULL,	'00:00:26',	'2023-10-25 18:26:48',	'2023-10-25 23:56:22'),
-(182,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	NULL,	'2023-10-26',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'26-10-2023_f8fd064c62294bc7e996a269e1bf6f70.jpg',	'00:46:11',	NULL,	'7J7F+92F, , Raipur Division, 492001',	'21.2633969',	'81.6229659',	'26-10-2023_e827f21d87b54ea1fa6a804556af1c4c.jpg',	'00:46:29',	'7J7F+92F, , Raipur Division, 492001',	'21.2634002',	'81.6229679',	NULL,	'00:00:18',	'2023-10-25 19:16:30',	'2023-10-26 00:46:12'),
-(184,	1,	0,	1,	1,	3,	1,	0,	0,	0,	0,	NULL,	'2023-10-26',	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	NULL,	'10:01:11',	NULL,	'Jay',	'21.111245',	'81.152525',	'26-10-2023_fbe8a25d49794be4f4a59d60fbbd4ca7.jpg',	'10:19:48',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.289688',	'81.6236521',	NULL,	'00:18:37',	'2023-10-26 04:49:48',	'2023-10-26 10:19:05'),
-(185,	1,	0,	1,	3,	3,	0,	1,	0,	0,	1,	'84',	'2023-10-26',	'IT119',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'25-10-2023_c6b67069f3b3338e6d72758015cd5d69.jpg',	'16:00:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896881',	'81.6236544',	'25-10-2023_3ec081e32ffbaa60b2198e8ef3e9c57e.jpg',	'24:30:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896898',	'81.6236505',	NULL,	'24:00:00',	'2023-10-26 05:10:23',	'2023-10-25 16:40:54'),
-(186,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	NULL,	'2023-10-26',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'26-10-2023_5c99ac090ae8fba317b6c2b3f8450b43.jpg',	'13:08:04',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896395',	'81.6237046',	'26-10-2023_aa52b092f8c68f06d1d770e5cae05f13.jpg',	'13:09:35',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896309',	'81.6236917',	NULL,	'00:01:31',	'2023-10-26 07:39:37',	'2023-10-26 13:08:04'),
-(187,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	NULL,	'2023-10-27',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'27-10-2023_9f2927d77556ef4d27d1f12fd8a7f458.jpg',	'09:25:22',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.289687',	'81.6236554',	'27-10-2023_b67a3d95bdf8bfc922d4379392d01e90.jpg',	'17:35:18',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896878',	'81.6236557',	NULL,	'00:00:56',	'2023-10-27 07:57:18',	'2023-10-27 13:13:24'),
-(188,	1,	0,	1,	1,	1,	1,	0,	0,	0,	0,	'121',	'2023-10-27',	'IT122',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	NULL,	'07:50:00',	NULL,	'Jay',	'21.111245',	'81.152525',	NULL,	'15:10:00',	'adsd hogaya hy abhe',	'21.1255',	'82.1222',	NULL,	'07:20:00',	'2023-10-27 12:40:59',	'2023-10-27 18:04:28'),
-(189,	1,	0,	1,	1,	1,	1,	0,	0,	0,	0,	'122',	'2023-10-27',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	NULL,	'15:51:00',	NULL,	'Jay',	'21.111245',	'81.152525',	NULL,	'00:00:00',	'adsd hogaya hy abhe',	'21.1255',	'82.1222',	NULL,	'08:09:00',	'2023-10-27 13:01:31',	'2023-10-27 18:27:38');
-
-DROP TABLE IF EXISTS `attendance_methods`;
-CREATE TABLE `attendance_methods` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `method_name` varchar(225) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `attendance_methods` (`id`, `method_name`) VALUES
-(1,	'Office'),
-(2,	'Out Door'),
-(3,	'Remote');
-
-DROP TABLE IF EXISTS `attendance_mode`;
-CREATE TABLE `attendance_mode` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `business_id` longtext DEFAULT NULL,
-  `attendance_active_methods` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`attendance_active_methods`)),
-  `office_auto` tinyint(1) unsigned zerofill DEFAULT 0,
-  `office_manual` tinyint(1) unsigned zerofill DEFAULT 0,
-  `office_qr` tinyint(1) unsigned zerofill DEFAULT 0,
-  `office_face_id` tinyint(1) unsigned zerofill DEFAULT 0,
-  `office_selfie` tinyint(1) unsigned zerofill DEFAULT 0,
-  `outdoor_auto` tinyint(1) unsigned zerofill DEFAULT 0,
-  `outdoor_manual` tinyint(1) unsigned zerofill DEFAULT 0,
-  `outdoor_selfie` tinyint(1) unsigned zerofill DEFAULT 0,
-  `wfh_auto` tinyint(1) unsigned zerofill DEFAULT 0,
-  `wfh_manual` tinyint(1) unsigned zerofill DEFAULT 0,
-  `wfh_selfie` tinyint(1) unsigned zerofill DEFAULT 0,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `attendance_mode` (`id`, `business_id`, `attendance_active_methods`, `office_auto`, `office_manual`, `office_qr`, `office_face_id`, `office_selfie`, `outdoor_auto`, `outdoor_manual`, `outdoor_selfie`, `wfh_auto`, `wfh_manual`, `wfh_selfie`, `updated_at`, `created_at`) VALUES
-(1,	'e3d64177e51bdff82b499e116796fe74',	'[1,2]',	0,	1,	1,	1,	1,	1,	0,	1,	0,	0,	0,	'2023-10-23 14:18:26',	'0000-00-00 00:00:00'),
-(2,	'bd545732e12addf17c34a231d24a3814',	'[1,3]',	0,	NULL,	1,	1,	NULL,	0,	NULL,	NULL,	0,	NULL,	1,	'2023-10-04 17:59:38',	'0000-00-00 00:00:00');
-
-DROP TABLE IF EXISTS `attendance_shift_settings`;
-CREATE TABLE `attendance_shift_settings` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `business_id` longtext DEFAULT NULL,
-  `branch_id` longtext DEFAULT NULL,
-  `department_id` longtext DEFAULT NULL,
-  `shift_type` tinyint(1) unsigned zerofill NOT NULL DEFAULT 0,
-  `shift_type_name` varchar(255) DEFAULT NULL,
-  `shift_weekly_repeat` tinyint(4) NOT NULL DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `attendance_shift_settings` (`id`, `business_id`, `branch_id`, `department_id`, `shift_type`, `shift_type_name`, `shift_weekly_repeat`, `created_at`, `updated_at`) VALUES
-(26,	'bd545732e12addf17c34a231d24a3814',	'',	NULL,	1,	'General Shift',	0,	'2023-10-02 09:46:57',	'2023-10-03 05:25:27'),
-(27,	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	1,	'Policy for First 6 Month',	0,	'2023-10-04 06:18:59',	'2023-10-25 07:50:33'),
-(29,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	2,	'24*7',	0,	'2023-10-11 05:45:51',	'2023-10-11 05:45:51'),
-(30,	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	1,	'Policy for Last 6 Month',	0,	'2023-10-11 12:24:13',	'2023-10-25 07:50:09'),
-(32,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	2,	'Reapetive Shift',	0,	'2023-10-27 11:36:58',	'2023-10-27 11:36:58');
-
-DROP TABLE IF EXISTS `attendance_shift_type`;
-CREATE TABLE `attendance_shift_type` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(225) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `attendance_shift_type` (`id`, `name`) VALUES
-(1,	'Fixed Shift'),
-(2,	'Rotational Shift'),
-(3,	'Open Shift');
-
-DROP TABLE IF EXISTS `attendance_shift_type_items`;
-CREATE TABLE `attendance_shift_type_items` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `attendance_shift_id` int(11) DEFAULT NULL,
-  `business_id` longtext DEFAULT NULL,
-  `branch_id` longtext DEFAULT NULL,
-  `depart_id` longtext DEFAULT NULL,
-  `shift_name` varchar(255) DEFAULT NULL,
-  `shift_start` time DEFAULT NULL,
-  `shift_hr` int(11) DEFAULT NULL,
-  `shift_end` time DEFAULT NULL,
-  `shift_min` int(11) DEFAULT NULL,
-  `work_hr` int(11) DEFAULT NULL,
-  `work_min` int(11) DEFAULT NULL,
-  `break_min` int(11) DEFAULT NULL,
-  `is_active` int(11) DEFAULT NULL,
-  `is_paid` tinyint(1) NOT NULL DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `attendance_shift_type_items` (`id`, `attendance_shift_id`, `business_id`, `branch_id`, `depart_id`, `shift_name`, `shift_start`, `shift_hr`, `shift_end`, `shift_min`, `work_hr`, `work_min`, `break_min`, `is_active`, `is_paid`, `created_at`, `updated_at`) VALUES
-(67,	26,	'bd545732e12addf17c34a231d24a3814',	'',	NULL,	'General Shift',	'09:30:00',	NULL,	'18:30:00',	NULL,	9,	0,	45,	1,	1,	'2023-10-25 04:51:48',	'2023-10-03 10:55:27'),
-(68,	27,	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	'Policy for First 6 Month',	'09:30:00',	NULL,	'17:30:00',	NULL,	7,	30,	30,	1,	0,	'2023-10-25 07:50:33',	'2023-10-25 13:20:33'),
-(80,	30,	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	'Policy for Last 6 Month',	'10:30:00',	NULL,	'18:30:00',	NULL,	7,	30,	30,	1,	0,	'2023-10-25 07:50:09',	'2023-10-25 13:20:09'),
-(121,	29,	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	'SET A',	'08:00:00',	NULL,	'16:00:00',	NULL,	8,	0,	30,	0,	1,	'2023-10-27 12:46:12',	'2023-10-27 10:19:12'),
-(122,	29,	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	'SET B',	'16:00:00',	NULL,	'00:00:00',	NULL,	7,	30,	30,	1,	0,	'2023-10-27 12:46:06',	'2023-10-27 10:19:12'),
-(123,	32,	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	'Shift A',	'04:00:00',	NULL,	'12:00:00',	NULL,	8,	0,	20,	1,	1,	'2023-10-27 11:36:58',	'2023-10-27 17:06:58'),
-(124,	32,	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	'Shift B',	'12:00:00',	NULL,	'20:00:00',	NULL,	8,	0,	20,	0,	1,	'2023-10-27 11:36:58',	'2023-10-27 17:06:58');
-
-DROP TABLE IF EXISTS `attendance_track_in_out`;
-CREATE TABLE `attendance_track_in_out` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `business_id` longtext DEFAULT NULL,
-  `branch_id` longtext DEFAULT NULL,
-  `department_id` longtext DEFAULT NULL,
-  `track_in_out` tinyint(1) NOT NULL DEFAULT 0,
-  `no_attendace_without_punch` tinyint(1) NOT NULL DEFAULT 0,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `attendance_track_in_out` (`id`, `business_id`, `branch_id`, `department_id`, `track_in_out`, `no_attendace_without_punch`, `updated_at`, `created_at`) VALUES
-(11,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	1,	0,	'2023-09-28 13:12:43',	'2023-10-05 15:08:21'),
-(13,	'bd545732e12addf17c34a231d24a3814',	NULL,	NULL,	0,	1,	'2023-10-03 05:17:24',	'2023-10-03 05:17:24');
-
-DROP TABLE IF EXISTS `atten_rule_break`;
-CREATE TABLE `atten_rule_break` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `switch_is` tinyint(1) unsigned zerofill DEFAULT NULL,
-  `is_break_hr_deduct` tinyint(1) unsigned zerofill DEFAULT NULL,
-  `break_extra_hr` int(2) unsigned zerofill DEFAULT NULL,
-  `break_extra_min` int(2) unsigned zerofill DEFAULT NULL,
-  `occurance_is` tinyint(1) unsigned zerofill DEFAULT NULL,
-  `occurance_hr` int(2) unsigned zerofill DEFAULT NULL,
-  `occurance_min` int(2) unsigned zerofill DEFAULT NULL,
-  `occurance_count` int(2) unsigned zerofill DEFAULT NULL,
-  `absent_is` tinyint(1) unsigned zerofill DEFAULT NULL,
-  `business_id` longtext DEFAULT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `atten_rule_break` (`id`, `switch_is`, `is_break_hr_deduct`, `break_extra_hr`, `break_extra_min`, `occurance_is`, `occurance_hr`, `occurance_min`, `occurance_count`, `absent_is`, `business_id`, `updated_at`, `created_at`) VALUES
-(3,	1,	NULL,	00,	15,	1,	00,	00,	03,	1,	'bd545732e12addf17c34a231d24a3814',	'2023-10-03 05:17:01',	'2023-10-03 05:17:01'),
-(4,	0,	NULL,	00,	20,	2,	02,	00,	NULL,	1,	'e3d64177e51bdff82b499e116796fe74',	'2023-10-18 05:20:04',	'2023-10-23 06:54:27');
-
-DROP TABLE IF EXISTS `atten_rule_early_exit`;
-CREATE TABLE `atten_rule_early_exit` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `switch_is` tinyint(1) NOT NULL,
-  `grace_time_hr` int(2) DEFAULT NULL,
-  `grace_time_min` int(2) DEFAULT NULL,
-  `occurance_is` int(1) DEFAULT NULL,
-  `occurance_count` int(2) DEFAULT NULL,
-  `occurance_hr` int(2) DEFAULT NULL,
-  `occurance_min` int(2) DEFAULT NULL,
-  `absent_is` int(1) DEFAULT NULL,
-  `mark_half_day_hr` int(2) DEFAULT NULL,
-  `mark_half_day_min` int(2) DEFAULT NULL,
-  `business_id` longtext DEFAULT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `atten_rule_early_exit` (`id`, `switch_is`, `grace_time_hr`, `grace_time_min`, `occurance_is`, `occurance_count`, `occurance_hr`, `occurance_min`, `absent_is`, `mark_half_day_hr`, `mark_half_day_min`, `business_id`, `updated_at`, `created_at`) VALUES
-(3,	1,	0,	30,	1,	3,	0,	1,	1,	2,	30,	'bd545732e12addf17c34a231d24a3814',	'2023-10-03 05:17:01',	'0000-00-00 00:00:00'),
-(4,	1,	0,	10,	2,	NULL,	2,	0,	1,	2,	30,	'e3d64177e51bdff82b499e116796fe74',	'2023-10-23 08:18:37',	'2023-10-23 08:18:37');
-
-DROP TABLE IF EXISTS `atten_rule_gatepass`;
-CREATE TABLE `atten_rule_gatepass` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `switch_is` int(1) DEFAULT NULL,
-  `occurance_is` int(1) DEFAULT NULL,
-  `occurance_count` int(2) DEFAULT NULL,
-  `occurance_hr` int(2) DEFAULT NULL,
-  `occurance_min` int(2) DEFAULT NULL,
-  `absent_is` int(1) DEFAULT NULL,
-  `business_id` longtext NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `atten_rule_gatepass` (`id`, `switch_is`, `occurance_is`, `occurance_count`, `occurance_hr`, `occurance_min`, `absent_is`, `business_id`, `updated_at`, `created_at`) VALUES
-(3,	1,	1,	5,	0,	0,	1,	'bd545732e12addf17c34a231d24a3814',	'2023-10-03 05:17:01',	'0000-00-00 00:00:00'),
-(4,	0,	2,	NULL,	0,	30,	1,	'e3d64177e51bdff82b499e116796fe74',	'2023-10-23 06:54:31',	'2023-10-23 06:54:31');
-
-DROP TABLE IF EXISTS `atten_rule_late_entry`;
-CREATE TABLE `atten_rule_late_entry` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `switch_is` tinyint(1) DEFAULT NULL,
-  `grace_time_hr` int(2) DEFAULT NULL,
-  `grace_time_min` int(2) DEFAULT NULL,
-  `occurance_is` int(1) DEFAULT NULL,
-  `occurance_count` int(2) DEFAULT NULL,
-  `occurance_hr` int(2) DEFAULT NULL,
-  `occurance_min` int(2) DEFAULT NULL,
-  `absent_is` int(1) DEFAULT NULL,
-  `mark_half_day_hr` int(2) DEFAULT NULL,
-  `mark_half_day_min` int(2) DEFAULT NULL,
-  `business_id` longtext DEFAULT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `atten_rule_late_entry` (`id`, `switch_is`, `grace_time_hr`, `grace_time_min`, `occurance_is`, `occurance_count`, `occurance_hr`, `occurance_min`, `absent_is`, `mark_half_day_hr`, `mark_half_day_min`, `business_id`, `updated_at`, `created_at`) VALUES
-(3,	1,	0,	30,	1,	5,	0,	0,	1,	2,	30,	'bd545732e12addf17c34a231d24a3814',	'2023-10-03 05:17:01',	'0000-00-00 00:00:00'),
-(4,	1,	0,	15,	2,	NULL,	2,	0,	1,	2,	30,	'e3d64177e51bdff82b499e116796fe74',	'2023-10-23 08:18:37',	'2023-10-23 08:18:37');
-
-DROP TABLE IF EXISTS `atten_rule_misspunch`;
-CREATE TABLE `atten_rule_misspunch` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `switch_is` tinyint(1) NOT NULL,
-  `occurance_is` int(1) DEFAULT NULL,
-  `occurance_count` int(2) DEFAULT NULL,
-  `occurance_hr` int(2) DEFAULT NULL,
-  `occurance_min` int(2) DEFAULT NULL,
-  `absent_is` int(1) DEFAULT NULL,
-  `business_id` longtext NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `atten_rule_misspunch` (`id`, `switch_is`, `occurance_is`, `occurance_count`, `occurance_hr`, `occurance_min`, `absent_is`, `business_id`, `updated_at`, `created_at`) VALUES
-(3,	1,	1,	3,	0,	0,	2,	'bd545732e12addf17c34a231d24a3814',	'2023-10-03 05:17:01',	'0000-00-00 00:00:00'),
-(4,	0,	2,	NULL,	2,	50,	1,	'e3d64177e51bdff82b499e116796fe74',	'2023-10-23 06:55:14',	'0000-00-00 00:00:00');
-
-DROP TABLE IF EXISTS `atten_rule_overtime`;
-CREATE TABLE `atten_rule_overtime` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `switch_is` tinyint(1) NOT NULL,
-  `early_ot_hr` int(2) NOT NULL,
-  `early_ot_min` int(2) NOT NULL,
-  `late_ot_hr` int(2) NOT NULL,
-  `late_ot_min` int(2) NOT NULL,
-  `min_ot_hr` int(2) NOT NULL,
-  `min_ot_min` int(2) NOT NULL,
-  `max_ot_hr` int(2) NOT NULL,
-  `max_ot_min` int(2) NOT NULL,
-  `business_id` longtext NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `atten_rule_overtime` (`id`, `switch_is`, `early_ot_hr`, `early_ot_min`, `late_ot_hr`, `late_ot_min`, `min_ot_hr`, `min_ot_min`, `max_ot_hr`, `max_ot_min`, `business_id`, `updated_at`, `created_at`) VALUES
-(3,	1,	0,	15,	1,	30,	10,	0,	30,	0,	'bd545732e12addf17c34a231d24a3814',	'2023-10-03 05:17:01',	'0000-00-00 00:00:00'),
-(4,	1,	0,	30,	0,	30,	1,	0,	40,	0,	'e3d64177e51bdff82b499e116796fe74',	'2023-10-23 07:07:54',	'0000-00-00 00:00:00');
+(34,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	NULL,	'2023-09-30',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'12-10-2023_6aaa2c1c7dd6e84d92361626b346a6d0.jpg',	'09:00:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896106',	'81.6236888',	'28-09-2023_f9d2f832006a6f5afe263dfb32a5d3d3.jpg',	'18:00:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	NULL,	NULL,	NULL,	'09:10:00',	'2023-10-31 07:59:11',	'2023-10-12 17:18:40'),
+(35,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	NULL,	'2023-10-09',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'16-10-2023_4402de8dc6f1943c696f38ecd7506b28.jpg',	'09:48:08',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896371',	'81.6236837',	NULL,	'17:48:08',	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-16 16:48:09'),
+(37,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	NULL,	'2023-10-05',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'17-10-2023_6a3f31964e04f41b064ceb356547d1e4.jpg',	'10:00:20',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896224',	'81.6236877',	NULL,	'04:00:20',	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-17 12:00:21'),
+(38,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	NULL,	'2023-10-17',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'17-10-2023_a1a3a44cfbd6650d2e6d6e98d595ac95.jpg',	'12:00:38',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896319',	'81.6236855',	NULL,	'01:00:38',	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-17 12:00:39'),
+(39,	1,	0,	0,	0,	0,	0,	1,	0,	0,	0,	NULL,	'2023-10-13',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'12-10-2023_6aaa2c1c7dd6e84d92361626b346a6d0.jpg',	'11:00:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896106',	'81.6236888',	NULL,	'18:20:00',	NULL,	NULL,	NULL,	NULL,	'04:10:00',	'2023-10-31 07:59:11',	'2023-10-12 17:18:40'),
+(40,	1,	0,	0,	0,	0,	0,	1,	0,	0,	0,	NULL,	'2023-10-11',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'12-10-2023_6aaa2c1c7dd6e84d92361626b346a6d0.jpg',	'08:40:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896106',	'81.6236888',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'09:10:00',	'2023-10-31 07:59:11',	'2023-10-12 17:18:40'),
+(41,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	'68',	'2023-10-16',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'12-10-2023_6aaa2c1c7dd6e84d92361626b346a6d0.jpg',	'09:20:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896106',	'81.6236888',	NULL,	'18:50:00',	NULL,	NULL,	NULL,	NULL,	'09:30:00',	'2023-10-31 07:59:11',	'2023-10-12 17:18:40'),
+(42,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	'68',	'2023-10-18',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'18-10-2023_517ffc3646ccb8bf87ea9efccad8a867.jpg',	'11:59:59',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896349',	'81.6236796',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-18 17:33:36'),
+(43,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	'68',	'2023-10-18',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'18-10-2023_9fa4bb87e6ff79f106466b3af75336bb.png',	'17:41:03',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896774',	'81.6236399',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-18 17:43:06'),
+(44,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	'68',	'2023-10-18',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'18-10-2023_9fa4bb87e6ff79f106466b3af75336bb.png',	'17:41:03',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896774',	'81.6236399',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-18 17:57:35'),
+(45,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	'68',	'2023-10-18',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'18-10-2023_54545722f5bccb0f50ec1278c425cafa.jpg',	'18:00:17',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896773',	'81.623636',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-18 18:00:19'),
+(47,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	'68',	'2023-10-10',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'12-10-2023_6aaa2c1c7dd6e84d92361626b346a6d0.jpg',	'13:40:02',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896106',	'81.6236888',	NULL,	'18:00:00',	NULL,	NULL,	NULL,	NULL,	'04:10:00',	'2023-10-31 07:59:11',	'2023-10-12 17:18:40'),
+(48,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	'68',	'2023-10-17',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'12-10-2023_6aaa2c1c7dd6e84d92361626b346a6d0.jpg',	'10:00:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896106',	'81.6236888',	NULL,	'18:10:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	NULL,	NULL,	NULL,	'09:10:00',	'2023-10-31 07:59:11',	'2023-10-12 17:18:40'),
+(67,	1,	0,	1,	0,	0,	1,	0,	0,	0,	0,	'68',	'2023-10-19',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	NULL,	'23:54:49',	NULL,	'7J7F+92F, , Raipur Division, 492001',	'21.2634089',	'81.6229431',	NULL,	'23:57:57',	'7J7F+92F, , Raipur Division, 492001',	'21.2634089',	'81.6229431',	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-19 23:54:49'),
+(70,	1,	0,	1,	0,	0,	1,	0,	0,	0,	1,	'68',	'2023-10-20',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	NULL,	'00:11:00',	NULL,	'7J7F+92F, , Raipur Division, 492001',	'21.2634073',	'81.6229435',	NULL,	'10:17:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896901',	'81.6236308',	NULL,	'10:06:00',	'2023-10-31 07:59:11',	'2023-10-20 00:11:11'),
+(155,	1,	0,	1,	3,	1,	0,	1,	0,	0,	0,	'68',	'2023-10-23',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'23-10-2023_80f8baee4acbef6a871d422c04ebd8d7.png',	'10:01:11',	NULL,	'Jay',	'21.111245',	'81.152525',	NULL,	'10:55:11',	'adsd sd',	'21.1255',	'82.1222',	NULL,	'00:54:00',	'2023-10-31 07:59:11',	'2023-10-23 23:06:30'),
+(156,	1,	0,	1,	3,	1,	0,	1,	0,	0,	1,	'68',	'2023-10-23',	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'23-10-2023_bd12b180fdf7cb7047f4fddcf4af2e70.png',	'10:01:11',	NULL,	'Jay',	'21.111245',	'81.152525',	NULL,	'10:55:11',	'adsd sd',	'21.1255',	'82.1222',	NULL,	'00:54:00',	'2023-10-31 07:59:11',	'2023-10-23 23:21:37'),
+(157,	1,	0,	1,	1,	3,	1,	0,	0,	0,	1,	'68',	'2023-10-23',	'IT008',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	NULL,	'10:01:11',	NULL,	'Jay',	'21.111245',	'81.152525',	'23-10-2023_403379d73aa9ae97d8a9cae6a3241bd7.png',	'10:55:11',	'adsd sd',	'21.1255',	'82.1222',	NULL,	'00:54:00',	'2023-10-31 07:59:11',	'2023-10-23 23:28:16'),
+(173,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-10-25',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'25-10-2023_8bd1eab5484d21b52d6db254b6054508.jpg',	'15:17:27',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896911',	'81.6236483',	'25-10-2023_2967aa13e56ebbf5820dbffa22facd91.jpg',	'18:52:34',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896879',	'81.6236558',	NULL,	'03:35:07',	'2023-10-31 07:59:11',	'2023-10-25 15:17:29'),
+(175,	1,	0,	1,	3,	3,	0,	1,	0,	0,	1,	'84',	'2023-10-25',	'IT119',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'25-10-2023_c6b67069f3b3338e6d72758015cd5d69.jpg',	'09:41:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896881',	'81.6236544',	'25-10-2023_3ec081e32ffbaa60b2198e8ef3e9c57e.jpg',	'17:30:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896898',	'81.6236505',	NULL,	'07:49:00',	'2023-10-31 07:59:11',	'2023-10-25 16:40:54'),
+(179,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-10-25',	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'25-10-2023_2f2dcba346ce20f4a6d1ea738398a6dc.jpg',	'23:56:21',	NULL,	'7J7F+92F, , Raipur Division, 492001',	'21.2633997',	'81.6229689',	'25-10-2023_e4c105f9c1a134d1380d1e0aee47b0e7.jpg',	'23:56:47',	'7J7F+92F, , Raipur Division, 492001',	'21.2634006',	'81.6229679',	NULL,	'00:00:26',	'2023-10-31 07:59:11',	'2023-10-25 23:56:22'),
+(182,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-10-26',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'26-10-2023_f8fd064c62294bc7e996a269e1bf6f70.jpg',	'00:46:11',	NULL,	'7J7F+92F, , Raipur Division, 492001',	'21.2633969',	'81.6229659',	'26-10-2023_e827f21d87b54ea1fa6a804556af1c4c.jpg',	'00:46:29',	'7J7F+92F, , Raipur Division, 492001',	'21.2634002',	'81.6229679',	NULL,	'00:00:18',	'2023-10-31 07:59:11',	'2023-10-26 00:46:12'),
+(184,	1,	0,	1,	1,	3,	1,	0,	0,	0,	0,	'68',	'2023-10-26',	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	NULL,	'10:01:11',	NULL,	'Jay',	'21.111245',	'81.152525',	'26-10-2023_fbe8a25d49794be4f4a59d60fbbd4ca7.jpg',	'10:19:48',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.289688',	'81.6236521',	NULL,	'00:18:37',	'2023-10-31 07:59:11',	'2023-10-26 10:19:05'),
+(185,	1,	0,	1,	3,	3,	0,	1,	0,	0,	1,	'84',	'2023-10-26',	'IT119',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'25-10-2023_c6b67069f3b3338e6d72758015cd5d69.jpg',	'16:00:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896881',	'81.6236544',	'25-10-2023_3ec081e32ffbaa60b2198e8ef3e9c57e.jpg',	'24:30:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896898',	'81.6236505',	NULL,	'24:00:00',	'2023-10-31 07:59:11',	'2023-10-25 16:40:54'),
+(186,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-10-26',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'26-10-2023_5c99ac090ae8fba317b6c2b3f8450b43.jpg',	'13:08:04',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896395',	'81.6237046',	'26-10-2023_aa52b092f8c68f06d1d770e5cae05f13.jpg',	'13:09:35',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896309',	'81.6236917',	NULL,	'00:01:31',	'2023-10-31 07:59:11',	'2023-10-26 13:08:04'),
+(187,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-10-28',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'27-10-2023_9f2927d77556ef4d27d1f12fd8a7f458.jpg',	'09:25:22',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.289687',	'81.6236554',	'27-10-2023_b67a3d95bdf8bfc922d4379392d01e90.jpg',	'17:35:18',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896878',	'81.6236557',	NULL,	'00:00:56',	'2023-10-31 07:59:11',	'2023-10-27 13:13:24'),
+(188,	1,	0,	1,	1,	1,	1,	0,	0,	0,	0,	'68',	'2023-10-28',	'IT122',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	NULL,	'07:50:00',	NULL,	'Jay',	'21.111245',	'81.152525',	NULL,	'15:10:00',	'adsd hogaya hy abhe',	'21.1255',	'82.1222',	NULL,	'07:20:00',	'2023-10-31 07:59:11',	'2023-10-27 18:04:28'),
+(189,	1,	0,	1,	1,	1,	1,	0,	0,	0,	0,	'68',	'2023-10-28',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	NULL,	'15:51:00',	NULL,	'Jay',	'21.111245',	'81.152525',	NULL,	'00:00:00',	'adsd hogaya hy abhe',	'21.1255',	'82.1222',	NULL,	'08:09:00',	'2023-10-31 07:59:11',	'2023-10-27 18:27:38'),
+(190,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-10-28',	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'28-10-2023_dcce182ada50f51a638ec487b982498b.jpg',	'11:51:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896861',	'81.623655',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-28 11:51:05'),
+(191,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-10-30',	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'30-10-2023_e98f79f33bd762bfe2408fd10a2d1eb3.jpg',	'11:30:33',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896294',	'81.6236877',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-30 10:22:33'),
+(192,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-10-30',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'30-10-2023_7ed29e9c6b7655b81c9259f7a162b247.jpg',	'11:39:39',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896847',	'81.6236568',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-30 11:39:44'),
+(194,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-10-30',	'IT121',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'2',	'30-10-2023_af651dc9191276af55f8dfc111d070c5.jpg',	'09:27:15',	NULL,	'7JQC+5VG, Bhanpuri, Raipur Division, 492003',	'21.2879296',	'81.6218321',	'30-10-2023_af651dc9191276af55f8dfc111d070c5.jpg',	'18:27:15',	'7JQC+5VG, Bhanpuri, Raipur Division, 492003',	'21.2879296',	'81.6218321',	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-30 15:28:09'),
+(196,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-10-29',	'IT125',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'2',	'30-10-2023_af651dc9191276af55f8dfc111d070c5.jpg',	'10:27:15',	NULL,	'7JQC+5VG, Bhanpuri, Raipur Division, 492003',	'21.2879296',	'81.6218321',	NULL,	'18:27:15',	'7JQC+5VG, Bhanpuri, Raipur Division, 492003',	'21.2879296',	'81.6218321',	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-30 15:28:09'),
+(197,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-10-27',	'IT125',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'2',	'30-10-2023_af651dc9191276af55f8dfc111d070c5.jpg',	'10:27:15',	NULL,	'7JQC+5VG, Bhanpuri, Raipur Division, 492003',	'21.2879296',	'81.6218321',	NULL,	'16:27:15',	'7JQC+5VG, Bhanpuri, Raipur Division, 492003',	'21.2879296',	'81.6218321',	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-30 15:28:09'),
+(198,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-10-26',	'IT125',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'2',	'30-10-2023_af651dc9191276af55f8dfc111d070c5.jpg',	'11:00:15',	NULL,	'7JQC+5VG, Bhanpuri, Raipur Division, 492003',	'21.2879296',	'81.6218321',	NULL,	'23:27:15',	'7JQC+5VG, Bhanpuri, Raipur Division, 492003',	'21.2879296',	'81.6218321',	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-30 15:28:09'),
+(200,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-10-31',	'IT121',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'2',	'31-10-2023_f6339f845f1caa49bb050e39258b1d6c.jpg',	'10:12:24',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896079',	'81.6236763',	NULL,	'17:40:00',	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-31 10:12:37'),
+(202,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-10-31',	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'31-10-2023_09f5bd5757d7818f6c8a7ef4713e86a1.jpg',	'10:50:39',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896881',	'81.6236566',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-31 10:50:51'),
+(203,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-10-31',	'IT020',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'2',	'31-10-2023_2804150443df3cd7ac455a717e81eb58.jpg',	'10:51:36',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2897011',	'81.6236526',	'31-10-2023_759a39bea6baa588a8da2dbdbe638a69.jpg',	'10:51:37',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2897011',	'81.6236526',	NULL,	'00:00:01',	'2023-10-31 07:59:11',	'2023-10-31 10:53:26'),
+(204,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-10-31',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'31-10-2023_7b0dbbe46630bdea4795541f2f1b698b.jpg',	'10:54:10',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896375',	'81.6236876',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-10-31 07:59:11',	'2023-10-31 10:55:17'),
+(205,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'139',	'2023-10-31',	'IT124',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'2',	'31-10-2023_85d1e1c96b95e14acf37708e4463589d.jpg',	'10:57:20',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896472',	'81.6236858',	'31-10-2023_a0245cb5e1e8cb0148f3bb2c19b8b019.jpg',	'10:57:22',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896472',	'81.6236858',	NULL,	'00:00:02',	'2023-10-31 07:59:11',	'2023-10-31 10:57:58'),
+(207,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-01',	'IT121',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'2',	'01-11-2023_6cb0fe58e8329da4f87ae5b2089e7f2b.jpg',	'10:27:17',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896327',	'81.6236906',	'01-11-2023_00cdb700530bf18919a1729540c62b8a.jpg',	'10:27:19',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896327',	'81.6236906',	NULL,	'00:00:02',	'2023-11-01 04:57:39',	'2023-11-01 10:27:35'),
+(208,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-01',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'01-11-2023_cd601652a573d3ec5781881a38bce26d.jpg',	'10:31:16',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896334',	'81.6236909',	'01-11-2023_6309fb0d43e321520d6b78e667ea232a.jpg',	'16:50:46',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896864',	'81.6236575',	NULL,	'06:19:30',	'2023-11-01 11:20:50',	'2023-11-01 10:31:20'),
+(209,	1,	0,	0,	0,	0,	0,	1,	0,	0,	1,	NULL,	'2023-09-30',	'IT008',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'12-10-2023_6aaa2c1c7dd6e84d92361626b346a6d0.jpg',	'09:00:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896106',	'81.6236888',	'28-09-2023_f9d2f832006a6f5afe263dfb32a5d3d3.jpg',	'18:00:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	NULL,	NULL,	NULL,	'09:10:00',	'2023-10-31 07:59:11',	'2023-10-12 17:18:40'),
+(210,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-11-01',	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'1',	'01-11-2023_b948c97d08ab9b6ed5929c282c6e2610.jpg',	'15:04:56',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896871',	'81.6236554',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-11-01 15:05:05',	'2023-11-01 15:05:05'),
+(211,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-01',	'IT125',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'01-11-2023_2a2322bc83225a2a85ff6dbe5c811c44.jpg',	'09:58:43',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.289685',	'81.6236582',	'01-11-2023_2e591d471e6ca88225fb977a6b785310.jpg',	'17:30:45',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.289685',	'81.6236582',	NULL,	'00:00:02',	'2023-11-01 10:40:09',	'2023-11-01 16:09:03'),
+(212,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-11-02',	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'02-11-2023_0957b850d1ed325449dd6a68ccd0595b.jpg',	'10:20:56',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896347',	'81.6236821',	NULL,	'18:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	'2023-11-03 04:43:28',	'2023-11-02 10:21:01'),
+(215,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-11-02',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'02-11-2023_0957b850d1ed325449dd6a68ccd0595b.jpg',	'10:20:56',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896347',	'81.6236821',	NULL,	'18:00:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2879296',	'81.6218321',	NULL,	'09:49:40',	'2023-11-03 04:43:00',	'2023-11-02 10:21:01');
 
 DROP TABLE IF EXISTS `branch_list`;
 CREATE TABLE `branch_list` (
@@ -447,30 +171,6 @@ INSERT INTO `branch_list` (`id`, `business_id`, `branch_id`, `branch_name`, `is_
 (7,	'bd545732e12addf17c34a231d24a3814',	'797342eb22742bdf4524f3322a8852f1',	'Creative Minds',	0,	NULL,	'2023-10-02 06:56:18',	'2023-10-02 06:56:18'),
 (8,	'e3d64177e51bdff82b499e116796fe74',	'234de5fb3a0dc68c19b33446d054d6c2',	'FixingDots Gudhgaons',	0,	NULL,	'2023-10-11 12:05:42',	'2023-10-22 17:07:10'),
 (9,	'b4a8dd835f749b155efa9862b130808b',	'0b30ae1bd5ea396ecccc00fbb2a20da6',	'Fixing Dots',	0,	NULL,	'2023-10-13 07:33:20',	'2023-10-13 07:33:20');
-
-DROP TABLE IF EXISTS `business_categories_list`;
-CREATE TABLE `business_categories_list` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` longtext DEFAULT NULL,
-  `status` tinyint(4) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `business_categories_list` (`id`, `name`, `status`, `created_at`, `updated_at`) VALUES
-(1,	'Hospital',	0,	'2023-08-18 12:00:52',	'2023-08-18 11:59:26'),
-(2,	'Hotel',	0,	'2023-08-18 12:00:44',	'2023-08-18 11:59:35'),
-(3,	'Super Market',	0,	'2023-08-18 12:00:34',	'2023-08-18 11:59:43'),
-(4,	'Software Development',	0,	'2023-08-18 12:01:34',	'2023-08-18 12:01:34'),
-(5,	'IT/Telecom',	0,	'2023-08-18 12:02:35',	'2023-08-18 12:02:35'),
-(6,	'Jewellery',	0,	'2023-08-18 12:02:53',	'2023-08-18 12:02:53'),
-(7,	'Logistics',	0,	'2023-08-18 12:03:05',	'2023-08-18 12:03:05'),
-(8,	'Saloon/Boutique',	0,	'2023-08-18 12:04:38',	'2023-08-18 12:03:43'),
-(9,	'Educational/Coaching Institute',	0,	'2023-08-18 12:05:47',	'2023-08-18 12:05:47'),
-(10,	'Manufacturing',	0,	'2023-08-18 12:06:25',	'2023-08-18 12:06:25'),
-(11,	'Others',	0,	'2023-08-18 12:08:06',	'2023-08-18 12:08:06');
 
 DROP TABLE IF EXISTS `business_details_list`;
 CREATE TABLE `business_details_list` (
@@ -497,25 +197,8 @@ CREATE TABLE `business_details_list` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `business_details_list` (`id`, `business_id`, `business_logo`, `business_categories`, `client_name`, `business_email`, `business_name`, `business_type`, `mobile_no`, `city`, `state`, `country`, `business_address`, `pin_code`, `gstnumber`, `created_at`, `updated_at`) VALUES
-(1,	'e3d64177e51bdff82b499e116796fe74',	'25-09-2023_b9f46108508bcf0c617f0b1398c948f5.png',	4,	'Mr. Aman Sahu',	'amansahu.er@gmail.com',	'IT Google Invitation Comp',	4,	'831915176',	'12',	'11',	'India',	'Shrinagar ,Pahadipara,Gudhiyari  Raipur C.G 492001\r\nTulshi nagar ,Pahadipara,Gudhiyari  Raipur C.G 492001',	'492011',	'SODSMEW123X',	'2023-10-23 11:53:47',	'2023-09-25 18:13:19'),
+(1,	'e3d64177e51bdff82b499e116796fe74',	'25-09-2023_b9f46108508bcf0c617f0b1398c948f5.png',	4,	'Mr. Aman Sahu',	'amansahu.er@gmail.com',	'IT Google Invitation Comp',	4,	'8319151766',	'12',	'11',	'India',	'Shrinagar ,Pahadipara,Gudhiyari  Raipur C.G 492001\r\nTulshi nagar ,Pahadipara,Gudhiyari  Raipur C.G 492001',	'492011',	'SODSMEW123X',	'2023-11-02 12:44:27',	'2023-09-25 18:13:19'),
 (2,	'bd545732e12addf17c34a231d24a3814',	'02-10-2023_12930beafc3b22a230438ffb901fefd3.png',	4,	'Dilip Sahu',	'dilipsahu26@gmail.com',	'Creative Minds',	1,	'9993659548',	'Raipur',	'Chhattisgarh',	'1',	'Pachpedi Naka, Old Dhamtari Road, Near Colors Mall',	'492001',	'1234567890098',	'2023-10-02 06:51:11',	'2023-10-02 06:51:11');
-
-DROP TABLE IF EXISTS `business_type_list`;
-CREATE TABLE `business_type_list` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `business_type_list` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(1,	'Sole Proprietorship',	'2023-09-04 06:41:20',	'2023-08-19 17:48:07'),
-(2,	'Partnership',	'2023-09-04 06:41:28',	'2023-08-19 17:48:07'),
-(3,	'Corporation',	'2023-09-04 06:41:36',	'2023-08-19 17:48:07'),
-(4,	'Cooperative',	'2023-09-04 06:41:58',	'2023-08-19 17:48:07'),
-(5,	'Limited Liability Company (LLC)',	'2023-09-04 06:42:10',	'2023-08-19 17:48:07');
 
 DROP TABLE IF EXISTS `camera_permission`;
 CREATE TABLE `camera_permission` (
@@ -548,7 +231,7 @@ CREATE TABLE `department_list` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `department_list` (`depart_id`, `b_id`, `branch_id`, `depart_name`, `status`, `updated_at`, `created_at`) VALUES
-(1,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'Finance & sales Department',	0,	'2023-10-09 17:25:26',	'2023-10-09 11:55:26'),
+(1,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'Finance & sales Department',	0,	'2023-11-02 16:16:54',	'2023-11-02 10:46:54'),
 (2,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'Housekeepings',	0,	'2023-09-15 01:02:34',	'2023-09-14 19:32:34'),
 (3,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'Accounting',	0,	'2023-09-14 10:33:06',	'2023-09-14 10:33:06'),
 (4,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'Human Resource Department',	0,	'2023-09-15 01:02:53',	'2023-09-14 19:32:53'),
@@ -616,18 +299,6 @@ INSERT INTO `designation_list` (`desig_id`, `business_id`, `branch_id`, `departm
 (39,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	'Finance Managerd',	'2023-10-23 14:54:01',	'2023-10-23 09:24:01'),
 (40,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	'Finance Manager',	'2023-10-10 15:15:56',	'2023-10-10 15:15:56');
 
-DROP TABLE IF EXISTS `employee_gender`;
-CREATE TABLE `employee_gender` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `gender_type` varchar(225) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `employee_gender` (`id`, `gender_type`) VALUES
-(1,	'Male'),
-(2,	'Female'),
-(3,	'Other');
-
 DROP TABLE IF EXISTS `employee_personal_details`;
 CREATE TABLE `employee_personal_details` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -648,13 +319,21 @@ CREATE TABLE `employee_personal_details` (
   `emp_email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `emp_date_of_birth` date DEFAULT NULL,
   `emp_date_of_joining` date DEFAULT NULL,
-  `emp_gender` tinyint(4) DEFAULT NULL,
+  `emp_gender` tinyint(1) NOT NULL DEFAULT 0,
+  `emp_marital_status` tinyint(1) NOT NULL DEFAULT 0,
+  `emp_caste` tinyint(1) NOT NULL DEFAULT 0,
+  `emp_blood_group` tinyint(1) NOT NULL DEFAULT 0,
+  `emp_select_id` tinyint(1) NOT NULL DEFAULT 0,
+  `emp_select_id_number` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `emp_nationality` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
   `emp_address` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `emp_country` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `emp_state` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `emp_city` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `emp_pin_code` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `emp_shift_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `emp_reporting_manager` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `emp_imei_no` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `emp_attendance_method` tinyint(1) DEFAULT NULL,
   `emp_status` tinyint(1) NOT NULL DEFAULT 0,
   `profile_photo` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -665,42 +344,34 @@ CREATE TABLE `employee_personal_details` (
   KEY `role_id` (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `employee_personal_details` (`id`, `business_id`, `branch_id`, `emp_id`, `master_endgame_id`, `emp_name`, `emp_mname`, `emp_lname`, `department_id`, `designation_id`, `is_admin`, `role_id`, `employee_type`, `employee_contractual_type`, `emp_mobile_number`, `emp_email`, `emp_date_of_birth`, `emp_date_of_joining`, `emp_gender`, `emp_address`, `emp_country`, `emp_state`, `emp_city`, `emp_pin_code`, `emp_shift_type`, `emp_attendance_method`, `emp_status`, `profile_photo`, `created_at`, `updated_at`) VALUES
-(5,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT008',	249,	'Dilip',	NULL,	'Sahu',	11,	28,	0,	1,	1,	0,	1234567890,	'dilipsahu26@gmail.com',	'1993-10-26',	'1998-09-01',	1,	'asdfafsdadffgssd',	'1',	'6',	'61',	'493333',	'30',	1,	0,	'29-09-2023_6ceab5266017decc66c8f0225becb1ff.png',	'2023-10-27 10:18:27',	'2023-09-30 07:29:48'),
-(7,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT009',	249,	'Nisha',	'power',	'Sahu',	11,	30,	0,	0,	1,	0,	9993433474,	'nishasahu018@gmail.com',	'1998-02-10',	'2023-09-13',	2,	'Near of Railway Station',	'1',	'6',	'65',	'495677',	'27',	1,	0,	'25-10-2023_1214b7e05479d3093893648a31982c54.jpg',	'2023-10-27 10:18:27',	'2023-09-13 07:36:57'),
-(8,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT010',	249,	'Soniya',	NULL,	'root',	11,	28,	0,	0,	1,	0,	9658473211,	'soniyasahu583@gmail.com',	'2000-10-04',	'2023-09-01',	2,	'Pahadipara,Gudhiyari  Raipur C.G 492011',	'1',	'6',	'101',	'489333',	'29',	1,	0,	'19-10-2023_3901ff8daa8436afde7e5155d4fbda3f.jpg',	'2023-10-27 12:54:04',	'2023-09-22 06:54:31'),
-(15,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT0012',	249,	'Jayant',	'fast',	'Nishad',	6,	28,	0,	0,	1,	0,	8462074453,	'jayantnishad34@gmail.com',	'2005-05-10',	'2023-01-05',	1,	'Shrinagar ,Pahadipara,Gudhiyari  Raipur C.G 492001',	'1',	'6',	'101',	'492011',	'27',	1,	0,	'09-10-2023_c9b5bba0ecfc5fbb8bce291a6eb6483c.jpg',	'2023-10-27 10:18:27',	'2023-09-06 14:32:53'),
-(18,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT111',	249,	'Satyam',	NULL,	'Singh',	5,	9,	0,	0,	1,	0,	8585858585,	'satyamsing55@gmail.com',	'2023-09-12',	'2023-09-07',	1,	'Amanaka raipur',	'1',	'6',	'101',	'493221',	'27',	2,	0,	'28-09-2023_cbe24864da407522f4b2ebf4b739f17b.jpg',	'2023-10-27 10:18:27',	'2023-09-28 09:59:25'),
-(22,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT020',	249,	'Kumar',	NULL,	'Sahu',	5,	17,	0,	0,	1,	0,	8596969696,	'ramesh@gmail.com',	'2000-10-03',	'2023-10-25',	1,	'fasdfasdf',	'1',	'6',	'101',	'858596',	'27',	3,	0,	'01-10-2023_ecf69975bffe119b50a066e13dc28cfe.png',	'2023-10-27 10:18:27',	'2023-10-01 17:16:59'),
-(29,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT034',	249,	'MD',	NULL,	'Shajid',	7,	26,	0,	0,	1,	0,	8585858585,	'satyamsingh@gmail.com',	'2005-12-02',	'2023-10-12',	1,	'Birgaon Raipur C.G.',	'1',	'6',	'101',	'564658',	'27',	1,	0,	'02-10-2023_088503d5ed091f76f405cd23a82be75b.jpg',	'2023-10-27 10:18:27',	'2023-10-02 05:48:29'),
-(30,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT024',	249,	'Radhika',	NULL,	'Singh',	5,	17,	0,	0,	1,	0,	8585858585,	'radhikasingh@gmail.com',	'1993-06-16',	'2023-10-11',	1,	'Birgaon Raipur C.G.',	'1',	'6',	'101',	NULL,	'27',	2,	0,	'19-10-2023_a5282dd7ce48d2e138f04095df08bfc4.jpg',	'2023-10-27 10:18:27',	'2023-10-02 05:58:06'),
-(32,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT040',	249,	'Vinay',	NULL,	'Verma',	2,	6,	0,	0,	1,	0,	8558585588,	'vinayverma@gmail.com',	'1993-11-17',	'2023-10-01',	1,	'Chainpur',	'1',	'6',	'101',	'564658',	'27',	1,	0,	'04-10-2023_c2d823fa7029fc07cf625bc7a5b5cb22.jpg',	'2023-10-27 10:18:27',	'2023-10-04 06:38:10'),
-(33,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT025',	249,	'Vandana',	NULL,	'Prajapati',	1,	28,	0,	0,	1,	0,	8585858585,	'vandnaprajapati@gmail.com',	'1991-06-04',	'2023-10-03',	2,	'Birgaon Raipur C.G.',	'1',	'0',	'0',	NULL,	'27',	1,	0,	'19-10-2023_fb47a4e39c924a0e23916aa2cac3127e.jpg',	'2023-10-27 10:18:27',	'2023-10-04 11:26:16'),
-(34,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT043',	249,	'Ishita',	NULL,	'Thakur',	4,	8,	0,	0,	1,	0,	8585858585,	'ishitathakur@gmail.com',	'1996-06-04',	'2023-10-02',	3,	'gfasdGfhdag',	'1',	'6',	'101',	'564658',	'27',	1,	0,	'04-10-2023_c2d823fa7029fc07cf625bc7a5b5cb22.jpg	',	'2023-10-27 10:18:27',	'2023-10-04 12:45:15'),
-(35,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT112',	249,	'Aditi',	NULL,	'Mishra',	5,	17,	0,	0,	1,	0,	7708925678,	'aditimishra@gmail.com',	'2000-11-08',	'2023-10-02',	2,	'Gondware, Ring Road 2',	'1',	'6',	'101',	'858596',	'27',	1,	0,	'19-10-2023_cfcda46fa805bc4fed7fd315f28f563b.jpg',	'2023-10-27 10:18:27',	'2023-10-05 19:03:11'),
-(37,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT114',	249,	'Arjun',	NULL,	'Rawat',	6,	10,	0,	0,	1,	0,	8985852852,	'aditimishra@gmail.com',	'2023-10-24',	'2023-10-18',	1,	'Rawabhata Raipur, Chhattisgarh 493221',	'1',	'14',	'1',	'858596',	'27',	2,	0,	'06-10-2023_4b72e1ad2382450c42fc1840d302433f.png',	'2023-10-27 10:18:27',	'2023-10-06 02:44:53'),
-(38,	'bd545732e12addf17c34a231d24a3814',	'797342eb22742bdf4524f3322a8852f1',	'Cr115',	NULL,	'Ramesh',	NULL,	'Yadav',	15,	32,	0,	0,	1,	0,	8855888588,	'ramesh@gmail.com',	'2000-10-17',	'2023-10-02',	1,	'Goa',	'1',	'10',	'4',	'526325',	'27',	1,	0,	'06-10-2023_c7741c9986aefd95c9b8ecee1be74ff3.png',	'2023-10-19 06:50:47',	'2023-10-06 11:33:42'),
-(39,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT115',	249,	'rahulraj',	'sda',	'Nishad',	7,	22,	0,	0,	1,	0,	354624564,	'jayantnishad34@gmail.com',	'2023-10-02',	'2023-10-09',	2,	'Shrinagar ,Pahadipara,Gudhiyari  Raipur C.G 492001',	'1',	'6',	'14',	'492011',	'27',	1,	0,	'08-10-2023_516d18fe541d42e58dd5761e0c1f1086.png',	'2023-10-27 10:18:27',	'2023-10-07 19:46:21'),
-(40,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT116',	249,	'mohit',	NULL,	'sahu',	5,	9,	0,	0,	1,	0,	483589348,	'mohit007@gmail.com',	'2023-09-27',	'2023-10-23',	1,	'Raipur',	'1',	'6',	'44',	'492011',	'27',	1,	0,	'08-10-2023_c83c281cf1fc02e3500574e47731c897.png',	'2023-10-27 10:18:27',	'2023-10-07 19:53:04'),
-(41,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT117',	249,	'Bhaskar',	'asdf',	'Dewangan',	2,	39,	0,	0,	1,	0,	8585885885,	'bhaskardewangan@gmail.co',	'1998-07-07',	'2023-10-05',	1,	'Mon',	'1',	'24',	'5',	'564658',	'27',	1,	0,	'18-10-2023_95fc577a986545f3a996d9ae017d36a4.jpg',	'2023-10-27 10:18:27',	'2023-10-18 12:48:06'),
-(42,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT118',	249,	'Rahul',	NULL,	'Verma',	9,	25,	0,	0,	1,	0,	8558585544,	'contractualemp@gmail.com',	'2000-06-13',	'2022-05-01',	1,	'C/O Ram Ganesh CG Nagar Tikraara Near Mahesh, Vijayvada',	'1',	'15',	'13',	'490505',	'27',	1,	0,	'23-10-2023_d4bfc20c7818c75867918aa46e8cfbd4.jpg',	'2023-10-27 10:18:27',	'2023-10-23 10:07:17'),
-(43,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT119',	249,	'Rupali',	NULL,	'Verma',	1,	40,	0,	0,	1,	1,	9875868485,	'rupali430@gmail.com',	'1999-10-12',	'2023-10-06',	2,	'Muzaaffarpur',	'1',	'4',	'74',	'858758',	'29',	1,	0,	'23-10-2023_aebe11b464f9d66d0e63ad8b889a2428.jpg',	'2023-10-27 10:18:27',	'2023-10-23 10:08:52'),
-(44,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT120',	249,	'Megha',	NULL,	'Kapoor',	1,	40,	0,	0,	2,	1,	8764584564,	'meghakapoor886@gmail.com',	'1998-11-11',	'2023-10-02',	2,	'Bastar',	'1',	'6',	'13',	'845415',	'27',	1,	0,	'23-10-2023_f25210e85fea6706e85cc627ec27b155.jpg',	'2023-10-27 10:18:27',	'2023-10-23 10:44:41'),
-(45,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT121',	249,	'Nitin',	NULL,	'Singh',	1,	39,	0,	0,	1,	3,	8585858585,	'satyamsingh@gmail.com',	'2000-06-07',	'2023-10-03',	1,	'Birgaon Raipur C.G.',	'1',	'10',	'4',	'564658',	'27',	1,	0,	'23-10-2023_229016001a0731f2a64d2d85fb210a42.jpg',	'2023-10-27 10:18:27',	'2023-10-23 10:52:32'),
-(46,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT122',	249,	'Lucky',	NULL,	'Prasad',	10,	28,	0,	0,	2,	2,	8588585285,	'luckyprasad84@gmail.com',	'2000-11-15',	'2023-02-21',	1,	'Dholka',	'1',	'11',	'43',	'898458',	'29',	1,	0,	'23-10-2023_ac4c98e10582952ecf33c6b9e60a184e.jpg',	'2023-10-27 10:18:27',	'2023-10-23 11:04:52'),
-(47,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT123',	249,	'Mrs. Jiya',	NULL,	'Sonwane',	6,	26,	0,	0,	1,	2,	9823757720,	'jiyarajput@gmail.com',	'2000-10-23',	'2023-07-01',	2,	'Kabir Nagar, Near SBPL',	'1',	'6',	'101',	'492001',	'27',	1,	0,	'23-10-2023_5195b06a40fdd84974c20586b42e39e6.jpg',	'2023-10-27 10:18:27',	'2023-10-23 11:23:54'),
-(48,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT124',	249,	'Karan',	'Prasad',	'Verma',	9,	25,	0,	0,	1,	3,	9823757755,	'karanverma@gmail.com',	'1999-11-10',	'2023-10-04',	1,	'Sahu Para, Main Road Bemetara',	'1',	'6',	'15',	'491237',	'29',	2,	0,	'23-10-2023_1ed86a3123cf74d559d7e389f8f9c58c.jpg',	'2023-10-27 10:18:27',	'2023-10-23 11:33:37');
-
-DROP TABLE IF EXISTS `employee_type`;
-CREATE TABLE `employee_type` (
-  `type_id` int(255) NOT NULL AUTO_INCREMENT,
-  `emp_type` varchar(255) NOT NULL,
-  PRIMARY KEY (`type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `employee_type` (`type_id`, `emp_type`) VALUES
-(1,	'Regular'),
-(2,	'Contractual');
+INSERT INTO `employee_personal_details` (`id`, `business_id`, `branch_id`, `emp_id`, `master_endgame_id`, `emp_name`, `emp_mname`, `emp_lname`, `department_id`, `designation_id`, `is_admin`, `role_id`, `employee_type`, `employee_contractual_type`, `emp_mobile_number`, `emp_email`, `emp_date_of_birth`, `emp_date_of_joining`, `emp_gender`, `emp_marital_status`, `emp_caste`, `emp_blood_group`, `emp_select_id`, `emp_select_id_number`, `emp_nationality`, `emp_address`, `emp_country`, `emp_state`, `emp_city`, `emp_pin_code`, `emp_shift_type`, `emp_reporting_manager`, `emp_imei_no`, `emp_attendance_method`, `emp_status`, `profile_photo`, `created_at`, `updated_at`) VALUES
+(5,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT008',	250,	'Dilip',	NULL,	'Sahu',	11,	28,	0,	1,	1,	0,	1234567890,	'dilipsahu26@gmail.com',	'1993-10-26',	'1998-09-01',	1,	0,	0,	0,	0,	'0',	'0',	'asdfafsdadffgssd',	'1',	'6',	'61',	'493333',	'30',	NULL,	NULL,	1,	0,	'29-09-2023_6ceab5266017decc66c8f0225becb1ff.png',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(7,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT009',	250,	'Nisha',	'power',	'Sahu',	11,	28,	0,	3,	1,	0,	9993433474,	'nishasahu018@gmail.com',	'1998-02-10',	'2023-09-13',	2,	0,	0,	0,	0,	'0',	'0',	'Near of Railway Station',	'1',	'6',	'65',	'495677',	'27',	NULL,	NULL,	1,	0,	'25-10-2023_1214b7e05479d3093893648a31982c54.jpg',	'2023-11-03 05:04:59',	'2023-11-03 10:34:59'),
+(8,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT010',	250,	'Soniya',	NULL,	'root',	11,	28,	0,	0,	1,	0,	9658473211,	'soniyasahu583@gmail.com',	'2000-10-04',	'2023-09-01',	2,	0,	0,	0,	0,	'0',	'0',	'Pahadipara,Gudhiyari  Raipur C.G 492011',	'1',	'6',	'101',	'489333',	'29',	NULL,	NULL,	2,	0,	'19-10-2023_3901ff8daa8436afde7e5155d4fbda3f.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(15,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT0012',	250,	'Jayant',	'fast',	'Nishad',	6,	28,	0,	0,	1,	0,	8462074453,	'jayantnishad34@gmail.com',	'2005-05-10',	'2023-01-05',	1,	0,	0,	0,	0,	'0',	'0',	'Shrinagar ,Pahadipara,Gudhiyari  Raipur C.G 492001',	'1',	'6',	'101',	'492011',	'27',	NULL,	NULL,	1,	0,	'09-10-2023_c9b5bba0ecfc5fbb8bce291a6eb6483c.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(18,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT111',	250,	'Satyam',	NULL,	'Singh',	5,	9,	0,	0,	1,	0,	8585858585,	'satyamsing55@gmail.com',	'2023-09-12',	'2023-09-07',	1,	0,	0,	0,	0,	'0',	'0',	'Amanaka raipur',	'1',	'6',	'101',	'493221',	'27',	NULL,	NULL,	2,	0,	'28-09-2023_cbe24864da407522f4b2ebf4b739f17b.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(22,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT020',	250,	'Kumar',	NULL,	'Sahu',	5,	17,	0,	0,	1,	0,	8596969696,	'ramesh@gmail.com',	'2000-10-03',	'2023-10-25',	1,	0,	0,	0,	0,	'0',	'0',	'fasdfasdf',	'1',	'6',	'101',	'858596',	'27',	NULL,	NULL,	3,	0,	'01-10-2023_ecf69975bffe119b50a066e13dc28cfe.png',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(29,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT034',	250,	'MD',	NULL,	'Shajid',	7,	26,	0,	0,	1,	0,	8585858585,	'satyamsingh@gmail.com',	'2005-12-02',	'2023-10-12',	1,	0,	0,	0,	0,	'0',	'0',	'Birgaon Raipur C.G.',	'1',	'6',	'101',	'564658',	'27',	NULL,	NULL,	1,	0,	'02-10-2023_088503d5ed091f76f405cd23a82be75b.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(30,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT024',	250,	'Radhika',	NULL,	'Singh',	5,	17,	0,	0,	1,	0,	8585858585,	'radhikasingh@gmail.com',	'1993-06-16',	'2023-10-11',	1,	0,	0,	0,	0,	'0',	'0',	'Birgaon Raipur C.G.',	'1',	'6',	'101',	NULL,	'27',	NULL,	NULL,	2,	0,	'19-10-2023_a5282dd7ce48d2e138f04095df08bfc4.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(32,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT040',	250,	'Vinay',	NULL,	'Verma',	2,	6,	0,	0,	1,	0,	8558585588,	'vinayverma@gmail.com',	'1993-11-17',	'2023-10-01',	1,	0,	0,	0,	0,	'0',	'0',	'Chainpur',	'1',	'6',	'101',	'564658',	'27',	NULL,	NULL,	1,	0,	'04-10-2023_c2d823fa7029fc07cf625bc7a5b5cb22.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(33,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT025',	250,	'Vandana',	NULL,	'Prajapati',	1,	28,	0,	0,	1,	0,	8585858585,	'vandnaprajapati@gmail.com',	'1991-06-04',	'2023-10-03',	2,	0,	0,	0,	0,	'0',	'0',	'Birgaon Raipur C.G.',	'1',	'0',	'0',	NULL,	'27',	NULL,	NULL,	1,	0,	'19-10-2023_fb47a4e39c924a0e23916aa2cac3127e.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(34,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT043',	250,	'Ishita',	NULL,	'Thakur',	4,	8,	0,	0,	1,	0,	8585858585,	'ishitathakur@gmail.com',	'1996-06-04',	'2023-10-02',	3,	0,	0,	0,	0,	'0',	'0',	'gfasdGfhdag',	'1',	'6',	'101',	'564658',	'27',	NULL,	NULL,	1,	0,	'04-10-2023_c2d823fa7029fc07cf625bc7a5b5cb22.jpg	',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(35,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT112',	250,	'Aditi',	NULL,	'Mishra',	5,	17,	0,	0,	1,	0,	7708925678,	'aditimishra@gmail.com',	'2000-11-08',	'2023-10-02',	2,	0,	0,	0,	0,	'0',	'0',	'Gondware, Ring Road 2',	'1',	'6',	'101',	'858596',	'27',	NULL,	NULL,	1,	0,	'19-10-2023_cfcda46fa805bc4fed7fd315f28f563b.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(37,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT114',	250,	'Arjun',	NULL,	'Rawat',	6,	10,	0,	0,	1,	0,	8985852852,	'aditimishra@gmail.com',	'2023-10-24',	'2023-10-18',	1,	0,	0,	0,	0,	'0',	'0',	'Rawabhata Raipur, Chhattisgarh 493221',	'1',	'14',	'1',	'858596',	'27',	NULL,	NULL,	2,	0,	'06-10-2023_4b72e1ad2382450c42fc1840d302433f.png',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(38,	'bd545732e12addf17c34a231d24a3814',	'797342eb22742bdf4524f3322a8852f1',	'Cr115',	NULL,	'Ramesh',	NULL,	'Yadav',	15,	32,	0,	0,	1,	0,	8855888588,	'ramesh@gmail.com',	'2000-10-17',	'2023-10-02',	1,	0,	0,	0,	0,	'0',	'0',	'Goa',	'1',	'10',	'4',	'526325',	'27',	NULL,	NULL,	1,	0,	'06-10-2023_c7741c9986aefd95c9b8ecee1be74ff3.png',	'2023-10-19 06:50:47',	'2023-10-06 11:33:42'),
+(39,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT115',	250,	'rahulraj',	'sda',	'Nishad',	7,	22,	0,	0,	1,	0,	354624564,	'jayantnishad34@gmail.com',	'2023-10-02',	'2023-10-09',	2,	0,	0,	0,	0,	'0',	'0',	'Shrinagar ,Pahadipara,Gudhiyari  Raipur C.G 492001',	'1',	'6',	'14',	'492011',	'27',	NULL,	NULL,	1,	0,	'08-10-2023_516d18fe541d42e58dd5761e0c1f1086.png',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(40,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT116',	250,	'mohit',	NULL,	'sahu',	5,	9,	0,	0,	1,	0,	483589348,	'mohit007@gmail.com',	'2023-09-27',	'2023-10-23',	1,	0,	0,	0,	0,	'0',	'0',	'Raipur',	'1',	'6',	'44',	'492011',	'27',	NULL,	NULL,	1,	0,	'08-10-2023_c83c281cf1fc02e3500574e47731c897.png',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(41,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT117',	250,	'Bhaskar',	'asdf',	'Dewangan',	2,	39,	0,	0,	1,	0,	8585885885,	'bhaskardewangan@gmail.co',	'1998-07-07',	'2023-10-05',	1,	0,	0,	0,	0,	'0',	'0',	'Mon',	'1',	'24',	'5',	'564658',	'27',	NULL,	NULL,	1,	0,	'18-10-2023_95fc577a986545f3a996d9ae017d36a4.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(42,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT118',	250,	'Rahul',	NULL,	'Verma',	9,	25,	0,	0,	1,	0,	8558585544,	'contractualemp@gmail.com',	'2000-06-13',	'2022-05-01',	1,	0,	0,	0,	0,	'0',	'0',	'C/O Ram Ganesh CG Nagar Tikraara Near Mahesh, Vijayvada',	'1',	'15',	'13',	'490505',	'27',	NULL,	NULL,	1,	0,	'23-10-2023_d4bfc20c7818c75867918aa46e8cfbd4.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(43,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT119',	250,	'Rupali',	NULL,	'Verma',	1,	40,	0,	0,	1,	1,	9875868485,	'rupali430@gmail.com',	'1999-10-12',	'2023-10-06',	2,	0,	0,	0,	0,	'0',	'0',	'Muzaaffarpur',	'1',	'4',	'74',	'858758',	'29',	NULL,	NULL,	1,	0,	'23-10-2023_aebe11b464f9d66d0e63ad8b889a2428.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(44,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT120',	250,	'Megha',	NULL,	'Kapoor',	1,	40,	0,	0,	2,	1,	8764584564,	'meghakapoor886@gmail.com',	'1998-11-11',	'2023-10-02',	2,	0,	0,	0,	0,	'0',	'0',	'Bastar',	'1',	'6',	'13',	'845415',	'27',	NULL,	NULL,	1,	0,	'23-10-2023_f25210e85fea6706e85cc627ec27b155.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(45,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT121',	250,	'Nitin',	NULL,	'Singh',	1,	39,	0,	0,	1,	3,	8888888888,	'satyamsingh@gmail.com',	'2000-06-07',	'2023-10-03',	1,	0,	0,	0,	0,	'0',	'0',	'Birgaon Raipur C.G.',	'1',	'10',	'4',	'564658',	'27',	NULL,	NULL,	1,	0,	'23-10-2023_229016001a0731f2a64d2d85fb210a42.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(46,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT122',	250,	'Lucky',	NULL,	'Prasad',	10,	28,	0,	0,	2,	2,	8888888877,	'luckyprasad84@gmail.com',	'2000-11-15',	'2023-02-21',	1,	0,	0,	0,	0,	'0',	'0',	'Dholka',	'1',	'11',	'43',	'898458',	'29',	NULL,	NULL,	1,	0,	'23-10-2023_ac4c98e10582952ecf33c6b9e60a184e.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(47,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT123',	250,	'Mrs. Jiya',	NULL,	'Sonwane',	6,	26,	0,	0,	1,	2,	9823757720,	'jiyarajput@gmail.com',	'2000-10-23',	'2023-07-01',	2,	0,	0,	0,	0,	'0',	'0',	'Kabir Nagar, Near SBPL',	'1',	'6',	'101',	'492001',	'27',	NULL,	NULL,	1,	0,	'23-10-2023_5195b06a40fdd84974c20586b42e39e6.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(48,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT124',	250,	'Karan',	'Prasad',	'Verma',	9,	25,	0,	0,	1,	3,	9823757755,	'karanverma@gmail.com',	'1999-11-10',	'2023-10-04',	1,	0,	0,	0,	0,	'0',	'0',	'Sahu Para, Main Road Bemetara',	'1',	'6',	'15',	'491237',	'29',	NULL,	NULL,	2,	0,	'23-10-2023_1ed86a3123cf74d559d7e389f8f9c58c.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(49,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT125',	250,	'Aman',	'Kumar',	'Sahu',	10,	28,	0,	0,	1,	0,	9111326605,	'amansahu2333924@gmail.com',	'2000-07-07',	'2023-06-13',	1,	0,	0,	0,	0,	'0',	'0',	'Vill-Ganiyari, Post-Sambalpur, Block-Nawagarh,C.G., 491340',	'1',	'6',	'15',	'491340',	'27',	NULL,	NULL,	1,	0,	'30-10-2023_19555fb9659a39160b458d5206d3273c.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(50,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT126',	250,	'Satyam',	NULL,	'Singh',	2,	39,	0,	0,	1,	0,	8585858585,	'satyamsingh@gmail.com',	'2023-11-02',	'2023-11-15',	1,	0,	1,	1,	1,	'704375743989',	'1',	NULL,	'1',	'3',	'0',	NULL,	'30',	NULL,	NULL,	1,	0,	'01-11-2023_19e117f19274353287492d5c051b6814.png',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(51,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308229',	'IT127',	250,	'Nitya',	NULL,	'Nishad',	1,	40,	0,	0,	1,	0,	6546546546,	'nityavaishnav@gmail.com',	'1999-02-02',	'2023-11-01',	2,	1,	3,	1,	1,	'707070707070',	'1',	'Antagarh',	NULL,	'6',	'1',	'564658',	'30',	'Mr. R. K.',	NULL,	1,	0,	'01-11-2023_1601d7185e3c905218de930e84685f1c.jpg',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14');
 
 DROP TABLE IF EXISTS `export_employee_templates`;
 CREATE TABLE `export_employee_templates` (
@@ -724,200 +395,6 @@ CREATE TABLE `export_employee_templates` (
 INSERT INTO `export_employee_templates` (`id`, `emp_id`, `emp_fname`, `emp_mname`, `emp_lname`, `emp_dob`, `emp_join`, `emp_gender`, `emp_mobile`, `emp_gmail`, `emp_blood_group`, `emp_iemi`, `created_at`, `updated_at`) VALUES
 (1,	323,	'John',	'D',	'Miller',	'2023-10-12',	'2023-10-12',	'Male/Female',	'8984388949',	'@gmail.com',	'O,B+,',	'5655645343434344',	NULL,	NULL);
 
-DROP TABLE IF EXISTS `failed_jobs`;
-CREATE TABLE `failed_jobs` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `uuid` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `connection` text COLLATE utf8_unicode_ci NOT NULL,
-  `queue` text COLLATE utf8_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
-DROP TABLE IF EXISTS `gatepass_request_list`;
-CREATE TABLE `gatepass_request_list` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `business_id` longtext DEFAULT NULL,
-  `branch_id` varchar(255) DEFAULT NULL,
-  `department_id` int(11) DEFAULT NULL,
-  `designation_id` int(11) DEFAULT NULL,
-  `emp_id` varchar(255) DEFAULT NULL,
-  `date` date DEFAULT NULL,
-  `going_through` varchar(255) DEFAULT NULL,
-  `in_time` time DEFAULT NULL,
-  `out_time` time DEFAULT NULL,
-  `reason` varchar(255) DEFAULT NULL,
-  `status` varchar(255) DEFAULT NULL,
-  `remark` varchar(255) DEFAULT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `gatepass_request_list` (`id`, `business_id`, `branch_id`, `department_id`, `designation_id`, `emp_id`, `date`, `going_through`, `in_time`, `out_time`, `reason`, `status`, `remark`, `created_at`, `updated_at`) VALUES
-(9,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	'2023-09-30',	'Auto',	'13:23:00',	'13:23:00',	'Qetj',	'2',	'hii',	'2023-09-30 13:23:42',	'2023-09-30 13:23:42'),
-(10,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	'2023-09-30',	'Scooty',	'13:26:00',	'13:26:00',	'4hh',	'2',	'sddsfaf',	'2023-09-30 13:26:25',	'2023-09-30 13:26:25'),
-(11,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	'2023-09-30',	'Car',	'17:05:00',	'16:10:00',	'Collect parcel',	'1',	NULL,	'2023-09-30 15:38:12',	'2023-09-30 15:38:12'),
-(13,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	'2023-10-10',	'JCB',	'12:50:00',	'16:35:00',	'Movie time',	'2',	'Not a valid reason',	'2023-10-10 10:45:06',	'2023-10-10 10:45:06'),
-(15,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-12 18:01:19',	'2023-10-12 18:01:19'),
-(16,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	'2023-10-10',	'Auto',	'17:03:01',	'16:03:00',	'Ggggggg',	'0',	NULL,	'2023-10-12 18:03:24',	'2023-10-12 18:03:24'),
-(17,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT010',	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:02:33',	'2023-10-27 18:02:33'),
-(18,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT010',	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:04:03',	'2023-10-27 18:04:03'),
-(19,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT010',	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:04:09',	'2023-10-27 18:04:09'),
-(20,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT010',	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:04:25',	'2023-10-27 18:04:25'),
-(21,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT010',	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:05:03',	'2023-10-27 18:05:03'),
-(22,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT010',	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:05:41',	'2023-10-27 18:05:41'),
-(23,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT010',	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:06:40',	'2023-10-27 18:06:40');
-
-DROP TABLE IF EXISTS `holiday_details`;
-CREATE TABLE `holiday_details` (
-  `holiday_id` int(11) NOT NULL AUTO_INCREMENT,
-  `template_id` int(11) DEFAULT NULL,
-  `business_id` longtext DEFAULT NULL,
-  `holiday_name` varchar(255) DEFAULT NULL,
-  `day` varchar(255) DEFAULT NULL,
-  `holiday_date` date DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
-  PRIMARY KEY (`holiday_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `holiday_details` (`holiday_id`, `template_id`, `business_id`, `holiday_name`, `day`, `holiday_date`, `updated_at`, `created_at`) VALUES
-(5,	3,	'e3d64177e51bdff82b499e116796fe74',	'Maha Shiv Ratri',	'Thursday',	'2023-09-07',	'2023-09-26 18:50:33',	'2023-09-26 18:50:33'),
-(10,	3,	'e3d64177e51bdff82b499e116796fe74',	'sdf',	'Thursday',	'2023-08-31',	NULL,	NULL),
-(11,	6,	'e3d64177e51bdff82b499e116796fe74',	'asdf',	'Wednesday',	'2023-09-13',	'2023-09-28 16:50:57',	'2023-09-28 16:50:57'),
-(12,	6,	'e3d64177e51bdff82b499e116796fe74',	'asdf',	'Monday',	'2023-09-04',	'2023-09-28 16:50:57',	'2023-09-28 16:50:57'),
-(13,	6,	'e3d64177e51bdff82b499e116796fe74',	'Dubai',	'Wednesday',	'2023-08-30',	'2023-09-28 16:50:57',	'2023-09-28 16:50:57'),
-(15,	8,	'bd545732e12addf17c34a231d24a3814',	'New Year',	'Sunday',	'2023-01-01',	'2023-10-02 12:43:26',	'2023-10-02 12:43:26'),
-(16,	8,	'bd545732e12addf17c34a231d24a3814',	'Republic Day',	'Thursday',	'2023-01-26',	'2023-10-02 12:43:26',	'2023-10-02 12:43:26'),
-(17,	8,	'bd545732e12addf17c34a231d24a3814',	'Holi',	'Tuesday',	'2023-03-07',	'2023-10-02 12:43:26',	'2023-10-02 12:43:26'),
-(18,	8,	'bd545732e12addf17c34a231d24a3814',	'Independence Day',	'Tuesday',	'2023-08-15',	'2023-10-02 12:43:26',	'2023-10-02 12:43:26'),
-(19,	9,	'e3d64177e51bdff82b499e116796fe74',	'Day 1',	'Monday',	'2023-10-02',	'2023-10-04 12:21:44',	'2023-10-04 12:21:44'),
-(25,	9,	'e3d64177e51bdff82b499e116796fe74',	'ASDF',	'Thursday',	'2023-10-05',	NULL,	NULL),
-(35,	10,	'e3d64177e51bdff82b499e116796fe74',	'Dashehara',	'Tuesday',	'2023-10-24',	'2023-10-10 10:12:51',	'2023-10-10 10:12:51');
-
-DROP TABLE IF EXISTS `holiday_template`;
-CREATE TABLE `holiday_template` (
-  `temp_id` int(255) NOT NULL AUTO_INCREMENT,
-  `temp_name` varchar(255) DEFAULT NULL,
-  `temp_from` date DEFAULT NULL,
-  `temp_to` date DEFAULT NULL,
-  `business_id` longtext DEFAULT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`temp_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `holiday_template` (`temp_id`, `temp_name`, `temp_from`, `temp_to`, `business_id`, `updated_at`, `created_at`) VALUES
-(3,	'Maha Shiv Ratri',	'2023-09-07',	'2023-09-08',	'e3d64177e51bdff82b499e116796fe74',	'2023-09-26 18:50:33',	'2023-09-26 18:50:33'),
-(6,	'getting rooted',	'2023-09-15',	'2023-09-10',	'e3d64177e51bdff82b499e116796fe74',	'2023-09-28 16:50:57',	'2023-09-28 16:50:57'),
-(8,	'Creative Minds Holiday Policy',	'2023-01-01',	'2023-12-31',	'bd545732e12addf17c34a231d24a3814',	'2023-10-02 12:43:26',	'2023-10-02 12:43:26'),
-(9,	'All Fest',	'2023-10-01',	'2023-10-30',	'e3d64177e51bdff82b499e116796fe74',	'2023-10-04 12:21:44',	'2023-10-04 12:21:44'),
-(10,	'Navratri',	'2023-10-15',	'2023-10-24',	'e3d64177e51bdff82b499e116796fe74',	'2023-10-10 10:12:51',	'2023-10-10 10:12:51');
-
-DROP TABLE IF EXISTS `leave_request_list`;
-CREATE TABLE `leave_request_list` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `business_id` varchar(255) DEFAULT NULL,
-  `branch_id` varchar(255) DEFAULT NULL,
-  `department_id` int(11) DEFAULT NULL,
-  `designation_id` int(11) DEFAULT NULL,
-  `emp_id` varchar(255) DEFAULT NULL,
-  `emp_type` int(11) DEFAULT NULL,
-  `emp_name` varchar(255) DEFAULT NULL,
-  `emp_mobile_no` varchar(255) DEFAULT NULL,
-  `leave_type` varchar(55) DEFAULT NULL,
-  `leave_category` tinyint(4) DEFAULT NULL,
-  `shift_type` tinyint(4) DEFAULT NULL,
-  `from_date` date DEFAULT NULL,
-  `to_date` date DEFAULT NULL,
-  `days` int(11) DEFAULT NULL,
-  `reason` varchar(255) DEFAULT NULL,
-  `remark` varchar(255) DEFAULT NULL,
-  `status` tinyint(1) DEFAULT 0,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `leave_request_list` (`id`, `business_id`, `branch_id`, `department_id`, `designation_id`, `emp_id`, `emp_type`, `emp_name`, `emp_mobile_no`, `leave_type`, `leave_category`, `shift_type`, `from_date`, `to_date`, `days`, `reason`, `remark`, `status`, `created_at`, `updated_at`) VALUES
-(2,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'1',	NULL,	NULL,	'2023-09-28',	'2023-10-11',	13,	'bhkjnk',	NULL,	1,	'2023-09-28 11:52:29',	'2023-09-30 11:31:10'),
-(4,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	NULL,	NULL,	NULL,	'2023-05-16',	'2023-05-20',	5,	'dfsakl',	NULL,	NULL,	'2023-09-28 22:09:03',	'2023-09-28 22:09:03'),
-(5,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'1',	NULL,	NULL,	'2023-05-03',	'2023-06-02',	30,	'dfsakl',	NULL,	1,	'2023-09-29 14:07:21',	'2023-09-30 11:25:37'),
-(6,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'Casual Leave',	NULL,	NULL,	'2023-09-30',	'2023-10-10',	10,	'Dffb',	NULL,	2,	'2023-09-29 15:36:27',	'2023-09-30 10:00:49'),
-(9,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'Privilege Leave',	NULL,	NULL,	'2023-10-03',	'2023-10-10',	7,	'Going Marriage..',	NULL,	1,	'2023-09-30 15:37:09',	'2023-09-30 10:10:53'),
-(10,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	1,	NULL,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	NULL,	'2023-10-01 21:55:28',	'2023-10-01 21:55:28'),
-(11,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	1,	1,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	NULL,	'2023-10-01 21:59:41',	'2023-10-01 21:59:41'),
-(12,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	1,	1,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	NULL,	'2023-10-01 22:01:23',	'2023-10-01 22:01:23'),
-(13,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	1,	1,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	NULL,	'2023-10-01 22:02:50',	'2023-10-01 22:02:50'),
-(14,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	0,	1,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	NULL,	'2023-10-01 22:03:01',	'2023-10-01 22:03:01'),
-(15,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	NULL,	1,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	NULL,	'2023-10-01 22:03:05',	'2023-10-01 22:03:05'),
-(16,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	NULL,	1,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	NULL,	'2023-10-01 22:03:17',	'2023-10-01 22:03:17'),
-(17,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	NULL,	1,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	NULL,	'2023-10-01 22:04:41',	'2023-10-01 22:04:41'),
-(18,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	0,	1,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	0,	'2023-10-01 22:05:04',	'2023-10-12 12:19:48'),
-(19,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	1,	1,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	0,	'2023-10-01 22:05:13',	'2023-10-12 12:19:48'),
-(20,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	1,	1,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	0,	'2023-10-01 22:05:59',	'2023-10-12 12:19:48'),
-(21,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	NULL,	1,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	0,	'2023-10-01 22:06:12',	'2023-10-12 12:19:48'),
-(22,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	1,	1,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	0,	'2023-10-01 22:06:18',	'2023-10-12 12:19:48'),
-(23,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	2,	1,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	0,	'2023-10-01 22:06:24',	'2023-10-12 12:19:48'),
-(24,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	NULL,	1,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	0,	'2023-10-01 22:06:43',	'2023-10-12 12:19:48'),
-(25,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	NULL,	1,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	0,	'2023-10-01 22:08:14',	'2023-10-12 12:19:48'),
-(26,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	NULL,	1,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	0,	'2023-10-01 22:08:33',	'2023-10-12 12:19:48'),
-(27,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	NULL,	2,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	0,	'2023-10-01 22:08:43',	'2023-10-12 12:19:48'),
-(28,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	NULL,	NULL,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	0,	'2023-10-01 22:08:48',	'2023-10-12 12:19:48'),
-(29,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'Casual Leave',	NULL,	NULL,	'2023-10-02',	'2023-10-05',	4,	'Aaaaaaaaaaaa',	NULL,	0,	'2023-10-01 23:15:37',	'2023-10-12 12:19:48'),
-(30,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	NULL,	NULL,	'2023-10-01',	NULL,	1,	'dasfg',	NULL,	0,	'2023-10-02 10:37:39',	'2023-10-12 12:19:48'),
-(31,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	1,	1,	'2023-10-01',	NULL,	1,	'dasfg',	NULL,	0,	'2023-10-02 11:01:43',	'2023-10-12 12:19:48'),
-(32,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	2,	2,	'2023-10-01',	NULL,	1,	'dasfg',	NULL,	0,	'2023-10-02 11:01:55',	'2023-10-12 12:19:48'),
-(33,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	2,	2,	'2023-10-01',	NULL,	NULL,	'dasfg',	NULL,	0,	'2023-10-02 11:02:12',	'2023-10-12 12:19:48'),
-(34,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	NULL,	NULL,	'2023-10-01',	NULL,	NULL,	'dasfg',	NULL,	0,	'2023-10-02 11:02:23',	'2023-10-12 12:19:48'),
-(35,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	1,	NULL,	'2023-10-01',	NULL,	NULL,	'dasfg',	NULL,	0,	'2023-10-02 11:06:23',	'2023-10-12 12:19:48'),
-(36,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	2,	NULL,	'2023-10-01',	NULL,	NULL,	'dasfg',	NULL,	0,	'2023-10-02 11:06:35',	'2023-10-12 12:19:48'),
-(37,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	2,	NULL,	'2023-10-01',	NULL,	NULL,	'dasfg',	NULL,	0,	'2023-10-02 11:08:35',	'2023-10-12 12:19:48'),
-(38,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	1,	NULL,	'2023-10-01',	NULL,	NULL,	'dasfg',	NULL,	0,	'2023-10-02 11:14:35',	'2023-10-12 12:19:48'),
-(39,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'Privilege Leave',	NULL,	NULL,	'2023-10-10',	'2023-10-18',	9,	'K.G.F-1',	NULL,	0,	'2023-10-02 12:07:47',	'2023-10-12 12:19:48'),
-(40,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	1,	NULL,	'2023-10-01',	NULL,	NULL,	'dasfg',	NULL,	0,	'2023-10-02 12:13:46',	'2023-10-12 12:19:48'),
-(41,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	1,	NULL,	'2023-10-02',	'2023-10-10',	1,	NULL,	NULL,	0,	'2023-10-02 12:20:27',	'2023-10-12 12:19:48'),
-(42,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	2,	NULL,	'2023-10-02',	NULL,	NULL,	NULL,	NULL,	0,	'2023-10-02 12:24:50',	'2023-10-12 12:19:48'),
-(43,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'Privilege Leave',	NULL,	NULL,	'2023-10-11',	'2023-10-22',	12,	'Ffffgggg',	NULL,	0,	'2023-10-02 12:35:42',	'2023-10-12 12:19:48'),
-(44,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	2,	NULL,	'2023-10-02',	NULL,	NULL,	NULL,	NULL,	0,	'2023-10-02 12:45:28',	'2023-10-12 12:19:48'),
-(45,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	2,	NULL,	'2023-10-02',	NULL,	NULL,	NULL,	NULL,	0,	'2023-10-02 13:02:23',	'2023-10-12 12:19:48'),
-(46,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'Sick Leave',	NULL,	NULL,	'2023-10-10',	'2023-10-18',	9,	'Ffff',	NULL,	0,	'2023-10-02 13:12:49',	'2023-10-12 12:19:48'),
-(47,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'Casual Leave',	2,	NULL,	'2023-10-10',	'2023-10-18',	9,	'Uuuu',	NULL,	0,	'2023-10-03 12:45:59',	'2023-10-12 12:19:48'),
-(48,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'Sick Leave',	2,	NULL,	'2023-10-24',	'2023-10-27',	4,	'K.G.F-1',	NULL,	0,	'2023-10-03 12:58:53',	'2023-10-12 12:19:48'),
-(49,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	2,	NULL,	'2023-10-02',	NULL,	NULL,	NULL,	NULL,	0,	'2023-10-03 13:35:27',	'2023-10-12 12:19:48'),
-(50,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	2,	NULL,	'2023-10-02',	NULL,	NULL,	NULL,	NULL,	0,	'2023-10-03 13:36:03',	'2023-10-12 12:19:48'),
-(51,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	1,	NULL,	'2023-10-02',	NULL,	NULL,	NULL,	NULL,	0,	'2023-10-03 13:36:10',	'2023-10-12 12:19:48'),
-(52,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'Privilege Leave',	1,	NULL,	'2023-10-24',	'2023-11-04',	12,	'Jawan',	NULL,	0,	'2023-10-03 13:42:54',	'2023-10-12 12:19:48'),
-(53,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	2,	NULL,	'2023-10-02',	NULL,	NULL,	'jjj',	NULL,	0,	'2023-10-03 13:46:22',	'2023-10-12 12:19:48'),
-(54,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	2,	NULL,	'2023-10-02',	NULL,	NULL,	'jjj',	NULL,	0,	'2023-10-03 13:46:28',	'2023-10-12 12:19:48'),
-(55,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	2,	NULL,	'2023-10-02',	NULL,	NULL,	'value',	NULL,	0,	'2023-10-03 13:46:46',	'2023-10-12 12:19:48'),
-(56,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	14,	NULL,	'IT011',	1,	'Lucky',	'333223432',	'Casual',	2,	0,	'2023-10-02',	NULL,	NULL,	'value',	NULL,	0,	'2023-10-03 13:52:57',	'2023-10-12 12:19:48'),
-(57,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'Sick Leave',	2,	1,	'2023-10-26',	NULL,	NULL,	'K.G.F-2',	NULL,	0,	'2023-10-03 15:04:46',	'2023-10-12 12:19:48'),
-(58,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'Sick Leave',	2,	2,	'2023-10-05',	NULL,	NULL,	'Skanda',	NULL,	0,	'2023-10-03 15:06:57',	'2023-10-12 12:19:48'),
-(59,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'Casual Leave',	1,	NULL,	'2023-10-10',	'2023-10-15',	6,	'Hum Sath Sath Hai',	NULL,	0,	'2023-10-03 15:11:53',	'2023-10-12 12:19:48'),
-(60,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'Sick Leave',	2,	2,	'2023-10-03',	NULL,	NULL,	'Hum Aapke Hai Koun',	NULL,	0,	'2023-10-03 15:12:42',	'2023-10-12 12:19:48'),
-(61,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	5,	17,	'IT024',	NULL,	NULL,	'8585858585',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	'2023-10-06 17:00:01',	'2023-10-20 07:07:56'),
-(62,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha ',	'9993433474',	'Casual Leave',	1,	NULL,	'2023-10-12',	'2023-10-16',	5,	'Sddfghjk',	NULL,	0,	'2023-10-09 10:19:21',	'2023-10-12 12:19:48'),
-(63,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha ',	'9993433474',	'Sick Leave',	NULL,	2,	'2023-10-09',	NULL,	NULL,	'Ffgnm',	NULL,	0,	'2023-10-09 10:23:33',	'2023-10-12 12:19:48'),
-(64,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha ',	'9993433474',	'Sick Leave',	1,	NULL,	'2023-10-12',	'2023-10-15',	4,	'Leo',	'no leave',	2,	'2023-10-10 10:41:06',	'2023-10-20 07:07:36'),
-(65,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha ',	'9993433474',	'Sick Leave',	2,	2,	'2023-10-10',	'2023-10-09',	NULL,	'Maaster',	NULL,	1,	'2023-10-10 10:42:12',	'2023-10-20 07:07:02'),
-(66,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha',	'9993433474',	'Sick Leave',	1,	NULL,	'2023-10-18',	'2023-10-20',	3,	'Hhkk',	'asfd',	2,	'2023-10-12 17:21:39',	'2023-10-13 02:41:49'),
-(67,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha',	'9993433474',	'1',	1,	NULL,	'2023-10-17',	'2023-10-20',	4,	'Suffering fever',	'asfda',	2,	'2023-10-12 17:46:30',	'2023-10-13 02:36:38'),
-(68,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT008',	1,	'Dilip',	'1234567890',	'1',	NULL,	NULL,	'2023-10-01',	NULL,	1,	'dasdfa',	NULL,	1,	'2023-10-12 21:33:12',	'2023-10-13 02:38:28'),
-(69,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT008',	1,	'Dilip',	'1234567890',	'1',	NULL,	NULL,	'2023-10-01',	NULL,	1,	'dasdfa',	'adf',	2,	'2023-10-12 21:34:20',	'2023-10-13 02:36:53'),
-(70,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT008',	1,	'Dilip',	'1234567890',	'1',	NULL,	NULL,	'2023-10-13',	NULL,	1,	'dasdfa',	NULL,	1,	'2023-10-12 21:37:50',	'2023-10-13 07:24:54'),
-(71,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT010',	1,	'Soniya',	'9658473211',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0,	'2023-10-27 18:07:48',	'2023-10-27 18:07:48'),
-(72,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT010',	1,	'Soniya',	'9658473211',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0,	'2023-10-27 18:09:50',	'2023-10-27 18:09:50'),
-(73,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT010',	1,	'Soniya',	'9658473211',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0,	'2023-10-27 18:11:31',	'2023-10-27 18:11:31'),
-(74,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT010',	1,	'Soniya',	'9658473211',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0,	'2023-10-27 18:14:54',	'2023-10-27 18:14:54'),
-(75,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT010',	1,	'Soniya',	'9658473211',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0,	'2023-10-27 18:15:07',	'2023-10-27 18:15:07'),
-(76,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT010',	1,	'Soniya',	'9658473211',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0,	'2023-10-27 18:16:01',	'2023-10-27 18:16:01');
-
 DROP TABLE IF EXISTS `login_admin`;
 CREATE TABLE `login_admin` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -936,10 +413,11 @@ CREATE TABLE `login_admin` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `login_admin` (`id`, `business_id`, `name`, `email`, `country_code`, `phone`, `otp`, `otp_created_at`, `is_verified`, `api_token`, `created_at`, `updated_at`) VALUES
-(1,	'e3d64177e51bdff82b499e116796fe74',	'Aman Sahu',	'amansahu.er@gmail.com',	'+91',	'831915176',	'336677',	'2023-10-27 11:37:30',	1,	'83|omCVfg78HLDho8yuqVlhiE2pTpvQtuc9RbXITgfx154125da',	'0000-00-00 00:00:00',	'2023-10-27 17:07:30'),
+(1,	'e3d64177e51bdff82b499e116796fe74',	'Aman Sahu',	'amansahu.er@gmail.com',	'+91',	'831915176',	'497215',	'2023-11-03 05:06:14',	1,	'98|pIcrLZ1VNq36CPoCHUuwlVwoOmHmAQVhGdYjVflFf4f39a06',	'0000-00-00 00:00:00',	'2023-11-03 10:36:14'),
 (10,	'e3d64177e51bdff82b499e116796fe74',	'Umesh Sahu',	'cpictogram@gmail.com',	'+91',	'6266043320',	'803277',	'2023-10-17 04:39:29',	0,	NULL,	'0000-00-00 00:00:00',	'2023-10-17 10:09:29'),
 (13,	'bd545732e12addf17c34a231d24a3814',	'Dilip Sahu',	'dilipsahu26@gmail.com',	'+91',	'9993659548',	'132036',	'2023-10-16 12:29:42',	1,	'7|tYFPvRzNzAsj15X0tbT9roRXAytTLhCOj3zQA6tVa73e0ce9',	'0000-00-00 00:00:00',	'2023-10-16 17:59:42'),
-(15,	'e3d64177e51bdff82b499e116796fe74',	'Dilip',	'dilipsahu26@gmail.com',	'+91',	'1234567890',	NULL,	'2023-10-16 12:30:05',	1,	NULL,	'0000-00-00 00:00:00',	'2023-10-16 12:30:05');
+(15,	'e3d64177e51bdff82b499e116796fe74',	'Dilip',	'dilipsahu26@gmail.com',	'+91',	'1234567890',	NULL,	'2023-10-16 12:30:05',	1,	NULL,	'0000-00-00 00:00:00',	'2023-10-16 12:30:05'),
+(16,	'e3d64177e51bdff82b499e116796fe74',	'Nisha',	'nishasahu018@gmail.com',	'+91',	'9993433474',	'727965',	'2023-11-03 05:05:43',	1,	NULL,	'0000-00-00 00:00:00',	'2023-11-03 05:05:43');
 
 DROP TABLE IF EXISTS `login_employee`;
 CREATE TABLE `login_employee` (
@@ -983,148 +461,13 @@ INSERT INTO `login_employee` (`id`, `emp_id`, `business_id`, `email`, `country_c
 (32,	'IT116',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'483589348',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
 (33,	'IT117',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'8585885885',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
 (34,	'IT010',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'9658473211',	NULL,	'2023-10-18 12:54:24',	'0000-00-00 00:00:00',	'2023-10-18 12:54:24'),
-(35,	'IT121',	'e3d64177e51bdff82b499e116796fe74',	'satyamsingh@gmail.com',	'+91',	'8585858585',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
-(36,	'IT122',	'e3d64177e51bdff82b499e116796fe74',	'luckyprasad84@gmail.com',	'+91',	'8588585285',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
+(35,	'IT121',	'e3d64177e51bdff82b499e116796fe74',	'satyamsingh@gmail.com',	'+91',	'8888888888',	NULL,	'2023-10-30 09:52:47',	'0000-00-00 00:00:00',	'2023-10-30 09:52:47'),
+(36,	'IT122',	'e3d64177e51bdff82b499e116796fe74',	'luckyprasad84@gmail.com',	'+91',	'8888888877',	NULL,	'2023-10-30 09:56:55',	'0000-00-00 00:00:00',	'2023-10-30 09:56:55'),
 (37,	'IT123',	'e3d64177e51bdff82b499e116796fe74',	'jiyarajput@gmail.com',	'+91',	'9823757720',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
-(39,	'IT124',	'e3d64177e51bdff82b499e116796fe74',	'karanverma@gmail.com',	'+91',	'9823757755',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00');
-
-DROP TABLE IF EXISTS `manager_details`;
-CREATE TABLE `manager_details` (
-  `mngr_id` int(11) NOT NULL AUTO_INCREMENT,
-  `mngr_name` varchar(255) NOT NULL,
-  `mngr_emp_id` varchar(255) NOT NULL,
-  `mngr_phone` varchar(255) NOT NULL,
-  `mngr_depart_id` longtext NOT NULL,
-  `mngr_branch_id` longtext NOT NULL,
-  `business_id` longtext NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`mngr_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-DROP TABLE IF EXISTS `master_business_details`;
-CREATE TABLE `master_business_details` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `business_table_name` longtext DEFAULT NULL,
-  `business_id` longtext DEFAULT NULL,
-  `business_client_name` varchar(255) DEFAULT NULL,
-  `business_email` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-DROP TABLE IF EXISTS `master_endgame_method`;
-CREATE TABLE `master_endgame_method` (
-  `id` bigint(11) NOT NULL AUTO_INCREMENT,
-  `business_id` longtext DEFAULT NULL,
-  `method_switch` tinyint(1) DEFAULT NULL,
-  `method_name` varchar(255) DEFAULT NULL,
-  `policy_preference` tinyint(4) DEFAULT NULL,
-  `level_type` tinyint(1) unsigned zerofill DEFAULT 0,
-  `leave_policy_ids_list` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`leave_policy_ids_list`)),
-  `holiday_policy_ids_list` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`holiday_policy_ids_list`)),
-  `weekly_policy_ids_list` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`weekly_policy_ids_list`)),
-  `shift_settings_ids_list` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`shift_settings_ids_list`)),
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `master_endgame_method` (`id`, `business_id`, `method_switch`, `method_name`, `policy_preference`, `level_type`, `leave_policy_ids_list`, `holiday_policy_ids_list`, `weekly_policy_ids_list`, `shift_settings_ids_list`, `created_at`, `updated_at`) VALUES
-(38,	'bd545732e12addf17c34a231d24a3814',	1,	'Creative Minds Approved Rule',	1,	1,	'[\"18\"]',	'[\"8\"]',	'[\"10\"]',	'[\"26\"]',	'2023-10-03 19:09:36',	'0000-00-00 00:00:00'),
-(247,	'e3d64177e51bdff82b499e116796fe74',	0,	'INDIA',	1,	1,	'[\"10\"]',	'[\"9\"]',	'[\"4\"]',	'[\"30\"]',	'2023-10-27 10:18:27',	'2023-10-27 10:18:27'),
-(249,	'e3d64177e51bdff82b499e116796fe74',	1,	'Indus',	1,	1,	'[\"10\"]',	'[\"6\",\"10\"]',	'[\"11\"]',	'[\"27\",\"29\",\"30\"]',	'2023-10-27 10:18:27',	'2023-10-27 10:18:27');
-
-DROP TABLE IF EXISTS `master_table_all_details`;
-CREATE TABLE `master_table_all_details` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `business_id` varchar(255) DEFAULT NULL,
-  `business_details` varchar(255) DEFAULT NULL,
-  `business_login` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-DROP TABLE IF EXISTS `migrations`;
-CREATE TABLE `migrations` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `migration` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `batch` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
-DROP TABLE IF EXISTS `misspunch_list`;
-CREATE TABLE `misspunch_list` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `business_id` longtext DEFAULT NULL,
-  `branch_id` longtext DEFAULT NULL,
-  `department_id` int(11) DEFAULT NULL,
-  `designation_id` int(11) DEFAULT NULL,
-  `emp_id` varchar(255) DEFAULT NULL,
-  `emp_type` int(11) DEFAULT NULL,
-  `emp_name` varchar(255) DEFAULT NULL,
-  `emp_mobile_no` varchar(10) DEFAULT NULL,
-  `emp_miss_date` varchar(50) DEFAULT NULL,
-  `emp_miss_time_type` varchar(50) DEFAULT NULL,
-  `emp_miss_in_time` time DEFAULT NULL,
-  `emp_miss_out_time` time DEFAULT NULL,
-  `emp_working_hour` time DEFAULT NULL,
-  `message` varchar(255) DEFAULT NULL,
-  `remark` varchar(255) DEFAULT NULL,
-  `status` varchar(50) DEFAULT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `misspunch_list` (`id`, `business_id`, `branch_id`, `department_id`, `designation_id`, `emp_id`, `emp_type`, `emp_name`, `emp_mobile_no`, `emp_miss_date`, `emp_miss_time_type`, `emp_miss_in_time`, `emp_miss_out_time`, `emp_working_hour`, `message`, `remark`, `status`, `created_at`, `updated_at`) VALUES
-(4,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'AM',	'09:38:00',	'06:18:00',	NULL,	'Raining',	NULL,	NULL,	'2023-09-28 16:56:24',	'2023-10-02 12:23:51'),
-(5,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'IN Time',	'09:38:00',	'06:18:00',	NULL,	'Raining',	NULL,	'Approve',	'2023-09-28 16:56:46',	'2023-10-02 12:23:44'),
-(6,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'IN Time',	'09:38:00',	'00:00:15',	NULL,	'Raining',	NULL,	NULL,	'2023-09-28 16:59:48',	'2023-09-28 16:59:48'),
-(7,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'IN Time',	'09:38:00',	'00:00:15',	'00:00:13',	'Raining',	NULL,	NULL,	'2023-09-28 17:00:01',	'2023-09-28 17:00:01'),
-(9,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'IN Time',	'09:38:00',	'00:00:15',	'15:13:00',	'Raining',	NULL,	NULL,	'2023-09-28 17:00:55',	'2023-09-28 17:00:55'),
-(10,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'IN Time',	'09:38:00',	'00:00:15',	'00:00:15',	'Raining',	NULL,	NULL,	'2023-09-28 17:01:04',	'2023-09-28 17:01:04'),
-(11,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'IN Time',	'09:38:00',	'00:00:15',	'05:00:00',	'Raining',	NULL,	NULL,	'2023-09-28 17:01:27',	'2023-09-28 17:01:27'),
-(12,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'IN Time',	'09:38:20',	'15:20:20',	'05:00:00',	'Raining',	NULL,	NULL,	'2023-09-28 17:01:41',	'2023-09-28 17:01:41'),
-(13,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'IN Time',	'09:38:20',	'15:20:20',	'05:00:00',	'Raining',	NULL,	NULL,	'2023-09-28 17:05:13',	'2023-09-28 17:05:13'),
-(14,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'IN Time',	'09:38:20',	'15:20:20',	'05:00:00',	'Raining',	NULL,	NULL,	'2023-09-28 17:05:30',	'2023-09-28 17:05:30'),
-(15,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'IN Time',	'09:38:20',	'15:20:20',	'05:00:00',	'Raining',	NULL,	NULL,	'2023-09-28 17:06:59',	'2023-09-28 17:06:59'),
-(16,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'IN Time',	'09:38:20',	'15:20:20',	'05:00:00',	'Raining',	NULL,	NULL,	'2023-09-28 17:08:12',	'2023-09-28 17:08:12'),
-(17,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'IN Time',	'09:38:20',	'15:20:20',	'05:00:00',	'Raining',	NULL,	NULL,	'2023-09-28 17:08:53',	'2023-09-28 17:08:53'),
-(18,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'IN Time',	'09:38:20',	'15:20:20',	'05:00:00',	'Raining',	NULL,	NULL,	'2023-09-28 17:10:44',	'2023-09-28 17:10:44'),
-(19,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'IN Time',	'09:38:20',	'15:20:20',	'05:00:00',	'Raining',	NULL,	NULL,	'2023-09-28 17:11:13',	'2023-09-28 17:11:13'),
-(20,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'IN Time',	'09:38:20',	'15:20:20',	'05:00:00',	'Raining',	NULL,	NULL,	'2023-09-28 17:25:16',	'2023-09-28 17:25:16'),
-(21,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'IN Time',	'09:38:20',	'15:20:20',	'05:00:00',	'Raining',	NULL,	NULL,	'2023-09-28 17:29:23',	'2023-09-28 17:29:23'),
-(22,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'IN Time',	'09:38:20',	'15:20:20',	'05:00:00',	'Raining',	NULL,	NULL,	'2023-09-28 18:51:17',	'2023-09-28 18:51:17'),
-(24,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'AM',	'10:19:00',	'06:00:00',	'00:00:13',	'Raining',	NULL,	NULL,	'2023-09-28 21:40:06',	'2023-09-28 21:40:06'),
-(25,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'AM',	'10:19:00',	'06:00:00',	'00:00:13',	'Raining',	NULL,	NULL,	'2023-09-28 21:40:33',	'2023-09-28 21:40:33'),
-(26,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'AM',	'10:19:00',	'06:00:00',	'00:00:13',	'Raining',	NULL,	NULL,	'2023-09-28 21:44:57',	'2023-09-28 21:44:57'),
-(27,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'AM',	'10:19:00',	'06:00:00',	'00:00:13',	'Raining',	NULL,	NULL,	'2023-09-28 21:46:51',	'2023-09-28 21:46:51'),
-(28,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'AM',	'10:19:00',	'06:00:00',	'00:00:13',	'Raining',	NULL,	NULL,	'2023-09-28 21:47:23',	'2023-09-28 21:47:23'),
-(29,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'In Time',	'10:19:00',	'06:00:00',	'00:00:13',	'Raining',	NULL,	NULL,	'2023-09-28 21:47:40',	'2023-09-28 21:47:40'),
-(30,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'In Time',	'10:19:00',	'06:00:00',	'00:00:13',	'Raining',	NULL,	NULL,	'2023-09-28 21:49:07',	'2023-09-28 21:49:07'),
-(31,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'In Time',	'10:19:00',	'06:00:00',	'00:00:13',	'Raining',	NULL,	NULL,	'2023-09-28 21:49:35',	'2023-09-28 21:49:35'),
-(32,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'In Time',	'10:19:00',	'15:00:00',	'00:00:13',	'Raining',	NULL,	NULL,	'2023-09-28 21:49:44',	'2023-09-28 21:49:44'),
-(33,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'In Time',	'10:19:00',	'15:00:00',	'00:00:13',	'Raining',	NULL,	NULL,	'2023-09-28 21:53:40',	'2023-09-28 21:53:40'),
-(34,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT011',	1,	'lucky',	'333223432',	'2023-08-19',	'In Time',	'10:19:00',	'15:00:00',	'00:00:13',	'Raining',	NULL,	NULL,	'2023-09-28 21:55:08',	'2023-09-28 21:55:08'),
-(38,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'2023-09-16',	'Both',	'10:08:00',	'17:09:00',	'00:00:08',	'Chjn',	'asdfasdf',	'2',	'2023-09-29 12:09:31',	'2023-09-29 12:09:31'),
-(39,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'2023-09-29',	'In Time',	'12:33:00',	'00:36:00',	'10:00:00',	'Dm',	NULL,	'1',	'2023-09-29 12:31:37',	'2023-09-29 12:31:37'),
-(41,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'2023-09-29',	'Out Time',	'13:51:00',	'13:51:00',	'00:00:00',	'Rjj',	NULL,	'1',	'2023-09-29 13:52:12',	'2023-09-29 13:52:12'),
-(43,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'2023-09-30',	'Out Time',	'10:28:00',	'04:28:00',	'18:00:00',	NULL,	'asdf',	'2',	'2023-09-30 00:28:56',	'2023-09-30 00:28:56'),
-(48,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'2023-09-08',	'In Time',	'10:07:00',	'18:13:00',	'08:05:00',	'Miss the both punch',	NULL,	'1',	'2023-09-30 15:39:20',	'2023-09-30 15:39:20'),
-(49,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'2023-09-06',	'Both',	'10:15:00',	'19:20:00',	'09:05:00',	'Miss punching both interval',	NULL,	'1',	'2023-09-30 15:43:47',	'2023-09-30 15:43:47'),
-(50,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'2023-09-10',	'In Time',	'08:40:00',	'21:14:00',	'12:34:00',	'Thjn',	NULL,	'1',	'2023-09-30 17:15:06',	'2023-09-30 17:15:06'),
-(51,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha Sahu',	'9993433474',	'2023-09-14',	'Both',	'09:16:00',	'16:16:00',	'07:00:00',	'Mmmmmmmmmm',	'Reson Is not Valid',	'2',	'2023-10-01 23:16:47',	'2023-10-09 12:40:15'),
-(52,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha ',	'9993433474',	'2023-10-05',	'Both',	'09:50:00',	'19:10:00',	'09:20:00',	'Thalapati',	'asdfdsaf',	'2',	'2023-10-10 10:43:42',	'2023-10-10 10:43:42'),
-(53,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT010',	1,	'Nisha',	'9993433474',	'2023-10-11',	'1',	'11:10:00',	'18:15:00',	'07:05:00',	'Ooooo',	NULL,	'1',	'2023-10-12 17:52:54',	'2023-10-12 17:52:54'),
-(54,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha',	'9993433474',	'24-10-2023',	'Both',	'11:08:00',	'16:08:00',	'05:00:00',	'Hhhh',	NULL,	'0',	'2023-10-23 15:08:46',	'2023-10-23 15:08:46'),
-(55,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	11,	28,	'IT009',	1,	'Nisha',	'9993433474',	'2023-10-25',	'Out Time',	'11:19:00',	'17:19:00',	'06:00:00',	'Jjjjjjjjj',	NULL,	'0',	'2023-10-23 16:19:49',	'2023-10-23 16:19:49');
+(39,	'IT124',	'e3d64177e51bdff82b499e116796fe74',	'karanverma@gmail.com',	'+91',	'9823757755',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
+(40,	'IT125',	'e3d64177e51bdff82b499e116796fe74',	'amansahu2333924@gmail.com',	'+91',	'9111326605',	NULL,	'2023-10-09 11:01:13',	'0000-00-00 00:00:00',	'2023-10-30 09:29:39'),
+(41,	'IT126',	'e3d64177e51bdff82b499e116796fe74',	'satyamsingh@gmail.com',	'+91',	'8585858585',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
+(42,	'IT127',	'e3d64177e51bdff82b499e116796fe74',	'nityavaishnav@gmail.com',	'+91',	'6546546546',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00');
 
 DROP TABLE IF EXISTS `model_has_permissions`;
 CREATE TABLE `model_has_permissions` (
@@ -1481,15 +824,6 @@ INSERT INTO `model_has_permissions` (`id`, `role_id`, `permission_id`, `model_id
 (335,	NULL,	NULL,	'Fi001',	28,	'0',	'Report.Update',	'b4a8dd835f749b155efa9862b130808b',	NULL),
 (336,	NULL,	NULL,	'Fi001',	28,	'0',	'Report.Delete',	'b4a8dd835f749b155efa9862b130808b',	NULL);
 
-DROP TABLE IF EXISTS `password_resets`;
-CREATE TABLE `password_resets` (
-  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  KEY `password_resets_email_index` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
 DROP TABLE IF EXISTS `pending_admins`;
 CREATE TABLE `pending_admins` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1505,35 +839,6 @@ CREATE TABLE `pending_admins` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `pending_admins` (`id`, `business_id`, `branch_id`, `emp_id`, `emp_name`, `emp_email`, `emp_phone`, `otp`, `created_at`, `updated_at`) VALUES
-(7,	NULL,	NULL,	NULL,	NULL,	'nishasahu018@gmail.com',	NULL,	'702037',	'2023-10-02 06:46:24',	'2023-10-02 06:46:24'),
-(9,	NULL,	NULL,	NULL,	NULL,	'jayantnishad34@gamil.com',	NULL,	'326806',	'2023-10-09 04:37:27',	'2023-10-09 04:37:27'),
-(10,	NULL,	NULL,	NULL,	NULL,	'jayantnishad34@gmail.com',	NULL,	'944617',	'2023-10-09 06:06:04',	'2023-10-09 06:06:04'),
-(11,	NULL,	NULL,	NULL,	NULL,	'Jayantnishad34@gmail.com',	NULL,	'346288',	'2023-10-09 17:50:13',	'2023-10-09 17:50:13'),
-(12,	NULL,	NULL,	NULL,	NULL,	'jayantnishad34@gamil.com',	NULL,	'879082',	'2023-10-10 04:36:17',	'2023-10-10 04:36:17'),
-(13,	NULL,	NULL,	NULL,	NULL,	'amansahu.er@gmail.com',	NULL,	'751734',	'2023-10-12 05:46:17',	'2023-10-12 05:46:17'),
-(14,	NULL,	NULL,	NULL,	NULL,	'jayantnishad34@gamil.com',	NULL,	'228599',	'2023-10-12 05:46:32',	'2023-10-12 05:46:32'),
-(15,	NULL,	NULL,	NULL,	NULL,	'jayantnishad34@gamil.com',	NULL,	'296013',	'2023-10-12 05:51:07',	'2023-10-12 05:51:07'),
-(16,	NULL,	NULL,	NULL,	NULL,	'amansahu.er@gmail.com',	NULL,	'425395',	'2023-10-12 06:09:21',	'2023-10-12 06:09:21'),
-(17,	NULL,	NULL,	NULL,	NULL,	'jayantnishad34@gamil.com',	NULL,	'310195',	'2023-10-12 06:17:14',	'2023-10-12 06:17:14'),
-(18,	NULL,	NULL,	NULL,	NULL,	'jayantnishad34@gamil.com',	NULL,	'480224',	'2023-10-12 06:19:26',	'2023-10-12 06:19:26'),
-(19,	NULL,	NULL,	NULL,	NULL,	'jayantnishad34@gamil.com',	NULL,	'157352',	'2023-10-12 06:19:37',	'2023-10-12 06:19:37'),
-(20,	NULL,	NULL,	NULL,	NULL,	'amansahu.er@gmail.com',	NULL,	'422117',	'2023-10-12 06:21:04',	'2023-10-12 06:21:04'),
-(21,	NULL,	NULL,	NULL,	NULL,	'amansahu.er@gmail.com',	NULL,	'426306',	'2023-10-12 06:21:56',	'2023-10-12 06:21:56'),
-(22,	NULL,	NULL,	NULL,	NULL,	'jayantnishad34@gamil.com',	NULL,	'777343',	'2023-10-12 06:22:05',	'2023-10-12 06:22:05'),
-(23,	NULL,	NULL,	NULL,	NULL,	'amansahu.er@gmail.com',	NULL,	'143118',	'2023-10-12 06:23:23',	'2023-10-12 06:23:23'),
-(24,	NULL,	NULL,	NULL,	NULL,	'jayantnishad34@gamil.com',	NULL,	'373351',	'2023-10-12 06:23:31',	'2023-10-12 06:23:31'),
-(25,	NULL,	NULL,	NULL,	NULL,	'amansahu.er@gmail.com',	NULL,	'324238',	'2023-10-12 06:23:54',	'2023-10-12 06:23:54'),
-(26,	NULL,	NULL,	NULL,	NULL,	'jayantnishad34@gamil.com',	NULL,	'626520',	'2023-10-12 06:24:03',	'2023-10-12 06:24:03'),
-(27,	NULL,	NULL,	NULL,	NULL,	'jayantnishad34@gamil.com',	NULL,	'157447',	'2023-10-12 06:31:43',	'2023-10-12 06:31:43'),
-(28,	NULL,	NULL,	NULL,	NULL,	'jayantnishad34@gamil.com',	NULL,	'530388',	'2023-10-12 06:32:35',	'2023-10-12 06:32:35'),
-(29,	NULL,	NULL,	NULL,	NULL,	'amansahu.er@gmail.com',	NULL,	'318976',	'2023-10-12 06:33:37',	'2023-10-12 06:33:37'),
-(30,	NULL,	NULL,	NULL,	NULL,	'jayantnishad34@gamil.com',	NULL,	'992922',	'2023-10-12 06:33:44',	'2023-10-12 06:33:44'),
-(31,	NULL,	NULL,	NULL,	NULL,	'jayantnishad007@gmail.com',	NULL,	'562656',	'2023-10-13 07:44:40',	'2023-10-13 04:43:36'),
-(32,	NULL,	NULL,	NULL,	NULL,	'jayantnishad34@gmail.com',	NULL,	'177381',	'2023-10-13 04:43:50',	'2023-10-13 04:43:50'),
-(34,	NULL,	NULL,	NULL,	NULL,	'jayantnishad007@gmail.com',	NULL,	'562656',	'2023-10-13 07:44:40',	'2023-10-13 07:25:02'),
-(35,	NULL,	NULL,	NULL,	NULL,	'jayantnishad34@gmail.com',	NULL,	'587257',	'2023-10-13 07:25:16',	'2023-10-13 07:25:16'),
-(36,	NULL,	NULL,	NULL,	NULL,	'amansahu.er@gmail.com',	NULL,	'938766',	'2023-10-17 04:47:12',	'2023-10-17 04:47:12');
 
 DROP TABLE IF EXISTS `permissions`;
 CREATE TABLE `permissions` (
@@ -1549,7 +854,7 @@ CREATE TABLE `permissions` (
   PRIMARY KEY (`id`),
   KEY `branch_id` (`branch_id`(3072)),
   KEY `module_id` (`module_id`),
-  CONSTRAINT `permissions_ibfk_1` FOREIGN KEY (`module_id`) REFERENCES `sidebar_menu` (`menu_id`)
+  CONSTRAINT `permissions_ibfk_1` FOREIGN KEY (`module_id`) REFERENCES `static_sidebar_menu` (`menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `permissions` (`id`, `guard_name`, `name`, `description`, `module_id`, `business_id`, `branch_id`, `created_at`, `updated_at`) VALUES
@@ -1991,10 +1296,317 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (80,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'08b96402f906aa5ae5f6a4b39cda13af8e90cfdfca9f718c55f253bb349252a5',	'[\"*\"]',	NULL,	NULL,	'2023-10-23 10:17:26',	'2023-10-23 10:17:26'),
 (81,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'7e67dde52c924140d4b0aff5c5f5c50ceafa70176164b50f2bba56cd92d4180f',	'[\"*\"]',	NULL,	NULL,	'2023-10-25 11:59:56',	'2023-10-25 11:59:56'),
 (82,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'2c1121bd2594ae2049798998b263ea563a82aeb3950969d0a4579d3a04bb09f9',	'[\"*\"]',	NULL,	NULL,	'2023-10-26 22:08:48',	'2023-10-26 22:08:48'),
-(83,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'4c2a1af6ed0f9fb9fd0e06412e135b8fd5de49e0ef5e70e60dc20355b010ae51',	'[\"*\"]',	NULL,	NULL,	'2023-10-27 10:16:02',	'2023-10-27 10:16:02');
+(83,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'4c2a1af6ed0f9fb9fd0e06412e135b8fd5de49e0ef5e70e60dc20355b010ae51',	'[\"*\"]',	NULL,	NULL,	'2023-10-27 10:16:02',	'2023-10-27 10:16:02'),
+(84,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'f9e6ba34dbb2ee003f7aa5d27eca9e1872e47363a136a74f66185dc1cd89e67f',	'[\"*\"]',	NULL,	NULL,	'2023-10-27 18:42:15',	'2023-10-27 18:42:15'),
+(85,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'9b3ddd66428d9fd8a13cde2158cff40bb8a65e83df1ea0dd88e14dc3609c284e',	'[\"*\"]',	NULL,	NULL,	'2023-10-29 19:17:37',	'2023-10-29 19:17:37'),
+(86,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'6fc772abfb893eea2715e2aab1e1198d647c840da7121c8c320b861cc38a0786',	'[\"*\"]',	NULL,	NULL,	'2023-10-29 22:56:31',	'2023-10-29 22:56:31'),
+(87,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'1e87fbf7793fd6c374ee9d901197844cb00f5427ce0b2e112443ed20f988be45',	'[\"*\"]',	NULL,	NULL,	'2023-10-29 23:48:35',	'2023-10-29 23:48:35'),
+(88,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'ac2cce14369b42bd8036be01d82e2bf2632faa1e0a87a031c274eb76450dd810',	'[\"*\"]',	NULL,	NULL,	'2023-10-30 10:17:08',	'2023-10-30 10:17:08'),
+(89,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'cbe422549658119419d3ffe6eb9ea3a2cef35bd2b2cc759a6ac99d15cc570f27',	'[\"*\"]',	NULL,	NULL,	'2023-10-30 15:27:43',	'2023-10-30 15:27:43'),
+(90,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'68751ed24e83b06fe873e22dc5715aa7862c783a3da306eb36430574ee3e5062',	'[\"*\"]',	NULL,	NULL,	'2023-10-30 15:37:18',	'2023-10-30 15:37:18'),
+(91,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'c800f202d8f2f3f1e3c9cfc871622dd852ba73a045361731144d93eb78d51407',	'[\"*\"]',	NULL,	NULL,	'2023-10-30 15:55:54',	'2023-10-30 15:55:54'),
+(92,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'8fe67c33c8b13560e5bfff956cd59136207a8e272d6f040297eaad006d3621cb',	'[\"*\"]',	NULL,	NULL,	'2023-10-30 17:19:58',	'2023-10-30 17:19:58'),
+(93,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'c4618a7642bc221a7f13a68756278dccf2966fa368f828bd11254ec2533fa882',	'[\"*\"]',	NULL,	NULL,	'2023-10-30 23:32:23',	'2023-10-30 23:32:23'),
+(94,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'c497aa376f0442a2a77582196faf99d2b677fed828d83f8c2cdfe927dfb0c863',	'[\"*\"]',	NULL,	NULL,	'2023-10-31 10:24:10',	'2023-10-31 10:24:10'),
+(95,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'47fa856116f724e6d9b16b48227689e9047765c83cefbda5523c7a95cf1354fe',	'[\"*\"]',	NULL,	NULL,	'2023-10-31 15:15:08',	'2023-10-31 15:15:08'),
+(96,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'e071634c84128729363631f83203f97acf9c756d8f7523f1b9c86ad23bc90428',	'[\"*\"]',	NULL,	NULL,	'2023-10-31 19:36:34',	'2023-10-31 19:36:34'),
+(97,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'1ea6a7c408da67159fa73a113335d189dbe91c9897d911c67d9f6da5efdad457',	'[\"*\"]',	NULL,	NULL,	'2023-11-01 10:36:58',	'2023-11-01 10:36:58'),
+(98,	'App\\Models\\admin\\LoginAdmin',	1,	'API TOKEN',	'ea64dbdba5460a73a87cde044876d0c6177947c1714976d0364cae4cae194f3c',	'[\"*\"]',	NULL,	NULL,	'2023-11-01 19:49:30',	'2023-11-01 19:49:30');
 
-DROP TABLE IF EXISTS `setting_leave_category`;
-CREATE TABLE `setting_leave_category` (
+DROP TABLE IF EXISTS `policy_attendance_mode`;
+CREATE TABLE `policy_attendance_mode` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `business_id` longtext DEFAULT NULL,
+  `attendance_active_methods` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`attendance_active_methods`)),
+  `office_auto` tinyint(1) unsigned zerofill DEFAULT 0,
+  `office_manual` tinyint(1) unsigned zerofill DEFAULT 0,
+  `office_qr` tinyint(1) unsigned zerofill DEFAULT 0,
+  `office_face_id` tinyint(1) unsigned zerofill DEFAULT 0,
+  `office_selfie` tinyint(1) unsigned zerofill DEFAULT 0,
+  `outdoor_auto` tinyint(1) unsigned zerofill DEFAULT 0,
+  `outdoor_manual` tinyint(1) unsigned zerofill DEFAULT 0,
+  `outdoor_selfie` tinyint(1) unsigned zerofill DEFAULT 0,
+  `wfh_auto` tinyint(1) unsigned zerofill DEFAULT 0,
+  `wfh_manual` tinyint(1) unsigned zerofill DEFAULT 0,
+  `wfh_selfie` tinyint(1) unsigned zerofill DEFAULT 0,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `policy_attendance_mode` (`id`, `business_id`, `attendance_active_methods`, `office_auto`, `office_manual`, `office_qr`, `office_face_id`, `office_selfie`, `outdoor_auto`, `outdoor_manual`, `outdoor_selfie`, `wfh_auto`, `wfh_manual`, `wfh_selfie`, `updated_at`, `created_at`) VALUES
+(1,	'e3d64177e51bdff82b499e116796fe74',	'[1,2]',	0,	1,	1,	1,	1,	1,	0,	1,	0,	0,	0,	'2023-10-23 14:18:26',	'0000-00-00 00:00:00'),
+(2,	'bd545732e12addf17c34a231d24a3814',	'[1,3]',	0,	NULL,	1,	1,	NULL,	0,	NULL,	NULL,	0,	NULL,	1,	'2023-10-04 17:59:38',	'0000-00-00 00:00:00');
+
+DROP TABLE IF EXISTS `policy_attendance_shift_settings`;
+CREATE TABLE `policy_attendance_shift_settings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `business_id` longtext DEFAULT NULL,
+  `branch_id` longtext DEFAULT NULL,
+  `department_id` longtext DEFAULT NULL,
+  `shift_type` tinyint(1) unsigned zerofill NOT NULL DEFAULT 0,
+  `shift_type_name` varchar(255) DEFAULT NULL,
+  `shift_weekly_repeat` tinyint(4) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `policy_attendance_shift_settings` (`id`, `business_id`, `branch_id`, `department_id`, `shift_type`, `shift_type_name`, `shift_weekly_repeat`, `created_at`, `updated_at`) VALUES
+(26,	'bd545732e12addf17c34a231d24a3814',	'',	NULL,	1,	'General Shift',	0,	'2023-10-02 09:46:57',	'2023-10-03 05:25:27'),
+(27,	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	1,	'Policy for First 6 Month',	0,	'2023-10-04 06:18:59',	'2023-10-25 07:50:33'),
+(29,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	2,	'24*7',	5,	'2023-10-11 05:45:51',	'2023-10-28 05:53:36'),
+(30,	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	1,	'Policy for Last 6 Month',	0,	'2023-10-11 12:24:13',	'2023-10-25 07:50:09'),
+(32,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	2,	'Reapetive Shift',	6,	'2023-10-27 11:36:58',	'2023-10-28 05:41:55'),
+(37,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	3,	'FD Open',	0,	'2023-10-28 12:54:50',	'2023-10-28 12:54:50');
+
+DROP TABLE IF EXISTS `policy_attendance_shift_type_items`;
+CREATE TABLE `policy_attendance_shift_type_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `attendance_shift_id` int(11) DEFAULT NULL,
+  `business_id` longtext DEFAULT NULL,
+  `branch_id` longtext DEFAULT NULL,
+  `depart_id` longtext DEFAULT NULL,
+  `shift_name` varchar(255) DEFAULT NULL,
+  `shift_start` time DEFAULT NULL,
+  `shift_hr` int(11) DEFAULT NULL,
+  `shift_end` time DEFAULT NULL,
+  `shift_min` int(11) DEFAULT NULL,
+  `work_hr` int(11) DEFAULT NULL,
+  `work_min` int(11) DEFAULT NULL,
+  `break_min` int(11) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 0,
+  `is_paid` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `policy_attendance_shift_type_items` (`id`, `attendance_shift_id`, `business_id`, `branch_id`, `depart_id`, `shift_name`, `shift_start`, `shift_hr`, `shift_end`, `shift_min`, `work_hr`, `work_min`, `break_min`, `is_active`, `is_paid`, `created_at`, `updated_at`) VALUES
+(67,	26,	'bd545732e12addf17c34a231d24a3814',	'',	NULL,	'General Shift',	'09:30:00',	NULL,	'18:30:00',	NULL,	9,	0,	45,	1,	1,	'2023-10-25 04:51:48',	'2023-10-03 10:55:27'),
+(68,	27,	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	'Policy for First 6 Month',	'09:30:00',	NULL,	'17:30:00',	NULL,	7,	30,	30,	1,	0,	'2023-10-25 07:50:33',	'2023-10-25 13:20:33'),
+(80,	30,	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	'Policy for Last 6 Month',	'10:30:00',	NULL,	'18:30:00',	NULL,	7,	30,	30,	1,	0,	'2023-10-25 07:50:09',	'2023-10-25 13:20:09'),
+(131,	32,	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	'Shift A',	'04:00:00',	NULL,	'12:00:00',	NULL,	8,	0,	20,	1,	1,	'2023-10-28 05:54:46',	'2023-10-28 05:41:55'),
+(132,	32,	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	'Shift B',	'12:00:00',	NULL,	'20:00:00',	NULL,	8,	0,	20,	0,	1,	'2023-10-28 05:54:46',	'2023-10-28 05:41:55'),
+(139,	29,	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	'SET A',	'08:00:00',	NULL,	'16:00:00',	NULL,	8,	0,	30,	1,	1,	'2023-10-28 05:58:46',	'2023-10-28 05:53:36'),
+(140,	29,	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	'SET B',	'16:00:00',	NULL,	'00:00:00',	NULL,	7,	30,	30,	0,	0,	'2023-10-28 05:53:36',	'2023-10-28 05:53:36'),
+(141,	37,	'e3d64177e51bdff82b499e116796fe74',	'',	NULL,	'FD Open',	NULL,	9,	NULL,	12,	NULL,	NULL,	30,	1,	1,	'2023-10-28 12:54:50',	'2023-10-28 18:24:50');
+
+DROP TABLE IF EXISTS `policy_attendance_track_in_out`;
+CREATE TABLE `policy_attendance_track_in_out` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `business_id` longtext DEFAULT NULL,
+  `branch_id` longtext DEFAULT NULL,
+  `department_id` longtext DEFAULT NULL,
+  `track_in_out` tinyint(1) NOT NULL DEFAULT 0,
+  `no_attendace_without_punch` tinyint(1) NOT NULL DEFAULT 0,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `policy_attendance_track_in_out` (`id`, `business_id`, `branch_id`, `department_id`, `track_in_out`, `no_attendace_without_punch`, `updated_at`, `created_at`) VALUES
+(11,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	1,	0,	'2023-09-28 13:12:43',	'2023-10-05 15:08:21'),
+(13,	'bd545732e12addf17c34a231d24a3814',	NULL,	NULL,	0,	1,	'2023-10-03 05:17:24',	'2023-10-03 05:17:24');
+
+DROP TABLE IF EXISTS `policy_atten_rule_break`;
+CREATE TABLE `policy_atten_rule_break` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `switch_is` tinyint(1) unsigned zerofill DEFAULT NULL,
+  `is_break_hr_deduct` tinyint(1) unsigned zerofill DEFAULT NULL,
+  `break_extra_hr` int(2) unsigned zerofill DEFAULT NULL,
+  `break_extra_min` int(2) unsigned zerofill DEFAULT NULL,
+  `occurance_is` tinyint(1) unsigned zerofill DEFAULT NULL,
+  `occurance_hr` int(2) unsigned zerofill DEFAULT NULL,
+  `occurance_min` int(2) unsigned zerofill DEFAULT NULL,
+  `occurance_count` int(2) unsigned zerofill DEFAULT NULL,
+  `absent_is` tinyint(1) unsigned zerofill DEFAULT NULL,
+  `business_id` longtext DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `policy_atten_rule_break` (`id`, `switch_is`, `is_break_hr_deduct`, `break_extra_hr`, `break_extra_min`, `occurance_is`, `occurance_hr`, `occurance_min`, `occurance_count`, `absent_is`, `business_id`, `updated_at`, `created_at`) VALUES
+(3,	1,	NULL,	00,	15,	1,	00,	00,	03,	1,	'bd545732e12addf17c34a231d24a3814',	'2023-10-03 05:17:01',	'2023-10-03 05:17:01'),
+(4,	0,	NULL,	00,	20,	2,	02,	00,	NULL,	1,	'e3d64177e51bdff82b499e116796fe74',	'2023-10-18 05:20:04',	'2023-10-23 06:54:27');
+
+DROP TABLE IF EXISTS `policy_atten_rule_early_exit`;
+CREATE TABLE `policy_atten_rule_early_exit` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `switch_is` tinyint(1) NOT NULL,
+  `grace_time_hr` int(2) DEFAULT NULL,
+  `grace_time_min` int(2) DEFAULT NULL,
+  `occurance_is` int(1) DEFAULT NULL,
+  `occurance_count` int(2) DEFAULT NULL,
+  `occurance_hr` int(2) DEFAULT NULL,
+  `occurance_min` int(2) DEFAULT NULL,
+  `absent_is` int(1) DEFAULT NULL,
+  `mark_half_day_hr` int(2) DEFAULT NULL,
+  `mark_half_day_min` int(2) DEFAULT NULL,
+  `business_id` longtext DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `policy_atten_rule_early_exit` (`id`, `switch_is`, `grace_time_hr`, `grace_time_min`, `occurance_is`, `occurance_count`, `occurance_hr`, `occurance_min`, `absent_is`, `mark_half_day_hr`, `mark_half_day_min`, `business_id`, `updated_at`, `created_at`) VALUES
+(3,	1,	0,	30,	1,	3,	0,	1,	1,	2,	30,	'bd545732e12addf17c34a231d24a3814',	'2023-10-03 05:17:01',	'0000-00-00 00:00:00'),
+(4,	1,	0,	10,	2,	NULL,	2,	0,	1,	2,	30,	'e3d64177e51bdff82b499e116796fe74',	'2023-10-23 08:18:37',	'2023-10-23 08:18:37');
+
+DROP TABLE IF EXISTS `policy_atten_rule_gatepass`;
+CREATE TABLE `policy_atten_rule_gatepass` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `switch_is` int(1) DEFAULT NULL,
+  `occurance_is` int(1) DEFAULT NULL,
+  `occurance_count` int(2) DEFAULT NULL,
+  `occurance_hr` int(2) DEFAULT NULL,
+  `occurance_min` int(2) DEFAULT NULL,
+  `absent_is` int(1) DEFAULT NULL,
+  `business_id` longtext NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `policy_atten_rule_gatepass` (`id`, `switch_is`, `occurance_is`, `occurance_count`, `occurance_hr`, `occurance_min`, `absent_is`, `business_id`, `updated_at`, `created_at`) VALUES
+(3,	1,	1,	5,	0,	0,	1,	'bd545732e12addf17c34a231d24a3814',	'2023-10-03 05:17:01',	'0000-00-00 00:00:00'),
+(4,	0,	2,	NULL,	0,	30,	1,	'e3d64177e51bdff82b499e116796fe74',	'2023-10-23 06:54:31',	'2023-10-23 06:54:31');
+
+DROP TABLE IF EXISTS `policy_atten_rule_late_entry`;
+CREATE TABLE `policy_atten_rule_late_entry` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `switch_is` tinyint(1) DEFAULT NULL,
+  `grace_time_hr` int(2) DEFAULT NULL,
+  `grace_time_min` int(2) DEFAULT NULL,
+  `occurance_is` int(1) DEFAULT NULL,
+  `occurance_count` int(2) DEFAULT NULL,
+  `occurance_hr` int(2) DEFAULT NULL,
+  `occurance_min` int(2) DEFAULT NULL,
+  `absent_is` int(1) DEFAULT NULL,
+  `mark_half_day_hr` int(2) DEFAULT NULL,
+  `mark_half_day_min` int(2) DEFAULT NULL,
+  `business_id` longtext DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `policy_atten_rule_late_entry` (`id`, `switch_is`, `grace_time_hr`, `grace_time_min`, `occurance_is`, `occurance_count`, `occurance_hr`, `occurance_min`, `absent_is`, `mark_half_day_hr`, `mark_half_day_min`, `business_id`, `updated_at`, `created_at`) VALUES
+(3,	1,	0,	30,	1,	5,	0,	0,	1,	2,	30,	'bd545732e12addf17c34a231d24a3814',	'2023-10-03 05:17:01',	'0000-00-00 00:00:00'),
+(4,	1,	0,	15,	2,	NULL,	2,	0,	1,	2,	30,	'e3d64177e51bdff82b499e116796fe74',	'2023-10-30 12:00:00',	'2023-10-30 12:00:00');
+
+DROP TABLE IF EXISTS `policy_atten_rule_misspunch`;
+CREATE TABLE `policy_atten_rule_misspunch` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `switch_is` tinyint(1) NOT NULL,
+  `occurance_is` int(1) DEFAULT NULL,
+  `occurance_count` int(2) DEFAULT NULL,
+  `occurance_hr` int(2) DEFAULT NULL,
+  `occurance_min` int(2) DEFAULT NULL,
+  `absent_is` int(1) DEFAULT NULL,
+  `business_id` longtext NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `policy_atten_rule_misspunch` (`id`, `switch_is`, `occurance_is`, `occurance_count`, `occurance_hr`, `occurance_min`, `absent_is`, `business_id`, `updated_at`, `created_at`) VALUES
+(3,	1,	1,	3,	0,	0,	2,	'bd545732e12addf17c34a231d24a3814',	'2023-10-03 05:17:01',	'0000-00-00 00:00:00'),
+(4,	1,	2,	NULL,	2,	50,	1,	'e3d64177e51bdff82b499e116796fe74',	'2023-10-28 09:39:16',	'0000-00-00 00:00:00');
+
+DROP TABLE IF EXISTS `policy_atten_rule_overtime`;
+CREATE TABLE `policy_atten_rule_overtime` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `switch_is` tinyint(1) NOT NULL,
+  `early_ot_hr` int(2) NOT NULL,
+  `early_ot_min` int(2) NOT NULL,
+  `late_ot_hr` int(2) NOT NULL,
+  `late_ot_min` int(2) NOT NULL,
+  `min_ot_hr` int(2) NOT NULL,
+  `min_ot_min` int(2) NOT NULL,
+  `max_ot_hr` int(2) NOT NULL,
+  `max_ot_min` int(2) NOT NULL,
+  `business_id` longtext NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `policy_atten_rule_overtime` (`id`, `switch_is`, `early_ot_hr`, `early_ot_min`, `late_ot_hr`, `late_ot_min`, `min_ot_hr`, `min_ot_min`, `max_ot_hr`, `max_ot_min`, `business_id`, `updated_at`, `created_at`) VALUES
+(3,	1,	0,	15,	1,	30,	10,	0,	30,	0,	'bd545732e12addf17c34a231d24a3814',	'2023-10-03 05:17:01',	'0000-00-00 00:00:00'),
+(4,	1,	0,	30,	0,	30,	1,	0,	40,	0,	'e3d64177e51bdff82b499e116796fe74',	'2023-10-23 07:07:54',	'0000-00-00 00:00:00');
+
+DROP TABLE IF EXISTS `policy_holiday_details`;
+CREATE TABLE `policy_holiday_details` (
+  `holiday_id` int(11) NOT NULL AUTO_INCREMENT,
+  `template_id` int(11) DEFAULT NULL,
+  `business_id` longtext DEFAULT NULL,
+  `holiday_name` varchar(255) DEFAULT NULL,
+  `day` varchar(255) DEFAULT NULL,
+  `holiday_date` date DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  PRIMARY KEY (`holiday_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `policy_holiday_details` (`holiday_id`, `template_id`, `business_id`, `holiday_name`, `day`, `holiday_date`, `updated_at`, `created_at`) VALUES
+(5,	3,	'e3d64177e51bdff82b499e116796fe74',	'Maha Shiv Ratri',	'Thursday',	'2023-09-07',	'2023-09-26 18:50:33',	'2023-09-26 18:50:33'),
+(10,	3,	'e3d64177e51bdff82b499e116796fe74',	'sdf',	'Thursday',	'2023-08-31',	NULL,	NULL),
+(11,	6,	'e3d64177e51bdff82b499e116796fe74',	'asdf',	'Wednesday',	'2023-09-13',	'2023-09-28 16:50:57',	'2023-09-28 16:50:57'),
+(12,	6,	'e3d64177e51bdff82b499e116796fe74',	'asdf',	'Monday',	'2023-09-04',	'2023-09-28 16:50:57',	'2023-09-28 16:50:57'),
+(13,	6,	'e3d64177e51bdff82b499e116796fe74',	'Dubai',	'Wednesday',	'2023-08-30',	'2023-09-28 16:50:57',	'2023-09-28 16:50:57'),
+(15,	8,	'bd545732e12addf17c34a231d24a3814',	'New Year',	'Sunday',	'2023-01-01',	'2023-10-02 12:43:26',	'2023-10-02 12:43:26'),
+(16,	8,	'bd545732e12addf17c34a231d24a3814',	'Republic Day',	'Thursday',	'2023-01-26',	'2023-10-02 12:43:26',	'2023-10-02 12:43:26'),
+(17,	8,	'bd545732e12addf17c34a231d24a3814',	'Holi',	'Tuesday',	'2023-03-07',	'2023-10-02 12:43:26',	'2023-10-02 12:43:26'),
+(18,	8,	'bd545732e12addf17c34a231d24a3814',	'Independence Day',	'Tuesday',	'2023-08-15',	'2023-10-02 12:43:26',	'2023-10-02 12:43:26'),
+(19,	9,	'e3d64177e51bdff82b499e116796fe74',	'Day 1',	'Monday',	'2023-10-02',	'2023-10-04 12:21:44',	'2023-10-04 12:21:44'),
+(25,	9,	'e3d64177e51bdff82b499e116796fe74',	'ASDF',	'Thursday',	'2023-10-05',	NULL,	NULL),
+(35,	10,	'e3d64177e51bdff82b499e116796fe74',	'Dashehara',	'Tuesday',	'2023-10-24',	'2023-10-10 10:12:51',	'2023-10-10 10:12:51');
+
+DROP TABLE IF EXISTS `policy_holiday_template`;
+CREATE TABLE `policy_holiday_template` (
+  `temp_id` int(255) NOT NULL AUTO_INCREMENT,
+  `temp_name` varchar(255) DEFAULT NULL,
+  `temp_from` date DEFAULT NULL,
+  `temp_to` date DEFAULT NULL,
+  `business_id` longtext DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`temp_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `policy_holiday_template` (`temp_id`, `temp_name`, `temp_from`, `temp_to`, `business_id`, `updated_at`, `created_at`) VALUES
+(3,	'Maha Shiv Ratri',	'2023-09-07',	'2023-09-08',	'e3d64177e51bdff82b499e116796fe74',	'2023-09-26 18:50:33',	'2023-09-26 18:50:33'),
+(6,	'getting rooted',	'2023-09-15',	'2023-09-10',	'e3d64177e51bdff82b499e116796fe74',	'2023-09-28 16:50:57',	'2023-09-28 16:50:57'),
+(8,	'Creative Minds Holiday Policy',	'2023-01-01',	'2023-12-31',	'bd545732e12addf17c34a231d24a3814',	'2023-10-02 12:43:26',	'2023-10-02 12:43:26'),
+(9,	'All Fest',	'2023-10-01',	'2023-10-30',	'e3d64177e51bdff82b499e116796fe74',	'2023-10-04 12:21:44',	'2023-10-04 12:21:44'),
+(10,	'Navratri',	'2023-10-15',	'2023-10-24',	'e3d64177e51bdff82b499e116796fe74',	'2023-10-10 10:12:51',	'2023-10-10 10:12:51');
+
+DROP TABLE IF EXISTS `policy_master_endgame_method`;
+CREATE TABLE `policy_master_endgame_method` (
+  `id` bigint(11) NOT NULL AUTO_INCREMENT,
+  `business_id` longtext DEFAULT NULL,
+  `method_switch` tinyint(1) DEFAULT NULL,
+  `method_name` varchar(255) DEFAULT NULL,
+  `policy_preference` tinyint(4) DEFAULT NULL,
+  `level_type` tinyint(1) unsigned zerofill DEFAULT 0,
+  `leave_policy_ids_list` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`leave_policy_ids_list`)),
+  `holiday_policy_ids_list` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`holiday_policy_ids_list`)),
+  `weekly_policy_ids_list` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`weekly_policy_ids_list`)),
+  `shift_settings_ids_list` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`shift_settings_ids_list`)),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `policy_master_endgame_method` (`id`, `business_id`, `method_switch`, `method_name`, `policy_preference`, `level_type`, `leave_policy_ids_list`, `holiday_policy_ids_list`, `weekly_policy_ids_list`, `shift_settings_ids_list`, `created_at`, `updated_at`) VALUES
+(38,	'bd545732e12addf17c34a231d24a3814',	1,	'Creative Minds Approved Rule',	1,	1,	'[\"18\"]',	'[\"8\"]',	'[\"10\"]',	'[\"26\"]',	'2023-10-03 19:09:36',	'0000-00-00 00:00:00'),
+(247,	'e3d64177e51bdff82b499e116796fe74',	0,	'INDIA',	1,	1,	'[\"10\"]',	'[\"9\"]',	'[\"4\"]',	'[\"30\"]',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14'),
+(250,	'e3d64177e51bdff82b499e116796fe74',	1,	'Indus',	1,	1,	'[\"10\"]',	'[\"6\",\"10\"]',	'[\"11\"]',	'[\"27\",\"29\",\"30\",\"37\"]',	'2023-11-02 12:07:14',	'2023-11-02 17:37:14');
+
+DROP TABLE IF EXISTS `policy_setting_leave_category`;
+CREATE TABLE `policy_setting_leave_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `leave_policy_id` int(11) DEFAULT NULL,
   `business_id` longtext DEFAULT NULL,
@@ -2010,15 +1622,14 @@ CREATE TABLE `setting_leave_category` (
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `setting_leave_category` (`id`, `leave_policy_id`, `business_id`, `branch_id`, `category_name`, `days`, `unused_leave_rule`, `carry_forward_limit`, `applicable_to`, `created_at`, `updated_at`) VALUES
+INSERT INTO `policy_setting_leave_category` (`id`, `leave_policy_id`, `business_id`, `branch_id`, `category_name`, `days`, `unused_leave_rule`, `carry_forward_limit`, `applicable_to`, `created_at`, `updated_at`) VALUES
 (131,	18,	'bd545732e12addf17c34a231d24a3814',	'',	'CL',	1,	'Carry Forward',	10,	'All',	'2023-10-02 12:55:28',	'2023-10-02 12:55:28'),
 (132,	18,	'bd545732e12addf17c34a231d24a3814',	'',	'SL',	1,	'Carry Forward',	10,	'All',	'2023-10-02 12:55:28',	'2023-10-02 12:55:28'),
-(142,	10,	'e3d64177e51bdff82b499e116796fe74',	NULL,	'CL',	1,	'Carry Forward',	5,	'All',	'2023-10-25 07:54:35',	'2023-10-25 07:54:35'),
-(143,	10,	'e3d64177e51bdff82b499e116796fe74',	NULL,	'SL',	1,	'Carry Forward',	5,	'All',	'2023-10-25 07:54:35',	'2023-10-25 07:54:35'),
-(144,	10,	'e3d64177e51bdff82b499e116796fe74',	NULL,	'LWOP',	1,	'Lapse',	0,	'All',	'2023-10-25 07:54:35',	'2023-10-25 07:54:35');
+(145,	10,	'e3d64177e51bdff82b499e116796fe74',	NULL,	'CL',	1,	'Carry Forward',	5,	'All',	'2023-10-31 07:17:44',	'2023-10-31 07:17:44'),
+(146,	10,	'e3d64177e51bdff82b499e116796fe74',	NULL,	'SL',	1,	'Carry Forward',	5,	'All',	'2023-10-31 07:17:44',	'2023-10-31 07:17:44');
 
-DROP TABLE IF EXISTS `setting_leave_policy`;
-CREATE TABLE `setting_leave_policy` (
+DROP TABLE IF EXISTS `policy_setting_leave_policy`;
+CREATE TABLE `policy_setting_leave_policy` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `business_id` longtext DEFAULT NULL,
   `branch_id` longtext DEFAULT NULL,
@@ -2033,26 +1644,12 @@ CREATE TABLE `setting_leave_policy` (
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `setting_leave_policy` (`id`, `business_id`, `branch_id`, `policy_name`, `leave_policy_cycle_monthly`, `leave_policy_cycle_yearly`, `leave_period_from`, `leave_period_to`, `created_at`, `updated_at`) VALUES
+INSERT INTO `policy_setting_leave_policy` (`id`, `business_id`, `branch_id`, `policy_name`, `leave_policy_cycle_monthly`, `leave_policy_cycle_yearly`, `leave_period_from`, `leave_period_to`, `created_at`, `updated_at`) VALUES
 (10,	'e3d64177e51bdff82b499e116796fe74',	'',	'Fixing Dots Leave Policy',	1,	0,	'2023-09-07',	'2023-09-12',	'2023-10-25 07:54:35',	'2023-09-28 00:19:49'),
 (18,	'bd545732e12addf17c34a231d24a3814',	'',	'Creative Minds Leave Policy',	1,	0,	'2023-01-01',	'2023-12-31',	'2023-10-02 12:55:28',	'2023-10-02 12:55:28');
 
-DROP TABLE IF EXISTS `setting_localization`;
-CREATE TABLE `setting_localization` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `default_country` int(11) DEFAULT NULL,
-  `time_format` int(11) DEFAULT NULL,
-  `date_format` int(11) DEFAULT NULL,
-  `time_zone` int(11) DEFAULT NULL,
-  `default_language` int(11) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-DROP TABLE IF EXISTS `setting_role_assign_permission`;
-CREATE TABLE `setting_role_assign_permission` (
+DROP TABLE IF EXISTS `policy_setting_role_assign_permission`;
+CREATE TABLE `policy_setting_role_assign_permission` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `business_id` longtext DEFAULT NULL,
   `emp_id` varchar(255) DEFAULT NULL,
@@ -2066,11 +1663,12 @@ CREATE TABLE `setting_role_assign_permission` (
   KEY `role_id` (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `setting_role_assign_permission` (`id`, `business_id`, `emp_id`, `role_id`, `branch_id`, `department_id`, `designation_id`, `created_at`, `updated_at`) VALUES
-(13,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	1,	'd845e2bc8a80f01f71ea5699a91308253',	'11',	'28',	'2023-10-16 12:10:01',	'2023-10-16 12:10:01');
+INSERT INTO `policy_setting_role_assign_permission` (`id`, `business_id`, `emp_id`, `role_id`, `branch_id`, `department_id`, `designation_id`, `created_at`, `updated_at`) VALUES
+(13,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	1,	'd845e2bc8a80f01f71ea5699a91308253',	'11',	'28',	'2023-10-16 12:10:01',	'2023-10-16 12:10:01'),
+(14,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	3,	'd845e2bc8a80f01f71ea5699a91308253',	'11',	'28',	'2023-11-03 05:04:59',	'2023-11-03 05:04:59');
 
-DROP TABLE IF EXISTS `setting_role_create`;
-CREATE TABLE `setting_role_create` (
+DROP TABLE IF EXISTS `policy_setting_role_create`;
+CREATE TABLE `policy_setting_role_create` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT,
   `business_id` longtext DEFAULT NULL,
   `branch_id` varchar(255) DEFAULT NULL,
@@ -2082,15 +1680,15 @@ CREATE TABLE `setting_role_create` (
   KEY `role_name` (`roles_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `setting_role_create` (`id`, `business_id`, `branch_id`, `roles_name`, `description`, `created_at`, `updated_at`) VALUES
+INSERT INTO `policy_setting_role_create` (`id`, `business_id`, `branch_id`, `roles_name`, `description`, `created_at`, `updated_at`) VALUES
 (1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Admin',	'set access',	'2023-09-25 18:49:47',	'2023-09-25 18:49:47'),
 (2,	'e3d64177e51bdff82b499e116796fe74',	'',	'HR Access',	'set access',	'2023-09-26 18:57:16',	'2023-09-26 18:57:16'),
 (3,	'e3d64177e51bdff82b499e116796fe74',	'',	'MD',	'set access',	'2023-10-01 08:03:08',	'2023-10-01 08:03:08'),
 (5,	'e3d64177e51bdff82b499e116796fe74',	'',	'Super Admin',	'view creditionals',	'2023-10-05 04:59:35',	'2023-10-05 04:59:35'),
 (6,	'e3d64177e51bdff82b499e116796fe74',	'',	'HR',	'Full access View creditionals',	'2023-10-16 12:37:55',	'2023-10-16 12:37:55');
 
-DROP TABLE IF EXISTS `setting_role_items`;
-CREATE TABLE `setting_role_items` (
+DROP TABLE IF EXISTS `policy_setting_role_items`;
+CREATE TABLE `policy_setting_role_items` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `role_create_id` bigint(20) DEFAULT NULL,
   `business_id` longtext DEFAULT NULL,
@@ -2101,7 +1699,7 @@ CREATE TABLE `setting_role_items` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `setting_role_items` (`id`, `role_create_id`, `business_id`, `branch_id`, `model_name`, `created_at`, `updated_at`) VALUES
+INSERT INTO `policy_setting_role_items` (`id`, `role_create_id`, `business_id`, `branch_id`, `model_name`, `created_at`, `updated_at`) VALUES
 (73,	2,	'e3d64177e51bdff82b499e116796fe74',	'',	'Dashboard.View',	'2023-09-26 18:57:16',	'2023-09-26 18:57:16'),
 (74,	2,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance.View',	'2023-09-26 18:57:16',	'2023-09-26 18:57:16'),
 (75,	2,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance Setting.View',	'2023-09-26 18:57:16',	'2023-09-26 18:57:16'),
@@ -2190,90 +1788,394 @@ INSERT INTO `setting_role_items` (`id`, `role_create_id`, `business_id`, `branch
 (179,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Roles & Permissions.Update',	'2023-10-16 12:37:55',	'2023-10-16 12:37:55'),
 (180,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Roles & Permissions.Delete',	'2023-10-16 12:37:55',	'2023-10-16 12:37:55');
 
-DROP TABLE IF EXISTS `shift_fixed`;
-CREATE TABLE `shift_fixed` (
-  `fixed_id` int(11) NOT NULL AUTO_INCREMENT,
-  `shift_name` varchar(255) DEFAULT NULL,
-  `shift_start` time DEFAULT NULL,
-  `shift_end` time DEFAULT NULL,
-  `break_min` int(11) DEFAULT NULL,
-  `is_paid` int(11) DEFAULT NULL,
-  `work_hr` int(11) DEFAULT NULL,
-  `work_min` int(11) DEFAULT NULL,
-  `business_id` longtext DEFAULT NULL,
-  `branch_id` longtext DEFAULT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`fixed_id`)
+DROP TABLE IF EXISTS `policy_weekly_holiday_list`;
+CREATE TABLE `policy_weekly_holiday_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `business_id` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `days` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `shift_fixed` (`fixed_id`, `shift_name`, `shift_start`, `shift_end`, `break_min`, `is_paid`, `work_hr`, `work_min`, `business_id`, `branch_id`, `updated_at`, `created_at`) VALUES
-(1,	'General Shift',	'05:57:00',	'18:57:00',	50,	0,	12,	10,	'e3d64177e51bdff82b499e116796fe74',	'',	'2023-09-26 16:57:40',	'0000-00-00 00:00:00'),
-(2,	'Evening',	'21:47:00',	'06:44:00',	60,	1,	8,	57,	'e3d64177e51bdff82b499e116796fe74',	'',	'2023-09-26 18:44:57',	'0000-00-00 00:00:00'),
-(3,	'adsf',	'01:14:00',	'13:12:00',	NULL,	1,	11,	58,	'e3d64177e51bdff82b499e116796fe74',	'',	'2023-09-29 01:12:24',	'0000-00-00 00:00:00');
+INSERT INTO `policy_weekly_holiday_list` (`id`, `business_id`, `name`, `days`, `created_at`, `updated_at`) VALUES
+(4,	'e3d64177e51bdff82b499e116796fe74',	'weeklyoff A',	'[\"Saturday\"]',	'2023-10-31 09:39:17',	'2023-09-28 14:05:37'),
+(10,	'bd545732e12addf17c34a231d24a3814',	'Creative Minds Week Off',	'[\"Sunday\"]',	'2023-10-02 07:30:29',	'2023-10-02 12:56:21'),
+(11,	'e3d64177e51bdff82b499e116796fe74',	'weeklyoff B',	'[\"Saturday\",\"Sunday\"]',	'2023-11-01 12:44:26',	'2023-10-04 22:53:01');
 
-DROP TABLE IF EXISTS `shift_open`;
-CREATE TABLE `shift_open` (
-  `open_id` int(11) NOT NULL AUTO_INCREMENT,
-  `shift_name` varchar(255) DEFAULT NULL,
-  `shift_hr` int(11) DEFAULT NULL,
-  `shift_min` int(11) DEFAULT NULL,
-  `break_min` int(11) DEFAULT NULL,
-  `is_paid` int(11) DEFAULT NULL,
-  `work_hr` int(11) DEFAULT NULL,
-  `work_min` int(11) DEFAULT NULL,
+DROP TABLE IF EXISTS `request_gatepass_list`;
+CREATE TABLE `request_gatepass_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `business_id` longtext DEFAULT NULL,
-  `branch_id` longtext DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`open_id`)
+  `emp_id` varchar(255) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `going_through` varchar(255) DEFAULT NULL,
+  `in_time` time DEFAULT NULL,
+  `out_time` time DEFAULT NULL,
+  `source` varchar(255) DEFAULT NULL,
+  `destination` varchar(255) DEFAULT NULL,
+  `reason` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `remark` varchar(255) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `shift_open` (`open_id`, `shift_name`, `shift_hr`, `shift_min`, `break_min`, `is_paid`, `work_hr`, `work_min`, `business_id`, `branch_id`, `updated_at`, `created_at`) VALUES
-(1,	'Morning',	9,	30,	30,	1,	NULL,	NULL,	'e3d64177e51bdff82b499e116796fe74',	'',	'2023-09-26 18:44:01',	NULL);
+INSERT INTO `request_gatepass_list` (`id`, `business_id`, `emp_id`, `date`, `going_through`, `in_time`, `out_time`, `source`, `destination`, `reason`, `status`, `remark`, `created_at`, `updated_at`) VALUES
+(9,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-09-30',	'Auto',	'13:23:00',	'13:23:00',	NULL,	NULL,	'Qetj',	'2',	'hii',	'2023-09-30 13:23:42',	'2023-09-30 13:23:42'),
+(10,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-09-30',	'Scooty',	'13:26:00',	'13:26:00',	NULL,	NULL,	'4hh',	'2',	'sddsfaf',	'2023-09-30 13:26:25',	'2023-09-30 13:26:25'),
+(11,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-09-30',	'Car',	'17:05:00',	'16:10:00',	NULL,	NULL,	'Collect parcel',	'1',	NULL,	'2023-09-30 15:38:12',	'2023-09-30 15:38:12'),
+(13,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-10-10',	'JCB',	'12:50:00',	'16:35:00',	NULL,	NULL,	'Movie time',	'2',	'Not a valid reason',	'2023-10-10 10:45:06',	'2023-10-10 10:45:06'),
+(15,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-12 18:01:19',	'2023-10-12 18:01:19'),
+(16,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-10-10',	'Auto',	'17:03:01',	'16:03:00',	NULL,	NULL,	'Ggggggg',	'0',	NULL,	'2023-10-12 18:03:24',	'2023-10-12 18:03:24'),
+(17,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:02:33',	'2023-10-27 18:02:33'),
+(18,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:04:03',	'2023-10-27 18:04:03'),
+(19,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:04:09',	'2023-10-27 18:04:09'),
+(20,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:04:25',	'2023-10-27 18:04:25'),
+(21,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:05:03',	'2023-10-27 18:05:03'),
+(22,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:05:41',	'2023-10-27 18:05:41'),
+(23,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:06:40',	'2023-10-27 18:06:40'),
+(24,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-10-10',	'Car',	'12:50:00',	'12:50:00',	NULL,	NULL,	'cjjjj',	'0',	NULL,	'2023-11-01 11:39:02',	'2023-11-01 11:39:02'),
+(25,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-10-10',	'Car',	'12:50:00',	'12:50:00',	NULL,	NULL,	'cjjjj',	'0',	NULL,	'2023-11-01 11:41:50',	'2023-11-01 11:41:50'),
+(26,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-11-01 12:13:43',	'2023-11-01 12:13:43'),
+(27,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'Auto',	'04:20:00',	'10:30:00',	'Raipur',	'Bilashpur',	'Fov Visiting',	'0',	NULL,	'2023-11-01 12:21:07',	'2023-11-01 12:21:07'),
+(28,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'Auto',	'04:20:00',	'10:30:00',	'Raipur',	'Bilashpur',	'Fov Visiting',	'0',	NULL,	'2023-11-01 12:21:22',	'2023-11-01 12:21:22'),
+(29,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'Auto',	'04:20:00',	'10:30:00',	'Raipur',	'Bilashpur',	'Fov Visiting',	'0',	NULL,	'2023-11-01 12:21:33',	'2023-11-01 12:21:33'),
+(30,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'Auto',	'04:20:00',	'10:30:00',	'Raipur',	'Bilashpur',	'Fov Visiting',	'0',	NULL,	'2023-11-01 12:21:39',	'2023-11-01 12:21:39'),
+(31,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'Auto',	'04:20:00',	'10:30:00',	'Raipur',	'Bilashpur',	'Fov Visiting',	'0',	NULL,	'2023-11-01 12:26:27',	'2023-11-01 12:26:27'),
+(32,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'Auto',	'04:20:00',	'10:30:00',	'Raipur',	'Bilashpur',	'Fov Visiting',	'0',	NULL,	'2023-11-01 12:28:10',	'2023-11-01 12:28:10'),
+(33,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-10-10',	'Car',	'12:50:00',	'12:50:00',	NULL,	NULL,	'cjjjj',	'0',	NULL,	'2023-11-01 12:30:20',	'2023-11-01 12:30:20'),
+(34,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-10-10',	'Car',	'12:50:00',	'12:50:00',	NULL,	NULL,	'cjjjj',	'0',	NULL,	'2023-11-01 12:30:43',	'2023-11-01 12:30:43'),
+(35,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'Auto',	'04:20:00',	'14:00:00',	'Raipur',	'Bilashpur',	'Fov Visiting',	'0',	NULL,	'2023-11-01 12:37:03',	'2023-11-01 12:37:03'),
+(36,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'Auto',	'04:20:00',	'14:00:00',	'Raipur',	'Bilashpur',	'For Visiting',	'0',	NULL,	'2023-11-01 12:37:19',	'2023-11-01 12:37:19'),
+(37,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'Auto',	'04:20:00',	'14:00:00',	'Raipur',	'Bilashpur',	'For Visiting',	'0',	NULL,	'2023-11-01 12:39:07',	'2023-11-01 12:39:07'),
+(40,	'e3d64177e51bdff82b499e116796fe74',	'IT0012',	'2023-11-01',	'Scotty',	'15:08:00',	'15:07:00',	'ttt',	'hhh',	'Ggggg',	'2',	'asdf',	'2023-11-01 15:08:31',	'2023-11-02 15:19:47'),
+(41,	'e3d64177e51bdff82b499e116796fe74',	'IT0012',	'2023-11-08',	'Car',	'17:46:00',	'16:46:00',	'uu',	'jj',	'Hhh',	'1',	NULL,	'2023-11-01 15:47:13',	'2023-11-02 15:18:23'),
+(42,	'e3d64177e51bdff82b499e116796fe74',	'IT0012',	'2023-11-01',	'Car',	'17:46:00',	'16:46:00',	'uu',	'jj',	'Hhh',	'1',	NULL,	'2023-11-01 16:01:02',	'2023-11-01 16:01:02'),
+(43,	'e3d64177e51bdff82b499e116796fe74',	'IT0012',	'2023-11-02',	'Truck',	'18:13:00',	'17:13:00',	'ii',	'yyyy',	'Uuuuuu',	'2',	'adf',	'2023-11-01 16:14:09',	'2023-11-01 16:14:09');
 
-DROP TABLE IF EXISTS `shift_rotational`;
-CREATE TABLE `shift_rotational` (
-  `rotational_id` int(11) NOT NULL AUTO_INCREMENT,
-  `set_id` int(11) DEFAULT NULL,
-  `shift_name` varchar(255) DEFAULT NULL,
-  `shift_start` time DEFAULT NULL,
-  `shift_end` time DEFAULT NULL,
-  `break_min` int(11) DEFAULT NULL,
-  `is_paid` int(11) DEFAULT NULL,
-  `work_hr` int(11) DEFAULT NULL,
-  `work_min` int(11) DEFAULT NULL,
-  `business_id` longtext DEFAULT NULL,
-  `branch_id` longtext DEFAULT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`rotational_id`),
-  KEY `set_id` (`set_id`),
-  CONSTRAINT `shift_rotational_ibfk_2` FOREIGN KEY (`set_id`) REFERENCES `shift_set` (`set_id`)
+DROP TABLE IF EXISTS `request_leave_list`;
+CREATE TABLE `request_leave_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `business_id` varchar(255) DEFAULT NULL,
+  `emp_id` varchar(255) DEFAULT NULL,
+  `emp_mobile_no` varchar(255) DEFAULT NULL,
+  `leave_type` tinyint(1) DEFAULT NULL,
+  `leave_category` int(11) NOT NULL DEFAULT 0,
+  `shift_type` tinyint(1) NOT NULL DEFAULT 0,
+  `from_date` date DEFAULT NULL,
+  `to_date` date DEFAULT NULL,
+  `days` double DEFAULT NULL,
+  `reason` varchar(255) DEFAULT NULL,
+  `remark` varchar(255) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  UNIQUE KEY `id_2` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `shift_rotational` (`rotational_id`, `set_id`, `shift_name`, `shift_start`, `shift_end`, `break_min`, `is_paid`, `work_hr`, `work_min`, `business_id`, `branch_id`, `updated_at`, `created_at`) VALUES
-(1,	1,	'Shift A',	'18:45:00',	'06:46:00',	20,	1,	12,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'2023-09-26 18:43:31',	'0000-00-00 00:00:00'),
-(2,	1,	'Shift B',	'06:44:00',	'18:43:00',	20,	0,	11,	39,	'e3d64177e51bdff82b499e116796fe74',	'',	'2023-09-26 18:43:31',	'0000-00-00 00:00:00'),
-(3,	2,	'adf',	'02:34:00',	'00:34:00',	3,	1,	22,	0,	'e3d64177e51bdff82b499e116796fe74',	'',	'2023-09-29 00:34:34',	'0000-00-00 00:00:00');
+INSERT INTO `request_leave_list` (`id`, `business_id`, `emp_id`, `emp_mobile_no`, `leave_type`, `leave_category`, `shift_type`, `from_date`, `to_date`, `days`, `reason`, `remark`, `status`, `created_at`, `updated_at`) VALUES
+(1,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	'9658473211',	1,	145,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	0,	'2023-11-01 16:38:17',	'2023-11-03 01:05:54'),
+(2,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	1,	146,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	0,	'2023-11-01 17:01:54',	'2023-11-03 01:05:54'),
+(3,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	'9658473211',	2,	145,	2,	'2023-10-10',	NULL,	NULL,	NULL,	NULL,	0,	'2023-11-01 17:16:15',	'2023-11-03 01:05:54'),
+(4,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	'9658473211',	1,	145,	1,	'2023-10-10',	NULL,	NULL,	NULL,	NULL,	0,	'2023-11-01 17:16:21',	'2023-11-03 01:05:54'),
+(5,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	1,	145,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	0,	'2023-11-01 17:18:17',	'2023-11-03 01:05:54'),
+(6,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	'9658473211',	1,	146,	2,	'2023-10-10',	'2023-11-10',	1,	'1',	NULL,	0,	'2023-11-01 17:29:08',	'2023-11-03 01:05:54'),
+(7,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	2,	146,	1,	'2023-10-10',	NULL,	0.5,	NULL,	NULL,	0,	'2023-11-01 17:32:22',	'2023-11-03 05:29:13');
 
-DROP TABLE IF EXISTS `shift_set`;
-CREATE TABLE `shift_set` (
-  `set_id` int(11) NOT NULL AUTO_INCREMENT,
-  `set_name` varchar(255) DEFAULT NULL,
-  `branch_id` longtext DEFAULT NULL,
+DROP TABLE IF EXISTS `request_mispunch_list`;
+CREATE TABLE `request_mispunch_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `business_id` longtext DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `created_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`set_id`)
+  `emp_id` varchar(255) DEFAULT NULL,
+  `emp_mobile_no` varchar(10) DEFAULT NULL,
+  `emp_miss_date` varchar(50) DEFAULT NULL,
+  `emp_miss_time_type` int(11) DEFAULT NULL,
+  `emp_miss_in_time` time DEFAULT NULL,
+  `emp_miss_out_time` time DEFAULT NULL,
+  `emp_working_hour` time DEFAULT NULL,
+  `message` varchar(255) DEFAULT NULL,
+  `remark` varchar(255) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `shift_set` (`set_id`, `set_name`, `branch_id`, `business_id`, `updated_at`, `created_at`) VALUES
-(1,	'Rotational Shift',	'',	'e3d64177e51bdff82b499e116796fe74',	'2023-09-26 13:13:31',	'0000-00-00 00:00:00'),
-(2,	'asdf',	'',	'e3d64177e51bdff82b499e116796fe74',	'2023-09-28 19:04:34',	'0000-00-00 00:00:00');
+INSERT INTO `request_mispunch_list` (`id`, `business_id`, `emp_id`, `emp_mobile_no`, `emp_miss_date`, `emp_miss_time_type`, `emp_miss_in_time`, `emp_miss_out_time`, `emp_working_hour`, `message`, `remark`, `status`, `created_at`, `updated_at`) VALUES
+(38,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-09-16',	1,	'10:08:00',	'17:09:00',	'00:00:08',	'Chjn',	'asdfasdf',	2,	'2023-09-29 12:09:31',	'2023-09-29 12:09:31'),
+(39,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-09-29',	1,	'12:33:00',	'00:36:00',	'10:00:00',	'Dm',	NULL,	1,	'2023-09-29 12:31:37',	'2023-09-29 12:31:37'),
+(41,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-09-29',	1,	'13:51:00',	'13:51:00',	'00:00:00',	'Rjj',	NULL,	1,	'2023-09-29 13:52:12',	'2023-09-29 13:52:12'),
+(43,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-09-30',	1,	'10:28:00',	'04:28:00',	'18:00:00',	NULL,	'asdf',	2,	'2023-09-30 00:28:56',	'2023-09-30 00:28:56'),
+(48,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-09-08',	1,	'10:07:00',	'18:13:00',	'08:05:00',	'Miss the both punch',	NULL,	1,	'2023-09-30 15:39:20',	'2023-09-30 15:39:20'),
+(49,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-09-06',	1,	'10:15:00',	'19:20:00',	'09:05:00',	'Miss punching both interval',	NULL,	1,	'2023-09-30 15:43:47',	'2023-09-30 15:43:47'),
+(50,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-09-10',	1,	'08:40:00',	'21:14:00',	'12:34:00',	'Thjn',	NULL,	1,	'2023-09-30 17:15:06',	'2023-09-30 17:15:06'),
+(51,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-09-14',	1,	'09:16:00',	'16:16:00',	'07:00:00',	'Mmmmmmmmmm',	'Reson Is not Valid',	2,	'2023-10-01 23:16:47',	'2023-10-09 12:40:15'),
+(52,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-10-05',	1,	'09:50:00',	'19:10:00',	'09:20:00',	'Thalapati',	'asdfdsaf',	2,	'2023-10-10 10:43:42',	'2023-10-10 10:43:42'),
+(53,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	'9993433474',	'2023-10-11',	1,	'11:10:00',	'18:15:00',	'07:05:00',	'Ooooo',	NULL,	1,	'2023-10-12 17:52:54',	'2023-10-12 17:52:54'),
+(54,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'24-10-2023',	1,	'11:08:00',	'16:08:00',	'05:00:00',	'Hhhh',	'asdf',	2,	'2023-10-23 15:08:46',	'2023-11-03 08:42:01'),
+(55,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-10-25',	1,	'11:19:00',	'17:19:00',	'06:00:00',	'Jjjjjjjjj',	NULL,	1,	'2023-10-23 16:19:49',	'2023-11-03 08:41:46'),
+(56,	'e3d64177e51bdff82b499e116796fe74',	'IT0012',	'8462074453',	'2023-11-09',	1,	'15:13:00',	'15:13:00',	'00:00:00',	'Ttt',	NULL,	0,	'2023-11-01 15:14:05',	'2023-11-01 15:14:05');
 
-DROP TABLE IF EXISTS `sidebar`;
-CREATE TABLE `sidebar` (
+DROP TABLE IF EXISTS `static_attendance_endgame_level`;
+CREATE TABLE `static_attendance_endgame_level` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `policypreference_level_id` bigint(11) DEFAULT NULL,
+  `level_name` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_attendance_endgame_level` (`id`, `policypreference_level_id`, `level_name`) VALUES
+(1,	1,	'Business Level');
+
+DROP TABLE IF EXISTS `static_attendance_endgame_policypreference`;
+CREATE TABLE `static_attendance_endgame_policypreference` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `policy_name` varchar(200) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_attendance_endgame_policypreference` (`id`, `policy_name`, `created_at`, `updated_at`) VALUES
+(1,	'Business',	'2023-10-03 05:16:43',	'2023-10-03 05:16:43'),
+(2,	'Employee',	'2023-10-03 05:17:55',	'2023-10-03 05:17:55');
+
+DROP TABLE IF EXISTS `static_attendance_methods`;
+CREATE TABLE `static_attendance_methods` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `method_name` varchar(225) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_attendance_methods` (`id`, `method_name`) VALUES
+(1,	'Office'),
+(2,	'Out Door'),
+(3,	'Remote');
+
+DROP TABLE IF EXISTS `static_attendance_mode`;
+CREATE TABLE `static_attendance_mode` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mode_name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='use attendancelist static data';
+
+INSERT INTO `static_attendance_mode` (`id`, `mode_name`) VALUES
+(1,	'QR Code'),
+(2,	'Face ID'),
+(3,	'Selfie');
+
+DROP TABLE IF EXISTS `static_attendance_shift_type`;
+CREATE TABLE `static_attendance_shift_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(225) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_attendance_shift_type` (`id`, `name`) VALUES
+(1,	'Fixed Shift'),
+(2,	'Rotational Shift'),
+(3,	'Open Shift');
+
+DROP TABLE IF EXISTS `static_business_categories_list`;
+CREATE TABLE `static_business_categories_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` longtext DEFAULT NULL,
+  `status` tinyint(4) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_business_categories_list` (`id`, `name`, `status`, `created_at`, `updated_at`) VALUES
+(1,	'Hospital',	0,	'2023-08-18 12:00:52',	'2023-08-18 11:59:26'),
+(2,	'Hotel',	0,	'2023-08-18 12:00:44',	'2023-08-18 11:59:35'),
+(3,	'Super Market',	0,	'2023-08-18 12:00:34',	'2023-08-18 11:59:43'),
+(4,	'Software Development',	0,	'2023-08-18 12:01:34',	'2023-08-18 12:01:34'),
+(5,	'IT/Telecom',	0,	'2023-08-18 12:02:35',	'2023-08-18 12:02:35'),
+(6,	'Jewellery',	0,	'2023-08-18 12:02:53',	'2023-08-18 12:02:53'),
+(7,	'Logistics',	0,	'2023-08-18 12:03:05',	'2023-08-18 12:03:05'),
+(8,	'Saloon/Boutique',	0,	'2023-08-18 12:04:38',	'2023-08-18 12:03:43'),
+(9,	'Educational/Coaching Institute',	0,	'2023-08-18 12:05:47',	'2023-08-18 12:05:47'),
+(10,	'Manufacturing',	0,	'2023-08-18 12:06:25',	'2023-08-18 12:06:25'),
+(11,	'Others',	0,	'2023-08-18 12:08:06',	'2023-08-18 12:08:06');
+
+DROP TABLE IF EXISTS `static_business_type_list`;
+CREATE TABLE `static_business_type_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_business_type_list` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1,	'Sole Proprietorship',	'2023-09-04 06:41:20',	'2023-08-19 17:48:07'),
+(2,	'Partnership',	'2023-09-04 06:41:28',	'2023-08-19 17:48:07'),
+(3,	'Corporation',	'2023-09-04 06:41:36',	'2023-08-19 17:48:07'),
+(4,	'Cooperative',	'2023-09-04 06:41:58',	'2023-08-19 17:48:07'),
+(5,	'Limited Liability Company (LLC)',	'2023-09-04 06:42:10',	'2023-08-19 17:48:07');
+
+DROP TABLE IF EXISTS `static_employee_join_blood_group`;
+CREATE TABLE `static_employee_join_blood_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `blood_group` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_employee_join_blood_group` (`id`, `blood_group`) VALUES
+(1,	'A+'),
+(2,	'O+'),
+(3,	'B+'),
+(4,	'AB+'),
+(5,	'A-'),
+(6,	'O-'),
+(7,	'B-'),
+(8,	'AB-');
+
+DROP TABLE IF EXISTS `static_employee_join_category_caste`;
+CREATE TABLE `static_employee_join_category_caste` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `caste_category` varchar(50) DEFAULT NULL,
+  `caste_full_name` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_employee_join_category_caste` (`id`, `caste_category`, `caste_full_name`) VALUES
+(1,	'SC',	'Scheduled Caste'),
+(2,	'ST',	'Scheduled Tribe'),
+(3,	'OBC',	'Other Backward Class'),
+(4,	'General',	'General Category'),
+(5,	'Other',	'');
+
+DROP TABLE IF EXISTS `static_employee_join_contractual_type`;
+CREATE TABLE `static_employee_join_contractual_type` (
+  `id` int(11) NOT NULL,
+  `contractual_type` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_employee_join_contractual_type` (`id`, `contractual_type`) VALUES
+(1,	'Monthly'),
+(2,	'Weekly'),
+(3,	'Daily'),
+(4,	'Hourly');
+
+DROP TABLE IF EXISTS `static_employee_join_emp_type`;
+CREATE TABLE `static_employee_join_emp_type` (
+  `type_id` int(255) NOT NULL AUTO_INCREMENT,
+  `emp_type` varchar(255) NOT NULL,
+  PRIMARY KEY (`type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_employee_join_emp_type` (`type_id`, `emp_type`) VALUES
+(1,	'Regular'),
+(2,	'Contractual');
+
+DROP TABLE IF EXISTS `static_employee_join_gender_type`;
+CREATE TABLE `static_employee_join_gender_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `gender_type` varchar(225) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_employee_join_gender_type` (`id`, `gender_type`) VALUES
+(1,	'Male'),
+(2,	'Female'),
+(3,	'Other');
+
+DROP TABLE IF EXISTS `static_employee_join_govt_doc_type`;
+CREATE TABLE `static_employee_join_govt_doc_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `govt_type` varchar(50) DEFAULT NULL,
+  `document_no_length` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`document_no_length`)),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_employee_join_govt_doc_type` (`id`, `govt_type`, `document_no_length`) VALUES
+(1,	'Aadhaar card',	'[\"12\"]'),
+(2,	'PAN Card',	'[\"10\"]'),
+(3,	'Driving license',	'[\"16\"]'),
+(4,	'Passport',	'[\"8\",\"9\"]'),
+(5,	'Voter ID',	'[\"6\",\"4\"]'),
+(6,	'Other',	'[\"0\"]');
+
+DROP TABLE IF EXISTS `static_employee_join_marital_type`;
+CREATE TABLE `static_employee_join_marital_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `marital_type` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_employee_join_marital_type` (`id`, `marital_type`) VALUES
+(1,	'Married'),
+(2,	'Unmarried ');
+
+DROP TABLE IF EXISTS `static_employee_join_religion`;
+CREATE TABLE `static_employee_join_religion` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `religion_name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_employee_join_religion` (`id`, `religion_name`) VALUES
+(1,	'Hinduism'),
+(2,	'Christianity'),
+(3,	'Islam'),
+(4,	'Sikhism'),
+(5,	'Others');
+
+DROP TABLE IF EXISTS `static_endgame_method_switch`;
+CREATE TABLE `static_endgame_method_switch` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `method_check` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_endgame_method_switch` (`id`, `method_check`) VALUES
+(1,	'ON'),
+(2,	'OFF');
+
+DROP TABLE IF EXISTS `static_leave_shift_type`;
+CREATE TABLE `static_leave_shift_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `leave_shift_type` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_leave_shift_type` (`id`, `leave_shift_type`) VALUES
+(1,	'First Half'),
+(2,	'Second Half');
+
+DROP TABLE IF EXISTS `static_mispunch_timetype`;
+CREATE TABLE `static_mispunch_timetype` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `time_type` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_mispunch_timetype` (`id`, `time_type`) VALUES
+(1,	'In Time'),
+(2,	'Out Time'),
+(3,	'Both Time');
+
+DROP TABLE IF EXISTS `static_request_leave_type`;
+CREATE TABLE `static_request_leave_type` (
+  `id` int(11) NOT NULL,
+  `leave_day` varchar(40) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_request_leave_type` (`id`, `leave_day`) VALUES
+(1,	'Full Day'),
+(2,	'Half Day');
+
+DROP TABLE IF EXISTS `static_sidebar`;
+CREATE TABLE `static_sidebar` (
   `bar_id` int(11) NOT NULL AUTO_INCREMENT,
   `sidebar_title` varchar(255) DEFAULT NULL,
   `side_icon` varchar(255) DEFAULT NULL,
@@ -2283,7 +2185,7 @@ CREATE TABLE `sidebar` (
   PRIMARY KEY (`bar_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `sidebar` (`bar_id`, `sidebar_title`, `side_icon`, `status`, `created_at`, `updated_at`) VALUES
+INSERT INTO `static_sidebar` (`bar_id`, `sidebar_title`, `side_icon`, `status`, `created_at`, `updated_at`) VALUES
 (1,	'Dashboard',	'feather feather-home',	1,	'2023-09-02 10:28:55',	'0000-00-00 00:00:00'),
 (2,	'Employee',	'feather feather-users',	1,	'2023-09-02 10:29:51',	'0000-00-00 00:00:00'),
 (3,	'Attendance',	'feather feather-user-check',	1,	'2023-09-02 10:30:10',	'0000-00-00 00:00:00'),
@@ -2291,8 +2193,8 @@ INSERT INTO `sidebar` (`bar_id`, `sidebar_title`, `side_icon`, `status`, `create
 (5,	'Setings',	'feather feather-settings',	1,	'2023-09-02 10:31:09',	'0000-00-00 00:00:00'),
 (6,	'Roles & Permissions',	'fa fa-file',	1,	'2023-09-09 08:14:13',	'0000-00-00 00:00:00');
 
-DROP TABLE IF EXISTS `sidebar_menu`;
-CREATE TABLE `sidebar_menu` (
+DROP TABLE IF EXISTS `static_sidebar_menu`;
+CREATE TABLE `static_sidebar_menu` (
   `menu_id` int(11) NOT NULL AUTO_INCREMENT,
   `menu_name` varchar(255) DEFAULT NULL,
   `menu_link` varchar(255) DEFAULT NULL,
@@ -2304,7 +2206,7 @@ CREATE TABLE `sidebar_menu` (
   PRIMARY KEY (`menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `sidebar_menu` (`menu_id`, `menu_name`, `menu_link`, `sub_list`, `sidebar_id`, `status`, `updated_at`, `created_at`) VALUES
+INSERT INTO `static_sidebar_menu` (`menu_id`, `menu_name`, `menu_link`, `sub_list`, `sidebar_id`, `status`, `updated_at`, `created_at`) VALUES
 (1,	'Dashboard',	'/admin',	NULL,	1,	1,	'2023-09-02 10:16:05',	'2023-09-22 17:05:45'),
 (2,	'Employee',	'/admin/employee',	NULL,	2,	1,	'2023-09-02 10:17:53',	'2023-09-02 11:29:09'),
 (3,	'Attendance',	'/admin/attendance',	NULL,	3,	1,	'2023-09-02 10:18:27',	'2023-09-02 11:29:09'),
@@ -2334,40 +2236,40 @@ INSERT INTO `sidebar_menu` (`menu_id`, `menu_name`, `menu_link`, `sub_list`, `si
 (27,	'Notification Setting',	'/admin/settings/notification',	NULL,	6,	1,	'2023-09-09 11:16:05',	'0000-00-00 00:00:00'),
 (28,	'Report',	'/admin/report',	NULL,	5,	0,	'2023-09-02 10:21:35',	'2023-09-28 17:33:08');
 
-DROP TABLE IF EXISTS `static_attendance_mode_response`;
-CREATE TABLE `static_attendance_mode_response` (
+DROP TABLE IF EXISTS `static_status_attendance`;
+CREATE TABLE `static_status_attendance` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `mode_name` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='use attendancelist static data';
-
-INSERT INTO `static_attendance_mode_response` (`id`, `mode_name`) VALUES
-(1,	'QR Code'),
-(2,	'Face ID'),
-(3,	'Selfie');
-
-DROP TABLE IF EXISTS `static_contractual_type`;
-CREATE TABLE `static_contractual_type` (
-  `id` int(11) NOT NULL,
-  `contractual_type` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `static_contractual_type` (`id`, `contractual_type`) VALUES
-(1,	'Monthly'),
-(2,	'Weekly'),
-(3,	'Daily'),
-(4,	'Hourly');
-
-DROP TABLE IF EXISTS `static_method_switch`;
-CREATE TABLE `static_method_switch` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `method_check` varchar(50) NOT NULL,
+  `status_labels` varchar(255) DEFAULT NULL,
+  `badge_colors` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `static_method_switch` (`id`, `method_check`) VALUES
-(1,	'ON'),
-(2,	'OFF');
+INSERT INTO `static_status_attendance` (`id`, `status_labels`, `badge_colors`) VALUES
+(1,	'Present',	'success'),
+(2,	'Absent',	'danger'),
+(3,	'Late',	'success'),
+(4,	'Mispunch',	'secondary'),
+(5,	'Not Marked',	'secondary'),
+(6,	'Holiday',	'primary'),
+(7,	'Weekoff',	'primary'),
+(8,	'Half day',	'danger'),
+(9,	'Overtime',	'success'),
+(10,	'paid leave',	'success'),
+(11,	'unpaid leave',	'danger');
+
+DROP TABLE IF EXISTS `static_status_request`;
+CREATE TABLE `static_status_request` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `request_response` varchar(50) DEFAULT NULL,
+  `request_color` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `static_status_request` (`id`, `request_response`, `request_color`) VALUES
+(0,	'Requested',	'badge badge-primary-light'),
+(1,	'Approved',	'badge badge-success-light'),
+(2,	'Declined',	'badge badge-warning-light'),
+(3,	'Pending',	'badge badge-danger-light');
 
 DROP TABLE IF EXISTS `subscription`;
 CREATE TABLE `subscription` (
@@ -2381,31 +2283,4 @@ INSERT INTO `subscription` (`id`, `business_id`, `packages`) VALUES
 (1,	'e3d64177e51bdff82b499e116796fe74',	'[\"{\\\"success\\\":true,\\\"code\\\":\\\"PAYMENT_SUCCESS\\\",\\\"message\\\":\\\"Your payment is successful.\\\",\\\"data\\\":{\\\"merchantId\\\":\\\"PGTESTPAYUAT\\\",\\\"merchantTransactionId\\\":\\\"65336c5973388\\\",\\\"transactionId\\\":\\\"T2310211144496972367197\\\",\\\"amount\\\":10000,\\\"state\\\":\\\"COMPLETED\\\",\\\"responseCode\\\":\\\"SUCCESS\\\",\\\"paymentInstrument\\\":{\\\"type\\\":\\\"NETBANKING\\\",\\\"pgTransactionId\\\":\\\"1995464773\\\",\\\"pgServiceTransactionId\\\":\\\"PG2212291607083344934300\\\",\\\"bankTransactionId\\\":null,\\\"bankId\\\":\\\"\\\"}}}\"]'),
 (2,	'e3d64177e51bdff82b499e116796fe74',	'[\"{\\\"success\\\":true,\\\"code\\\":\\\"PAYMENT_SUCCESS\\\",\\\"message\\\":\\\"Your payment is successful.\\\",\\\"data\\\":{\\\"merchantId\\\":\\\"PGTESTPAYUAT\\\",\\\"merchantTransactionId\\\":\\\"65336efb3d2ad\\\",\\\"transactionId\\\":\\\"T2310211156034832367494\\\",\\\"amount\\\":10000,\\\"state\\\":\\\"COMPLETED\\\",\\\"responseCode\\\":\\\"SUCCESS\\\",\\\"paymentInstrument\\\":{\\\"type\\\":\\\"CARD\\\",\\\"cardType\\\":\\\"CREDIT_CARD\\\",\\\"pgTransactionId\\\":\\\"PG2207221432267522530776\\\",\\\"bankTransactionId\\\":null,\\\"pgAuthorizationCode\\\":null,\\\"arn\\\":null,\\\"bankId\\\":\\\"\\\",\\\"brn\\\":\\\"B12345\\\"}}}\"]');
 
-DROP TABLE IF EXISTS `universal_roles_define`;
-CREATE TABLE `universal_roles_define` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `role_id` int(11) DEFAULT NULL,
-  `role_name` varchar(200) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-DROP TABLE IF EXISTS `weekly_holiday_list`;
-CREATE TABLE `weekly_holiday_list` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `business_id` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `days` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `weekly_holiday_list` (`id`, `business_id`, `name`, `days`, `created_at`, `updated_at`) VALUES
-(4,	'e3d64177e51bdff82b499e116796fe74',	'weeklyoff A',	'[\"Saturday\",\"Sunday\"]',	'2023-10-23 11:32:13',	'2023-09-28 14:05:37'),
-(10,	'bd545732e12addf17c34a231d24a3814',	'Creative Minds Week Off',	'[\"Sunday\"]',	'2023-10-02 07:30:29',	'2023-10-02 12:56:21'),
-(11,	'e3d64177e51bdff82b499e116796fe74',	'weeklyoff B',	'[\"Sunday\"]',	'2023-10-17 06:33:01',	'2023-10-04 22:53:01');
-
--- 2023-10-27 13:11:29
+-- 2023-11-03 05:34:55

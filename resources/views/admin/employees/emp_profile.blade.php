@@ -119,7 +119,7 @@
                                 @if ($DATA->emp_country == 1)
                                     India
                                 @endif
-                                @if ($DATA->emp_gender == 2)
+                                @if ($DATA->emp_country == 2)
                                     USA
                                 @endif
                             </span></li>

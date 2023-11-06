@@ -353,7 +353,7 @@
                 <div class="card">
                     <div class="card-header border-bottom-0">
                         <div class="card-title">
-                            Employee Summary
+                            Attendance Summary
                         </div>
                         <div class="page-rightheader ms-auto">
                             <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
@@ -385,55 +385,64 @@
                                 </thead>
                                 <tbody>
                                     @php
-                                        $limit = 5;
+                                        $limit = 10;
                                     @endphp
                                     @foreach ($Emp as $emp)
                                         @php
-                                            $resCode = $root->attCall($emp->emp_id);
+                                            $resCode = $root->attendanceCount($emp->emp_id,date('Y'),date('m'));
                                             // dd($resCode);
                                         @endphp
-
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex">
-                                                    <span class="avatar avatar brround me-3"
-                                                        style="background-image: url(imgs/user.png)"></span>
-                                                    <div class="me-3 mt-0 mt-sm-2 d-block">
-                                                        <h6 class=" fs-14"><a
-                                                                href="{{ url('') }}">{{ $emp->emp_name }}</a>
-                                                        </h6>
+                                        @if ($resCode[1] + $resCode[3] + $resCode[9] + $resCode[8] / 2 != 0)
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex">
+                                                        <span class="avatar avatar-md brround me-3 rounded-circle"
+                                                            style="background-image: url('/employee_profile/{{ $emp->profile_photo }}')"></span>
+                                                        <div class="me-3 mt-0 mt-sm-1 d-block">
+                                                            <a href="{{ route('employeeProfile', [$emp->emp_id]) }}">
+                                                            <h6 class="mb-1 fs-14">
+                                                                    {{ $emp->emp_name }}&nbsp;{{ $emp->emp_mname }}&nbsp;{{ $emp->emp_lname }}
+                                                                </h6>
+                                                            </a>
+                                                            <p class="text-muted mb-0 fs-12">
+                                                                <?= $root->DesingationIdToName($emp->designation_id) ?>
+                                                            </p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td>{{ $emp->emp_id }}</td>
+                                                </td>
+                                                <td>{{ $emp->emp_id }}</td>
 
-                                            <td class="text-center">{{$resCode[1]+$resCode[3]+$resCode[9]+$resCode[8]/2}}</td> 
-                                            <td class="text-center">{{$resCode[2]}}</td>
-                                            <td class="text-center">{{$resCode[8]}}</td>
-                                            <td class="text-center">{{'0'}}</td>
-                                            <td class="text-center">{{$resCode[9]}}</td>
-                                            <td class="text-center">{{$resCode[3]}}</td>
-                                            <td class="text-center">{{'0'}}</td>
-                                            <td class="text-center">{{$resCode[1]}}</td>
-                                            <td class="text-center">
-                                                <div class="btn btn-light btn-icon btn-sm" id="calenderbtn"
-                                                    data-bs-toggle="tooltip" data-original-title="View">
-                                                    <a href="{{ route('attendance.byemployee', [$emp->emp_id]) }}">
-                                                        <i class="feather feather-eye"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        @php
-                                            if ($limit-- <= 0) {
-                                                break;
-                                            }
-                                        @endphp
+                                                <td class="text-center">
+                                                    {{ $resCode[1] + $resCode[3] + $resCode[9] + $resCode[8] / 2 }}</td>
+                                                <td class="text-center">{{ $resCode[2] }}</td>
+                                                <td class="text-center">{{ $resCode[8] }}</td>
+                                                <td class="text-center">{{ '0' }}</td>
+                                                <td class="text-center">{{ $resCode[9] }}</td>
+                                                <td class="text-center">{{ $resCode[3] }}</td>
+                                                <td class="text-center">{{ '0' }}</td>
+                                                <td class="text-center">{{ $resCode[1] }}</td>
+                                                <td class="text-center">
+                                                    <div class="btn btn-light btn-icon btn-sm" id="calenderbtn"
+                                                        data-bs-toggle="tooltip" data-original-title="View">
+                                                        <a href="{{ route('attendance.byemployee', [$emp->emp_id]) }}">
+                                                            <i class="feather feather-eye"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            @php
+                                                if ($limit-- <= 0) {
+                                                    break;
+                                                }
+                                            @endphp
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
                             <div class="d-flex">
-                                <a class="btn btn-sm btn-outline-primary ms-auto">View All</a>
+                                <a href="{{ url('/admin/attendance/month-summary') }}"
+                                    class="btn btn-sm btn-outline-primary ms-auto">View More</a>
                             </div>
                         </div>
                         <div class="rescalendar" id="my_calendar_en"></div>

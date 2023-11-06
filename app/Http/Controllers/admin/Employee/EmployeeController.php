@@ -9,9 +9,22 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Session;
 use RealRashid\SweetAlert\Facades\Alert;
-use App\Models\employee\EmployeePersonalDetail;
+use App\Models\PolicyAttenRuleLateEntry;
+use App\Models\PolicyAttenRuleEarlyExit;
+use App\Models\AttendanceList;
+use App\Models\EmployeePersonalDetail;
+use App\Models\DesignationList;
+use App\Models\PolicyAttendanceShiftSetting;
+use App\Models\StaticEmployeeJoinGenderType;
+use App\Models\PolicyAttendanceTrackInOut;
+use App\Models\PolicyAttendanceShiftTypeItem;
+use App\Models\PolicyMasterEndgameMethod;
+use App\Models\StaticAttendanceMethod;
+use App\Models\StaticEmployeeJoinMaritalType;
+use App\Models\StaticEmployeeJoinCategoryCaste;
+use App\Models\StaticEmployeeJoinBloodGroup;
+use App\Models\StaticEmployeeJoinGovtDocType;
 use App\Helpers\Central_unit;
-
 use App\Exports\AddEmployeeDetails;
 use App\Exports\ExportEmployeeDetails;
 use App\Imports\EmployeeImport;
@@ -27,38 +40,25 @@ class EmployeeController extends Controller
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
-        $attendanceMethod = DB::table('attendance_methods')->get();
+        $attendanceMethod = StaticAttendanceMethod::get();
         // dd($attendanceMethod);
-        $shiftAttendance = DB::table('attendance_shift_settings')
-            ->join('attendance_shift_type', 'attendance_shift_settings.shift_type', '=', 'attendance_shift_type.id')
+        $shiftAttendance = DB::table('policy_attendance_shift_settings')
+            ->join('static_attendance_shift_type', 'policy_attendance_shift_settings.shift_type', '=', 'static_attendance_shift_type.id')
             ->where('business_id', Session::get('business_id'))
-            ->select('attendance_shift_settings.id as attendance_id', 'attendance_shift_settings.shift_type_name',      )
-            // ->orderBy()
+            ->select('policy_attendance_shift_settings.id as attendance_id', 'policy_attendance_shift_settings.shift_type_name')
             ->get();
-            // dd($shiftAttendance);
-            // dd($shiftAttendance);
-        // dd($shiftAttendance);
-        // $call = new Central_unit();
-        // $Branch = $call->BranchList();
-        // $accessPermission = Central_unit::AccessPermission();
-        // $moduleName = $accessPermission[0];
-        // $permissions = $accessPermission[1];
-        // $root= compact('moduleName', 'permissions');
-        // $itemt = DB::table('employee_personal_details')
-        //     ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
-        //     ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
-        //     ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
-        //     ->get();
-        // ->select('employee_personal_details.*', 'branch_list.branch_name', 'designation_list.desig_name')->get();
-        // dd($itemt);
-        $DATA = DB::table('employee_personal_details')
-            ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
-            ->where('employee_personal_details.business_id', Session::get('business_id'))
-            ->orderBy('employee_personal_details.id','desc')
 
+        $DATA = EmployeePersonalDetail::join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+            ->where('employee_personal_details.business_id', Session::get('business_id'))
+            ->orderBy('employee_personal_details.id', 'desc')
             ->get();
-        // dd($DATA);
-        return view('admin.employees.employee', compact('DATA', 'Branch', 'moduleName', 'permissions', 'shiftAttendance', 'attendanceMethod'));
+
+        $staticGender = StaticEmployeeJoinGenderType::get();
+        $staticMarital = StaticEmployeeJoinMaritalType::get();
+        $statciCategory = StaticEmployeeJoinCategoryCaste::get();
+        $staticbloodGroup = StaticEmployeeJoinBloodGroup::get();
+        $staticGovId = StaticEmployeeJoinGovtDocType::get();
+        return view('admin.employees.employee', compact('DATA', 'Branch', 'moduleName', 'permissions', 'shiftAttendance', 'attendanceMethod', 'staticGender', 'staticMarital', 'statciCategory', 'staticbloodGroup', 'staticGovId'));
     }
 
     //Import Files
@@ -69,6 +69,7 @@ class EmployeeController extends Controller
         ]);
 
         $file = $request->file('csv_file');
+        // dd($file);
         Excel::import(new EmployeeImport(), $file);
 
         // Process the uploaded file using Maatwebsite/Excel
@@ -94,9 +95,8 @@ class EmployeeController extends Controller
         // DB::enableQueryLog();
 
         $session_id = Session::get('business_id');
-        $DATA = DB::table('employee_personal_details')
-            ->Join('attendance_methods', 'employee_personal_details.emp_attendance_method', '=', 'attendance_methods.id')
-            ->Join('attendance_shift_settings', 'employee_personal_details.emp_shift_type', '=', 'attendance_shift_settings.id')
+        $DATA = EmployeePersonalDetail::Join('static_attendance_methods', 'employee_personal_details.emp_attendance_method', '=', 'static_attendance_methods.id')
+            ->Join('policy_attendance_shift_settings', 'employee_personal_details.emp_shift_type', '=', 'policy_attendance_shift_settings.id')
             ->Join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
             ->Join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
             ->Join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
@@ -173,75 +173,60 @@ class EmployeeController extends Controller
 
     public function UpdateEmployee(Request $request)
     {
-        $load = DB::table('employee_personal_details')
-            ->where('emp_id', $request->emp_id)
+        // dd($request->all());
+        $load = EmployeePersonalDetail::where('emp_id', $request->update_emp_id)
             ->select('profile_photo')
             ->first();
-
-        // dd();
         // Validate the request data
         if ($request->image) {
             $validatedData = $request->validate([
                 'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-                // Adjust max size as needed
             ]);
-
-            // Get the uploaded image file
             $image = $request->file('image');
-
-            // Generate a unique image name
             $imageName = date('d-m-Y') . '_' . md5(time()) . '.' . $image->getClientOriginalExtension();
-
-            // Move the uploaded image to the desired directory
             $image->move(public_path('employee_profile/'), $imageName);
         }
 
         // Update employee details in the database
-        $updated = DB::table('employee_personal_details')
-            ->where('emp_id', $request->emp_id)
-            ->update([
-                'business_id' => $request->session()->get('business_id'),
-                'employee_type' => 1,
-                'emp_name' => $request->name,
-                'emp_mname' => $request->mName,
-                'emp_lname' => $request->lName,
-                'emp_mobile_number' => $request->mobile_number,
-                'emp_email' => $request->email_sd,
-                'emp_date_of_birth' => $request->dob,
-                'emp_gender' => $request->update_gender,
-                'emp_country' => $request->country,
-                'emp_state' => $request->state,
-                'emp_city' => $request->city,
-                'emp_pin_code' => $request->pincode,
-                'emp_address' => $request->address,
-                'emp_id' => $request->emp_id,
-                'emp_shift_type' => $request->shift_type,
-                'branch_id' => $request->branch_id2,
-                'department_id' => $request->department_id,
-                'designation_id' => $request->designation_id1,
-                'emp_date_of_joining' => $request->doj,
-                'emp_attendance_method' => $request->attendance_method,
-                'profile_photo' => $request->image ?? false && $request->has('image') ? $imageName : $load->profile_photo,
+        $updated = EmployeePersonalDetail::where('emp_id', $request->update_emp_id)->update([
+            'business_id' => $request->session()->get('business_id'),
+            // 'employee_type' => 1,
+            // 'business_id' => $request->session()->get('business_id'),
+            // 'master_endgame_id' => $masterEndgameId->id,
+            // 'employee_type' => $request->employee_type,
+            // 'employee_contractual_type' => $request->contractualtype != null ? $request->contractualtype : '0',
 
-                // 'business_id' => $request->session()->get('business_id'),
-                // 'branch_id' => $request->branch_id2,
-                // 'employee_type' => $request->employee_type,
-                // 'emp_id' => $request->emp_id,
-                // 'emp_name' => $request->first_name,
-                // 'department_id' => $request->department_id,
-                // 'designation_id' => $request->designation_id1,
-                // 'emp_mobile_number' => $request->mobile_number,
-                // 'emp_email' => $request->email,
-                // 'emp_date_of_birth' => $request->dob,
-                // 'emp_date_of_joining' => $request->doj,
-                // 'emp_gender' => $request->gender,
-                // 'emp_address' => $request->address,
-                // 'emp_country' => $request->country,
-                // 'emp_state' => $request->state,
-                // 'emp_city' => $request->city,
-                // 'emp_pin_code' => $request->pin,
-                // 'profile_photo' => $imageName? $imageName: '',
-            ]);
+            // 'emp_id' => $request->update_emp_id,
+            'emp_name' => $request->update_name,
+            'emp_mname' => $request->update_mName,
+            'emp_lname' => $request->update_lName,
+            'emp_mobile_number' => $request->update_mobile_number,
+            'emp_email' => $request->udpate_email,
+            'emp_date_of_birth' => $request->update_dob,
+            'emp_gender' => $request->update_gender,
+            'emp_marital_status' => $request->update_marital,
+            'emp_country' => $request->update_country,
+            'emp_category' => $request->update_category,
+            'emp_blood_group' => $request->update_blood,
+            'emp_gov_select_id' => $request->update_gov_id,
+            'emp_gov_select_id_number' => $request->update_id_no,
+            'emp_nationality' => $request->update_nationality,
+            'emp_state' => $request->update_state,
+            'emp_city' => $request->update_city,
+            'emp_pin_code' => $request->update_pincode,
+            'emp_address' => $request->update_address,
+            'emp_shift_type' => $request->update_shift_type,
+            'branch_id' => $request->update_branch,
+            'department_id' => $request->update_department,
+            'designation_id' => $request->update_designation,
+            'emp_reporting_manager' => $request->update_reporting_manager,
+            'emp_date_of_joining' => $request->update_doj,
+            'emp_attendance_method' => $request->update_attendance_method,
+            'profile_photo' => $request->image ?? false && $request->has('image') ? $imageName : $load->profile_photo,
+            // 'profile_photo' => $request->image ?? false && $request->has('image') ? $imageName : ($load ? $load->profile_photo : false),
+        ]);
+
+
 
         // dd($updated);
         if ($updated) {
@@ -257,9 +242,7 @@ class EmployeeController extends Controller
     {
         // dd($request->all());
         // echo $request->delete_employesd;
-        $dataDelete = DB::table('employee_personal_details')
-            ->where('emp_id', $request->weekly_policy_id)
-            ->delete();
+        $dataDelete = EmployeePersonalDetail::where('emp_id', $request->weekly_policy_id)->delete();
         if ($dataDelete) {
             Alert::success('Deleted Successfully', 'Success Message');
         } else {
@@ -278,8 +261,7 @@ class EmployeeController extends Controller
         $designationId = $request->input('designation_id');
 
         // // Use the selected filter values to query your database and retrieve the filtered data
-        $filteredData = DB::table('employee_personal_details')
-            ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+        $filteredData = EmployeePersonalDetail::join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
             ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
             ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
             ->when($branchId, function ($query) use ($branchId) {
@@ -299,8 +281,7 @@ class EmployeeController extends Controller
 
     public function allEmployee(Request $request)
     {
-        $days = DB::table('employee_personal_details')
-            ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+        $days = EmployeePersonalDetail::join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
             ->where('employee_personal_details.business_id', Session::get('business_id'))
             ->where('branch_list.business_id', Session::get('business_id'))
             ->where('employee_personal_details.emp_id', $request->employee_id)
@@ -310,22 +291,24 @@ class EmployeeController extends Controller
 
     public function empId()
     {
-        // return true;
-
-        $data = DB::table('employee_personal_details')
-            ->select(DB::raw('MAX(emp_id) as max_emp_id'))
-            ->first();
-
+        $data = EmployeePersonalDetail::select(DB::raw('MAX(emp_id) as max_emp_id'))->first();
         return response()->json(['get' => $data]);
     }
 
     public function empIdCheck(Request $request)
     {
-        // return $request;
-        $data = DB::table('employee_personal_details')
-            ->where('emp_id', $request->emp_id)
-            ->first();
-        // $data = DB::table('employee_personal_details')->select('emp_')get();
+        $data = EmployeePersonalDetail::where('emp_id', $request->emp_id)->first();
         return response()->json(['get' => $data]);
     }
+
+    public function shiftCheck(Request $request){
+        // return $request->all();
+        // return "orkias";
+        $id = $request->shift_id;
+        // return $reqeust->shift_id;
+        $data = PolicyAttendanceShiftSetting::where('id', $id)->first();
+        return response()->json(['get' => $data]);
+
+    }
+
 }

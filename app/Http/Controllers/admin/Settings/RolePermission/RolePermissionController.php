@@ -10,43 +10,74 @@ use App\Mail\AdminMailer;
 use RealRashid\SweetAlert\Facades\Alert;
 
 use App\Helpers\Central_unit;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+// use Spatie\Permission\Models\Role;
+// use Spatie\Permission\Models\Permission;
+use App\Models\LoginAdmin;
+use App\Models\ModelHasPermission;
+use App\Models\AdminNotice;
+use App\Models\BusinessDetailsList;
+use App\Models\RequestLeaveList;
+use App\Models\RequestMispunchList;
+use App\Models\BranchList;
+use App\Models\RequestGatepassList;
+use App\Models\DesignationList;
+use App\Models\AttendanceList;
+use App\Models\EmployeePersonalDetail;
+use App\Models\StaticSidebarMenu;
+use App\Models\PolicyAttendanceShiftSetting;
+use App\Models\PolicySettingRoleCreate;
+use App\Models\DepartmentList;
+use App\Models\Permission;
+use App\Models\PendingAdmin;
+use App\Models\PolicyAttenRuleBreak;
+use App\Models\PolicyAttenRuleEarlyExit;
+use App\Models\PolicyAttenRuleGatepass;
+use App\Models\PolicyAttenRuleLateEntry;
+use App\Models\PolicyAttenRuleMisspunch;
+use App\Models\PolicyAttenRuleOvertime;
+use App\Models\PolicyHolidayTemplate;
+use App\Models\PolicyPolicyHolidayDetail;
+use App\Models\PolicySettingRoleItem;
+use App\Models\PolicySettingLeavePolicy;
+use App\Models\PolicySettingRoleAssignPermission;
+use App\Models\PolicyAttendanceShiftTypeItem;
+use App\Models\PolicyHolidayDetail;
+use App\Models\PolicyMasterEndgameMethod;
 
 class RolePermissionController extends Controller
 {
 
-    public function index(Request $request)
+    public function index()
     {
-        $params_data = $request->data;
+        // $params_data = $request->data;
         // dd($params_data);
-        $Admins = DB::table('login_admin')->where([
+        $Admins = LoginAdmin::where([
             'business_id' => $request->session()->get('business_id'),
             'user' => '1',
         ])->get();
-        $roles = DB::table('roles')->get();
-        $permissions = DB::table('permissions')->where([
+        // $roles = DB::table('roles')->get();
+        $permissions = Permission::where([
             'business_id' => $request->session()->get('business_id'),
         ])->get();
-        $RoleDetails = DB::table('model_has_roles')->where([
-            'model_id' => $params_data,
-            'business_id' => $request->session()->get('business_id'),
-        ])->first();
-        return view('admin.setting.permissions.Permissions', compact('roles', 'permissions', 'Admins', 'RoleDetails'));
+        // $RoleDetails = DB::table('model_has_roles')->where([
+        //     'model_id' => $params_data,
+        //     'business_id' => $request->session()->get('business_id'),
+        // ])->first();
+        return view('admin.setting.permissions.Permissions', compact('permissions', 'Admins'));
     }
 
     public function AdminList(Request $request)
     {
-        $admins = DB::table('login_admin')->where([
+        $admins = LoginAdmin::where([
             'business_id' => $request->session()->get('business_id'),
         ])->get();
-        $roles = DB::table('setting_role_create')->where([
+        $roles = PolicySettingRoleCreate::where([
             'business_id' => $request->session()->get('business_id'),
         ])->get();
-        $pendings = DB::table('pending_admins')->where([
+        $pendings = PendingAdmin::where([
             'business_id' => $request->session()->get('business_id'),
         ])->get();
-        $permissions = DB::table('permissions')->where([
+        $permissions = Permission::where([
             'business_id' => $request->session()->get('business_id'),
         ])->get();
         // $modelHasRole = DB::table('setting_role_items')->where([
@@ -65,12 +96,12 @@ class RolePermissionController extends Controller
     public function addAdmin(Request $request)
     {
         // dd($request->all());
-        $is_Emp = DB::table('employee_personal_details')->where([
+        $is_Emp = EmployeePersonalDetail::where([
             'emp_id' => $request->employee,
             'business_id' => $request->session()->get('business_id'),
         ])->first();
         if (isset($is_Emp)) {
-            $pending_admin = DB::table('pending_admins')->insert([
+            $pending_admin = PendingAdmin::insert([
                 'emp_id' => $is_Emp->emp_id,
                 'business_id' => $is_Emp->business_id,
                 'branch_id' => $is_Emp->branch_id,
@@ -97,7 +128,7 @@ class RolePermissionController extends Controller
     {
         // if($request->session()->get('business_id')){
         // dd($request->session()->get('business_id'));
-        $now_is_admin = DB::table('login_admin')->insert([
+        $now_is_admin = LoginAdmin::insert([
             'user' => $request->session()->get('login_role'),
             'business_id' => $request->session()->get('business_id'),
             'name' => $request->session()->get('login_name'),
@@ -111,7 +142,7 @@ class RolePermissionController extends Controller
 
         if (isset($now_is_admin)) {
 
-            $approved = DB::table('pending_admins')->where('emp_email', $request->session()->get('login_email'))->delete();
+            $approved = PendingAdmin::where('emp_email', $request->session()->get('login_email'))->delete();
 
             if (isset($approved)) {
                 Alert::success('Login Successfully', 'Now you are a Admin Position at FixingDots');
@@ -129,10 +160,10 @@ class RolePermissionController extends Controller
         $data = $request->all();
         $admin = $request->admin;
 
-        $employee = DB::table('employee_personal_details')->where('emp_email', $request->admin)->first();
+        $employee = EmployeePersonalDetail::where('emp_email', $request->admin)->first();
         $RoleDetails = DB::table('model_has_roles')->where('model_id', $employee->emp_id)->first();
 
-        $permit_id = DB::table('permissions')->where('id', $request->permission_id)->first();
+        $permit_id = Permission::where('id', $request->permission_id)->first();
         $module = DB::table('sidebar_menu')->where('menu_id', $permit_id->module_id)->first();
         $assignPermision = DB::table('model_has_permissions')->insert([
             'permission_id' => $request->permission_id,
@@ -157,7 +188,7 @@ class RolePermissionController extends Controller
     {
         if ($request->ajax()) {
             $admin_mail = $request->valueq;
-            $employee = DB::table('employee_personal_details')->where('emp_email', $admin_mail)->first();
+            $employee = EmployeePersonalDetail::where('emp_email', $admin_mail)->first();
             $modelHasRole = DB::table('model_has_permissions')->where('model_id', $employee->emp_id)->get();
 
             return response()->json($modelHasRole);
@@ -179,7 +210,7 @@ class RolePermissionController extends Controller
 
             if (isset($model_has_role1)) {
                 // $model_has_role->assignRole($model_has_role);
-                $update_employee = DB::table('employee_personal_details')->where([
+                $update_employee = EmployeePersonalDetail::where([
                     'emp_id' => $request->model,
                     'business_id' => $request->session()->get('business_id'),
                 ])->update([
@@ -200,7 +231,7 @@ class RolePermissionController extends Controller
             ]);
             if (isset($model_has_role2)) {
                 // $model_has_role->assignRole($model_has_role);
-                $update_employee = DB::table('employee_personal_details')->where([
+                $update_employee = EmployeePersonalDetail::where([
                     'emp_id' => $request->model,
                     'business_id' => $request->session()->get('business_id'),
                 ])->update([
@@ -216,7 +247,4 @@ class RolePermissionController extends Controller
 
         return redirect('/Role-permission/admin-list');
     }
-
-
-
 }

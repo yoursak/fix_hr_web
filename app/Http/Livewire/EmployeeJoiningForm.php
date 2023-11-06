@@ -11,6 +11,14 @@ use Session;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\employee\EmployeePersonalDetail;
 use App\Helpers\Central_unit;
+use App\Models\PolicyMasterEndgameMethod;
+use App\Models\StaticEmployeeJoinMaritalType;
+use App\Models\StaticEmployeeJoinCategoryCaste;
+use App\Models\StaticEmployeeJoinBloodGroup;
+use App\Models\StaticEmployeeJoinGovtDocType;
+use App\Models\StaticEmployeeJoinGenderType;
+
+
 
 class EmployeeJoiningForm extends Component
 {
@@ -42,11 +50,12 @@ class EmployeeJoiningForm extends Component
         $image->move(public_path('employee_profile/'), $imageName);
 
         // dd($request);
-        $masterEndgameId = DB::table('master_endgame_method')
-            ->where('business_id', Session::get('business_id'))
+        $masterEndgameId = PolicyMasterEndgameMethod::where('business_id', Session::get('business_id'))
             ->where('method_switch', 1)
             ->select('id')
             ->first();
+
+        
 
         // dd($masterEndgameId->id);
         $added = DB::table('employee_personal_details')->insert([
@@ -59,18 +68,25 @@ class EmployeeJoiningForm extends Component
             'emp_lname' => $request->lName,
             'emp_mobile_number' => $request->mobile_number,
             'emp_email' => $request->email_sd,
-            'emp_date_of_birth' => $request->dob,
+            'emp_date_of_birth' => $request->dob_dd,
             'emp_gender' => $request->gender,
-            'emp_country' => $request->country,
-            'emp_state' => $request->state,
-            'emp_city' => $request->city,
-            'emp_pin_code' => $request->pincode,
-            'emp_address' => $request->address,
+            'emp_marital_status' => $request->marital_satatus_dd,
+            'emp_country' => $request->country_dd,
+            'emp_category' => $request->caste_dd,
+            'emp_blood_group' => $request->blood_group_dd,
+            'emp_gov_select_id' => $request->select_id_dd,
+            'emp_gov_select_id_number' => $request->id_number_dd,
+            'emp_nationality' => $request->nationality_dd,
+            'emp_state' => $request->state_dd,
+            'emp_city' => $request->city_dd,
+            'emp_pin_code' => $request->pincode_dd,
+            'emp_address' => $request->address_dd,
             'emp_id' => $request->emp_id,
             'emp_shift_type' => $request->shift_type,
             'branch_id' => $request->branch_id1,
             'department_id' => $request->department_id1,
             'designation_id' => $request->designation_id1,
+            'emp_reporting_manager' => $request->reporting_manager_dd,
             'emp_date_of_joining' => $request->doj,
             'emp_attendance_method' => $request->attendance_method,
             'profile_photo' => $imageName,
@@ -100,20 +116,26 @@ class EmployeeJoiningForm extends Component
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
-        $attendanceMethod = DB::table('attendance_methods')->get();
+        $attendanceMethod = DB::table('static_attendance_methods')->get();
 
-        $shiftAttendance = DB::table('attendance_shift_settings')
-            ->join('attendance_shift_type', 'attendance_shift_settings.shift_type', '=', 'attendance_shift_type.id')
+        $staticGender = StaticEmployeeJoinGenderType::get();
+        $staticMarital = StaticEmployeeJoinMaritalType::get();
+        $statciCategory = StaticEmployeeJoinCategoryCaste::get();
+        $staticbloodGroup = StaticEmployeeJoinBloodGroup::get();
+        $staticGovId = StaticEmployeeJoinGovtDocType::get();
+
+        $shiftAttendance = DB::table('policy_attendance_shift_settings')
+            ->join('static_attendance_shift_type', 'policy_attendance_shift_settings.shift_type', '=', 'static_attendance_shift_type.id')
             ->where('business_id', Session::get('business_id'))
-            ->select('attendance_shift_settings.id as attendance_id', 'attendance_shift_settings.shift_type_name', 'attendance_shift_type.name as attendance_shift_type_name')
+            ->select('policy_attendance_shift_settings.id as attendance_id','static_attendance_shift_type.id as shift_type_id', 'policy_attendance_shift_settings.shift_type_name', 'static_attendance_shift_type.name as static_attendance_shift_type_name')
             ->get();
-
+            // dd($shiftAttendance);    
         $DATA = DB::table('employee_personal_details')
             ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
             ->where('employee_personal_details.business_id', Session::get('business_id'))
             ->get();
         // dd($DATA);
-        return view('livewire.employee-joining-form', compact('DATA', 'Branch', 'moduleName', 'permissions', 'shiftAttendance', 'attendanceMethod'));
+        return view('livewire.employee-joining-form', compact('DATA', 'Branch', 'moduleName', 'permissions', 'shiftAttendance', 'attendanceMethod', 'staticGender', 'staticMarital', 'statciCategory', 'staticbloodGroup', 'staticGovId'));
 
         // return view('livewire.employee-joining-form');
     }

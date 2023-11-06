@@ -4,8 +4,8 @@ namespace App\Http\Controllers\admin\Settings\RolePermission;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+// use Spatie\Permission\Models\Role;
+// use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AdminMailer;
 use App\Helpers\Layout;
@@ -17,6 +17,39 @@ use Illuminate\Support\Facades\Route;
 use App\Helpers\MasterRulesManagement\RulesManagement;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Redirect;
+
+use App\Models\ModelHasPermission;
+use App\Models\AdminNotice;
+use App\Models\BusinessDetailsList;
+use App\Models\RequestLeaveList;
+use App\Models\RequestMispunchList;
+use App\Models\BranchList;
+use App\Models\LoginAdmin;
+use App\Models\RequestGatepassList;
+use App\Models\DesignationList;
+use App\Models\AttendanceList;
+use App\Models\EmployeePersonalDetail;
+use App\Models\StaticSidebarMenu;
+use App\Models\PolicyAttendanceShiftSetting;
+use App\Models\PolicySettingRoleCreate;
+use App\Models\DepartmentList;
+use App\Models\PolicyAttenRuleBreak;
+use App\Models\PolicyAttenRuleEarlyExit;
+use App\Models\PolicyAttenRuleGatepass;
+use App\Models\PolicyAttenRuleLateEntry;
+use App\Models\PolicyAttenRuleMisspunch;
+use App\Models\PolicyAttenRuleOvertime;
+use App\Models\PolicyHolidayTemplate;
+use App\Models\PolicyPolicyHolidayDetail;
+use App\Models\PolicySettingRoleItem;
+use App\Models\PolicySettingLeavePolicy;
+use App\Models\PolicySettingRoleAssignPermission;
+use App\Models\PolicyAttendanceShiftTypeItem;
+use App\Models\PolicyHolidayDetail;
+use App\Models\Permission;
+use App\Models\StaticApprovalName;
+use App\Models\ApprovalManagementCycle;
+
 // use Alert;
 
 class NewPermission extends Controller
@@ -25,15 +58,17 @@ class NewPermission extends Controller
     {
 
         $rooted1 = new Layout();
-        $BranchList = DB::table('branch_list')->where('business_id', Session::get('business_id'))->get();
-        $RolesData = DB::table('setting_role_create')->where('business_id', Session::get('business_id'))->get();
-        $EmployeeList = DB::table('employee_personal_details')->where('business_id', Session::get('business_id'))->get();
-        $Modules = $rooted1->SidebarMenu();
-        $permissions = DB::table('permissions')->where('business_id', Session::get('business_id'))->get();
-
         $accessPermission = Central_unit::AccessPermission();
+        $BranchList = BranchList::where('business_id', Session::get('business_id'))->get();
+        $RolesData = PolicySettingRoleCreate::where('business_id', Session::get('business_id'))->get();
+        $EmployeeList = EmployeePersonalDetail::where('business_id', Session::get('business_id'))->get();
+        $permissions = Permission::where('business_id', Session::get('business_id'))->get();
+        $Modules = $rooted1->SidebarMenu();
         $moduleName = $accessPermission[0];
         $permission = $accessPermission[1];
+
+
+
 
 
         $send = compact('moduleName', 'permission', 'Modules', 'permissions', 'RolesData', 'EmployeeList', 'BranchList');
@@ -51,12 +86,11 @@ class NewPermission extends Controller
             'roles_name' => $request->role_name,
             'description' => $request->description
         ];
-        $truechecking_id = DB::table('setting_role_create')->insert($storeData);
+        $truechecking_id = PolicySettingRoleCreate::insert($storeData);
 
         // $adminRole = Role::create(['name' => $request->role_name, 'branch_id' => Session::get('branch_id'), 'business_id' => $BusinessID]);
         if ($truechecking_id) {
-            $latestID = DB::table('setting_role_create')
-                ->latest()
+            $latestID = PolicySettingRoleCreate::latest()
                 ->select('id')
                 ->first();
 
@@ -73,7 +107,7 @@ class NewPermission extends Controller
                         'model_name' => $permission[$i],
                     ];
                     // print_r($collectionDataSet);
-                    DB::table('setting_role_items')->insert($collectionDataSet);
+                    PolicySettingRoleItem::insert($collectionDataSet);
                 }
             }
             Alert::success('Added', 'Your Create Role Added Successfully');
@@ -83,7 +117,7 @@ class NewPermission extends Controller
         return back();
     }
 
-    public function createAssignPermission(Request $request)
+    public function createAssignPermission(Request $request) //QA OK
     {
         // dd($request->all());
         $BusinessID = Session::get('business_id');
@@ -94,11 +128,11 @@ class NewPermission extends Controller
         $designationID = $request->designation_id;
 
 
-        $load = DB::table('employee_personal_details')->where('emp_id', $empID)->where('business_id', $BusinessID)->first();
-        $empLoginAdmin = DB::table('login_admin')->where('email', $load->emp_email)->where('business_id', $load->business_id)->first();
+        $load = EmployeePersonalDetail::where('emp_id', $empID)->where('business_id', $BusinessID)->first();
+        $empLoginAdmin = LoginAdmin::where('email', $load->emp_email)->where('business_id', $load->business_id)->first();
         if (Session::get('business_id') != null) {
-            $checkexits = DB::table('setting_role_assign_permission')->where('business_id', $BusinessID)->where('branch_id', $branchID)->where('role_id', $roleID)->where('emp_id', $empID)->first();
-
+            $checkexits = PolicySettingRoleAssignPermission::where('business_id', $BusinessID)->where('emp_id', $empID)->first();
+            // ->where('branch_id', $branchID)->where('role_id', $roleID)
             if (isset($checkexits)) {
                 //     $storeData = [
                 //         'business_id' => $BusinessID,
@@ -109,8 +143,8 @@ class NewPermission extends Controller
                 //         'designation_id' => $designationID
 
                 //     ];
-                //     $truechecking_id = DB::table('setting_role_assign_permission')->update($storeData);
-                //     DB::table('employee_personal_details')->where('emp_id', $empID)->where('business_id', $BusinessID)->update(['role_id' => $roleID]);
+                //     $truechecking_id = PolicySettingRoleAssignPermission::update($storeData);
+                //     EmployeePersonalDetail::where('emp_id', $empID)->where('business_id', $BusinessID)->update(['role_id' => $roleID]);
                 //     if ($truechecking_id) {
                 //         Alert::success('Update', 'Permission has been Updated Successfully');
                 //     } else {
@@ -128,10 +162,10 @@ class NewPermission extends Controller
                     'designation_id' => $designationID
 
                 ];
-                $truechecking_id = DB::table('setting_role_assign_permission')->insert($storeData);
-                $get = DB::table('employee_personal_details')->where('emp_id', $empID)->where('business_id', $BusinessID)->first();
-                $empDetails = DB::table('employee_personal_details')->where('emp_id', $empID)->where('business_id', $BusinessID)->update(['role_id' => $roleID]);
-                $empLoginAdmin = DB::table('login_admin')->insert([
+                $truechecking_id = PolicySettingRoleAssignPermission::insert($storeData);
+                $get = EmployeePersonalDetail::where('emp_id', $empID)->where('business_id', $BusinessID)->first();
+                $empDetails = EmployeePersonalDetail::where('emp_id', $empID)->where('business_id', $BusinessID)->update(['role_id' => $roleID]);
+                $empLoginAdmin = LoginAdmin::insert([
                     'business_id' => $BusinessID,
                     'name' => $get->emp_name,
                     'email' => $get->emp_email,
@@ -162,7 +196,7 @@ class NewPermission extends Controller
 
     public function GetAssignUser(Request $request)
     {
-        $get = DB::table('setting_role_items')->where('role_create_id', $request->role_id)->get();
+        $get = PolicySettingRoleItem::where('role_create_id', $request->role_id)->get();
         return response()->json(['checking' => $get]);
     }
 
@@ -176,8 +210,7 @@ class NewPermission extends Controller
             $businessId = Session::get('business_id');
             $branch = Session::get('branch_id');
 
-            $delete = DB::table('setting_role_items')
-                ->where('role_create_id', $role)
+            $delete = PolicySettingRoleItem::where('role_create_id', $role)
                 ->where('business_id', $businessId)
                 ->where('branch_id', $branch)
                 ->delete();
@@ -200,7 +233,7 @@ class NewPermission extends Controller
                             'model_name' => $permission,
                         ];
 
-                        DB::table('setting_role_items')->insert($collectionDataSet);
+                        PolicySettingRoleItem::insert($collectionDataSet);
                     }
                     Alert::success('Updated', 'Permission Assigned Successfully Updated');
                 } else {
@@ -215,8 +248,7 @@ class NewPermission extends Controller
             $role = $request->role;
             $businessId = Session::get('business_id');
 
-            $delete = DB::table('setting_role_items')
-                ->where('role_create_id', $role)
+            $delete = PolicySettingRoleItem::where('role_create_id', $role)
                 ->where('business_id', $businessId)
                 ->delete();
 
@@ -238,7 +270,7 @@ class NewPermission extends Controller
                             'model_name' => $permission,
                         ];
 
-                        DB::table('setting_role_items')->insert($collectionDataSet);
+                        PolicySettingRoleItem::insert($collectionDataSet);
                     }
                     Alert::success('Updated', 'Permission Assigned Successfully Updated');
                 } else {
@@ -257,13 +289,13 @@ class NewPermission extends Controller
         $branchID = Session::get('branch_id');
         // dd($businessID);
         if ($businessID != null && $branchID != null) {
-            $deleted = DB::table('setting_role_create')->where('id', $getID)->where('business_id', $businessID)->where('branch_id', $branchID)->delete();
-            $load = DB::table('setting_role_assign_permission')->where('role_id', $getID)->where('business_id', $businessID)->where('branch_id', $branchID)->delete();
-            $lao = DB::table('employee_personal_details')->where('role_id', $getID)->where('business_id', $businessID)->where('branch_id', $branchID)->update(['role_id' => 0]);
+            $deleted = PolicySettingRoleCreate::where('id', $getID)->where('business_id', $businessID)->where('branch_id', $branchID)->delete();
+            $load = PolicySettingRoleAssignPermission::where('role_id', $getID)->where('business_id', $businessID)->where('branch_id', $branchID)->delete();
+            $lao = EmployeePersonalDetail::where('role_id', $getID)->where('business_id', $businessID)->where('branch_id', $branchID)->update(['role_id' => 0]);
 
             if ($deleted) {
                 // Delete related permissions or items if needed
-                DB::table('setting_role_items')->where('role_create_id', $getID)->where('business_id', $businessID)->where('branch_id', $branchID)->delete();
+                PolicySettingRoleItem::where('role_create_id', $getID)->where('business_id', $businessID)->where('branch_id', $branchID)->delete();
 
                 Alert::success('Deleted', 'Role and associated permissions deleted successfully');
             } else {
@@ -272,13 +304,13 @@ class NewPermission extends Controller
         }
         if ($businessID != null) {
             // Perform the deletion of the role with the given ID
-            $deleted = DB::table('setting_role_create')->where('id', $getID)->where('business_id', $businessID)->delete();
-            $load = DB::table('setting_role_assign_permission')->where('role_id', $getID)->where('business_id', $businessID)->delete();
-            $lao = DB::table('employee_personal_details')->where('role_id', $getID)->where('business_id', $businessID)->update(['role_id' => 0]);
-            DB::table('roles')->where('business_id', $businessID)->delete();
+            $deleted = PolicySettingRoleCreate::where('id', $getID)->where('business_id', $businessID)->delete();
+            $load = PolicySettingRoleAssignPermission::where('role_id', $getID)->where('business_id', $businessID)->delete();
+            EmployeePersonalDetail::where('role_id', $getID)->where('business_id', $businessID)->update(['role_id' => 0]);
+            // DB::table('roles')->where('business_id', $businessID)->delete();
             if ($deleted && $load) {
                 // Delete related permissions or items if needed
-                DB::table('setting_role_items')->where('role_create_id', $getID)->where('business_id', $businessID)->delete();
+                PolicySettingRoleItem::where('role_create_id', $getID)->where('business_id', $businessID)->delete();
                 Alert::success('Deleted', 'Role and associated permissions deleted successfully');
             } else {
                 Alert::error('Error', 'Role deletion failed');
@@ -302,12 +334,11 @@ class NewPermission extends Controller
                 ->where('emp_id', $empId)
                 ->update(['role_id' => 0]);
 
-            $deleteResult = DB::table('setting_role_assign_permission')
-                ->where('business_id', $businessId)
+            $deleteResult = PolicySettingRoleAssignPermission::where('business_id', $businessId)
                 ->where('branch_id', $branchId)
                 ->where('emp_id', $empId)
                 ->delete();
-            $getDatails = DB::table('employee_personal_details')->where('business_id', $businessId)->where('emp_id', $empId)->first();
+            $getDatails = EmployeePersonalDetail::where('business_id', $businessId)->where('emp_id', $empId)->first();
             $deletelogin = DB::table('login_admin')
                 ->where('business_id', $getDatails->business_id)
                 ->where('email', $getDatails->emp_email)
@@ -326,12 +357,11 @@ class NewPermission extends Controller
                 ->update(['role_id' => 0]);
 
 
-            $deleteResult = DB::table('setting_role_assign_permission')
-                ->where('business_id', $businessId)
+            $deleteResult = PolicySettingRoleAssignPermission::where('business_id', $businessId)
                 ->where('emp_id', $empId)
                 ->delete();
 
-            $getDatails = DB::table('employee_personal_details')->where('business_id', $businessId)->where('emp_id', $empId)->first();
+            $getDatails = EmployeePersonalDetail::where('business_id', $businessId)->where('emp_id', $empId)->first();
             $deletelogin = DB::table('login_admin')
                 ->where('business_id', $getDatails->business_id)
                 ->where('email', $getDatails->emp_email)
@@ -351,14 +381,15 @@ class NewPermission extends Controller
 
 
 
-
-    public function ApprovalSetings()
+    //approval Setup 
+    public function ApprovalSettings()
     {
         // echo "SDF";
         $accessPermission = Central_unit::AccessPermission();
-
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
+
+
         $List = RulesManagement::ALLPolicyTemplates();
 
         $FinalEndGameRule = $List[0];
@@ -377,35 +408,55 @@ class NewPermission extends Controller
         // alert()->success('Success Title', 'Success Message');
         // alert()->success('Success Title', 'Success Message');
         // Alert::success('Success', 'Updated Rule Method Successfully');
-
-        // dd($LeavePolicy);
         $root = compact('moduleName', 'permissions', 'BusinessDetails', 'FinalEndGameRule', 'BranchList', 'LeavePolicy', 'HolidayPolicy', 'weeklyPolicy', 'attendanceModePolicy', 'attendanceShiftPolicy', 'attendanceTrackInOut');
 
         // return redirect('/admin/setting/permissions/approval_management');
         return view('admin/setting/permissions/approval_management', $root);
     }
+    public function SetApprovalSectionData($approvalTypeID)
+    {
+        $approvalSystemManagement = RulesManagement::ApprovalGetDetails($approvalTypeID)[0];
+        return response()->json(['data' => $approvalSystemManagement]);
+
+    }
+    // used Component X-ApprovalManagement
     public function ApprovalSubmit(Request $request)
     {
+        $businessID = Session::get('business_id');
+        $loadType = $request->load;
+        $radioBtn = $request->btnradio;
+        $approvalSelection = $request->input("approval_select");
         // dd($request->all());
-        $point = DB::table('approval_management_cycle')->where('business_id', Session::get('business_id'))->first();
+        $point = ApprovalManagementCycle::where('business_id', $businessID)->where('approval_type_id', $loadType)->first();
 
-        if ($point??false) {
-            $save = DB::table('approval_management_cycle')->insert([
-                'business_id' => Session::get('business_id'),
-                'cycle_type' => $request->btnradio,
-                'role_id' => json_encode($request->input("approval_select")),
+        if (!isset($point)) { //?? false
+            $save = ApprovalManagementCycle::insert([
+                'approval_type_id' => $loadType,
+                'business_id' => $businessID,
+                'cycle_type' => $radioBtn,
+                'role_id' => json_encode($approvalSelection),
             ]);
             if (isset($save)) {
-                Alert::success("Submit Approval ");
+                Alert::success("Submit Active Attendance Approval ");
             } else {
-                Alert::info("Not Approval ");
+                Alert::info("Not Attendance Approval ");
             }
         } else {
-            Alert::info("All ready Approval create this business ID");
-        
+            $update_all_ready = ApprovalManagementCycle::where('business_id', $businessID)->where('approval_type_id', $loadType)->update([
+                'approval_type_id' => $loadType,
+                'business_id' => $businessID,
+                'cycle_type' => $radioBtn,
+                'role_id' => json_encode($approvalSelection),
+            ]);
+            if (isset($update_all_ready)) {
+                Alert::success("Your Updated Approval System ");
+
+            } else {
+                Alert::info("Not Updated Approval System ");
+
+            }
         }
-        // dd($request->all());
         return back();
-        // return  response()->json($request->all());
     }
+
 }

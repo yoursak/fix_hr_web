@@ -82,32 +82,29 @@
         }
 
         /* @media print{@page {size: landscape}} */
-        
     </style>
 @endsection
 
 @section('content')
     @php
         $root = new App\Helpers\Central_unit();
-        $centralUnit = new App\Helpers\Central_unit();
+        $Department = $root->DepartmentList();
+        $Branch = $root->BranchList();
+        $Employee = $root->EmployeeDetails();
+        $EmpID = $root->EmpPlaceHolder();
+        $Designation = $root->DesignationList();
         $LOADED = new App\Helpers\MasterRulesManagement\RulesManagement();
-        $Department = $centralUnit->DepartmentList();
-        $Branch = $centralUnit->BranchList();
-        $Employee = $centralUnit->EmployeeDetails();
-        $nss = new App\Helpers\Central_unit();
-        $EmpID = $nss->EmpPlaceHolder();
         $ITEM = $LOADED->SectionEmployeeCounters();
-        $Designation = $centralUnit->DesignationList();
 
     @endphp
 
-<div class=" p-0 py-2">
-    <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
-        <li><a href="{{ url('/admin') }}">Dashboard</a></li>
-        {{-- <li><a href="{{ url('/admin/requests/leaves') }}">Attendance</a></li> --}}
-        <li class="active"><span><b>Attendance</b></span></li>
-    </ol>
-</div>
+    <div class=" p-0 py-2">
+        <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
+            <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+            {{-- <li><a href="{{ url('/admin/requests/leaves') }}">Attendance</a></li> --}}
+            <li class="active"><span><b>Attendance</b></span></li>
+        </ol>
+    </div>
     <!-- PAGE HEADER -->
     <div class="page-header d-xl-flex d-block">
         <div class="page-leftheader">
@@ -200,9 +197,12 @@
                                 Half Day</span>
                             <span class="badge badge-orange-light me-2"><i class="fa fa-history text-orange"></i> ---&gt;
                                 Mis-punch</span>
-                            <span class="badge badge-primary-light me-2"><i class="fa fa-calendar-minus-o text-primary"></i>
+                            <span class="badge badge-primary-light me-2"><i class="fa fa-calendar text-primary"></i>
                                 ---&gt;
                                 Week Off</span>
+                            <span class="badge badge-danger-light me-2"><i class="fa fa-calendar-minus-o text-danger"></i>
+                                ---&gt;
+                                Leave</span>
                         </div>
                     </div>
                     <div class="table-responsive hr-attlist">
@@ -210,7 +210,7 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="table-responsive">
-                                        <table class="table text-nowrap border" id="basic-datatable">
+                                        <table class="table text-nowrap border-bottum" id="basic-datatable">
                                             <thead>
                                                 <tr role="row">
                                                     <th class="border-bottom-0 reorder sorting sorting_asc" tabindex="0"
@@ -229,17 +229,18 @@
                                                     </th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="resBody" class="my_body">
                                                 @foreach ($Emp as $key => $emp)
                                                     {{-- @dd($root->getEmpAttSumm(['emp_id'=>'IT009','punch_date'=>date('Y-m-13')])); --}}
                                                     <tr class="odd border border-bottum">
                                                         <td class="reorder sorting_1">
                                                             <div class="d-flex">
                                                                 <span class="avatar avatar-md brround me-3 rounded-circle"
-                                                            style="background-image: url('/employee_profile/{{ $emp->profile_photo }}')"></span>
+                                                                    style="background-image: url('/employee_profile/{{ $emp->profile_photo }}')"></span>
                                                                 <div class="me-3 mt-0 mt-sm-2 d-block">
                                                                     <h6 class="mb-1 fs-14">
-                                                                        <a href="{{ route('employeeProfile', [$emp->emp_id]) }}">
+                                                                        <a
+                                                                            href="{{ route('employeeProfile', [$emp->emp_id]) }}">
                                                                             {{ $emp->emp_name }}&nbsp;{{ $emp->emp_mname }}&nbsp;{{ $emp->emp_lname }}
                                                                         </a>
                                                                     </h6>
@@ -275,6 +276,8 @@
                                                                             $shiftWH = $resCode[9];
                                                                             $twhMin = $resCode[10];
                                                                             $MaxOvertime = $resCode[11];
+                                                                            $inSelfie = $resCode[17];
+                                                                            $outSelfie = $resCode[18];
                                                                             $totalTwhMin += $twhMin;
                                                                             $totalOTMin += $overTime;
                                                                             $totalDayinMonth = date('t');
@@ -291,6 +294,8 @@
                                                                         data-shiftname="{{ $shiftName }}"
                                                                         data-breakmin="{{ $breakTime }}"
                                                                         data-overtime="{{ $overTime }}"
+                                                                        data-inselfie="{{ $inSelfie }}"
+                                                                        data-outselfie="{{ $outSelfie }}"
                                                                         class="hr-listmodal"></a>
 
                                                                     @if ($resCode[0] == 1 || $resCode[0] == 3 || $resCode[0] == 9)
@@ -302,15 +307,18 @@
                                                                             class="feather feather-x-circle text-danger"></span>
                                                                     @elseif ($resCode[0] == 6)
                                                                         <span class="fa fa-star text-warning"
-                                                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                            title="holiday" data-bs-original-title="Sunday"
+                                                                            data-bs-toggle="tooltip"
+                                                                            data-bs-placement="top" title="holiday"
+                                                                            data-bs-original-title="Sunday"
                                                                             aria-label="Sunday"></span>
                                                                     @elseif ($resCode[0] == 4)
-                                                                    <i class="fa fa-history text-orange"></i>
+                                                                        <i class="fa fa-history text-orange"></i>
                                                                     @elseif ($resCode[0] == 7)
-                                                                        <i class="fa fa-calendar-minus-o text-primary"></i>
+                                                                        <i class="fa fa-calendar text-primary"></i>
+                                                                    @elseif ($resCode[0] == 10 || $resCode[0] == 11)
+                                                                        <i class="fa fa-calendar-minus-o text-danger"></i>
                                                                     @elseif ($resCode[0] == 8)
-                                                                    <?php $halfday++; ?>
+                                                                        <?php $halfday++; ?>
                                                                         <span class=""><i
                                                                                 class="fa fa-adjust text-orange"></i></span>
                                                                     @else
@@ -323,7 +331,8 @@
 
                                                         <td>
                                                             <h6 class="mb-0">
-                                                                <span class="text-primary">{{ $present + $halfday }}</span>
+                                                                <span
+                                                                    class="text-primary">{{ $present + $halfday }}</span>
                                                                 <span
                                                                     class="my-auto fs-8 font-weight-normal text-muted">/</span>
                                                                 <span class="">{{ $day - 1 }}</span>
@@ -422,9 +431,9 @@
                                                         <p>
                                                     </div>
                                                     <div class="col-2">
-                                                        <a href="#" data-bs-toggle="modal"
-                                                            data-bs-target="#PunchIn" class="my-auto">
-                                                            <span class="avatar avatar-sm brround"
+                                                        <a id="showInSelfie" onclick="showSelfie(this)" data-imgin=''
+                                                            class="my-auto">
+                                                            <span id="showInSelfieBg" class="avatar avatar-sm brround"
                                                                 style="background-image: url(assets/images/users/1.jpg)"></span>
                                                         </a>
                                                     </div>
@@ -442,9 +451,9 @@
                                                         <p>
                                                     </div>
                                                     <div class="col-2">
-                                                        <a href="#" data-bs-toggle="modal"
-                                                            data-bs-target="#PunchIn" class="my-auto">
-                                                            <span class="avatar avatar-sm brround"
+                                                        <a id="showOutSelfie" onclick="showSelfie(this)" data-imgout=''
+                                                            class="my-auto">
+                                                            <span id="showOutSelfieBg" class="avatar avatar-sm brround"
                                                                 style="background-image: url(assets/images/users/1.jpg)"></span>
                                                         </a>
                                                     </div>
@@ -467,246 +476,134 @@
         </div>
         <!-- END PRESENT MODAL -->
 
-        <!-- EDIT MODAL -->
-        <div class="modal fade" id="editmodal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Attendance Details</h5>
-                        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="form-group">
-                                    <label class="form-label">Clock In</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control timepicker" value="9:30 AM">
-                                        <div class="input-group-text">
-                                            <i class="fa fa-clock-o"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="custom-switch mt-md-6">
-                                    <input type="checkbox" name="custom-switch-checkbox"
-                                        class="custom-switch-input orange">
-                                    <span class="custom-switch-indicator "></span>
-                                    <span class="custom-switch-description text-dark">Late</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="form-group">
-                                    <label class="form-label">Clock Out</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control timepicker" value="06: 30 PM">
-                                        <div class="input-group-text">
-                                            <i class="fa fa-clock-o"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="custom-switch mt-md-6">
-                                    <input type="checkbox" name="custom-switch-checkbox"
-                                        class="custom-switch-input  orange">
-                                    <span class="custom-switch-indicator"></span>
-                                    <span class="custom-switch-description text-dark">half Day</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">IP Address</label>
-                            <input type="text" class="form-control" placeholder="225.192.145.1" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Working Form</label>
-                            <select name="projects" class="form-control custom-select select2" disabled
-                                data-placeholder="Select">
-                                <option label="Select"></option>
-                                <option value="1" selected>Office</option>
-                                <option value="2">Home</option>
-                                <option value="3">Others</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer d-flex">
-                        <div>
-                            <a href="javascript:void(0);" class="btn btn-light" data-bs-toggle="modal"
-                                data-bs-target="#presentmodal" data-bs-dismiss="modal"><i
-                                    class="feather feather-arrow-left me-1"></i>Back</a>
-                        </div>
-                        <div class="ms-auto">
-                            <a href="javascript:void(0);" class="btn btn-outline-primary"
-                                data-bs-dismiss="modal">close</a>
-                            <a href="javascript:void(0);" class="btn btn-primary">Save</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- END EDIT MODAL -->
-
-        <!--HALFPRESENT MODAL -->
-        <div class="modal fade" id="halfpresentmodal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Attendance Details <span class="badge badge-orange">Half Day</span></h5>
-                        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row mb-5 mt-4">
-                            <div class="col-md-4">
-                                <div class="pt-5 text-center">
-                                    <h6 class="mb-1 fs-16 font-weight-semibold">09:30 AM</h6>
-                                    <small class="text-muted fs-14">Clock In</small>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="chart-circle chart-circle-md" data-value=".50" data-thickness="6"
-                                    data-color="#0dcd94">
-                                    <div class="chart-circle-value text-muted">04:30 hrs</div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="pt-5 text-center">
-                                    <h6 class="mb-1 fs-16 font-weight-semibold"> 01:30 PM</h6>
-                                    <small class="text-muted fs-14">Clock Out</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">IP Address</label>
-                            <input type="text" class="form-control" placeholder="225.192.145.1" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Working Form</label>
-                            <select name="projects" class="form-control custom-select select2" disabled
-                                data-placeholder="Select">
-                                <option label="Select"></option>
-                                <option value="1" selected>Office</option>
-                                <option value="2">Home</option>
-                                <option value="3">Others</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-dismiss="modal">close</a>
-                        <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#halfdayeditmodal" data-bs-dismiss="modal">Edit</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- END HALFPRESENT MODAL  -->
-
-        <!--HALFDAY EDIT MODAL -->
-        <div class="modal fade" id="halfdayeditmodal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Attendance Details <span class="badge badge-orange">Half Day</span></h5>
-                        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="form-group">
-                                    <label class="form-label">Clock In</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control timepicker" value="9:30 AM">
-                                        <div class="input-group-text">
-                                            <i class="fa fa-clock-o"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="custom-switch mt-md-6">
-                                    <input type="checkbox" name="custom-switch-checkbox"
-                                        class="custom-switch-input  orange">
-                                    <span class="custom-switch-indicator "></span>
-                                    <span class="custom-switch-description text-dark">Late</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="form-group">
-                                    <label class="form-label">Clock Out</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control timepicker" value="01: 30 PM">
-                                        <div class="input-group-text">
-                                            <i class="fa fa-clock-o"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="custom-switch mt-md-6">
-                                    <input type="checkbox" name="custom-switch-checkbox"
-                                        class="custom-switch-input  orange" checked>
-                                    <span class="custom-switch-indicator"></span>
-                                    <span class="custom-switch-description text-dark">half Day</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">IP Address</label>
-                            <input type="text" class="form-control" placeholder="225.192.145.1" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Working Form</label>
-                            <select name="projects" class="form-control custom-select select2" disabled
-                                data-placeholder="Select">
-                                <option label="Select"></option>
-                                <option value="1" selected>Office</option>
-                                <option value="2">Home</option>
-                                <option value="3">Others</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer d-flex">
-                        <div>
-                            <a href="javascript:void(0);" class="btn btn-light" data-bs-toggle="modal"
-                                data-bs-target="#halfpresentmodal" data-bs-dismiss="modal"><i
-                                    class="feather feather-arrow-left me-1"></i>Back</a>
-                        </div>
-                        <div class="ms-auto">
-                            <a href="javascript:void(0);" class="btn btn-outline-primary"
-                                data-bs-dismiss="modal">close</a>
-                            <a href="javascript:void(0);" class="btn btn-primary">Save</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <!-- END HALFDAY EDIT MODAL -->
         {{-- Punch Image --}}
         <div class="modal fade" id="PunchIn">
             <div class="modal-dialog modal-dialog-centered " role="document">
                 <div class="modal-content tx-size-sm">
-                    <img src="{{ asset('imgs/selfie.jpg') }}" alt="">
+                    <div class="modal-header">
+                        <h5 class="modal-title">PunchIn Selfie</h5>
+                        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <img id="inselfieID" src="" alt="">
+                    </div>
                 </div>
             </div>
         </div>
+
         <div class="modal fade" id="PunchOut">
             <div class="modal-dialog modal-dialog-centered " role="document">
                 <div class="modal-content tx-size-sm">
-                    <img src="{{ asset('imgs/selfie.jpg') }}" alt="">
+                    <div class="modal-header">
+                        <h5 class="modal-title">PunchOut Selfie</h5>
+                        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <img id="outselfieID" src="" alt="">
+                    </div>
                 </div>
             </div>
         </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#country-dd, #state-dd, #desig-dd').change(function() {
+                    var branchId = $('#country-dd').val();
+                    var departmentId = $('#state-dd').val();
+                    var designationId = $('#desig-dd').val();
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ url('admin/attendance/monthly_attendance_calculation') }}",
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            branch_id: branchId,
+                            department_id: departmentId,
+                            designation_id: designationId
+                        },
+                        success: function(result) {
+                            console.log(result);
+
+                            var resBody = document.getElementById("resBody");
+                            resBody.innerHTML = '';
+                            result[0].forEach(element => {
+                                var empID = element.emp_id;
+
+                                // Check if the employee ID exists in result[1]
+                                var newRow =
+                                    '<tr>' +
+                                    '<td>' +
+                                    `<div class="d-flex">
+                                    <span class="avatar avatar-md brround me-3 rounded-circle" style="background-image: url('/employee_profile/` +
+                                    element.profile_photo + `')"></span>
+                                    <div class="me-3 mt-0 mt-sm-1 d-block">
+                                        <h6 class="mb-1 fs-14">` + element.emp_name + ' ' + (element.emp_mname !=
+                                        null ? element.emp_mname : '') + ' ' + element
+                                    .emp_lname + `</h6>
+                                        <p class="text-muted mb-0 fs-12">` + element.desig_name + `</p>
+                                    </div>
+                                </div>` +
+                                    '</td>';
+
+                                if (result[1][empID]) {
+                                    result[1][empID].forEach(status => {
+                                        // console.log(status);
+                                        // var present = 0;
+                                        // var halfday = 0;
+                                        if (status === 1 || status === 3 || status === 9) {
+                                            newRow +='<td><div class="hr-listd"><span class="feather feather-check-circle text-success"></span></div></td>';
+                                            // present++;
+                                        } else if (status === 2) {
+                                            newRow +=
+                                                '<td><div class="hr-listd"><span class="feather feather-x-circle text-danger"></span></div></td>';
+                                        } else if (status === 6) {
+                                            newRow +=
+                                                '<td><div class="hr-listd"><span class="fa fa-star text-warning"></span></div></td>';
+                                        } else if (status === 4) {
+                                            newRow +=
+                                                '<td><div class="hr-listd"><i class="fa fa-history text-orange"></i></div></td>';
+                                        } else if (status === 7) {
+                                            newRow +=
+                                                '<td><div class="hr-listd"><i class="fa fa-calendar text-primary"></i></div></td>';
+                                        } else if (status === 10 || status === 11) {
+                                            newRow +=
+                                                '<td><div class="hr-listd"><i class="fa fa-calendar-minus-o text-danger"></i></div></td>';
+                                        } else if (status === 8) {
+                                            newRow +=
+                                                '<td><div class="hr-listd"><i class="fa fa-adjust text-orange"></i></div></td>';
+                                                // halfday++;
+                                        } else {
+                                            newRow +=
+                                                '<td><div class="hr-listd"><i></i></div></td>';
+                                        }
+                                    });
+                                }   
+
+                                newRow += `
+                                <td>
+                                    <h6 class="mb-0">
+                                        <span class="text-primary">10</span>
+                                        <span class="my-auto fs-8 font-weight-normal text-muted">/</span>
+                                        <span>30</span>
+                                    </h6>
+                                </td>
+                            </tr>`;
+
+                                resBody.insertAdjacentHTML('beforeend', newRow);
+
+
+                            });
+                        }
+                    });
+                });
+            });
+        </script>
 
         <script>
             function showPresentModal(context) {
@@ -719,6 +616,8 @@
                 var breakMin = $(context).data('breakmin');
                 var shiftName = $(context).data('shiftname');
                 var overTime = $(context).data('overtime');
+                var inSelfie = $(context).data('inselfie');
+                var outSelfie = $(context).data('outselfie');
                 $('#modalPunchIn').html(inTime);
                 $('#puchInAt').html(inTime);
                 $('#modalPunchOut').html(outTime);
@@ -729,297 +628,29 @@
                 $('#modalBreakTime').html(breakMin);
                 $('#modalOverTime').html(overTime);
                 $('.shiftName').html(shiftName);
+                $("#showInSelfie").attr("data-imgin", inSelfie);
+                $("#showOutSelfie").attr("data-imgout", outSelfie);
+                $("#showInSelfieBg").css("background-image", "url('/upload_image/" + inSelfie + "')");
+                $("#showOutSelfieBg").css("background-image", "url('/upload_image/" + outSelfie + "')");
+                // console.log(document.getElementById('showInSelfie'));
             }
-        </script>
-        <script src="{{ asset('assets/plugins/circle-progress/circle-progress.min.js') }}"></script>
-        <script>
-            $(document).ready(function() {
-                // Trigger the AJAX request when a button is clicked
-                $('#fetchEmpId-data-button').click(function() {
-                    $.ajax({
-                        type: 'GET',
-                        url: "{{ url('/admin/employee/emp_id') }}", // The URL defined in your route
-                        dataType: 'json',
-                        success: function(data) {
-                            var numericPart = parseInt(data.get.max_emp_id.slice(2));
-                            numericPart += 1;
-                            $('#emp_id_sd').val(load() + numericPart);
-                        },
-                    });
-                });
-            });
-    
-            // Employee Type select
-            $('#openAddNewEmployeeMod').on('change', function() {
-                //  alert( this.value ); // or $(this).val()
-                // console.log(this.value);
-                if (this.value == 1) {
-                    // console.log("1jsr")
-                    $('#regularEmployeeAdddd').removeClass('d-none');
-                    $('#contractualEmployeeAdd').addClass('d-none');
-                } else if (this.value == 2) {
-                    // console.log("2jsr");
-                    $('#regularEmployeeAdddd').addClass('d-none');
-                    $('#contractualEmployeeAdd').removeClass('d-none');
-                } else {
-                    $('#regularEmployeeAdddd').addClass('d-none');
-                    $('#contractualEmployeeAdd').addClass('d-none');
+
+            function showSelfie(context) {
+                if (context.id === 'showInSelfie') {
+                    var inSelfie = context.getAttribute('data-imgin');
+                    var inSelfieURL = "{{ asset('/upload_image/') }}" + "/" + inSelfie;
+                    console.log(inSelfieURL);
+                    $('#PunchIn').modal('show');
+                    $("#inselfieID").attr("src", inSelfieURL);
                 }
-            });
-    
-            function ItemDeleteModel(context) {
-                var id = $(context).data('id');
-                $('#weekly_policy_id').val(id);
+
+                if (context.id === 'showOutSelfie') {
+                    var outSelfie = context.getAttribute('data-imgout');
+                    var outSelfieURL = "{{ asset('/upload_image/') }}" + "/" + outSelfie;
+                    $('#PunchOut').modal('show');
+                    $("#outselfieID").attr("src", outSelfieURL);
+                }
+
             }
-    
-            function openEditModel(context) {
-                $("#updateempmodal").modal("show");
-    
-                var id = $(context).data('id');
-                $('#setId').val(id);
-                $.ajax({
-                    url: "{{ url('/admin/employee/all_employee') }}",
-                    type: "POST",
-                    async: true,
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        employee_id: id
-                    },
-                    dataType: 'json',
-                    cache: true,
-                    success: function(result) {
-                        console.log("Edit modal" + result.get[0].profile_photo);
-                        if (result.get[0].emp_id) {
-                            $("input[name='update_gender']").filter("[value='" + result.get[0]
-                                .emp_gender + "']").prop(
-                                'checked', true);
-                            console.log("city: " + result.get[0].emp_city);
-                            $('#sts2').val(result.get[0].emp_state);
-                            $('#sts2').trigger('change');
-                            var dataat = $('#sts2').val();
-                            console.log("Dad: ", dataat[0]);
-                            $('#state24').val(result.get[0].emp_city);
-                            $('.update_name_sd').val(result.get[0].emp_name);
-                            $('.update_mname_sddd').val(result.get[0].emp_mname);
-                            $('.update_lname_sddd').val(result.get[0].emp_lname);
-                            $('.update_cnumber_sddd').val(result.get[0].emp_mobile_number);
-                            $('.update_email_sddd').val(result.get[0].emp_email);
-                            $('.update_dob_sddd').val(result.get[0].emp_date_of_birth);
-                            $('.update_country_sddd').val(result.get[0].emp_country);
-                            $('.update_city_sddd').val(result.get[0].emp_city);
-                            $('.update_pcode_sddd').val(result.get[0].emp_pin_code);
-                            $('.update_address_sddd').val(result.get[0].emp_address);
-                            $('.update_shifttype_sddd').val(result.get[0].emp_shift_type).change();
-                            $('.update_attendance_method').val(result.get[0].emp_attendance_method).change();
-                            $('.update_empid_sddd').val(result.get[0].emp_id);
-                            $('.update_branchname_sddd').val(result.get[0].branch_id);
-                            $('.update_department_sddd').val(result.get[0].department_id);
-                            $('.update_designationname_sddd').val(result.get[0].designation_id);
-                            $('.update_doj_dd').val(result.get[0].emp_date_of_joining);
-                            const imageUrl = `{{ asset('employee_profile/${result.get[0].profile_photo}') }}`;
-                            $('.image_sdd').attr("data-default-file", imageUrl);
-                            $('.image_sdd').dropify('destroy');
-                            $('.image_sdd').dropify();
-                            change(result.get[0].branch_id, result.get[0].department_id, result.get[0]
-                                .designation_id);
-    
-                        } else {}
-                    },
-                });
-            }
-    
-            function drofiyimage(id) {
-                console.log("gaya image function make");
-                $.ajax({
-                    url: "{{ url('/admin/employee/all_employee') }}",
-                    type: "POST",
-    
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        employee_id: id
-                    },
-                    dataType: 'json',
-                    success: function(result) {
-                        // console.log(result);
-                        if (result.get[0].emp_id) {
-                            const imageUrl = `{{ asset('employee_profile/${result.get[0].profile_photo}') }}`;
-                            $('#image_sd').attr("data-default-file", imageUrl);
-                            $('#image_sd').dropify();
-                        } else {}
-                    },
-                });
-            }
-    
-            $('#state-dd').on('change', function() {
-                var depart_id = this.value;
-                $("#employee-dd").html('');
-                $.ajax({
-                    url: "{{ url('admin/settings/business/allemployeefilter') }}",
-                    type: "POST",
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        depart_id: depart_id,
-                    },
-                    dataType: 'json',
-                    success: function(res) {
-                        console.log(res);
-                        $('#employee-dd').html('<option value="">Select Employee</option>');
-                        $.each(res.employee, function(key, value) {
-                            $("#employee-dd").append('<option value="' + value.emp_id +
-                                '">' + value.emp_name + '</option>');
-                        });
-                    }
-                });
-            });
-    
-            $(document).ready(function() {
-                $('#country-dd, #state-dd, #desig-dd').change(function() {
-                    var branchId = $('#country-dd').val();
-                    var departmentId = $('#state-dd').val();
-                    var designationId = $('#desig-dd').val();
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ url('admin/employee/employeefilter') }}",
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            branch_id: branchId,
-                            department_id: departmentId,
-                            designation_id: designationId
-                        },
-                        success: function(data) {
-                            var tbody = $('.my_body');
-                            tbody.empty();
-    
-                            $.each(data, function(index, employee) {
-                                // console.log(employee);
-                                let i = 1;
-                                employee.forEach(el => {
-                                    console.log("employee aa" + el);
-                                    var newRow = '<tr>' +
-                                        '<td>' + i++ + '</td>' +
-    
-                                        '<td>' + `<div class="d-flex">
-                                                <span class="avatar avatar-md brround me-3 rounded-circle"
-                                                    style="background-image: url('/employee_profile/` + el
-                                        .profile_photo + `')"></span>
-                                                <div class="me-3 mt-0 mt-sm-1 d-block">
-                                                    <h6 class="mb-1 fs-14">` + el.emp_name + `</h6>
-                                                    <p class="text-muted mb-0 fs-12">
-                                                        ` + el.desig_name + `</p>
-                                                </div>
-                                            </div>` + '</td>' +
-                                        '<td>' + el.emp_id + '</td>' +
-                                        '<td>' + el.branch_name + '</td>' +
-                                        '<td>' + el.depart_name + '</td>' +
-                                        '<td>' + el.emp_date_of_joining + '</td>' +
-                                        '<td>' + el.emp_mobile_number + '</td>' +
-                                        '<td>'
-                                    newRow += `<a class="btn btn-primary m-1 btn-icon btn-sm" href="javascript:void(0);"
-                            onclick="openEditModel(this)" data-id="${el.emp_id}" 
-                            data-bs-toggle="modal" data-bs-target="#updateempmodal">
-                            <i class="feather feather-edit" data-bs-toggle="tooltip"
-                                data-original-title="View"></i>
-                           </a>`;
-    
-                                    newRow += `<a href="javascript:void(0);" class="btn btn-danger btn-icon btn-sm"
-                            data-bs-toggle="modal" onclick="ItemDeleteModel(this)" data-id="${el.emp_id}" 
-                            data-bs-target="#deletemodal">
-                            <i class="feather feather-trash-2" data-bs-toggle="tooltip"
-                                data-original-title="View"></i>
-                        </a>`;
-                                    newRow += '</td></tr>';
-                                    tbody.append(newRow);
-                                });
-                            });
-    
-                        }
-                    });
-                });
-            });
-    
-            $(document).ready(function() {
-                // Bind the "keyup" event to the input field
-                $('#emp_id_sd').keyup(function() {
-                    var searchValue = $(this).val();
-                    console.log("SearchValue--->" + searchValue);
-                    $.ajax({
-                        type: 'POST',
-                        url: "{{ url('admin/employee/emp_id_check') }}",
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            emp_id: searchValue,
-                        },
-                        dataType: 'json',
-                        success: function(data) {
-                            console.log(data.get);
-                            var call =
-                                load();
-                            var pattern = new RegExp("^" + call.replace(/\s/g, '') +
-                                "\\d+$");
-                            console.log("pattern=>" + pattern);
-                            if ((pattern.test(searchValue))) {
-                                console.log("Valid format: " + searchValue);
-                                $('.emp_id_dd').css("border-color", "green");
-                                $('#empIdAlready').text("Valid format").css("color",
-                                    "green");
-                                if (data.get && data.get.emp_id !== undefined && data
-                                    .get.emp_id ==
-                                    searchValue) {
-                                    $('#empIdAlready').text(
-                                        "Employee ID already exists: " + data
-                                        .get
-                                        .emp_id);
-                                    $('.emp_id_dd').css("border-color", "red");
-                                    $('#empIdAlready').css("color", "red");
-                                    console.log("empIdAlready");
-                                }
-                            } else if (searchValue.replace(/\s+/g, '')) {
-                                $('.emp_id_dd').css("border-color", "red");
-    
-                                $('#empIdAlready').text(
-                                    "Invalid format. Employee ID should start with " +
-                                    call +
-                                    " followed by numbers.").css("color", "red");
-                            } else {
-                                $('.emp_id_dd').css("border-color", "red");
-    
-                                $('#empIdAlready').text(
-                                    "Invalid format. Employee ID should start with " +
-                                    call +
-                                    " followed by numbers.").css("color", "red");
-                            }
-                        },
-                    });
-                });
-            });
-    
-                $('#country-dd').on('change', function() {
-                    var branch_id = this.value;
-                    $("#state-dd").html('');
-                    $.ajax({
-                        url: "{{ url('admin/settings/business/alldepartment') }}",
-                        type: "POST",
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            brand_id: branch_id
-                        },
-                        dataType: 'json',
-                        success: function(result) {
-    
-                            console.log("Result",result);
-                            $('#state-dd').html(
-                                '<option value="" name="department">Select Department Name</option>'
-                            );
-                            $.each(result.department, function(key, value) {
-                                $("#state-dd").append('<option name="department" value="' +
-                                    value
-                                    .depart_id + '">' + value.depart_name +
-                                    '</option>');
-                            });
-                            $('#desig-dd').html(
-                                '<option value="">Select Designation Name</option>');
-                        }
-                    });
-                });
         </script>
     @endsection

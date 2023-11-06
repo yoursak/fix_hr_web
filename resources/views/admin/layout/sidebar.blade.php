@@ -72,10 +72,12 @@ $Helper1 = new App\Helpers\Layout();
                             <li><a href="{{ url('/admin/attendance') }}" class="slide-item">Daily Attendance</a></li>
 
                             <li>
-                                <a href="{{ url('/admin/attendance/details') }}" class="slide-item">Monthly Attendance</a>
+                                <a href="{{ url('/admin/attendance/details') }}" class="slide-item">Monthly
+                                    Attendance</a>
                             </li>
                             <li>
-                                <a href="{{ url('/admin/attendance/month-summary') }}" class="slide-item">Attendance Summary</a>
+                                <a href="{{ url('/admin/attendance/month-summary') }}" class="slide-item">Attendance
+                                    Summary</a>
                             </li>
 
                             {{-- <li><a href="{{ url('/admin/attendance/byemployee') }}" class="slide-item">Attendance By Employee</a></li> --}}
@@ -91,7 +93,7 @@ $Helper1 = new App\Helpers\Layout();
 
                             <li><a href="{{ url('/admin/requests/leaves') }}" class="slide-item"> Leave </a></li>
 
-                            <li><a href="{{ url('/admin/requests/misspunch') }}" class="slide-item"> Miss Punch </a>
+                            <li><a href="{{ url('/admin/requests/mispunch') }}" class="slide-item"> Miss Punch </a>
                             </li>
 
                             <li><a href="{{ url('/admin/requests/gatepass') }}" class="slide-item"> Gate Pass</a></li>
@@ -188,7 +190,7 @@ $Helper1 = new App\Helpers\Layout();
                         </li>
                     @endif
                     @php
-                        $subItems1 = [['url' => '/admin/leave', 'label' => 'Leave.View', 'name' => 'Leave'], ['url' => '/admin/requests/misspunch', 'label' => 'Miss Punch.View', 'name' => 'Miss Punch'], ['url' => '/admin/requests/gatepass', 'label' => 'Gate Pass.View', 'name' => 'Gate Pass']];
+                        $subItems1 = [['url' => '/admin/leave', 'label' => 'Leave.View', 'name' => 'Leave'], ['url' => '/admin/requests/mispunch', 'label' => 'Miss Punch.View', 'name' => 'Miss Punch'], ['url' => '/admin/requests/gatepass', 'label' => 'Gate Pass.View', 'name' => 'Gate Pass']];
                         $showRequestsMenu1 = false; // Initialize a flag variable
                     @endphp
 

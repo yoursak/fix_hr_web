@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\paymentGateway;
 
+use Razorpay\Api\Api;
+// use Session;
+use Exception;
 use App\Http\Controllers\Controller;
 use App\Helpers\MasterRulesManagement\RulesManagement;
 use Illuminate\Http\Request;
@@ -11,23 +14,60 @@ use Session;
 
 class PhonepeController extends Controller
 {
+    public function razorpayIndex()
+    {
+        return view('razorpayView');
+    }
+
+
+    public function razorpaystore(Request $request)
+    {
+        $input = $request->all();
+
+        $api = new Api("rzp_test_uD4KyWA2QuBnwj", "8LLSR3LwHOBueyladJTonUSD");
+
+        $payment = $api->payment->fetch($input['razorpay_payment_id']);
+
+        if (count($input) && !empty($input['razorpay_payment_id'])) {
+            try {
+                $response = $api->payment->fetch($input['razorpay_payment_id'])->capture(array('amount' => $payment['amount']));
+                // dd($response);
+
+                // if()
+            } catch (Exception $e) {
+                return $e->getMessage();
+                Session::put('error', $e->getMessage());
+                return redirect()->back();
+            }
+        }
+
+        Session::put('success', 'Payment successful');
+        return redirect()->back();
+    }
+
+
+
+
+
     public function phonePe()
     {
+
+        $business_id = Session::get('business_id');
+        $user_type = Session::get('user_type');
+
         $data = array(
             'merchantId' => 'PGTESTPAYUAT',
-            'merchantTransactionId' => uniqid(),
+            'merchantTransactionId' => 'JAYANTHEMANTANIKET',
             'merchantUserId' => 'PGTESTPAYUAT',
-            'business_id' => Session::get('business_id'),
-            'user_type' => Session::get('user_type'),
             'amount' => 10000,
-            'redirectUrl' => route('subscription'),
+            'redirectUrl' => url('response'),
             'redirectMode' => 'POST',
-            'callbackUrl' => route('subscription'),
+            'callbackUrl' =>  url('response'),
             'mobileNumber' => '8462074453',
             'paymentInstrument' =>
-                array(
-                    'type' => 'PAY_PAGE',
-                ),
+            array(
+                'type' => 'PAY_PAGE',
+            ),
         );
 
 
@@ -50,14 +90,14 @@ class PhonepeController extends Controller
             ->post();
 
         $rData = json_decode($response);
-
-        return redirect()->to($rData->data->instrumentResponse->redirectInfo->url);
+        return redirect($rData->data->instrumentResponse->redirectInfo->url);
     }
 
     public function responseSubmit(Request $request)
     {
+        // Session::put('business_id',$id);
+        // Session::put('user_type',$id1);
         $input = $request->all();
-        // dd($input);
         $saltKey = '099eb0cd-02cf-4e2a-8aca-3e6c6aff0399';
         $saltIndex = 1;
 
@@ -69,8 +109,8 @@ class PhonepeController extends Controller
             ->withHeader('X-VERIFY:' . $finalXHeader)
             ->withHeader('X-MERCHANT-ID:' . $input['transactionId'])
             ->get();
-
-        // return  json_decode($response);
-        return redirec()->to('subscription');
+       
+        return  json_decode($response);
+        // return redirec()->to('/');
     }
 }

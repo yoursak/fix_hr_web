@@ -9,165 +9,40 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Hash;
 use App\Helpers\ApiResponse;
 use Carbon\Carbon;
-use DateTime;
 use App\Helpers\Central_unit;
-use DB;
-use App\Models\employee\LeaveRequestList;
-use App\Models\employee\GatepassRequestList;
-use App\Models\employee\MisspunchList;
-use Session;
+use App\Helpers\MasterRulesManagement\RulesManagement;
+use App\Models\RequestGatepassList;
+use App\Models\StaticMissPunchTimeType;
+use App\Models\RequestLeaveList;
+use App\Models\RequestMispunchList;
+// use App\Models\RequestMispunchList;  
 use RealRashid\SweetAlert\Facades\Alert;
+use DateTime;
+use DB;
+use Session;
 
 class RequestController extends Controller
 {
-    // public function attendanceMark(Request $request)
-    // {
-    //     // dd($request->all())  ;
-    //     $user_id_array = $request->input('id');
-    //     $keys = 0;
-    //     foreach ($user_id_array as $key => $value) {
-    //         $attendance = DB::table('attendance_list')
-    //             ->where('id', $value)
-    //             ->where('business_id', Session::get('business_id'))
-    //             ->update(['attendance_status' => $request->myAttendanceCheck[$keys]]);
-    //         $keys = $keys + 1;
-    //     }
-    //     // if ($attendance) {
-    //         Alert::success('Items updated successfully');
-    //     // }
-    //     return back();
-    // }
-    // public function index2(Request $request)
-    // {
-    //     // $check = DB::table('master_endgame_method')
-    //     //     ->select('shift_settings_ids_list')
-    //     //     ->get();
-    //     // // dd($check);
-    //     // foreach ($check as $item) {
-    //     //     $very = json_decode($item->shift_settings_ids_list)->toArray();
-    //     //     foreach ( $very as $key => $value) {
-    //     //         dd($value);
-    //     //     }
-    //     //     $model=DB::table('employee_personal_details')->select('emp_shift_type')->where('emp_shift_type',$very)->first();
-    //     //     dd($very,$model);
-    //     //     // print_r($very,$model);
-    //     // }
-    //     $accessPermission = Central_unit::AccessPermission();
-    //     $moduleName = $accessPermission[0];
-    //     $permissions = $accessPermission[1];
-
-    //     $DATA = DB::table('attendance_list')
-    //         ->join('employee_personal_details', 'attendance_list.emp_id', '=', 'employee_personal_details.emp_id')
-    //         ->join('attendance_methods', 'attendance_list.working_from_method', '=', 'attendance_methods.id')
-    //         ->join('atten_rule_late_entry', 'attendance_list.business_id', '=', 'atten_rule_late_entry.business_id')
-    //         ->join('attendance_shift_type_items', 'employee_personal_details.emp_shift_type', '=', 'attendance_shift_type_items.attendance_shift_id')
-    //         ->join('master_endgame_method', 'employee_personal_details.master_endgame_id', '=', 'master_endgame_method.id')
-    //         ->whereRaw('JSON_CONTAINS(master_endgame_method.shift_settings_ids_list, JSON_QUOTE(employee_personal_details.emp_shift_type))')
-    //         ->where('master_endgame_method.method_switch', 1)
-    //         ->where('atten_rule_late_entry.switch_is', 1)
-    //         ->where('employee_personal_details.business_id', Session::get('business_id'))
-    //         ->select('attendance_list.*', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.profile_photo', 'employee_personal_details.designation_id', 'employee_personal_details.emp_lname', 'employee_personal_details.department_id', 'attendance_shift_type_items.shift_start', 'attendance_shift_type_items.shift_end', 'attendance_methods.method_name', 'atten_rule_late_entry.grace_time_min')
-    //         ->orderBy('attendance_list.id', 'DESC')
-    //         ->get();
-
-    //     // Assuming the punch-in time and grace time are in the format "HH:MM"
-    //     $punchInTime = '10:45'; // The time the person punched in
-    //     $graceTime = 15; // Grace time in minutes
-
-    //     // Convert the punch-in time and grace time to minutes since midnight
-    //     $punchInMinutes = strtotime($punchInTime) / 60;
-    //     $graceMinutes = $graceTime;
-
-    //     // Calculate the allowed punch-in time
-    //     $allowedPunchInMinutes = strtotime('10:30') / 60;
-
-    //     // Calculate the late mark time
-    //     $lateMarkTime = $allowedPunchInMinutes + $graceMinutes;
-
-    //     if ($punchInMinutes <= $allowedPunchInMinutes) {
-    //         // The person is on time or early
-    //         // Mark attendance accordingly
-    //         $attendanceStatus = 'On Time';
-    //     } elseif ($punchInMinutes <= $lateMarkTime) {
-    //         // The person is within the grace period
-    //         // Mark attendance accordingly
-    //         $attendanceStatus = 'Late (Grace Period)';
-    //     } else {
-    //         // The person is late beyond the grace period
-    //         // Calculate the amount of lateness
-    //         $latenessMinutes = $punchInMinutes - $allowedPunchInMinutes;
-    //         // Mark attendance accordingly
-    //         $attendanceStatus = 'Late (' . $latenessMinutes . ' minutes)';
-    //     }
-
-    //     echo 'Attendance Status: ' . $attendanceStatus;
-
-    //     $root = compact('moduleName', 'permissions', 'DATA');
-
-    //     // dd($root);
-    //     return view('admin.attendance.attendance', $root);
-
-    //     $targetValue = '30';
-
-    //     $result = DB::table('master_endgame_method')
-    //         ->where('business_id', Session::get('business_id'))
-    //         ->where('id', 248)
-    //         ->whereJsonContains('shift_settings_ids_list', $targetValue)
-    //         ->get();
-    //     dd($result);
-    //     $accessPermission = Central_unit::AccessPermission();
-    //     $moduleName = $accessPermission[0];
-    //     $permissions = $accessPermission[1];
-
-    //     //         $shiftType = 29;
-    //     // $shiftSettingsIds = ["29", "30"];
-    //     $result = DB::table('master_endgame_method')
-    //         ->where('business_id', Session::get('business_id'))
-    //         ->where('id', 248)
-    //         ->select('shift_settings_ids_list')
-    //         ->get();
-    //     foreach ($result as $item) {
-    //         $very = json_decode($item->shift_settings_ids_list, true);
-    //         print_r($very);
-    //     }
-
-    //     // session()->forget('custom_success_message');
-    //     // ->join('master_endgame_method', 'attendance_list.attendance_shift_id', '=', 'master_endgame_method.shift_settings_ids_list')
-    //     $DATA = DB::table('attendance_list')
-    //         ->join('employee_personal_details', 'attendance_list.emp_id', '=', 'employee_personal_details.emp_id')
-    //         ->join('master_endgame_method', 'employee_personal_details.master_endgame_id', '=', 'master_endgame_method.id')
-    //         ->join('attendance_shift_settings', function ($join) {
-    //             $join->on('master_endgame_method.shift_settings_ids_list', 'LIKE', DB::raw('CONCAT("%", attendance_shift_settings.id, "%")'));
-    //         })
-
-    //         ->select('attendance_list.*', 'employee_personal_details.emp_name', 'master_endgame_method.shift_settings_ids_list')
-    //         ->distinct()
-    //         ->get();
-    //     dd($DATA);
-    //     $root = compact('moduleName', 'permissions', 'DATA');
-    //     // dd($root);
-    //     return view('admin.attendance.attendance', $root);
-    // }
-
+    // gatepass home page
     public function gatepass()
     {
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
-        $DATA = DB::table('gatepass_request_list')
-            ->join('employee_personal_details', 'gatepass_request_list.emp_id', '=', 'employee_personal_details.emp_id')
-            ->where('gatepass_request_list.business_id', Session::get('business_id'))
-            ->select('gatepass_request_list.*', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.emp_mobile_number')
-            ->orderBy('gatepass_request_list.id', 'DESC')
+        $going_through = DB::table('static_going_through_type')->get();
+        $DATA = RequestGatepassList::join('employee_personal_details', 'request_gatepass_list.emp_id', '=', 'employee_personal_details.emp_id')
+            ->where('request_gatepass_list.business_id', Session::get('business_id'))
+            ->select('request_gatepass_list.*', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.designation_id', 'employee_personal_details.emp_mobile_number')
+            ->orderBy('request_gatepass_list.id', 'DESC')
             ->get();
-        $root = compact('moduleName', 'permissions', 'DATA');
+        $root = compact('moduleName', 'permissions', 'DATA', 'going_through');
         return view('admin.request.gatepass', $root);
     }
 
+    // delete gatepass detail
     public function DestroyGatepass(Request $request)
     {
-        $data = DB::table('gatepass_request_list')
-            ->where('id', $request->id)
+        $data = RequestGatepassList::where('id', $request->id)
             ->delete();
         if ($data) {
             Alert::error('Not Updated', 'Your Gatepass Detail Delete is Fail');
@@ -175,23 +50,21 @@ class RequestController extends Controller
         return back();
     }
 
+    // gatepas approve
     public function ApproveGatepass(Request $request)
     {
+        // dd($request->all());
         if ($request->has('id') && $request->has('in_time') && $request->has('approve')) {
-            $gatepass = DB::table('gatepass_request_list')
-                ->where('id', $request->id)
+            $gatepass = RequestGatepassList::where('id', $request->id)
                 ->where('business_id', Session::get('business_id'))
-                ->update(['in_time' => $request->in_time, 'status' => $request->approve]);
+                ->update(['out_time' => $request->out_time, 'in_time' => $request->in_time, 'status' => $request->approve]);
             Alert::success('Your Gatepass Request has been Approve Successfully');
-
             return back();
         } elseif ($request->has('id') && $request->has('in_time') && $request->has('submit') && $request->has('remark')) {
-            $gatepass = DB::table('gatepass_request_list')
-                ->where('id', $request->id)
+            $gatepass = RequestGatepassList::where('id', $request->id)
                 ->where('business_id', Session::get('business_id'))
-                ->update(['in_time' => $request->in_time, 'status' => $request->submit, 'remark' => $request->remark]);
+                ->update(['status' => $request->submit, 'remark' => $request->remark]);
             Alert::success('Your Gatepass Request has been Decline Successfully');
-            // , 'Updated  Created'
             return back();
         } else {
             Alert::error('Not Updated', 'Your Gatepass Detail Updation is Fail');
@@ -201,54 +74,59 @@ class RequestController extends Controller
 
     public function ApproveLeave(Request $request)
     {
-        // dd($request->all());
-        if ($request->has('id') && $request->has('leave_type') && $request->has('from_date') && $request->has('to_date') && $request->has('days') && $request->has('approve')) {
-            $gatepass = DB::table('leave_request_list')
-                ->where('id', $request->id)
-                ->where('business_id', Session::get('business_id'))
-                ->update(['leave_type' => $request->leave_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $request->days, 'status' => $request->approve]);
-            Alert::success('Your Leave Request has been Approve Successfully');
-            return back();
-        } elseif ($request->has('id') && $request->has('leave_type') && $request->has('from_date') && $request->has('to_date') && $request->has('days') && $request->has('submit') && $request->has('remark')) {
-            $gatepass = DB::table('leave_request_list')
-                ->where('id', $request->id)
-                ->where('business_id', Session::get('business_id'))
-                ->update(['leave_type' => $request->leave_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $request->days, 'remark' => $request->remark, 'status' => $request->submit]);
-            Alert::success('Your Gatepass Request has been Decline Successfully');
-            // , 'Updated  Created'
-            return back();
-        } else {
-            Alert::error('Not Updated', 'Your Gatepass Detail Updation is Fail');
-            return back();
-        }
+        $FindRoleID = RulesManagement::PassBy()[3];
+        $EmpID = RulesManagement::PassBy()[2];
+        $ApprovalManagement = RulesManagement::ApprovalGetDetails(2, (string)$FindRoleID)[0]; //show hidden
+        if (isset($ApprovalManagement)) {
 
-        $toDate = Carbon::parse($request->to_date);
-        $fromDate = Carbon::parse($request->from_date);
+            // $allRoleList=$ApprovalManagement->role_id;//$request->has('id') && $request->has('leave_type') && $request->has('from_date') && $request->has('to_date') && $request->has('days') && $request->has('submit') && 
+            if ($request->has('approve')) {
+                $gatepass = RequestLeaveList::where('id', $request->id)
+                ->where('business_id', Session::get('business_id'))
+                ->update(['leave_type' => $request->time_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $request->days, 'approved_by_role_id' => json_encode($FindRoleID), 'approved_by_emp_id' => json_encode($EmpID), 'approved_by_status' => json_encode('1'), 'status' => $request->approve]);
+                
+                Alert::success('Your Leave Request has been Approve Successfully');
+                // dd($request->all(), $FindRoleID, $EmpID, $ApprovalManagement);
 
-        $loaded = $toDate->diffInDays($fromDate);
-        $branch = DB::table('leave_request_list')
-            ->where('id', $request->editLeaveId)
-            ->where('business_id', Session::get('business_id'))
-            ->update(['leave_type' => $request->leave_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $loaded, 'status' => $request->status]);
-        if ($branch) {
-            Alert::success('Data Updated', 'Leave Request Approve Successfully');
+                return back();
+            } else if ($request->has('remark')) {
+                $gatepass = RequestLeaveList::where('id', $request->id)
+                    ->where('business_id', Session::get('business_id'))
+                    ->update(['leave_type' => $request->time_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $request->days, 'remark' => $request->remark, 'status' => $request->submit]);
+                Alert::success('Your Gatepass Request has been Decline Successfully');
+                // , 'Updated  Created'
+                return back();
+            } else {
+                Alert::error('Not Updated', 'Your Leave Request Detail Updating is Fail');
+                return back();
+            }
         }
-        return back();
+        // $toDate = Carbon::parse($request->to_date);
+        // $fromDate = Carbon::parse($request->from_date);
+
+        // $loaded = $toDate->diffInDays($fromDate);
+        // $branch = RequestLeaveList::where('id', $request->editLeaveId)
+        //     ->where('business_id', Session::get('business_id'))
+        //     ->update(['leave_type' => $request->leave_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $loaded, 'status' => $request->status]);
+        // if ($branch) {
+        //     Alert::success('Data Updated', 'Leave Request Approve Successfully');
+        // }
+        // return back();
     }
 
-    public function ApproveMisspunch(Request $request)
+    public function ApproveMispunch(Request $request)
     {
-        // dd($request->all());
+        $attendance = DB::table('attendance_list')->where('emp_id', $request->emp_id)->where('punch_date', $request->date)->get();
+        dd($attendance);
         if ($request->has('id') && $request->has('time_type') && $request->has('in_time') && $request->has('out_time') && $request->has('approve')) {
-            $misspunch = DB::table('misspunch_list')
-                ->where('id', $request->id)
+            $mispunch = RequestMispunchList::where('id', $request->id)
                 ->where('business_id', Session::get('business_id'))
                 ->update(['emp_miss_time_type' => $request->time_type, 'emp_miss_in_time' => $request->in_time, 'emp_miss_out_time' => $request->out_time, 'status' => $request->approve]);
-            Alert::success('Your Misspunch Request has been Approve Successfully');
+
+            Alert::success('Your Mispunch Request has been Approve Successfully');
             return back();
         } elseif ($request->has('id') && $request->has('time_type') && $request->has('in_time') && $request->has('out_time') && $request->has('submit') && $request->has('remark')) {
-            $misspunch = DB::table('misspunch_list')
-                ->where('id', $request->id)
+            $mispunch = RequestMispunchList::where('id', $request->id)
                 ->where('business_id', Session::get('business_id'))
                 ->update(['emp_miss_time_type' => $request->time_type, 'emp_miss_in_time' => $request->in_time, 'emp_miss_out_time' => $request->out_time, 'status' => $request->submit, 'remark' => $request->remark]);
             Alert::success('Your Gatepass Request has been Decline Successfully');
@@ -268,10 +146,10 @@ class RequestController extends Controller
         return back();
     }
 
-    public function DestroyMisspunch($id)
+    public function DestroyMispunch($id)
     {
         // dd($id);
-        $data = MisspunchList::find($id);
+        $data = MispunchList::find($id);
         $data->delete();
         if ($data) {
             Alert::success('Delete Success', 'Delete Gatepass Successfully');
@@ -280,55 +158,49 @@ class RequestController extends Controller
         return back();
     }
 
-    // DestroyMisspunch
-    public function misspunch()
+    // DestroyMispunch
+    public function mispunch()
     {
         // return true;
-        $DATA = DB::table('misspunch_list')
-            ->join('employee_personal_details', 'misspunch_list.emp_id', '=', 'employee_personal_details.emp_id')
-            ->where('misspunch_list.business_id', Session::get('business_id'))
-            ->select('misspunch_list.*', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname')
-            ->orderBy('misspunch_list.id', 'desc')
+        $id = 38;
+        // $data = DB::table('request_mispunch_list')->join('employee_personal_details', 'request_mispunch_list.emp_id', '=', 'employee_personal_details.emp_id')
+        //     ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+        //     ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+        //     ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+        //     ->join('static_mispunch_timetype', 'request_mispunch_list.emp_miss_time_type', '=', 'static_mispunch_timetype.id')
+        //     ->where('request_mispunch_list.id', $id)
+        //     ->select('request_mispunch_list.*', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name', 'employee_personal_details.emp_mobile_number', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'static_mispunch_timetype.time_type  as time_type')
+        //     ->first();
+        //     dd($data);
+        $DATA = DB::table('request_mispunch_list')
+            ->join('employee_personal_details', 'request_mispunch_list.emp_id', '=', 'employee_personal_details.emp_id')
+            ->join('static_mispunch_timetype', 'request_mispunch_list.emp_miss_time_type', '=', 'static_mispunch_timetype.id')
+            ->where('request_mispunch_list.business_id', Session::get('business_id'))
+            ->select('request_mispunch_list.*', 'static_mispunch_timetype.time_type', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.designation_id')
+            ->orderBy('request_mispunch_list.id', 'desc')
             ->get();
+        $StaticMisspunchTimeType = DB::table('static_mispunch_timetype')->get();
+        // dd($leave_type);
+
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
 
-        $root = compact('moduleName', 'permissions', 'DATA');
+        $root = compact('moduleName', 'permissions', 'DATA', 'StaticMisspunchTimeType');
 
-        // $data = MisspunchList::all();
+        // $data = MispunchList::all();
         // dd($DATA);
-        return view('admin.request.misspunch', $root);
+        return view('admin.request.mispunch', $root);
     }
 
     public function leaves()
     {
-        // $EmpCount = DB::table('employee_personal_details')
-        //     ->where('business_id', Session::get('business_id'))
-        //     ->count();
-        // $AttendanceCount = DB::table('attendance_list')
-        //     ->where(['business_id' => Session::get('business_id'), 'punch_date' => date('Y-m-d')])
-        //     ->count();
-        // dd($EmpCount);
-
-        $item = DB::table('employee_personal_details')
+        $staticLeaveType =
+            $item = DB::table('employee_personal_details')
             ->join('attendance_list', 'employee_personal_details.emp_id', '=', 'attendance_list.emp_id')
-            // ->join('leave_request_list', 'employee_personal_details.emp_id', 'leave_request_list.emp_id')
-            // ->where('employee_personal_details.business_id', Session::get('business_id'))
             ->where('attendance_list.punch_date', '!=', date('Y-m-d'))
-            // ->where('leave_request_list.from_date' , date('Y-m-d'))
-
             ->select('employee_personal_details.emp_id')
             ->get();
-        // dd($item);
-
-        // $item  = DB::table('employee_personal_details')
-        // ->join('attendance_list', 'employee_personal_details.emp_id', '=', 'attendance_list.emp_id')
-        // ->join('leave_request_list', 'employee_personal_details.emp_id', 'leave_request_list.emp_id')
-        // // ->where('employee_personal_details.business_id', Session::get('business_id'))
-        // // ->where('attendance_list.punch_date' , '!=', date('Y-m-d'))
-        // ->where('leave_request_list.from_date','!=',null)->where('leave_request_list.to_date','!=',null)
-        // ->get();
 
         $TodayPresent = DB::table('attendance_list')
             ->where('business_id', Session::get('business_id'))
@@ -336,29 +208,26 @@ class RequestController extends Controller
             ->get();
 
         $PresetCount = count($TodayPresent);
-        // $daata= now()->toDateString();
-        // dd($daata);
+        $leaveCategory = DB::table('policy_setting_leave_category')->where('business_id', Session::get('business_id'))->get();
+        // dd($leaveCategory);
+        $shiftType = DB::table('static_leave_shift_type')->get();
+        $leaveType = DB::table('static_request_leave_type')->get();
+        $DATA = DB::table('request_leave_list')
+            ->join('employee_personal_details', 'request_leave_list.emp_id', '=', 'employee_personal_details.emp_id')
+            ->join('policy_setting_leave_category', 'policy_setting_leave_category.id', '=', 'request_leave_list.leave_category')
+            ->join('static_request_leave_type', 'static_request_leave_type.id', '=', 'request_leave_list.leave_type')
+            // static_request_leave_type`
 
-        // $TodayPresent = DB::table('leave_request_list')
-        // ->join('attendance_list', 'leave_request_list.emp_id', '=', 'attendance_list.emp_id')
-        // // ->join('employee_personal_details', 'leave_request_list.emp_id', '=', 'employee_personal_details.emp_id')
-
-        // // ->join('attendance_list', 'leave_request_list.emp_id', '=', 'attendance_list.emp_id')
-        // ->where('leave_request_list.business_id', Session::get('business_id'))
-        // ->select('leave_request_list.id')
-        // ->get();
-        // dd($PresetCount);
-        $DATA = DB::table('leave_request_list')
-            ->join('employee_personal_details', 'leave_request_list.emp_id', '=', 'employee_personal_details.emp_id')
-            ->where('leave_request_list.business_id', Session::get('business_id'))
-            ->select('leave_request_list.*', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname')
-            ->orderBy('leave_request_list.id', 'desc')
+            ->where('request_leave_list.business_id', Session::get('business_id'))
+            ->select('request_leave_list.*', 'static_request_leave_type.leave_day', 'policy_setting_leave_category.category_name', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.designation_id', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname')
+            ->orderBy('request_leave_list.id', 'desc')
             ->get();
+        // dd($DATA);   
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
         // dd($data);
-        $root = compact('moduleName', 'permissions', 'DATA', 'PresetCount');
+        $root = compact('moduleName', 'permissions', 'DATA', 'PresetCount', 'leaveCategory', 'leaveType', 'shiftType');
         return view('admin.request.leave', $root);
     }
 
@@ -382,22 +251,21 @@ class RequestController extends Controller
         $designationId = $request->input('designation_id');
 
         // // Use the selected filter values to query your database and retrieve the filtered data
-        $filteredData = DB::table('gatepass_request_list')
-            ->join('employee_personal_details', 'gatepass_request_list.emp_id', '=', 'employee_personal_details.emp_id')
-            ->join('branch_list', 'gatepass_request_list.branch_id', '=', 'branch_list.branch_id')
-            ->join('department_list', 'gatepass_request_list.department_id', '=', 'department_list.depart_id')
-            ->join('designation_list', 'gatepass_request_list.designation_id', '=', 'designation_list.desig_id')
+        $filteredData = RequestGatepassList::join('employee_personal_details', 'request_gatepass_list.emp_id', '=', 'employee_personal_details.emp_id')
+            ->join('branch_list', 'request_gatepass_list.branch_id', '=', 'branch_list.branch_id')
+            ->join('department_list', 'request_gatepass_list.department_id', '=', 'department_list.depart_id')
+            ->join('designation_list', 'request_gatepass_list.designation_id', '=', 'designation_list.desig_id')
             ->when($branchId, function ($query) use ($branchId) {
-                $query->where('gatepass_request_list.branch_id', $branchId);
+                $query->where('request_gatepass_list.branch_id', $branchId);
             })
             ->when($departmentId, function ($query) use ($departmentId) {
-                $query->where('gatepass_request_list.department_id', $departmentId);
+                $query->where('request_gatepass_list.department_id', $departmentId);
             })
             ->when($designationId, function ($query) use ($designationId) {
-                $query->where('gatepass_request_list.designation_id', $designationId);
+                $query->where('request_gatepass_list.designation_id', $designationId);
             })
-            ->select('gatepass_request_list.*', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.profile_photo', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name')
-            ->orderBy('gatepass_request_list.id', 'desc')
+            ->select('request_gatepass_list.*', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.profile_photo', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name')
+            ->orderBy('request_gatepass_list.id', 'desc')
             ->get();
 
         // Return the filtered data as JSON response
@@ -445,8 +313,6 @@ class RequestController extends Controller
                 $table->timestamps();
             });
             DB::table($tableName)->insert([
-                // 'emp_name' => $request->name,
-                // 'emp_id' => $request->emp_id,
                 'emp_gatepass_date' => $request->date,
                 'emp_gate_reason' => $request->reason,
                 'emp_gatepass_going_through' => $request->going_through,
@@ -461,7 +327,7 @@ class RequestController extends Controller
         }
     }
 
-    public function MisspunchTable($tableName, Request $request)
+    public function MispunchTable($tableName, Request $request)
     {
         // dd($tableName,$name);
         // Check if the table does not exist
@@ -513,29 +379,28 @@ class RequestController extends Controller
         // return true;
     }
 
-    public function show(Request $request)
+    public function EditGatepassDataGet(Request $request)
     {
-        $data = DB::table('gatepass_request_list')
-            ->join('employee_personal_details', 'gatepass_request_list.emp_id', '=', 'employee_personal_details.emp_id')
-            ->join('branch_list', 'gatepass_request_list.branch_id', '=', 'branch_list.branch_id')
-            ->join('department_list', 'gatepass_request_list.department_id', '=', 'department_list.depart_id')
-            ->join('designation_list', 'gatepass_request_list.designation_id', '=', 'designation_list.desig_id')
-            ->where('gatepass_request_list.id', $request->id)
-            ->select('gatepass_request_list.*', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name', 'employee_personal_details.emp_mobile_number', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname')
+        $data = DB::table('request_gatepass_list')->join('employee_personal_details', 'request_gatepass_list.emp_id', '=', 'employee_personal_details.emp_id')
+            ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+            ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+            ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+            ->where('request_gatepass_list.id', $request->id)
+            ->select('request_gatepass_list.*', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name', 'employee_personal_details.emp_mobile_number', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname')
             ->first();
         return response()->json(['get' => $data]);
     }
 
-    public function EditMisspunchDataGet(Request $request)
+    public function EditMispunchDataGet(Request $request)
     {
         // return true;
-        $data = DB::table('misspunch_list')
-            ->join('employee_personal_details', 'misspunch_list.emp_id', '=', 'employee_personal_details.emp_id')
-            ->join('branch_list', 'misspunch_list.branch_id', '=', 'branch_list.branch_id')
-            ->join('department_list', 'misspunch_list.department_id', '=', 'department_list.depart_id')
-            ->join('designation_list', 'misspunch_list.designation_id', '=', 'designation_list.desig_id')
-            ->where('misspunch_list.id', $request->id)
-            ->select('misspunch_list.*', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name', 'employee_personal_details.emp_mobile_number', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname')
+        $data = DB::table('request_mispunch_list')->join('employee_personal_details', 'request_mispunch_list.emp_id', '=', 'employee_personal_details.emp_id')
+            ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+            ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+            ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+            ->join('static_mispunch_timetype', 'request_mispunch_list.emp_miss_time_type', '=', 'static_mispunch_timetype.id')
+            ->where('request_mispunch_list.id', $request->id)
+            ->select('request_mispunch_list.*', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name', 'employee_personal_details.emp_mobile_number', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'static_mispunch_timetype.id  as time_type')
             ->first();
         return response()->json(['get' => $data]);
     }
@@ -546,40 +411,38 @@ class RequestController extends Controller
         $departmentId = $request->input('department_id');
         $designationId = $request->input('designation_id');
 
-        // // Use the selected filter values to query your database and retrieve the filtered data
-        $filteredData = DB::table('misspunch_list')
-            ->join('employee_personal_details', 'misspunch_list.emp_id', '=', 'employee_personal_details.emp_id')
-            ->join('branch_list', 'misspunch_list.branch_id', '=', 'branch_list.branch_id')
-            ->join('department_list', 'misspunch_list.department_id', '=', 'department_list.depart_id')
-            ->join('designation_list', 'misspunch_list.designation_id', '=', 'designation_list.desig_id')
+        // Use the selected filter values to query your database and retrieve the filtered data
+        $filteredData = RequestMispunchList::join('employee_personal_details', 'request_mispunch_list.emp_id', '=', 'employee_personal_details.emp_id')
+            ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+            ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+            ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
             ->when($branchId, function ($query) use ($branchId) {
-                $query->where('misspunch_list.branch_id', $branchId);
+                $query->where('employee_personal_details.branch_id', $branchId);
             })
             ->when($departmentId, function ($query) use ($departmentId) {
-                $query->where('misspunch_list.department_id', $departmentId);
+                $query->where('employee_personal_details.department_id', $departmentId);
             })
             ->when($designationId, function ($query) use ($designationId) {
-                $query->where('misspunch_list.designation_id', $designationId);
+                $query->where('employee_personal_details.designation_id', $designationId);
             })
-            ->select('misspunch_list.*', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.profile_photo', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name')
-            ->orderBy('misspunch_list.id', 'desc')
+            ->select('request_mispunch_list.*', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.profile_photo', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name')
+            ->orderBy('request_mispunch_list.id', 'desc')
             ->get();
 
         // Return the filtered data as JSON response
-        return response()->json(['get' =>  $filteredData]);
+        return response()->json(['get' => $filteredData]);
     }
 
     public function EditLeaveDataGet(Request $request)
     {
         // dd($request->all());
         // return $request->id;
-        $data = DB::table('leave_request_list')
-            ->join('employee_personal_details', 'leave_request_list.emp_id', '=', 'employee_personal_details.emp_id')
-            ->join('branch_list', 'leave_request_list.branch_id', '=', 'branch_list.branch_id')
-            ->join('department_list', 'leave_request_list.department_id', '=', 'department_list.depart_id')
-            ->join('designation_list', 'leave_request_list.designation_id', '=', 'designation_list.desig_id')
-            ->where('leave_request_list.id', $request->id)
-            ->select('leave_request_list.*', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name', 'employee_personal_details.emp_mobile_number', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname')
+        $data = DB::table('request_leave_list')->join('employee_personal_details', 'request_leave_list.emp_id', '=', 'employee_personal_details.emp_id')
+            ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+            ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+            ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+            ->where('request_leave_list.id', $request->id)
+            ->select('request_leave_list.*', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name', 'employee_personal_details.emp_mobile_number', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname')
             ->first();
         return response()->json(['get' => $data]);
     }
@@ -588,7 +451,7 @@ class RequestController extends Controller
     {
         // return true;
         $branchId = $request->branch_id;
-        $data = DB::table('leave_request_list')->get();
+        $data = DB::table('request_leave_list')->get();
         return $data;
         // return $branchId;
         $departmentId = $request->input('department_id');
@@ -598,31 +461,31 @@ class RequestController extends Controller
         // $fromDate = $request->input('from_date');
 
         // // Use the selected filter values to query your database and retrieve the filtered data
-        $filteredData = DB::table('leave_request_list')
-            ->join('employee_personal_details', 'leave_request_list.emp_id', '=', 'employee_personal_details.emp_id')
-            ->join('branch_list', 'leave_request_list.branch_id', '=', 'branch_list.branch_id')
-            ->join('department_list', 'leave_request_list.department_id', '=', 'department_list.depart_id')
-            ->join('designation_list', 'leave_request_list.designation_id', '=', 'designation_list.desig_id')
+        $filteredData = DB::table('request_leave_list')
+            ->join('employee_personal_details', 'request_leave_list.emp_id', '=', 'employee_personal_details.emp_id')
+            ->join('branch_list', 'request_leave_list.branch_id', '=', 'branch_list.branch_id')
+            ->join('department_list', 'request_leave_list.department_id', '=', 'department_list.depart_id')
+            ->join('designation_list', 'request_leave_list.designation_id', '=', 'designation_list.desig_id')
             ->when($branchId, function ($query) use ($branchId) {
-                $query->where('leave_request_list.branch_id', $branchId);
+                $query->where('request_leave_list.branch_id', $branchId);
             })
             ->when($departmentId, function ($query) use ($departmentId) {
-                $query->where('leave_request_list.department_id', $departmentId);
+                $query->where('request_leave_list.department_id', $departmentId);
             })
             ->when($designationId, function ($query) use ($designationId) {
-                $query->where('leave_request_list.designation_id', $designationId);
+                $query->where('request_leave_list.designation_id', $designationId);
             })
             ->when($fromDate, function ($query) use ($fromDate) {
-                $query->where('leave_request_list.from_date', '>=', $fromDate);
+                $query->where('request_leave_list.from_date', '>=', $fromDate);
             })
             ->when($toDate, function ($query) use ($toDate) {
-                $query->where('leave_request_list.to_date', '<=', $toDate);
+                $query->where('request_leave_list.to_date', '<=', $toDate);
             })
 
             // from_date
 
-            ->select('leave_request_list.*', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.profile_photo', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name')
-            ->orderBy('leave_request_list.id', 'desc')
+            ->select('request_leave_list.*', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.profile_photo', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name')
+            ->orderBy('request_leave_list.id', 'desc')
             ->get();
 
         // Return the filtered data as JSON response
@@ -631,6 +494,6 @@ class RequestController extends Controller
 }
 
 // Route::any('/gatepass/{tableName}', [RequestController::class, 'GatepassTable']);
-// Route::any('/gatepass/{tableName}', [RequestController::class, 'MisspunchTable']);
-// Route::any('/misspunch/detail', [RequestController::class, 'editMisspunchDataGet']);
+// Route::any('/gatepass/{tableName}', [RequestController::class, 'MispunchTable']);
+// Route::any('/mispunch/detail', [RequestController::class, 'editMispunchDataGet']);
 // Route::any('/mispunchemployeefilter', [RequestController::class, 'MispunchEmployeeFilter']);

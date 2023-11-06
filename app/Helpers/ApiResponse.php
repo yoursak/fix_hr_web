@@ -7,8 +7,8 @@ use App\Models\admin\SidebarMenu;
 use App\Models\admin\Branch_list;
 use App\Models\employee\EmployeePersonalDetail;
 use App\Models\admin\LoginAdmin;
-use App\Models\admin\DepartmentList;
-use App\Models\admin\BranchList;
+use App\Models\DepartmentList;
+use App\Models\BranchList;
 
 /**
  * Laravel Custom Helper
@@ -21,6 +21,11 @@ use App\Models\admin\BranchList;
 
 class ApiResponse
 {
+    public static function Index($parameter)
+    {
+        return response()->json($parameter);
+    }
+
     public static function getFirstWord($sentence)
     {
         $words = explode(' ', $sentence);

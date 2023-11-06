@@ -2,25 +2,47 @@
 
 namespace App\Helpers;
 
-use App\Models\admin\SidebarMenu;
-use App\Models\admin\BranchList;
-use App\Models\Permissions\Role;
-use App\Models\Permissions\ModelHasPermission;
-use App\Models\admin\Department_list;
-use App\Models\admin\Designation_list;
+use App\Models\LoginAdmin;
+use App\Models\LoginEmployee;
+use App\Models\PendingAdmin;
+use App\Models\ModelHasPermission;
+use App\Models\PolicyHolidayDetail;
+use App\Models\AdminNotice;
+use App\Models\BusinessDetailsList;
+use App\Models\RequestLeaveList;
+use App\Models\RequestMispunchList;
+use App\Models\BranchList;
+use App\Models\RequestGatepassList;
+use App\Models\DesignationList;
+use App\Models\AttendanceList;
+use App\Models\EmployeePersonalDetail;
+use App\Models\StaticSidebarMenu;
+use App\Models\PolicyAttendanceShiftSetting;
+use App\Models\PolicySettingRoleCreate;
+use App\Models\DepartmentList;
+use App\Models\PolicyAttenRuleBreak;
+use App\Models\PolicyAttenRuleEarlyExit;
+use App\Models\PolicyAttenRuleGatepass;
+use App\Models\PolicyAttenRuleLateEntry;
+use App\Models\PolicyAttenRuleMisspunch;
+use App\Models\PolicyAttenRuleOvertime;
+use App\Models\PolicyHolidayTemplate;
+use App\Models\PolicySettingRoleItem;
+use App\Models\PolicySettingLeavePolicy;
+use App\Models\PolicySettingRoleAssignPermission;
+use App\Models\PolicyAttendanceShiftTypeItem;
+use App\Models\PolicySettingLeaveCategory;
+use App\Models\StaticBusinessTypeList;
+use App\Models\StaticBusinessCategoriesList;
 
-use App\Models\admin\DepartmentList;
-use App\Models\employee\Employee_Details;
 use Illuminate\Support\Facades\DB;
-use App\Models\admin\HolidayTemplate;
-use App\Models\admin\HolidayDetail;
+
 // use App\Models\admin\HolidayDetail;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Traits\HasRoles;
 use Carbon\Carbon;
-
 use App\Helpers\MasterRulesManagement\RulesManagement;
 
 class Central_unit
@@ -52,15 +74,13 @@ class Central_unit
 
         // Check if 'business_id', 'branch_id', and 'login_emp_id' are not null in the session ///onwer
         if (Session::has('business_id') && Session::has('branch_id') && Session::has('user_type') && Session::has('login_emp_id')) {
-            $CheckRole = DB::table('setting_role_assign_permission')
-                ->where('business_id', Session::get('business_id'))
+            $CheckRole = PolicySettingRoleAssignPermission::where('business_id', Session::get('business_id'))
                 ->where('branch_id', Session::get('branch_id'))
                 ->where('emp_id', Session::get('login_emp_id'))
                 ->first();
 
             if ($CheckRole) {
-                $roleItem = DB::table('setting_role_items')
-                    ->where('role_create_id', $CheckRole->role_id)
+                $roleItem = PolicySettingRoleItem::where('role_create_id', $CheckRole->role_id)
                     ->get();
 
                 $permissions = array_merge($permissions, $roleItem->pluck('model_name')->toArray());
@@ -69,14 +89,12 @@ class Central_unit
         }
         // model_id
         if (Session::has('business_id') && Session::has('user_type') && Session::has('model_id')) {
-            $CheckRole = DB::table('model_has_permissions')
-                ->where('business_id', Session::get('business_id'))
+            $CheckRole = ModelHasPermission::where('business_id', Session::get('business_id'))
                 ->where('model_id', Session::get('model_id'))
                 ->first();
 
             if ($CheckRole) {
-                $roleItem = DB::table('model_has_permissions')
-                    ->where('business_id', Session::get('business_id'))
+                $roleItem = ModelHasPermission::where('business_id', Session::get('business_id'))
                     ->where('model_id', Session::get('model_id'))
                     ->get();
 
@@ -107,8 +125,7 @@ class Central_unit
 
     static function BusinessIdToName($email, $businessID)
     {
-        $result = DB::table('business_details_list')
-            ->where('business_email', $email)
+        $result = BusinessDetailsList::where('business_email', $email)
             ->where('business_id', $businessID)
             ->first();
         // ->first(); // Get the first row as an object
@@ -124,8 +141,7 @@ class Central_unit
 
     static function BusinessIdToName2($businessID)
     {
-        $result = DB::table('business_details_list')
-            ->where('business_id', $businessID)
+        $result = BusinessDetailsList::where('business_id', $businessID)
             ->first();
         // ->first(); // Get the first row as an object
 
@@ -142,9 +158,8 @@ class Central_unit
     public static function RoleIdToName()
     {
         // $result = DB::table('universal_roles_define')->where('role_id', $roleId)->select('role_name')->first();
-
-        $result = DB::table('setting_role_create')
-            ->where('id', self::$LoginRole)
+        // sftp://jayant_fd_hr@143.244.136.30/public_html/app/Models/PolicySettingRoleCreate.php
+        $result = PolicySettingRoleCreate::where('id', self::$LoginRole)
             ->select('roles_name')
             ->first();
 
@@ -172,8 +187,7 @@ class Central_unit
     {
         // $result = DB::table('universal_roles_define')->where('role_id', $roleId)->select('role_name')->first();
 
-        $result = DB::table('setting_role_create')
-            ->where('id', $roleId)
+        $result = PolicySettingRoleCreate::where('id', $roleId)
             ->select('roles_name')
             ->first();
 
@@ -188,7 +202,7 @@ class Central_unit
         //  else if (self::$LoginRole == 1) {
         //    return "Admin";
         // } else if (self::$LoginRole == 2) {
-        //    return "Super Admin";
+        //    return "Super Admin";4
         // } else if (self::$LoginRole == 3) {
         //    return "Employee";
         // }
@@ -208,8 +222,7 @@ class Central_unit
     // }
     public static function DesingationIdToName($ID)
     {
-        $load = DB::table('designation_list')
-            ->where('desig_id', $ID)
+        $load = DesignationList::where('desig_id', $ID)
             ->select('desig_name')
             ->first();
         if (isset($load)) {
@@ -220,22 +233,19 @@ class Central_unit
 
     public static function BranchList()
     {
-        return DB::table('branch_list')
-            ->where('business_id', self::$BusinessID)
+        return BranchList::where('business_id', self::$BusinessID)
             ->select('*')
             ->get();
     }
     static function Departmentget($id)
     {
-        return DB::table('department_list')
-            ->where(['depart_id' => $id, 'b_id' => self::$BusinessID])
+        return DepartmentList::where(['depart_id' => $id, 'b_id' => self::$BusinessID])
             ->select('depart_name')
             ->first();
     }
     static function Branchget($id)
     {
-        return DB::table('branch_list')
-            ->where(['branch_id' => $id, 'business_id' => self::$BusinessID])
+        return BranchList::where(['branch_id' => $id, 'business_id' => self::$BusinessID])
             ->select('branch_name')
             ->first();
     }
@@ -247,8 +257,7 @@ class Central_unit
         //     ->select('*')
         //     ->get();//old
 
-        $department = DB::table('department_list')
-            ->where('b_id', self::$BusinessID)
+        $department = DepartmentList::where('b_id', self::$BusinessID)
             ->select('*')
             ->get();
         // dd($department);
@@ -257,36 +266,32 @@ class Central_unit
     static function LeavePolicyList($businessID, $branchID)
     {
         if (isset($businessID) && isset($branchID)) {
-            $Rooted = DB::table('setting_leave_policy')
-                ->where('setting_leave_policy.business_id', $businessID)
+            $Rooted = PolicySettingLeavePolicy::where('setting_leave_policy.business_id', $businessID)
                 ->where('setting_leave_policy.branch_id', $branchID)
                 ->select('setting_leave_policy.*') // Select all columns from all three tables
                 ->get();
         }
         if (isset($businessID)) {
-            $Rooted = DB::table('setting_leave_policy')
-                ->where('setting_leave_policy.business_id', $businessID)
+            $Rooted = PolicySettingLeavePolicy::where('setting_leave_policy.business_id', $businessID)
                 ->select('setting_leave_policy.*') // Select all columns from all three tables
                 ->get();
             // ->where('setting_leave_policy.branch_id', $branchID)
         }
         if (isset($branchID)) {
-            $Rooted = DB::table('setting_leave_policy')
-                ->where('setting_leave_policy.branch_id', $branchID)
+            $Rooted = PolicySettingLeavePolicy::where('setting_leave_policy.branch_id', $branchID)
                 ->select('setting_leave_policy.*') // Select all columns from all three tables
                 ->get();
         }
-        // ->join('setting_leave_category', 'setting_leave_category.business_id', '=', 'setting_leave_policy.business_id')
-        // ->join('setting_leave_category', )
+        // ->join('policy_setting_leave_category', 'policy_setting_leave_category.business_id', '=', 'setting_leave_policy.business_id')
+        // ->join('policy_setting_leave_category', )
         // ->orderBy('designation_list.desig_id', 'desc') // Order by designation_list.id in descending order
-        // ->join('setting_leave_category', 'setting_leave_category.leave_policy_id', '=', 'setting_leave_policy.id')
+        // ->join('policy_setting_leave_category', 'policy_setting_leave_category.leave_policy_id', '=', 'setting_leave_policy.id')
 
         return $Rooted;
     }
     static function EmpPlaceHolder()
     {
-        $ad = DB::table('model_has_permissions')
-            ->where('business_id', self::$BusinessID)
+        $ad = ModelHasPermission::where('business_id', self::$BusinessID)
             ->first();
         if ($ad != null) {
             return $ad;
@@ -294,8 +299,7 @@ class Central_unit
     }
     static function RoleIdToCountAssignUsers($roleId)
     {
-        $node = DB::table('setting_role_assign_permission')
-            ->where('business_id', self::$BusinessID)
+        $node = PolicySettingRoleAssignPermission::where('business_id', self::$BusinessID)
             ->where('role_id', $roleId)
             ->count();
 
@@ -313,8 +317,7 @@ class Central_unit
         //     ->orderBy('designation_list.desig_id', 'desc') // Order by designation_list.id in descending order
         //     ->get();old
 
-        $designation = DB::table('designation_list')
-            ->where('designation_list.business_id', self::$BusinessID) // Select all columns from all three tables
+        $designation = DesignationList::where('designation_list.business_id', self::$BusinessID) // Select all columns from all three tables
             ->select('designation_list.*')
             ->orderBy('designation_list.desig_id', 'desc') // Order by designation_list.id in descending order
             ->get();
@@ -323,26 +326,23 @@ class Central_unit
 
     static function EmployeeDetails()
     {
-        $employee = DB::table('employee_personal_details')
-            ->join('employee_gender', 'employee_personal_details.emp_gender', '=', 'employee_gender.id')
+        $employee = EmployeePersonalDetail::join('static_employee_join_gender_type', 'employee_personal_details.emp_gender', '=', 'static_employee_join_gender_type.id')
             ->where(['business_id' => self::$BusinessID])
-            ->select('employee_personal_details.*', 'employee_gender.gender_type')
+            ->select('employee_personal_details.*', 'static_employee_join_gender_type.gender_type')
             ->get();
         return $employee;
     }
 
     static function Template()
     {
-        $template = DB::table('holiday_template')
-            ->where(['business_id' => self::$BusinessID])
+        $template = PolicyHolidayTemplate::where(['business_id' => self::$BusinessID])
             ->select('*')
             ->get();
         return $template;
     }
     static function Holiday()
     {
-        $template = DB::table('holiday_details')
-            ->where(['business_id' => self::$BusinessID])
+        $template = PolicyHolidayDetail::where(['business_id' => self::$BusinessID])
             ->select('*')
             ->get();
         return $template;
@@ -350,8 +350,7 @@ class Central_unit
 
     static function GetAttDetails()
     {
-        $AttList = DB::table('attendance_list')
-            ->where('business_id', self::$BusinessID)
+        $AttList = AttendanceList::where('business_id', self::$BusinessID)
             ->get();
         if ($AttList != null) {
             return $AttList;
@@ -360,42 +359,40 @@ class Central_unit
 
     static function GetBusinessType()
     {
-        $AttList = DB::table('business_type_list')->get();
+        $AttList = StaticBusinessTypeList::get();
         return $AttList;
     }
 
     static function GetBusinessCategory()
     {
-        $AttList = DB::table('business_categories_list')->get();
+        $AttList = StaticBusinessCategoriesList::get();
         return $AttList;
     }
 
     // static function GetBusinessCategoryName($id){
-    //    $data = DB::table('business_categories_list')->find($id);
+    //    $data =StaticBusinessCategoriesList::find($id);
     //    return $data
     // }
 
     public static function GetBusinessCategoryName($id)
     {
-        $data = DB::table('business_categories_list')
-            ->where('id', $id)
+        $data = StaticBusinessCategoriesList::where('id', $id)
             ->first();
         return $data;
     }
 
     public static function GetBusinessTypeName($id)
     {
-        $data = DB::table('business_type_list')
-            ->where('id', $id)
+        $data = StaticBusinessTypeList::where('id', $id)
             ->first();
         return $data;
     }
 
-    //  business_type_list
+    //  static_business_type_list
 
     static function Get()
     {
-        $AttList = DB::table('business_type_list')->get();
+        $AttList = StaticBusinessTypeList::get();
         return $AttList;
     }
 
@@ -404,26 +401,20 @@ class Central_unit
     // Setting Template METHOD JAY  With Null Safety
     static function CountersValue()
     {
-        $branch = DB::table('branch_list')
-            ->where('business_id', Session::get('business_id'))
+        $branch = BranchList::where('business_id', Session::get('business_id'))
             ->count();
 
-        $department = DB::table('department_list')
-            ->where('b_id', Session::get('business_id'))
+        $department = DepartmentList::where('b_id', Session::get('business_id'))
             ->count();
-        $designation = DB::table('designation_list')
-            ->where('business_id', Session::get('business_id'))
+        $designation = DesignationList::where('business_id', Session::get('business_id'))
             ->count();
-        $adminCount = DB::table('setting_role_assign_permission')
-            ->where('business_id', Session::get('business_id'))
+        $adminCount = PolicySettingRoleAssignPermission::where('business_id', Session::get('business_id'))
             ->count();
-        $holidayCount = DB::table('holiday_template')
-            ->where('business_id', Session::get('business_id'))
+        $holidayCount = PolicyHolidayTemplate::where('business_id', Session::get('business_id'))
             ->count();
-        $leaveCount = DB::table('setting_leave_policy')
-            ->where('business_id', Session::get('business_id'))
+        $leaveCount = PolicySettingLeavePolicy::where('business_id', Session::get('business_id'))
             ->count();
-        $weeklyholidayCount = DB::table('weekly_holiday_list')
+        $weeklyholidayCount = DB::table('policy_weekly_holiday_list')
             ->where('business_id', Session::get('business_id'))
             ->count();
 
@@ -447,49 +438,134 @@ class Central_unit
         // ->get();
     }
 
-    static function GetCount()
+    // Attendace Blade Count
+    static function AttendanceGetCount()
     {
-        $LeaveCount = DB::table('leave_request_list')
-            ->where('business_id', Session::get('business_id'))
+        $TotalEmpCount = EmployeePersonalDetail::where('business_id', Session::get('business_id'))
             ->count();
-        $EmpCount = DB::table('employee_personal_details')
-            ->where('business_id', Session::get('business_id'))
+        $PresentCount = AttendanceList::where(['business_id' => Session::get('business_id'), 'punch_date' => date('Y-m-d')])
             ->count();
-        $AttendanceCount = DB::table('attendance_list')
-            ->where(['business_id' => Session::get('business_id'), 'punch_date' => date('Y-m-d')])
-            ->count();
-        $AbsentCount = $EmpCount - $AttendanceCount;
-        $MissPunchCount = DB::table('misspunch_list')
-            ->where('business_id', Session::get('business_id'))
+        // ->where('business_id', Session::get('business_id'))
+        $now = date('Y-m-d');
+        $LeaveRequests = RequestLeaveList::where(function ($query) use ($now) {
+            $query
+                ->where(function ($query) use ($now) {
+                    $query->where('from_date', '<=', $now)->where('to_date', '>=', $now);
+                })
+                ->orWhere(function ($query) use ($now) {
+                    $query->where('from_date', '=', $now)->whereNull('to_date');
+                });
+        })
+            ->get();
+
+        $lateEntry = PolicyAttenRuleLateEntry::where('business_id', Session::get('business_id'))
+            ->where('switch_is', 1)
+            ->first();
+
+        $earlyExit = PolicyAttenRuleEarlyExit::where('business_id', Session::get('business_id'))
+            ->where('switch_is', 1)
+            ->first();
+        $earlyTime = $earlyExit->mark_half_day_hr * 60 + $earlyExit->mark_half_day_min;
+        $hours1 = floor($earlyTime / 60);
+        $minutes1 = $earlyTime % 60;
+        $earlyExitTime = gmdate('H:i', $hours1 * 3600 + $minutes1 * 60);
+        $lateTime = $lateEntry->mark_half_day_hr * 60 + $lateEntry->mark_half_day_min;
+        // Calculate hours and minutes
+        $hours = floor($lateTime / 60);
+        $minutes = $lateTime % 60;
+
+        // Format as hh:mm
+        $formattedTime = gmdate('H:i', $hours * 3600 + $minutes * 60);
+        $fullLate = $lateTime * 60;
+        // dd($formattedTime);
+        $halfDayThreshold = 240; // Threshold for a half-day in minutes (4 hours)
+        $currentDate = Carbon::now();
+
+        $halfDayCount = DB::table('attendance_list')
+            ->join('policy_attendance_shift_type_items', 'attendance_list.attendance_shift', '=', 'policy_attendance_shift_type_items.id')
+            ->join('policy_atten_rule_late_entry', 'attendance_list.business_id', '=', 'policy_atten_rule_late_entry.business_id')
+            ->where('policy_atten_rule_late_entry.switch_is', '1')
+            ->where(function ($query) use ($halfDayThreshold, $formattedTime, $earlyExitTime) {
+                // Case 1: Late Entry
+                $query->orWhere(function ($query) use ($halfDayThreshold, $formattedTime) {
+                    $query->whereRaw('TIMEDIFF(punch_in_time, policy_attendance_shift_type_items.shift_start) > 0')->whereRaw("TIMEDIFF(punch_in_time, policy_attendance_shift_type_items.shift_start) >= '$formattedTime'");
+                });
+                // Case 2: Early Exit
+                $query->orWhere(function ($query) use ($halfDayThreshold, $earlyExitTime) {
+                    $query
+                        ->whereRaw('TIMEDIFF(policy_attendance_shift_type_items.shift_end,  punch_out_time) > 0')
+                        ->whereRaw("TIMEDIFF(policy_attendance_shift_type_items.shift_end, punch_out_time) >= '$earlyExitTime'")
+                        ->where('attendance_list.emp_today_current_status', '2');
+                });
+
+                // // Case 3: Occurrence = 1
+                // $query->orWhere(function($query) {
+                //     $query->where('occurrence', 1)
+                //         ->whereRaw("HOUR(real_punch_in_time) >= 4");
+                // });
+    
+                // // Case 4: Occurrence = 2
+                // $query->orWhere(function($query) use ($halfDayThreshold) {
+                //     $query->where('occurrence', 2)
+                //         ->where(function($query) use ($halfDayThreshold) {
+                //             $query->whereRaw("TIMEDIFF(real_punch_in_time, shift_punch_time) > 0")
+                //                 ->orWhereRaw("TIMEDIFF(real_punch_out_time, shift_punch_out_time) > 0");
+                //         });
+                // });
+            })
+            // ->where('attendance_list.punch_date', $currentDate->toDateString())
+            ->where('attendance_list.punch_date', $now)
+            ->select('attendance_list.*', 'policy_attendance_shift_type_items.shift_start', 'policy_attendance_shift_type_items.shift_end')
+            // ->where('date', $currentDate->toDateString())
             ->count();
 
-        if ($LeaveCount != null || $AttendanceCount != null || $MissPunchCount != null || $EmpCount != null || $AbsentCount != null) {
-            return [$EmpCount, $AttendanceCount, $MissPunchCount, $LeaveCount, $AbsentCount];
+        // $halfDayCount will contain the count of half-days based on the conditions
+        // dd($halfDayCount);
+
+        $LeavesCount = count($LeaveRequests);
+        $AbsentCount = $TotalEmpCount - $PresentCount - $LeavesCount;
+        // dd($now);
+
+        $LateDays = AttendanceList::where('attendance_list.business_id', Session::get('business_id'))
+            ->join('employee_personal_details', 'employee_personal_details.emp_id', '=', 'attendance_list.emp_id')
+            ->join('policy_master_endgame_method', 'policy_master_endgame_method.id', '=', 'employee_personal_details.master_endgame_id')
+            ->join('policy_attendance_shift_type_items', 'policy_attendance_shift_type_items.attendance_shift_id', '=', 'employee_personal_details.emp_shift_type')
+            ->whereRaw('TIME(attendance_list.punch_in_time) > TIME(policy_attendance_shift_type_items.shift_start)')
+            ->where('attendance_list.punch_date', date('Y-m-d'))
+            ->where('policy_attendance_shift_type_items.is_active', '1')
+            ->select('attendance_list.id', 'attendance_list.punch_in_time', 'policy_attendance_shift_type_items.shift_start')
+            ->get();
+        $LateDaysCount = count($LateDays);
+        // dd($LateDays)
+        $LeaveCount = RequestLeaveList::where('business_id', Session::get('business_id'))
+            ->count();
+
+        $MissPunchCount = RequestMispunchList::where('business_id', Session::get('business_id'))
+            ->count();
+
+        if ($TotalEmpCount != null || $PresentCount != null || $AbsentCount != null || $LateDaysCount != null || $halfDayCount != null) {
+            return [$TotalEmpCount, $PresentCount, $AbsentCount, $halfDayCount, $LateDaysCount, $LeavesCount];
         } else {
-            return [0, 0, 0, 0, 0];
+            return [0, 0, 0, 0, 0, 0];
         }
     }
 
     //  Leave
     static function LeaveSectionCount()
     {
-        $LeaveCount = DB::table('leave_request_list')
-            ->where('business_id', Session::get('business_id'))
+        $LeaveCount = RequestLeaveList::where('business_id', Session::get('business_id'))
             ->where('from_date', date('Y-m-d'))
             ->count();
-        $EmpCount = DB::table('employee_personal_details')
-            ->where('business_id', Session::get('business_id'))
+        $EmpCount = EmployeePersonalDetail::where('business_id', Session::get('business_id'))
             ->count();
-        $AttendanceCount = DB::table('attendance_list')
-            ->where(['business_id' => Session::get('business_id'), 'punch_date' => date('Y-m-d')])
+        $AttendanceCount = AttendanceList::where(['business_id' => Session::get('business_id'), 'punch_date' => date('Y-m-d')])
             ->count();
 
-            // $UnplanedLeave = DB::table('leave_request_list')
-            // ->where(['business_id' => Session::get('business_id'), 'punch_date' => date('Y-m-d')])
-            // ->count();
+        // $UnplanedLeave = DB::table('request_leave_list')
+        // ->where(['business_id' => Session::get('business_id'), 'punch_date' => date('Y-m-d')])
+        // ->count();
         $AbsentCount = $EmpCount - $AttendanceCount;
-        $PendingLeave = DB::table('leave_request_list')
-            ->where('business_id', Session::get('business_id'))
+        $PendingLeave = RequestLeaveList::where('business_id', Session::get('business_id'))
             ->where('status', 0)
             ->count();
 
@@ -502,8 +578,7 @@ class Central_unit
 
     static function GenderCheck()
     {
-        $load = DB::table('employee_personal_details')
-            ->where('business_id', Session::get('business_id'))
+        $load = EmployeePersonalDetail::where('business_id', Session::get('business_id'))
             ->where('emp_id', Session::get('login_emp_id'))
             ->select('emp_gender')
             ->first();
@@ -520,8 +595,7 @@ class Central_unit
     }
     static function LeavePolicyCategory($id)
     {
-        $load = DB::table('setting_leave_category')
-            ->where('business_id', Session::get('business_id'))
+        $load = PolicySettingLeaveCategory::where('business_id', Session::get('business_id'))
             ->where('leave_policy_id', $id)
             ->get();
         if ($load != null) {
@@ -533,8 +607,7 @@ class Central_unit
 
     static function GetPolicysCount($id)
     {
-        $holiday_policy = DB::table('holiday_details')
-            ->where('template_id', $id)
+        $holiday_policy = PolicyHolidayDetail::where('template_id', $id)
             ->where('business_id', Session::get('business_id'))
             ->count();
         //  || ($department != null) || ($designation != null) || ($adminCount != null)
@@ -550,16 +623,14 @@ class Central_unit
     {
         // change role
         if (isset(self::$BusinessID) && isset(self::$BranchID)) {
-            $Roles = DB::table('setting_role_items')
-                ->where('business_id', self::$BusinessID)
+            $Roles = PolicySettingRoleItem::where('business_id', self::$BusinessID)
                 ->where('branch_id', self::$BranchID)
                 ->select('*') // Select all columns from all three tables
                 ->get();
             return $Roles;
         }
         if (isset(self::$BusinessID)) {
-            $Roles = DB::table('setting_role_items')
-                ->where('business_id', self::$BusinessID)
+            $Roles = PolicySettingRoleItem::where('business_id', self::$BusinessID)
                 ->select('*') // Select all columns from all three tables
                 ->get();
             return $Roles;
@@ -567,8 +638,7 @@ class Central_unit
             // ->where('setting_leave_policy.branch_id', $branchID)
         }
         if (isset(self::$BranchID)) {
-            $Roles = DB::table('setting_role_items')
-                ->where('branch_id', self::$BranchID)
+            $Roles = PolicySettingRoleItem::where('branch_id', self::$BranchID)
                 ->select('*') // Select all columns from all three tables
                 ->get();
             return $Roles;
@@ -621,13 +691,12 @@ class Central_unit
     }
     static function sideBarLists()
     {
-        return DB::table('sidebar_menu')->get();
+        return StaticSidebarMenu::get();
     }
 
     static function EmpIdToRoleId()
     {
-        $checkPermission = DB::table('setting_role_assign_permission')
-            ->where('emp_id', self::$LoginEmpID)
+        $checkPermission = PolicySettingRoleAssignPermission::where('emp_id', self::$LoginEmpID)
             ->select('role_id')
             ->first();
         return $checkPermission;
@@ -635,47 +704,42 @@ class Central_unit
 
     static function ModuleIdToPermission()
     {
-        $checkPermission = DB::table('setting_role_assign_permission')
-            ->join('setting_role_items', 'setting_role_items.role_create_id', '=', 'setting_role_assign_permission.role_id')
+        $checkPermission = PolicySettingRoleAssignPermission::join('policy_setting_role_items', 'policy_setting_role_items.role_create_id', '=', 'policy_setting_role_assign_permission.role_id')
             ->where('emp_id', self::$LoginEmpID)
             ->get();
         return $checkPermission;
     }
-    static function RoleIdToModelId($roleId)
-    {
-        return DB::table('model_has_roles')
-            ->where('role_id', $roleId)
-            ->select('model_id', 'model_type')
-            ->first();
-    }
+    // static function RoleIdToModelId($roleId)
+    // {
+    //     return DB::table('model_has_roles')
+    //         ->where('role_id', $roleId)
+    //         ->select('model_id', 'model_type')
+    //         ->first();
+    // }
     static function RoleIdToModelName($roleId)
     {
-        return DB::table('setting_role_items')
-            ->where('role_create_id', $roleId)
+        return PolicySettingRoleItem::where('role_create_id', $roleId)
             ->select('model_name')
             ->get();
     }
 
     static function RoleIdToModelName2($roleId)
     {
-        return DB::table('setting_role_items')
-            ->where('role_create_id', $roleId)
+        return PolicySettingRoleItem::where('role_create_id', $roleId)
             ->select('model_name as roleName')
             ->first();
     }
 
     static function GetModelPermission()
     {
-        $ModelPermission = DB::table('model_has_permissions')
-            ->where('model_id', self::$LoginModelID)
+        $ModelPermission = ModelHasPermission::where('model_id', self::$LoginModelID)
             ->get();
         return $ModelPermission;
     }
 
     static function GetBranchName($branch_id)
     {
-        $Branch = DB::table('branch_list')
-            ::where('branch_id', $branch_id)
+        $Branch = BranchList::where('branch_id', $branch_id)
             ->first();
     }
 
@@ -692,4 +756,676 @@ class Central_unit
 
         return $timeDifference;
     }
+
+
+
+
+    // ********************************************************** Start of Attendance Calculation By Aman ***************************************
+
+
+    static function attendanceByEmpDetails($Emp, $y, $m)
+    {
+        $day = date('d');
+        while ($day > 0) {
+
+            $sno = 0;
+            $totalTwhMin = 0;
+            $totalOTMin = 0;
+            $totalLateTime = 0;
+            $totalEarlyExitTime = 0;
+            $resCode = self::getEmpAttSumm(['emp_id' => $Emp, 'punch_date' => date('Y-m-' . $day)]);
+            // dd($resCode[2]);
+            $status = $resCode[0];
+            $inTime = $resCode[1] != 0 ? date('h:i A', strtotime($resCode[1])) : 'Not Mark';
+            $outTime = $resCode[2] != 0 ? date('h:i A', strtotime($resCode[2])) : 'Not Mark';
+            $workingHour = $resCode[1] && $resCode[2] ? $resCode[3] : '00:00';
+            $punchInLoc = $resCode[4];
+            $punchOutLoc = $resCode[5];
+            $shiftName = $resCode[6];
+            $breakTime = $resCode[7];
+            $overTime = $resCode[8];
+            $shiftWH = $resCode[9];
+            $twhMin = $resCode[10];
+            $MaxOvertime = $resCode[11];
+            $lateby = $resCode[12];
+            $earlyExitBy = $resCode[13];
+            $occurance = $resCode[14];
+            $entryGrace = $resCode[15];
+            $exitGrace = $resCode[16];
+            $inSelfie = $resCode[17];
+            $outSelfie = $resCode[18];
+            $remLeave = $resCode[19];
+            $totalTwhMin += $twhMin;
+            $totalOTMin += $overTime;
+            $totalEarlyExitTime += $earlyExitBy;
+            $totalLateTime += $lateby;
+            $totalDayinMonth = date('t');
+
+            $day--;
+        }
+
+        $allStatusCount = self::attendanceCount($Emp, $y, $m);
+        $twd = $allStatusCount[1] + $allStatusCount[2] + $allStatusCount[3] + $allStatusCount[9] + $allStatusCount[8] + $allStatusCount[10] + $allStatusCount[11];
+        $present = $allStatusCount[1] + $allStatusCount[3] + $allStatusCount[9] + $allStatusCount[8] / 2;
+        $absent = $allStatusCount[2];
+        $late = $allStatusCount[3];
+        $mispunch = $allStatusCount[4];
+        $holiday = $allStatusCount[6];
+        $weekoff = $allStatusCount[7];
+        $halfday = $allStatusCount[8];
+        $overtime = $allStatusCount[9];
+        $remainingleave = $remLeave;
+        $cwh = $totalTwhMin / 60;
+        $twh = (date('t') - ($allStatusCount[6] + $allStatusCount[7])) * ($shiftWH / 60);
+        $twhpercentage = $totalTwhMin != 0 && $shiftWH != 0 ? ($totalTwhMin / 60 / (date('t') * ($shiftWH / 60))) * 100 : 0;
+        $rwh = (date('t') - ($allStatusCount[6] + $allStatusCount[7])) * ($shiftWH / 60) - $totalTwhMin / 60;
+        $trwh = (date('t') - ($allStatusCount[6] + $allStatusCount[7])) * ($shiftWH / 60);
+        $trwhpercentege = (((date('t') - ($allStatusCount[6] + $allStatusCount[7])) * ($shiftWH / 60) - $totalTwhMin / 60) / ((date('t') - ($allStatusCount[6] + $allStatusCount[7])) * ($shiftWH / 60))) * 100;
+        $otwh = $totalOTMin / 60;
+        $totwh = $MaxOvertime / 60;
+        $totwhpercentage = $MaxOvertime !== 0 ? ($totalOTMin / 60 / ($MaxOvertime / 60)) * 100 : 0;
+
+        return [
+            $twd, //0
+            $present, //1
+            $absent,//2
+            $late,//3
+            $mispunch,//4
+            $holiday,//5
+            $weekoff,//6
+            $halfday,//7
+            $overtime,//8
+            $remainingleave,//9
+            $cwh,//10
+            $twh,//11
+            $twhpercentage,//12
+            $rwh,//13
+            $trwh,//14
+            $trwhpercentege,//15
+            $otwh,//16
+            $totwh,//17
+            $totwhpercentage//18
+        ];
+    }
+
+    // All type calculation of Attendance for Dashboard
+    static function GetCount()
+    {
+
+        $LeaveCount = RequestLeaveList::where('business_id', Session::get('business_id'))
+            ->count();
+        $EmpCount = EmployeePersonalDetail::where('business_id', Session::get('business_id'))
+            ->count();
+        $AttendanceCount = AttendanceList::where(['business_id' => Session::get('business_id'), 'punch_date' => date('Y-m-d')])
+            ->count();
+        $AbsentCount = $EmpCount - $AttendanceCount;
+        $MissPunchCount = RequestMispunchList::where('business_id', Session::get('business_id'))
+            ->count();
+
+        if ($LeaveCount != null || $AttendanceCount != null || $MissPunchCount != null || $EmpCount != null || $AbsentCount != null) {
+            return [$EmpCount, $AttendanceCount, $MissPunchCount, $LeaveCount, $AbsentCount];
+        } else {
+            return [0, 0, 0, 0, 0];
+        }
+    }
+
+    // Attendance Summary of Indivisual Employee for a Month 
+    // $Emp = employee id 
+    // $y = year 
+    // $m = month
+    static function attendanceCount($Emp, $y, $m)
+    {
+        $totalTwhMin = 0;
+        $totalOTMin = 0;
+        $totalLateTime = 0;
+        $totalEarlyExitTime = 0;
+        $day = 0;
+        // $m = 10;
+        $statusCounts = [
+            1 => 0,
+            // Present
+            2 => 0,
+            // Absent
+            3 => 0,
+            // Late
+            4 => 0,
+            // Mispunch
+            5 => 0,
+            // working
+            6 => 0,
+            // Holiday
+            7 => 0,
+            // Week Off
+            8 => 0,
+            // Half Day
+            9 => 0,
+            // Overtime
+            10 => 0,
+            // paid leave
+            11 => 0,
+            // unpaid leave
+        ];
+
+        $totalDayInMonth = $m == date('m') ? date('d') : date('t', strtotime($m));
+        while (++$day <= $totalDayInMonth) {
+            $date = $y . '-' . $m . '-' . $day;
+            // $date = $y.'-'.'10'.'-'.$day;
+            // dd(date('Y-m-d',strtotime($date)));
+            $resCode = self::getEmpAttSumm(['emp_id' => $Emp, 'punch_date' => date('Y-m-d', strtotime($date))]);
+            $status = $resCode[0];
+            $overTime = $resCode[8];
+            $twhMin = $resCode[10];
+            $lateby = $resCode[12];
+            $earlyExitBy = $resCode[13];
+            $occurance = $resCode[14];
+            $totalTwhMin += $twhMin;
+            $totalOTMin += $overTime;
+            $totalEarlyExitTime += $earlyExitBy;
+            $totalLateTime += $lateby;
+
+            // if (isset($statusCounts[$status])) {
+                $earlyOccurrenceIs = $occurance[0] ?? 0;
+                $earlyOccurrence = $occurance[1] ?? 0;
+                $earlyOccurrencePenalty = $occurance[2] ?? 0;
+
+                $lateOccurrenceIs = $occurance[3] ?? 0;
+                $lateOccurrence = $occurance[4] ?? 0;
+                $lateOccurrencePenalty = $occurance[5] ?? 0;
+                // dd($occurance);
+                if ($status == 3) {
+                    if ($lateOccurrenceIs == 1) {
+                        if ($statusCounts[3] >= $lateOccurrence) {
+                            if ($lateOccurrencePenalty == 1) {
+                                $statusCounts[8]++;
+                            } else {
+                                $statusCounts[2]++;
+                            }
+                        }
+                    } elseif ($totalLateTime >= $lateOccurrence) {
+                        if ($lateOccurrencePenalty == 1) {
+                            $statusCounts[8]++;
+                        } else {
+                            $statusCounts[2]++;
+                        }
+                    }
+
+                    if ($earlyOccurrenceIs == 1) {
+                        if ($statusCounts[3] >= $earlyOccurrence) {
+                            if ($earlyOccurrencePenalty == 1) {
+                                $statusCounts[8]++;
+                            } else {
+                                $statusCounts[2]++;
+                            }
+                        } elseif ($totalEarlyExitTime >= $earlyOccurrence) {
+                            if ($earlyOccurrencePenalty == 1) {
+                                $statusCounts[8]++;
+                            } else {
+                                $statusCounts[2]++;
+                            }
+                        }
+                    }
+                }
+
+
+                $statusCounts[$status]++;
+            // }
+        }
+        // dd($statusCounts);
+        // print_r($statusCounts);
+        return $statusCounts;
+    }
+
+    // Attendance Calculation of Indivisual Employee for a single day
+
+    // $Emp['emp_id','punch_date'];
+    static function getEmpAttSumm($Emp)
+    {
+        // calculate present, absent, halfday, holiday, weekoff;
+
+        $employee = DB::table('employee_personal_details')->join('policy_master_endgame_method', 'employee_personal_details.master_endgame_id', '=', 'policy_master_endgame_method.id')
+            ->where('employee_personal_details.business_id', Session::get('business_id'))
+            ->where('employee_personal_details.emp_id', $Emp['emp_id'])
+            ->select('emp_id', 'emp_name', 'employee_type', 'employee_contractual_type', 'emp_gender', 'holiday_policy_ids_list', 'weekly_policy_ids_list', 'shift_settings_ids_list', 'leave_policy_ids_list', 'method_name', 'method_switch', 'emp_shift_type', 'policy_master_endgame_method.created_at as AppliedFrom')
+            ->first();
+
+        $holiday_policy = json_decode($employee->holiday_policy_ids_list ?? 0, true);
+        $weekly_policy = json_decode($employee->weekly_policy_ids_list ?? 0, true);
+        $shift_policy = json_decode($employee->shift_settings_ids_list ?? 0, true);
+        $leave_policy = json_decode($employee->leave_policy_ids_list ?? 0, true);
+
+        // dd($holiday_policy);
+
+
+
+
+        if ($employee !== null && $employee->method_switch == 1) {
+
+            $attendanceList = DB::table('attendance_list')
+                ->where('business_id', Session::get('business_id'))
+                ->where($Emp)
+                ->first();
+
+
+            $shift_type_found = false;
+
+            foreach ($shift_policy as $policy) {
+                if ($policy == $employee->emp_shift_type) {
+                    $shift_type_found = true;
+                    break; // No need to continue checking if we found a match
+                }
+            }
+
+            if ($shift_type_found) {
+
+                $shiftType = PolicyAttendanceShiftSetting::where([
+                    'business_id' => Session::get('business_id'),
+                    'id' => $employee->emp_shift_type,
+                ])
+                    ->first();
+
+                if ($shiftType->shift_type == 2) {
+                    $shift = PolicyAttendanceShiftTypeItem::where([
+                        'business_id' => Session::get('business_id'),
+                        'id' => $attendanceList->attendance_shift ?? 0,
+                    ])
+                        ->first();
+                } else {
+                    $shift = PolicyAttendanceShiftTypeItem::where([
+                        'business_id' => Session::get('business_id'),
+                        'attendance_shift_id' => $employee->emp_shift_type,
+                    ])->first();
+                }
+            } else {
+                return [5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            }
+
+            $leavesPolicyItems = DB::table('policy_setting_leave_category')
+                ->where([
+                    'business_id' => Session::get('business_id'),
+                    'leave_policy_id' => $leave_policy[0],
+                ])
+                ->get();
+
+            $leaveRequestList = DB::table('request_leave_list')
+                ->where([
+                    'business_id' => Session::get('business_id'),
+                    'emp_id' => $Emp['emp_id'],
+                    'status' => 1,
+                ])
+                ->whereMonth('from_date', date('m'))
+                ->get();
+
+            // dd($leaveRequestList);
+
+
+            $lateEntry = PolicyAttenRuleLateEntry::where('business_id', Session::get('business_id'))
+                ->first();
+            $earlyExit = PolicyAttenRuleEarlyExit::where('business_id', Session::get('business_id'))
+                ->first();
+            $overtimeRule = PolicyAttenRuleOvertime::where('business_id', Session::get('business_id'))
+                ->first();
+
+            $misPunchRequest = RequestMispunchList::where([
+                'business_id' => Session::get('business_id'),
+                'emp_id' => $Emp['emp_id'],
+                'emp_miss_date' => $Emp['punch_date'],
+            ])
+                ->first();
+
+
+            foreach ($holiday_policy as $Hpolicy) {
+                $isTodayHoliday = PolicyHolidayDetail::where([
+                    'business_id' => Session::get('business_id'),
+                    'holiday_date' => $Emp['punch_date'],
+                    'template_id' => $Hpolicy,
+                ])
+                    ->first();
+            }
+
+
+
+            // dd(isset($attendanceList));
+            $attendanceStatus = $attendanceList->emp_today_current_status ?? 0;
+            $dayName = date('N', strtotime($Emp['punch_date']));
+            $inTime = Carbon::parse($attendanceList->punch_in_time ?? 0)->format('H:i:s') !== '00:00:00' ? $attendanceList->punch_in_time : 0;
+            $outTime = Carbon::parse($attendanceList->punch_out_time ?? 0)->format('H:i:s') !== '00:00:00' ? $attendanceList->punch_out_time : 0;
+            $shiftStart = $shift->shift_start ?? 0;
+            $shiftEnd = $shift->shift_end ?? 0;
+            $entryGracetime = ($lateEntry->grace_time_hr ?? 0) * 60 + ($lateEntry->grace_time_min ?? 0);
+            $exitGracetime = ($earlyExit->grace_time_hr ?? 0) * 60 + ($lateEntry->grace_time_min ?? 0);
+            $markAbsentIf = $lateEntry->mark_half_day_hr * 60 + $earlyExit->mark_half_day_min ?? 0;
+            $punchInLoc = $attendanceList->punch_in_address ?? 'Not Mark';
+            $punchOutLoc = $attendanceList->punch_out_address ?? 'Not Mark';
+            $in_selfie = $attendanceList->punch_in_selfie ?? '';
+            $out_selfie = $attendanceList->punch_out_selfie ?? '';
+            $shiftName = $shift->shift_name ?? 'Genral Shift';
+            $breakTime = $shift->break_min ?? '00';
+            $maxOvertime = $overtimeRule->max_ot_hr * 60 + $overtimeRule->max_ot_min;
+            $shiftStartObj = Carbon::parse($shiftStart);
+            $shiftEndObj = Carbon::parse($shiftEnd);
+            $inTimeObj = Carbon::parse($inTime);
+            $outTimeObj = Carbon::parse($outTime);
+            $leaveDetail = [];
+            $remLeave = 0;
+
+
+            // leave calculation 
+
+            foreach ($leavesPolicyItems as $leave) {
+                // some variables
+                $tLeave = 0;
+                $appliedLeave = 0;
+                $leaveLimit = $leave->days;
+                $leaveRequest = $leaveRequestList->where('leave_category', $leave->id);
+                foreach ($leaveRequest as $list) {
+                    $to = Carbon::parse($list->to_date);
+                    $punch_date = Carbon::parse($Emp['punch_date']);
+                    if ($to < $punch_date) {
+                        $tLeave = $tLeave + $list->days;
+                        $appliedLeave = $appliedLeave + $list->days;
+                    }
+                }
+                $remaining = $leaveLimit - $appliedLeave;
+                $leaveDetail[$leave->id] = [
+                    'name' => $leave->category_name,
+                    'limit' => $leaveLimit,
+                    'remaining' => $remaining,
+                    'total_applied' => $tLeave,
+                ];
+            }
+
+            foreach ($leaveDetail as $key => $detail) {
+                $remLeave = $remLeave + $detail['remaining'];
+            }
+            // dd($remLeave);
+
+
+
+            // occurance in $earlyExit  and $lateEntry
+            if ($earlyExit->switch_is != null && $earlyExit->switch_is == 1) {
+                if ($earlyExit->occurance_is == 1) {
+                    $earlyOccurance = $earlyExit->occurance_count;
+                } else {
+                    $earlyOccurance = $earlyExit->occurance_hr * 60 + $earlyExit->occurance_min;
+                }
+            }
+
+            if ($lateEntry->switch_is != null && $lateEntry->switch_is == 1) {
+                if ($lateEntry->occurance_is == 1) {
+                    $lateOccurance = $lateEntry->occurance_count;
+                } else {
+                    $lateOccurance = $lateEntry->occurance_hr * 60 + $lateEntry->occurance_min;
+                }
+                $ruleCount = [
+                    0 => $earlyExit->occurance_is,
+                    1 => $earlyOccurance,
+                    2 => $earlyExit->absent_is,
+                    3 => $lateEntry->occurance_is,
+                    4 => $lateOccurance,
+                    5 => $lateEntry->absent_is,
+                ];
+            } else {
+                $ruleCount = [
+                    0 => 0,
+                    1 => 0,
+                    2 => 0,
+                    3 => 0,
+                    4 => 0,
+                    5 => 0,
+                ];
+            }
+
+            // dd($ruleCount);
+
+            // difference between in and out time
+            $punchInterval = $outTimeObj->diff($inTimeObj);
+            $twh = $punchInterval->h . ' hr ' . $punchInterval->i . ' min'; // Use 'i' for minutes
+            $twhMin = $punchInterval->h * 60 + $punchInterval->i; // Use 'i' for minutes
+            // dd($twhMin);
+
+            //calculate overtime:- (punchOut-punchIn)-(shiftEnd-shiftStart) = Overtime
+            $shiftInterval = $shiftEndObj->diff($shiftStartObj);
+
+            // Calculate total minutes for punchInterval and shiftInterval for overtime
+            $punchIntervalMinutes = $punchInterval->h * 60 + $punchInterval->i;
+            $shiftIntervalMinutes = $shiftInterval->h * 60 + $shiftInterval->i;
+            $overtime = $punchIntervalMinutes - $shiftIntervalMinutes;
+            $overtimeValue = $overtime > 0 ? $overtime : 0;
+
+            // calculate overtime if overtime rule is active
+            if ($overtimeRule->switch_is == 1 && $overtimeValue > 0) {
+                $inTimeObj = Carbon::parse($inTime);
+                $outTimeObj = Carbon::parse($outTime);
+
+                $shiftStartObj = Carbon::parse($shiftStart);
+                $shiftEndObj = Carbon::parse($shiftEnd);
+
+                $earlyOtTime = $overtimeRule->early_ot_hr * 60 + $overtimeRule->early_ot_min;
+                $lateOtTime = $overtimeRule->late_ot_hr * 60 + $overtimeRule->late_ot_min;
+
+                $earlyCommingTime = $shiftStartObj->subMinutes($earlyOtTime);
+                $lateGoingTime = $shiftEndObj->addMinutes($lateOtTime);
+
+                if ($inTimeObj < $earlyCommingTime) {
+                    $earlyIn = $earlyCommingTime;
+                    if ($outTimeObj > $lateGoingTime) {
+                        $lateGoing = $lateGoingTime;
+                        $totalWork = $lateGoing->diff($earlyIn);
+                    } else {
+                        $totalWork = $outTimeObj->diff($earlyIn);
+                    }
+                } elseif ($outTimeObj > $lateGoingTime) {
+                    $lateGoing = $lateGoingTime;
+                    $totalWork = $lateGoing->diff($inTimeObj);
+                } else {
+                    $totalWork = $outTimeObj->diff($inTimeObj);
+                }
+
+                $totalshiftInterval = $earlyCommingTime->diff($lateGoingTime);
+
+                $twhIntervalMinutes = $totalshiftInterval->h * 60 + $totalshiftInterval->i - ($shiftInterval->h * 60 + $shiftInterval->i);
+                $overtimeValue = $totalWork->h * 60 + $totalWork->i - ($shiftInterval->h * 60 + $shiftInterval->i);
+
+                $overtimeValue = min($overtimeValue, $twhIntervalMinutes);
+                $overtimeValue = $overtimeValue >= 0 ? $overtimeValue : 0;
+
+                // dd($inTimeObj);
+            }
+
+            // add grace time to entry time
+            $shiftStartObj = Carbon::parse($shiftStart);
+            $addedTime = $shiftStartObj->addMinutes($entryGracetime);
+            $entryGrace = date('H:i', strtotime($addedTime));
+
+            // sub grace time to exit time
+            $shiftEndObj = Carbon::parse($shiftEnd);
+            $exitGraceTime = $shiftEndObj->subMinutes($exitGracetime);
+            $exitGrace = date('H:i', strtotime($exitGraceTime));
+
+            // Mark absent half day if late by
+            $halfAbsentTimeObj = $shiftStartObj->addMinutes($markAbsentIf);
+            $absentHalfTime = date('H:i', strtotime($halfAbsentTimeObj));
+
+            // Mark absent half day if early exit by
+            $earlyExitMin = $earlyExit->mark_half_day_hr * 60 + $earlyExit->mark_half_day_min;
+            $shiftEndObj = Carbon::parse($shiftEnd);
+            $earlyExitBefore = $shiftEndObj->subMinutes($earlyExitMin);
+            $EarlyExitTime = date('H:i', strtotime($earlyExitBefore));
+
+            // calculate late by and early exit by
+            $shiftStartObj = Carbon::parse($shiftStart);
+            $shiftEndObj = Carbon::parse($shiftEnd);
+            $inTimeObj = Carbon::parse($inTime);
+            $outTimeObj = Carbon::parse($outTime);
+            $lateBy = 0;
+            $earlyExitBy = 0;
+
+            if ($lateEntry->switch_is != null && $lateEntry->switch_is == 1 && $inTime > $entryGrace) {
+                $lateByObj = $shiftStartObj->diff($inTimeObj);
+                $lateBy = $lateByObj->h * 60 + $lateByObj->i;
+            }
+
+            if ($earlyExit->switch_is != null && $earlyExit->switch_is == 1 && $outTime < $exitGrace && $inTime && $outTime) {
+                // dd(Carbon::parse($outTime)->format('H:i:s') !== '00:00:00');
+                if (Carbon::parse($outTime)->format('H:i:s') !== '00:00:00') {
+                    $earlyExitByObj = $shiftEndObj->diff($outTimeObj);
+                    $earlyExitBy = $earlyExitByObj->h * 60 + $earlyExitByObj->i;
+                } else {
+                    $earlyExitBy = 0;
+                }
+            }
+            // dd();
+
+            // Status Code :-
+            // Method Switch Off = 0
+            // Present = 1
+            // Absent = 2
+            // Late = 3
+            // Mispunch = 4
+            // Working = 5
+            // Holiday = 6
+            // Weekoff = 7
+            // Half day  = 8
+            // Overtime  = 9
+            // paid leave = 10
+            //unpaid leave = 11
+
+
+            $status = 2; // Default status (e.g., Absent)
+
+            if (isset($attendanceList)) {
+                // dd('if');
+                if ($attendanceStatus >= 1) {
+                    if ($attendanceStatus >= 2) {
+                        if ($twhMin > $shiftIntervalMinutes / 2) {
+                            if ($lateEntry->switch_is != null && $lateEntry->switch_is == 1 && $inTime > $entryGrace) {
+                                if ($inTime > $absentHalfTime) {
+                                    $status = 8; // Half Day (Late)
+                                } else {
+                                    $status = 3; // Late
+                                }
+                            } elseif ($earlyExit->switch_is != null && $earlyExit->switch_is == 1 && $outTime < $exitGrace) {
+                                // Half Day (Late)
+                                if ($outTime < $EarlyExitTime) {
+                                    $status = 8;
+                                } else {
+                                    // dd($outTime);
+                                    $status = 3;
+                                }
+                            } else {
+                                if ($punchIntervalMinutes > $shiftIntervalMinutes) {
+                                    $status = 9; // Overtime
+                                } else {
+                                    $status = 1; // Present
+                                }
+                            }
+                        } else {
+                            $status = 2; //Absent
+                        }
+                    } else {
+                        // dd();
+                        if (date('Y-m-d', strtotime($Emp['punch_date'])) === date('Y-m-d')) {
+                            $status = 1; // working
+                        }else{
+                            $status = 4; // Mis-punch
+                        }
+                    }
+                }
+            } elseif ($isTodayHoliday) {
+                $status = 6; // Holiday
+            } elseif (count($leaveRequestList) > 0) {
+                // checking employee has any leave request or not
+
+                foreach ($leaveRequestList as $list) {
+                    $leaveFrom = Carbon::parse($list->from_date);
+                    $leaveTo = Carbon::parse($list->to_date);
+                    $today = Carbon::parse($Emp['punch_date']);
+                    // $today = Carbon::parse(date('Y-m-d'));
+
+                    if ($today >= $leaveFrom && $today <= $leaveTo) {
+                        $remainingLeaves = $leaveDetail[$list->leave_category]['remaining'];
+                        $day = $leaveFrom->diffInDays($today) + 1;
+                        while ($day-- > 0) {
+                            if ($remainingLeaves != 0) {
+                                $status = 10; //paid leave
+                                $remainingLeaves--;
+                            } else {
+                                $status = 11; // unpaid leave
+                            }
+                        }
+                    }else{
+
+                    }
+                    // print_r($status);
+                    // dd($today >= $leaveFrom);
+
+                    // dd($remainingLeaves);
+                }
+            } else {
+                foreach ($weekly_policy as $key => $wPolicy) {
+                    $weekOff = DB::table('policy_weekly_holiday_list')
+                        ->where([
+                            'business_id' => Session::get('business_id'),
+                            'id' => $wPolicy,
+                        ])
+                        ->first();
+                    foreach (json_decode($weekOff->days) as $day) {
+                        if (date('N', strtotime($day)) == $dayName) {
+                            $status = 7; // Week Off
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // dd($status);
+
+            return [
+                $status,
+                //day status present, absent etc.
+                $inTime,
+                // punch in time
+                $outTime,
+                // punch out time
+                $twh,
+                // total working hour
+                $punchInLoc,
+                //punch in location
+                $punchOutLoc,
+                // punch out location
+                $shiftName,
+                // shift name
+                $breakTime,
+                // break time
+                $overtimeValue,
+                // overtime
+                $shiftIntervalMinutes,
+                //shift working hour
+                $twhMin,
+                // total working hour minutes
+                $maxOvertime,
+                // maximum overtime for a single month
+                $lateBy,
+                //late by
+                $earlyExitBy,
+                // early exit by
+                $ruleCount,
+                // occurances for late and early rule
+                $entryGrace,
+                //shift start time with grace time
+                $exitGrace,
+                //shift endd time with grace time
+                $in_selfie,
+                // punch in selfie
+                $out_selfie,
+                //punch out selfie
+                $remLeave,
+                //remaining leave
+                $leaveDetail // details of leave
+            ];
+        }
+        return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    }
+
+    // ********************************************************** End of Attendance Calculation By Aman ***************************************
 }

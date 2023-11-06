@@ -13,8 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  * Class LoginEmployee
  * 
  * @property int $id
+ * @property string|null $emp_id
  * @property string|null $business_id
- * @property string|null $name
  * @property string|null $email
  * @property string|null $country_code
  * @property string|null $phone
@@ -34,8 +34,8 @@ class LoginEmployee extends Model
 	];
 
 	protected $fillable = [
+		'emp_id',
 		'business_id',
-		'name',
 		'email',
 		'country_code',
 		'phone',

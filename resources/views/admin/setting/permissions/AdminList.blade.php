@@ -14,7 +14,10 @@
     </ol>
 </div>
     <div class="row">
+    
         @php
+            use App\Models\PolicySettingRoleAssignPermission;
+            use App\Models\PolicySettingRoleCreate;
             $rooted = new App\Helpers\Central_unit();
             $Branch = $rooted->BranchList();
             $Department = $rooted->DepartmentList();
@@ -24,7 +27,10 @@
             $Onwer = DB::table('business_details_list')
                 ->where('business_id', Session::get('business_id'))
                 ->get();
-            // dd($Employee);
+
+            //
+
+            //  dd($Employee);
             // $Permission = App\Helpers\Central_unit::GetModelPermission();
             // $Permission->where('permission_name','Employee.View')->all()!= null
         @endphp
@@ -127,23 +133,28 @@
                                 </p>
                             </div>
                             <div class="col-6 col-xl-3 my-auto">
-                                <?php
+                              
+
+                            <?php
                     if ($admin->emp_id !== null) {
-                        $Role_id = DB::table('setting_role_assign_permission')
-                            ->where('emp_id', $admin->emp_id)
+                        $Role_id = PolicySettingRoleAssignPermission::where('emp_id', $admin->emp_id)
                             ->where('business_id', Session::get('business_id'))
                             ->select('*')
                             ->first();
-
-                        if ($Role_id !== null) { // Check if $Role_id is not null
-                            $Rolee = DB::table('setting_role_create')
-                                ->where('business_id', Session::get('business_id'))
+                            
+                            if ($Role_id !== null) { // Check if $Role_id is not null
+                                $Rolee = PolicySettingRoleCreate::where('business_id', Session::get('business_id'))
                                 ->where('id', '=', $Role_id->role_id)
-                                ->first(); ?>
+                                ->first(); 
+                                // dd($Role_id->created_at);
+                                ?>
                                 <p class="my-auto " style="color:rgb(34, 33, 29)"><i class="fe fe-user mx-2"></i>
                                     <?= $Rolee != '' ? $Rolee->roles_name : 'Role Name : null' ?>
+                                    <?= 'Date: '.date('d-m-y',strtotime($Role_id->created_at)) ?>
+                                
                                 </p>
 
+                                
                                 <?php
                             // Continue with your code using $Role_id and $Rolee if necessary
                         } else {
@@ -156,6 +167,7 @@
                     }
                     ?>
                             </div>
+                            
                             {{-- @else --}}
                             {{-- <a class="modal-effect btn btn-primary btn-sm border-0 my-auto" data-effect="effect-scale"
                     data-bs-toggle="modal" href="#asignAdmin{{ $admin->id }}">Assign</a> --}}

@@ -68,7 +68,7 @@ $Helper = new Central_unit();
                                     <?php if(Session::has('business_id')){ ?>
                                     <div class="me-3 mt-0 mt-sm-1 d-block text-center">
                                         <span
-                                            class="fs-14 mb-0"><b><?= $Helper->GenderCheck() != '' ? $Helper->GenderCheck() : '' ?>{{ Session::get('login_name') }}</b></span><br>
+                                            class="fs-14 mb-0"><b>{{ Session::get('login_name') }}</b></span><br>
                                         <span class="text-muted mt-0">
                                             <b> <?= $Helper->RoleIdToName() ?></b>
                                         </span>
@@ -90,7 +90,7 @@ $Helper = new Central_unit();
                                         </span>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated">
-                                        <a class="dropdown-item d-flex" href="profile1.html">
+                                        <a class="dropdown-item d-flex" href="{{url('/admin/settings/account')}}">
                                             <i class="feather feather-user me-3 fs-16 my-auto"></i>
                                             <div class="mt-1">Profile</div>
                                         </a>
@@ -98,7 +98,7 @@ $Helper = new Central_unit();
                                             <i class="feather feather-award me-3 fs-16 my-auto"></i>
                                             <div class="mt-1">Upgrade</div>
                                         </a>
-                                        <a class="dropdown-item d-flex" href="editprofile.html">
+                                        <a class="dropdown-item d-flex" href="e{{url('/admin/settings/business')}}">
                                             <i class="feather feather-settings me-3 fs-16 my-auto"></i>
                                             <div class="mt-1">Settings</div>
                                         </a>

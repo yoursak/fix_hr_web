@@ -119,7 +119,7 @@
                 </div>
                 <div class="card-body ">
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-lg-2">
                             <div class="form-group">
                                 <p class="form-label">Branch</p>
                                 <select name='branch_id' id="country-dd" class="form-control" required>
@@ -134,7 +134,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-lg-2">
                             <div class="form-group">
                                 <p class="form-label">Department</p>
                                 <div class="form-group mb-3">
@@ -149,7 +149,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-lg-2">
                             <div class="form-group">
                                 <p class="form-label">Designation</p>
                                 <div class="form-group mb-3">
@@ -164,14 +164,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-2">
+                        <div class="col-lg-2">
                             <div class="form-group">
                                 <label class="form-label">From Date</label>
                                 <input type="date" id="from_date_dd" class="form-control custom-select">
 
                             </div>
                         </div>
-                        <div class="col-xl-2">
+                        <div class="col-lg-2">
                             <div class="form-group">
                                 <label class="form-label">To Date</label>
                                 <input type="date" id="to_date_dd" class="form-control custom-select">
@@ -191,6 +191,8 @@
                                     <th class="border-bottom-0">S.No.</th>
                                     <th class="border-bottom-0">Employee Name</th>
                                     <th class="border-bottom-0">Employee Id</th>
+                                    <th class="border-bottom-0">Applied Date</th>
+                                    <th class="border-bottom-0">Leave Category</th>
                                     <th class="border-bottom-0">Leave Type</th>
                                     <th class="border-bottom-0">From</th>
                                     <th class="border-bottom-0">To</th>
@@ -221,8 +223,10 @@
                                                 <span class="avatar avatar-md brround me-3"
                                                     style="background-image: url('/employee_profile/{{ $item->profile_photo }}')"></span>
                                                 <div class="me-3 mt-0 mt-sm-1 d-block">
-                                                    <h6 class="mb-1 fs-14"><a
-                                                            href="{{ route('employeeProfile', [$item->emp_id]) }}">{{ $item->emp_name }}</a>
+                                                    <h6 class="mb-1 fs-14">
+                                                        <a href="{{ route('employeeProfile', [$item->emp_id]) }}">
+                                                            {{ $item->emp_name }}&nbsp;{{ $item->emp_mname }}&nbsp;{{ $item->emp_lname }}
+                                                        </a>
                                                     </h6>
                                                     <p class="text-muted mb-0 fs-12">
                                                         <?= $nss->DesingationIdToName($item->designation_id) ?></p>
@@ -230,9 +234,13 @@
                                             </div>
                                         </td>
                                         <td>{{ $item->emp_id }}</td>
-                                        <td>{{ $item->leave_type }}</td>
-                                        <td>{{ $item->from_date }}</td>
-                                        <td>{{ $item->to_date }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
+                                        <td>{{ $item->category_name }}</td>
+                                        <td>{{ $item->leave_day }}</td>
+                                        <td>{{ $item->from_date ? \Carbon\Carbon::parse($item->from_date)->format('d-m-Y') : '' }}
+                                        </td>
+                                        <td>{{ $item->to_date ? \Carbon\Carbon::parse($item->to_date)->format('d-m-Y') : '' }}
+                                        </td>
                                         <td>{{ $item->days }}</td>
                                         {{-- <td>{{ $item->reason }}</td> --}}
                                         <td>
@@ -251,7 +259,8 @@
                                                 <a class="btn btn-primary btn-icon btn-sm " href="javascript:void(0);"
                                                     id="edit_btn_modal" onclick="openEditModel(this)"
                                                     data-id='<?= $item->id ?>' data-status='<?= $item->status ?>'
-                                                    data-bs-toggle="modal" data data-bs-target="#updateempmodal">
+                                                    data-leavetype='<?= $item->leave_type ?>' data-bs-toggle="modal" data
+                                                    data-bs-target="#opendEditModelId">
                                                     <i class="feather feather-edit" data-bs-toggle="tooltip"
                                                         data-original-title="View"></i>
                                                 </a>
@@ -282,10 +291,10 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content modal-content-demo">
 
-                <div class="modal-header">
+                <div class="modal-header " style="background: #1877f2; color:white;">
                     <h5 class="modal-title ms-2 " id="exampleModalLongTitle">Leave Request</h5>
-                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
-                            aria-hidden="true">&times;</span></button>
+                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span aria-hidden="true"
+                            style="color: white;">&times;</span></button>
                 </div>
 
                 <form action="{{ route('admin.leaveapprove') }}" method="post">
@@ -326,19 +335,32 @@
                             </div>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-group  col-md-3 col-sm-3">
-                                <label for="inputPassword4">Leave Type </label>
-                                <input type="text" class="form-control" id="editLeaveType" name="leave_type"
-                                    placeholder="time" value="" readonly>
-                                {{-- <select name="leave_type" class="form-control custom-select select2" id="editLeaveType"
-                                    data-placeholder="" value="">
-                                    </option>
-                                    <option value="1">Casual Leave</option>
-                                    <option value="2">Sick Leave</option>
-                                </select> --}}
+                        <div class="form-row" id="leaveTypeOneShow">
+                            <div class="form-group  col-lg-2 col-md-4">
+                                <label for="inputPassword4">Leave Type</label>
+                                <select name="time_type" class="form-control" onchange="checkLeaveType(this)"
+                                    value="" id="editLeaveTypeFirst">
+                                    <option value="">Select Type</option>
+                                    @foreach ($leaveType as $leavetypes)
+                                        <option value="{{ $leavetypes->id }}">
+                                            {{ $leavetypes->leave_day }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="form-group    col-md-3 col-sm-3">
+                            <div class="form-group  col-lg-2 col-md-4">
+                                <label for="inputPassword4">Leave Category</label>
+                                <select name="time_type" class="form-control" value=""
+                                    id="editLeaveCategoryFirst">
+                                    <option value="">Select Category</option>
+                                    @foreach ($leaveCategory as $leavcat)
+                                        <option value="{{ $leavcat->id }}">
+                                            {{ $leavcat->category_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group  col-lg-3 col-md-4">
                                 <label for="inputPassword4">From <i class="fa fa-calendar" data-bs-toggle="tooltip"
                                         title="" data-bs-original-title="fa fa-calendar"
                                         aria-label="fa fa-calendar"></i></label>
@@ -346,19 +368,112 @@
                                     placeholder="time" value="">
                             </div>
 
-                            <div class="form-group  col-md-3 col-sm-3 ">
+                            <div class="form-group  col-lg-3 col-md-4">
                                 <label for="inputPassword4">To <i class="fa fa-calendar" data-bs-toggle="tooltip"
                                         title="" data-bs-original-title="fa fa-calendar"
                                         aria-label="fa fa-calendar"></i></label>
                                 <input type="date" class="form-control" name="to_date" id="editTo"
                                     placeholder="Password" value="">
                             </div>
-                            <div class="form-group  col-md-3 col-sm-3 ">
+                            {{-- <div class="form-group col-md-2">
+                                <label for="inputPassword4">Leave Value</label>
+                                <select name="time_type" class="form-control"  value=""
+                                    id="edit_shift_type">
+                                    <option value="">Select Shift Type</option>
+                                    @foreach ($shiftType as $shifttype)
+                                        <option value="{{ $shifttype->id }}">
+                                            {{ $shifttype->leave_shift_type }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div> --}}
+                            <div class="form-group  col-lg-2 col-md-4">
                                 <label for="inputPassword4">Days</label>
                                 <input type="text" class="form-control" id="editDays" name="days" value=""
-                                    placeholder="days" readonly>
+                                    placeholder="days">
                             </div>
                         </div>
+                        <div class="form-row" id="leaveTypeTwoShow">
+                            <div class="form-group  col-lg-2 col-md-4">
+                                <label for="inputPassword4">Leave Type</label>
+                                <select name="time_type" class="form-control" value=""
+                                    onchange="checkLeaveType(this)" id="editLeaveTypeSecond">
+                                    <option value="">Select Type</option>
+                                    @foreach ($leaveType as $leavetypes)
+                                        <option value="{{ $leavetypes->id }}">
+                                            {{ $leavetypes->leave_day }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-2 col-md-4">
+                                <label for="inputPassword4">Leave Category</label>
+                                <select name="time_type" class="form-control" value=""
+                                    id="editLeaveCategorySecond">
+                                    <option value="">Select Category</option>
+                                    @foreach ($leaveCategory as $leavcat)
+                                        <option value="{{ $leavcat->id }}">
+                                            {{ $leavcat->category_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-2 col-md-4">
+                                <label for="inputPassword4">From <i class="fa fa-calendar" data-bs-toggle="tooltip"
+                                        title="" data-bs-original-title="fa fa-calendar"
+                                        aria-label="fa fa-calendar"></i></label>
+                                <input type="date" class="form-control px-2" id="editFromT" name="from_date"
+                                    placeholder="time" value="">
+                            </div>
+
+                            <div class="form-group col-lg-2 col-md-4">
+                                <label for="inputPassword4">To <i class="fa fa-calendar" data-bs-toggle="tooltip"
+                                        title="" data-bs-original-title="fa fa-calendar"
+                                        aria-label="fa fa-calendar"></i></label>
+                                <input type="date" class="form-control px-2" name="to_date" id="editToT"
+                                    placeholder="Password" value="">
+                            </div>
+
+                            <div class="form-group col-lg-2 col-md-4">
+                                <label for="inputPassword4">Leave Value</label>
+                                <select name="time_type" class="form-control" value="" id="edit_shift_type">
+                                    <option value="">Select Shift Type</option>
+                                    @foreach ($shiftType as $shifttype)
+                                        <option value="{{ $shifttype->id }}">
+                                            {{ $shifttype->leave_shift_type }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-2 col-md-4">
+                                <label for="inputPassword4">Days</label>
+                                <input type="text" class="form-control" id="editDaysSecond" name="days"
+                                    value="" onc placeholder="days">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col">
+                                Remaining Leaves: 
+                                @foreach ($leaveCategory as $leavcat)
+                                        {{-- <option value="{{ $leavcat->id }}">
+                                            {{ $leavcat->category_name }}
+                                        </option> --}}
+                                        <span>{{$leavcat->category_name}}</span>-><span>{{$leavcat->days}}</span> ||
+                                    @endforeach
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col">
+                                <span style="color:red">Disclamer:</span> 
+                                @foreach ($leaveCategory as $leavcat)
+                                        {{-- <option value="{{ $leavcat->id }}">
+                                            {{ $leavcat->category_name }}
+                                        </option> --}}
+                                        <span>{{$leavcat->category_name}}</span>-><span>{{$leavcat->days}}</span> ||
+                                    @endforeach
+                            </div>
+                        </div>
+
                         <div class="form-row">
                             <div class="form-group col">
                                 <label for="inputPassword4" class="">Reason</label>
@@ -374,6 +489,7 @@
                                 <textarea class="form-control required" id="RemarkTextarea" name="remark" rows="2" value=""></textarea>
                             </div>
                         </div>
+
                     </div>
                     <div class="modal-footer" id="editModalFooter">
                         <div class="d-flex me-auto ">
@@ -403,17 +519,112 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+    <script>
+        document.getElementById('editFrom').addEventListener('change', calculateDateDifference);
+        document.getElementById('editTo').addEventListener('change', calculateDateDifference);
+
+        document.getElementById('editFromT').addEventListener('change', calculateDateDifferenceHalf);
+        document.getElementById('editToT').addEventListener('change', calculateDateDifferenceHalf);
+
+        function calculateDateDifference() {
+            var fromDate = document.getElementById('editFrom').value;
+            var toDate = document.getElementById('editTo').value;
+
+            if (fromDate && toDate) {
+                var from = new Date(fromDate);
+                var to = new Date(toDate);
+
+                if (from > to) {
+                    alert("Please select a 'from' date that is earlier than the 'to' date.");
+                    return;
+                }
+
+                var differenceInTime = to - from;
+                var differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24)) + 1;
+                $('#editDays').val(differenceInDays);
+                console.log(differenceInDays);
+                // Display the results
+                // document.getElementById('result').textContent = 'Difference: ' + differenceInDays + ' days';
+            }
+        }
+
+        function calculateDateDifferenceHalf() {
+            var fromDate = document.getElementById('editFromT').value;
+            var toDate = document.getElementById('editToT').value;
+
+            if (fromDate && toDate) {
+                var from = new Date(fromDate);
+                var to = new Date(toDate);
+
+                if (from > to || from < to) {
+                    alert("You can't select different date.");
+                    return;
+                }
+
+                var differenceInTime = to - from;
+                var differenceInDays = (Math.floor(differenceInTime / (1000 * 3600 * 24)) + 1) / 2;
+                $('#editDaysSecond').val(differenceInDays);
+                console.log(differenceInDays);
+                // Display the results
+                // document.getElementById('result').textContent = 'Difference: ' + differenceInDays + ' days';
+            }
+        }
+
+        function checkLeaveType(context) {
+            var selectedValue = context.value;
+
+            if (selectedValue == 1) {
+                $('#leaveTypeOneShow').removeClass('d-none');
+                $('#leaveTypeTwoShow').addClass('d-none');
+            } else if (selectedValue == 2) {
+                $('#leaveTypeOneShow').addClass('d-none');
+                $('#leaveTypeTwoShow').removeClass('d-none');
+            }
+
+            // If you want to set the selected value for other dropdowns, you can use val() method
+            $('#editLeaveTypeFirst').val(selectedValue);
+            $('#editLeaveTypeSecond').val(selectedValue);
+
+            console.log("Selected Value: " + selectedValue);
+        }
+    </script>
 
     <script>
+        // function checkLeaveType(context) {
+        //     var selectedValue = context.value;
+        //     if (selectedValue == 1) {
+        //         $('#leaveTypeOneShow').removeClass('d-none');
+        //         $('#leaveTypeTwoShow').addClass('d-none');
+        //         $('#editLeaveTypeSecond').selectedValue;
+        //         $('#editLeaveTypeFirst').selectedValue;
+        //     } else if (selectedValue == 2) {
+        //         $('#leaveTypeOneShow').addClass('d-none');
+        //         $('#leaveTypeTwoShow').removeClass('d-none');
+        //         $('#editLeaveTypeSecond').selectedValue;
+        //         $('#editLeaveTypeFirst').selectedValue;
+        //     }
+        //     console.log("Selected Value: " + selectedValue);
+        // }
+
         function openEditModel(context) {
             $("#opendEditModelId").modal("show");
             var id = $(context).data('id');
             var status = $(context).data('status');
-            console.log("result " + id);
+            var leavetype = $(context).data('leavetype');
+            console.log("leavetype " + leavetype);
             $('#editLeaveId').val(id);
             // $('#status').val(status);
 
+            if (leavetype == 1) {
+                $('#leaveTypeOneShow').removeClass('d-none');
+                $('#leaveTypeTwoShow').addClass('d-none');
 
+            } else if (leavetype == 2) {
+                $('#leaveTypeOneShow').addClass('d-none');
+                $('#leaveTypeTwoShow').removeClass('d-none');
+            }
+
+            // leavetype
             if (status == 1) {
                 $('#editModalFooter').addClass('d-none');
                 $('#remarks').addClass('d-none');
@@ -446,8 +657,8 @@
                 dataType: 'json',
                 cache: true,
                 success: function(result) {
-                    console.log("result" + result);
                     if (result.get.id) {
+                        console.log("result", result);
 
                         $('#editBranch').val(result.get.branch_name);
                         $('#editDepratment').val(result.get.depart_name);
@@ -458,10 +669,17 @@
                         $('#editMobileNo').val(result.get.emp_mobile_no);
                         $('#editDate').val(result.get.date);
                         $('#editFrom').val(result.get.from_date);
+                        $('#editFromT').val(result.get.from_date);
                         $('#editTo').val(result.get.to_date);
-                        $('#editLeaveType').val(result.get.leave_type);
-
+                        $('#editToT').val(result.get.to_date);
+                        $('#editLeaveTypeFirst').val(result.get.leave_type);
+                        $('#editLeaveTypeSecond').val(result.get.leave_type);
+                        $('#edit_shift_type').val(result.get.shift_type);
+                        $('#editLeaveCategoryFirst').val(result.get.leave_category);
+                        $('#editLeaveCategorySecond').val(result.get.leave_category);
+                        $('#only_date').val(result.get.from_date);
                         $('#editDays').val(result.get.days);
+                        $('#editDaysSecond').val(result.get.days);
                         $('#editReason').val(result.get.reason);
                         $('#RemarkTextarea').val(result.get.remark);
                     } else {
@@ -561,7 +779,7 @@
                         //             '<td>'
                         //         newRow += `<a class="btn btn-primary m-1 btn-icon btn-sm" href="javascript:void(0);"
                     //     onclick="openEditModel(this)" data-id="${el.id}"  data-status="${el.status}"
-                    //     data-bs-toggle="modal" data-bs-target="#updateempmodal">
+                    //     data-bs-toggle="modal" data-bs-target="#opendEditModelId">
                     //     <i class="feather feather-edit" data-bs-toggle="tooltip"
                     //         data-original-title="View"></i>
                     //    </a>`;
