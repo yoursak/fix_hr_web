@@ -42,6 +42,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $punch_out_longitude
  * @property string|null $punch_out_location_tag
  * @property string|null $total_working_hour
+ * @property int $approved_by_role_id
+ * @property string|null $approved_by_emp_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
@@ -64,7 +66,8 @@ class AttendanceList extends Model
 	// 	'attendance_status' => 'bool',
 	// 	'punch_date' => 'datetime',
 	// 	'punch_in_time' => 'datetime',
-	// 	'punch_out_time' => 'datetime'
+	// 	'punch_out_time' => 'datetime',
+	// 	'approved_by_role_id' => 'int'
 	// ];
 
 	protected $fillable = [
@@ -96,6 +99,8 @@ class AttendanceList extends Model
 		'punch_out_latitude',
 		'punch_out_longitude',
 		'punch_out_location_tag',
-		'total_working_hour'
+		'total_working_hour',
+		'approved_by_role_id',
+		'approved_by_emp_id'
 	];
 }

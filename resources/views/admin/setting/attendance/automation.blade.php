@@ -706,9 +706,9 @@
                 </div>
             </div>
 
-            <div class="col-xl-4">
+            {{-- <div class="col-xl-4">
                 <div class="card">
-                    {{-- break rule  --}}
+                    
                     <div class="card-body border-top">
                         <div class="row">
                             <div class="d-flex justify-content-between">
@@ -727,14 +727,7 @@
                             </p>
 
                             <div class="my-3" id="breakContent">
-                                {{-- <div class="d-flex my-1">
-                                    <label class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" name="defaultBreak"
-                                            id="defaultBreakBtn" value="1" {{$breakData != null && $breakData->is_break_hr_deduct != 0 ? 'checked' : ''}}>
-                                        <span class="custom-control-label"></span>
-                                    </label>
-                                    <label class="form-label mx-1">Deduct Break hour from work hour </label>
-                                </div> --}}
+                                
 
                                 <div class="d-flex my-1">
                                     <div class="col-8">
@@ -969,7 +962,7 @@
                         breakContent();
                     </script>
                 </div>
-            </div>
+            </div> --}}
 
             <div class="col-xl-4">
                 <div class="card">
@@ -1215,21 +1208,21 @@
 
                             <div class="my-3" id="missPunchContent">
 
-                                <div class="my-1">
-                                    <div class="col-12">
+                                <div class="my-1 d-flex">
+                                    <div class="col-8">
                                         <label class="custom-control custom-checkbox">
                                             <input type="checkbox" onchange="missPunchOccurenceContent()"
                                                 class="custom-control-input" name="missPunchOccurence"
                                                 id="missPunchOccurenceBtn" value="1"
-                                                {{ $missPunchData != null && $missPunchData->occurance_is != 0 ? 'checked' : '' }}>
+                                                {{ $missPunchData->occurance_count != null ? 'checked' : '' }}>
                                             <span class="custom-control-label"></span>
                                             <label class="form-label mx-1">Set Occurence</label>
                                         </label>
                                     </div>
-                                    <div class="col-12 d-none" id="missPunchOccurenceContent">
-                                        <div class="row d-flex justify-content-around">
-                                            <div class="col-7 text-end">
-                                                <select onchange="missPunchCountHour()" style="width: 5rem; height:1.5rem"
+                                    <div class="col-4 text-end d-none" id="missPunchOccurenceContent">
+                                        {{-- <div class="row d-flex justify-content-around"> --}}
+                                            {{-- <div class="col-7 text-end"> --}}
+                                                {{-- <select onchange="missPunchCountHour()" style="width: 5rem; height:1.5rem"
                                                     id="missPunchSelectOccurence" name="missPunchSelectOccurence">
                                                     <option value="0"
                                                         {{ $missPunchData != null && $missPunchData->occurance_is == 0 ? 'selected' : '' }}>
@@ -1240,24 +1233,24 @@
                                                     <option value="2"
                                                         {{ $missPunchData != null && $missPunchData->occurance_is == 2 ? 'selected' : '' }}>
                                                         Hour</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-5 d-flex">
+                                                </select> --}}
+                                            {{-- </div> --}}
+                                            {{-- <div class="col-5 d-flex"> --}}
                                                 <input
-                                                    class="mb-4 ms-auto {{ $missPunchData != null && $missPunchData->occurance_is == 1 ? '' : 'd-none' }}"
+                                                    class="mb-4 mr-auto"
                                                     value="{{ $missPunchData ? $missPunchData->occurance_count : '' }}"
                                                     name="missPunchOccurenceCount" id="missPunchOccurenceCount"
                                                     placeholder="Times" type="number" min="0"
                                                     style="width: 5rem; height: 1.5rem">
-                                                <input
+                                                {{-- <input
                                                     class="mb-4 ms-auto {{ $missPunchData != null && $missPunchData->occurance_is == 2 ? '' : 'd-none' }}"
                                                     value="{{ $missPunchData ? $missPunchData->occurance_hr : '' }}:{{ $missPunchData ? $missPunchData->occurance_min : '' }}"
                                                     name="missPunchOccurenceHour" id="missPunchOccurenceHour"
                                                     type="text" placeholder="HH:MM" class="text-center""
                                                     maxlength="5" oninput="formatTime(this)"
-                                                    style="width: 5rem; height: 1.5rem">
-                                            </div>
-                                        </div>
+                                                    style="width: 5rem; height: 1.5rem"> --}}
+                                            {{-- </div> --}}
+                                        {{-- </div> --}}
                                     </div>
                                     <script>
                                         function missPunchCountHour() {
@@ -1442,21 +1435,21 @@
 
                             <div class="my-3" id="gatePassContent">
 
-                                <div class="my-1">
-                                    <div class="col-12">
+                                <div class="my-1 d-flex">
+                                    <div class="col-8">
                                         <label class="custom-control custom-checkbox">
                                             <input type="checkbox" onchange="gatePassOccurenceContent()"
                                                 class="custom-control-input" name="gatePassOccurence"
                                                 id="gatePassOccurenceBtn" value="1"
-                                                {{ $gatePassData != null && $gatePassData->occurance_is != 0 ? 'checked' : '' }}>
+                                                {{ $gatePassData->occurance_count != null ? 'checked' : '' }}>
                                             <span class="custom-control-label"></span>
                                             <label class="form-label mx-1">Set Occurence</label>
                                         </label>
                                     </div>
-                                    <div class="col-12 d-none" id="gatePassOccurenceContent">
-                                        <div class="row d-flex justify-content-around">
-                                            <div class="col-7 text-end">
-                                                <select onchange="gatePassCountHour()" style="width: 5rem; height:1.5rem"
+                                    <div class="col-4 text-end d-none" id="gatePassOccurenceContent">
+                                        {{-- <div class="row d-flex justify-content-around">
+                                            <div class="col-7 text-end"> --}}
+                                                {{-- <select onchange="gatePassCountHour()" style="width: 5rem; height:1.5rem"
                                                     id="gatePassSelectOccurence" name="gatePassSelectOccurence">
                                                     <option value="0"
                                                         {{ $gatePassData != null && $gatePassData->occurance_is == 0 ? 'selected' : '' }}>
@@ -1467,21 +1460,21 @@
                                                     <option value="2"
                                                         {{ $gatePassData != null && $gatePassData->occurance_is == 2 ? 'selected' : '' }}>
                                                         Hour</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-5 d-flex">
+                                                </select> --}}
+                                            {{-- </div>
+                                            <div class="col-5 d-flex"> --}}
                                                 <input
-                                                    class="mb-4 ms-auto {{ $gatePassData != null && $gatePassData->occurance_is == 1 ? '' : 'd-none' }}"
-                                                    value="{{ $gatePassData != null && $gatePassData->occurance_count }}"
+                                                    class="mb-4 "
+                                                    value="{{$gatePassData->occurance_count }}"
                                                     name="gatePassOccurenceCount" id="gatePassOccurenceCount"
                                                     placeholder="Times" type="number" min="0"
                                                     style="width: 5rem; height: 1.5rem" ">
-                                                                            <input class="mb-4 ms-auto {{ $gatePassData != null && $gatePassData->occurance_is == 2 ? '' : 'd-none' }}" value="{{ $gatePassData ? $gatePassData->occurance_hr : '' }}:{{ $gatePassData ? $gatePassData->occurance_min : '' }}" name="gatePassOccurenceHour"
+                                                                            {{-- <input class="mb-4 ms-auto {{ $gatePassData != null && $gatePassData->occurance_is == 2 ? '' : 'd-none' }}" value="{{ $gatePassData ? $gatePassData->occurance_hr : '' }}:{{ $gatePassData ? $gatePassData->occurance_min : '' }}" name="gatePassOccurenceHour"
                                                                                 id="gatePassOccurenceHour" type="text" placeholder="HH:MM" class="text-center""
                                                     maxlength="5" oninput="formatTime(this)"
-                                                    style="width: 5rem; height: 1.5rem">
-                                            </div>
-                                        </div>
+                                                    style="width: 5rem; height: 1.5rem"> --}}
+                                            {{-- </div>
+                                        </div> --}}
                                     </div>
                                     <script>
                                         function gatePassCountHour() {

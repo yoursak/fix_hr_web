@@ -1,5 +1,5 @@
 @extends('admin.pagelayout.master')
-@section('title', 'Dashboard')
+@section('title', 'Attendance Summary')
 @section('css')
     <style>
         .pignose-calendar .pignose-calendar-unit a {
@@ -39,14 +39,14 @@
         <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
             <li><a href="{{ url('/admin') }}">Dashboard</a></li>
             {{-- <li><a href="{{ url('/admin/requests/leaves') }}">Attendance</a></li> --}}
-            <li class="active"><span><b>Employee Summary</b></span></li>
+            <li class="active"><span><b>Attendance Summary</b></span></li>
         </ol>
     </div>
 
     <!-- ROW -->
     @php
         $root = new App\Helpers\Central_unit();
-        $Count = $root->GetCount();
+        $Count = $root->GetCount(date('Y-m-d'));
     @endphp
     <div class="row row-sm">
         <div class="col-lg-12">
@@ -87,7 +87,6 @@
                                     </select>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -115,7 +114,6 @@
                                     @php
                                         $resCode = $root->attendanceCount($emp->emp_id, date('Y'), date('m'));
                                     @endphp
-
                                     <tr>
                                         <td>{{ ++$key }}</td>
                                         <td>
@@ -136,10 +134,10 @@
                                         </td>
                                         <td>{{ $emp->emp_id }}</td>
                                         <td class="text-center" id="{{ $emp->emp_id }}['present']">
-                                            {{ $resCode[1] + $resCode[3] + $resCode[9] + $resCode[8] / 2 }}
+                                            {{ $resCode[1] + $resCode[3] + $resCode[9] + $resCode[8]}}
                                         </td>
                                         {{-- @dd($resCode[8]); --}}
-                                        <td class="text-center" id="{{ $emp->emp_id }}['absent']">{{ $resCode[2] }}
+                                        <td class="text-center" id="{{ $emp->emp_id }}['absent']">{{ $resCode[2] + $resCode[11] }}
                                         </td>
                                         <td class="text-center" id="{{ $emp->emp_id }}['halfday']">{{ $resCode[8] }}
                                         </td>
@@ -149,13 +147,13 @@
                                         </td>
                                         <td class="text-center" id="{{ $emp->emp_id }}['overtime']">{{ $resCode[9] }}
                                         </td>
-                                        <td class="text-center" id="{{ $emp->emp_id }}['fine']">{{ $resCode[8] / 2 }}</td>
-                                        <td class="text-center" id="{{ $emp->emp_id }}['total']">{{ $resCode[1] }}</td>
+                                        <td class="text-center" id="{{ $emp->emp_id }}['fine']">{{ $resCode[8] }}</td>
+                                        <td class="text-center" id="{{ $emp->emp_id }}['total']">{{ $resCode[1] + $resCode[3] + $resCode[9] + $resCode[10] + ($resCode[8] / 2) }}</td>
                                         <td class="text-center">
                                             <div class="btn btn-light btn-icon btn-sm" id="calenderbtn"
                                                 data-bs-toggle="tooltip" data-original-title="View">
 
-                                                @if ($resCode[1] + $resCode[3] + $resCode[9] + $resCode[8] / 2 > 0)
+                                                @if (($resCode[1] + $resCode[3] + $resCode[9] + $resCode[8] / 2) > 0)
                                                     <a href="{{ route('attendance.byemployee', [$emp->emp_id]) }}">
                                                         <i class="feather feather-eye"></i>
                                                     </a>

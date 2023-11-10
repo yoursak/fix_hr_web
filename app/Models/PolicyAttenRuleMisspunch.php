@@ -29,14 +29,14 @@ class PolicyAttenRuleMisspunch extends Model
 {
 	protected $table = 'policy_atten_rule_misspunch';
 
-	protected $casts = [
-		'switch_is' => 'bool',
-		'occurance_is' => 'int',
-		'occurance_count' => 'int',
-		'occurance_hr' => 'int',
-		'occurance_min' => 'int',
-		'absent_is' => 'int'
-	];
+	// protected $casts = [
+	// 	'switch_is' => 'bool',
+	// 	'occurance_is' => 'int',
+	// 	'occurance_count' => 'int',
+	// 	'occurance_hr' => 'int',
+	// 	'occurance_min' => 'int',
+	// 	'absent_is' => 'int'
+	// ];
 
 	protected $fillable = [
 		'switch_is',

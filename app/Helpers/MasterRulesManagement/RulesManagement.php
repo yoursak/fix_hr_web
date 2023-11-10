@@ -571,21 +571,53 @@ class RulesManagement
     // {
 
     // }
+    static public function RoleName($ID)
+    {
 
+        $check = DB::table('policy_setting_role_create')->where('id', $ID)->first();
+
+        if ($check != null) {
+            return [$check];
+        } else {
+            return [0];
+        }
+    }
 
     // Upcoming Approval-Management SettingUpdated
     // 0 index get All Details
-    static public function ApprovalGetDetails($approvalTypeID,$RoleID)
+    static public function ApprovalGetDetails($approvalTypeID)
     {
         // StaticApprovalName ApprovalManagementCycle
         $AttendanceApproval = DB::table('approval_management_cycle')->where('business_id', self::allValueGet()[5])
             ->where('approval_type_id', $approvalTypeID)
-            ->whereJsonContains('role_id',$RoleID)
             ->first();
+        // Checking Approval Cycle Type like Sequential ,Parallel
+
+        // else {
+        //     $cycleType = 1;
+        // }
+        // || $CycleType->cycle_type != null
+
         if ($AttendanceApproval != null) {
-            return [$AttendanceApproval, 0, 0];
+            $CycleType = DB::table('approval_management_cycle')->where('business_id', self::allValueGet()[5])->where('cycle_type', $AttendanceApproval->cycle_type)->select('cycle_type')->first();
+            $cycleType = 2;
+            if ($CycleType->cycle_type != null) {
+                $cycleType = $CycleType->cycle_type;
+            }
+            return [$AttendanceApproval, $cycleType, 0];
         } else {
             return [0, 0, 0]; //off or false case
+        }
+    }
+    // Current Status Leave Approval Checking Set
+    static public function CheckLeaveApprovalStatus($primaryID, $bID, $findRoleID)
+    {
+        $findRole = DB::table('request_leave_list')->where('id', $primaryID)->where('business_id', $bID)->select('approved_by_status', 'approved_by_emp_id', 'approved_by_role_id')->first();
+
+        if ($findRole != null) {
+            return [$findRole];
+        } else {
+            return [0]; //off or false case
         }
     }
 
@@ -602,6 +634,35 @@ class RulesManagement
         }, $nextMonth);
     }
 
+    // 
+    static public function FinalRequestStatusSubmitFilterValue($ID, $ApprovalType)
+    {
+        $statusCounts = DB::table('approval_status_list')
+            ->where('business_id', self::allValueGet()[5])
+            ->where('all_request_id', $ID)
+            ->where('status',2)
+            ->where('approval_type_id', $ApprovalType)
+            ->select('status')
+            ->get();
+
+        $maxStatusValue = 0;
+
+        if ($statusCounts->isNotEmpty()) {
+            // If there is at least one row, set $maxStatusValue to 2
+            $maxStatusValue = 2;
+        } else {
+            // If there are no rows, set $maxStatusValue to 1
+            $maxStatusValue = 1;
+        }
+        // $maxStatusValue = $statusCounts->firstWhere('count', 2) ? 2 : 1;
+
+        //  dd($maxStatusValue, $count);  
+        if ($maxStatusValue != null) {
+            return [$maxStatusValue];
+        } else {
+            return [0];
+        }
+    }
 
 
 

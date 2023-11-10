@@ -52,6 +52,8 @@ class PersonalEmployeeDetails extends JsonResource
             'branch_name' => $this->branch_name ?? '',
             'depart_name' => $this->depart_name ?? '',
             'desig_name' => $this->desig_name ?? '',
+            'emp_shift_start' => $this->shift_start ?? '',
+            'emp_shift_end' => $this->shift_end ?? '',
         ];
 
 

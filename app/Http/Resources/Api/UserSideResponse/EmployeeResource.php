@@ -38,6 +38,8 @@ class EmployeeResource extends JsonResource
             'emp_shift_name' => $this->name ?? '',
             'emp_attendance_method_id' => $this->emp_attendance_method ?? '',
             'emp_attendance_method_name' => $this->method_name ?? '',
+            'emp_shift_start' => $this->shift_start ?? '',
+            'emp_shift_end' => $this->shift_end ?? '',
             'emp_status' => $this->emp_status ?? '',
             'emp_profile_photo' => $this->profile_photo ?? '',
             'created_at' => $this->created_at ?? '',

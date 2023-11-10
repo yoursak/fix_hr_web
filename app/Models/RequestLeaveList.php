@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class RequestLeaveList
+ * Class 	
  * 
  * @property int $id
  * @property string|null $business_id
@@ -34,28 +34,29 @@ class RequestLeaveList extends Model
 {
 	protected $table = 'request_leave_list';
 
-	protected $casts = [
-		'leave_type' => 'bool',
-		'leave_category' => 'bool',
-		'shift_type' => 'bool',
-		'from_date' => 'datetime',
-		'to_date' => 'datetime',
-		'days' => 'int',
-		'status' => 'bool'
-	];
+	// protected $casts = [
+	// 	'leave_type' => 'bool',
+	// 	'leave_category' => 'bool',
+	// 	'shift_type' => 'bool',
+	// 	'from_date' => 'datetime',
+	// 	'to_date' => 'datetime',
+	// 	'days' => 'int',
+	// 	'status' => 'bool'
+	// ];
 
-	protected $fillable = [
-		'business_id',
-		'emp_id',
-		'emp_mobile_no',
-		'leave_type',
-		'leave_category',
-		'shift_type',
-		'from_date',
-		'to_date',
-		'days',
-		'reason',
-		'remark',
-		'status'
-	];
+	// protected $fillable = [
+	// 	'business_id',
+	// 	'emp_id',
+	// 'runtime_cycle_update',
+	// 	'emp_mobile_no',
+	// 	'leave_type',
+	// 	'leave_category',
+	// 	'shift_type',
+	// 	'from_date',
+	// 	'to_date',
+	// 	'days',
+	// 	'reason',
+	// 	'remark',
+	// 	'status'
+	// ];
 }

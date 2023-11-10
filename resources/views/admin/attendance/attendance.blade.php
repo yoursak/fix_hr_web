@@ -106,7 +106,7 @@
             $nss = new App\Helpers\Central_unit();
             $EmpID = $nss->EmpPlaceHolder();
             $Count = $centralUnit->AttendanceGetCount();
-
+// dd($Count);
             // dd($Count);
             // dd($Count[4]);
 
@@ -288,7 +288,7 @@
                                             <th class="border-bottom-0">Status</th>
                                             <th class="border-bottom-0">Date</th>
                                             <th class="border-bottom-0">Punch In</th>
-                                            <th class="border-bottom-0">Atten-Mode</th>
+                                            {{-- <th class="border-bottom-0">Atten-Mode</th> --}}
                                             <th class="border-bottom-0">Punch Out</th>
                                             <th class="border-bottom-0">Working Hour</th>
                                             <th class="border-bottom-0">Late By</th>
@@ -391,8 +391,8 @@
                                                         class="badge badge-{{ $badgeColors[$status] }}-light">{{ $statusLabels[$status] }}</span>
                                                 </td>
                                                 <td>{{ $item->punch_date }}</td>
-                                                <td><?= $ruleMange->Convert24To12($item->punch_in_time) ?></td>
-                                                <td>
+                                                <td><?= $ruleMange->Convert24To12($item->punch_in_time) ?> </td>
+                                                {{-- <td>
                                                     @if ($item->marked_in_mode == 1)
                                                         <span class="">QR Code</span>
                                                     @endif
@@ -411,10 +411,10 @@
                                                     @if ($item->marked_out_mode == 3)
                                                         <span class=""> | Selfie</span>
                                                     @endif
-                                                </td>
+                                                </td> --}}
                                                 <td><?= $item->emp_today_current_status == '2' ? $ruleMange->Convert24To12($item->punch_out_time) : '' ?>
                                                 </td>
-                                                <td><?= $item->total_working_hour !== null && $item->total_working_hour != 'undefined' ? date('H:i', strtotime($item->total_working_hour)) . ' Min.' : '' ?>
+                                                <td><?= $item->emp_today_current_status == '2'? ($item->total_working_hour !== null && $item->total_working_hour != 'undefined' ? date('H:i', strtotime($item->total_working_hour)) . ' Min.' : ''): '' ?>
                                                 </td>
 
                                                 <td>{{ $lateBy }}</td>
@@ -462,6 +462,8 @@
                                                             data-punchqrmode='<?= $item->active_qr_mode ?>'
                                                             data-shiftstart='<?= $item->shift_start ?>'
                                                             data-shiftend='<?= $item->shift_end ?>'
+                                                            data-attendance_status='<?= $item->attendance_status ?>'
+                                                            data-emp_today_current_status='<?= $item->emp_today_current_status ?>'
                                                             onclick="showPresentModal(this)">
                                                             <i class="feather feather-eye" data-bs-toggle="tooltip"
                                                                 data-original-title="View"></i>
@@ -530,9 +532,9 @@
                                             <div class="col-4">
                                                 <div class="chart-circle chart-circle-md rounded-circle" data-value="100"
                                                     data-thickness="6" data-color="#0dcd94">
-                                                    <div class="chart-circle-value text-muted"
-                                                        style="border:5px solid #0DCD94; border-radius: 50px;                                                    ">
-                                                        09:00 hrs</div>
+                                                    <div class="chart-circle-value text-muted" id="modalWorkingHr"
+                                                        style="border:5px solid #0DCD94; border-radius: 50px;                                                     ">
+                                                        </div>
                                                 </div>
                                             </div>
                                             <div class="col-4">
@@ -564,11 +566,8 @@
                                         <a class="btn btn-green btn-block text-white mt-5">Approve</a>
                                     </div> --}}
                                     </div>
-
                                 </div>
-
                                 <div class="col-xl-6">
-
                                     <div class="col-sm-12">
                                         <div class="">
                                             <h4 class="my-5">Timeline</h4>
@@ -628,7 +627,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer PresentModalFooter">
                             <a href="javascript:void(0);" class="btn btn-outline-primary"
                                 data-bs-dismiss="modal">close</a>
                             <button href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal"
@@ -937,6 +936,16 @@
                 // var attendance_shift_type_items_break_min
                 var punchInSelfieV = $(context).data('punchinselfie');
                 var punchOutSelfieV = $(context).data('punchoutselfie');
+                var attendancestatus = $(context).data('attendance_status');
+                var empTodayCurrentStatus = $(context).data('emp_today_current_status');
+                console.log("empTodayCurrentStatus "+empTodayCurrentStatus)
+                if (attendancestatus == 0) {
+                    $('.PresentModalFooter').removeClass('d-none');
+                    
+                } else {
+                    $('.PresentModalFooter').addClass('d-none');
+                    
+                }
                 if (punchQrMode == 0) {
                     var imageOutUrl = '/upload_image/' + punchOutSelfieV;
                     var imageInUrl = '/upload_image/' + punchInSelfieV;
@@ -955,10 +964,10 @@
                         $('#punchOutSelfieId').css('background-image', 'url(' + imageOutUrl + ')');
                         $('#fullOutTimeImage').attr('src', imageOutUrl);
                     }
-
+                    
                 }
-
-
+                
+                
                 var intimeWithoutSeconds = inTime.split(":").slice(0, 2).join(":"); // Remove the seconds
                 var outtimeWithoutSeconds = outTime.split(":").slice(0, 2).join(":"); // Remove the seconds
                 var overtimeWithoutSeconds = addtimesSecond ? addtimesSecond.split(":").slice(0, 2).join(":") : '';
@@ -966,9 +975,11 @@
                 var punchOutAtModel = convert24To12(outTime);
                 $('#puchInAt').html(punchInAtModel);
                 $('#modalPunchIn').val(intimeWithoutSeconds);
-                $('#modalPunchOut').val(outtimeWithoutSeconds);
                 $('#punchOutAt').html(punchOutAtModel);
-                $('#modalWorkingHr').html(twh);
+                empTodayCurrentStatus == 2 ? $('#modalPunchOut').val(outtimeWithoutSeconds): '';
+                empTodayCurrentStatus == 2 ? $('#modalWorkingHr').html(twh): '';
+
+                // $('#modalWorkingHr').html(twh);
                 $('#inLocation').html(inLoc);
                 $('#punchOutLocation').html(outLoc);
                 $('#modalBreakTime').html(breakMin);

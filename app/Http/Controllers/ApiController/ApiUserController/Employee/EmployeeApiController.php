@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\admin\LoginAdmin;
 // use App\Models\employee\LoginEmployee;
 use Illuminate\Support\Facades\DB;
-// /public_html/app/Models/admin    
+// /public_html/app/Models/admin
 use App\Helpers\ReturnHelpers;
 use App\Helpers\ApiResponse;
 use App\Models\LoginEmployee;
@@ -130,7 +130,20 @@ class EmployeeApiController extends Controller
     {
         $business_id = $request->business_id;
         $emp_id = $request->emp_id;
-
+        $now = DB::table('employee_personal_details')
+            ->join('policy_attendance_shift_settings', 'policy_attendance_shift_settings.id', '=', 'employee_personal_details.emp_shift_type')
+            ->where('employee_personal_details.emp_id', $emp_id)
+            ->where('employee_personal_details.business_id', $business_id)
+            ->select('policy_attendance_shift_settings.shift_type')
+            ->first(); // Use first() to retrieve a single row
+            $now = (int)$now->shift_type;
+        $item = DB::table('employee_personal_details')
+            ->where('employee_personal_details.emp_id', $emp_id)
+            ->where('employee_personal_details.business_id', $business_id)
+            ->select('emp_rotational_shift_type_item')
+            ->first(); 
+            $item = (int) $item->emp_rotational_shift_type_item;
+            // dd($item);
         $emp = DB::table('employee_personal_details')
             ->join('static_employee_join_gender_type as employeegender', 'employee_personal_details.emp_gender', '=', 'employeegender.id')
             ->join('static_employee_join_emp_type as employeetype', 'employee_personal_details.employee_type', '=', 'employeetype.type_id')
@@ -142,20 +155,34 @@ class EmployeeApiController extends Controller
             ->join('static_attendance_methods as am1', 'employee_personal_details.emp_attendance_method', '=', 'am1.id')
             ->join('policy_attendance_shift_settings as attendanceShift', 'employee_personal_details.emp_shift_type', '=', 'attendanceShift.id')
             ->join('static_attendance_shift_type', 'attendanceShift.shift_type', '=', 'static_attendance_shift_type.id')
+            ->join('policy_attendance_shift_type_items', 'attendanceShift.id', '=', 'policy_attendance_shift_type_items.attendance_shift_id')
             ->where('employee_personal_details.emp_id', $emp_id)
             ->where('employee_personal_details.business_id', $business_id)
-            ->select('employee_personal_details.*', 'employeegender.gender_type as gender', 'policypreference.policy_name', 'mem.method_name', 'mem.method_switch', 'mem.method_name', 'mem.leave_policy_ids_list', 'mem.holiday_policy_ids_list', 'mem.weekly_policy_ids_list', 'mem.shift_settings_ids_list', 'employeetype.emp_type as emp_type_name', 'am1.method_name as attendance_method_name', 'static_attendance_shift_type.name as attendance_shift_name', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name')
+            ->where(function ($query) use ($now, $item) {
+                if ($now == 1) {
+                    //fix
+                    // $query->where('policy_attendance_shift_settings.shift_type', $now);
+                    $query->where('attendanceShift.shift_type', $now);
+                }
+                if ($now == 2) {
+                    //rotation
+                    $query->where('attendanceShift.shift_type', $now)->where('policy_attendance_shift_type_items.id', $item);
+                }
+                if ($now == 3) {
+                    //open
+                    $query->where('attendanceShift.shift_type', $now);
+                }
+            })
+            ->select('employee_personal_details.*', 'employeegender.gender_type as gender', 'policypreference.policy_name', 'mem.method_name', 'mem.method_switch', 'mem.method_name', 'mem.leave_policy_ids_list', 'mem.holiday_policy_ids_list', 'mem.weekly_policy_ids_list', 'mem.shift_settings_ids_list', 'employeetype.emp_type as emp_type_name', 'am1.method_name as attendance_method_name', 'static_attendance_shift_type.name as attendance_shift_name', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name', 'policy_attendance_shift_type_items.shift_start', 'policy_attendance_shift_type_items.shift_end')
             ->first();
-        // dd($emp);   
+        // dd($emp);
 
         if (isset($emp)) {
-            // return $emp;
-            // return response()->json(['result' => [$emp], 'status' => true]);
-
             return ReturnHelpers::jsonApiReturn(PersonalEmployeeDetails::collection([$emp])->all());
         }
         return response()->json(['result' => [], 'status' => false], 404);
     }
+    
     public function update(Request $request, $emp_id)
     {
         $emp = EmployeePersonalDetail::where('emp_id', $emp_id)->first();

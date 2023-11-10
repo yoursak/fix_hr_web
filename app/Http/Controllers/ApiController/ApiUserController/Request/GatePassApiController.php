@@ -8,6 +8,7 @@ use App\Models\EmployeePersonalDetail;
 use App\Models\RequestGatepassList;
 use App\Models\BranchList;
 use App\Models\DepartmentList;
+use App\Models\PolicyAttenRuleGatepass;
 use App\Models\StaticGoingThroughType;
 use App\Models\DesignationList;
 use App\Http\Resources\Api\UserSideResponse\GatepassRequestResources;
@@ -31,34 +32,57 @@ class GatePassApiController extends Controller
     {
         $business_id = $request->business_id;
         $emp_id = $request->emp_id;
+        $requestDate = Carbon::createFromFormat('d-m-Y', $request->date);
+        $currentYear = $requestDate;
+        $currentMonth = $requestDate;
         if ($business_id != null && $emp_id != null) {
-            // return 'Ja Raha Hai...';
-            $emp = EmployeePersonalDetail::where('business_id', $business_id)
-                ->where('emp_id', $emp_id)
-                ->first();
-            if ($emp) {
-                $requestDate = Carbon::createFromFormat('d-m-Y', $request->date);
-                $data = new RequestGatepassList();
-                $data->business_id = $emp->business_id;
-                $data->emp_id = $request->emp_id;
-                $data->source = $request->source;
-                $data->date = $requestDate->toDateString();
-                $data->destination = $request->destination;
-                $data->going_through = $request->going_through;
-                $data->in_time = $request->in_time;
-                $data->out_time = $request->out_time;
-                $data->reason = $request->reason;
-                $data->status = 0;
-                if ($data->save()) {
-                    return ReturnHelpers::jsonApiReturnSecond(GatepassRequestResources::collection([RequestGatepassList::find($data->id)])->all(), 1); // case 1 when the gatepass date store
+            $checkAutomation = PolicyAttenRuleGatepass::where('business_id', $business_id)->first();
+            if ($checkAutomation->switch_is == 1) {
+                $emp = EmployeePersonalDetail::where('business_id', $business_id)
+                    ->where('emp_id', $emp_id)
+                    ->first();
+                if ($emp) {
+                    $checkOccurrence = RequestGatepassList::where('emp_id', $emp_id)
+                    ->where('business_id', $business_id)
+                    ->whereYear('date', '=', $currentYear)
+                    ->whereMonth('date', '=', $currentMonth)
+                    ->select('id')
+                    ->count();
+                    // dd(gettype($checkAutomation->occurance_count), gettype($checkOccurrence));
+                        // dd($checkOccurrence, $checkAutomation->occurance_count);
+                    if ($checkAutomation->occurance_count > $checkOccurrence) {
+                        $requestDate = Carbon::createFromFormat('d-m-Y', $request->date);
+                        $data = new RequestGatepassList();
+                        $data->business_id = $emp->business_id;
+                        $data->emp_id = $request->emp_id;
+                        $data->source = $request->source;
+                        $data->date = $requestDate->toDateString();
+                        $data->destination = $request->destination;
+                        $data->going_through = $request->going_through;
+                        $data->in_time = $request->in_time;
+                        $data->out_time = $request->out_time;
+                        $data->reason = $request->reason;
+                        $data->status = 0;
+                        if ($data->save()) {
+                            return ReturnHelpers::jsonApiReturnSecond(GatepassRequestResources::collection([RequestGatepassList::find($data->id)])->all(), 1); // case 1 when the gatepass date store
+                        } else {
+                            return response()->json(['result' => [], 'case' => 2, 'status' => true]); // case 2 when the gatepass record not store
+                        }
+                    } else {
+                        // return 'case 3 this limit above exit';
+                        return response()->json(['result' => [], 'case' => 3, 'status' => false]); // case 4 this limit above exit
+                    }
                 } else {
-                    return response()->json(['result' => [], 'case' => 2, 'status' => true]); // case 2 when the gatepass record not store
+                    // return 'case 4 employee not found';
+                    return response()->json(['result' => [], 'case' => 4, 'status' => false], 404); // case 4 when the employee not found
                 }
             } else {
-                return response()->json(['result' => [], 'case' => 3, 'status' => false], 404); // case 3 when the employee not found
+                // return 'case 5 gatepass switch off';
+                return response()->json(['result' => [], 'case' => 5, 'status' => false]); // case 5 gatepass switch off
             }
         } else {
-            return response()->json(['result' => [], 'case' => 4, 'status' => false], 404); // case 4 when the rquired field is null
+            // return 'case 6 when the rquired field is null';
+            return response()->json(['result' => [], 'case' => 6, 'status' => false], 404); // case 6 when the rquired field is null
         }
     }
 
@@ -75,11 +99,16 @@ class GatePassApiController extends Controller
                 ->where('business_id', $business_id)
                 ->first();
             if ($emp) {
-                $gatepass = RequestGatepassList::where('emp_id', $emp_id)
-                    ->where('business_id', $business_id)
-                    ->whereRaw('YEAR(date) = YEAR(?) AND MONTH(date) = MONTH(?)', [$requestDate, $requestDate])
-                    ->orderBy('id', 'desc')
+                $gatepass = RequestGatepassList::join('static_going_through_type', 'static_going_through_type.id', '=', 'request_gatepass_list.going_through')
+                    ->where('request_gatepass_list.emp_id', $emp_id)
+                    ->where('request_gatepass_list.business_id', $business_id)
+                    ->whereYear('request_gatepass_list.date', '=', $requestDate->year)
+                    ->whereMonth('request_gatepass_list.date', '=', $requestDate->month)
+                    ->select('request_gatepass_list.*', 'static_going_through_type.going_through as going_through_name')
+                    ->orderBy('request_gatepass_list.id', 'desc')
                     ->get();
+                // return $gatepass;
+                // return $gatepass;
                 if (count($gatepass) != 0) {
                     return ReturnHelpers::jsonApiReturnSecond(GatepassRequestResources::collection($gatepass)->all(), 1); // case 1 when the gatepass date find
                 } else {
@@ -164,7 +193,7 @@ class GatePassApiController extends Controller
         $data = $data->where('status', '=', 0)->first();
         return $data;
         if ($data) {
-            $data->delete(); 
+            $data->delete();
             return response()->json(['result' => true, 'status' => true]);
         } else {
             return response()->json(['result' => [], 'status' => false], 404);

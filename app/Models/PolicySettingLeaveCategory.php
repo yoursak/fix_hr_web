@@ -30,11 +30,11 @@ class PolicySettingLeaveCategory extends Model
 {
 	protected $table = 'policy_setting_leave_category';
 
-	protected $casts = [
-		'leave_policy_id' => 'int',
-		'days' => 'int',
-		'carry_forward_limit' => 'int'
-	];
+	// protected $casts = [
+	// 	'leave_policy_id' => 'int',
+	// 	'days' => 'int',
+	// 	'carry_forward_limit' => 'int'
+	// ];
 
 	protected $fillable = [
 		'leave_policy_id',

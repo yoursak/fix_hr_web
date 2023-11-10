@@ -81,7 +81,69 @@
             box-shadow: 0 0 15px -2px #8c8c96;
         }
 
+        /* .halfday-status {
+                color: #8fb31d;
+            }
+
+            .halfday-status-badge {
+                color: #8fb31d;
+                font-size: 11px;
+                font-weight: bolder;
+                padding: 2px;
+                background-color: #8fb31d30;
+            }
+
+            .holiday-status {
+                color: purple;
+            }
+
+            .holiday-status-badge {
+                color: purple;
+                font-size: 11px;
+                font-weight: bolder;
+                padding: 2px;
+                background-color: rgba(128, 0, 128, 0.105);
+            }
+
+            .mispunch-status {
+                color: orange;
+            }
+
+            .mispunch-status-badge {
+                color: orange;
+                font-size: 11px;
+                font-weight: bolder;
+                padding: 2px;
+                background-color: rgba(255, 166, 0, 0.121);
+            }
+
+            .weekoff-status {
+                color: gray;
+            }
+
+            .weekoff-status-badge {
+                color: gray;
+                font-size: 11px;
+                font-weight: bolder;
+                padding: 2px;
+                background-color: rgba(128, 128, 128, 0.099);
+            }
+
+            .leave-status {
+                color: brown;
+            }
+
+            .leave-status-badge {
+                color: brown;
+                font-size: 11px;
+                font-weight: bolder;
+                padding: 2px;
+                background-color: rgba(165, 42, 42, 0.155);
+            } */
         /* @media print{@page {size: landscape}} */
+        .abc {
+            color: #0e501f3e;
+        }
     </style>
 @endsection
 
@@ -112,7 +174,7 @@
         </div>
         <div class="page-rightheader ms-md-auto">
             <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-                <div class="btn-list">
+                {{-- <div class="btn-list">
                     <a onclick="window.print()" class="btn btn-primary me-3">Print Page</a>
                     <button class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title=""
                         data-bs-original-title="E-mail"> <i class="feather feather-mail"></i> </button>
@@ -120,7 +182,7 @@
                         data-bs-original-title="Contact"> <i class="feather feather-phone-call"></i> </button>
                     <button class="btn btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" title=""
                         data-bs-original-title="Info"> <i class="feather feather-info"></i> </button>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
@@ -136,7 +198,9 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <p class="form-label">Branch</p>
-                                <select name='country-dd' id="country-dd" class="form-control" required>
+                                <select name='country-dd' id="country-dd" class="form-control"
+                                    data-nodays='{{ date('t') }}' data-modays='{{ date('d') }}'
+                                    data-currentMonth='{{ date('m') }}' data-currentYear='{{ date('Y') }}' required>
                                     <option value="">--- Select Branch ---</option>
                                     @foreach ($Branch as $data)
                                         <option value="{{ $data->branch_id }}">
@@ -179,30 +243,64 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-5">
+                                    <div class="form-group">
+                                        <p class="form-label">Year</p>
+                                        <div class="form-group mb-3">
+                                            <select name="year" id="yearFilter" class="form-control" required>
+                                                <option value="">--- Year ---</option>
+                                                @for ($year = date('Y'); $year >= date('Y') - 20; $year--)
+                                                    <option value="{{ $year }}">{{ $year }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-7">
+                                    <div class="form-group">
+                                        <p class="form-label">Month</p>
+                                        <div class="form-group mb-3">
+                                            <select name="month" id="monthFilter" class="form-control" required>
+                                                <option value="">--- Month ---</option>
+                                                @for ($month = 1; $month <= 12; $month++)
+                                                    <option value="{{ $month }}">
+                                                        {{ date('F', mktime(0, 0, 0, $month, 1)) }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex mb-6 mt-5">
+                    <div class="d-flex my-2">
                         <div class="me-3">
                             <label class="form-label">Note:</label>
                         </div>
                         <div>
-                            <span class="badge badge-success-light me-2"><i
-                                    class="feather feather-check-circle text-success"></i> ---&gt; Present</span>
-                            <span class="badge badge-danger-light me-2"><i class="feather feather-x-circle text-danger"></i>
+                            <span class="present-status-badge me-2"><i
+                                    class="feather feather-check-circle present-status"></i> ---&gt; Present</span>
+                            <span class="absent-status-badge me-2"><i class="feather feather-x-circle absent-status"></i>
                                 ---&gt; Absent</span>
-                            <span class="badge badge-warning-light me-2"><i class="fa fa-star text-warning"></i> ---&gt;
-                                Holiday</span>
-                            <span class="badge badge-orange-light me-2"><i class="fa fa-adjust text-orange"></i> ---&gt;
+
+                            <span class="halfday-status-badge me-2"><i class="fa fa-adjust halfday-status"></i> ---&gt;
                                 Half Day</span>
-                            <span class="badge badge-orange-light me-2"><i class="fa fa-history text-orange"></i> ---&gt;
-                                Mis-punch</span>
-                            <span class="badge badge-primary-light me-2"><i class="fa fa-calendar text-primary"></i>
+                            <span class="weekoff-status-badge me-2"><i class="fa fa-calendar-check-o weekoff-status"></i>
                                 ---&gt;
                                 Week Off</span>
-                            <span class="badge badge-danger-light me-2"><i class="fa fa-calendar-minus-o text-danger"></i>
+                            <span class="holiday-status-badge me-2"><i class="fa fa-star holiday-status"></i> ---&gt;
+                                Holiday</span>
+                            <span class="leave-status-badge me-2"><i class="fa fa-certificate leave-status"></i>
                                 ---&gt;
                                 Leave</span>
+                            <span class="mispunch-status-badge me-2"><i class="fa fa-history mispunch-status"></i> ---&gt;
+                                Mis-punch</span>
+
                         </div>
                     </div>
                     <div class="table-responsive hr-attlist">
@@ -301,26 +399,23 @@
                                                                     @if ($resCode[0] == 1 || $resCode[0] == 3 || $resCode[0] == 9)
                                                                         <?php $present++; ?>
                                                                         <span
-                                                                            class="feather feather-check-circle text-success "></span>
+                                                                            class="feather feather-check-circle present-status"></span>
                                                                     @elseif ($resCode[0] == 2)
                                                                         <span
-                                                                            class="feather feather-x-circle text-danger"></span>
+                                                                            class="feather feather-x-circle absent-status"></span>
                                                                     @elseif ($resCode[0] == 6)
-                                                                        <span class="fa fa-star text-warning"
-                                                                            data-bs-toggle="tooltip"
-                                                                            data-bs-placement="top" title="holiday"
-                                                                            data-bs-original-title="Sunday"
-                                                                            aria-label="Sunday"></span>
+                                                                        <i class="fa fa-star holiday-status"></i>
                                                                     @elseif ($resCode[0] == 4)
-                                                                        <i class="fa fa-history text-orange"></i>
+                                                                        <i class="fa fa-history mispunch-status"></i>
                                                                     @elseif ($resCode[0] == 7)
-                                                                        <i class="fa fa-calendar text-primary"></i>
+                                                                        <i
+                                                                            class="fa fa-calendar-check-o weekoff-status"></i>
                                                                     @elseif ($resCode[0] == 10 || $resCode[0] == 11)
-                                                                        <i class="fa fa-calendar-minus-o text-danger"></i>
+                                                                        <i class="fa fa-certificate leave-status"></i>
                                                                     @elseif ($resCode[0] == 8)
                                                                         <?php $halfday++; ?>
                                                                         <span class=""><i
-                                                                                class="fa fa-adjust text-orange"></i></span>
+                                                                                class="fa fa-adjust halfday-status"></i></span>
                                                                     @else
                                                                         <span class=""> </span>
                                                                     @endif
@@ -468,8 +563,8 @@
                     </div>
                     <div class="modal-footer">
                         <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-dismiss="modal">close</a>
-                        <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#editmodal" data-bs-dismiss="modal">Edit</a>
+                        {{-- <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#editmodal" data-bs-dismiss="modal">Edit</a> --}}
                     </div>
                 </div>
             </div>
@@ -514,10 +609,23 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
         <script>
             $(document).ready(function() {
-                $('#country-dd, #state-dd, #desig-dd').change(function() {
+                $('#country-dd, #state-dd, #desig-dd, #yearFilter, #monthFilter').change(function() {
                     var branchId = $('#country-dd').val();
                     var departmentId = $('#state-dd').val();
                     var designationId = $('#desig-dd').val();
+                    var month = $('#monthFilter').val();
+                    var year = $('#yearFilter').val();
+                    var days = $('#country-dd').data('nodays'); // number of days in month
+                    var mdays = $('#country-dd').data('modays'); //till today
+                    var currentYear = $('#country-dd').data('currentYear'); //current year
+                    var currentMonth = $('#country-dd').data('currentMonth'); //current month
+                    var resBody = document.getElementById("resBody");
+                    var tillCount = year == currentYear && month == currentMonth ? mdays : days;
+
+
+                    resBody.innerHTML = '';
+                    resBody.innerHTML = '<div class="text-center"><h4>Fetching Data....</h4></div>';
+
                     $.ajax({
                         type: "POST",
                         url: "{{ url('admin/attendance/monthly_attendance_calculation') }}",
@@ -525,72 +633,83 @@
                             _token: '{{ csrf_token() }}',
                             branch_id: branchId,
                             department_id: departmentId,
-                            designation_id: designationId
+                            designation_id: designationId,
+                            'month': month,
+                            'year': year
                         },
                         success: function(result) {
                             console.log(result);
 
-                            var resBody = document.getElementById("resBody");
+
                             resBody.innerHTML = '';
                             result[0].forEach(element => {
                                 var empID = element.emp_id;
-
+                                var present = 0;
+                                var halfday = 0;
+                                var day = 0;
                                 // Check if the employee ID exists in result[1]
                                 var newRow =
                                     '<tr>' +
                                     '<td>' +
                                     `<div class="d-flex">
-                                    <span class="avatar avatar-md brround me-3 rounded-circle" style="background-image: url('/employee_profile/` +
+                                            <span class="avatar avatar-md brround me-3 rounded-circle" style="background-image: url('/employee_profile/` +
                                     element.profile_photo + `')"></span>
-                                    <div class="me-3 mt-0 mt-sm-1 d-block">
-                                        <h6 class="mb-1 fs-14">` + element.emp_name + ' ' + (element.emp_mname !=
+                                            <div class="me-3 mt-0 mt-sm-1 d-block">
+                                                <h6 class="mb-1 fs-14">` + element.emp_name + ' ' + (element
+                                        .emp_mname !=
                                         null ? element.emp_mname : '') + ' ' + element
                                     .emp_lname + `</h6>
-                                        <p class="text-muted mb-0 fs-12">` + element.desig_name + `</p>
-                                    </div>
-                                </div>` +
+                                                    <p class="text-muted mb-0 fs-12">` + element.desig_name + `</p>
+                                                    </div>
+                                                    </div>` +
                                     '</td>';
 
                                 if (result[1][empID]) {
                                     result[1][empID].forEach(status => {
-                                        // console.log(status);
-                                        // var present = 0;
-                                        // var halfday = 0;
-                                        if (status === 1 || status === 3 || status === 9) {
-                                            newRow +='<td><div class="hr-listd"><span class="feather feather-check-circle text-success"></span></div></td>';
-                                            // present++;
-                                        } else if (status === 2) {
-                                            newRow +=
-                                                '<td><div class="hr-listd"><span class="feather feather-x-circle text-danger"></span></div></td>';
-                                        } else if (status === 6) {
-                                            newRow +=
-                                                '<td><div class="hr-listd"><span class="fa fa-star text-warning"></span></div></td>';
-                                        } else if (status === 4) {
-                                            newRow +=
-                                                '<td><div class="hr-listd"><i class="fa fa-history text-orange"></i></div></td>';
-                                        } else if (status === 7) {
-                                            newRow +=
-                                                '<td><div class="hr-listd"><i class="fa fa-calendar text-primary"></i></div></td>';
-                                        } else if (status === 10 || status === 11) {
-                                            newRow +=
-                                                '<td><div class="hr-listd"><i class="fa fa-calendar-minus-o text-danger"></i></div></td>';
-                                        } else if (status === 8) {
-                                            newRow +=
-                                                '<td><div class="hr-listd"><i class="fa fa-adjust text-orange"></i></div></td>';
-                                                // halfday++;
+
+                                        if (++day <= tillCount) {
+                                            if (status === 1 || status === 3 ||
+                                                status === 9) {
+                                                present++;
+                                                newRow +=
+                                                    '<td><div class="hr-listd"><span class="feather feather-check-circle text-success"></span></div></td>';
+                                            } else if (status === 2) {
+                                                newRow +=
+                                                    '<td><div class="hr-listd"><span class="feather feather-x-circle text-danger"></span></div></td>';
+                                            } else if (status === 6) {
+                                                newRow +=
+                                                    '<td><div class="hr-listd"><span class="fa fa-star holiday-status"></span></div></td>';
+                                            } else if (status === 4) {
+                                                newRow +=
+                                                    '<td><div class="hr-listd"><i class="fa fa-history mispunch-status"></i></div></td>';
+                                            } else if (status === 7) {
+                                                newRow +=
+                                                    '<td><div class="hr-listd"><i class="fa fa-calendar-check-o weekoff-status"></i></div></td>';
+                                            } else if (status === 10 || status ===
+                                                11) {
+                                                newRow +=
+                                                    '<td><div class="hr-listd"><i class="fa fa-certificate leave-status"></i></div></td>';
+                                            } else if (status === 8) {
+                                                newRow +=
+                                                    '<td><div class="hr-listd"><i class="fa fa-adjust halfday-status"></i></div></td>';
+                                                halfday++;
+                                            } else {
+                                                newRow +=
+                                                    '<td><div class="hr-listd"><i></i></div></td>';
+                                            }
                                         } else {
                                             newRow +=
                                                 '<td><div class="hr-listd"><i></i></div></td>';
                                         }
                                     });
-                                }   
+                                }
 
                                 newRow += `
                                 <td>
                                     <h6 class="mb-0">
-                                        <span class="text-primary">10</span>
+                                        <span class="text-primary">` + (present + (halfday / 2)) + `</span>
                                         <span class="my-auto fs-8 font-weight-normal text-muted">/</span>
-                                        <span>30</span>
+                                        <span>` + days + `</span>
                                     </h6>
                                 </td>
                             </tr>`;

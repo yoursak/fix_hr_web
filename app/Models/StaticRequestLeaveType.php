@@ -22,12 +22,12 @@ class StaticRequestLeaveType extends Model
 	public $incrementing = false;
 	public $timestamps = false;
 
-	protected $casts = [
-		'id' => 'int'
-	];
+	// protected $casts = [
+	// 	'id' => 'int'
+	// ];
 
-	protected $fillable = [
-		'id',
-		'leave_day'
-	];
+	// protected $fillable = [
+	// 	'id',
+	// 	'leave_day'
+	// ];
 }

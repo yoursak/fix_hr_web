@@ -39,7 +39,7 @@
                                 <div class="form-group ">
                                     <select id="openAddNewEmployeeMod" name="employee_type" class="form-control"
                                         required>
-                                        <<option value="" selected>Select Employee Type</option>
+                                        <option value="" selected>Select Employee Type</option>
                                             <option value="1">Regular Employee</option>
                                             <option value="2">Contractual Employee</option>
                                     </select>
@@ -362,7 +362,20 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Select Shift Type</label>
-                                                <select name="shift_type" id="shift_type_sd" aria-label="Type" onchange="selectShiftType(this.value)"
+                                                <select name="country-dd" id="country-dd" class="form-control" required>
+                                                    <option value="">Select Branch Name</option>
+                                                    @foreach ($shiftAttendance as $shiftset)
+                                                    <option   value="{{ $shiftset->attendance_id }}">
+                                                        {{ $shiftset->shift_type_name }} |
+                                                        {{ $shiftset->static_attendance_shift_type_name }}</option>
+                                                @endforeach
+                                                    {{-- @foreach ($Branch as $data)
+                                                        <option value="{{ $data->branch_id }}">
+                                                            {{ $data->branch_name }}
+                                                        </option>
+                                                    @endforeach --}}
+                                                </select>
+                                                {{-- <select name="shift_type" id="shift_type_sd" aria-label="Type" onchange="selectShiftType(this.value)"
                                                     class="form-control custom-select" data-placeholder="Select Type">
                                                     <option value="">Select Shift Type</option>
                                                     @foreach ($shiftAttendance as $shiftset)
@@ -370,12 +383,21 @@
                                                             {{ $shiftset->shift_type_name }} |
                                                             {{ $shiftset->static_attendance_shift_type_name }}</option>
                                                     @endforeach
-                                                </select>
+                                                </select> --}}
                                             </div>
 
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Select Rotational Type</label>
-                                                <select name="update_shift_type" id="shift_type_sd" aria-label="Type"
+                                                <select id="state-dd" name="department_id" class="form-control" required>
+                                                    <option value="">Select Deparment Name</option>
+                                                    @foreach ($Department as $data)
+                                                        <option value="{{ $data->depart_id }}">
+                                                            {{ $data->depart_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+            
+                                                {{-- <select name="update_shift_type" id="shift_type_sd" aria-label="Type"
                                                     class="update_shifttype_sddd form-control custom-select"
                                                     data-placeholder="Select Type">
                                                     <option value="">Select Rotational Type</option>
@@ -383,7 +405,7 @@
                                                         <option value="{{ $shiftset->attendance_id }}">
                                                             {{ $shiftset->shift_type_name }}</option>
                                                     @endforeach
-                                                </select>
+                                                </select> --}}
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">

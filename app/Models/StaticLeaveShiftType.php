@@ -21,7 +21,7 @@ class StaticLeaveShiftType extends Model
 	protected $table = 'static_leave_shift_type';
 	public $timestamps = false;
 
-	protected $fillable = [
-		'leave_shift_type'
-	];
+	// protected $fillable = [
+	// 	'leave_shift_type'
+	// ];
 }

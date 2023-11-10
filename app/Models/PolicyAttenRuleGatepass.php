@@ -29,14 +29,14 @@ class PolicyAttenRuleGatepass extends Model
 {
 	protected $table = 'policy_atten_rule_gatepass';
 
-	protected $casts = [
-		'switch_is' => 'int',
-		'occurance_is' => 'int',
-		'occurance_count' => 'int',
-		'occurance_hr' => 'int',
-		'occurance_min' => 'int',
-		'absent_is' => 'int'
-	];
+	// protected $casts = [
+	// 	'switch_is' => 'int',
+	// 	'occurance_is' => 'int',
+	// 	'occurance_count' => 'int',
+	// 	'occurance_hr' => 'int',
+	// 	'occurance_min' => 'int',
+	// 	'absent_is' => 'int'
+	// ];
 
 	protected $fillable = [
 		'switch_is',

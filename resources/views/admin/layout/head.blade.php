@@ -14,7 +14,7 @@
 <link href={{ asset('assets/plugins/bootstrap/css/bootstrap.css') }} rel="stylesheet" />
 
 <!-- STYLE CSS -->
-<link href={{ asset('assets/css/style.css?V=1.6') }} rel="stylesheet" />
+<link href={{ asset('assets/css/style.css?V=1.7') }} rel="stylesheet" />
 <link href={{ asset('assets/css/plugins.css') }} rel="stylesheet" />
 
 <!-- ANIMATE CSS -->

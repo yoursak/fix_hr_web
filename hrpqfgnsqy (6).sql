@@ -61,11 +61,41 @@ CREATE TABLE `approval_management_cycle` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Use Approval Manage Cycle showlist';
 
 INSERT INTO `approval_management_cycle` (`id`, `approval_type_id`, `business_id`, `branch_id`, `department_id`, `desgination_id`, `cycle_type`, `role_id`, `checked_status`, `initial_status`, `current_status`, `created_at`, `updated_at`) VALUES
-(25,	1,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	NULL,	1,	'[\"1\"]',	1,	0,	0,	'2023-11-05 11:07:44',	'2023-11-06 17:15:30'),
-(26,	2,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	NULL,	1,	'[\"1\",\"6\"]',	1,	0,	0,	'2023-11-05 11:34:43',	'2023-11-05 17:22:16');
+(28,	2,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	NULL,	1,	'[\"6\",\"1\",\"10\"]',	1,	0,	0,	'2023-11-09 16:01:16',	'2023-11-10 16:34:17'),
+(29,	1,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	NULL,	2,	'[\"1\"]',	1,	0,	0,	'2023-11-10 10:37:58',	'2023-11-10 16:08:04');
+
+DROP TABLE IF EXISTS `approval_status_list`;
+CREATE TABLE `approval_status_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `applied_cycle_type` tinyint(1) NOT NULL DEFAULT 2,
+  `business_id` longtext DEFAULT NULL,
+  `approval_type_id` bigint(20) DEFAULT NULL,
+  `all_request_id` bigint(20) DEFAULT NULL,
+  `role_id` varchar(255) DEFAULT NULL,
+  `emp_id` varchar(255) DEFAULT NULL,
+  `remarks` longtext DEFAULT NULL,
+  `status` tinyint(1) DEFAULT 0,
+  `prev_role_id` varchar(255) NOT NULL DEFAULT '0',
+  `current_role_id` varchar(255) NOT NULL DEFAULT '0',
+  `next_role_id` varchar(255) NOT NULL DEFAULT '0',
+  `clicked` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Use Approval Live Status Checking';
+
+INSERT INTO `approval_status_list` (`id`, `applied_cycle_type`, `business_id`, `approval_type_id`, `all_request_id`, `role_id`, `emp_id`, `remarks`, `status`, `prev_role_id`, `current_role_id`, `next_role_id`, `clicked`, `created_at`, `updated_at`) VALUES
+(156,	2,	'e3d64177e51bdff82b499e116796fe74',	2,	16,	'6',	'IT009',	'hero baano',	2,	'0',	'6',	'1',	1,	'2023-11-10 11:07:09',	'2023-11-10 11:07:09'),
+(157,	2,	'e3d64177e51bdff82b499e116796fe74',	2,	16,	'1',	'IT008',	'',	1,	'6',	'1',	'10',	1,	'2023-11-10 11:07:27',	'2023-11-10 11:07:27'),
+(158,	2,	'e3d64177e51bdff82b499e116796fe74',	2,	16,	'10',	'IT127',	'',	1,	'1',	'10',	'-1',	1,	'2023-11-10 11:08:48',	'2023-11-10 11:08:48'),
+(159,	2,	'e3d64177e51bdff82b499e116796fe74',	2,	15,	'6',	'IT009',	'asdf',	2,	'0',	'6',	'1',	1,	'2023-11-10 11:28:06',	'2023-11-10 11:28:06'),
+(160,	2,	'e3d64177e51bdff82b499e116796fe74',	2,	15,	'1',	'IT008',	'',	1,	'6',	'1',	'10',	1,	'2023-11-10 11:28:20',	'2023-11-10 11:28:20'),
+(161,	2,	'e3d64177e51bdff82b499e116796fe74',	2,	15,	'10',	'IT127',	'',	1,	'1',	'10',	'-1',	1,	'2023-11-10 11:28:37',	'2023-11-10 11:28:37'),
+(162,	2,	'e3d64177e51bdff82b499e116796fe74',	2,	6,	'6',	'IT009',	'',	1,	'0',	'6',	'1',	1,	'2023-11-10 11:37:43',	'2023-11-10 11:37:43'),
+(163,	2,	'e3d64177e51bdff82b499e116796fe74',	2,	5,	'6',	'IT009',	'afsdf',	2,	'0',	'6',	'1',	1,	'2023-11-10 11:44:58',	'2023-11-10 11:44:58');
 
 DROP TABLE IF EXISTS `attendance_list`;
 CREATE TABLE `attendance_list` (
@@ -161,13 +191,48 @@ INSERT INTO `attendance_list` (`id`, `working_from_method`, `method_auto`, `meth
 (222,	1,	0,	1,	3,	0,	0,	1,	0,	0,	1,	'68',	'2023-11-04',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'1',	'04-11-2023_be87efd9159e5ccabcd726011e17f620.jpg',	'12:32:48',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896944',	'81.6237068',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	6,	'IT009',	'2023-11-04 12:21:16',	'2023-11-04 17:51:16'),
 (224,	1,	0,	1,	3,	0,	0,	1,	0,	0,	1,	'68',	'2023-11-04',	'IT125',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'1',	'04-11-2023_af4e389fa13c22c621b0d034c981a564.jpg',	'12:34:16',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896591',	'81.6237173',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	'IT008',	'2023-11-04 12:18:05',	'2023-11-04 17:48:05'),
 (225,	1,	0,	1,	3,	0,	0,	1,	0,	0,	1,	'80',	'2023-11-04',	'IT008',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'1',	'04-11-2023_29c3058b24f3b86f53e47e33ae6fa2b4.jpg',	'12:38:52',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896588',	'81.6237162',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	6,	'IT009',	'2023-11-04 12:31:17',	'2023-11-04 18:01:17'),
-(227,	1,	0,	1,	1,	0,	1,	0,	0,	0,	0,	'68',	'2023-11-04',	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'1',	NULL,	'15:51:00',	NULL,	'Jay',	'21.111245',	'81.152525',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	0,	NULL,	'2023-11-04 18:33:04',	'2023-11-04 18:33:04'),
+(227,	1,	0,	1,	1,	0,	1,	0,	0,	0,	0,	'68',	'2023-11-04',	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	NULL,	'09:01:00',	NULL,	'Testing',	'21.111245',	'81.152525',	NULL,	'16:00:00',	'7JQC+5VG, Bhanpuri, Raipur Division, 492003',	'21.2879296',	'81.6218321',	NULL,	'09:49:40',	0,	NULL,	'2023-11-07 06:55:40',	'2023-11-04 18:33:04'),
 (228,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'132',	'2023-11-04',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'04-11-2023_6f02966f9b7cffd6b808384798c3d2cf.jpg',	'18:37:29',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896992',	'81.6237067',	'04-11-2023_d064b7b0cabf7d60434aa231c8cee5b4.jpg',	'18:37:47',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896979',	'81.6237073',	NULL,	'00:00:18',	0,	NULL,	'2023-11-04 13:07:47',	'2023-11-04 18:37:47'),
-(229,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-11-05',	'IT125',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'1',	'05-11-2023_331290c4846490dc72a5d409281808b6.jpg',	'15:02:35',	NULL,	'8J7G+FF6, Birgoan, Raipur Division, 492003',	'21.3132918',	'81.6262844',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	0,	NULL,	'2023-11-05 15:02:41',	'2023-11-05 15:02:41'),
+(229,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-11-05',	'IT125',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'05-11-2023_331290c4846490dc72a5d409281808b6.jpg',	'15:02:35',	NULL,	'8J7G+FF6, Birgoan, Raipur Division, 492003',	'21.3132918',	'81.6262844',	NULL,	'18:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	0,	NULL,	'2023-11-08 11:36:29',	'2023-11-05 15:02:41'),
 (231,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-11-06',	'IT121',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'1',	'06-11-2023_a262bb01f800877221d6f65ec8085670.jpg',	'10:13:41',	NULL,	'Near Durga Fule Pump Ring Road Number 02, Birgoan, Raipur Division, 492003',	'21.2882823',	'81.6214896',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	0,	NULL,	'2023-11-06 10:13:54',	'2023-11-06 10:13:54'),
-(232,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-06',	'IT125',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'1',	'06-11-2023_52911ffb55e4d54169959eb51eb6f1c2.jpg',	'10:32:28',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896629',	'81.6237163',	'06-11-2023_3964150e6307a7141dcee64db12443de.jpg',	'00:00:00',	'',	'',	'',	NULL,	'',	0,	NULL,	'2023-11-06 05:06:20',	'2023-11-06 10:32:33'),
+(232,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-06',	'IT125',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'06-11-2023_52911ffb55e4d54169959eb51eb6f1c2.jpg',	'10:32:28',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896629',	'81.6237163',	'06-11-2023_3964150e6307a7141dcee64db12443de.jpg',	'18:00:00',	'',	'',	'',	NULL,	'',	0,	NULL,	'2023-11-08 11:36:08',	'2023-11-06 10:32:33'),
 (233,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-11-06',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'1',	'06-11-2023_225dfb41979f4436a9726c9d08a0b0bf.jpg',	'11:12:52',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896918',	'81.6237089',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	0,	NULL,	'2023-11-06 11:12:57',	'2023-11-06 11:12:57'),
-(234,	1,	0,	1,	1,	0,	1,	0,	0,	0,	0,	'68',	'2023-11-06',	'IT123',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'1',	NULL,	'14:29:59',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896939',	'81.6237117',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	0,	NULL,	'2023-11-06 14:30:01',	'2023-11-06 14:30:01');
+(234,	1,	0,	1,	1,	0,	1,	0,	0,	0,	0,	'68',	'2023-11-06',	'IT123',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'2',	NULL,	'14:29:59',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896939',	'81.6237117',	NULL,	'17:50:00',	'7JQC+5VG, Bhanpuri, Raipur Division, 492003',	'21.2879296',	'81.6218321',	NULL,	'09:49:40',	1,	NULL,	'2023-11-07 06:41:49',	'2023-11-06 14:30:01'),
+(235,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-11-07',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'1',	'07-11-2023_eb87f505b6392d001264fa85c1b3c81c.jpg',	'10:07:28',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2897018',	'81.623705',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	0,	NULL,	'2023-11-07 10:07:30',	'2023-11-07 10:07:30'),
+(236,	1,	0,	1,	3,	0,	0,	1,	0,	0,	1,	'131',	'2023-11-07',	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'1',	'07-11-2023_4233e6044864d40248102f6519466c87.jpg',	'10:08:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2897003',	'81.6237068',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	'13:52:00',	0,	NULL,	'2023-11-07 12:17:46',	'2023-11-07 17:47:46'),
+(237,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-01',	'IT034',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'2',	'07-11-2023_e95e93d37c47e6f2770a7b23c76b83c8.jpg',	'09:42:41',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	'07-11-2023_c4b38f7e5add1fed82dcaaa6b93de8c1.jpg',	'18:00:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	NULL,	'00:00:19',	0,	NULL,	'2023-11-07 11:18:52',	'2023-11-07 16:47:06'),
+(238,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-02',	'IT034',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'2',	'07-11-2023_e95e93d37c47e6f2770a7b23c76b83c8.jpg',	'09:55:41',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	'07-11-2023_c4b38f7e5add1fed82dcaaa6b93de8c1.jpg',	'18:00:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	NULL,	'00:00:19',	0,	NULL,	'2023-11-07 11:23:53',	'2023-11-07 16:47:06'),
+(239,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-03',	'IT034',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'2',	'07-11-2023_e95e93d37c47e6f2770a7b23c76b83c8.jpg',	'10:00:41',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	'07-11-2023_c4b38f7e5add1fed82dcaaa6b93de8c1.jpg',	'18:00:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	NULL,	'00:00:19',	0,	NULL,	'2023-11-07 11:18:52',	'2023-11-07 16:47:06'),
+(240,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-04',	'IT034',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'2',	'07-11-2023_e95e93d37c47e6f2770a7b23c76b83c8.jpg',	'12:45:41',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	'07-11-2023_c4b38f7e5add1fed82dcaaa6b93de8c1.jpg',	'18:00:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	NULL,	'00:00:19',	0,	NULL,	'2023-11-07 11:47:48',	'2023-11-07 16:47:06'),
+(241,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-06',	'IT034',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'2',	'07-11-2023_e95e93d37c47e6f2770a7b23c76b83c8.jpg',	'09:46:41',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	'07-11-2023_c4b38f7e5add1fed82dcaaa6b93de8c1.jpg',	'18:00:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	NULL,	'00:00:19',	0,	NULL,	'2023-11-07 11:18:52',	'2023-11-07 16:47:06'),
+(242,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'131',	'2023-11-08',	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'1',	'08-11-2023_ffee6ecfe2e3256402b92c7ab6597364.jpg',	'10:14:39',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896983',	'81.623708',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	0,	NULL,	'2023-11-08 10:14:40',	'2023-11-08 10:14:40'),
+(243,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-08',	'IT034',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'2',	'08-11-2023_6be82155fdd5686cc18a43dd29ff34f2.jpg',	'10:19:51',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896538',	'81.6237225',	'08-11-2023_153145118c65ac716fe780261a90a422.jpg',	'17:35:44',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896621',	'81.6237182',	NULL,	'07:15:53',	0,	NULL,	'2023-11-08 12:05:53',	'2023-11-08 17:35:53'),
+(244,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-08',	'IT125',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'08-11-2023_d933f4054b8d151bc834f2abd04824ef.jpg',	'09:30:56',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896623',	'81.6236861',	'08-11-2023_1ac6f599fcb88d80730882c3701d727d.jpg',	'17:02:38',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.289662',	'81.6237173',	NULL,	'06:02:42',	0,	NULL,	'2023-11-08 11:34:55',	'2023-11-08 17:03:08'),
+(245,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-01',	'IT040',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'2',	'07-11-2023_e95e93d37c47e6f2770a7b23c76b83c8.jpg',	'09:02:41',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	'07-11-2023_c4b38f7e5add1fed82dcaaa6b93de8c1.jpg',	'16:20:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	NULL,	'00:00:19',	0,	NULL,	'2023-11-07 11:18:52',	'2023-11-07 16:47:06'),
+(246,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-02',	'IT040',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'2',	'07-11-2023_e95e93d37c47e6f2770a7b23c76b83c8.jpg',	'09:02:41',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	'07-11-2023_c4b38f7e5add1fed82dcaaa6b93de8c1.jpg',	'16:00:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	NULL,	'00:00:19',	0,	NULL,	'2023-11-07 11:18:52',	'2023-11-07 16:47:06'),
+(247,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-03',	'IT040',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'2',	'07-11-2023_e95e93d37c47e6f2770a7b23c76b83c8.jpg',	'09:02:41',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	'07-11-2023_c4b38f7e5add1fed82dcaaa6b93de8c1.jpg',	'16:10:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	NULL,	'00:00:19',	0,	NULL,	'2023-11-07 11:18:52',	'2023-11-07 16:47:06'),
+(248,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-04',	'IT040',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'2',	'07-11-2023_e95e93d37c47e6f2770a7b23c76b83c8.jpg',	'09:05:41',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	'07-11-2023_c4b38f7e5add1fed82dcaaa6b93de8c1.jpg',	'18:10:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	NULL,	'00:00:19',	0,	NULL,	'2023-11-07 11:18:52',	'2023-11-07 16:47:06'),
+(249,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-06',	'IT040',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'2',	'07-11-2023_e95e93d37c47e6f2770a7b23c76b83c8.jpg',	'09:50:41',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	'07-11-2023_c4b38f7e5add1fed82dcaaa6b93de8c1.jpg',	'17:50:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	NULL,	'00:00:19',	0,	NULL,	'2023-11-07 11:18:52',	'2023-11-07 16:47:06'),
+(250,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-07',	'IT040',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'2',	'07-11-2023_e95e93d37c47e6f2770a7b23c76b83c8.jpg',	'09:30:41',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	'07-11-2023_c4b38f7e5add1fed82dcaaa6b93de8c1.jpg',	'17:10:00',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896586',	'81.6237124',	NULL,	'00:00:19',	0,	NULL,	'2023-11-08 07:30:38',	'2023-11-07 16:47:06'),
+(251,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-11-08',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'08-11-2023_0376cdf7b8113742d3c43fb4ccfdb740.jpg',	'11:19:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896933',	'81.6237052',	NULL,	'17:19:00',	NULL,	NULL,	NULL,	NULL,	'06:00:00',	0,	NULL,	'2023-11-09 03:08:27',	'2023-11-09 08:38:27'),
+(252,	1,	0,	1,	0,	0,	0,	0,	0,	0,	1,	NULL,	NULL,	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	NULL,	'09:13:00',	NULL,	NULL,	NULL,	NULL,	NULL,	'15:33:00',	NULL,	NULL,	NULL,	NULL,	'06:20:00',	0,	NULL,	'2023-11-09 08:55:20',	'2023-11-09 08:55:20'),
+(253,	1,	0,	1,	0,	0,	0,	0,	0,	0,	1,	NULL,	NULL,	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	NULL,	'11:19:00',	NULL,	NULL,	NULL,	NULL,	NULL,	'17:19:00',	NULL,	NULL,	NULL,	NULL,	'06:00:00',	0,	NULL,	'2023-11-09 08:56:29',	'2023-11-09 08:56:29'),
+(254,	1,	0,	1,	0,	0,	0,	0,	0,	0,	1,	NULL,	NULL,	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	NULL,	'09:13:00',	NULL,	NULL,	NULL,	NULL,	NULL,	'15:33:00',	NULL,	NULL,	NULL,	NULL,	'06:20:00',	0,	NULL,	'2023-11-09 09:02:47',	'2023-11-09 09:02:47'),
+(255,	1,	0,	1,	0,	0,	0,	0,	0,	0,	1,	NULL,	'2023-11-09',	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	NULL,	'09:13:00',	NULL,	NULL,	NULL,	NULL,	NULL,	'15:33:00',	NULL,	NULL,	NULL,	NULL,	'06:20:00',	0,	NULL,	'2023-11-09 09:03:48',	'2023-11-09 09:03:48'),
+(256,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-09',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'09-11-2023_a3137b9311d60dd62e4a99c6cdc39282.jpg',	'10:26:38',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.289693',	'81.6236654',	'09-11-2023_915976ce98620ad3e2ac2e4523f12d0e.jpg',	'11:23:25',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896932',	'81.6236682',	NULL,	'00:56:47',	0,	NULL,	'2023-11-09 05:53:33',	'2023-11-09 11:23:33'),
+(257,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-09',	'IT121',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'2',	'09-11-2023_be96de2f8e23331740dc62c2fd0ad222.jpg',	'10:36:39',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896321',	'81.6236323',	'09-11-2023_c536b7fa99787fd5a2de2394d8167c55.jpg',	'11:19:35',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896949',	'81.6236654',	NULL,	'00:42:56',	0,	NULL,	'2023-11-09 05:49:40',	'2023-11-09 11:19:40'),
+(258,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-11-09',	'IT125',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'1',	'09-11-2023_70d484b0031f23080e843f91c1ae2dda.jpg',	'10:37:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896609',	'81.6237186',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	0,	NULL,	'2023-11-09 10:37:05',	'2023-11-09 10:37:05'),
+(259,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-11-09',	'IT034',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'1',	'09-11-2023_4c834b665387c3f02014a280fe9e5c5e.jpg',	'10:42:17',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896631',	'81.6237016',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	0,	NULL,	'2023-11-09 10:42:23',	'2023-11-09 10:42:23'),
+(260,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'68',	'2023-11-09',	'IT040',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'2',	'09-11-2023_103ae175e6725ef5987d228e4117491f.jpg',	'10:43:04',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896627',	'81.6237194',	'09-11-2023_64c9e45383ee90de9a10b87a71912d03.jpg',	'14:04:41',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896962',	'81.6236616',	NULL,	'03:21:37',	0,	NULL,	'2023-11-09 08:34:43',	'2023-11-09 14:04:43'),
+(261,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'132',	'2023-11-09',	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'09-11-2023_23bc85f60c9631d82d9a32428fea83b8.jpg',	'13:49:43',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896357',	'81.6237014',	'09-11-2023_5ddadc530c1a6c231b31958b1f3210c0.jpg',	'13:59:03',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896943',	'81.6236654',	NULL,	'00:09:20',	0,	NULL,	'2023-11-09 08:29:05',	'2023-11-09 13:59:05'),
+(262,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'80',	'2023-11-09',	'IT126',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'1',	'09-11-2023_a27f556a9e6ae9668c5020c93e296684.jpg',	'14:03:06',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896333',	'81.6237046',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	0,	NULL,	'2023-11-09 14:03:08',	'2023-11-09 14:03:08'),
+(263,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-11-10',	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'1',	'10-11-2023_d63e0b9615a51ccae3ee83422fb7be37.jpg',	'10:19:48',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896941',	'81.6236634',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	0,	NULL,	'2023-11-10 10:19:50',	'2023-11-10 10:19:50'),
+(264,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-11-10',	'IT125',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'1',	'10-11-2023_d8b876d44d2bdb14990c652c1432e73b.jpg',	'10:33:32',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.289627',	'81.6237059',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	0,	NULL,	'2023-11-10 10:33:39',	'2023-11-10 10:33:39'),
+(265,	1,	0,	1,	3,	3,	0,	1,	0,	0,	0,	'80',	'2023-11-10',	'IT127',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'2',	'10-11-2023_3e6dac646f62bf88ed16b33a12f06af5.jpg',	'10:53:38',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896934',	'81.6236651',	'10-11-2023_ebec113cf38ce7b7b7a29007bd757c9d.jpg',	'10:56:48',	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896929',	'81.6236657',	NULL,	'00:03:10',	0,	NULL,	'2023-11-10 05:26:51',	'2023-11-10 10:56:51'),
+(266,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'80',	'2023-11-10',	'IT128',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'1',	'10-11-2023_0496d9dfeea030d24dbe7db1aa91b2f4.jpg',	'10:54:44',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896921',	'81.6236664',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	0,	NULL,	'2023-11-10 10:54:50',	'2023-11-10 10:54:50'),
+(267,	1,	0,	1,	3,	0,	0,	1,	0,	0,	1,	'80',	'2023-11-10',	'IT129',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'1',	'10-11-2023_6a63cf6b6bd9a09757b1ffee64640028.jpg',	'10:56:15',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896936',	'81.6236653',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	'IT008',	'2023-11-10 11:00:45',	'2023-11-10 16:30:45'),
+(268,	1,	0,	1,	3,	0,	0,	1,	0,	0,	1,	'68',	'2023-11-10',	'IT121',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'1',	'10-11-2023_de610408fef334ae6655e1343168d12d.jpg',	'14:11:00',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896923',	'81.6236701',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'15:19:00',	0,	NULL,	'2023-11-10 10:46:42',	'2023-11-10 16:16:42'),
+(269,	1,	0,	1,	3,	0,	0,	1,	0,	0,	0,	'68',	'2023-11-10',	'IT043',	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'1',	'10-11-2023_3b79d0f03c091040c09e12702d321a79.jpg',	'14:13:31',	NULL,	'7JQF+WC9, Birgoan, Raipur Division, 492003',	'21.2896929',	'81.6236677',	NULL,	'00:00:00',	NULL,	NULL,	NULL,	NULL,	NULL,	0,	NULL,	'2023-11-10 14:13:35',	'2023-11-10 14:13:35');
 
 DROP TABLE IF EXISTS `branch_list`;
 CREATE TABLE `branch_list` (
@@ -185,11 +250,9 @@ CREATE TABLE `branch_list` (
 
 INSERT INTO `branch_list` (`id`, `business_id`, `branch_id`, `branch_name`, `is_active`, `address`, `updated_at`, `created_at`) VALUES
 (1,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'Kesar Earth Solutions',	0,	NULL,	'2023-08-26 10:19:54',	'2023-09-27 05:41:40'),
-(2,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308229',	'Kesar Earth Solution Pvt. Ltd.',	0,	NULL,	'2023-08-26 10:19:45',	'2023-08-26 10:19:45'),
 (3,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'FixingDots Gudhgaon',	0,	NULL,	'2023-08-26 10:20:10',	'2023-08-26 10:20:10'),
 (4,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'FixingDots',	1,	NULL,	'2023-09-04 11:35:42',	'2023-09-04 11:35:42'),
 (7,	'bd545732e12addf17c34a231d24a3814',	'797342eb22742bdf4524f3322a8852f1',	'Creative Minds',	0,	NULL,	'2023-10-02 06:56:18',	'2023-10-02 06:56:18'),
-(8,	'e3d64177e51bdff82b499e116796fe74',	'234de5fb3a0dc68c19b33446d054d6c2',	'FixingDots Gudhgaons',	0,	NULL,	'2023-10-11 12:05:42',	'2023-10-22 17:07:10'),
 (9,	'b4a8dd835f749b155efa9862b130808b',	'0b30ae1bd5ea396ecccc00fbb2a20da6',	'Fixing Dots',	0,	NULL,	'2023-10-13 07:33:20',	'2023-10-13 07:33:20');
 
 DROP TABLE IF EXISTS `business_details_list`;
@@ -217,7 +280,7 @@ CREATE TABLE `business_details_list` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `business_details_list` (`id`, `business_id`, `business_logo`, `business_categories`, `client_name`, `business_email`, `business_name`, `business_type`, `mobile_no`, `city`, `state`, `country`, `business_address`, `pin_code`, `gstnumber`, `created_at`, `updated_at`) VALUES
-(1,	'e3d64177e51bdff82b499e116796fe74',	'25-09-2023_b9f46108508bcf0c617f0b1398c948f5.png',	4,	'Mr. Aman Sahu',	'amansahu.er@gmail.com',	'IT Google Invitation Comp',	4,	'8319151766',	'12',	'11',	'India',	'Shrinagar ,Pahadipara,Gudhiyari  Raipur C.G 492001\r\nTulshi nagar ,Pahadipara,Gudhiyari  Raipur C.G 492001',	'492011',	'SODSMEW123X',	'2023-11-02 12:44:27',	'2023-09-25 18:13:19'),
+(1,	'e3d64177e51bdff82b499e116796fe74',	'09-11-2023_bd75345f32cfa91d127c016d3de60623.png',	4,	'Mr. Aman Sahu',	'amansahu.er@gmail.com',	'IT Google Invitation Comp',	4,	'8319151766',	'12',	'11',	'India',	'Shrinagar ,Pahadipara,Gudhiyari  Raipur C.G 492001\r\nTulshi nagar ,Pahadipara,Gudhiyari  Raipur C.G 492001',	'492011',	'SODSMEW123X',	'2023-11-09 10:51:41',	'2023-09-25 18:13:19'),
 (2,	'bd545732e12addf17c34a231d24a3814',	'02-10-2023_12930beafc3b22a230438ffb901fefd3.png',	4,	'Dilip Sahu',	'dilipsahu26@gmail.com',	'Creative Minds',	1,	'9993659548',	'Raipur',	'Chhattisgarh',	'1',	'Pachpedi Naka, Old Dhamtari Road, Near Colors Mall',	'492001',	'1234567890098',	'2023-10-02 06:51:11',	'2023-10-02 06:51:11');
 
 DROP TABLE IF EXISTS `camera_permission`;
@@ -252,24 +315,16 @@ CREATE TABLE `department_list` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `department_list` (`depart_id`, `b_id`, `branch_id`, `depart_name`, `status`, `updated_at`, `created_at`) VALUES
-(1,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'Finance & sales Department',	0,	'2023-11-02 16:16:54',	'2023-11-02 10:46:54'),
-(2,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'Housekeepings',	0,	'2023-09-15 01:02:34',	'2023-09-14 19:32:34'),
 (3,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'Accounting',	0,	'2023-09-14 10:33:06',	'2023-09-14 10:33:06'),
-(4,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'Human Resource Department',	0,	'2023-09-15 01:02:53',	'2023-09-14 19:32:53'),
 (5,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'Human Resource',	0,	'2023-09-14 10:33:06',	'2023-09-14 10:33:06'),
 (6,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'Sales Department',	0,	'2023-09-14 10:33:06',	'2023-09-14 10:33:06'),
 (7,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'Finance Department',	0,	'2023-09-14 10:33:06',	'2023-09-14 10:33:06'),
-(8,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'Marketing Department',	0,	'2023-09-14 10:33:06',	'2023-09-14 10:33:06'),
-(9,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'Marketing Department',	0,	'2023-09-22 06:42:01',	'2023-09-22 01:12:01'),
-(10,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT informations',	0,	'2023-10-05 11:08:07',	'2023-10-05 05:38:07'),
-(11,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'Software Developer',	0,	'2023-09-25 19:12:29',	'2023-09-25 19:12:29'),
-(12,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT Root',	0,	'2023-09-26 00:42:58',	'2023-09-26 00:42:58'),
-(14,	'e3d64177e51bdff82b499e116796fe74',	NULL,	'House Kepping',	0,	'2023-10-10 15:00:12',	'2023-10-10 09:30:12'),
 (15,	'bd545732e12addf17c34a231d24a3814',	'797342eb22742bdf4524f3322a8852f1',	'Information Technology',	0,	'2023-10-05 11:49:01',	'2023-10-05 06:19:01'),
 (16,	'bd545732e12addf17c34a231d24a3814',	'797342eb22742bdf4524f3322a8852f1',	'Sales and Marketing',	0,	'2023-10-02 12:28:34',	'2023-10-02 12:28:34'),
-(18,	'e3d64177e51bdff82b499e116796fe74',	NULL,	'Software Developer Google',	0,	'2023-10-10 14:58:50',	'2023-10-10 14:58:50'),
 (21,	'b4a8dd835f749b155efa9862b130808b',	NULL,	'Information Technology',	0,	'2023-10-13 13:05:17',	'2023-10-13 13:05:17'),
-(22,	'b4a8dd835f749b155efa9862b130808b',	NULL,	'Human Resource',	0,	'2023-10-13 13:05:32',	'2023-10-13 13:05:32');
+(22,	'b4a8dd835f749b155efa9862b130808b',	NULL,	'Human Resource',	0,	'2023-10-13 13:05:32',	'2023-10-13 13:05:32'),
+(23,	'e3d64177e51bdff82b499e116796fe74',	NULL,	'Information Technology',	0,	'2023-11-08 11:54:36',	'2023-11-08 11:54:36'),
+(24,	'e3d64177e51bdff82b499e116796fe74',	NULL,	'Marketing',	0,	'2023-11-08 11:54:47',	'2023-11-08 11:54:47');
 
 DROP TABLE IF EXISTS `designation_list`;
 CREATE TABLE `designation_list` (
@@ -284,32 +339,8 @@ CREATE TABLE `designation_list` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `designation_list` (`desig_id`, `business_id`, `branch_id`, `department_id`, `desig_name`, `updated_at`, `created_at`) VALUES
-(2,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308229',	'2',	'Director',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(3,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308229',	'6',	'Chairman',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(4,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'6',	'Chief Executive Officer (CEO)',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(5,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'2',	'Chief Financial Officer (CFO)',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(6,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'2',	'Secretary',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(7,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'2',	'Chief Operating Officer (COO)',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(8,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'4',	'Chief Technology Officer (CTO)',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(9,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'5',	'Vice President',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(10,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'6',	'Manager',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(12,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308229',	'3',	'Vice President',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(13,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308229',	'3',	'Chief Technology Officer (CTO)',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(14,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'4',	'Secretary',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(15,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308229',	'4',	'Managing Director',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(16,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308229',	'3',	'Chairman',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(17,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308229',	'5',	'Director',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(18,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'6',	'Chairman',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(19,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'6',	'Managing Directors',	'2023-10-05 11:47:03',	'2023-10-05 06:17:03'),
-(20,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'7',	'Secretary',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(21,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'7',	'Vice President',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
 (22,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'7',	'Manager',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(23,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'7',	'Chief Operating Officer (COO)',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(24,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'7',	'Chief Operating Officer (COO)',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(25,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'7',	'Manager',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
 (26,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'7',	'Assistant Manager',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(27,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'7\r\n',	'Finance Manager',	'2023-09-25 19:02:59',	'2023-09-25 19:02:59'),
-(28,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'11',	'IT Full Stack',	'2023-09-26 00:36:19',	'2023-09-26 00:36:19'),
 (31,	'bd545732e12addf17c34a231d24a3814',	'797342eb22742bdf4524f3322a8852f1',	'15',	'Software Engineer',	'2023-10-02 12:29:10',	'2023-10-02 12:29:10'),
 (32,	'bd545732e12addf17c34a231d24a3814',	'797342eb22742bdf4524f3322a8852f1',	'15',	'Project Head',	'2023-10-05 11:51:31',	'2023-10-05 06:21:31'),
 (34,	'bd545732e12addf17c34a231d24a3814',	'797342eb22742bdf4524f3322a8852f1',	NULL,	'Business Development Manager',	'2023-10-02 12:30:19',	'2023-10-02 12:30:19'),
@@ -317,8 +348,15 @@ INSERT INTO `designation_list` (`desig_id`, `business_id`, `branch_id`, `departm
 (36,	'bd545732e12addf17c34a231d24a3814',	'797342eb22742bdf4524f3322a8852f1',	'15',	'Software Manual Tester',	'2023-10-02 12:32:40',	'2023-10-02 12:32:40'),
 (37,	'bd545732e12addf17c34a231d24a3814',	'797342eb22742bdf4524f3322a8852f1',	'16',	'Business Manager',	'2023-10-05 11:54:12',	'2023-10-05 06:24:12'),
 (38,	'bd545732e12addf17c34a231d24a3814',	'797342eb22742bdf4524f3322a8852f1',	'15',	'Marketing Executive',	'2023-10-05 11:53:44',	'2023-10-05 06:23:44'),
-(39,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	'Finance Managerd',	'2023-10-23 14:54:01',	'2023-10-23 09:24:01'),
-(40,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	'Finance Manager',	'2023-10-10 15:15:56',	'2023-10-10 15:15:56');
+(41,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	'Software Engineer',	'2023-11-08 11:49:21',	'2023-11-08 11:49:21'),
+(42,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	'Full Stack Developer',	'2023-11-08 11:49:36',	'2023-11-08 11:49:36'),
+(43,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	'HR',	'2023-11-08 11:51:55',	'2023-11-08 11:51:55'),
+(44,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	'Manual Tester',	'2023-11-08 11:52:20',	'2023-11-08 11:52:20'),
+(45,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	'Flutter Developer',	'2023-11-08 11:52:41',	'2023-11-08 11:52:41'),
+(46,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	'Laravel Developer',	'2023-11-08 11:53:03',	'2023-11-08 11:53:03'),
+(47,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	'Project Head',	'2023-11-08 12:13:26',	'2023-11-08 12:13:26'),
+(49,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	'Accountent',	'2023-11-08 12:13:41',	'2023-11-08 12:13:41'),
+(50,	'e3d64177e51bdff82b499e116796fe74',	NULL,	NULL,	'Project manager',	'2023-11-08 12:14:19',	'2023-11-08 12:14:19');
 
 DROP TABLE IF EXISTS `employee_personal_details`;
 CREATE TABLE `employee_personal_details` (
@@ -367,35 +405,34 @@ CREATE TABLE `employee_personal_details` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `employee_personal_details` (`id`, `business_id`, `branch_id`, `emp_id`, `master_endgame_id`, `emp_name`, `emp_mname`, `emp_lname`, `department_id`, `designation_id`, `is_admin`, `role_id`, `employee_type`, `employee_contractual_type`, `emp_mobile_number`, `emp_email`, `emp_date_of_birth`, `emp_date_of_joining`, `emp_gender`, `emp_marital_status`, `emp_category`, `emp_blood_group`, `emp_gov_select_id`, `emp_gov_select_id_number`, `emp_nationality`, `emp_address`, `emp_country`, `emp_state`, `emp_city`, `emp_pin_code`, `emp_shift_type`, `emp_rotational_shift_type_item`, `emp_reporting_manager`, `emp_imei_no`, `emp_attendance_method`, `emp_status`, `profile_photo`, `created_at`, `updated_at`) VALUES
-(5,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT008',	254,	'Dilip',	NULL,	'Sahu',	11,	28,	0,	1,	1,	0,	9993659548,	'dilipsahu26@gmail.com',	'1993-10-26',	'1998-09-01',	1,	0,	0,	0,	0,	'0',	'0',	'asdfafsdadffgssd',	'1',	'6',	'61',	'493333',	'30',	0,	NULL,	NULL,	1,	0,	'29-09-2023_6ceab5266017decc66c8f0225becb1ff.png',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(7,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT009',	254,	'Nisha',	'power',	'Sahu',	11,	28,	0,	6,	1,	0,	9993433474,	'nishasahu018@gmail.com',	'1998-02-10',	'2023-09-13',	2,	0,	0,	0,	0,	'0',	'0',	'Near of Railway Station',	'1',	'6',	'65',	'495677',	'27',	0,	NULL,	NULL,	1,	0,	'25-10-2023_1214b7e05479d3093893648a31982c54.jpg',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(8,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT010',	254,	'Soniya',	NULL,	'root',	11,	28,	0,	0,	1,	0,	9658473211,	'soniyasahu583@gmail.com',	'2000-10-04',	'2023-09-01',	2,	0,	0,	0,	0,	'0',	'0',	'Pahadipara,Gudhiyari  Raipur C.G 492011',	'1',	'6',	'101',	'489333',	'29',	132,	NULL,	NULL,	2,	0,	'19-10-2023_3901ff8daa8436afde7e5155d4fbda3f.jpg',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(15,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT0012',	254,	'Jayant',	'fast',	'Nishad',	6,	28,	0,	0,	1,	0,	8462074453,	'jayantnishad34@gmail.com',	'2005-05-10',	'2023-01-05',	1,	0,	0,	0,	0,	'0',	'0',	'Shrinagar ,Pahadipara,Gudhiyari  Raipur C.G 492001',	'1',	'6',	'101',	'492011',	'29',	131,	NULL,	NULL,	1,	0,	'09-10-2023_c9b5bba0ecfc5fbb8bce291a6eb6483c.jpg',	'2023-11-05 14:41:00',	'2023-11-04 14:12:11'),
-(18,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT111',	254,	'Satyam',	NULL,	'Singh',	5,	9,	0,	0,	1,	0,	8585858585,	'satyamsing55@gmail.com',	'2023-09-12',	'2023-09-07',	1,	0,	0,	0,	0,	'0',	'0',	'Amanaka raipur',	'1',	'6',	'101',	'493221',	'27',	0,	NULL,	NULL,	2,	0,	'28-09-2023_cbe24864da407522f4b2ebf4b739f17b.jpg',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(22,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT020',	254,	'Kumar',	NULL,	'Sahu',	5,	17,	0,	0,	1,	0,	8596969696,	'ramesh@gmail.com',	'2000-10-03',	'2023-10-25',	1,	0,	0,	0,	0,	'0',	'0',	'fasdfasdf',	'1',	'6',	'101',	'858596',	'27',	0,	NULL,	NULL,	3,	0,	'01-10-2023_ecf69975bffe119b50a066e13dc28cfe.png',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(29,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT034',	254,	'MD',	NULL,	'Shajid',	7,	26,	0,	0,	1,	0,	8585858585,	'satyamsingh@gmail.com',	'2005-12-02',	'2023-10-12',	1,	0,	0,	0,	0,	'0',	'0',	'Birgaon Raipur C.G.',	'1',	'6',	'101',	'564658',	'27',	0,	NULL,	NULL,	1,	0,	'02-10-2023_088503d5ed091f76f405cd23a82be75b.jpg',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(30,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT024',	254,	'Radhika',	NULL,	'Singh',	5,	17,	0,	0,	1,	0,	8585858585,	'radhikasingh@gmail.com',	'1993-06-16',	'2023-10-11',	1,	0,	0,	0,	0,	'0',	'0',	'Birgaon Raipur C.G.',	'1',	'6',	'101',	NULL,	'27',	0,	NULL,	NULL,	2,	0,	'19-10-2023_a5282dd7ce48d2e138f04095df08bfc4.jpg',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(32,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT040',	254,	'Vinay',	NULL,	'Verma',	2,	6,	0,	0,	1,	0,	8558585588,	'vinayverma@gmail.com',	'1993-11-17',	'2023-10-01',	1,	0,	0,	0,	0,	'0',	'0',	'Chainpur',	'1',	'6',	'101',	'564658',	'27',	0,	NULL,	NULL,	1,	0,	'04-10-2023_c2d823fa7029fc07cf625bc7a5b5cb22.jpg',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(33,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT025',	254,	'Vandana',	NULL,	'Prajapati',	1,	28,	0,	0,	1,	0,	8585858585,	'vandnaprajapati@gmail.com',	'1991-06-04',	'2023-10-03',	2,	0,	0,	0,	0,	'0',	'0',	'Birgaon Raipur C.G.',	'1',	'0',	'0',	NULL,	'27',	0,	NULL,	NULL,	1,	0,	'19-10-2023_fb47a4e39c924a0e23916aa2cac3127e.jpg',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(34,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT043',	254,	'Ishita',	NULL,	'Thakur',	4,	8,	0,	0,	1,	0,	8585858585,	'ishitathakur@gmail.com',	'1996-06-04',	'2023-10-02',	3,	0,	0,	0,	0,	'0',	'0',	'gfasdGfhdag',	'1',	'6',	'101',	'564658',	'27',	0,	NULL,	NULL,	1,	0,	'04-10-2023_c2d823fa7029fc07cf625bc7a5b5cb22.jpg	',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(35,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT112',	254,	'Aditi',	NULL,	'Mishra',	5,	17,	0,	0,	1,	0,	7708925678,	'aditimishra@gmail.com',	'2000-11-08',	'2023-10-02',	2,	0,	0,	0,	0,	'0',	'0',	'Gondware, Ring Road 2',	'1',	'6',	'101',	'858596',	'27',	0,	NULL,	NULL,	1,	0,	'19-10-2023_cfcda46fa805bc4fed7fd315f28f563b.jpg',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(37,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT114',	254,	'Arjun',	NULL,	'Rawat',	6,	10,	0,	0,	1,	0,	8985852852,	'aditimishra@gmail.com',	'2023-10-24',	'2023-10-18',	1,	0,	0,	0,	0,	'0',	'0',	'Rawabhata Raipur, Chhattisgarh 493221',	'1',	'14',	'1',	'858596',	'27',	0,	NULL,	NULL,	2,	0,	'06-10-2023_4b72e1ad2382450c42fc1840d302433f.png',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
+(5,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT008',	256,	'Dilip',	NULL,	'Sahu',	23,	50,	0,	1,	1,	0,	9993659548,	'dilipsahu26@gmail.com',	'1993-10-26',	'1998-09-01',	1,	2,	3,	3,	2,	'WLPPK9678H',	'India',	'asdfafsdadffgssd',	'1',	'6',	'65',	'493333',	'30',	0,	'Dilip Sahu',	NULL,	1,	0,	'29-09-2023_6ceab5266017decc66c8f0225becb1ff.png',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(7,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT009',	256,	'Nisha',	'Power',	'House',	23,	45,	0,	6,	1,	0,	9993433474,	'nishasahu018@gmail.com',	'1998-02-10',	'2023-09-13',	2,	1,	3,	1,	1,	'858285852852',	'India',	'Near of Railway Station',	'1',	'6',	'65',	'495677',	'27',	0,	'Dilip Sahu',	NULL,	1,	0,	'25-10-2023_1214b7e05479d3093893648a31982c54.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(8,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT010',	256,	'Soniya',	NULL,	'Pandey',	23,	42,	0,	0,	1,	0,	9658473211,	'soniyasahu583@gmail.com',	'2000-10-04',	'2023-09-01',	2,	1,	4,	1,	3,	'CG26BB54FXHR',	'0',	'Pahadipara,Gudhiyari  Raipur C.G 492011',	'1',	'6',	'101',	'489333',	'29',	132,	'Dilip Sahu',	NULL,	1,	0,	'19-10-2023_3901ff8daa8436afde7e5155d4fbda3f.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(15,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT0012',	256,	'Jayant',	'fast',	'Nishad',	23,	42,	0,	0,	1,	0,	8462074453,	'jayantnishad34@gmail.com',	'2005-05-10',	'2023-01-05',	1,	1,	1,	1,	1,	'06235625525',	'0',	'Shrinagar ,Pahadipara,Gudhiyari  Raipur C.G 492001',	'1',	'6',	'101',	'492011',	'29',	131,	'Dilip Sahu',	NULL,	1,	0,	'09-10-2023_c9b5bba0ecfc5fbb8bce291a6eb6483c.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(18,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT111',	256,	'Satyam',	NULL,	'Singh',	5,	9,	0,	0,	1,	0,	8585858585,	'satyamsing55@gmail.com',	'2023-09-12',	'2023-09-07',	1,	0,	0,	0,	0,	'0',	'0',	'Amanaka raipur',	'1',	'6',	'101',	'493221',	'27',	0,	NULL,	NULL,	2,	0,	'28-09-2023_cbe24864da407522f4b2ebf4b739f17b.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(22,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT020',	256,	'Kumar',	NULL,	'Sahu',	5,	17,	0,	0,	1,	0,	8596969696,	'ramesh@gmail.com',	'2000-10-03',	'2023-10-25',	1,	0,	0,	0,	0,	'0',	'0',	'fasdfasdf',	'1',	'6',	'101',	'858596',	'27',	0,	NULL,	NULL,	3,	0,	'01-10-2023_ecf69975bffe119b50a066e13dc28cfe.png',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(29,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT034',	256,	'MD',	NULL,	'Shajid',	7,	26,	0,	0,	1,	0,	9111326606,	'mdshahi@gmail.com',	'2005-12-02',	'2023-10-12',	1,	1,	1,	1,	1,	'065235995259259',	'0',	'Birgaon Raipur C.G.',	'1',	'6',	'101',	'564658',	'27',	0,	'Dilip Sahu',	NULL,	1,	0,	'02-10-2023_088503d5ed091f76f405cd23a82be75b.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(30,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT024',	256,	'Radhika',	NULL,	'Singh',	5,	17,	0,	0,	1,	0,	9111326607,	'radhikasingh@gmail.com',	'1993-06-16',	'2023-10-11',	2,	1,	3,	2,	1,	'065235995259259',	'0',	'Birgaon Raipur C.G.',	'1',	'6',	'101',	'491337',	'27',	0,	'Dilip Sahu',	NULL,	2,	0,	'19-10-2023_a5282dd7ce48d2e138f04095df08bfc4.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(32,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT040',	256,	'Vinay',	NULL,	'Verma',	23,	45,	0,	0,	1,	0,	9111326608,	'vinayverma@gmail.com',	'1993-11-17',	'2023-10-01',	1,	1,	2,	1,	2,	'RNWPK9875G',	'Indian',	'Chainpur',	'1',	'6',	'101',	'564658',	'27',	0,	'Dilip Sahu',	NULL,	1,	0,	'04-10-2023_c2d823fa7029fc07cf625bc7a5b5cb22.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(33,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT025',	256,	'Vandana',	NULL,	'Prajapati',	23,	46,	0,	0,	1,	0,	8319151816,	'vandnaprajapati@gmail.com',	'1991-06-04',	'2023-10-03',	2,	2,	2,	2,	2,	'HLWPK6688R',	'0',	'Birgaon Raipur C.G.',	'1',	'0',	'0',	'492101',	'27',	0,	'Dilip Sahu',	NULL,	1,	0,	'19-10-2023_fb47a4e39c924a0e23916aa2cac3127e.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(34,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT043',	256,	'Ishita',	NULL,	'Thakur',	23,	46,	0,	0,	1,	0,	9111326609,	'ishitathakur02@gmail.com',	'1996-06-04',	'2023-10-02',	3,	1,	1,	1,	1,	'777777777',	'india',	'gfasdGfhdag',	'1',	'6',	'101',	'564658',	'27',	0,	'Dilip Sahu',	NULL,	1,	0,	'04-10-2023_c2d823fa7029fc07cf625bc7a5b5cb22.jpg	',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(35,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT112',	256,	'Aditi',	NULL,	'Mishra',	5,	17,	0,	0,	1,	0,	7708925678,	'aditimishra@gmail.com',	'2000-11-08',	'2023-10-02',	2,	0,	0,	0,	0,	'0',	'0',	'Gondware, Ring Road 2',	'1',	'6',	'101',	'858596',	'27',	0,	NULL,	NULL,	1,	0,	'19-10-2023_cfcda46fa805bc4fed7fd315f28f563b.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(37,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT114',	256,	'Arjun',	NULL,	'Rawat',	6,	10,	0,	0,	1,	0,	8985852852,	'aditimishra@gmail.com',	'2023-10-24',	'2023-10-18',	1,	0,	0,	0,	0,	'0',	'0',	'Rawabhata Raipur, Chhattisgarh 493221',	'1',	'14',	'1',	'858596',	'27',	0,	NULL,	NULL,	2,	0,	'06-10-2023_4b72e1ad2382450c42fc1840d302433f.png',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
 (38,	'bd545732e12addf17c34a231d24a3814',	'797342eb22742bdf4524f3322a8852f1',	'Cr115',	0,	'Ramesh',	NULL,	'Yadav',	15,	32,	0,	0,	1,	0,	8855888588,	'ramesh@gmail.com',	'2000-10-17',	'2023-10-02',	1,	0,	0,	0,	0,	'0',	'0',	'Goa',	'1',	'10',	'4',	'526325',	'27',	0,	NULL,	NULL,	1,	0,	'06-10-2023_c7741c9986aefd95c9b8ecee1be74ff3.png',	'2023-11-04 06:03:09',	'2023-10-06 11:33:42'),
-(39,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT115',	254,	'rahulraj',	'sda',	'Nishad',	7,	22,	0,	0,	1,	0,	354624564,	'jayantnishad34@gmail.com',	'2023-10-02',	'2023-10-09',	2,	0,	0,	0,	0,	'0',	'0',	'Shrinagar ,Pahadipara,Gudhiyari  Raipur C.G 492001',	'1',	'6',	'14',	'492011',	'27',	0,	NULL,	NULL,	1,	0,	'08-10-2023_516d18fe541d42e58dd5761e0c1f1086.png',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(40,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT116',	254,	'mohit',	NULL,	'sahu',	5,	9,	0,	0,	1,	0,	483589348,	'mohit007@gmail.com',	'2023-09-27',	'2023-10-23',	1,	0,	0,	0,	0,	'0',	'0',	'Raipur',	'1',	'6',	'44',	'492011',	'27',	0,	NULL,	NULL,	1,	0,	'08-10-2023_c83c281cf1fc02e3500574e47731c897.png',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(41,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT117',	254,	'Bhaskar',	'asdf',	'Dewangan',	2,	39,	0,	0,	1,	0,	8585885885,	'bhaskardewangan@gmail.co',	'1998-07-07',	'2023-10-05',	1,	0,	0,	0,	0,	'0',	'0',	'Mon',	'1',	'24',	'5',	'564658',	'27',	0,	NULL,	NULL,	1,	0,	'18-10-2023_95fc577a986545f3a996d9ae017d36a4.jpg',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(42,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT118',	254,	'Rahul',	NULL,	'Verma',	9,	25,	0,	0,	1,	0,	8558585544,	'contractualemp@gmail.com',	'2000-06-13',	'2022-05-01',	1,	0,	0,	0,	0,	'0',	'0',	'C/O Ram Ganesh CG Nagar Tikraara Near Mahesh, Vijayvada',	'1',	'15',	'13',	'490505',	'27',	0,	NULL,	NULL,	1,	0,	'23-10-2023_d4bfc20c7818c75867918aa46e8cfbd4.jpg',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(43,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT119',	254,	'Rupali',	NULL,	'Verma',	1,	40,	0,	0,	1,	1,	9875868485,	'rupali430@gmail.com',	'1999-10-12',	'2023-10-06',	2,	0,	0,	0,	0,	'0',	'0',	'Muzaaffarpur',	'1',	'4',	'74',	'858758',	'29',	0,	NULL,	NULL,	1,	0,	'23-10-2023_aebe11b464f9d66d0e63ad8b889a2428.jpg',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(44,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT120',	254,	'Megha',	NULL,	'Kapoor',	1,	40,	0,	0,	2,	1,	8764584564,	'meghakapoor886@gmail.com',	'1998-11-11',	'2023-10-02',	2,	0,	0,	0,	0,	'0',	'0',	'Bastar',	'1',	'6',	'13',	'845415',	'27',	0,	NULL,	NULL,	1,	0,	'23-10-2023_f25210e85fea6706e85cc627ec27b155.jpg',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(45,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT121',	254,	'Nitin',	NULL,	'Singh',	1,	39,	0,	0,	1,	3,	8888888888,	'satyamsingh@gmail.com',	'2000-06-07',	'2023-10-03',	1,	0,	0,	0,	0,	'0',	'0',	'Birgaon Raipur C.G.',	'1',	'10',	'4',	'564658',	'27',	0,	NULL,	NULL,	1,	0,	'23-10-2023_229016001a0731f2a64d2d85fb210a42.jpg',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(46,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT122',	254,	'Lucky',	NULL,	'Prasad',	10,	28,	0,	0,	2,	2,	8888888877,	'luckyprasad84@gmail.com',	'2000-11-15',	'2023-02-21',	1,	0,	0,	0,	0,	'0',	'0',	'Dholka',	'1',	'11',	'43',	'898458',	'29',	0,	NULL,	NULL,	1,	0,	'23-10-2023_ac4c98e10582952ecf33c6b9e60a184e.jpg',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(47,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT123',	254,	'Mrs. Jiya',	NULL,	'Sonwane',	6,	26,	0,	0,	1,	2,	9823757720,	'jiyarajput@gmail.com',	'2000-10-23',	'2023-07-01',	2,	0,	0,	0,	0,	'0',	'0',	'Kabir Nagar, Near SBPL',	'1',	'6',	'101',	'492001',	'27',	0,	NULL,	NULL,	1,	0,	'23-10-2023_5195b06a40fdd84974c20586b42e39e6.jpg',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(48,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT124',	254,	'Karan',	'Prasad',	'Verma',	9,	25,	0,	0,	1,	3,	9823757755,	'karanverma@gmail.com',	'1999-11-10',	'2023-10-04',	1,	0,	0,	0,	0,	'0',	'0',	'Sahu Para, Main Road Bemetara',	'1',	'6',	'15',	'491237',	'29',	0,	NULL,	NULL,	2,	0,	'23-10-2023_1ed86a3123cf74d559d7e389f8f9c58c.jpg',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(49,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT125',	254,	'Aman',	'Kumar',	'Sahu',	10,	28,	0,	0,	1,	0,	9111326605,	'amansahu2333924@gmail.com',	'2000-07-07',	'2023-06-13',	1,	0,	0,	0,	0,	'0',	'0',	'Vill-Ganiyari, Post-Sambalpur, Block-Nawagarh,C.G., 491340',	'1',	'6',	'15',	'491340',	'27',	0,	NULL,	NULL,	1,	0,	'30-10-2023_19555fb9659a39160b458d5206d3273c.jpg',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(50,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT126',	254,	'Satyam',	NULL,	'Singh',	2,	39,	0,	0,	1,	0,	8585858585,	'satyamsingh@gmail.com',	'2023-11-02',	'2023-11-15',	1,	0,	1,	1,	1,	'704375743989',	'1',	NULL,	'1',	'3',	'0',	NULL,	'30',	0,	NULL,	NULL,	1,	0,	'01-11-2023_19e117f19274353287492d5c051b6814.png',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(51,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT127',	254,	'Nitya',	NULL,	'Nishad',	11,	28,	0,	6,	1,	0,	6546546546,	'nityavaishnav@gmail.com',	'1999-02-02',	'2023-11-01',	2,	1,	3,	1,	1,	'707070707070',	'1',	'Antagarh',	'1',	'6',	'1',	'564658',	'30',	0,	'Mr. R. K.',	NULL,	1,	0,	'01-11-2023_1601d7185e3c905218de930e84685f1c.jpg',	'2023-11-06 06:28:20',	'2023-11-04 14:12:11'),
-(52,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT128',	254,	'Nikita',	NULL,	'Goswami',	11,	28,	0,	0,	1,	0,	9999999999,	'nikita@gmail.com',	'2000-02-01',	'2023-10-06',	2,	1,	3,	1,	1,	'70707070707071',	'India',	'Birgaon Raipur C.G.',	'1',	'0',	'0',	'565656',	'38',	0,	'Mr. R. K.',	NULL,	1,	0,	'06-11-2023_d2582c0cc06a78b96e1974e366a95605.jpg',	'2023-11-06 07:45:04',	'2023-11-06 13:15:04'),
-(53,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT129',	254,	'Ajay',	NULL,	'Yadav',	1,	40,	0,	0,	1,	0,	7777777777,	'ajayyadav@gmail.com',	'1998-03-04',	'2023-11-02',	1,	1,	1,	1,	1,	'704375743986',	'India',	'New Delhi',	'1',	'9',	'2',	'564658',	'32',	0,	'Mr. R. K.',	NULL,	1,	0,	'06-11-2023_39bbff5435a2f30178d18c8eb9e8ac86.jpg',	'2023-11-06 07:58:16',	'2023-11-06 07:58:16');
+(39,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT115',	256,	'rahulraj',	NULL,	'Nishad',	7,	22,	0,	0,	1,	0,	8319141658,	'rahulnishad54@gmail.com',	'2023-10-02',	'2023-10-09',	1,	1,	3,	4,	5,	'VOT005FXHR',	'Indian',	'Shrinagar ,Pahadipara,Gudhiyari  Raipur C.G 492001',	'1',	'6',	'14',	'492011',	'27',	0,	'Kunal Pandit',	NULL,	1,	0,	'08-10-2023_516d18fe541d42e58dd5761e0c1f1086.png',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(40,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT116',	256,	'mohit',	NULL,	'sahu',	5,	9,	0,	0,	1,	0,	483589348,	'mohit007@gmail.com',	'2023-09-27',	'2023-10-23',	1,	0,	0,	0,	0,	'0',	'0',	'Raipur',	'1',	'6',	'44',	'492011',	'27',	0,	NULL,	NULL,	1,	0,	'08-10-2023_c83c281cf1fc02e3500574e47731c897.png',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(41,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT117',	256,	'Bhaskar',	NULL,	'Dewangan',	7,	49,	0,	0,	1,	0,	8585885885,	'bhaskardewangan@gmail.co',	'1998-07-07',	'2023-10-05',	1,	2,	3,	8,	2,	'RLWPK9878G',	'0',	'Mon',	'1',	'24',	'5',	'564658',	'27',	0,	'Dilip Sahu',	NULL,	1,	0,	'18-10-2023_95fc577a986545f3a996d9ae017d36a4.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(42,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT118',	256,	'Rahul',	NULL,	'Verma',	23,	46,	0,	0,	1,	0,	8315468571,	'rahulverma.ppk45@gmail.com',	'2000-06-13',	'2022-05-01',	1,	2,	3,	1,	5,	'VOT005FXHR',	'0',	'C/O Ram Ganesh CG Nagar Tikraara Near Mahesh, Vijayvada',	'1',	'15',	'13',	'490505',	'27',	0,	'Kunal Pandit',	NULL,	1,	0,	'23-10-2023_d4bfc20c7818c75867918aa46e8cfbd4.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(43,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT119',	256,	'Rupali',	NULL,	'Verma',	7,	22,	0,	0,	1,	1,	9875868485,	'rupaliverma430@gmail.com',	'1999-10-12',	'2023-10-06',	2,	1,	3,	8,	3,	'MH08GGR12F',	'India',	'Maharastra Govt',	'1',	'20',	'54',	'4821555',	'29',	0,	'Dilip Sahu',	NULL,	1,	0,	'23-10-2023_aebe11b464f9d66d0e63ad8b889a2428.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(44,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT120',	256,	'Megha',	NULL,	'Kapoor',	5,	43,	0,	0,	2,	1,	8764584564,	'meghakapoor886@gmail.com',	'1998-11-11',	'2023-10-02',	2,	1,	2,	1,	2,	'065235995259259',	'0',	'Bastar',	'1',	'6',	'13',	'845415',	'27',	0,	'Mr. R. K.',	NULL,	1,	0,	'23-10-2023_f25210e85fea6706e85cc627ec27b155.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(45,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT121',	256,	'Nitin',	NULL,	'Singh',	23,	46,	0,	0,	1,	3,	8888888888,	'satyamsingh123@gmail.com',	'2000-06-07',	'2023-10-03',	1,	1,	2,	2,	2,	'065235995259259',	'0',	'Birgaon Raipur C.G.',	'1',	'10',	'4',	'564658',	'27',	0,	'Dilip Sahu',	NULL,	1,	0,	'23-10-2023_229016001a0731f2a64d2d85fb210a42.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(46,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT122',	256,	'Lucky',	NULL,	'Prasad',	23,	44,	0,	0,	2,	2,	8888888877,	'luckyprasad84@gmail.com',	'2000-11-15',	'2023-02-21',	1,	1,	3,	2,	1,	'065235995259259',	'0',	'Dholka',	'1',	'11',	'43',	'898458',	'29',	0,	'Mr. R. K.',	NULL,	1,	0,	'23-10-2023_ac4c98e10582952ecf33c6b9e60a184e.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(47,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT123',	256,	'Mrs. Jiya',	NULL,	'Sonwane',	6,	26,	0,	0,	1,	2,	9823757720,	'jiyarajput@gmail.com',	'2000-10-23',	'2023-07-01',	2,	0,	0,	0,	0,	'0',	'0',	'Kabir Nagar, Near SBPL',	'1',	'6',	'101',	'492001',	'27',	0,	NULL,	NULL,	1,	0,	'23-10-2023_5195b06a40fdd84974c20586b42e39e6.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(48,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308228',	'IT124',	256,	'Karan',	'Prasad',	'Verma',	23,	45,	0,	0,	1,	3,	9823757755,	'karanverma@gmail.com',	'1999-11-10',	'2023-10-04',	1,	1,	3,	4,	1,	'065235995259259',	'0',	'Sahu Para, Main Road Bemetara',	'1',	'6',	'15',	'491237',	'29',	0,	'Dilip Sahu',	NULL,	2,	0,	'23-10-2023_1ed86a3123cf74d559d7e389f8f9c58c.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(49,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT125',	256,	'Aman',	'Kumar',	'Sahu',	23,	42,	0,	0,	1,	0,	9111326605,	'amansahu2333924@gmail.com',	'2000-07-07',	'2023-06-13',	1,	1,	3,	1,	1,	'121321231321',	'Indian',	'Vill-Ganiyari, Post-Sambalpur, Block-Nawagarh,C.G., 491340',	'1',	'6',	'15',	'491340',	'27',	0,	'Mr. R. K.',	NULL,	1,	0,	'30-10-2023_19555fb9659a39160b458d5206d3273c.jpg',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(51,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT127',	256,	'Nitya',	NULL,	'Nishad',	6,	22,	0,	10,	1,	0,	6546546546,	'nityavaishnav@gmail.com',	'1999-02-02',	'2023-11-01',	2,	1,	3,	1,	1,	'707070707070',	'1',	'Antagarh',	'1',	'6',	'1',	'564658',	'30',	0,	'Mr. R. K.',	NULL,	1,	0,	'01-11-2023_1601d7185e3c905218de930e84685f1c.jpg',	'2023-11-09 15:59:46',	'2023-11-09 17:34:40'),
+(52,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308253',	'IT128',	256,	'Nikita',	NULL,	'Goswami',	23,	26,	0,	0,	1,	0,	9999999999,	'nikita@gmail.com',	'2000-02-01',	'2023-10-06',	2,	1,	3,	1,	1,	'70707070707071',	'India',	'Birgaon Raipur C.G.',	'1',	'0',	'0',	'565656',	'30',	0,	'Mr. R. K.',	NULL,	1,	0,	'06-11-2023_d2582c0cc06a78b96e1974e366a95605.jpg',	'2023-11-10 05:22:47',	'2023-11-10 10:52:47'),
+(53,	'e3d64177e51bdff82b499e116796fe74',	'd845e2bc8a80f01f71ea5699a91308252',	'IT129',	256,	'Ajay',	NULL,	'Yadav',	23,	46,	0,	0,	1,	0,	9111352205,	'ajayyadav@gmail.com',	'1998-03-04',	'2023-11-02',	1,	1,	1,	1,	1,	'704375743986',	'India',	'New Delhi',	'1',	'9',	'2',	'564658',	'30',	0,	'Mr. R. K.',	NULL,	1,	0,	'06-11-2023_39bbff5435a2f30178d18c8eb9e8ac86.jpg',	'2023-11-10 12:19:43',	'2023-11-10 17:49:43');
 
 DROP TABLE IF EXISTS `export_employee_templates`;
 CREATE TABLE `export_employee_templates` (
@@ -437,11 +474,11 @@ CREATE TABLE `login_admin` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `login_admin` (`id`, `business_id`, `name`, `email`, `country_code`, `phone`, `otp`, `otp_created_at`, `is_verified`, `api_token`, `created_at`, `updated_at`) VALUES
-(1,	'e3d64177e51bdff82b499e116796fe74',	'aman',	'amansahu.er@gmail.com',	'+91',	'8319151766',	NULL,	NULL,	1,	'168|mt1phBbOWNIf9yEswebAqowiRQt5elYpFQOP9oHV4ce5f67e',	'2023-11-06 11:34:41',	'2023-11-06 17:04:41'),
-(2,	'e3d64177e51bdff82b499e116796fe74',	'Dilip',	'dilipsahu26@gmail.com',	'+91',	'1234567890',	'827895',	'2023-11-06 12:07:09',	1,	NULL,	'2023-11-06 12:07:09',	'2023-11-06 17:37:09'),
-(3,	'e3d64177e51bdff82b499e116796fe74',	'Nisha',	'nishasahu018@gmail.com',	'+91',	'9993433474',	'718923',	'2023-11-04 12:20:21',	1,	NULL,	'2023-11-04 12:20:21',	'2023-11-04 17:50:21'),
-(4,	'e3d64177e51bdff82b499e116796fe74',	'Nitya',	'nityavaishnav@gmail.com',	'+91',	'6546546546',	NULL,	NULL,	0,	NULL,	'2023-11-03 06:54:29',	'2023-11-03 06:54:29'),
-(5,	'bd545732e12addf17c34a231d24a3814',	'Dilip',	'dilipsahu26@gmail.com',	'+91',	'1234567890',	NULL,	NULL,	0,	NULL,	'2023-11-03 06:53:29',	'2023-11-03 06:53:29');
+(1,	'e3d64177e51bdff82b499e116796fe74',	'aman',	'amansahu.er@gmail.com',	'+91',	'8319151766',	'360111',	'2023-11-10 11:08:45',	1,	'172|gfYE9DoD8TXrlTzGinxLTwYZbSURbGP9C4LLLjEo755f9f38',	'2023-11-10 11:08:45',	'2023-11-10 16:38:45'),
+(2,	'e3d64177e51bdff82b499e116796fe74',	'Dilip',	'dilipsahu26@gmail.com',	'+91',	'1234567890',	'176277',	'2023-11-10 10:42:39',	1,	NULL,	'2023-11-10 10:42:39',	'2023-11-10 16:12:39'),
+(3,	'e3d64177e51bdff82b499e116796fe74',	'Nisha',	'nishasahu018@gmail.com',	'+91',	'9993433474',	'740722',	'2023-11-10 04:51:08',	1,	NULL,	'2023-11-10 04:51:08',	'2023-11-10 10:21:08'),
+(5,	'bd545732e12addf17c34a231d24a3814',	'Dilip',	'dilipsahu26@gmail.com',	'+91',	'1234567890',	NULL,	NULL,	0,	NULL,	'2023-11-03 06:53:29',	'2023-11-03 06:53:29'),
+(6,	'e3d64177e51bdff82b499e116796fe74',	'Nitya',	'nityavaishnav@gmail.com',	NULL,	NULL,	'355590',	'2023-11-10 11:06:25',	1,	NULL,	'2023-11-10 11:06:25',	'2023-11-10 16:36:25');
 
 DROP TABLE IF EXISTS `login_employee`;
 CREATE TABLE `login_employee` (
@@ -462,12 +499,12 @@ CREATE TABLE `login_employee` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `login_employee` (`id`, `emp_id`, `business_id`, `email`, `country_code`, `phone`, `otp`, `otp_created_at`, `created_at`, `updated_at`) VALUES
-(1,	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'jayantnishad34@gmail.com',	'+91',	'8462074453',	NULL,	'2023-10-09 09:55:59',	'0000-00-00 00:00:00',	'2023-10-09 09:55:59'),
+(1,	'IT0012',	'e3d64177e51bdff82b499e116796fe74',	'jayantnishad34@gmail.com',	'+91',	'8462074453',	NULL,	'2023-11-08 06:36:04',	'0000-00-00 00:00:00',	'2023-11-08 12:06:04'),
 (2,	'IT020',	'e3d64177e51bdff82b499e116796fe74',	'sahuuuu@gmail.com',	'+91',	'8980052852',	NULL,	'2023-11-06 08:50:31',	'0000-00-00 00:00:00',	'2023-11-06 08:50:31'),
 (3,	'IT022',	'e3d64177e51bdff82b499e116796fe74',	'satyamsigh@gmail.com',	'+91',	'8585858586',	NULL,	'2023-11-06 08:51:34',	'0000-00-00 00:00:00',	'2023-11-06 08:51:34'),
 (4,	'IT001',	'e3d64177e51bdff82b499e116796fe74',	'atyamsingh@gmail.com',	'+91',	'8585858555',	NULL,	'2023-11-06 08:52:47',	'0000-00-00 00:00:00',	'2023-11-06 08:52:47'),
-(5,	'IT025',	'e3d64177e51bdff82b499e116796fe74',	'sayamsingh@gmail.com',	'+91',	'8585800590',	'',	'2023-11-06 08:51:34',	'0000-00-00 00:00:00',	'2023-11-06 08:51:34'),
-(7,	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'nishasahu018@gmail.com',	'+91',	'9993433474',	NULL,	'2023-10-09 12:53:05',	'0000-00-00 00:00:00',	'2023-10-09 12:53:05'),
+(5,	'IT025',	'e3d64177e51bdff82b499e116796fe74',	'vandnaprajapati@gmail.com',	'+91',	'8319151816',	'',	'2023-11-08 06:39:12',	'0000-00-00 00:00:00',	'2023-11-08 12:09:12'),
+(7,	'IT009',	'e3d64177e51bdff82b499e116796fe74',	'nishasahu018@gmail.com',	'+91',	'9993433474',	NULL,	'2023-11-08 06:46:56',	'0000-00-00 00:00:00',	'2023-11-08 12:16:56'),
 (8,	'IT030',	'e3d64177e51bdff82b499e116796fe74',	'satymsingh@gmail.com',	'+91',	'8589998585',	NULL,	'2023-11-06 08:51:58',	'0000-00-00 00:00:00',	'2023-11-06 08:51:58'),
 (11,	'IT111',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'8585858587',	NULL,	'2023-11-06 08:47:24',	'0000-00-00 00:00:00',	'2023-11-06 08:47:24'),
 (12,	'IT028',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'8585858588',	NULL,	'2023-11-06 08:47:24',	'0000-00-00 00:00:00',	'2023-11-06 08:47:24'),
@@ -475,28 +512,27 @@ INSERT INTO `login_employee` (`id`, `emp_id`, `business_id`, `email`, `country_c
 (17,	'IT027',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'8596969696',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
 (19,	'IT029',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'8589658965',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
 (21,	'IT033',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'8585858589',	NULL,	'2023-11-06 08:47:24',	'0000-00-00 00:00:00',	'2023-11-06 08:47:24'),
-(22,	'IT034',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'8585858590',	NULL,	'2023-11-06 08:47:24',	'0000-00-00 00:00:00',	'2023-11-06 08:47:24'),
-(23,	'IT024',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'8585858591',	NULL,	'2023-11-06 08:47:24',	'0000-00-00 00:00:00',	'2023-11-06 08:47:24'),
-(24,	'IT040',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'8558585592',	NULL,	'2023-11-06 08:47:24',	'0000-00-00 00:00:00',	'2023-11-06 08:47:24'),
-(26,	'IT043',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'8585858599',	NULL,	'2023-11-06 08:47:24',	'0000-00-00 00:00:00',	'2023-11-06 08:47:24'),
+(22,	'IT034',	'e3d64177e51bdff82b499e116796fe74',	'mdshahi@gmail.com',	'+91',	'9111326606',	NULL,	'2023-11-07 11:15:03',	'0000-00-00 00:00:00',	'2023-11-07 11:15:03'),
+(23,	'IT024',	'e3d64177e51bdff82b499e116796fe74',	'radhikasingh@gmail.com',	'+91',	'9111326607',	NULL,	'2023-11-07 11:15:21',	'0000-00-00 00:00:00',	'2023-11-07 11:15:21'),
+(24,	'IT040',	'e3d64177e51bdff82b499e116796fe74',	'vinayverma@gmail.com',	'+91',	'9111326608',	NULL,	'2023-11-08 06:50:50',	'0000-00-00 00:00:00',	'2023-11-08 12:20:50'),
+(26,	'IT043',	'e3d64177e51bdff82b499e116796fe74',	'ishitathakur02@gmail.com',	'+91',	'9111326609',	NULL,	'2023-11-08 06:34:33',	'0000-00-00 00:00:00',	'2023-11-08 12:04:33'),
 (27,	'IT112',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'7708925678',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
 (28,	'IT113',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'8985852852',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
 (29,	'IT114',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'8985852851',	NULL,	'2023-11-06 08:47:24',	'0000-00-00 00:00:00',	'2023-11-06 08:47:24'),
 (30,	'Cr115',	'bd545732e12addf17c34a231d24a3814',	NULL,	'+91',	'8855888588',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
-(31,	'IT115',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'3546245658',	NULL,	'2023-10-09 11:01:13',	'0000-00-00 00:00:00',	'2023-10-09 11:01:13'),
+(31,	'IT115',	'e3d64177e51bdff82b499e116796fe74',	'rahulnishad54@gmail.com',	'+91',	'8319141658',	NULL,	'2023-11-08 06:56:34',	'0000-00-00 00:00:00',	'2023-11-08 12:26:34'),
 (32,	'IT116',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'483589348',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
-(33,	'IT117',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'8585885885',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
-(34,	'IT010',	'e3d64177e51bdff82b499e116796fe74',	NULL,	'+91',	'9658473211',	NULL,	'2023-10-18 12:54:24',	'0000-00-00 00:00:00',	'2023-10-18 12:54:24'),
-(35,	'IT121',	'e3d64177e51bdff82b499e116796fe74',	'styamsingh@gmail.com',	'+91',	'8888888888',	NULL,	'2023-11-06 08:52:03',	'0000-00-00 00:00:00',	'2023-11-06 08:52:03'),
-(36,	'IT122',	'e3d64177e51bdff82b499e116796fe74',	'luckyprasad84@gmail.com',	'+91',	'8888888877',	NULL,	'2023-10-30 09:56:55',	'0000-00-00 00:00:00',	'2023-10-30 09:56:55'),
+(33,	'IT117',	'e3d64177e51bdff82b499e116796fe74',	'bhaskardewangan@gmail.co',	'+91',	'8585885885',	NULL,	'2023-11-08 06:49:45',	'0000-00-00 00:00:00',	'2023-11-08 12:19:45'),
+(34,	'IT010',	'e3d64177e51bdff82b499e116796fe74',	'soniyasahu583@gmail.com',	'+91',	'9658473211',	NULL,	'2023-11-08 06:48:46',	'0000-00-00 00:00:00',	'2023-11-08 12:18:46'),
+(35,	'IT121',	'e3d64177e51bdff82b499e116796fe74',	'satyamsingh123@gmail.com',	'+91',	'8888888888',	NULL,	'2023-11-08 06:30:31',	'0000-00-00 00:00:00',	'2023-11-08 12:00:31'),
+(36,	'IT122',	'e3d64177e51bdff82b499e116796fe74',	'luckyprasad84@gmail.com',	'+91',	'8888888877',	NULL,	'2023-11-08 06:28:30',	'0000-00-00 00:00:00',	'2023-11-08 11:58:30'),
 (37,	'IT123',	'e3d64177e51bdff82b499e116796fe74',	'jiyarajput@gmail.com',	'+91',	'9823757720',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
-(39,	'IT124',	'e3d64177e51bdff82b499e116796fe74',	'karanverma@gmail.com',	'+91',	'9823757755',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
-(40,	'IT125',	'e3d64177e51bdff82b499e116796fe74',	'amansahu2333924@gmail.com',	'+91',	'9111326605',	NULL,	'2023-10-09 11:01:13',	'0000-00-00 00:00:00',	'2023-10-30 09:29:39'),
-(41,	'IT126',	'e3d64177e51bdff82b499e116796fe74',	'satyamsingh@gmail.com',	'+91',	'8585858585',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
-(42,	'IT127',	'e3d64177e51bdff82b499e116796fe74',	'nityavaishnav@gmail.com',	'+91',	'6546546546',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
-(43,	'IT008',	'e3d64177e51bdff82b499e116796fe74',	'dilipsahu26@gmail.com',	'+91',	'9993659548',	NULL,	'2023-10-09 09:55:59',	'0000-00-00 00:00:00',	'2023-10-09 09:55:59'),
-(44,	'IT128',	'e3d64177e51bdff82b499e116796fe74',	'nikita@gmail.com',	'+91',	'9999999999',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00'),
-(45,	'IT129',	'e3d64177e51bdff82b499e116796fe74',	'ajayyadav@gmail.com',	'+91',	'7777777777',	NULL,	NULL,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00');
+(39,	'IT124',	'e3d64177e51bdff82b499e116796fe74',	'karanverma@gmail.com',	'+91',	'9823757755',	NULL,	'2023-11-08 06:27:44',	'0000-00-00 00:00:00',	'2023-11-08 11:57:44'),
+(40,	'IT125',	'e3d64177e51bdff82b499e116796fe74',	'amansahu2333924@gmail.com',	'+91',	'9111326605',	NULL,	'2023-11-08 06:27:06',	'0000-00-00 00:00:00',	'2023-11-08 11:57:06'),
+(42,	'IT127',	'e3d64177e51bdff82b499e116796fe74',	'nityavaishnav@gmail.com',	'+91',	'6546546546',	NULL,	'2023-11-08 06:26:08',	'0000-00-00 00:00:00',	'2023-11-08 11:56:08'),
+(43,	'IT008',	'e3d64177e51bdff82b499e116796fe74',	'dilipsahu26@gmail.com',	'+91',	'9993659548',	NULL,	'2023-11-08 06:46:06',	'0000-00-00 00:00:00',	'2023-11-08 12:16:06'),
+(44,	'IT128',	'e3d64177e51bdff82b499e116796fe74',	'nikita@gmail.com',	'+91',	'9999999999',	NULL,	'2023-11-10 05:22:47',	'0000-00-00 00:00:00',	'2023-11-10 10:52:47'),
+(45,	'IT129',	'e3d64177e51bdff82b499e116796fe74',	'ajayyadav@gmail.com',	'+91',	'9111352205',	NULL,	'2023-11-10 12:19:43',	'0000-00-00 00:00:00',	'2023-11-10 17:49:43');
 
 DROP TABLE IF EXISTS `model_has_permissions`;
 CREATE TABLE `model_has_permissions` (
@@ -1373,7 +1409,7 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (128,	'App\\Models\\LoginAdmin',	1,	'API Token',	'1c3ba5256996268ebe1d73cc55f294007aed214df8c0ec4d57092709604a65ad',	'[\"*\"]',	NULL,	NULL,	'2023-11-06 01:20:17',	'2023-11-06 01:20:17'),
 (129,	'App\\Models\\LoginAdmin',	1,	'API Token',	'8ea1a17dbd3adce69d6971456dd5df06c2abdf65f6d81438dfb456a0365ba474',	'[\"*\"]',	'2023-11-06 01:20:59',	NULL,	'2023-11-06 01:20:47',	'2023-11-06 01:20:59'),
 (130,	'App\\Models\\LoginAdmin',	1,	'API Token',	'64cb2c4e78fb462e361a6e1099829629e43f53d0f4b1a750ab0e9a954d947bf4',	'[\"*\"]',	'2023-11-06 10:55:07',	NULL,	'2023-11-06 10:24:59',	'2023-11-06 10:55:07'),
-(131,	'App\\Models\\LoginAdmin',	1,	'API Token',	'e8c4631de8e07ea4dd5cfd4d5bbaad2736b8ea0b3fba24a132393570a331c349',	'[\"*\"]',	'2023-11-06 18:17:23',	NULL,	'2023-11-06 10:42:55',	'2023-11-06 18:17:23'),
+(131,	'App\\Models\\LoginAdmin',	1,	'API Token',	'e8c4631de8e07ea4dd5cfd4d5bbaad2736b8ea0b3fba24a132393570a331c349',	'[\"*\"]',	'2023-11-09 11:27:26',	NULL,	'2023-11-06 10:42:55',	'2023-11-09 11:27:26'),
 (132,	'App\\Models\\LoginAdmin',	1,	'API Token',	'a080c2b0449cd25ded3ecccf8e0351fdad6e27cf1a29918018715e72858ded96',	'[\"*\"]',	NULL,	NULL,	'2023-11-06 10:56:16',	'2023-11-06 10:56:16'),
 (133,	'App\\Models\\LoginAdmin',	1,	'API Token',	'534bd08a4ed3a25688b376c952ad95d936602cfd97ced71a0a58c886b283eab6',	'[\"*\"]',	NULL,	NULL,	'2023-11-06 10:57:45',	'2023-11-06 10:57:45'),
 (134,	'App\\Models\\LoginAdmin',	1,	'API Token',	'e3b494f59015f7d3e136d10d381f47df6cc8a94959076dd82a684cba9dd9e30a',	'[\"*\"]',	NULL,	NULL,	'2023-11-06 10:59:15',	'2023-11-06 10:59:15'),
@@ -1409,8 +1445,12 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (164,	'App\\Models\\LoginAdmin',	1,	'API Token',	'dcb776c6ac2b399f5ec600fa1b006caf2460eb94a4111412fc2e80d4a90f426f',	'[\"*\"]',	'2023-11-06 14:04:52',	NULL,	'2023-11-06 14:04:51',	'2023-11-06 14:04:52'),
 (165,	'App\\Models\\LoginAdmin',	1,	'API Token',	'8c0581850f0e12dc2271fbd73c3c1c935e89aa10344ce56cc9b4a4f7873e4b8d',	'[\"*\"]',	'2023-11-06 14:06:45',	NULL,	'2023-11-06 14:05:37',	'2023-11-06 14:06:45'),
 (166,	'App\\Models\\LoginAdmin',	1,	'API Token',	'c3ac6c19915e58344b9d4097914a28f7cd49fdfdccea14d0d9067aa795972f63',	'[\"*\"]',	'2023-11-06 14:07:16',	NULL,	'2023-11-06 14:07:15',	'2023-11-06 14:07:16'),
-(167,	'App\\Models\\LoginAdmin',	1,	'API Token',	'85fbffc0f20ef6592db2942d7137216b4165cc82990627948cb783304e351103',	'[\"*\"]',	'2023-11-06 14:27:23',	NULL,	'2023-11-06 14:08:06',	'2023-11-06 14:27:23'),
-(168,	'App\\Models\\LoginAdmin',	1,	'API Token',	'1f88c310133d104275548fc2ecf902e898a0e39222be610fb57eaaec55017de8',	'[\"*\"]',	'2023-11-06 17:04:42',	NULL,	'2023-11-06 17:04:41',	'2023-11-06 17:04:42');
+(167,	'App\\Models\\LoginAdmin',	1,	'API Token',	'85fbffc0f20ef6592db2942d7137216b4165cc82990627948cb783304e351103',	'[\"*\"]',	'2023-11-09 09:34:00',	NULL,	'2023-11-06 14:08:06',	'2023-11-09 09:34:00'),
+(168,	'App\\Models\\LoginAdmin',	1,	'API Token',	'1f88c310133d104275548fc2ecf902e898a0e39222be610fb57eaaec55017de8',	'[\"*\"]',	'2023-11-06 17:04:42',	NULL,	'2023-11-06 17:04:41',	'2023-11-06 17:04:42'),
+(169,	'App\\Models\\LoginAdmin',	1,	'API Token',	'3bdc3ba9672deac6244e1306de3c60a5d972e812d324c39b2365f310ffb16eda',	'[\"*\"]',	'2023-11-06 20:23:44',	NULL,	'2023-11-06 20:23:43',	'2023-11-06 20:23:44'),
+(170,	'App\\Models\\LoginAdmin',	1,	'API Token',	'601495263e02c23469bd0e1e4782f48eb704f006792f7ff5080f75b6a90db3ca',	'[\"*\"]',	'2023-11-06 20:25:18',	NULL,	'2023-11-06 20:25:17',	'2023-11-06 20:25:18'),
+(171,	'App\\Models\\LoginAdmin',	1,	'API Token',	'22b1a1ebfba436e5aa2cea7df105dd4b71be1315f6c7bce7936058fee2d624b1',	'[\"*\"]',	'2023-11-07 00:07:48',	NULL,	'2023-11-06 20:26:51',	'2023-11-07 00:07:48'),
+(172,	'App\\Models\\LoginAdmin',	1,	'API Token',	'5a9a9ccffc48088bc4a7cd7debe19b8a2d887c77706f804aefba6b5e98aee7a7',	'[\"*\"]',	'2023-11-07 19:54:06',	NULL,	'2023-11-07 10:37:47',	'2023-11-07 19:54:06');
 
 DROP TABLE IF EXISTS `policy_attendance_mode`;
 CREATE TABLE `policy_attendance_mode` (
@@ -1549,7 +1589,7 @@ CREATE TABLE `policy_atten_rule_early_exit` (
 
 INSERT INTO `policy_atten_rule_early_exit` (`id`, `switch_is`, `grace_time_hr`, `grace_time_min`, `occurance_is`, `occurance_count`, `occurance_hr`, `occurance_min`, `absent_is`, `mark_half_day_hr`, `mark_half_day_min`, `business_id`, `updated_at`, `created_at`) VALUES
 (3,	1,	0,	30,	1,	3,	0,	1,	1,	2,	30,	'bd545732e12addf17c34a231d24a3814',	'2023-10-03 05:17:01',	'0000-00-00 00:00:00'),
-(4,	1,	0,	10,	2,	NULL,	2,	0,	1,	2,	30,	'e3d64177e51bdff82b499e116796fe74',	'2023-10-23 08:18:37',	'2023-10-23 08:18:37');
+(4,	1,	0,	15,	1,	2,	0,	1,	1,	1,	0,	'e3d64177e51bdff82b499e116796fe74',	'2023-11-08 11:16:44',	'2023-11-08 11:16:44');
 
 DROP TABLE IF EXISTS `policy_atten_rule_gatepass`;
 CREATE TABLE `policy_atten_rule_gatepass` (
@@ -1568,7 +1608,7 @@ CREATE TABLE `policy_atten_rule_gatepass` (
 
 INSERT INTO `policy_atten_rule_gatepass` (`id`, `switch_is`, `occurance_is`, `occurance_count`, `occurance_hr`, `occurance_min`, `absent_is`, `business_id`, `updated_at`, `created_at`) VALUES
 (3,	1,	1,	5,	0,	0,	1,	'bd545732e12addf17c34a231d24a3814',	'2023-10-03 05:17:01',	'0000-00-00 00:00:00'),
-(4,	0,	2,	NULL,	0,	30,	1,	'e3d64177e51bdff82b499e116796fe74',	'2023-10-23 06:54:31',	'2023-10-23 06:54:31');
+(4,	1,	NULL,	4,	0,	0,	1,	'e3d64177e51bdff82b499e116796fe74',	'2023-11-10 12:05:30',	'2023-11-10 12:05:30');
 
 DROP TABLE IF EXISTS `policy_atten_rule_late_entry`;
 CREATE TABLE `policy_atten_rule_late_entry` (
@@ -1591,7 +1631,7 @@ CREATE TABLE `policy_atten_rule_late_entry` (
 
 INSERT INTO `policy_atten_rule_late_entry` (`id`, `switch_is`, `grace_time_hr`, `grace_time_min`, `occurance_is`, `occurance_count`, `occurance_hr`, `occurance_min`, `absent_is`, `mark_half_day_hr`, `mark_half_day_min`, `business_id`, `updated_at`, `created_at`) VALUES
 (3,	1,	0,	30,	1,	5,	0,	0,	1,	2,	30,	'bd545732e12addf17c34a231d24a3814',	'2023-10-03 05:17:01',	'0000-00-00 00:00:00'),
-(4,	1,	0,	15,	2,	NULL,	2,	0,	1,	2,	30,	'e3d64177e51bdff82b499e116796fe74',	'2023-10-30 12:00:00',	'2023-10-30 12:00:00');
+(4,	1,	0,	15,	1,	2,	0,	0,	1,	1,	0,	'e3d64177e51bdff82b499e116796fe74',	'2023-11-08 11:22:01',	'2023-11-08 11:22:01');
 
 DROP TABLE IF EXISTS `policy_atten_rule_misspunch`;
 CREATE TABLE `policy_atten_rule_misspunch` (
@@ -1610,7 +1650,7 @@ CREATE TABLE `policy_atten_rule_misspunch` (
 
 INSERT INTO `policy_atten_rule_misspunch` (`id`, `switch_is`, `occurance_is`, `occurance_count`, `occurance_hr`, `occurance_min`, `absent_is`, `business_id`, `updated_at`, `created_at`) VALUES
 (3,	1,	1,	3,	0,	0,	2,	'bd545732e12addf17c34a231d24a3814',	'2023-10-03 05:17:01',	'0000-00-00 00:00:00'),
-(4,	1,	2,	NULL,	2,	50,	1,	'e3d64177e51bdff82b499e116796fe74',	'2023-10-28 09:39:16',	'0000-00-00 00:00:00');
+(4,	1,	NULL,	4,	0,	0,	1,	'e3d64177e51bdff82b499e116796fe74',	'2023-11-10 12:05:30',	'0000-00-00 00:00:00');
 
 DROP TABLE IF EXISTS `policy_atten_rule_overtime`;
 CREATE TABLE `policy_atten_rule_overtime` (
@@ -1632,7 +1672,7 @@ CREATE TABLE `policy_atten_rule_overtime` (
 
 INSERT INTO `policy_atten_rule_overtime` (`id`, `switch_is`, `early_ot_hr`, `early_ot_min`, `late_ot_hr`, `late_ot_min`, `min_ot_hr`, `min_ot_min`, `max_ot_hr`, `max_ot_min`, `business_id`, `updated_at`, `created_at`) VALUES
 (3,	1,	0,	15,	1,	30,	10,	0,	30,	0,	'bd545732e12addf17c34a231d24a3814',	'2023-10-03 05:17:01',	'0000-00-00 00:00:00'),
-(4,	1,	0,	30,	0,	30,	1,	0,	40,	0,	'e3d64177e51bdff82b499e116796fe74',	'2023-10-23 07:07:54',	'0000-00-00 00:00:00');
+(4,	0,	0,	30,	0,	30,	1,	0,	40,	0,	'e3d64177e51bdff82b499e116796fe74',	'2023-11-08 10:09:22',	'0000-00-00 00:00:00');
 
 DROP TABLE IF EXISTS `policy_holiday_details`;
 CREATE TABLE `policy_holiday_details` (
@@ -1662,7 +1702,8 @@ INSERT INTO `policy_holiday_details` (`holiday_id`, `template_id`, `business_id`
 (35,	10,	'e3d64177e51bdff82b499e116796fe74',	'Dashehara',	'Tuesday',	'2023-10-24',	'2023-10-10 10:12:51',	'2023-10-10 10:12:51'),
 (36,	11,	'e3d64177e51bdff82b499e116796fe74',	'Naraka Chaturthi',	'Sunday',	'2023-11-12',	'2023-11-04 16:41:00',	'2023-11-04 16:41:00'),
 (37,	11,	'e3d64177e51bdff82b499e116796fe74',	'Diwali',	'Monday',	'2023-11-13',	'2023-11-04 16:41:00',	'2023-11-04 16:41:00'),
-(38,	11,	'e3d64177e51bdff82b499e116796fe74',	'Govardhan Pooja',	'Wednesday',	'2023-11-15',	'2023-11-04 16:41:00',	'2023-11-04 16:41:00');
+(38,	11,	'e3d64177e51bdff82b499e116796fe74',	'Govardhan Pooja',	'Wednesday',	'2023-11-15',	'2023-11-04 16:41:00',	'2023-11-04 16:41:00'),
+(39,	11,	'e3d64177e51bdff82b499e116796fe74',	'Dhanterash',	'Friday',	'2023-11-10',	NULL,	NULL);
 
 DROP TABLE IF EXISTS `policy_holiday_template`;
 CREATE TABLE `policy_holiday_template` (
@@ -1682,7 +1723,7 @@ INSERT INTO `policy_holiday_template` (`temp_id`, `temp_name`, `temp_from`, `tem
 (8,	'Creative Minds Holiday Policy',	'2023-01-01',	'2023-12-31',	'bd545732e12addf17c34a231d24a3814',	'2023-10-02 12:43:26',	'2023-10-02 12:43:26'),
 (9,	'All Fest',	'2023-10-01',	'2023-10-30',	'e3d64177e51bdff82b499e116796fe74',	'2023-10-04 12:21:44',	'2023-10-04 12:21:44'),
 (10,	'Navratri',	'2023-10-15',	'2023-10-24',	'e3d64177e51bdff82b499e116796fe74',	'2023-10-10 10:12:51',	'2023-10-10 10:12:51'),
-(11,	'Diwali',	'2023-11-12',	'2023-11-15',	'e3d64177e51bdff82b499e116796fe74',	'2023-11-04 16:41:00',	'2023-11-04 16:41:00');
+(11,	'Diwali',	'2023-11-10',	'2023-11-15',	'e3d64177e51bdff82b499e116796fe74',	'2023-11-09 18:44:38',	'2023-11-04 16:41:00');
 
 DROP TABLE IF EXISTS `policy_master_endgame_method`;
 CREATE TABLE `policy_master_endgame_method` (
@@ -1703,8 +1744,8 @@ CREATE TABLE `policy_master_endgame_method` (
 
 INSERT INTO `policy_master_endgame_method` (`id`, `business_id`, `method_switch`, `method_name`, `policy_preference`, `level_type`, `leave_policy_ids_list`, `holiday_policy_ids_list`, `weekly_policy_ids_list`, `shift_settings_ids_list`, `created_at`, `updated_at`) VALUES
 (38,	'bd545732e12addf17c34a231d24a3814',	1,	'Creative Minds Approved Rule',	1,	1,	'[\"18\"]',	'[\"8\"]',	'[\"10\"]',	'[\"26\"]',	'2023-10-03 19:09:36',	'0000-00-00 00:00:00'),
-(247,	'e3d64177e51bdff82b499e116796fe74',	0,	'INDIA',	1,	1,	'[\"10\"]',	'[\"9\"]',	'[\"4\"]',	'[\"30\"]',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11'),
-(254,	'e3d64177e51bdff82b499e116796fe74',	1,	'Indus',	1,	1,	'[\"10\"]',	'[\"6\",\"10\"]',	'[\"11\"]',	'[\"27\",\"29\",\"30\",\"38\"]',	'2023-11-04 08:42:11',	'2023-11-04 14:12:11');
+(247,	'e3d64177e51bdff82b499e116796fe74',	0,	'INDIA',	1,	1,	'[\"10\"]',	'[\"9\"]',	'[\"4\"]',	'[\"30\"]',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40'),
+(256,	'e3d64177e51bdff82b499e116796fe74',	1,	'Indus',	1,	1,	'[\"10\"]',	'[\"6\",\"10\",\"11\"]',	'[\"11\"]',	'[\"27\",\"29\",\"30\",\"38\"]',	'2023-11-09 12:04:40',	'2023-11-09 17:34:40');
 
 DROP TABLE IF EXISTS `policy_setting_leave_category`;
 CREATE TABLE `policy_setting_leave_category` (
@@ -1767,7 +1808,7 @@ CREATE TABLE `policy_setting_role_assign_permission` (
 INSERT INTO `policy_setting_role_assign_permission` (`id`, `business_id`, `emp_id`, `role_id`, `branch_id`, `department_id`, `designation_id`, `created_at`, `updated_at`) VALUES
 (18,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	1,	'd845e2bc8a80f01f71ea5699a91308253',	'11',	'28',	'2023-11-03 06:53:29',	'2023-11-03 06:53:29'),
 (19,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	6,	'd845e2bc8a80f01f71ea5699a91308253',	'11',	'28',	'2023-11-03 06:54:00',	'2023-11-03 06:54:00'),
-(20,	'e3d64177e51bdff82b499e116796fe74',	'IT127',	6,	'd845e2bc8a80f01f71ea5699a91308253',	'11',	'28',	'2023-11-03 06:54:29',	'2023-11-03 06:54:29');
+(21,	'e3d64177e51bdff82b499e116796fe74',	'IT127',	10,	'd845e2bc8a80f01f71ea5699a91308253',	'11',	'28',	'2023-11-09 12:45:32',	'2023-11-09 12:45:13');
 
 DROP TABLE IF EXISTS `policy_setting_role_create`;
 CREATE TABLE `policy_setting_role_create` (
@@ -1785,7 +1826,8 @@ CREATE TABLE `policy_setting_role_create` (
 INSERT INTO `policy_setting_role_create` (`id`, `business_id`, `branch_id`, `roles_name`, `description`, `created_at`, `updated_at`) VALUES
 (1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Admin',	'set access',	'2023-09-25 18:49:47',	'2023-09-25 18:49:47'),
 (6,	'e3d64177e51bdff82b499e116796fe74',	'',	'HR',	'Full access View creditionals',	'2023-10-16 12:37:55',	'2023-10-16 12:37:55'),
-(9,	'e3d64177e51bdff82b499e116796fe74',	'',	'user',	'Employee',	'2023-11-03 06:11:40',	'2023-11-03 06:11:40');
+(9,	'e3d64177e51bdff82b499e116796fe74',	'',	'user',	'Employee',	'2023-11-03 06:11:40',	'2023-11-03 06:11:40'),
+(10,	'e3d64177e51bdff82b499e116796fe74',	'',	'MD',	'last',	'2023-11-09 12:41:57',	'2023-11-09 12:41:57');
 
 DROP TABLE IF EXISTS `policy_setting_role_items`;
 CREATE TABLE `policy_setting_role_items` (
@@ -1852,40 +1894,52 @@ INSERT INTO `policy_setting_role_items` (`id`, `role_create_id`, `business_id`, 
 (186,	9,	'e3d64177e51bdff82b499e116796fe74',	'',	'Dashboard.View',	'2023-11-03 06:11:40',	'2023-11-03 06:11:40'),
 (187,	9,	'e3d64177e51bdff82b499e116796fe74',	'',	'Employee.View',	'2023-11-03 06:11:40',	'2023-11-03 06:11:40'),
 (188,	9,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance.View',	'2023-11-03 06:11:40',	'2023-11-03 06:11:40'),
-(189,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Dashboard.View',	'2023-11-04 04:57:56',	'2023-11-04 04:57:56'),
-(190,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Dashboard.Create',	'2023-11-04 04:57:56',	'2023-11-04 04:57:56'),
-(191,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Dashboard.Update',	'2023-11-04 04:57:56',	'2023-11-04 04:57:56'),
-(192,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Dashboard.Delete',	'2023-11-04 04:57:56',	'2023-11-04 04:57:56'),
-(193,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Employee.View',	'2023-11-04 04:57:56',	'2023-11-04 04:57:56'),
-(194,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Employee.Create',	'2023-11-04 04:57:56',	'2023-11-04 04:57:56'),
-(195,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Employee.Update',	'2023-11-04 04:57:56',	'2023-11-04 04:57:56'),
-(196,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Employee.Delete',	'2023-11-04 04:57:56',	'2023-11-04 04:57:56'),
-(197,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance.View',	'2023-11-04 04:57:56',	'2023-11-04 04:57:56'),
-(198,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance.Create',	'2023-11-04 04:57:56',	'2023-11-04 04:57:56'),
-(199,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance.Update',	'2023-11-04 04:57:56',	'2023-11-04 04:57:56'),
-(200,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance.Delete',	'2023-11-04 04:57:56',	'2023-11-04 04:57:56'),
-(201,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Leave.View',	'2023-11-04 04:57:56',	'2023-11-04 04:57:56'),
-(202,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Miss Punch.View',	'2023-11-04 04:57:56',	'2023-11-04 04:57:56'),
-(203,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Gate Pass.View',	'2023-11-04 04:57:56',	'2023-11-04 04:57:56'),
-(204,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Roles & Permissions.View',	'2023-11-04 04:57:56',	'2023-11-04 04:57:56'),
-(205,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Dashboard.View',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24'),
-(206,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance.View',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24'),
-(207,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Leave.View',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24'),
-(208,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Leave.Create',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24'),
-(209,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Leave.Update',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24'),
-(210,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Leave.Delete',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24'),
-(211,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Miss Punch.View',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24'),
-(212,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Gate Pass.View',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24'),
-(213,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance Setting.View',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24'),
-(214,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance Attedance-Mode.View',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24'),
-(215,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance Access-List.View',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24'),
-(216,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance Shift.View',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24'),
-(217,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance Automation-Rules.View',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24'),
-(218,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance TrackIn-OutTime.View',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24'),
-(219,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance Holiday.View',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24'),
-(220,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Business Setting.View',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24'),
-(221,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Branch Setting.View',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24'),
-(222,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Department Setting.View',	'2023-11-05 12:08:24',	'2023-11-05 12:08:24');
+(223,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Dashboard.View',	'2023-11-06 12:58:31',	'2023-11-06 12:58:31'),
+(224,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Dashboard.Create',	'2023-11-06 12:58:31',	'2023-11-06 12:58:31'),
+(225,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Dashboard.Update',	'2023-11-06 12:58:31',	'2023-11-06 12:58:31'),
+(226,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Dashboard.Delete',	'2023-11-06 12:58:31',	'2023-11-06 12:58:31'),
+(227,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Employee.View',	'2023-11-06 12:58:31',	'2023-11-06 12:58:31'),
+(228,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Employee.Create',	'2023-11-06 12:58:31',	'2023-11-06 12:58:31'),
+(229,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Employee.Update',	'2023-11-06 12:58:31',	'2023-11-06 12:58:31'),
+(230,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Employee.Delete',	'2023-11-06 12:58:31',	'2023-11-06 12:58:31'),
+(231,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance.View',	'2023-11-06 12:58:31',	'2023-11-06 12:58:31'),
+(232,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance.Create',	'2023-11-06 12:58:31',	'2023-11-06 12:58:31'),
+(233,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance.Update',	'2023-11-06 12:58:31',	'2023-11-06 12:58:31'),
+(234,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance.Delete',	'2023-11-06 12:58:31',	'2023-11-06 12:58:31'),
+(235,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Leave.View',	'2023-11-06 12:58:31',	'2023-11-06 12:58:31'),
+(236,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Leave.Update',	'2023-11-06 12:58:31',	'2023-11-06 12:58:31'),
+(237,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Miss Punch.View',	'2023-11-06 12:58:31',	'2023-11-06 12:58:31'),
+(238,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Gate Pass.View',	'2023-11-06 12:58:31',	'2023-11-06 12:58:31'),
+(239,	6,	'e3d64177e51bdff82b499e116796fe74',	'',	'Roles & Permissions.View',	'2023-11-06 12:58:31',	'2023-11-06 12:58:31'),
+(240,	10,	'e3d64177e51bdff82b499e116796fe74',	'',	'Dashboard.View',	'2023-11-09 12:41:57',	'2023-11-09 12:41:57'),
+(241,	10,	'e3d64177e51bdff82b499e116796fe74',	'',	'Dashboard.Create',	'2023-11-09 12:41:57',	'2023-11-09 12:41:57'),
+(242,	10,	'e3d64177e51bdff82b499e116796fe74',	'',	'Dashboard.Update',	'2023-11-09 12:41:57',	'2023-11-09 12:41:57'),
+(243,	10,	'e3d64177e51bdff82b499e116796fe74',	'',	'Dashboard.Delete',	'2023-11-09 12:41:57',	'2023-11-09 12:41:57'),
+(244,	10,	'e3d64177e51bdff82b499e116796fe74',	'',	'Leave.View',	'2023-11-09 12:41:57',	'2023-11-09 12:41:57'),
+(245,	10,	'e3d64177e51bdff82b499e116796fe74',	'',	'Leave.Create',	'2023-11-09 12:41:57',	'2023-11-09 12:41:57'),
+(246,	10,	'e3d64177e51bdff82b499e116796fe74',	'',	'Leave.Update',	'2023-11-09 12:41:57',	'2023-11-09 12:41:57'),
+(247,	10,	'e3d64177e51bdff82b499e116796fe74',	'',	'Leave.Delete',	'2023-11-09 12:41:57',	'2023-11-09 12:41:57'),
+(248,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Dashboard.View',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(249,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance.View',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(250,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance.Create',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(251,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance.Update',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(252,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance.Delete',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(253,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Leave.View',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(254,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Leave.Create',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(255,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Leave.Update',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(256,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Leave.Delete',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(257,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Miss Punch.View',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(258,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Gate Pass.View',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(259,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance Setting.View',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(260,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance Attedance-Mode.View',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(261,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance Access-List.View',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(262,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance Shift.View',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(263,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance Automation-Rules.View',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(264,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance TrackIn-OutTime.View',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(265,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Attendance Holiday.View',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(266,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Business Setting.View',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(267,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Branch Setting.View',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35'),
+(268,	1,	'e3d64177e51bdff82b499e116796fe74',	'',	'Department Setting.View',	'2023-11-10 10:35:35',	'2023-11-10 10:35:35');
 
 DROP TABLE IF EXISTS `policy_weekly_holiday_list`;
 CREATE TABLE `policy_weekly_holiday_list` (
@@ -1901,7 +1955,7 @@ CREATE TABLE `policy_weekly_holiday_list` (
 INSERT INTO `policy_weekly_holiday_list` (`id`, `business_id`, `name`, `days`, `created_at`, `updated_at`) VALUES
 (4,	'e3d64177e51bdff82b499e116796fe74',	'weeklyoff A',	'[\"Saturday\"]',	'2023-10-31 09:39:17',	'2023-09-28 14:05:37'),
 (10,	'bd545732e12addf17c34a231d24a3814',	'Creative Minds Week Off',	'[\"Sunday\"]',	'2023-10-02 07:30:29',	'2023-10-02 12:56:21'),
-(11,	'e3d64177e51bdff82b499e116796fe74',	'weeklyoff B',	'[\"Saturday\",\"Sunday\"]',	'2023-11-01 12:44:26',	'2023-10-04 22:53:01');
+(11,	'e3d64177e51bdff82b499e116796fe74',	'weeklyoff B',	'[\"Sunday\"]',	'2023-11-07 06:49:15',	'2023-10-04 22:53:01');
 
 DROP TABLE IF EXISTS `request_gatepass_list`;
 CREATE TABLE `request_gatepass_list` (
@@ -1909,7 +1963,7 @@ CREATE TABLE `request_gatepass_list` (
   `business_id` longtext DEFAULT NULL,
   `emp_id` varchar(255) DEFAULT NULL,
   `date` date DEFAULT NULL,
-  `going_through` varchar(255) DEFAULT NULL,
+  `going_through` int(11) DEFAULT NULL,
   `in_time` time DEFAULT NULL,
   `out_time` time DEFAULT NULL,
   `source` varchar(255) DEFAULT NULL,
@@ -1919,72 +1973,12 @@ CREATE TABLE `request_gatepass_list` (
   `remark` varchar(255) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `request_gatepass_list` (`id`, `business_id`, `emp_id`, `date`, `going_through`, `in_time`, `out_time`, `source`, `destination`, `reason`, `status`, `remark`, `created_at`, `updated_at`) VALUES
-(9,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-09-30',	'1',	'13:23:00',	'13:23:00',	NULL,	NULL,	'Qetj',	'2',	'hii',	'2023-09-30 13:23:42',	'2023-09-30 13:23:42'),
-(10,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-09-30',	'2',	'13:26:00',	'13:26:00',	NULL,	NULL,	'4hh',	'2',	'sddsfaf',	'2023-09-30 13:26:25',	'2023-09-30 13:26:25'),
-(11,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-09-30',	'3',	'17:05:00',	'16:10:00',	NULL,	NULL,	'Collect parcel',	'1',	NULL,	'2023-09-30 15:38:12',	'2023-09-30 15:38:12'),
-(13,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-10-10',	'4',	'12:50:00',	'16:35:00',	NULL,	NULL,	'Movie time',	'2',	'Not a valid reason',	'2023-10-10 10:45:06',	'2023-10-10 10:45:06'),
-(15,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	NULL,	'5',	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-12 18:01:19',	'2023-10-12 18:01:19'),
-(16,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-10-10',	'1',	'17:03:01',	'16:03:00',	NULL,	NULL,	'Ggggggg',	'0',	NULL,	'2023-10-12 18:03:24',	'2023-10-12 18:03:24'),
-(17,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	NULL,	'2',	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:02:33',	'2023-10-27 18:02:33'),
-(18,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	NULL,	'2',	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:04:03',	'2023-10-27 18:04:03'),
-(19,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	NULL,	'2',	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:04:09',	'2023-10-27 18:04:09'),
-(20,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	NULL,	'1',	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:04:25',	'2023-10-27 18:04:25'),
-(21,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	NULL,	'3',	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:05:03',	'2023-10-27 18:05:03'),
-(22,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	NULL,	'2',	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:05:41',	'2023-10-27 18:05:41'),
-(23,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	NULL,	'1',	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-10-27 18:06:40',	'2023-10-27 18:06:40'),
-(24,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-10-10',	'1',	'12:50:00',	'12:50:00',	NULL,	NULL,	'cjjjj',	'0',	NULL,	'2023-11-01 11:39:02',	'2023-11-01 11:39:02'),
-(25,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-10-10',	'2',	'12:50:00',	'12:50:00',	NULL,	NULL,	'cjjjj',	'0',	NULL,	'2023-11-01 11:41:50',	'2023-11-01 11:41:50'),
-(26,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'5',	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-11-01 12:13:43',	'2023-11-01 12:13:43'),
-(27,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'4',	'04:20:00',	'10:30:00',	'Raipur',	'Bilashpur',	'Fov Visiting',	'0',	NULL,	'2023-11-01 12:21:07',	'2023-11-01 12:21:07'),
-(28,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'4',	'04:20:00',	'10:30:00',	'Raipur',	'Bilashpur',	'Fov Visiting',	'0',	NULL,	'2023-11-01 12:21:22',	'2023-11-01 12:21:22'),
-(29,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'4',	'04:20:00',	'10:30:00',	'Raipur',	'Bilashpur',	'Fov Visiting',	'0',	NULL,	'2023-11-01 12:21:33',	'2023-11-01 12:21:33'),
-(30,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'3',	'04:20:00',	'10:30:00',	'Raipur',	'Bilashpur',	'Fov Visiting',	'0',	NULL,	'2023-11-01 12:21:39',	'2023-11-01 12:21:39'),
-(31,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'5',	'04:20:00',	'10:30:00',	'Raipur',	'Bilashpur',	'Fov Visiting',	'0',	NULL,	'2023-11-01 12:26:27',	'2023-11-01 12:26:27'),
-(32,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'4',	'04:20:00',	'10:30:00',	'Raipur',	'Bilashpur',	'Fov Visiting',	'0',	NULL,	'2023-11-01 12:28:10',	'2023-11-01 12:28:10'),
-(33,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-10-10',	'2',	'12:50:00',	'12:50:00',	NULL,	NULL,	'cjjjj',	'0',	NULL,	'2023-11-01 12:30:20',	'2023-11-01 12:30:20'),
-(34,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-10-10',	'4',	'12:50:00',	'12:50:00',	NULL,	NULL,	'cjjjj',	'0',	NULL,	'2023-11-01 12:30:43',	'2023-11-01 12:30:43'),
-(35,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'6',	'04:20:00',	'14:00:00',	'Raipur',	'Bilashpur',	'Fov Visiting',	'2',	'asdf',	'2023-11-01 12:37:03',	'2023-11-03 23:54:17'),
-(36,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'4',	'04:20:00',	'14:00:00',	'Raipur',	'Bilashpur',	'For Visiting',	'0',	NULL,	'2023-11-01 12:37:19',	'2023-11-01 12:37:19'),
-(37,	'e3d64177e51bdff82b499e116796fe74',	'IT121',	'2023-11-20',	'5',	'22:25:00',	'14:00:00',	'Raipur',	'Bilashpur',	'For Visiting',	'1',	NULL,	'2023-11-01 12:39:07',	'2023-11-03 23:53:46'),
-(40,	'e3d64177e51bdff82b499e116796fe74',	'IT0012',	'2023-11-01',	'2',	'15:08:00',	'15:07:00',	'ttt',	'hhh',	'Ggggg',	'2',	'asdf',	'2023-11-01 15:08:31',	'2023-11-02 15:19:47'),
-(41,	'e3d64177e51bdff82b499e116796fe74',	'IT0012',	'2023-11-04',	'1',	'17:46:00',	'16:46:00',	'uu',	'jj',	'Hhh',	'1',	NULL,	'2023-11-01 15:47:13',	'2023-11-02 15:18:23'),
-(42,	'e3d64177e51bdff82b499e116796fe74',	'IT0012',	'2023-11-04',	'2',	'17:46:00',	'16:46:00',	'uu',	'jj',	'Hhh',	'1',	NULL,	'2023-11-01 16:01:02',	'2023-11-01 16:01:02'),
-(43,	'e3d64177e51bdff82b499e116796fe74',	'IT0012',	'2023-11-04',	'3',	'18:13:00',	'17:13:00',	'ii',	'yyyy',	'sdfasdf',	'2',	'adf',	'2023-11-01 16:14:09',	'2023-11-01 16:14:09'),
-(44,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	'2023-11-04',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-11-04 12:56:24',	'2023-11-04 12:56:24'),
-(45,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	'2023-11-04',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-11-04 12:58:13',	'2023-11-04 12:58:13'),
-(46,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	'2023-11-04',	'2',	'16:10:00',	'12:10:00',	'FixingDots Ring Road No. 2',	'Ambuja Mall',	'Watching a movie because the lights were off in the office.',	'0',	NULL,	'2023-11-04 13:53:14',	'2023-11-04 13:53:14'),
-(47,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	NULL,	'2',	'16:10:00',	'12:10:00',	'FixingDots Ring Road No. 2',	'Ambuja Mall',	'Watching a movie because the lights were off in the office.',	'0',	NULL,	'2023-11-04 15:00:41',	'2023-11-04 15:00:41'),
-(48,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	'2023-11-04',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-11-04 15:04:51',	'2023-11-04 15:04:51'),
-(49,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	NULL,	'2',	'16:10:00',	'12:10:00',	'FixingDots Ring Road No. 2',	'Ambuja Mall',	'Watching a movie because the lights were off in the office.',	'0',	NULL,	'2023-11-04 15:32:37',	'2023-11-04 15:32:37'),
-(50,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-11-04 15:35:31',	'2023-11-04 15:35:31'),
-(51,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-11-04 15:41:20',	'2023-11-04 15:41:20'),
-(52,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-11-04',	'Scotty',	'15:53:00',	'15:53:00',	'bnmm',	'bmnbm',	'bnmbm',	'0',	NULL,	'2023-11-04 15:53:54',	'2023-11-04 15:53:54'),
-(53,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-11-04 15:54:53',	'2023-11-04 15:54:53'),
-(54,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-11-04',	'Bike',	'15:58:00',	'15:58:00',	'yy',	'iii.',	'Ghhh',	'0',	NULL,	'2023-11-04 15:59:11',	'2023-11-04 15:59:11'),
-(55,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	NULL,	'Scotty',	'16:21:00',	'16:21:00',	'uuuu',	'yyyy',	'Kkkk',	'0',	NULL,	'2023-11-04 16:22:09',	'2023-11-04 16:22:09'),
-(56,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	NULL,	'Bike',	'16:20:00',	'15:41:00',	'Gandhi chowk',	'Fixing dots',	'Household Work',	'0',	NULL,	'2023-11-04 17:42:16',	'2023-11-04 17:42:16'),
-(57,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	NULL,	'Auto',	'17:20:00',	'16:05:00',	'Budhawari  chowk',	'Fixing dots',	'Festivald Work',	'0',	NULL,	'2023-11-04 17:43:38',	'2023-11-04 17:43:38'),
-(58,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	NULL,	'Truck',	'17:20:00',	'16:05:00',	'Budhawari  chowk',	'Fixing dots',	'FestConstuuctioon work',	'0',	NULL,	'2023-11-04 17:44:22',	'2023-11-04 17:44:22'),
-(59,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	NULL,	'Bike',	'18:15:00',	'15:44:00',	'Bus stand',	'Fixing Dotson',	'working On Delivery',	'0',	NULL,	'2023-11-04 17:45:50',	'2023-11-04 17:45:50'),
-(60,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-11-04 18:02:49',	'2023-11-04 18:02:49'),
-(61,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	NULL,	'2023-11-04 18:07:38',	'2023-11-04 18:07:38'),
-(62,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	NULL,	'JCB',	'16:14:00',	'12:05:00',	'Bilaspur Road',	'Duriii',	'Connstruction Site Work Managament',	'0',	NULL,	'2023-11-04 18:15:48',	'2023-11-04 18:15:48'),
-(63,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	'2023-11-04',	'2',	'16:10:00',	'12:10:00',	'FixingDots Ring Road No. 2',	'Ambuja Mall',	'Watching a movie because the lights were off in the office.',	'0',	NULL,	'2023-11-04 21:55:03',	'2023-11-04 21:55:03'),
-(64,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	'2023-11-04',	'2',	'16:10:00',	'12:10:00',	'FixingDots Ring Road No. 2',	'Ambuja Mall',	'Watching a movie because the lights were off in the office.',	'0',	NULL,	'2023-11-04 21:56:40',	'2023-11-04 21:56:40'),
-(65,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	'2023-11-04',	'2',	'16:10:00',	'12:10:00',	'FixingDots Ring Road No. 2',	'Ambuja Mall',	'Watching a movie because the lights were off in the office.',	'0',	NULL,	'2023-11-04 21:57:55',	'2023-11-04 21:57:55'),
-(66,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	'2023-11-04',	'2',	'16:10:00',	'12:10:00',	'FixingDots Ring Road No. 2',	'Ambuja Mall',	'Watching a movie because the lights were off in the office.',	'0',	NULL,	'2023-11-04 21:58:22',	'2023-11-04 21:58:22'),
-(67,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	'2023-11-04',	'2',	'16:10:00',	'12:10:00',	'FixingDots Ring Road No. 2',	'Ambuja Mall',	'Watching a movie because the lights were off in the office.',	'0',	NULL,	'2023-11-04 22:00:11',	'2023-11-04 22:00:11'),
-(68,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	'2023-11-04',	'2',	'16:10:00',	'12:10:00',	'FixingDots Ring Road No. 2',	'Ambuja Mall',	'Watching a movie because the lights were off in the office.',	'0',	NULL,	'2023-11-04 22:00:34',	'2023-11-04 22:00:34'),
-(69,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	'2023-11-04',	'2',	'16:10:00',	'12:10:00',	'FixingDots Ring Road No. 2',	'Ambuja Mall',	'Watching a movie because the lights were off in the office.',	'0',	NULL,	'2023-11-04 22:03:40',	'2023-11-04 22:03:40'),
-(70,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-11-06',	'Scooty',	'15:15:00',	'14:10:00',	'Xertypo',	'UpHill',	'Personal Work',	'0',	NULL,	'2023-11-06 13:49:24',	'2023-11-06 13:49:24'),
-(71,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'2023-12-07',	'Bike',	'13:05:00',	'11:55:00',	'ttt',	'kkkk',	'Xxvbnuteefn',	'0',	NULL,	'2023-11-06 13:56:06',	'2023-11-06 13:56:06'),
-(72,	'e3d64177e51bdff82b499e116796fe74',	'IT129',	'2023-09-08',	'Car',	'16:30:00',	'15:30:00',	'koihhm',	'jkjfd',	'Bbb',	'0',	NULL,	'2023-11-06 15:31:22',	'2023-11-06 15:31:22'),
-(73,	'e3d64177e51bdff82b499e116796fe74',	'IT129',	'2023-10-26',	'1',	'18:38:00',	'17:38:00',	'iii',	'nnnnm',	'Ghjgfgu',	'0',	NULL,	'2023-11-06 17:38:44',	'2023-11-06 17:38:44'),
-(74,	'e3d64177e51bdff82b499e116796fe74',	'IT129',	'2023-11-24',	'5',	'18:05:00',	'15:05:00',	'Mahadev ghat',	'Urkara Road',	'Client Tour',	'0',	NULL,	'2023-11-06 17:42:24',	'2023-11-06 17:42:24');
+(1,	'e3d64177e51bdff82b499e116796fe74',	'IT043',	'2023-11-04',	2,	'16:10:00',	'12:10:00',	'FixingDots Ring Road No. 2',	'Ambuja Mall',	'Watching a movie because the lights were off in the office.',	'0',	NULL,	'2023-11-10 17:35:58',	'2023-11-10 17:35:58');
 
 DROP TABLE IF EXISTS `request_leave_list`;
 CREATE TABLE `request_leave_list` (
@@ -1999,28 +1993,29 @@ CREATE TABLE `request_leave_list` (
   `to_date` date DEFAULT NULL,
   `days` double DEFAULT NULL,
   `reason` varchar(255) DEFAULT NULL,
-  `remark` varchar(255) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 0,
-  `approved_by_role_id` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`approved_by_role_id`)),
-  `approved_by_emp_id` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`approved_by_emp_id`)),
-  `approved_by_status` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`approved_by_status`)),
+  `initial_level_role_id` varchar(255) NOT NULL DEFAULT '0',
+  `forward_by_role_id` varchar(255) NOT NULL DEFAULT '0',
+  `forward_by_status` tinyint(1) NOT NULL DEFAULT 0,
+  `final_level_role_id` varchar(255) NOT NULL DEFAULT '0',
+  `final_status` tinyint(1) NOT NULL DEFAULT 0,
+  `process_complete` varchar(255) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `id_2` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='all level request submit , data set runtime_cycle_update used by approval_sequence manage by 1 in Sequenctial or Parallel';
 
-INSERT INTO `request_leave_list` (`id`, `business_id`, `emp_id`, `emp_mobile_no`, `leave_type`, `leave_category`, `shift_type`, `from_date`, `to_date`, `days`, `reason`, `remark`, `status`, `approved_by_role_id`, `approved_by_emp_id`, `approved_by_status`, `created_at`, `updated_at`) VALUES
-(1,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	'9658473211',	1,	145,	1,	'2023-10-10',	'2023-10-11',	NULL,	NULL,	NULL,	1,	'1',	'\"IT008\"',	'\"1\"',	'2023-11-01 16:38:17',	'2023-11-06 18:22:49'),
-(2,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	1,	146,	1,	'2023-10-10',	'2023-10-12',	NULL,	NULL,	NULL,	0,	'0',	NULL,	NULL,	'2023-11-02 17:01:54',	'2023-11-05 12:26:39'),
-(3,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	'9658473211',	NULL,	145,	2,	'2023-10-10',	'2023-10-11',	NULL,	NULL,	NULL,	1,	'1',	'\"IT008\"',	'\"1\"',	'2023-11-03 17:16:15',	'2023-11-06 18:21:07'),
-(4,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	'9658473211',	1,	145,	1,	'2023-10-10',	'2023-11-10',	NULL,	NULL,	NULL,	0,	'0',	NULL,	NULL,	'2023-11-04 17:16:21',	'2023-11-05 12:26:39'),
-(5,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	1,	145,	1,	'2023-10-10',	'2023-10-11',	NULL,	NULL,	NULL,	0,	'0',	NULL,	NULL,	'2023-11-05 17:18:17',	'2023-11-05 12:26:39'),
-(6,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	'9658473211',	1,	146,	2,	'2023-11-10',	'2023-10-10',	1,	'1',	NULL,	1,	'0',	NULL,	NULL,	'2023-11-06 17:29:08',	'2023-11-05 12:26:39'),
-(7,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	2,	146,	1,	'2023-10-10',	'2023-10-11',	0.5,	NULL,	NULL,	0,	'0',	NULL,	NULL,	'2023-11-07 17:32:22',	'2023-11-05 12:26:39'),
-(15,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	'9658473211',	1,	146,	2,	'2023-11-03',	'2023-11-03',	1,	'1',	NULL,	1,	'0',	NULL,	NULL,	'2023-11-06 17:29:08',	'2023-11-05 12:26:39'),
-(16,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	'9658473211',	1,	146,	2,	'2023-11-02',	'2023-11-02',	1,	'1',	NULL,	1,	'0',	NULL,	NULL,	'2023-11-06 17:29:08',	'2023-11-05 12:26:39');
+INSERT INTO `request_leave_list` (`id`, `business_id`, `emp_id`, `emp_mobile_no`, `leave_type`, `leave_category`, `shift_type`, `from_date`, `to_date`, `days`, `reason`, `initial_level_role_id`, `forward_by_role_id`, `forward_by_status`, `final_level_role_id`, `final_status`, `process_complete`, `created_at`, `updated_at`) VALUES
+(1,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	'9658473211',	1,	145,	1,	'2023-10-10',	'2023-10-11',	2,	NULL,	'0',	'6',	0,	'10',	0,	'0',	'2023-11-01 16:38:17',	'2023-11-10 16:34:17'),
+(2,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	1,	146,	1,	'2023-10-10',	'2023-10-12',	NULL,	NULL,	'0',	'6',	0,	'10',	0,	'0',	'2023-11-02 17:01:54',	'2023-11-10 16:34:17'),
+(3,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	'9658473211',	2,	145,	2,	'2023-10-10',	'2023-10-11',	NULL,	NULL,	'0',	'6',	0,	'10',	0,	'0',	'2023-11-03 17:16:15',	'2023-11-10 16:34:17'),
+(4,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	'9658473211',	1,	145,	1,	'2023-10-10',	'2023-11-10',	NULL,	NULL,	'0',	'6',	0,	'10',	0,	'0',	'2023-11-04 17:16:21',	'2023-11-10 16:34:17'),
+(5,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	1,	145,	1,	'2023-10-10',	'2023-10-11',	5,	NULL,	'0',	'1',	2,	'10',	0,	'0',	'2023-11-05 17:18:17',	'2023-11-10 11:44:58'),
+(6,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	'9658473211',	2,	146,	2,	'2023-11-10',	'2023-10-10',	1,	NULL,	'0',	'1',	1,	'10',	0,	'0',	'2023-11-06 17:29:08',	'2023-11-10 11:37:43'),
+(7,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	1,	146,	0,	'2023-11-03',	'2023-11-03',	1,	NULL,	'0',	'6',	0,	'10',	0,	'0',	'2023-11-07 17:32:22',	'2023-11-10 16:34:17'),
+(15,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	'9658473211',	2,	146,	2,	'2023-11-03',	'2023-11-03',	1,	NULL,	'0',	'-1',	1,	'10',	2,	'1',	'2023-11-06 17:29:08',	'2023-11-10 11:28:37'),
+(16,	'e3d64177e51bdff82b499e116796fe74',	'IT008',	'9658473211',	2,	146,	2,	'2023-11-02',	'2023-11-02',	1,	NULL,	'0',	'-1',	1,	'10',	1,	'1',	'2023-11-06 17:29:08',	'2023-11-10 11:08:48');
 
 DROP TABLE IF EXISTS `request_mispunch_list`;
 CREATE TABLE `request_mispunch_list` (
@@ -2033,28 +2028,17 @@ CREATE TABLE `request_mispunch_list` (
   `emp_miss_in_time` time DEFAULT NULL,
   `emp_miss_out_time` time DEFAULT NULL,
   `emp_working_hour` time DEFAULT NULL,
-  `message` varchar(255) DEFAULT NULL,
+  `reason` varchar(255) DEFAULT NULL,
   `remark` varchar(255) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `request_mispunch_list` (`id`, `business_id`, `emp_id`, `emp_mobile_no`, `emp_miss_date`, `emp_miss_time_type`, `emp_miss_in_time`, `emp_miss_out_time`, `emp_working_hour`, `message`, `remark`, `status`, `created_at`, `updated_at`) VALUES
-(38,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-09-16',	1,	'10:08:00',	'17:09:00',	'00:00:08',	'Chjn',	'asdfasdf',	2,	'2023-09-29 12:09:31',	'2023-09-29 12:09:31'),
-(39,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-09-29',	1,	'12:33:00',	'00:36:00',	'10:00:00',	'Dm',	NULL,	1,	'2023-09-29 12:31:37',	'2023-09-29 12:31:37'),
-(41,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-09-29',	1,	'13:51:00',	'13:51:00',	'00:00:00',	'Rjj',	NULL,	1,	'2023-09-29 13:52:12',	'2023-09-29 13:52:12'),
-(43,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-09-30',	1,	'10:28:00',	'04:28:00',	'18:00:00',	NULL,	'asdf',	2,	'2023-09-30 00:28:56',	'2023-09-30 00:28:56'),
-(48,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-09-08',	1,	'10:07:00',	'18:13:00',	'08:05:00',	'Miss the both punch',	NULL,	1,	'2023-09-30 15:39:20',	'2023-09-30 15:39:20'),
-(49,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-09-06',	1,	'10:15:00',	'19:20:00',	'09:05:00',	'Miss punching both interval',	NULL,	1,	'2023-09-30 15:43:47',	'2023-09-30 15:43:47'),
-(50,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-09-10',	1,	'08:40:00',	'21:14:00',	'12:34:00',	'Thjn',	NULL,	1,	'2023-09-30 17:15:06',	'2023-09-30 17:15:06'),
-(51,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-09-14',	1,	'09:16:00',	'16:16:00',	'07:00:00',	'Mmmmmmmmmm',	'Reson Is not Valid',	2,	'2023-10-01 23:16:47',	'2023-10-09 12:40:15'),
-(52,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-10-05',	1,	'09:50:00',	'19:10:00',	'09:20:00',	'Thalapati',	'asdfdsaf',	2,	'2023-10-10 10:43:42',	'2023-10-10 10:43:42'),
-(53,	'e3d64177e51bdff82b499e116796fe74',	'IT010',	'9993433474',	'2023-10-11',	1,	'11:10:00',	'18:15:00',	'07:05:00',	'Ooooo',	NULL,	1,	'2023-10-12 17:52:54',	'2023-10-12 17:52:54'),
-(54,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'24-10-2023',	1,	'11:08:00',	'16:08:00',	'05:00:00',	'Hhhh',	'asdf',	2,	'2023-10-23 15:08:46',	'2023-11-03 08:42:01'),
-(55,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-10-25',	1,	'11:19:00',	'17:19:00',	'06:00:00',	'Jjjjjjjjj',	NULL,	1,	'2023-10-23 16:19:49',	'2023-11-03 08:41:46'),
-(56,	'e3d64177e51bdff82b499e116796fe74',	'IT0012',	'8462074453',	'2023-11-03',	1,	'15:13:00',	'15:13:00',	'00:00:00',	'Ttt',	NULL,	0,	'2023-11-01 15:14:05',	'2023-11-01 15:14:05');
+INSERT INTO `request_mispunch_list` (`id`, `business_id`, `emp_id`, `emp_mobile_no`, `emp_miss_date`, `emp_miss_time_type`, `emp_miss_in_time`, `emp_miss_out_time`, `emp_working_hour`, `reason`, `remark`, `status`, `created_at`, `updated_at`) VALUES
+(1,	'e3d64177e51bdff82b499e116796fe74',	'IT009',	'9993433474',	'2023-11-10',	1,	'09:30:00',	'15:30:00',	'08:00:00',	'Network Unavailabel',	NULL,	0,	'2023-11-10 17:27:12',	'2023-11-10 17:27:12');
 
 DROP TABLE IF EXISTS `static_approval_name`;
 CREATE TABLE `static_approval_name` (
@@ -2323,9 +2307,8 @@ CREATE TABLE `static_mispunch_timetype` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `static_mispunch_timetype` (`id`, `time_type`) VALUES
-(1,	'In Time'),
-(2,	'Out Time'),
-(3,	'Both Time');
+(1,	'Out Time'),
+(2,	'Both Time');
 
 DROP TABLE IF EXISTS `static_request_leave_type`;
 CREATE TABLE `static_request_leave_type` (
@@ -2425,14 +2408,16 @@ CREATE TABLE `static_status_request` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `request_response` varchar(50) DEFAULT NULL,
   `request_color` varchar(50) DEFAULT NULL,
+  `btn_color` varchar(50) DEFAULT NULL,
+  `tooltip_color` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `static_status_request` (`id`, `request_response`, `request_color`) VALUES
-(0,	'Requested',	'badge badge-primary-light'),
-(1,	'Approved',	'badge badge-success-light'),
-(2,	'Declined',	'badge badge-warning-light'),
-(3,	'Pending',	'badge badge-danger-light');
+INSERT INTO `static_status_request` (`id`, `request_response`, `request_color`, `btn_color`, `tooltip_color`) VALUES
+(0,	'Requested',	'badge badge-primary-light',	'btn btn-warning',	'tooltip-warning'),
+(1,	'Approved',	'badge badge-success-light',	'btn btn-success',	'tooltip-warning'),
+(2,	'Declined',	'badge badge-warning-light',	'btn btn-danger',	'tooltip-danger'),
+(3,	'Pending',	'badge badge-danger-light',	'btn btn-primary',	'tooltip-primary');
 
 DROP TABLE IF EXISTS `subscription`;
 CREATE TABLE `subscription` (
@@ -2446,4 +2431,4 @@ INSERT INTO `subscription` (`id`, `business_id`, `packages`) VALUES
 (1,	'e3d64177e51bdff82b499e116796fe74',	'[\"{\\\"success\\\":true,\\\"code\\\":\\\"PAYMENT_SUCCESS\\\",\\\"message\\\":\\\"Your payment is successful.\\\",\\\"data\\\":{\\\"merchantId\\\":\\\"PGTESTPAYUAT\\\",\\\"merchantTransactionId\\\":\\\"65336c5973388\\\",\\\"transactionId\\\":\\\"T2310211144496972367197\\\",\\\"amount\\\":10000,\\\"state\\\":\\\"COMPLETED\\\",\\\"responseCode\\\":\\\"SUCCESS\\\",\\\"paymentInstrument\\\":{\\\"type\\\":\\\"NETBANKING\\\",\\\"pgTransactionId\\\":\\\"1995464773\\\",\\\"pgServiceTransactionId\\\":\\\"PG2212291607083344934300\\\",\\\"bankTransactionId\\\":null,\\\"bankId\\\":\\\"\\\"}}}\"]'),
 (2,	'e3d64177e51bdff82b499e116796fe74',	'[\"{\\\"success\\\":true,\\\"code\\\":\\\"PAYMENT_SUCCESS\\\",\\\"message\\\":\\\"Your payment is successful.\\\",\\\"data\\\":{\\\"merchantId\\\":\\\"PGTESTPAYUAT\\\",\\\"merchantTransactionId\\\":\\\"65336efb3d2ad\\\",\\\"transactionId\\\":\\\"T2310211156034832367494\\\",\\\"amount\\\":10000,\\\"state\\\":\\\"COMPLETED\\\",\\\"responseCode\\\":\\\"SUCCESS\\\",\\\"paymentInstrument\\\":{\\\"type\\\":\\\"CARD\\\",\\\"cardType\\\":\\\"CREDIT_CARD\\\",\\\"pgTransactionId\\\":\\\"PG2207221432267522530776\\\",\\\"bankTransactionId\\\":null,\\\"pgAuthorizationCode\\\":null,\\\"arn\\\":null,\\\"bankId\\\":\\\"\\\",\\\"brn\\\":\\\"B12345\\\"}}}\"]');
 
--- 2023-11-06 12:56:16
+-- 2023-11-10 13:07:06

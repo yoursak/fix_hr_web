@@ -13,6 +13,7 @@ use App\Models\PolicyAttenRuleLateEntry;
 use App\Models\PolicyAttenRuleEarlyExit;
 use App\Models\AttendanceList;
 use App\Models\EmployeePersonalDetail;
+use App\Models\LoginEmployee;
 use App\Models\DesignationList;
 use App\Models\PolicyAttendanceShiftSetting;
 use App\Models\StaticEmployeeJoinGenderType;
@@ -174,6 +175,14 @@ class EmployeeController extends Controller
     public function UpdateEmployee(Request $request)
     {
         // dd($request->all());
+        $loginEmployee = LoginEmployee::where('emp_id', $request->update_emp_id)
+        ->update([
+            'email' => $request->udpate_email,
+            'phone' => $request->update_mobile_number,
+        ]);
+        // dd($loginEmployee);
+        
+
         $load = EmployeePersonalDetail::where('emp_id', $request->update_emp_id)
             ->select('profile_photo')
             ->first();
@@ -229,7 +238,7 @@ class EmployeeController extends Controller
 
 
         // dd($updated);
-        if ($updated) {
+        if ($updated && $loginEmployee) {
             Alert::success('Updated Successfully', 'Your Employee Detail is Updated Successfully');
             return redirect('admin/employee');
         } else {
@@ -273,6 +282,7 @@ class EmployeeController extends Controller
             ->when($designationId, function ($query) use ($designationId) {
                 $query->where('employee_personal_details.designation_id', $designationId);
             })
+            
             ->get();
 
         // Return the filtered data as JSON response

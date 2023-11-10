@@ -134,6 +134,24 @@ class AttendanceController extends Controller
     }
 
     // ********************************** Start of Attendance Ajax Response By Aman ******************************
+
+
+
+    public function dashboardAttendanceCountFilter(Request $request)
+    {
+        $resDate = $request->date;
+        $monthAbbreviations = [
+            'Okt' => 'Oct',
+            'Maj' => 'May',
+            // Add more month abbreviations as needed
+        ];
+        $engDate = str_replace(array_keys($monthAbbreviations), array_values($monthAbbreviations), $resDate);
+
+        $date = date('Y-m-d', strtotime($engDate));
+        $responseData = Central_unit::GetCount($date);
+        return response()->json($responseData);
+
+    }
     public function allAttendanceCalculationAjax(Request $request)
     {
         $Emp = EmployeePersonalDetail::where('business_id', Session::get('business_id'))->get();
@@ -152,15 +170,16 @@ class AttendanceController extends Controller
         $branchId = $request->branch_id;
         $departmentId = $request->department_id;
         $designationId = $request->designation_id;
+        $year = $request->year ?? date('Y');
+        $month = $request->month ?? date('m');
         $Emp = EmployeePersonalDetail::when($branchId, function ($query) use ($branchId) {
             $query->where('employee_personal_details.branch_id', $branchId);
         })->when($departmentId, function ($query) use ($departmentId) {
             $query->where('employee_personal_details.department_id', $departmentId);
         })->when($designationId, function ($query) use ($designationId) {
-                $query->where('employee_personal_details.designation_id', $designationId);
-            })
-            ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
-            ->where('employee_personal_details.business_id',Session()->get('business_id'))
+            $query->where('employee_personal_details.designation_id', $designationId);
+        })->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+            ->where('employee_personal_details.business_id', Session()->get('business_id'))
             ->get();
 
         $status = [];
@@ -168,12 +187,11 @@ class AttendanceController extends Controller
         foreach ($Emp as $key => $emp) {
             $day = 0;
             $EmpID = $emp->emp_id;
-
             // Create an array to store the status for this employee
             $status[$EmpID] = [];
 
-            while ($day++ < date('d')) {
-                $res = Central_unit::getEmpAttSumm(['emp_id' => $EmpID, 'punch_date' => date('Y-m-' . $day)]);
+            while ($day++ < date('t')) {
+                $res = Central_unit::getEmpAttSumm(['emp_id' => $EmpID, 'punch_date' => date($year.'-'.$month.'-'.$day)]);
 
                 // Store the status for this day in the employee's array
                 $status[$EmpID][] = $res[0];
@@ -200,6 +218,7 @@ class AttendanceController extends Controller
         $load = RulesManagement::RoleDetailsGet();
         $call = RulesManagement::PassBy();
         $AdminRoleId = $load[0];
+        // dd($AdminRoleId);
         $EmpId = $call[2];
         if ($request->has('approveAll') && ($AdminRoleId != null && $EmpId != null)) {
 

@@ -274,7 +274,7 @@
                         <div class="form-row">
                             <div class="form-group col">
                                 <label for="inputPassword4" class="">Reason</label>
-                                <textarea class="form-control" id="" rows="2" value="" id="editReason" readonly></textarea>
+                                <textarea class="form-control"  rows="2" value="" id="editReasonData" readonly></textarea>
                             </div>
                         </div>
                         <div class="form-row d-none" id="remarks">
@@ -379,8 +379,8 @@
                         $('#editOutTime').val(result.get.emp_miss_out_time);
                         $('#editInTime').val(result.get.emp_miss_in_time);
                         $('#editTimeType').val(result.get.time_type);
-                        console.log(result.get.message);
-                        $('#editReason').val(result.get.message);
+                        // console.log(result.get.reason);
+                        $('#editReasonData').val(result.get.reason);
                         $('#RemarkTextarea').val(result.get.remark);
 
                     } else {

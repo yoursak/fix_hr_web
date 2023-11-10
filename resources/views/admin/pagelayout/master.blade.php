@@ -18,18 +18,18 @@
     <!-- FAVICON -->
     <link rel="icon" href={{ asset('assets/logo/f_fav.png?v=0.2') }} type="image/x-icon" />
     <!-- BOOTSTRAP CSS -->
-    <link href="{{asset('assets/plugins/bootstrap/css/bootstrap.css')}}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/bootstrap/css/bootstrap.css') }}" rel="stylesheet" />
     <!-- STYLE CSS -->
-    <link href="{{asset('assets/css/style.css?v=2.2')}}" rel="stylesheet" />
-    <link href="{{asset('assets/css/plugins.css')}}" rel="stylesheet" />
+    <link href="{{ asset('assets/css/style.css?v=2.7') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/css/plugins.css') }}" rel="stylesheet" />
     <!-- ANIMATE CSS -->
-    <link href="{{asset('assets/css/animated.css')}}" rel="stylesheet" />
+    <link href="{{ asset('assets/css/animated.css') }}" rel="stylesheet" />
     <!---ICONS CSS -->
-    <link href="{{asset('assets/plugins/icons/icons.css')}}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/icons/icons.css') }}" rel="stylesheet" />
 
     <!-- INTERNAL SWITCHER CSS -->
-    <link href="{{asset('assets/switcher/css/switcher.css')}}" rel="stylesheet" />
-    <link href="{{asset('assets/switcher/demo.css')}}" rel="stylesheet" />
+    <link href="{{ asset('assets/switcher/css/switcher.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/switcher/demo.css') }}" rel="stylesheet" />
 
     <!----hatasactahy -->
     @yield('css')
@@ -38,19 +38,25 @@
 
 <body class="app sidebar-mini ltr">
     @include('sweetalert::alert')
- <style>
-        body *::-webkit-scrollbar-thumb, body *:hover::-webkit-scrollbar-thumb {
+    <style>
+        .modal-header {
+            background: #1877f2;
+            color: white;
+        }
+
+        body *::-webkit-scrollbar-thumb,
+        body *:hover::-webkit-scrollbar-thumb {
 
             /* color: #f1f4fb; */
             background: #1877f2;
         }
+
         body *::-webkit-scrollbar {
             width: 5px;
             height: 8px;
             -webkit-transition: 0.3s;
             transition: 0.3s;
         }
-
     </style>
     <!-- SWITCHER -->
     <div class="switcher-wrapper">
@@ -187,8 +193,8 @@
                                         <div class="">
                                             <input
                                                 class="w-30p h-30 input-transparent-color-picker color-bg-transparent"
-                                                value="#6c5ffc" id="transparentBgColorID" type="color" data-id5="body"
-                                                data-id6="theme" data-id9="transparentcolor"
+                                                value="#6c5ffc" id="transparentBgColorID" type="color"
+                                                data-id5="body" data-id6="theme" data-id9="transparentcolor"
                                                 name="transparentBackground">
                                         </div>
                                     </div>
@@ -209,17 +215,17 @@
                                     </div>
                                 </div>
                                 <div class="switch-toggle d-flex mt-2">
-                                    <a class="bg-img1" href="javascript:void(0);"><img src={{
-                                            asset("assets/images/photos/bg-img1.jpg")}} alt="Bg-Image"
+                                    <a class="bg-img1" href="javascript:void(0);"><img
+                                            src={{ asset('assets/images/photos/bg-img1.jpg') }} alt="Bg-Image"
                                             id="bgimage1"></a>
-                                    <a class="bg-img2" href="javascript:void(0);"><img src={{
-                                            asset("assets/images/photos/bg-img2.jpg")}} alt="Bg-Image"
+                                    <a class="bg-img2" href="javascript:void(0);"><img
+                                            src={{ asset('assets/images/photos/bg-img2.jpg') }} alt="Bg-Image"
                                             id="bgimage2"></a>
-                                    <a class="bg-img3" href="javascript:void(0);"><img src={{
-                                            asset("assets/images/photos/bg-img3.jpg")}} alt="Bg-Image"
+                                    <a class="bg-img3" href="javascript:void(0);"><img
+                                            src={{ asset('assets/images/photos/bg-img3.jpg') }} alt="Bg-Image"
                                             id="bgimage3"></a>
-                                    <a class="bg-img4" href="javascript:void(0);"><img src={{
-                                            asset("assets/images/photos/bg-img4.jpg")}} alt="Bg-Image"
+                                    <a class="bg-img4" href="javascript:void(0);"><img
+                                            src={{ asset('assets/images/photos/bg-img4.jpg') }} alt="Bg-Image"
                                             id="bgimage4"></a>
                                 </div>
                             </div>
@@ -381,7 +387,7 @@
     <!-- END SWITCHER -->
     <!--- GLOBAL-LOADER -->
     <div id="global-loader">
-        <img src={{ asset('imgs/loader.gif')}} alt="loader">
+        <img src={{ asset('imgs/loader.gif') }} alt="loader">
     </div>
     <!--- END GLOBAL-LOADER -->
 
@@ -425,7 +431,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> ignor --}}
-    <script src="{{asset('assets/plugins/jquery/jquery.min.js')}}"></script>
+    <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
     @yield('js')
 
     {{-- external link used by js script use at sweet alert --}}
@@ -433,54 +439,56 @@
     <!-- JQUERY JS -->
 
     <!-- BOOTSTRAP JS -->
-    <script src="{{asset('assets/plugins/bootstrap/js/popper.min.js')}}"></script>
-    <script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="{{ asset('assets/plugins/bootstrap/js/popper.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
 
     <!-- MOMENT JS -->
-    <script src="{{asset('assets/plugins/moment/moment.js')}}"></script>
+    <script src="{{ asset('assets/plugins/moment/moment.js') }}"></script>
 
     <!-- CIRCLE-PROGRESS JS -->
-    <script src="{{asset('assets/plugins/circle-progress/circle-progress.min.js')}}"></script>
+    <script src="{{ asset('assets/plugins/circle-progress/circle-progress.min.js') }}"></script>
 
     <!--SIDEMENU JS -->
-    <script src="{{asset('assets/plugins/sidemenu/sidemenu.js')}}"></script>
+    <script src="{{ asset('assets/plugins/sidemenu/sidemenu.js') }}"></script>
 
     <!-- P-SCROLL JS -->
-    <script src="{{asset('assets/plugins/p-scrollbar/p-scrollbar.js')}}"></script>
-    <script src="{{asset('assets/plugins/p-scrollbar/p-scroll1.js')}}"></script>
+    <script src="{{ asset('assets/plugins/p-scrollbar/p-scrollbar.js') }}"></script>
+    <script src="{{ asset('assets/plugins/p-scrollbar/p-scroll1.js') }}"></script>
 
     <!--SIDEBAR JS -->
-    <script src="{{asset('assets/plugins/sidebar/sidebar.js')}}"></script>
+    <script src="{{ asset('assets/plugins/sidebar/sidebar.js') }}"></script>
 
     <!-- SELECT2 JS -->
-    <script src="{{asset('assets/plugins/select2/select2.full.min.js')}}"></script>
+    <script src="{{ asset('assets/plugins/select2/select2.full.min.js') }}"></script>
 
     <!-- INTERNAL DATA TABLES -->
-    <script src="{{asset('assets/plugins/datatable/js/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('assets/plugins/datatable/js/dataTables.bootstrap5.js')}}"></script>
-    <script src="{{asset('assets/plugins/datatable/js/dataTables.buttons.min.js')}}"></script>
-    <script src="{{asset('assets/plugins/datatable/js/buttons.bootstrap5.min.js')}}"></script>
-    <script src="{{asset('assets/plugins/datatable/js/jszip.min.js')}}"></script>
-    <script src="{{asset('assets/plugins/datatable/pdfmake/pdfmake.min.js')}}"></script>
-    <script src="{{asset('assets/plugins/datatable/pdfmake/vfs_fonts.js')}}"></script>
-    <script src="{{asset('assets/plugins/datatable/js/buttons.html5.min.js')}}"></script>
-    <script src="{{asset('assets/plugins/datatable/js/buttons.print.min.js')}}"></script>
-    <script src="{{asset('assets/plugins/datatable/js/buttons.colVis.min.js')}}"></script>
-    <script src="{{asset('assets/plugins/datatable/dataTables.responsive.min.js')}}"></script>
-    <script src="{{asset('assets/plugins/datatable/responsive.bootstrap5.min.js')}}"></script>
-    <script src="{{asset('assets/js/datatables.js')}}"></script>
-    <script src="{{asset('assets/js/select2.js')}}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/buttons.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/pdfmake/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/pdfmake/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/js/datatables.js') }}"></script>
+    <script src="{{ asset('assets/js/select2.js') }}"></script>
     <!-- STICKY JS -->
-    <script src="{{asset('assets/js/sticky.js')}}"></script>
+    <script src="{{ asset('assets/js/sticky.js') }}"></script>
+    <script src="{{ asset('assets/js/tooltip.js?0.2') }}"></script>
+    {{-- <script src="assets/js/tooltip.js"></script> --}}
 
     <!-- COLOR THEME JS  -->
-    <script src="{{asset('assets/js/themeColors.js')}}"></script>
+    <script src="{{ asset('assets/js/themeColors.js') }}"></script>
 
     <!-- CUSTOM JS -->
-    <script src="{{asset('assets/js/custom.js?v=0.6')}}"></script>
+    <script src="{{ asset('assets/js/custom.js?v=0.6') }}"></script>
 
     <!-- SWITCHER JS -->
-    <script src="{{asset('assets/switcher/js/switcher.js')}}"></script>
+    <script src="{{ asset('assets/switcher/js/switcher.js') }}"></script>
     @livewireScripts
 </body>
 

@@ -3,10 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
-
 use App\Http\Controllers\MigrationController;
 use App\Http\Controllers\ApiController\CommonApiController;
-use App\Http\Controllers\ApiController\LeaveRequestApiController;
+// use App\Http\Controllers\ApiController\LeaveRequestApiController;
 use App\Http\Controllers\ApiController\MisspuchApiController;
 use App\Http\Controllers\ApiController\UploadImageApiController;
 
@@ -17,8 +16,8 @@ use App\Http\Controllers\ApiController\ApiAdminController\Attendance\AttendanceC
 use App\Http\Controllers\ApiController\ApiAdminController\Setting\BusinessController;
 
 // User Side
+use App\Http\Controllers\ApiController\ApiUserController\Request\LeaveRequestApiController;
 use App\Http\Controllers\ApiController\ApiUserController\Request\MispunchApiController;
-
 use App\Http\Controllers\ApiController\ApiUserController\Login\EmployeeLoginApiController;
 use App\Http\Controllers\ApiController\ApiUserController\Employee\EmployeeApiController;
 use App\Http\Controllers\ApiController\ApiUserController\Request\GatePassApiController;
@@ -51,22 +50,26 @@ Route::prefix('user')->group(function () {
             Route::post('/detail', [AttendanceApiController::class, 'store']);
             Route::post('attendance_store', [AttendanceApiController::class, 'storeAttendance']);
             Route::get('detail/{id}', [AttendanceApiController::class, 'show']);
+            Route::any('/attendance_data_list', [AttendanceApiController::class, 'attendanceDataList']);
             Route::any('filter_attendance', [AttendanceApiController::class, 'filterAttenDetail']);
             Route::any('attendance_detail', [AttendanceApiController::class, 'attendanceDetail']);
             Route::put('detail/{id}', [AttendanceApiController::class, 'update']);
             Route::delete('detail/{id}', [AttendanceApiController::class, 'destroy']);
         });
 
-        // Route::prefix('/')->group(function () {
         Route::post('employee_details', [EmployeeApiController::class, 'show']);
-        // });
 
         // Leave Request
         Route::prefix('leaverequest')->group(function () {
             // Route::get('detail',[LeaveRequestApiController::class, 'index']);
             Route::post('detail', [LeaveRequestApiController::class, 'store']);
             Route::get('detail/{id}', [LeaveRequestApiController::class, 'show']);
-            Route::get('leaveidtodata/{id}', [LeaveRequestApiController::class, 'leaveIdToData']);
+            Route::any('leave_data_list', [LeaveRequestApiController::class, 'leaveDataList']);
+            Route::any('leave_shift_type', [LeaveRequestApiController::class, 'staticLeaveShiftType']); //static_leave_shift_type
+            Route::any('request_leave_type', [LeaveRequestApiController::class, 'staticRequestLeaveType']); // static_request_leave_type
+            Route::post('leave_category', [LeaveRequestApiController::class, 'policySettingLeaveCategory']); //policy_setting_leave_category
+            
+            // Route::get('leaveidtodata/{id}', [LeaveRequestApiController::class, 'leaveIdToData']);
             Route::put('detail/{id}', [LeaveRequestApiController::class, 'update']);
             Route::delete('detail/{id}', [LeaveRequestApiController::class, 'destroy']);
         });
@@ -86,9 +89,10 @@ Route::prefix('user')->group(function () {
         // MisPunch Request
         Route::prefix('mispuchrequest')->group(function () {
             // Route::get('detail',[MispunchApiController::class, 'index']);
+            Route::get('static_mispunch_time',[MispunchApiController::class, 'staticMispunchTimeType']);
             Route::get('detail/{id}', [MispunchApiController::class, 'show']);
             Route::any('mispunch_data_list', [MispunchApiController::class, 'mispunchDataList']);
-            Route::post('detail', [MispunchApiController::class, 'store']);
+            Route::post('store', [MispunchApiController::class, 'store']);
             Route::put('detail/{id}', [MispunchApiController::class, 'update']);
             Route::delete('detail/{id}', [MispunchApiController::class, 'destroy']);
 

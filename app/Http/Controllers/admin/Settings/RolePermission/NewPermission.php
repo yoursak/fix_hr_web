@@ -417,7 +417,6 @@ class NewPermission extends Controller
     {
         $approvalSystemManagement = RulesManagement::ApprovalGetDetails($approvalTypeID)[0];
         return response()->json(['data' => $approvalSystemManagement]);
-
     }
     // used Component X-ApprovalManagement
     public function ApprovalSubmit(Request $request)
@@ -426,9 +425,11 @@ class NewPermission extends Controller
         $loadType = $request->load;
         $radioBtn = $request->btnradio;
         $approvalSelection = $request->input("approval_select");
-        // dd($request->all());
+        $initialIndex = $approvalSelection[0]; // Index of the next element you want to access
+        $lastIndex = $approvalSelection[sizeof($approvalSelection) - 1];
+        // dd($request->all(), $lastIndex);
         $point = ApprovalManagementCycle::where('business_id', $businessID)->where('approval_type_id', $loadType)->first();
-
+// !
         if (!isset($point)) { //?? false
             $save = ApprovalManagementCycle::insert([
                 'approval_type_id' => $loadType,
@@ -436,6 +437,9 @@ class NewPermission extends Controller
                 'cycle_type' => $radioBtn,
                 'role_id' => json_encode($approvalSelection),
             ]);
+            // LeaveRequestList Update Particular BusinessID
+            // $load = RequestLeaveList::where('business_id', $businessID)->update(['runtime_cycle_update' => $radioBtn]);
+            // && isset($load
             if (isset($save)) {
                 Alert::success("Submit Active Attendance Approval ");
             } else {
@@ -448,15 +452,19 @@ class NewPermission extends Controller
                 'cycle_type' => $radioBtn,
                 'role_id' => json_encode($approvalSelection),
             ]);
-            if (isset($update_all_ready)) {
-                Alert::success("Your Updated Approval System ");
-
+            // LeaveRequestList Update Particular BusinessID 'runtime_cycle_update' => $radioBtn
+            // $initialIndex
+            $load = RequestLeaveList::where('business_id', $businessID)->where('process_complete','!=',1)->update(['initial_level_role_id' => 0, 'forward_by_role_id' => $initialIndex, 'final_level_role_id' => $lastIndex, 'forward_by_status' => 0]);
+            // DB::table('approval_status_list')->where('approval_type_id', 2)
+            //     ->where('business_id', $businessID)->where('status', '!=', 1)->update([
+            //         'applied_cycle_type' => $radioBtn
+            //     ]);
+            if (isset($update_all_ready) && isset($load)) {
+                Alert::success('', "Your Updated Approval System also Update Request Leave List");
             } else {
-                Alert::info("Not Updated Approval System ");
-
+                Alert::info('', "Not Updated Approval System ");
             }
         }
         return back();
     }
-
 }

@@ -1,5 +1,6 @@
 @extends('admin.pagelayout.master')
-<script src="{{ asset('assets/js/cities.js?v=2.34') }}"></script>
+<script src="{{ asset('assets/js/cities.js?v=2.34') }}">
+</script>
 @section('title')
     Employee
 @endsection
@@ -234,7 +235,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <p class="form-label">Branch</p>
-                                <select name='country-dd' id="country-dd" class="form-control" required>
+                                <select name="country-dd" id="filter-branch" class="form-control" required>
                                     <option value="">Select Branch Name</option>
                                     @foreach ($Branch as $data)
                                         <option value="{{ $data->branch_id }}">
@@ -248,7 +249,7 @@
                             <div class="form-group">
                                 <p class="form-label">Department</p>
                                 <div class="form-group mb-3">
-                                    <select id="state-dd" name="department_id" class="form-control" required>
+                                    <select id="filter-department" name="department_id" class="form-control" required>
                                         <option value="">Select Deparment Name</option>
                                         @foreach ($Department as $data)
                                             <option value="{{ $data->depart_id }}">
@@ -265,7 +266,7 @@
                             <div class="form-group">
                                 <p class="form-label">Designation</p>
                                 <div class="form-group mb-3">
-                                    <select id="desig-dd" name="designation_id" class="form-control" required>
+                                    <select id="filter-designation" name="designation_id" class="form-control" required>
                                         <option value="">Select Designation Name</option>
                                         @foreach ($Designation as $data)
                                             <option value="{{ $data->desig_id }}">
@@ -300,51 +301,51 @@
 
                                     $count = 1;
                                 @endphp
-                                @empty(!$DATA)
-                                    @foreach ($DATA as $item)
-                                        @php
-                                            $branch = $centralUnit->Branchget($item->branch_id);
-                                            $depart = $centralUnit->Departmentget($item->department_id);
+                                {{-- @empty(!$DATA) --}}
+                                @foreach ($DATA as $item)
+                                    @php
+                                        $branch = $centralUnit->Branchget($item->branch_id);
+                                        $depart = $centralUnit->Departmentget($item->department_id);
 
-                                        @endphp
-                                        <tr>
-                                            <td>{{ $count++ }}</td>
-                                            <td>
-                                                <div class="d-flex">
-                                                    <span class="avatar avatar-md brround me-3 rounded-circle"
-                                                        style="background-image: url('/employee_profile/{{ $item->profile_photo }}')"></span>
-                                                    <div class="me-3 mt-0 mt-sm-1 d-block">
-                                                        <h6 class="mb-1 fs-14">
-                                                            <a href="{{ route('employeeProfile', [$item->emp_id]) }}">
-                                                                {{ $item->emp_name }}&nbsp;{{ $item->emp_mname }}&nbsp;{{ $item->emp_lname }}
-                                                            </a>
-                                                        </h6>
-                                                        <p class="text-muted mb-0 fs-12">
-                                                            <?= $nss->DesingationIdToName($item->designation_id) ?>
-                                                        </p>
-                                                    </div>
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $count++ }}</td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <span class="avatar avatar-md brround me-3 rounded-circle"
+                                                    style="background-image: url('/employee_profile/{{ $item->profile_photo }}')"></span>
+                                                <div class="me-3 mt-0 mt-sm-1 d-block">
+                                                    <h6 class="mb-1 fs-14">
+                                                        <a href="{{ route('employeeProfile', [$item->emp_id]) }}">
+                                                            {{ $item->emp_name }}&nbsp;{{ $item->emp_mname }}&nbsp;{{ $item->emp_lname }}
+                                                        </a>
+                                                    </h6>
+                                                    <p class="text-muted mb-0 fs-12">
+                                                        <?= $nss->DesingationIdToName($item->designation_id) ?>
+                                                    </p>
                                                 </div>
-                                            </td>
-                                            <td><span class="mb-1 fs-14">{{ $item->emp_id }}</span></td>
-                                            <td><span class="mb-1 fs-14">{{ $branch->branch_name ?? ' ' }}</span></td>
-                                            <td><span class="mb-1 fs-14">{{ $depart->depart_name }}</span></td>
-                                            <td><span class="mb-1 fs-14">{{ $item->emp_date_of_joining }}</span></td>
-                                            <td><span class="mb-1 fs-14">{{ $item->emp_mobile_number }}</span></td>
-                                            <td>
-                                                @if (in_array('Employee.Update', $permissions))
-                                                    <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
-                                                        id="edit_btn_modal" onclick="openEditModel(this)"
-                                                        data-id='<?= $item->emp_id ?>' data-bs-toggle="modal" data
-                                                        data-bs-target="#updateempmodal">
-                                                        <i class="feather feather-edit" data-bs-toggle="tooltip"
-                                                            data-original-title="View"></i>
-                                                    </a>
-                                                @endif
+                                            </div>
+                                        </td>
+                                        <td><span class="mb-1 fs-14">{{ $item->emp_id }}</span></td>
+                                        <td><span class="mb-1 fs-14">{{ $branch->branch_name ?? ' ' }}</span></td>
+                                        <td><span class="mb-1 fs-14">{{ $depart->depart_name ?? '' }}</span></td>
+                                        <td><span class="mb-1 fs-14">{{ $item->emp_date_of_joining }}</span></td>
+                                        <td><span class="mb-1 fs-14">{{ $item->emp_mobile_number }}</span></td>
+                                        <td>
+                                            @if (in_array('Employee.Update', $permissions))
+                                                <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
+                                                    id="edit_btn_modal" onclick="openEditModel(this)"
+                                                    data-id='<?= $item->emp_id ?>' data-bs-toggle="modal" data
+                                                    data-bs-target="#updateempmodal">
+                                                    <i class="feather feather-edit" data-bs-toggle="tooltip"
+                                                        data-original-title="View"></i>
+                                                </a>
+                                            @endif
 
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @endempty
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                {{-- @endempty --}}
 
                             </tbody>
                         </table>
@@ -376,7 +377,6 @@
                                 <li><a href="#step-10">Personal Details</a></li>
                                 <li><a href="#step-11">Communcation Details</a></li>
                                 <li><a href="#step-12">Comapany Details</a></li>
-
                             </ul>
                             <div>
                                 <div id="step-10" class="">
@@ -438,12 +438,13 @@
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Date Of Birth</label>
                                                 <input type="date" class="update_dob_sddd form-control fc-datepicker"
-                                                    placeholder="DD-MM-YYY" id="dateofbirth_sd" name="update_dob" required>
+                                                    placeholder="DD-MM-YYY" id="dateofbirth_sd" name="update_dob"
+                                                    required>
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Gender</label>
-                                                <select class="form-control update_gender_sddd" aria-label="Type" id=""
-                                                    name="update_gender" required>
+                                                <select class="form-control update_gender_sddd" aria-label="Type"
+                                                    id="" name="update_gender" required>
                                                     <option value="">Select Gender</option>
                                                     @foreach ($staticGender as $gender)
                                                         <option value="{{ $gender->id }}">{{ $gender->gender_type }}
@@ -470,8 +471,8 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Marital Status</label>
-                                                <select class="form-control marital_satatu_sddd" aria-label="Type" id="marital_status_dd"
-                                                    name="update_marital" required>
+                                                <select class="form-control marital_satatu_sddd" aria-label="Type"
+                                                    id="marital_status_dd" name="update_marital" required>
                                                     <option value="">Select Marital Status</option>
                                                     @foreach ($staticMarital as $martial)
                                                         <option value="{{ $martial->id }}">{{ $martial->marital_type }}
@@ -481,13 +482,14 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Category</label>
-                                                <select class="form-control update_caste_sddd" aria-label="Type" 
+                                                <select class="form-control update_caste_sddd" aria-label="Type"
                                                     id="caste_dd" name="update_category" required>
                                                     <option value="">Select Category</option>
                                                     @foreach ($statciCategory as $category)
-                                                    <option value="{{ $category->id }}">{{ $category->caste_category }}
-                                                    </option>
-                                                @endforeach
+                                                        <option value="{{ $category->id }}">
+                                                            {{ $category->caste_category }}
+                                                        </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                             <div class="col-md-4">
@@ -496,25 +498,27 @@
                                                     id="blood_group_dd" name="update_blood" required>
                                                     <option value="">Select Blood Group</option>
                                                     @foreach ($staticbloodGroup as $bloodgroup)
-                                                    <option value="{{ $bloodgroup->id }}">{{ $bloodgroup->blood_group }}
-                                                    </option>
-                                                @endforeach
-                                                    </select>
+                                                        <option value="{{ $bloodgroup->id }}">
+                                                            {{ $bloodgroup->blood_group }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Select Id</label>
-                                                <select class="form-control update_gov_id_sddd" aria-label="Type" id="select_id_dd"
-                                                    name="update_gov_id" required>
+                                                <select class="form-control update_gov_id_sddd" aria-label="Type"
+                                                    id="select_id_dd" name="update_gov_id" required>
                                                     <option value="">Select Any Goverment Id</option>
                                                     @foreach ($staticGovId as $govId)
-                                                    <option value="{{ $govId->id }}">{{ $govId->govt_type }}
-                                                    </option>
-                                                @endforeach</select>
+                                                        <option value="{{ $govId->id }}">{{ $govId->govt_type }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Id Number</label>
-                                                <input type="text" class="form-control  update_id_no_sddd" id="id_number_dd"
-                                                    name="update_id_no" required>
+                                                <input type="text" class="form-control  update_id_no_sddd"
+                                                    id="id_number_dd" name="update_id_no" required>
                                             </div>
 
                                         </div>
@@ -523,10 +527,12 @@
                                 </div>
                                 <div id="step-11" class="" style="height: 448px">
                                     <div class="form-group">
+                                        <h4 class="mb-2 font-weight-bold">Communication Details</h4>
                                         <div class="row pt-5">
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Nationality</label>
-                                                <input type="text" class="form-control update-nationality_sddd" name="update_nationality" id="nationality_dd">
+                                                <input type="text" class="form-control update-nationality_sddd"
+                                                    name="update_nationality" id="nationality_dd">
                                                 {{-- <select class="form-control update_nationality_sddd" name="nationality_dd" aria-label="Type"
                                                     id="nationality_dd" name="nationality_dd" required>
                                                     <option value="">Select Nationality</option>
@@ -588,7 +594,7 @@
                                                 <label class="form-label mb-0 mt-2">Date Of Joining</label>
                                                 <input type="date" class="form-control fc-datepicker update_doj_dd"
                                                     id="doj_sd" placeholder="DD-MM-YYYY" name="update_doj" required>
-                                            </div>  
+                                            </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Employee ID</label>
                                                 <input name="update_emp_id" id="emp_id_sd" type="text"
@@ -673,10 +679,11 @@
                                                 </div>
                                             </div>
 
-                                            
+
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Assign Attendance Mathod</label>
-                                                <select name="update_attendance_method" aria-label="Type" id="attendance_sd"
+                                                <select name="update_attendance_method" aria-label="Type"
+                                                    id="attendance_sd"
                                                     class="update_attendance_method form-control custom-select" required>
                                                     <option label="Select Type" value="">Select Attendence Mark Type
                                                     </option>
@@ -689,7 +696,8 @@
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Reporting Manager</label>
                                                 <input type="text" name="update_reporting_manager"
-                                                    id="update_reporting_manager_dd" class="form-control update_reporting_manager_dd" required>
+                                                    id="update_reporting_manager_dd"
+                                                    class="form-control update_reporting_manager_dd" required>
                                             </div>
                                             <div class="col-sm-12">
                                                 <label class="custom-control mt-5 custom-checkbox">
@@ -820,7 +828,7 @@
                 dataType: 'json',
                 cache: true,
                 success: function(result) {
-                    console.log(result);
+                    // console.log(result);
                     // console.log("Edit modal" + result.get[0].profile_photo);
                     if (result.get[0].emp_id) {
                         $("input[name='update_gender']").filter("[value='" + result.get[0]
@@ -900,33 +908,34 @@
             });
         }
 
-        $('#state-dd').on('change', function() {
-            var depart_id = this.value;
-            $("#employee-dd").html('');
-            $.ajax({
-                url: "{{ url('admin/settings/business/allemployeefilter') }}",
-                type: "POST",
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    depart_id: depart_id,
-                },
-                dataType: 'json',
-                success: function(res) {
-                    console.log(res);
-                    $('#employee-dd').html('<option value="">Select Employee</option>');
-                    $.each(res.employee, function(key, value) {
-                        $("#employee-dd").append('<option value="' + value.emp_id +
-                            '">' + value.emp_name + '</option>');
-                    });
-                }
-            });
-        });
+        // $('#state-dd').on('change', function() {
+        //     var depart_id = this.value;
+        //     $("#employee-dd").html('');
+        //     $.ajax({
+        //         url: "{{ url('admin/settings/business/allemployeefilter') }}",
+        //         type: "POST",
+        //         data: {
+        //             _token: '{{ csrf_token() }}',
+        //             depart_id: depart_id,
+        //         },
+        //         dataType: 'json',
+        //         success: function(res) {
+        //             console.log(res);
+        //             $('#employee-dd').html('<option value="">Select Employee</option>');
+        //             $.each(res.employee, function(key, value) {
+        //                 $("#employee-dd").append('<option value="' + value.emp_id +
+        //                     '">' + value.emp_name + '</option>');
+        //             });
+        //         }
+        //     });
+        // });
 
         $(document).ready(function() {
-            $('#country-dd, #state-dd, #desig-dd').change(function() {
-                var branchId = $('#country-dd').val();
-                var departmentId = $('#state-dd').val();
-                var designationId = $('#desig-dd').val();
+            $('#filter-branch, #filter-department, #filter-designation').change(function() {
+                var branchId = $('#filter-branch').val();
+                // console.log(branchId);
+                var departmentId = $('#filter-department').val();
+                var designationId = $('#filter-designation').val();
                 $.ajax({
                     type: "POST",
                     url: "{{ url('admin/employee/employeefilter') }}",
@@ -937,6 +946,7 @@
                         designation_id: designationId
                     },
                     success: function(data) {
+                        // console.log(data);
                         var tbody = $('.my_body');
                         tbody.empty();
 
@@ -944,7 +954,7 @@
                             // console.log(employee);
                             let i = 1;
                             employee.forEach(el => {
-                                console.log("employee aa" + el);
+                                console.log("employee aa", el);
                                 var newRow = '<tr>' +
                                     '<td>' + i++ + '</td>' +
 
@@ -987,6 +997,87 @@
             });
         });
 
+        $(document).ready(function() {
+            $('#filter-branch').on('change', function() {
+                var branch_id = this.value;
+                $("#filter-department").html('');
+                $.ajax({
+                    url: "{{ url('admin/settings/business/allfilterdepartment') }}",
+                    type: "POST",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        brand_id: branch_id
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+
+                        console.log(result);
+                        $('#filter-department').html(
+                            '<option value="" name="department">Select Department Name</option>'
+                        );
+                        $.each(result.department, function(key, value) {
+                            $("#filter-department").append('<option name="department" value="' +
+                                value
+                                .depart_id + '">' + value.depart_name +
+                                '</option>');
+                        });
+
+
+
+
+                        $('#desig-dd').html(
+                            '<option value="">Select Designation Name</option>');
+                    }
+                });
+            });
+            $('#filter-department').on('change', function() {
+                var depart_id = this.value;
+                $("#desig-dd").html('');
+                $.ajax({
+                    url: "{{ url('admin/settings/business/alldesignation') }}",
+                    type: "POST",
+                    data: {
+                        depart_id: depart_id,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        console.log(res);
+                        $('#desig-dd').html(
+                            '<option value="">Select Designation Name</option>');
+                        $.each(res.designation, function(key, value) {
+                            $("#desig-dd").append('<option value="' + value
+                                .desig_id + '">' + value.desig_name + '</option>');
+                        });
+                        // $('#employee-dd').html(
+                        //     '<option value="">Select Employee Name</option>');
+
+                    }
+                });
+            });
+            // employee
+            $('#filter-department').on('change', function() {
+                var depart_id = this.value;
+                $("#employee-dd").html('');
+                $.ajax({
+                    url: "{{ url('admin/settings/business/allemployeefilter') }}",
+                    type: "POST",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        depart_id: depart_id,
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        console.log(res);
+                        $('#employee-dd').html('<option value="">Select Employee</option>');
+                        $.each(res.employee, function(key, value) {
+                            $("#employee-dd").append('<option value="' + value.emp_id +
+                                '">' + value.emp_name + '</option>');
+                        });
+                    }
+                });
+            });
+        });
         $(document).ready(function() {
             // Bind the "keyup" event to the input field
             $('#emp_id_sd').keyup(function() {
@@ -1043,34 +1134,37 @@
             });
         });
 
-        $('#country-dd').on('change', function() {
-            var branch_id = this.value;
-            $("#state-dd").html('');
-            $.ajax({
-                url: "{{ url('admin/settings/business/alldepartment') }}",
-                type: "POST",
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    brand_id: branch_id
-                },
-                dataType: 'json',
-                success: function(result) {
+        // $('#country-dd').on('change', function() {
+        //     var branch_id = this.value;
+        //     console.log("sahi ja raha hai");
+        //     $("#state-dd").html('');
+        //     $.ajax({
+        //         url: "{{ url('admin/settings/business/allrotationalshift') }}",
+        //         type: "POST",
+        //         data: {
+        //             _token: '{{ csrf_token() }}',
+        //             brand_id: branch_id
+        //         },
+        //         dataType: 'json',
+        //         success: function(result) {
 
-                    console.log("Result", result);
-                    $('#state-dd').html(
-                        '<option value="" name="department">Select Department Name</option>'
-                    );
-                    $.each(result.department, function(key, value) {
-                        $("#state-dd").append('<option name="department" value="' +
-                            value
-                            .depart_id + '">' + value.depart_name +
-                            '</option>');
-                    });
-                    $('#desig-dd').html(
-                        '<option value="">Select Designation Name</option>');
-                }
-            });
-        });
+        //             console.log("Result", result);
+        //             $('#state-dd').html(
+        //                 '<option value="" name="department">Select Department Name</option>'
+        //             );
+        //             // console.log(result.department.shift_type);
+        //             $.each(result.department, function(key, value) {
+        //                 // value.shift_type == 2
+        //                 $("#state-dd").append('<option name="department" value="' +
+        //                     value
+        //                     .id + '">' + value.shift_name +
+        //                     '</option>');
+        //             });
+        //             $('#desig-dd').html(
+        //                 '<option value="">Select Designation Name</option>');
+        //         }
+        //     });
+        // });
     </script>
     <script>
         function load() {
@@ -1083,7 +1177,7 @@
 
 
     <script>
-        function selectShiftType(context){
+        function selectShiftType(context) {
             // console.log("hii "+context);
             var id = context;
             console.log(id);

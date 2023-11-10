@@ -67,37 +67,37 @@ Route::middleware(['web', 'logincheck'])->group(function () {
 
 
 // Route::middleware(['web'])->get('/custom-route', [CustomController::class, 'customAction']);
-Route::get('/payment', function () {
-    return <<<HTML
-<html>
-<head>
-<style>
-  body, html {
-    height: 100%;
-    margin-left: 20%;
-    justify-content: center;
-    align-items: center;
-  }
-</style>
-</head>
-<body>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      var iframe = document.createElement("iframe");
-      iframe.src = "https://phplaravel-1083191-3790162.cloudwaysapps.com/phonepe";
-      iframe.style.border = "none";
-      iframe.style.width = "40%";
-      iframe.style.height = "100%";
+// Route::get('/payment', function () {
+//     return <<<HTML
+// <html>
+// <head>
+// <style>
+//   body, html {
+//     height: 100%;
+//     margin-left: 20%;
+//     justify-content: center;
+//     align-items: center;
+//   }
+// </style>
+// </head>
+// <body>
+//   <script>
+//     document.addEventListener("DOMContentLoaded", function() {
+//       var iframe = document.createElement("iframe");
+//       iframe.src = "https://phplaravel-1083191-3790162.cloudwaysapps.com/phonepe";
+//       iframe.style.border = "none";
+//       iframe.style.width = "40%";
+//       iframe.style.height = "100%";
 
-      document.body.appendChild(iframe);
+//       document.body.appendChild(iframe);
 
-      document.body.style.overflow = "hidden";
-    });
-  </script>
-</body>
-</html>
-HTML;
-})->name('payment');
+//       document.body.style.overflow = "hidden";
+//     });
+//   </script>
+// </body>
+// </html>
+// HTML;
+// })->name('payment');
 
 
 Route::any('phonepe', [PhonepeController::class, 'phonePe'])->name('phonepe');
@@ -196,7 +196,8 @@ Route::any('response', [PhonepeController::class, 'responseSubmit']);
             Route::any('/attendace_update', [AttendanceController::class, 'attendanceUpdate'])->name('attendance.update'); // modal attendace update route
             Route::any('/attendance_list_filter', [AttendanceController::class, 'attendanceListFilter']);
             Route::post('/attendance_calculation', [AttendanceController::class, 'allAttendanceCalculationAjax']);
-            Route::post('/monthly_attendance_calculation', [AttendanceController::class, 'monthlyAtendanceAjax']);
+            Route::post('/dashboard_attendance_count', [AttendanceController::class, 'dashboardAttendanceCountFilter']);
+            Route::post('/monthly_attendance_calculation', [AttendanceController::class, 'monthlyAtendanceAjax'])->name('dashboardCount');
             Route::get('/details', [AttendanceController::class, 'details'])->name('attendance.detail');
             Route::get('/byemployee/{id}', [AttendanceController::class, 'byemployee'])->name('attendance.byemployee');
 
@@ -295,6 +296,8 @@ Route::any('response', [PhonepeController::class, 'responseSubmit']);
                 Route::any('/designation/{id?}', [SettingController::class, 'designation'])->name('admin.designation');
                 Route::post('/leave_policy_submit', [SettingController::class, 'leavePolicySubmit'])->name('admin.leavepolicySubmit');
                 // ajax dropdown  verify usefull
+                Route::post('/allrotationalshift', [SettingController::class, 'allRotationalShift']); //save
+                Route::post('/allfilterdepartment', [SettingController::class, 'allFilterDepartment']); //save
                 Route::post('/alldepartment', [SettingController::class, 'allDepartment']); //save
                 Route::post('/alldesignation', [SettingController::class, 'allDesignation']);
                 Route::post('/check', [SettingController::class, 'check']);

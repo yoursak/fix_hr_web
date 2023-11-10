@@ -523,7 +523,8 @@ class Central_unit
         // dd($halfDayCount);
 
         $LeavesCount = count($LeaveRequests);
-        $AbsentCount = $TotalEmpCount - $PresentCount - $LeavesCount;
+        $AbsentCount = $TotalEmpCount - $PresentCount;
+        // $AbsentCount = $TotalEmpCount - $PresentCount - $LeavesCount;
         // dd($now);
 
         $LateDays = AttendanceList::where('attendance_list.business_id', Session::get('business_id'))
@@ -565,9 +566,10 @@ class Central_unit
         // ->where(['business_id' => Session::get('business_id'), 'punch_date' => date('Y-m-d')])
         // ->count();
         $AbsentCount = $EmpCount - $AttendanceCount;
-        $PendingLeave = RequestLeaveList::where('business_id', Session::get('business_id'))
+        $PendingLeave = DB::table('approval_status_list')->where('business_id', Session::get('business_id'))->where('approval_type_id', 2)
             ->where('status', 0)
             ->count();
+        // dd($PendingLeave);
 
         if ($LeaveCount != null || $AttendanceCount != null || $PendingLeave != null || $EmpCount != null || $AbsentCount != null) {
             return [$EmpCount, $AttendanceCount, $PendingLeave, $LeaveCount, $AbsentCount];
@@ -763,18 +765,52 @@ class Central_unit
     // ********************************************************** Start of Attendance Calculation By Aman ***************************************
 
 
+    // get no of Sunday function 
+    static function getNumberOfSundaysInMonth($year, $month)
+    {
+        $day = 0;
+        $totalDayinMonth = date('t');
+        $sundays = 0;
+
+        while(++$day <= $totalDayinMonth){
+            $NDay = date('N',strtotime($year.'-'.$month.'-'.$day));
+            if($NDay == 7){
+                $sundays++;
+            }
+        }
+        return $sundays;
+    }
+
     static function attendanceByEmpDetails($Emp, $y, $m)
     {
-        $day = date('d');
-        while ($day > 0) {
+        $totalTwhMin = 0;
+        $totalOTMin = 0;
+        $totalLateTime = 0;
+        $totalEarlyExitTime = 0;
+        $totalHolidays = 0;
+        $totalWeekOff = 0;
+        $totalPaidLeave = 0;
+        $totalDayinMonth = date('t');
+        $check = 0;
 
-            $sno = 0;
-            $totalTwhMin = 0;
-            $totalOTMin = 0;
-            $totalLateTime = 0;
-            $totalEarlyExitTime = 0;
+        while(++$check <= $totalDayinMonth){
+            $getOffDay = self::getEmpAttSumm(['emp_id' => $Emp, 'punch_date' => date('Y-m-' . $check)]);
+            $isOffDay = $getOffDay[0];
+            if($isOffDay == 6){
+                $totalHolidays++;
+            }elseif ($isOffDay == 7) {
+                $totalWeekOff++;
+            }elseif ($isOffDay == 10){
+                $totalPaidLeave++;
+            }
+        }
+
+        // dd($totalHolidays);
+
+        $day = 1;
+        while ($day <= date('d')) {
             $resCode = self::getEmpAttSumm(['emp_id' => $Emp, 'punch_date' => date('Y-m-' . $day)]);
-            // dd($resCode[2]);
+            // dd($resCode[10]);
             $status = $resCode[0];
             $inTime = $resCode[1] != 0 ? date('h:i A', strtotime($resCode[1])) : 'Not Mark';
             $outTime = $resCode[2] != 0 ? date('h:i A', strtotime($resCode[2])) : 'Not Mark';
@@ -799,13 +835,14 @@ class Central_unit
             $totalOTMin += $overTime;
             $totalEarlyExitTime += $earlyExitBy;
             $totalLateTime += $lateby;
-            $totalDayinMonth = date('t');
 
-            $day--;
+
+            $day++;
         }
 
         $allStatusCount = self::attendanceCount($Emp, $y, $m);
-        $twd = $allStatusCount[1] + $allStatusCount[2] + $allStatusCount[3] + $allStatusCount[9] + $allStatusCount[8] + $allStatusCount[10] + $allStatusCount[11];
+        // dd($twhMin);
+        $twd = $allStatusCount[1] + $allStatusCount[2] + $allStatusCount[3] + $allStatusCount[4] + $allStatusCount[9] + $allStatusCount[8] + $allStatusCount[10] + $allStatusCount[11];
         $present = $allStatusCount[1] + $allStatusCount[3] + $allStatusCount[9] + $allStatusCount[8] / 2;
         $absent = $allStatusCount[2];
         $late = $allStatusCount[3];
@@ -815,58 +852,106 @@ class Central_unit
         $halfday = $allStatusCount[8];
         $overtime = $allStatusCount[9];
         $remainingleave = $remLeave;
-        $cwh = $totalTwhMin / 60;
-        $twh = (date('t') - ($allStatusCount[6] + $allStatusCount[7])) * ($shiftWH / 60);
-        $twhpercentage = $totalTwhMin != 0 && $shiftWH != 0 ? ($totalTwhMin / 60 / (date('t') * ($shiftWH / 60))) * 100 : 0;
-        $rwh = (date('t') - ($allStatusCount[6] + $allStatusCount[7])) * ($shiftWH / 60) - $totalTwhMin / 60;
-        $trwh = (date('t') - ($allStatusCount[6] + $allStatusCount[7])) * ($shiftWH / 60);
-        $trwhpercentege = (((date('t') - ($allStatusCount[6] + $allStatusCount[7])) * ($shiftWH / 60) - $totalTwhMin / 60) / ((date('t') - ($allStatusCount[6] + $allStatusCount[7])) * ($shiftWH / 60))) * 100;
-        $otwh = $totalOTMin / 60;
-        $totwh = $MaxOvertime / 60;
-        $totwhpercentage = $MaxOvertime !== 0 ? ($totalOTMin / 60 / ($MaxOvertime / 60)) * 100 : 0;
+        $totalPaidOffDay = $totalHolidays + $totalWeekOff + $totalPaidLeave;
+        $totalWDinMonth =  $totalDayinMonth-$totalPaidOffDay;
 
-        return [
+
+        $cwh = ($totalTwhMin / 60);
+        $twh = ($totalWDinMonth) * ($shiftWH / 60);
+        $twhpercentage = $totalTwhMin != 0 && $shiftWH != 0 ? (($totalTwhMin / 60) / ($totalWDinMonth * ($shiftWH / 60))) * 100 : 0;
+        // dd($twhpercentage);
+
+        $rwh = ($totalWDinMonth) * ($shiftWH / 60) - $totalTwhMin / 60;
+
+        $trwh = ($totalWDinMonth) * ($shiftWH / 60);
+
+        $trwhpercentege = ((($totalWDinMonth) * ($shiftWH / 60) - $totalTwhMin / 60) / (($totalWDinMonth) * ($shiftWH / 60))) * 100;
+
+        $otwh = $totalOTMin / 60;
+
+        $totwh = $MaxOvertime / 60;
+
+        $totwhpercentage = $MaxOvertime !== 0 ? ((($totalOTMin / 60) / ($MaxOvertime / 60))) * 100 : 0;
+
+        $response = [
             $twd, //0
             $present, //1
-            $absent,//2
-            $late,//3
-            $mispunch,//4
-            $holiday,//5
-            $weekoff,//6
-            $halfday,//7
-            $overtime,//8
-            $remainingleave,//9
-            $cwh,//10
-            $twh,//11
-            $twhpercentage,//12
-            $rwh,//13
-            $trwh,//14
-            $trwhpercentege,//15
-            $otwh,//16
-            $totwh,//17
-            $totwhpercentage//18
+            $absent, //2
+            $late, //3
+            $mispunch, //4
+            $holiday, //5
+            $weekoff, //6
+            $halfday, //7
+            $overtime, //8
+            $remainingleave, //9
+            $cwh, //10
+            $twh, //11
+            $twhpercentage, //12
+            $rwh, //13
+            $trwh, //14
+            $trwhpercentege, //15
+            $otwh, //16
+            $totwh, //17
+            $totwhpercentage //18
         ];
+
+        // dd($response);
+        return $response;
     }
 
     // All type calculation of Attendance for Dashboard
-    static function GetCount()
+    static function GetCount($Date)
     {
 
-        $LeaveCount = RequestLeaveList::where('business_id', Session::get('business_id'))
-            ->count();
-        $EmpCount = EmployeePersonalDetail::where('business_id', Session::get('business_id'))
-            ->count();
-        $AttendanceCount = AttendanceList::where(['business_id' => Session::get('business_id'), 'punch_date' => date('Y-m-d')])
-            ->count();
-        $AbsentCount = $EmpCount - $AttendanceCount;
-        $MissPunchCount = RequestMispunchList::where('business_id', Session::get('business_id'))
-            ->count();
+        
+        $leaveCount = 0;
+        $misPunchCount = 0;
+        $Present = 0;
+        $Late = 0;
+        $Overtime = 0;
+        $HalfDay = 0;
+        $Absent = 0;
 
-        if ($LeaveCount != null || $AttendanceCount != null || $MissPunchCount != null || $EmpCount != null || $AbsentCount != null) {
-            return [$EmpCount, $AttendanceCount, $MissPunchCount, $LeaveCount, $AbsentCount];
-        } else {
-            return [0, 0, 0, 0, 0];
+
+        $EmpCount = EmployeePersonalDetail::where('business_id', Session::get('business_id'))->count();
+        $AttendanceList = AttendanceList::where('business_id', Session::get('business_id'))->get();
+        $TodayAttendanceList = $AttendanceList->where('punch_date', $Date);
+        $misPunchList = $AttendanceList->where('punch_date', $Date);
+
+        foreach ($TodayAttendanceList as $key => $value) {
+            $response = self::getEmpAttSumm(['emp_id' => $value->emp_id, 'punch_date' => $value->punch_date]);
+            $status = $response[0];
+
+            if ($status == 1 || $status == 5) {
+                $Present++;
+            } elseif ($status == 3) {
+                $Late++;
+            } elseif ($status == 9) {
+                $Overtime++;
+            } elseif ($status == 8) {
+                $HalfDay++;
+            } elseif ($status == 10 || $status == 11) {
+                $leaveCount++;
+            } elseif ($status == 2) {
+                $Absent++;
+            } elseif ($status == 4) {
+                $misPunchCount++;
+            }
         }
+
+
+        $Present = $Present + $Late;
+        $AbsentCount = $EmpCount - ($Present + $HalfDay + $misPunchCount);
+
+        // foreach ($misPunchList as $mispunch) {
+        //     if ($mispunch->emp_today_current_status == 1) {
+        //         $misPunchCount++;
+        //     }
+        // }
+
+
+        return [$EmpCount ?? 0, $Present ?? 0, $AbsentCount ?? 0, $HalfDay ?? 0, $leaveCount ?? 0, $misPunchCount ?? 0, $Late ?? 0, $Overtime ?? 0];
+
     }
 
     // Attendance Summary of Indivisual Employee for a Month 
@@ -906,12 +991,11 @@ class Central_unit
             // unpaid leave
         ];
 
-        $totalDayInMonth = $m == date('m') ? date('d') : date('t', strtotime($m));
+        $totalDayInMonth = ($m == date('m') ? date('d') : date('t', strtotime($m)));
         while (++$day <= $totalDayInMonth) {
             $date = $y . '-' . $m . '-' . $day;
-            // $date = $y.'-'.'10'.'-'.$day;
-            // dd(date('Y-m-d',strtotime($date)));
             $resCode = self::getEmpAttSumm(['emp_id' => $Emp, 'punch_date' => date('Y-m-d', strtotime($date))]);
+            // dd($resCode);
             $status = $resCode[0];
             $overTime = $resCode[8];
             $twhMin = $resCode[10];
@@ -920,19 +1004,22 @@ class Central_unit
             $occurance = $resCode[14];
             $totalTwhMin += $twhMin;
             $totalOTMin += $overTime;
-            $totalEarlyExitTime += $earlyExitBy;
-            $totalLateTime += $lateby;
+            if ($status == 3) {
+                $totalEarlyExitTime += $earlyExitBy;
+                $totalLateTime += $lateby;
+            }
 
-            // if (isset($statusCounts[$status])) {
-                $earlyOccurrenceIs = $occurance[0] ?? 0;
-                $earlyOccurrence = $occurance[1] ?? 0;
-                $earlyOccurrencePenalty = $occurance[2] ?? 0;
+            $earlyOccurrenceIs = $occurance[0] ?? 0;
+            $earlyOccurrence = $occurance[1] ?? 0;
+            $earlyOccurrencePenalty = $occurance[2] ?? 0;
 
-                $lateOccurrenceIs = $occurance[3] ?? 0;
-                $lateOccurrence = $occurance[4] ?? 0;
-                $lateOccurrencePenalty = $occurance[5] ?? 0;
-                // dd($occurance);
-                if ($status == 3) {
+            $lateOccurrenceIs = $occurance[3] ?? 0;
+            $lateOccurrence = $occurance[4] ?? 0;
+            $lateOccurrencePenalty = $occurance[5] ?? 0;
+
+
+            if ($status == 3) {
+                if ($lateOccurrenceIs != 0 && $earlyOccurrenceIs != 1) {
                     if ($lateOccurrenceIs == 1) {
                         if ($statusCounts[3] >= $lateOccurrence) {
                             if ($lateOccurrencePenalty == 1) {
@@ -941,11 +1028,13 @@ class Central_unit
                                 $statusCounts[2]++;
                             }
                         }
-                    } elseif ($totalLateTime >= $lateOccurrence) {
-                        if ($lateOccurrencePenalty == 1) {
-                            $statusCounts[8]++;
-                        } else {
-                            $statusCounts[2]++;
+                    } elseif ($lateOccurrenceIs == 2) {
+                        if ($totalLateTime >= $lateOccurrence) {
+                            if ($lateOccurrencePenalty == 1) {
+                                $statusCounts[8]++;
+                            } else {
+                                $statusCounts[2]++;
+                            }
                         }
                     }
 
@@ -956,28 +1045,32 @@ class Central_unit
                             } else {
                                 $statusCounts[2]++;
                             }
-                        } elseif ($totalEarlyExitTime >= $earlyOccurrence) {
-                            if ($earlyOccurrencePenalty == 1) {
-                                $statusCounts[8]++;
-                            } else {
-                                $statusCounts[2]++;
+                        } elseif ($earlyOccurrenceIs == 2) {
+                            if ($totalEarlyExitTime >= $earlyOccurrence) {
+                                if ($earlyOccurrencePenalty == 1) {
+                                    $statusCounts[8]++;
+                                } else {
+                                    $statusCounts[2]++;
+                                }
                             }
                         }
                     }
+                } else {
+                    $statusCounts[3]++;
                 }
-
-
+                // dd($status);
+            } else {
                 $statusCounts[$status]++;
-            // }
+            }
+            // dd($statusCounts);
+
         }
-        // dd($statusCounts);
-        // print_r($statusCounts);
+
         return $statusCounts;
     }
 
     // Attendance Calculation of Indivisual Employee for a single day
 
-    // $Emp['emp_id','punch_date'];
     static function getEmpAttSumm($Emp)
     {
         // calculate present, absent, halfday, holiday, weekoff;
@@ -1046,11 +1139,20 @@ class Central_unit
                 ])
                 ->get();
 
+            // $leaveRequestList = DB::table('approval_status_list')->where([
+            //     'business_id' => Session::get('business_id'),
+            //     'emp_id' => 'IT008',
+            //     'approval_type_id' => 2,
+            //     'status'=>1,
+            // ])->get();
+
+            // dd($leaveRequestList);
+
             $leaveRequestList = DB::table('request_leave_list')
                 ->where([
                     'business_id' => Session::get('business_id'),
                     'emp_id' => $Emp['emp_id'],
-                    'status' => 1,
+                    // 'status' => 1,
                 ])
                 ->whereMonth('from_date', date('m'))
                 ->get();
@@ -1069,8 +1171,7 @@ class Central_unit
                 'business_id' => Session::get('business_id'),
                 'emp_id' => $Emp['emp_id'],
                 'emp_miss_date' => $Emp['punch_date'],
-            ])
-                ->first();
+            ])->first();
 
 
             foreach ($holiday_policy as $Hpolicy) {
@@ -1113,9 +1214,9 @@ class Central_unit
 
             foreach ($leavesPolicyItems as $leave) {
                 // some variables
-                $tLeave = 0;
-                $appliedLeave = 0;
-                $leaveLimit = $leave->days;
+                $tLeave = 0;                        //total leave of all type of leave
+                $appliedLeave = 0;                  //applied leave by user of particular leave type
+                $leaveLimit = $leave->days;          //max leave for leave type
                 $leaveRequest = $leaveRequestList->where('leave_category', $leave->id);
                 foreach ($leaveRequest as $list) {
                     $to = Carbon::parse($list->to_date);
@@ -1158,7 +1259,7 @@ class Central_unit
                 }
                 $ruleCount = [
                     0 => $earlyExit->occurance_is,
-                    1 => $earlyOccurance,
+                    1 => $earlyOccurance ?? 0,
                     2 => $earlyExit->absent_is,
                     3 => $lateEntry->occurance_is,
                     4 => $lateOccurance,
@@ -1224,7 +1325,7 @@ class Central_unit
                 $totalshiftInterval = $earlyCommingTime->diff($lateGoingTime);
 
                 $twhIntervalMinutes = $totalshiftInterval->h * 60 + $totalshiftInterval->i - ($shiftInterval->h * 60 + $shiftInterval->i);
-                $overtimeValue = $totalWork->h * 60 + $totalWork->i - ($shiftInterval->h * 60 + $shiftInterval->i);
+                $overtimeValue = ($totalWork->h * 60 + $totalWork->i) - ($shiftInterval->h * 60 + $shiftInterval->i);
 
                 $overtimeValue = min($overtimeValue, $twhIntervalMinutes);
                 $overtimeValue = $overtimeValue >= 0 ? $overtimeValue : 0;
@@ -1299,14 +1400,15 @@ class Central_unit
                     if ($attendanceStatus >= 2) {
                         if ($twhMin > $shiftIntervalMinutes / 2) {
                             if ($lateEntry->switch_is != null && $lateEntry->switch_is == 1 && $inTime > $entryGrace) {
-                                if ($inTime > $absentHalfTime) {
+                                if ($markAbsentIf > 0 && $inTime > $absentHalfTime) {
                                     $status = 8; // Half Day (Late)
                                 } else {
                                     $status = 3; // Late
                                 }
+                                // dd($Emp);
                             } elseif ($earlyExit->switch_is != null && $earlyExit->switch_is == 1 && $outTime < $exitGrace) {
                                 // Half Day (Late)
-                                if ($outTime < $EarlyExitTime) {
+                                if ($earlyExitMin > 0 && $outTime < $EarlyExitTime) {
                                     $status = 8;
                                 } else {
                                     // dd($outTime);
@@ -1326,7 +1428,7 @@ class Central_unit
                         // dd();
                         if (date('Y-m-d', strtotime($Emp['punch_date'])) === date('Y-m-d')) {
                             $status = 1; // working
-                        }else{
+                        } else {
                             $status = 4; // Mis-punch
                         }
                     }
@@ -1353,13 +1455,22 @@ class Central_unit
                                 $status = 11; // unpaid leave
                             }
                         }
-                    }else{
-
+                    } else {
+                        foreach ($weekly_policy as $key => $wPolicy) {
+                            $weekOff = DB::table('policy_weekly_holiday_list')
+                                ->where([
+                                    'business_id' => Session::get('business_id'),
+                                    'id' => $wPolicy,
+                                ])
+                                ->first();
+                            foreach (json_decode($weekOff->days) as $day) {
+                                if (date('N', strtotime($day)) == $dayName) {
+                                    $status = 7; // Week Off
+                                    break;
+                                }
+                            }
+                        }
                     }
-                    // print_r($status);
-                    // dd($today >= $leaveFrom);
-
-                    // dd($remainingLeaves);
                 }
             } else {
                 foreach ($weekly_policy as $key => $wPolicy) {
@@ -1378,7 +1489,7 @@ class Central_unit
                 }
             }
 
-            // dd($status);
+            // dd($twhMin);
 
             return [
                 $status,

@@ -70,7 +70,7 @@ class AttendanceApiController extends Controller
         }
     }
 
-    // select particular record 
+    // select particular record
     public function filterAttenDetail(Request $request)
     {
         $id = $request->id;
@@ -165,21 +165,23 @@ class AttendanceApiController extends Controller
         $business = $request->business_id;
         $Today = $formattedDate;
 
-        $load = AttendanceList::where('business_id', $business)->where('emp_id', $emp)->where('punch_date', $Today)->first(); //use by static data
+        $load = AttendanceList::where('business_id', $business)
+            ->where('emp_id', $emp)
+            ->where('punch_date', $Today)
+            ->first(); //use by static data
 
         if (isset($load)) {
             // return $load;
             return ReturnHelpers::jsonApiReturn(TodayStatusAttendanceResource::collection([AttendanceList::find($load->id)])->all());
         } else {
-
             return response()->json(['result' => [], 'status' => false], 404);
         }
     }
 
-
     //CREATED CODE BY JAYANT (Attendance Handling)
-    public function storeAttendance(Request $request) //remaining on faceID and location-tabs
+    public function storeAttendance(Request $request)
     {
+        //remaining on faceID and location-tabs
         // initialize
         $currentMethodAuto = 0;
         $currentMethodManual = 0;
@@ -190,10 +192,10 @@ class AttendanceApiController extends Controller
         //methods
         $methodAccept = $request->method_layer; //1-Office 2-Outdoor 3-Remote
         // mode
-        $qrCode = $request->active_qr_mode; //Active Starter Created Attendance  Layer like 1-Office{qrmode} and Second{selfie} 
+        $qrCode = $request->active_qr_mode; //Active Starter Created Attendance  Layer like 1-Office{qrmode} and Second{selfie}
         $selfie = $request->active_selfie_mode;
         //other crede. gate_working_loaded_MODE
-        $markedInOutMode = $request->marked_mode; //static_attendance_mode_response use by table //Marked like : MarkedIn : MarkedOut -> 1 QrCode , 2 FaceID , 3 Selfie 
+        $markedInOutMode = $request->marked_mode; //static_attendance_mode_response use by table //Marked like : MarkedIn : MarkedOut -> 1 QrCode , 2 FaceID , 3 Selfie
 
         // punchIn
         $punchInTime = $request->punch_in_time;
@@ -208,7 +210,7 @@ class AttendanceApiController extends Controller
         $punchOutAddress = $request->punch_out_address;
 
         //checking QR auto - manual  Automatic Set values BY AttendanceMode
-        $checkingModes =PolicyAttendanceMode::where('business_id', $business)
+        $checkingModes = PolicyAttendanceMode::where('business_id', $business)
             ->where(function ($query) {
                 $query->where('office_auto', 1)->orWhere('office_manual', 1); //->orWhere('office_face_id', 1)->orWhere('office_qr', 1)->orWhere('office_selfie', 1);
             })
@@ -224,7 +226,9 @@ class AttendanceApiController extends Controller
         $formattedDate = date('Y-m-d', strtotime($getDay));
         $punchDate = $formattedDate;
 
-        $information = EmployeePersonalDetail::where('business_id', $business)->where('emp_id', $emp)->first(); //findOut Employee Details
+        $information = EmployeePersonalDetail::where('business_id', $business)
+            ->where('emp_id', $emp)
+            ->first(); //findOut Employee Details
         $policyGetShiftPerDay = DB::table('employee_personal_details')
             ->join('policy_attendance_shift_settings', 'employee_personal_details.emp_shift_type', '=', 'policy_attendance_shift_settings.id')
             ->join('static_attendance_shift_type', 'policy_attendance_shift_settings.shift_type', '=', 'static_attendance_shift_type.id')
@@ -252,22 +256,7 @@ class AttendanceApiController extends Controller
                     $query->where('policy_attendance_shift_type_items.id', $RotationalShift);
                 }
             })
-            ->select(
-                'policy_master_endgame_method.id as method_id',
-                'policy_master_endgame_method.method_name as method_name',
-                'policy_attendance_shift_type_items.id as shift_item_id',
-                'policy_attendance_shift_type_items.shift_name as shift_template_name',
-                'static_attendance_shift_type.id  as shift_type_id',
-                'static_attendance_shift_type.name as shift_type_name',
-                'policy_attendance_shift_type_items.shift_start as shift_start_time',
-                'policy_attendance_shift_type_items.shift_end as shift_end_time',
-                'policy_attendance_shift_type_items.shift_hr as shift_hour',
-                'policy_attendance_shift_type_items.shift_min as shift_min',
-                'policy_attendance_shift_type_items.work_hr as working_hour',
-                'policy_attendance_shift_type_items.work_min as working_min',
-                'policy_attendance_shift_type_items.break_min as break_min',
-                'policy_attendance_shift_type_items.is_paid as is_paid'
-            )
+            ->select('policy_master_endgame_method.id as method_id', 'policy_master_endgame_method.method_name as method_name', 'policy_attendance_shift_type_items.id as shift_item_id', 'policy_attendance_shift_type_items.shift_name as shift_template_name', 'static_attendance_shift_type.id  as shift_type_id', 'static_attendance_shift_type.name as shift_type_name', 'policy_attendance_shift_type_items.shift_start as shift_start_time', 'policy_attendance_shift_type_items.shift_end as shift_end_time', 'policy_attendance_shift_type_items.shift_hr as shift_hour', 'policy_attendance_shift_type_items.shift_min as shift_min', 'policy_attendance_shift_type_items.work_hr as working_hour', 'policy_attendance_shift_type_items.work_min as working_min', 'policy_attendance_shift_type_items.break_min as break_min', 'policy_attendance_shift_type_items.is_paid as is_paid')
             ->first();
         // dd($DATA);
 
@@ -286,7 +275,8 @@ class AttendanceApiController extends Controller
             $ShiftItemID = $DATA->shift_item_id;
 
             if (
-                ($checkInTime >= $extendedStartTime && $checkOutTime <= $extendedEndTime) //checkin overall shift active and which shift checking , get details or shift get id in shift item
+                $checkInTime >= $extendedStartTime &&
+                $checkOutTime <= $extendedEndTime //checkin overall shift active and which shift checking , get details or shift get id in shift item
             ) {
                 $minutes = date('i', $checkInTime);
 
@@ -297,21 +287,21 @@ class AttendanceApiController extends Controller
 
                 // Office Method
                 if (isset($information)) {
-
                     // QR-Mode by Method hold on method case of remote other working
                     if ($emp != null && $business != null && $qrCode == 1 && $markedInOutMode != null) {
-
-                        $check = AttendanceList::where('punch_date', $formattedDate)->where('emp_id', $emp)->where('emp_today_current_status', 1)->first();
+                        $check = AttendanceList::where('punch_date', $formattedDate)
+                            ->where('emp_id', $emp)
+                            ->where('emp_today_current_status', 1)
+                            ->first();
                         if (isset($check)) {
                             if ($methodAccept != null && $punchOutTime != null && $punchOutAddress != null && $punchOutLongitude != null && $punchOutLatitude != null) {
-
                                 $punchInTimes = strtotime($check->punch_in_time);
                                 $punchOutTimes = strtotime($punchOutTime);
                                 $totalWorkingSeconds = $punchOutTimes - $punchInTimes;
 
-                                $totalWorkingTimestamp = strtotime("midnight") + $totalWorkingSeconds;
+                                $totalWorkingTimestamp = strtotime('midnight') + $totalWorkingSeconds;
 
-                                $totalWorking = date("H:i:s", $totalWorkingTimestamp);
+                                $totalWorking = date('H:i:s', $totalWorkingTimestamp);
 
                                 //punch-out-confirm
                                 $updateDATA = [
@@ -328,9 +318,12 @@ class AttendanceApiController extends Controller
                                     'punch_out_address' => $punchOutAddress,
                                     'punch_out_latitude' => $punchOutLatitude,
                                     'punch_out_longitude' => $punchOutLongitude,
-                                    'total_working_hour' => $totalWorking
+                                    'total_working_hour' => $totalWorking,
                                 ];
-                                $loaded = AttendanceList::where('punch_date', $formattedDate)->where('emp_id', $emp)->where('emp_today_current_status', 1)->update($updateDATA);
+                                $loaded = AttendanceList::where('punch_date', $formattedDate)
+                                    ->where('emp_id', $emp)
+                                    ->where('emp_today_current_status', 1)
+                                    ->update($updateDATA);
 
                                 return response()->json(['result' => ['Dafault InTime' => date('h:i a', $startTime), 'Dafault OutTime' => date('h:i a', $endTime), 'PunchInTime' => date('h:i a', strtotime($punchInTime)), 'PunchOutTime' => date('h:i a', strtotime($punchOutTime)), 'message' => 'QR-Code Marked PunchOut Successfully Attendance', 'case' => 2], 'status' => true], 200);
                             } else {
@@ -338,8 +331,10 @@ class AttendanceApiController extends Controller
                             }
                         } else {
                             if ($methodAccept != null && $punchInTime != null && $punchInTime != null && $punchInAddress != null && $punchInLatitude != null && $punchInLongitude != null) {
-
-                                $insertChecking = AttendanceList::where('punch_date', $formattedDate)->where('emp_id', $emp)->where('emp_today_current_status', 2)->first();
+                                $insertChecking = AttendanceList::where('punch_date', $formattedDate)
+                                    ->where('emp_id', $emp)
+                                    ->where('emp_today_current_status', 2)
+                                    ->first();
                                 if (!isset($insertChecking)) {
                                     $collection = new AttendanceList();
                                     $collection->emp_id = $emp;
@@ -369,8 +364,6 @@ class AttendanceApiController extends Controller
                     }
                     // Selfie Office Mode
                     if ($emp != null && $business != null && $selfie == 1 && $markedInOutMode != null) {
-
-
                         $validatedData = $request->validate([
                             'image' => 'required|image|mimes:jpeg,png,jpg',
                             // Adjust max size as needed
@@ -381,18 +374,20 @@ class AttendanceApiController extends Controller
                         $imageName = date('d-m-Y') . '_' . md5($image) . '.' . $request->image->extension();
                         $request->image->move($path, $imageName);
                         // $data->punch_in_selfie = $imageName;
-                        $check = AttendanceList::where('punch_date', $formattedDate)->where('emp_id', $emp)->where('emp_today_current_status', 1)->first();
+                        $check = AttendanceList::where('punch_date', $formattedDate)
+                            ->where('emp_id', $emp)
+                            ->where('emp_today_current_status', 1)
+                            ->first();
 
                         if (isset($check)) {
                             if ($methodAccept != null && $imageName != null && $punchOutTime != null && $punchOutAddress != null && $punchOutLongitude != null && $punchOutLatitude != null) {
-
                                 $punchInTimes = strtotime($check->punch_in_time);
                                 $punchOutTimes = strtotime($punchOutTime);
                                 $totalWorkingSeconds = $punchOutTimes - $punchInTimes;
 
-                                $totalWorkingTimestamp = strtotime("midnight") + $totalWorkingSeconds;
+                                $totalWorkingTimestamp = strtotime('midnight') + $totalWorkingSeconds;
 
-                                $totalWorking = date("H:i:s", $totalWorkingTimestamp);
+                                $totalWorking = date('H:i:s', $totalWorkingTimestamp);
 
                                 //punch-out-confirm
                                 //static_attendance_mode_response use by table
@@ -412,17 +407,21 @@ class AttendanceApiController extends Controller
                                     'punch_out_latitude' => $punchOutLatitude,
                                     'punch_out_longitude' => $punchOutLongitude,
                                     'total_working_hour' => $totalWorking,
-
                                 ];
-                                $loaded = AttendanceList::where('punch_date', $formattedDate)->where('emp_id', $emp)->where('emp_today_current_status', 1)->update($updateDATA);
+                                $loaded = AttendanceList::where('punch_date', $formattedDate)
+                                    ->where('emp_id', $emp)
+                                    ->where('emp_today_current_status', 1)
+                                    ->update($updateDATA);
 
                                 return response()->json(['result' => ['Dafault InTime' => date('h:i a', $startTime), 'Dafault OutTime' => date('h:i a', $endTime), 'PunchInTime' => date('h:i a', strtotime($punchInTime)), 'PunchOutTime' => date('h:i a', strtotime($punchOutTime)), 'message' => 'Selfie Marked PunchOut Successfully Attendance', 'case' => 2], 'status' => true], 200);
                             }
                             return response()->json(['result' => ['Dafault InTime' => date('h:i a', $startTime), 'Dafault OutTime' => date('h:i a', $endTime), 'PunchInTime' => date('h:i a', strtotime($punchInTime)), 'PunchOutTime' => date('h:i a', strtotime($punchOutTime)), 'message' => 'Selfie Marked Already PunchOut Successfully', 'case' => 3], 'status' => true], 200);
                         } else {
                             if ($methodAccept != null && $imageName != null && $punchInTime != null && $punchInAddress != null && $punchInLatitude != null && $punchInLongitude != null) {
-
-                                $insertChecking = AttendanceList::where('punch_date', $formattedDate)->where('emp_id', $emp)->where('emp_today_current_status', 2)->first();
+                                $insertChecking = AttendanceList::where('punch_date', $formattedDate)
+                                    ->where('emp_id', $emp)
+                                    ->where('emp_today_current_status', 2)
+                                    ->first();
                                 if (!isset($insertChecking)) {
                                     $collection = new AttendanceList();
                                     $collection->emp_id = $emp;
@@ -447,7 +446,6 @@ class AttendanceApiController extends Controller
                                 }
                                 return response()->json(['result' => ['Dafault InTime' => date('h:i a', $startTime), 'Dafault OutTime' => date('h:i a', $endTime), 'PunchInTime' => date('h:i a', strtotime($punchInTime)), 'PunchOutTime' => date('h:i a', strtotime($punchOutTime)), 'message' => 'Today Selfie Marked Completed', 'case' => 4], 'status' => true], 200);
                             } else {
-
                                 return response()->json(['result' => ['value' => 'Selfie Marked Already PunchIn Successfully', 'case' => 3], 'status' => true], 200);
                             }
                         }
@@ -465,7 +463,6 @@ class AttendanceApiController extends Controller
             }
             return response()->json(['result' => ['Dafault InTime' => date('h:i a', $startTime), 'Dafault OutTime' => date('h:i a', $endTime), 'PunchInTime' => date('h:i a', strtotime($punchInTime)), 'PunchOutTime' => date('h:i a', strtotime($punchOutTime)), 'message' => 'Your Shift is Activated', 'case' => 7], 'status' => true], 200);
         } else {
-
             return response()->json(['result' => ['message' => 'Your Shift is Not Activated', 'case' => 6], 'status' => true], 404);
         }
     }
@@ -498,11 +495,46 @@ class AttendanceApiController extends Controller
         return response()->json(['result' => [], 'status' => false]);
     }
 
+    public function attendanceDataList(Request $request)
+    {
+        $emp_id = $request->emp_id;
+        $business_id = $request->business_id;
+        $date = $request->date;
+        if ($emp_id != null && $business_id != null && $date != null) {
+            $requestDate = Carbon::createFromFormat('d-m-Y', $date);
+            $emp = DB::table('employee_personal_details')
+                ->where('emp_id', $emp_id)
+                ->where('business_id', $business_id)
+                ->first();
+            if ($emp) {
+                $attendance = AttendanceList::
+                    where('attendance_list.emp_id', $emp_id)
+                    ->where('attendance_list.business_id', $business_id)
+                    ->whereYear('attendance_list.punch_date', '=', $requestDate->year)
+                    ->whereMonth('attendance_list.punch_date', '=', $requestDate->month)
+                    ->orderBy('attendance_list.id', 'desc')
+                    ->get();
+                if (count($attendance) != 0) {
+                    return ReturnHelpers::jsonApiReturnSecond(UserAttendanceResources::collection($attendance)->all(), 1); // case 1 when the attendance date find
+                } else {
+                    return response()->json(['result' => [], 'case' => 2, 'status' => true]); // case 2 when the employee attendance record not found
+                }
+            } else {
+                return response()->json(['result' => [], 'case' => 3, 'status' => false], 404); // case 3 when the employee not found
+            }
+        } else {
+            return response()->json(['result' => [], 'case' => 4, 'status' => false], 404); // case 4 when the rquired field is null
+        }
+    }
+
     public function show($id)
     {
-        $empData = DB::table('employee_personal_details')->where('emp_id', $id)->first();
+        $empData = DB::table('employee_personal_details')
+            ->where('emp_id', $id)
+            ->first();
         if ($empData) {
-            $attendData = AttendanceList::where('emp_id', $id)->orderBy('id', 'desc')
+            $attendData = AttendanceList::where('emp_id', $id)
+                ->orderBy('id', 'desc')
                 ->get();
             return ReturnHelpers::jsonApiReturn(UserAttendanceResources::collection($attendData)->all());
         } else {

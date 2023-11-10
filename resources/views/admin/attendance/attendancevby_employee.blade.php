@@ -1,7 +1,7 @@
 @extends('admin.pagelayout.master')
 
 @section('title')
-    Employee Attendance Detail
+    Monthly Attendance Detail
 @endsection
 @section('css')
     <style>
@@ -75,6 +75,17 @@
             background-clip: content-box;
             box-shadow: 0 0 15px -2px #8c8c96;
         }
+
+        tr {
+            line-height: 1.5;
+        }
+
+        /* #WeekOffCell {
+                border: solid #b9d6fb 2px;
+            }
+            #HolidayCell{
+                border: solid rgba(128, 0, 128, 0.445) 2px;
+            } */
     </style>
 @endsection
 
@@ -86,15 +97,12 @@
     <!-- INTERNAL INDEX JS -->
 @endsection
 
-@section('css')
-@endsection
-
 @section('content')
 
     <div class=" p-0 py-2">
         <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
             <li><a href="{{ url('/admin') }}">Dashboard</a></li>
-            <li><a href="{{ url('/admin/requests/leaves') }}">Attendance</a></li>
+            <li><a href="{{ url('/admin/attendance/month-summary') }}">Attendance Summary</a></li>
             <li class="active"><span><b>Attendance By</b></span></li>
         </ol>
     </div>
@@ -102,8 +110,10 @@
         $root = new App\Helpers\Central_unit();
         $byAttendanceCalculation = $root->attendanceByEmpDetails($emp->emp_id, date('Y'), date('m'));
         $allStatusCount = $root->attendanceCount($emp->emp_id, date('Y'), date('m'));
+        $getLeave = $root->getEmpAttSumm(['emp_id' => $emp->emp_id, 'punch_date' => date('Y-m-d')]);
 
-        // dd($allStatusCount);
+        // dd($byAttendanceCalculation);
+
     @endphp
 
     <!-- PAGE HEADER -->
@@ -114,14 +124,46 @@
         </div>
         <div class="page-rightheader ms-md-auto">
             <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-                <div class="btn-list">
-                    <a href="hr-attmark.html" class="btn btn-primary me-3">Mark Attendance</a>
+                {{-- <div class="btn-list">
+                    <a class="btn btn-primary me-3">Mark Attendance</a>
                     <button class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title="E-mail"> <i
                             class="feather feather-mail"></i> </button>
                     <button class="btn btn-light" data-bs-placement="top" data-bs-toggle="tooltip" title="Contact"> <i
                             class="feather feather-phone-call"></i> </button>
                     <button class="btn btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" title="Info"> <i
                             class="feather feather-info"></i> </button>
+                </div> --}}
+                <div class="row">
+                    <div class="col-6 d-flex">
+                        <i class="fa fa-chevron-down my-auto text-primary"></i>
+                        <select name="dataMonth" class="form-control text-primary" id="dataMonth"
+                            onchange="getAttendanceData()" data-placeholder="Select Month"
+                            style="width:100px; border:none; font-size:1rem; font-weight:bolder;">
+                            <option label="Month"></option>
+                            <?php
+                            for ($month = 1; $month <= 12; $month++) {
+                                $monthName = date('F', mktime(0, 0, 0, $month, 1));
+                                $selected = $month == date('n') ? 'selected="selected"' : '';
+                                echo '<option value="' . $month . '" ' . $selected . '>' . $monthName . '</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="col-4 d-flex">
+                        <i class="fa fa-chevron-down my-auto text-primary"></i>
+                        <select name="dataYear" class="form-control text-primary" id="dataYear"
+                            onchange="getAttendanceData()" data-placeholder="Year"
+                            style="width:100px; border:none; font-size:1rem; font-weight:bolder">
+                            <option label="Select Year"></option>
+                            <?php
+                            $currentYear = date('Y');
+                            for ($year = $currentYear; $year >= 1897; $year--) {
+                                $selected = $year == $currentYear ? 'selected="selected"' : '';
+                                echo '<option value="' . $year . '" ' . $selected . '>' . $year . '</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -138,42 +180,43 @@
                         <div class="col-xl-8">
                             <div class="row mb-0 pb-0">
                                 <div class="col-md-4 col-lg-3 col-sm-6 text-center py-5">
+
                                     <span class="avatar avatar-md bradius fs-20 bg-primary-transparent"
                                         id="gettwdCount">{{ $byAttendanceCalculation[0] }}</span>
                                     <h5 class="mb-0 mt-3">Total Working Days</h5>
                                 </div>
                                 <div class="col-md-4 col-lg-3 col-sm-6 text-center py-5 ">
-                                    <span class="avatar avatar-md bradius fs-20 bg-success-transparent"
+                                    <span class="avatar avatar-md bradius fs-20 present-status-badge"
                                         id="getPresentCount">{{ $byAttendanceCalculation[1] }}</span>
                                     <h5 class="mb-0 mt-3">Present Days</h5>
                                 </div>
                                 <div class="col-md-4 col-lg-3 col-sm-6 text-center py-5">
-                                    <span class="avatar avatar-md bradius fs-20 bg-danger-transparent"
+                                    <span class="avatar avatar-md bradius fs-20 absent-status-badge"
                                         id="getAbsentCount">{{ $byAttendanceCalculation[2] }}</span>
                                     <h5 class="mb-0 mt-3">Absent Days</h5>
                                 </div>
                                 <div class="col-md-4 col-lg-3 col-sm-6 text-center py-5">
-                                    <span class="avatar avatar-md bradius fs-20 bg-warning-transparent"
+                                    <span class="avatar avatar-md bradius fs-20 halfday-status-badge"
                                         id="getHalfDayCount">{{ $byAttendanceCalculation[7] }}</span>
                                     <h5 class="mb-0 mt-3">Half Days</h5>
                                 </div>
                                 <div class="col-md-4 col-lg-3 col-sm-6 text-center py-5 ">
-                                    <span class="avatar avatar-md bradius fs-20 bg-orange-transparent"
+                                    <span class="avatar avatar-md bradius fs-20 late-status-badge"
                                         id="getLateCount">{{ $byAttendanceCalculation[3] }}</span>
                                     <h5 class="mb-0 mt-3">Late Days</h5>
                                 </div>
                                 <div class="col-md-4 col-lg-3 col-sm-6 text-center py-5">
-                                    <span class="avatar avatar-md bradius fs-20 bg-pink-transparent"
+                                    <span class="avatar avatar-md bradius fs-20 holiday-status-badge"
                                         id="getHolidayCount">{{ $byAttendanceCalculation[5] }}</span>
                                     <h5 class="mb-0 mt-3">Holidays</h5>
                                 </div>
                                 <div class="col-md-4 col-lg-3 col-sm-6 text-center py-5">
-                                    <span class="avatar avatar-md bradius fs-20 bg-pink-transparent"
+                                    <span class="avatar avatar-md bradius fs-20 mispunch-status-badge"
                                         id="getMisPunchCount">{{ $byAttendanceCalculation[4] }}</span>
                                     <h5 class="mb-0 mt-3">Mis-punch</h5>
                                 </div>
                                 <div class="col-md-4 col-lg-3 col-sm-6 text-center py-5">
-                                    <span class="avatar avatar-md bradius fs-20 bg-pink-transparent"
+                                    <span class="avatar avatar-md bradius fs-20 leave-status-badge"
                                         id="getLeaveRemainCount">{{ $byAttendanceCalculation[9] }}</span>
                                     <h5 class="mb-0 mt-3">Remaining Leave</h5>
                                 </div>
@@ -186,33 +229,40 @@
                             <div class="col-sm-12 mt-5">
                                 <div class="d-flex justify-content-between">
                                     <h6>This Month</h6>
-                                    <h6><b><span id="getcwhCount">{{ number_format($byAttendanceCalculation[10]) }}</span> hr / <span
-                                                id="gettwhCount">{{ number_format($byAttendanceCalculation[11]) }}</span> hr</b></h6>
+                                    <h6><b><span id="getcwhCount">{{ number_format($byAttendanceCalculation[10]) }}</span>
+                                            hr / <span
+                                                id="gettwhCount">{{ number_format($byAttendanceCalculation[11]) }}</span>
+                                            hr</b></h6>
                                 </div>
-                                <div class="progress progress-md mb-3">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-yellow"
-                                        id="progress1" style="width: {{ number_format($byAttendanceCalculation[12]) }}%">
-                                        {{ number_format($byAttendanceCalculation[12]) }}%</div>
+                                <div class="progress progress-md mb-3" style="border-radius:0px">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" id="progress1"
+                                        style="width: {{ number_format($byAttendanceCalculation[12]) }}%; border-radius:0px; background-color:#1877f2">
+                                        {{ number_format($byAttendanceCalculation[12], 1) }}%</div>
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <h6>Remaining</h6>
-                                    <h6><b><span id="getrwhCount">{{ number_format($byAttendanceCalculation[13]) }}</span> hr /<span
-                                                id="gettrwhCount">{{ number_format($byAttendanceCalculation[14]) }}</span> hr</b></h6>
+                                    <h6><b><span id="getrwhCount">{{ number_format($byAttendanceCalculation[13]) }}</span>
+                                            hr /<span
+                                                id="gettrwhCount">{{ number_format($byAttendanceCalculation[14]) }}</span>
+                                            hr</b></h6>
                                 </div>
-                                <div class="progress progress-md mb-3">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger"
-                                        id="progress2" style="width: {{ $byAttendanceCalculation[15] }}%">
+                                <div class="progress progress-md mb-3" style="border-radius:0px">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" id="progress2"
+                                        style="width: {{ $byAttendanceCalculation[15] }}%;border-radius:0px;background-color:#A52A2A">
                                         {{ number_format($byAttendanceCalculation[15], 1) }}%</div>
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <h6>Overtime</h6>
-                                    <h6><b><span id="getotwhCount">{{ number_format($byAttendanceCalculation[16]) }}</span> hr/<span
-                                                id="gettotwhCount">{{ number_format($byAttendanceCalculation[17]) }}</span> hr</b></h6>
+                                    <h6><b><span id="getotwhCount">{{ number_format($byAttendanceCalculation[16]) }}</span>
+                                            hr/<span
+                                                id="gettotwhCount">{{ number_format($byAttendanceCalculation[17]) }}</span>
+                                            hr</b></h6>
                                 </div>
-                                <div class="progress progress-md">
+                                <div class="progress progress-md" style="border-radius:0px">
                                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-green"
-                                        id="progress3" style="width: {{ $byAttendanceCalculation[18] }}%">
-                                        {{ number_format($byAttendanceCalculation[18]) }}%
+                                        id="progress3"
+                                        style="width: {{ $byAttendanceCalculation[18] }}%;border-radius:0px">
+                                        {{ number_format($byAttendanceCalculation[18], 1) }}%
                                     </div>
                                 </div>
                             </div>
@@ -223,26 +273,26 @@
                 <div class="card-body">
                     <div id="leavesoverview" class="mx-auto pt-2"></div>
                     <div class="row mx-auto text-center">
-                        <div class="col-12 mx-auto d-block">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="d-flex font-weight-semibold">
-                                        <span class="dot-label bg-success me-2 my-auto"></span>Paid Leaves ({{$allStatusCount[10]}})
-                                    </div>
-                                </div>
-                                <div class="col-md-12 mt-3">
-                                    <div class="d-flex font-weight-semibold">
-                                        <span class="dot-label badge-danger me-2 my-auto"></span>Unpaid Leaves ({{$allStatusCount[11]}})
-                                    </div>
-                                </div>
-                                
+                        <div class="col-12 mx-auto d-flex">
+                            @foreach ($getLeave[20] as $leave)
+                            {{-- @dd($leave); --}}
+                            <div class="d-flex font-weight-semibold mx-2">
+                                @if ($allStatusCount[10] ?? 0 != 0)
+                                    <span class="dot-label bg-success me-2 my-auto"></span>{{$leave['name']}}({{$leave['remaining']}})
+                                @endif
+                            </div>
+                            @endforeach
+                            <div class="d-flex font-weight-semibold mx-2">
+                                @if ($allStatusCount[11] ?? 0 != 0)
+                                    <span class="dot-label badge-danger me-2 my-auto"></span>Unpaid Leaves({{ $allStatusCount[11] }})
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-body ">
                     <div class="table-responsive">
-                        <table class="table  table-vcenter text-nowrap border-bottum" id="file-datatable">
+                        <table class="table table-vcenter text-center border-bottum" id="file-datatable">
                             <thead>
                                 <tr>
                                     <th class="border-bottom-0">S.No.</th>
@@ -257,13 +307,13 @@
                             </thead>
                             <tbody>
                                 @php
-                                    
+
                                     $sno = 0;
                                     $totalTwhMin = 0;
                                     $totalOTMin = 0;
                                     $totalLateTime = 0;
                                     $totalEarlyExitTime = 0;
-                                    $day = date('d');
+                                    $day = 1;
                                     $statusCounts = [
                                         1 => 0, // Present
                                         2 => 0, // Absent
@@ -279,15 +329,15 @@
                                     ];
                                 @endphp
 
-                                @while ($day > 0)
+                                @while ($day <= date('d'))
                                     {{-- @dd($day); --}}
                                     @php
 
                                         $resCode = $root->getEmpAttSumm(['emp_id' => $emp->emp_id, 'punch_date' => date('Y-m-' . $day)]);
-                                        // dd($resCode[2]);
+                                        // dd($resCode[0]);
                                         $status = $resCode[0];
-                                        $inTime = $resCode[1] != 0 ? date('h:i A', strtotime($resCode[1])) : 'Not Mark';
-                                        $outTime = $resCode[2] != 0 ? date('h:i A', strtotime($resCode[2])) : 'Not Mark';
+                                        $inTime = $resCode[1] != 0 ? date('h:i A', strtotime($resCode[1])) : '00:00';
+                                        $outTime = $resCode[2] != 0 ? date('h:i A', strtotime($resCode[2])) : '00:00';
                                         $workingHour = $resCode[1] && $resCode[2] ? $resCode[3] : '00:00';
                                         $punchInLoc = $resCode[4];
                                         $punchOutLoc = $resCode[5];
@@ -308,10 +358,15 @@
                                         $leaveDetails = $resCode[20];
                                         $totalTwhMin += $twhMin;
                                         $totalOTMin += $overTime;
-                                        $totalEarlyExitTime += $earlyExitBy;
-                                        $totalLateTime += $lateby;
+                                        if ($status == 3) {
+                                            $totalEarlyExitTime += $earlyExitBy;
+                                            $totalLateTime += $lateby;
+                                            // dd($totalLateTime);
+                                        }
                                         $totalDayinMonth = date('t');
+
                                         // dd($leaveDetails);
+
                                     @endphp
                                     <tr>
                                         <td>{{ ++$sno }}</td>
@@ -321,100 +376,115 @@
                                         <td>
                                             @php
                                                 $statusLabels = [
-                                                    1 => 'Present',
-                                                    2 => 'Absent',
-                                                    3 => 'Present',
-                                                    4 => 'Mispunch',
-                                                    5 => 'Working',
-                                                    6 => 'Holiday',
-                                                    7 => 'Week Off',
-                                                    8 => 'Halfday',
-                                                    9 => 'Present',
-                                                    10 => 'Paid Leave',
-                                                    11 => 'Unpaid Leave',
+                                                    1 => 'Present', //success
+                                                    2 => 'Absent', //danger
+                                                    3 => 'Present', //danger
+                                                    4 => 'Mispunch', //orange
+                                                    5 => 'Working', //secondary
+                                                    6 => 'Holiday', //yellow
+                                                    7 => 'Week Off', //gray
+                                                    8 => 'Halfday', //yellow
+                                                    9 => 'Present', //primary
+                                                    10 => 'Paid Leave', //brown
+                                                    11 => 'Unpaid Leave', //brown
                                                 ];
                                                 $badgeColors = [
-                                                    1 => 'success',
-                                                    2 => 'danger',
-                                                    3 => 'success',
-                                                    4 => 'secondary',
-                                                    5 => 'secondary',
-                                                    6 => 'primary',
-                                                    7 => 'primary',
-                                                    8 => 'danger',
-                                                    9 => 'success',
-                                                    10 => 'success',
-                                                    11 => 'danger',
+                                                    1 => 'present-status-badge',
+                                                    2 => 'absent-status-badge',
+                                                    3 => 'present-status-badge',
+                                                    4 => 'mispunch-status-badge',
+                                                    5 => 'present-status-badge',
+                                                    6 => 'holiday-status-badge',
+                                                    7 => 'weekoff-status-badge',
+                                                    8 => 'halfday-status-badge',
+                                                    9 => 'present-status-badge',
+                                                    10 => 'present-status-badge',
+                                                    11 => 'leave-status-badge',
                                                 ];
                                             @endphp
 
                                             @php
+                                                //Early Exit Rule
                                                 $earlyOccurrenceIs = $occurance[0];
                                                 $earlyOccurrence = $occurance[1];
                                                 $earlyOccurrencePenalty = $occurance[2];
-
+                                                //Late Rule
                                                 $lateOccurrenceIs = $occurance[3];
                                                 $lateOccurrence = $occurance[4];
                                                 $lateOccurrencePenalty = $occurance[5];
-
+                                                //status print indicator
                                                 $statusPrinted = false;
+                                                // dd($lateOccurrenceIs != 0 && $earlyOccurrenceIs != 0);
                                             @endphp
 
                                             @if ($status == 3)
-                                                @if ($lateOccurrenceIs == 1)
-                                                    @if ($allStatusCount[3] >= $lateOccurrence)
-                                                        @if ($lateOccurrencePenalty == 1)
-                                                            <span id="statusLabelView"
-                                                                class="badge badge-danger-light">Halfday</span>
-                                                        @else
-                                                            <span id="statusLabelView"
-                                                                class="badge badge-danger-light">Absent</span>
+                                                @if ($lateOccurrenceIs != 0 && $earlyOccurrenceIs != 0)
+                                                    @if ($lateOccurrenceIs == 1)
+                                                        @if ($statusCounts[3] >= $lateOccurrence)
+                                                            @if ($lateOccurrencePenalty == 1)
+                                                                <span id="statusLabelView"
+                                                                    class="halfday-status-badge">Halfday</span>
+                                                            @else
+                                                                <span id="statusLabelView"
+                                                                    class="absent-status-badge">Absent</span>
+                                                            @endif
+                                                            @php $statusPrinted = true; @endphp
                                                         @endif
-                                                        @php $statusPrinted = true; @endphp
+                                                    @elseif ($lateOccurrenceIs == 2)
+                                                        @if ($totalLateTime >= $lateOccurrence)
+                                                            @if ($lateOccurrencePenalty == 1)
+                                                                <span id="statusLabelView"
+                                                                    class="halfday-status-badge">Halfday</span>
+                                                            @else
+                                                                <span id="statusLabelView"
+                                                                    class="absent-status-badge">Absent</span>
+                                                            @endif
+                                                            @php $statusPrinted = true; @endphp
+                                                        @endif
                                                     @endif
-                                                @elseif ($totalLateTime >= $lateOccurrence)
-                                                    @if ($lateOccurrencePenalty == 1)
-                                                        <span id="statusLabelView"
-                                                            class="badge badge-danger-light">Halfday</span>
-                                                    @else
-                                                        <span id="statusLabelView"
-                                                            class="badge badge-danger-light">Absent</span>
+
+                                                    @if ($earlyOccurrenceIs == 1 && !$statusPrinted)
+                                                        @if ($statusCounts[3] >= $earlyOccurrence)
+                                                            @if ($earlyOccurrencePenalty == 1)
+                                                                <span id="statusLabelView"
+                                                                    class="halfday-status-badge">Halfday</span>
+                                                            @else
+                                                                <span id="statusLabelView"
+                                                                    class="absent-status-badge">Absent</span>
+                                                            @endif
+                                                            @php $statusPrinted = true; @endphp
+                                                        @endif
+                                                    @elseif ($earlyOccurrenceIs == 2 && !$statusPrinted)
+                                                        @if ($totalEarlyExitTime >= $earlyOccurrence && !$statusPrinted)
+                                                            @if ($earlyOccurrencePenalty == 1)
+                                                                <span id="statusLabelView"
+                                                                    class="halfday-status-badge">Halfday</span>
+                                                            @else
+                                                                <span id="statusLabelView"
+                                                                    class="absent-status-badge">Absent</span>
+                                                            @endif
+                                                            @php $statusPrinted = true; @endphp
+                                                        @endif
                                                     @endif
+                                                @else
+                                                    <span id="statusLabelView"
+                                                        class="{{ $badgeColors[3] }}">{{ $statusLabels[3] }}</span>
                                                     @php $statusPrinted = true; @endphp
                                                 @endif
 
-                                                @if ($earlyOccurrenceIs == 1 && !$statusPrinted)
-                                                    @if ($allStatusCount[3] >= $earlyOccurrence)
-                                                        @if ($earlyOccurrencePenalty == 1)
-                                                            <span id="statusLabelView"
-                                                                class="badge badge-danger-light">Halfday</span>
-                                                        @else
-                                                            <span id="statusLabelView"
-                                                                class="badge badge-danger-light">Absent</span>
-                                                        @endif
-                                                        @php $statusPrinted = true; @endphp
-                                                    @endif
-                                                @elseif ($totalEarlyExitTime >= $earlyOccurrence && !$statusPrinted)
-                                                    @if ($earlyOccurrencePenalty == 1)
-                                                        <span id="statusLabelView"
-                                                            class="badge badge-danger-light">Halfday</span>
-                                                    @else
-                                                        <span id="statusLabelView"
-                                                            class="badge badge-danger-light">Absent</span>
-                                                    @endif
-                                                    @php $statusPrinted = true; @endphp
-                                                @endif
                                             @endif
 
                                             @if (!$statusPrinted)
                                                 <span id="statusLabelView"
-                                                    class="badge badge-{{ $badgeColors[$status] }}-light">{{ $statusLabels[$status] }}</span>
+                                                    class="{{ $badgeColors[$status] }}">{{ $statusLabels[$status] }}</span>
                                             @endif
+
+                                            <?php $statusCounts[$status]++; ?>
                                         </td>
 
                                         <td>{{ $inTime }}
                                             @if ($lateby > 0)
-                                                <br><span class="badge badge-danger-light">
+                                                <br><span class="late-status fs-11 fw-bolder">
                                                     {{ $lateby > 0 ? 'Late By: ' . (intval($lateby / 60) ? intval($lateby / 60) . ' Hr ' : '') . (intval($lateby % 60) ? intval($lateby % 60) . ' Min' : '') : '' }}
                                                 </span>
                                             @endif
@@ -422,14 +492,14 @@
                                         </td>
                                         <td>{{ $outTime }}
                                             @if ($earlyExitBy > 0)
-                                                <br><span class="badge badge-danger-light">
+                                                <br><span class="late-status fs-11 fw-bolder">
                                                     {{ $earlyExitBy > 0 ? 'Early Exit By: ' . (intval($earlyExitBy / 60) ? intval($earlyExitBy / 60) . ' Hr ' : '') . (intval($earlyExitBy % 60) ? intval($earlyExitBy % 60) . ' Min' : '') : '' }}
                                                 </span>
                                             @endif
                                         </td>
                                         <td>{{ $workingHour ?? '00:00' }}
                                             @if ($overTime)
-                                                <br><span class="badge badge-secondary-light">
+                                                <br><span class="overtime-status fs-11 fw-bolder">
                                                     {{ $overTime > 0 ? 'Overtime: ' . (intval($overTime / 60) ? intval($overTime / 60) . ' Hr ' : '') . (intval($overTime % 60) ? intval($overTime % 60) . ' Min' : '') : '' }}
                                                 </span>
                                             @endif
@@ -447,7 +517,7 @@
                                             </a>
                                         </td>
                                     </tr>
-                                    <?php $day--; ?>
+                                    <?php $day++; ?>
                                 @endwhile
                             </tbody>
                         </table>
@@ -569,8 +639,8 @@
                 </div>
                 <div class="modal-footer">
                     <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-dismiss="modal">close</a>
-                    <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#editmodal" data-bs-dismiss="modal">Edit</a>
+                    {{-- <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#editmodal" data-bs-dismiss="modal">Edit</a> --}}
                 </div>
             </div>
         </div>
@@ -621,7 +691,7 @@
             $("#showOutSelfieBg").css("background-image", "url('/upload_image/" + outSelfie + "')");
         }
 
-        function showSelfie(context) {            
+        function showSelfie(context) {
 
             if (context.id === 'showInSelfie') {
                 var inSelfie = context.getAttribute('data-imgin');
@@ -643,6 +713,6 @@
     </script>
     <script src="{{ asset('assets/plugins/circle-progress/circle-progress.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/chart/chart.bundle.js') }}"></script>
-		<script src="{{ asset('assets/plugins/chart/utils.js') }}"></script>
-		<script src="{{ asset('assets/plugins/apexchart/apexcharts.js') }}"></script>
+    <script src="{{ asset('assets/plugins/chart/utils.js') }}"></script>
+    <script src="{{ asset('assets/plugins/apexchart/apexcharts.js') }}"></script>
 @endsection

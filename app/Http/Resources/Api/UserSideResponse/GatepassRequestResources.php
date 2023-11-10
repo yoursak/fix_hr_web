@@ -7,7 +7,6 @@ class GatepassRequestResources extends JsonResource
 {
     public function toArray($request)
     {
-
         return [
             'id' => $this->id ?? $this->id,
             'business_id' => $this->business_id ?? '',
@@ -15,7 +14,7 @@ class GatepassRequestResources extends JsonResource
             'date' => $this->date ? date('d-m-Y', strtotime($this->date)) : '',
             'source' => $this->source ?? '',
             'destination' => $this->destination ?? '',
-            'going_through' => $this->going_through ?? '',
+            'going_through' => $this->going_through_name ?? '',
             'in_time' => $this->in_time ?? '',
             'out_time' => $this->out_time ?? '',
             'reason' => $this->reason ?? '',

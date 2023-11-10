@@ -40,7 +40,6 @@ use App\Models\PolicyAttendanceShiftTypeItem;
 use App\Models\PolicySettingLeaveCategory;
 use App\Models\StaticBusinessTypeList;
 use App\Models\StaticBusinessCategoriesList;
-
 use App\Models\PolicyMasterEndgameMethod;
 use Session;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -497,6 +496,26 @@ class SettingController extends Controller
         return view('admin.setting.business.designation.designation', compact('item', 'permissions', 'moduleName'));
     }
 
+    public function allRotationalShift(Request $request)
+    {
+        $branch_ID = $request->brand_id;
+        $get = PolicyAttendanceShiftTypeItem::
+            join('policy_attendance_shift_settings', 'policy_attendance_shift_settings.id', '=', 'policy_attendance_shift_type_items.attendance_shift_id')
+           ->where('policy_attendance_shift_type_items.attendance_shift_id', $branch_ID)->where('policy_attendance_shift_type_items.business_id',Session::get('business_id'))
+           ->select('policy_attendance_shift_settings.shift_type', 'policy_attendance_shift_type_items.*')
+           ->get();
+
+        // $get = DepartmentList::where('branch_id', $branch_ID)->where('b_id', Session::get('business_id'))->get();
+        return response()->json(['department' => $get]);
+    }
+
+    public function allFilterDepartment(Request $request)
+    {
+        $branch_ID = $request->brand_id;
+        $get = EmployeePersonalDetail::where('branch_id', $branch_ID)->where('business_id', Session::get('business_id'))->get();
+        return response()->json(['department' => $get]);
+    }
+
     // designationDetails ajax list shows
     public function allDepartment(Request $request)
     {
@@ -855,7 +874,7 @@ class SettingController extends Controller
 
     public function leavePolicySubmit(Request $request)
     {
-        // dd($request->all());
+        dd($request->all());
         // if (empty($request->category_name)) {
         //     Alert::info('Not Added', 'Pleace Enter You Category Name, Your Leave-Policy Not Added');
         //     return back();
@@ -975,7 +994,7 @@ class SettingController extends Controller
     }
     public function updateWeeklyHoliday(Request $request)
     {
-        $data = DB::table('weekly_holiday_list')
+        $data = DB::table('policy_weekly_holiday_list')
             ->where('id', $request->id)
             ->where('business_id', Session::get('business_id'))
             ->update(['name' => $request->edit_weekname, 'days' => json_encode($request->holidays)]);
@@ -988,7 +1007,7 @@ class SettingController extends Controller
     }
     public function deleteWeeklyHoliday(Request $request)
     {
-        $data = DB::table('weekly_holiday_list')
+        $data = DB::table('policy_weekly_holiday_list')
             ->where('id', $request->weekly_policy_id)
             ->where('business_id', Session::get('business_id'))
             ->delete();
@@ -1567,7 +1586,7 @@ class SettingController extends Controller
             if (!isset($gatePassData)) {
                 $insertGatePassData = DB::table('policy_atten_rule_gatepass')->insert([
                     'switch_is' => 1,
-                    'occurance_is' => $request->gatePassSelectOccurence,
+                    'occurance_is' => $request->gatePassSelectOccurence ?? 0,
                     'occurance_count' => $request->gatePassOccurenceCount,
                     'occurance_hr' => isset($request->gatePassOccurenceHour) ? $splitedGatePassOccurenceHour[0] : 0,
                     'occurance_min' => isset($request->gatePassOccurenceHour) ? $splitedGatePassOccurenceHour[1] : 0,
