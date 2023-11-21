@@ -11,11 +11,6 @@
             line-height: 0;
         }
 
-        .modal-header,
-        .modal-footer {
-            background-color: #f8f8ff;
-            /* color: #fff; */
-        }
 
         .modal-open {
             overflow: hidden
@@ -264,10 +259,10 @@
         <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
             <li><a href="{{ url('/admin') }}">Dashboard</a></li>
             {{-- <li><a href="{{ url('admin/settings/attendance') }}">Settings</a></li> --}}
-            <li><a href="{{ url('admin/settings/attendance') }}">Attendace Setting</a></li>
+            <li><a href="{{ url('admin/settings/attendance') }}">Attendace Settings</a></li>
             {{-- <li><a href="{{ url('/admin/requests/misspunch') }}">Request</a></li> --}}
 
-            <li class="active"><span><b>Shift Setting</b></span></li>
+            <li class="active"><span><b>Shift Settings</b></span></li>
         </ol>
     </div>
 
@@ -461,7 +456,7 @@
         </div>
         <div class="container">
             <div class="modal fade" id="fixiedshift">
-                <div class="modal-dialog modal-xl">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
                     <div class="modal-content">
                         <div class="modal-header p-5">
                             <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Fixed Shift Policy
@@ -568,7 +563,7 @@
 
         <div class="container">
             <div class="modal fade" id="openEditRotationalModel">
-                <div class="modal-dialog modal-xl">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
                     <div class="modal-content">
                         <div class="modal-header p-5">
                             <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Rotational Edit
@@ -622,8 +617,7 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-light" type="reset" data-bs-dismiss="modal">Close</button>
-                            <button class="btn btn-primary" type="submit" id="updateButton">Save
-                                changes</button>
+                            <button class="btn btn-primary" type="submit" id="updateButton">Save changes</button>
                         </div>
 
                     </div>
@@ -633,7 +627,7 @@
 
         <div class="container">
             <div class="modal fade" id="openshiftModel">
-                <div class="modal-dialog modal-xl">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
                     <div class="modal-content">
                         <div class="modal-header p-5">
                             <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Edit Open Shift
@@ -728,8 +722,7 @@
                             <div class="modal-footer">
                                 <button class="btn btn-light" type="reset" data-bs-dismiss="modal">Close</button>
                                 <button class="btn btn-primary" name="EditShiftOpenShiftSubmit" value="OpenSubmit"
-                                    type="submit" id="savechanges">Save
-                                    changes</button>
+                                    type="submit" id="savechanges">Save changes</button>
                             </div>
                         </form>
                     </div>
@@ -738,7 +731,7 @@
         </div>
         <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
 
                     <form action="{{ route('delete.shift') }}" method="post">
@@ -750,21 +743,12 @@
                                 aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p>Type Name <b>
-                                </b></p>
-                            <h4 id="load_type_name"></h4><b>
-                            </b>
-
-                            <p>Policy Name <b>
-                                </b></p>
-                            <h4 id="load_name"></h4><b>
-                            </b>
-                            <p></p>
-
-                            Are you sure you want to delete this item?
+                          
+                            <h4>Are you sure you want to delete <span id="load_name"></span> ?</h4><b>
+                            
                         </div>
                         <div class="modal-footer">
-                            <button type="close" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <a class="btn btn-secondary" data-bs-dismiss="modal">Cancel</a>
                             <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
                         </div>
                     </form>

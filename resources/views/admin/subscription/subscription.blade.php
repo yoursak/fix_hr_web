@@ -22,6 +22,15 @@
         .freePlan {
             padding-top: 2rem;
         }
+        .razorpay-payment-button {
+            padding: 5px;
+            border-radius: 5px;
+    background-color: #1877f2; Replace with your desired button color
+    border-color: #1877f2;
+    border:none;
+    color:white;
+
+  }
     </style>
 @endsection
 @section('contents')
@@ -51,7 +60,7 @@
                                             <div class="text-center">
                                                 <span class="fs-20 fw-bold">Activate Your FixHR Free Demo</span><br>
                                                 <span class="fs-15 text-muted">Your registered Email Id is:<span
-                                                        class="text-primary mx-1">mustangsteam@fixhr.com</span></span>
+                                                        class="text-primary mx-1">{{$accDetail->business_email}}</span></span>
                                             </div>
                                         </div>
                                     </div>
@@ -107,12 +116,11 @@
                                 <div class="text-center">
                                     <span class="fs-26 fw-bold">Customize Your FixHR Subscription</span><br>
                                     <span class="fs-16 text-muted">Your registered Email Id is:<span
-                                            class="text-primary mx-1">mustangsteam@fixhr.com</span></span>
+                                            class="text-primary mx-1">{{$accDetail->business_email}}</span></span>
                                 </div>
                             </div>
                         </div>
                         <div class="contents">
-
 
                             <a href="javascript:void(0);" class="btn btn-danger btn-icon btn-sm" data-bs-toggle="modal"
                                 onclick="openPhonePe(this)" data-id="" data-bs-target="#phonePe">
@@ -224,16 +232,16 @@
                                                             <strong>Success!</strong> {{ $message }}
                                                         </div>
                                                     @endif
-                                                    <div class="card card-default">
-                                                        <div class="card-header">
+                                                    <div class="card-default pt-5">
+                                                        {{-- <div class="card-header">
                                                             Laravel 8- Razorpay Payment Gateway Integration
-                                                        </div>
+                                                        </div> --}}
                                                         <div class="card-body text-center">
                                                             <form action="/submit_payment" method="POST">
                                                                 @csrf
                                                                 {{-- private keyid --}}
                                                                 <script src="https://checkout.razorpay.com/v1/checkout.js" data-key="rzp_test_uD4KyWA2QuBnwj" data-amount="10000"
-                                                                    data-currency="INR" data-buttontext="Pay 100 INR" data-name="Cyber Security" data-description="Rozerpay"
+                                                                    data-currency="INR" data-buttontext="Make Payment" data-name="Cyber Security" data-description="Rozerpay"
                                                                     data-image="https://cybercollege.info/wp-content/uploads/2021/06/cropped-logo.png" data-prefill.name="Jayant Nishad"
                                                                     data-prefill.email="jayantnishad34@gmail.com" data-theme.color="#F37254"></script>
                                                             </form>
@@ -244,10 +252,10 @@
                                         </div>
                                         <div class="d-flex my-5">
 
-                                            <a class="btn btn-primary mx-auto" href="javascript:void(0);"
+                                            {{-- <a class="btn btn-primary mx-auto" href="javascript:void(0);"
                                                 style="width: 50%"
                                                 onclick="openFloatingWindow('{{ route('phonepe') }}', 500, 900);">Make
-                                                Payment</a>
+                                                Payment</a> --}}
 
                                             {{-- <a class="btn btn-primary mx-auto" target="_blank" href="{{ route('phonepe') }}" style="width: 50%">Make Payment</a> --}}
                                         </div>

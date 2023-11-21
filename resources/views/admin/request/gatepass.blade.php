@@ -90,7 +90,6 @@
                             <thead>
                                 <tr>
                                     <th class="border-bottom-0">S.No.</th>
-
                                     <th class="border-bottom-0">Employee Name</th>
                                     <th class="border-bottom-0">Employee Id</th>
                                     <th class="border-bottom-0">Date</th>
@@ -105,7 +104,7 @@
                                     $count = 1;
                                 @endphp
                                 {{-- @empty($DATA) --}}
-                                @foreach ($DATA as $item)
+                                @foreach ($DATA as $key => $item)
                                     @php
                                         $ruleMange = new App\Helpers\MasterRulesManagement\RulesManagement();
 
@@ -118,7 +117,7 @@
                                                 font-size: 14px;
                                             }
                                         </style>
-                                        <td>{{ $count++ }}</td>
+                                        <td>{{ ++$key }}</td>
                                         <td>
                                             <div class="d-flex">
                                                 <span class="avatar avatar-md brround me-3"

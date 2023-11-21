@@ -14,7 +14,31 @@
 			e.preventDefault(); // Prevent the default form submission
 
 			// Define an array to store the IDs of required fields
-			var requiredFields = ["name_sd", "last_sd", "number_sd", "image_sd", "dateofbirth_sd", "email_sd", "country_sd", "sts1", "state1", "pincode_sd", "address_sd", "emp_id_sd", "shift_type_sd", "country-1dd", "state-1dd", "state-dd1", "country-dd1", "designation_id1", "desig-dd1", "doj_sd", "attendance_sd", "employee_type", "gender"];
+			var requiredFields = ["image_sd", 
+								"name_sd", 
+								"last_sd", 
+								"number_sd", 
+								"email_sd",
+								"dateofbirth_sd", 
+								"marital_status_dd", 
+								"caste_dd", 
+								"blood_group_dd", 
+								"select_id_dd", 
+								"id_number_dd", 
+								"nationality_dd", 
+								"country_dd", 
+								"sts1", 
+								"state1", 
+								"pincode_dd", 
+								"address_dd", 
+								"doj_dd", 
+								"emp_id_sd", 
+								"shift_type_sd", 
+								"country-dd1", 
+								"state-dd1", 
+								"desig-dd1", 
+								"attendance_sd", 
+								"reporting_manager_dd"];
 
 			// Flag to check if all required fields are filled
 			var allFieldsFilled = true;
@@ -37,14 +61,16 @@
 			}
 			if (allFieldsFilled) {
 				// Continue with the form submission
-				alert('Finish Clicked');
+				alert('Form  Submitted!');
 				console.log("Submit ");
 				$('#myForm').submit();
 			} else {
 				// Show an alert indicating that all required fields must be filled
 				alert('Please fill in all required fields.');
 			}
-		});
+			// $('#myForm').submit();
+
+		}); 
 	// Toolbar extra buttons
 	// var btnFinish = $('<button></button>').text('Submit')
 	//     .addClass('btn btn-primary')
@@ -154,9 +180,13 @@
 		transitionEffect: 'fade',
 		showStepURLhash: false,
 		toolbarSettings: {
-			toolbarExtraButtons: [btnFinish,]
+
+				toolbarExtraButtons: [btnFinish,]
+
 		}
 	});
+
+	
 
 	$('.smartwizard-4').smartWizard({
 		selected: 0,
@@ -164,6 +194,7 @@
 		transitionEffect: 'fade',
 		showStepURLhash: false,
 		toolbarSettings: {
+
 			toolbarExtraButtons: [btnCancel,]
 		}
 	});

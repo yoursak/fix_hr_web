@@ -36,25 +36,25 @@ class BusinessDetailsList extends Model
 {
 	protected $table = 'business_details_list';
 
-	protected $casts = [
-		'business_categories' => 'int',
-		'business_type' => 'int'
-	];
+	// protected $casts = [
+	// 	'business_categories' => 'int',
+	// 	'business_type' => 'int'
+	// ];
 
-	protected $fillable = [
-		'business_id',
-		'business_logo',
-		'business_categories',
-		'client_name',
-		'business_email',
-		'business_name',
-		'business_type',
-		'mobile_no',
-		'city',
-		'state',
-		'country',
-		'business_address',
-		'pin_code',
-		'gstnumber'
-	];
+	// protected $fillable = [
+	// 	'business_id',
+	// 	'business_logo',
+	// 	'business_categories',
+	// 	'client_name',
+	// 	'business_email',
+	// 	'business_name',
+	// 	'business_type',
+	// 	'mobile_no',
+	// 	'city',
+	// 	'state',
+	// 	'country',
+	// 	'business_address',
+	// 	'pin_code',
+	// 	'gstnumber'
+	// ];
 }

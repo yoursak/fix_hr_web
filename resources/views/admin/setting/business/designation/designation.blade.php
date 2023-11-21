@@ -2,7 +2,7 @@
 @extends('admin.pagelayout.master')
 
 @section('title')
-    Salary / Designation Setting
+    Designation Settings
 @endsection
 
 @section('css')
@@ -48,8 +48,8 @@
         <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
             <li><a href="{{ url('/admin') }}">Dashboard</a></li>
             {{-- <li><a href="{{ url('admin/settings/business') }}">Settings</a></li> --}}
-            <li><a href="{{ url('admin/settings/business') }}">Business Setting</a></li>
-            <li class="active"><span><b>Designation Setting</b></span></li>
+            <li><a href="{{ url('admin/settings/business') }}">Business Settings</a></li>
+            <li class="active"><span><b>Designation Settings</b></span></li>
         </ol>
     </div>
     <form method="POST" action="{{ route('add.designation') }}">
@@ -67,7 +67,7 @@
                 
             @endphp
             <div class="page-leftheader">
-                <div class="page-title">Designation Setting</div>
+                <div class="page-title">Designation Settings</div>
                 <p class="text-muted m-0">{{ $designationCount[2] }} Active Designation</p>
             </div>
             <div class="page-rightheader ms-md-auto">
@@ -258,16 +258,22 @@
     @foreach ($Designation as $item)
         {{-- @dd($item); --}}
         <div class="modal fade" id="departDeletebtn{{ $item->desig_id }}" data-bs-backdrop="static">
-            <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">
+            <div class="modal-dialog modal-dialog-centered  modal-md" role="document">
                 <div class="modal-content modal-content-demo">
-                    <div class="modal-body">
-                        <h3>Are you sure want to Delete, <span class="text-primary">{{ $item->desig_name }}</span> ?</h3>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirmation</h5>
+                        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <h4 class="mt-5">Are you sure want to Delete, <span class="text-primary">{{ $item->desig_name }}</span> ?</h4>
                     </div>
                     <div class="modal-footer">
-                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal">Decline</button>
+                        <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Decline</button>
                         <form method="POST" action="{{ route('delete.designation', $item->desig_id) }}">
                             @csrf
-                            <button type="submit" class="btn btn-success" data-bs-toggle="modal"
+                            <button type="submit" class="btn btn-danger" data-bs-toggle="modal"
                                 data-bs-target="#">Delete</button>
                         </form>
                     </div>

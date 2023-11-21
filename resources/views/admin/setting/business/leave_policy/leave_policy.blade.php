@@ -317,7 +317,7 @@
 
         <!-- The Modal -->
         <div class="modal fade" id="myModal">
-            <div class="modal-dialog modal-xl">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
                 <div class="modal-content">
                     <div class="modal-header p-5">
                         <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Leave Policy</h5>
@@ -331,7 +331,7 @@
                             @csrf
                             <div class="row">
                                 <div class="col">
-                                    <h4 class="card-title"><span>Leave Settddding</span></h4>
+                                    <h4 class="card-title"><span>Leave Setting</span></h4>
                                 </div>
                                 <div class="form-group row">
                                     <label for="inputPassword" class="col-sm-2 col-form-label">Policy Name</label>
@@ -389,8 +389,8 @@
 
                         <div class="modal-footer d-flex justify-content-center">
                             <div class="text-center">
-                                <button class="btn btn-success" type="submit" name="" id="submit"
-                                    data-bs-target="">Apply</button>
+                                <button class="btn btn-primary" type="submit" name="" id="submit"
+                                    data-bs-target="">Save and Continue</button>
                             </div>
                         </div>
                     </form>
@@ -546,8 +546,8 @@
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
                         <div class="text-center">
-                            <button class="btn btn-success" type="submit" name="" id="updateButton"
-                                data-bs-target="">Apply</button>
+                            <button class="btn btn-primary" type="submit" name="" id="updateButton"
+                                data-bs-target="">Update and Contionue</button>
                         </div>
                     </div>
 
@@ -555,25 +555,21 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
 
                 <form action="{{ route('delete.leavePolicy') }}" method="post">
                     @csrf
                     <input type="text" id="poli_id" name="poli_id" hidden>
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Confirm Deletion</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <p>Policy Name <b>
-                            </b></p>
-                        <h4 id="assign_emp"></h4><b>
-                        </b>
-                        <p></p>
-                        Are you sure you want to delete this item?
+                    <div class="modal-body text-center">
+                        <h4 class="mt-5" >Are you sure you want to delete <span id="assign_emp"></span> ?</h4>
                     </div>
                     <div class="modal-footer">
                         <button type="close" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

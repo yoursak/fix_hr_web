@@ -89,13 +89,13 @@
                     </li>
                     {{-- <i class="fa fa-street-view mx-3"></i> --}}
                     <li class="my-5"><span class="fs-16"><b>Gender:</b></span><span class="fs-16 mx-2">
-                            @if ($DATA->emp_gender == 1)
+                            @if (($DATA->emp_gender ?? 0) == 1)
                                 Male
                             @endif
-                            @if ($DATA->emp_gender == 2)
+                            @if (($DATA->emp_gender ?? 0) == 2)
                                 Female
                             @endif
-                            @if ($DATA->emp_gender == 3)
+                            @if (($DATA->emp_gender ?? 0) == 3)
                                 Other
                             @endif
                         </span></li>
@@ -116,10 +116,10 @@
                         {{-- <ul class="pe-4" style="border-right:dashed 2px #97928e;"> --}}
                         <li class="my-5"><span class="fs-24"><b>Residential Information</b></span></li>
                         <li class="my-5"><span class="fs-16"><b>Country:</b></span><span class="fs-16 mx-2">
-                                @if ($DATA->emp_country == 1)
+                                @if (($DATA->emp_country ?? 0) == 1)
                                     India
                                 @endif
-                                @if ($DATA->emp_country == 2)
+                                @if (($DATA->emp_country ?? 0) == 2)
                                     USA
                                 @endif
                             </span></li>
@@ -128,9 +128,9 @@
                         <li class="my-5"><span class="fs-16"><b>City:</b></span><span
                                 class="fs-16 mx-2" onload="print_city($DATA->emp_city,$DATA->emp_state)" id="printCity">Raipur</span></li>
                         <li class="my-5"><span class="fs-16"><b>Zip Code:</b></span><span
-                                class="fs-16 mx-2">{{ $DATA->emp_pin_code }}</span></li>
+                                class="fs-16 mx-2">{{ $DATA->emp_pin_code ?? '' }}</span></li>
                         <li class="my-5"><span class="fs-16"><b>Address:</b></span><span
-                                class="fs-16 mx-2">{{ $DATA->emp_address }}</span></li>
+                                class="fs-16 mx-2">{{ $DATA->emp_address ?? '' }}</span></li>
                     </ul>
                 </div>
             </div>
@@ -143,13 +143,13 @@
                         <li class="my-5"><span class="fs-16"><b>Branch:</b></span><span
                                 class="fs-16 mx-2">{{ $DATA->branch_name ?? ' ' }}</span></li>
                         <li class="my-5"><span class="fs-16"><b>Department:</b></span><span
-                                class="fs-16 mx-2">{{ $DATA->depart_name }}</span></li>
+                                class="fs-16 mx-2">{{ $DATA->depart_name ?? '' }}</span></li>
                         <li class="my-5"><span class="fs-16"><b>Designation:</b></span><span
-                                class="fs-16 mx-2">{{ $DATA->desig_name }}</span></li>
+                                class="fs-16 mx-2">{{ $DATA->desig_name ?? '' }}</span></li>
                         <li class="my-5"><span class="fs-16"><b>Shift Type:</b></span><span
-                                class="fs-16 mx-2">{{ $DATA->shift_type_name ?? 'Not Allotted' }}</span></li>
+                                class="fs-16 mx-2">{{ $DATA->shift_type_name ?? '' ?? 'Not Allotted' }}</span></li>
                         <li class="my-5"><span class="fs-16"><b>Attendance Method:</b></span><span
-                                class="fs-16 mx-2">{{ $DATA->method_name }}</span></li>
+                                class="fs-16 mx-2">{{ $DATA->method_name ?? '' }}</span></li>
                     </ul>
                 </div>
             </div>

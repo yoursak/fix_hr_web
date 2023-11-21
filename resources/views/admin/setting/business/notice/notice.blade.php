@@ -1,5 +1,5 @@
 @extends('admin.pagelayout.master')
-@section('title', 'Dashboard')
+@section('title', 'Notice')
 @section('css')
 
 @endsection
@@ -10,7 +10,7 @@
     <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
         <li><a href="{{ url('/admin') }}">Dashboard</a></li>
         {{-- <li><a href="{{ url('admin/settings/business')}}">Settings</a></li> --}}
-        <li><a href="{{ url('admin/settings/business')}}">Business Setting</a></li>
+        <li><a href="{{ url('admin/settings/business')}}">Business Settings</a></li>
         <li class="active"><span><b>Notice Board</b></span></li>
     </ol>
 </div>
@@ -24,12 +24,12 @@
                 <div class="btn-list">
                     <a href="javascript:void(0);" class="btn btn-primary me-3" data-bs-toggle="modal"
                         data-bs-target="#addnoticemodal">Create New Notice</a>
-                    <button class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title="E-mail"> <i
+                    {{-- <button class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title="E-mail"> <i
                             class="feather feather-mail"></i> </button>
                     <button class="btn btn-light" data-bs-placement="top" data-bs-toggle="tooltip" title="Contact"> <i
                             class="feather feather-phone-call"></i> </button>
                     <button class="btn btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" title="Info"> <i
-                            class="feather feather-info"></i> </button>
+                            class="feather feather-info"></i> </button> --}}
                 </div>
             </div>
         </div>
@@ -68,13 +68,13 @@
                                     <td>
                                         <div class="d-flex">
                                             <a type="" class="action-btns1" data-bs-toggle="modal"
-                                                data-bs-target="#deletenoticemodal" title="Delete"><i
+                                                data-bs-target="#deletenoticemodal{{$notice->id}}" title="Delete"><i
                                                     class="feather feather-trash-2 text-danger"></i></a>
                                         </div>
                                     </td>
                                 </tr>
-                                <div class="modal fade" id="deletenoticemodal">
-                                    <div class="modal-dialog modal-md" role="document">
+                                <div class="modal fade" id="deletenoticemodal{{$notice->id}}">
+                                    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title">Confirmation</h5>
@@ -84,12 +84,12 @@
                                             </div>
                                             <form action="{{route('delete.notice',[$notice->id])}}" method="post">
                                                 @csrf
-                                                <div class="modal-body">
-                                                    <h4>Are You Sure Want to Delete {{$notice->title}}</h4>
+                                                <div class="modal-body text-center">
+                                                    <h4 class="mt-5">Are You Sure Want to Delete {{$notice->title}}</h4>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <a href="#" type="reset" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</a>
-                                                    <button type="submit" class="btn btn-success">Save</button>
+                                                    <a href="#" type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
+                                                    <button type="submit" class="btn btn-danger">Delete</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -114,7 +114,7 @@
 
     <!-- ADD LEAVE MODAL -->
     <div class="modal fade" id="addnoticemodal">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add New Notice</h5>
@@ -152,8 +152,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <a href="#" type="reset" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</a>
-                        <button type="submit" class="btn btn-success">Save</button>
+                        <a href="#" type="reset" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</a>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>

@@ -273,9 +273,9 @@ class AttendanceApiController extends Controller
 
             //shiftCollections
             $ShiftItemID = $DATA->shift_item_id;
-
+            //&&
             if (
-                $checkInTime >= $extendedStartTime &&
+                $checkInTime >= $extendedStartTime ||
                 $checkOutTime <= $extendedEndTime //checkin overall shift active and which shift checking , get details or shift get id in shift item
             ) {
                 $minutes = date('i', $checkInTime);
@@ -507,14 +507,16 @@ class AttendanceApiController extends Controller
                 ->where('business_id', $business_id)
                 ->first();
             if ($emp) {
-                $attendance = AttendanceList::
-                    where('attendance_list.emp_id', $emp_id)
+                $attendance = AttendanceList::join('policy_attendance_shift_type_items', 'attendance_list.attendance_shift', '=', 'policy_attendance_shift_type_items.id')
+                    ->where('attendance_list.emp_id', $emp_id)
                     ->where('attendance_list.business_id', $business_id)
                     ->whereYear('attendance_list.punch_date', '=', $requestDate->year)
                     ->whereMonth('attendance_list.punch_date', '=', $requestDate->month)
+                    ->select('attendance_list.*', 'policy_attendance_shift_type_items.shift_name', 'policy_attendance_shift_type_items.shift_start', 'policy_attendance_shift_type_items.shift_end')
                     ->orderBy('attendance_list.id', 'desc')
                     ->get();
                 if (count($attendance) != 0) {
+                    // return $attendance;
                     return ReturnHelpers::jsonApiReturnSecond(UserAttendanceResources::collection($attendance)->all(), 1); // case 1 when the attendance date find
                 } else {
                     return response()->json(['result' => [], 'case' => 2, 'status' => true]); // case 2 when the employee attendance record not found

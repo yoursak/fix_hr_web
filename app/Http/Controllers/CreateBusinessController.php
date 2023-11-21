@@ -34,8 +34,8 @@ class CreateBusinessController extends Controller
     public function create()
     {
 
-        $businessCat = DB::table("business_categories_list")->get();
-        $businessType = DB::table("business_type_list")->get();
+        $businessCat = DB::table("static_business_categories_list")->get();
+        $businessType = DB::table("static_business_type_list")->get();
         return view("auth.admin.business", compact("businessType", "businessCat"));
     }
 
@@ -105,6 +105,7 @@ class CreateBusinessController extends Controller
             $business_id = md5($request->name . $request->bname . $request->gst);
             $created = DB::table("business_details_list")->insert([
                 "business_id" => $business_id,
+                "call_back_id" => rand(10000, 99999),
                 "business_logo" => $imageName,
                 "business_categories" => $request->businessCategory,
                 "client_name" => $request->name,
@@ -129,7 +130,7 @@ class CreateBusinessController extends Controller
             ]);
 
             // Creating Roles & Permissions
-            $modules = DB::table('sidebar_menu')->get();
+            $modules = DB::table('static_sidebar_menu')->get();
             $permission = array('View', 'Create', 'Update', 'Delete');
 
             foreach ($modules as $key => $module) {

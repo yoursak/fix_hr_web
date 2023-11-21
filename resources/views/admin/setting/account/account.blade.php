@@ -90,9 +90,7 @@
                             action="{{ route('upload.logo', $accDetail->id) }}">
                             @csrf
                             {{-- <div class="form-row border-bottom"> --}}
-                            <p class=" fs-13 px-4 border-bottom " style="color: rgb(110, 104, 88)">Please upload the logo
-                                ogf
-                                business in png, jpg or jpeg formate, this logo will be visible in payment slip.</p>
+                            <p class=" fs-13 px-4 mt-3 pb-3 border-bottom " style="color: rgb(110, 104, 88)">Please upload the logo of your business in png, jpg or jpeg formate, this logo will be visible in payment slip.</p>
                             {{-- </div> --}}
                             <div class="modal-body">
                                 {{-- <div class="card-header border-bottom-0"> --}}
@@ -102,7 +100,7 @@
                                 {{-- src="{{ asset('business_logo/' . Session::get('login_business_image')) }}" --}}
                                 <input type="file" name="image" class="dropify"
                                     data-default-file="{{ asset('business_logo/' . $accDetail->business_logo) }}"
-                                    required />
+                                     />
                                 {{--                               
                                 <img type="file" src="{{asset('business_logo/'.$accDetail->business_logo )}}" class="dropify" name="image" 
                                     data-default-file=""
@@ -252,7 +250,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-2 my-auto">
-                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                            <span class="settings-icon  text-primary border-primary"><i
                                     class="nav-icon fa fa-phone"></i></span>
                         </div>
                         <div class="col-10 d-flex justify-content-between">
@@ -273,7 +271,7 @@
             <div class="modal fade" id="bphone">
                 <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                     <div class="modal-content tx-size-sm">
-                        <div class="modal-header " style="background:#f9f8f8;">
+                        <div class="modal-header " >
                             <h4 class="modal-title">Phone Number</h4>
 
                             <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
@@ -290,7 +288,7 @@
                             </div>
                             <div class="modal-footer py-1" style="background:#f9f8f8;">
                                 <a class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
-                                <button class="btn btn-primary savebtn me-0" type="sumbit">Update & Continue </button>
+                                <button class="btn btn-primary savebtn me-0" type="sumbit"> Save Changes </button>
                                 {{-- <a href="{{ route('name.update') }}" method="post" type="sumbit" class="btn btn-primary btn-sm">Continue</a> --}}
                             </div>
                         </form>
@@ -607,7 +605,7 @@
                     <div class="modal-body">
                         <p>Please add your address to continue</p>
 {{-- <input type="text" id="emialllllll"> --}}
-                        {{-- <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden> --}}
+                        <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden>
 
                         <p class="mb-0 pb-0 text-dark fs-13 mt-2 ">Address Line</p>
                         <textarea class="form-control" id="upateAddressLine" placeholder="Address Line 1" rows="3" name="address" maxlength="100"></textarea>

@@ -81,11 +81,11 @@
         }
 
         /* #WeekOffCell {
-                border: solid #b9d6fb 2px;
-            }
-            #HolidayCell{
-                border: solid rgba(128, 0, 128, 0.445) 2px;
-            } */
+                        border: solid #b9d6fb 2px;
+                    }
+                    #HolidayCell{
+                        border: solid rgba(128, 0, 128, 0.445) 2px;
+                    } */
     </style>
 @endsection
 
@@ -133,12 +133,11 @@
                     <button class="btn btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" title="Info"> <i
                             class="feather feather-info"></i> </button>
                 </div> --}}
-                <div class="row">
-                    <div class="col-6 d-flex">
-                        <i class="fa fa-chevron-down my-auto text-primary"></i>
-                        <select name="dataMonth" class="form-control text-primary" id="dataMonth"
-                            onchange="getAttendanceData()" data-placeholder="Select Month"
-                            style="width:100px; border:none; font-size:1rem; font-weight:bolder;">
+                {{-- <div class="row">
+                    <div class="col-6">
+                        <select name="dataMonth" class="form-control text-center" id="dataMonth"
+                            onchange="getAttendanceData()" data-empId="{{ $emp->emp_id }}" data-placeholder="Select Month"
+                            style="width:100px; border:solid 1px black">
                             <option label="Month"></option>
                             <?php
                             for ($month = 1; $month <= 12; $month++) {
@@ -149,11 +148,10 @@
                             ?>
                         </select>
                     </div>
-                    <div class="col-4 d-flex">
-                        <i class="fa fa-chevron-down my-auto text-primary"></i>
-                        <select name="dataYear" class="form-control text-primary" id="dataYear"
+                    <div class="col-6">
+                        <select name="dataYear" class="form-control text-center" id="dataYear"
                             onchange="getAttendanceData()" data-placeholder="Year"
-                            style="width:100px; border:none; font-size:1rem; font-weight:bolder">
+                            style="width:100px; border:solid 1px black">
                             <option label="Select Year"></option>
                             <?php
                             $currentYear = date('Y');
@@ -164,12 +162,66 @@
                             ?>
                         </select>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
     <!-- END PAGE HEADER -->
 
+    <script>
+       function getAttendanceData(){
+            var month = document.getElementById('dataMonth');
+            var year = document.getElementById('dataYear').value;
+            var empId = month.getAttribute('data-empId');
+
+            // console.log(empId);
+
+        $.ajax({
+                url: "{{ url('/admin/attendance/attendance_by_calculation') }}",
+                type: "POST",
+                data: {
+                    month: month.value,
+                    year: year,
+                    emp_id:empId,
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: 'json',
+                success: function(result) {
+                    console.log(result);
+                    // tBody.innerHTML = '';
+                    // tBody.innerHTML = 'Loading...';
+                    // $("#empSumData").removeClass('d-none');
+                    // $("#bodyLoading").addClass('d-none');
+
+                    // result[0].forEach(element => {
+
+                    //     var Present = result[1][element['emp_id']][1] + result[1][element['emp_id']][
+                    //         3] + result[1][element['emp_id']][9] + result[1][element['emp_id']][8] / 2;
+                    //     var Absent = result[1][element['emp_id']][2];
+                    //     var Halfday = result[1][element['emp_id']][8];
+                    //     var PaidLeave = result[1][element['emp_id']][10];
+                    //     var Mispunch = result[1][element['emp_id']][9];
+                    //     var Overtime = result[1][element['emp_id']][3];
+                    //     var Fine = result[1][element['emp_id']][11];
+                    //     var Total = Present + PaidLeave;
+
+                    //     document.getElementById(element['emp_id'] + "['present']").innerHTML = Present;
+                    //     document.getElementById(element['emp_id'] + "['absent']").innerHTML = Absent;
+                    //     document.getElementById(element['emp_id'] + "['halfday']").innerHTML = Halfday;
+                    //     document.getElementById(element['emp_id'] + "['paidleave']").innerHTML = PaidLeave; 
+                    //         PaidLeave;
+                    //     document.getElementById(element['emp_id'] + "['mispunch']").innerHTML = Mispunch;
+                    //     Mispunch;
+                    //     document.getElementById(element['emp_id'] + "['overtime']").innerHTML = Overtime;
+                    //     Overtime;
+                    //     document.getElementById(element['emp_id'] + "['fine']").innerHTML = Fine;
+                    //     document.getElementById(element['emp_id'] + "['total']").innerHTML = Total;
+                    // });
+                }
+            });
+        }
+        
+    </script>
     <!-- ROW -->
 
     <div class="row">
@@ -217,8 +269,8 @@
                                 </div>
                                 <div class="col-md-4 col-lg-3 col-sm-6 text-center py-5">
                                     <span class="avatar avatar-md bradius fs-20 leave-status-badge"
-                                        id="getLeaveRemainCount">{{ $byAttendanceCalculation[9] }}</span>
-                                    <h5 class="mb-0 mt-3">Remaining Leave</h5>
+                                        id="getLeaveRemainCount">{{ $allStatusCount[10] + $allStatusCount[11] }}</span>
+                                    <h5 class="mb-0 mt-3">Leave</h5>
                                 </div>
                             </div>
                         </div>
@@ -270,26 +322,27 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
+                {{-- <div class="card-body">
                     <div id="leavesoverview" class="mx-auto pt-2"></div>
                     <div class="row mx-auto text-center">
                         <div class="col-12 mx-auto d-flex">
                             @foreach ($getLeave[20] as $leave)
-                            {{-- @dd($leave); --}}
-                            <div class="d-flex font-weight-semibold mx-2">
-                                @if ($allStatusCount[10] ?? 0 != 0)
-                                    <span class="dot-label bg-success me-2 my-auto"></span>{{$leave['name']}}({{$leave['remaining']}})
-                                @endif
-                            </div>
+                                <div class="d-flex font-weight-semibold mx-2">
+                                    @if ($allStatusCount[10] ?? 0 != 0)
+                                        <span
+                                            class="dot-label bg-success me-2 my-auto"></span>{{ $leave['name'] }}({{ $leave['remaining'] }})
+                                    @endif
+                                </div>
                             @endforeach
                             <div class="d-flex font-weight-semibold mx-2">
                                 @if ($allStatusCount[11] ?? 0 != 0)
-                                    <span class="dot-label badge-danger me-2 my-auto"></span>Unpaid Leaves({{ $allStatusCount[11] }})
+                                    <span class="dot-label badge-danger me-2 my-auto"></span>Unpaid
+                                    Leaves({{ $allStatusCount[11] }})
                                 @endif
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <div class="card-body ">
                     <div class="table-responsive">
                         <table class="table table-vcenter text-center border-bottum" id="file-datatable">
@@ -591,7 +644,7 @@
                                 <div class="col-sm-12 mt-5">
                                     <div class="tl-content tl-content-active">
 
-                                        <div class="tl-header">
+                                        <div class="tl-header d-none" id="timeline1">
                                             <span class="tl-marker"></span>
                                             <div class="row">
                                                 <div class="col-10">
@@ -610,7 +663,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tl-header">
+                                        <div class="tl-header d-none" id="timeline2">
                                             <span class="tl-marker"></span>
                                             <div class="row">
                                                 <div class="col-10">
@@ -675,6 +728,15 @@
             var overTime = $(context).data('overtime');
             var inSelfie = $(context).data('inselfie');
             var outSelfie = $(context).data('outselfie');
+
+            if (inTime != '00:00') {
+                $('#timeline1').removeClass('d-none');
+            }
+            if (outTime != '00:00') {
+                $('#timeline2').removeClass('d-none');
+            }
+
+
             $('#modalPunchIn').html(inTime);
             $('#puchInAt').html(inTime);
             $('#modalPunchOut').html(outTime);

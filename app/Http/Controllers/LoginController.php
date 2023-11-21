@@ -47,10 +47,10 @@ class LoginController extends BaseController
                 'title' => 'OTP Genrated',
                 'body' => ' Your FixHR Admin Login one time PIN is: ' . "$otp",
             ];
-            $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
+            // $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
 
             // isset($sendMail)
-            if (isset($sendMail)) {
+            if (true) {
                 // define('STDIN', fopen("php://stdin", "r"));
 
                 // echo "calling Schedular";
@@ -78,10 +78,10 @@ class LoginController extends BaseController
                     'title' => 'OTP Genrated',
                     'body' => ' Your FixHR Admin Login one time PIN is: ' . "$otp",
                 ];
-                $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
+                // $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
 
-                // isset()
-                if (isset($sendMail)) {
+                // isset($sendMail)
+                if (true) {
 
                     $first = PendingAdmin::where('emp_email', $request->email)->update(['otp' => $otp]);
                     // dd($otp);
@@ -120,7 +120,7 @@ class LoginController extends BaseController
                     Session::put('business_id', $businessId);
                     Session::put('branch_id', '');
                     Session::put('model_id', $load->model_id);
-                    Session::put('login_role', 0);
+                    Session::put('login_role', $mainloodLoad1->call_back_id);//atteched by CallID role old 0 backup id
                     Session::put('login_name', $mainloodLoad1->client_name);
                     Session::put('login_email', $mainloodLoad1->business_email);
                     Session::put('login_business_image', $mainloodLoad1->business_logo);

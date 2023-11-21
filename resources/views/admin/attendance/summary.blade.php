@@ -59,9 +59,9 @@
                         <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
                             <div class="row">
                                 <div class="col-6">
-                                    <select name="dataMonth" class="form-control" id="dataMonth"
+                                    <select name="dataMonth" class="form-control text-center" id="dataMonth"
                                         onchange="getAttendanceData()" data-placeholder="Select Month"
-                                        style="width:100px; border:none">
+                                        style="width:100px; border:solid 1px black">
                                         <option label="Month"></option>
                                         <?php
                                         for ($month = 1; $month <= 12; $month++) {
@@ -73,9 +73,9 @@
                                     </select>
                                 </div>
                                 <div class="col-6">
-                                    <select name="dataYear" class="form-control" id="dataYear"
+                                    <select name="dataYear" class="form-control text-center" id="dataYear"
                                         onchange="getAttendanceData()" data-placeholder="Year"
-                                        style="width:100px; border:none">
+                                        style="width:100px; border:solid 1px black">
                                         <option label="Select Year"></option>
                                         <?php
                                         $currentYear = date('Y');

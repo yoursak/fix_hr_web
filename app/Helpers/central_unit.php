@@ -168,8 +168,13 @@ class Central_unit
         // // Check if a result was found
         if ($result) {
             return $result->roles_name; // Return the role_name property
+        } else if (!$result) {
+            $load = DB::table('business_details_list')->where('call_back_id', self::$LoginRole)->where('business_id', self::$BusinessID)->get();
+            if ($load) {
+                return 'Owner';
+            }
         } elseif (self::$LoginRole == 0) {
-            return 'Owner';
+            return 'Unknown Role';
         }
         //  else if (self::$LoginRole == 1) {
         //    return "Admin";
@@ -465,11 +470,11 @@ class Central_unit
         $earlyExit = PolicyAttenRuleEarlyExit::where('business_id', Session::get('business_id'))
             ->where('switch_is', 1)
             ->first();
-        $earlyTime = $earlyExit->mark_half_day_hr * 60 + $earlyExit->mark_half_day_min;
+        $earlyTime = ($earlyExit->mark_half_day_hr ?? 0) * 60 + ($earlyExit->mark_half_day_min ?? 0);
         $hours1 = floor($earlyTime / 60);
         $minutes1 = $earlyTime % 60;
         $earlyExitTime = gmdate('H:i', $hours1 * 3600 + $minutes1 * 60);
-        $lateTime = $lateEntry->mark_half_day_hr * 60 + $lateEntry->mark_half_day_min;
+        $lateTime = ($lateEntry->mark_half_day_hr ?? 0) * 60 + ($lateEntry->mark_half_day_min ?? 0);
         // Calculate hours and minutes
         $hours = floor($lateTime / 60);
         $minutes = $lateTime % 60;
@@ -772,9 +777,9 @@ class Central_unit
         $totalDayinMonth = date('t');
         $sundays = 0;
 
-        while(++$day <= $totalDayinMonth){
-            $NDay = date('N',strtotime($year.'-'.$month.'-'.$day));
-            if($NDay == 7){
+        while (++$day <= $totalDayinMonth) {
+            $NDay = date('N', strtotime($year . '-' . $month . '-' . $day));
+            if ($NDay == 7) {
                 $sundays++;
             }
         }
@@ -793,14 +798,14 @@ class Central_unit
         $totalDayinMonth = date('t');
         $check = 0;
 
-        while(++$check <= $totalDayinMonth){
+        while (++$check <= $totalDayinMonth) {
             $getOffDay = self::getEmpAttSumm(['emp_id' => $Emp, 'punch_date' => date('Y-m-' . $check)]);
             $isOffDay = $getOffDay[0];
-            if($isOffDay == 6){
+            if ($isOffDay == 6) {
                 $totalHolidays++;
-            }elseif ($isOffDay == 7) {
+            } elseif ($isOffDay == 7) {
                 $totalWeekOff++;
-            }elseif ($isOffDay == 10){
+            } elseif ($isOffDay == 10) {
                 $totalPaidLeave++;
             }
         }
@@ -835,8 +840,6 @@ class Central_unit
             $totalOTMin += $overTime;
             $totalEarlyExitTime += $earlyExitBy;
             $totalLateTime += $lateby;
-
-
             $day++;
         }
 
@@ -853,19 +856,19 @@ class Central_unit
         $overtime = $allStatusCount[9];
         $remainingleave = $remLeave;
         $totalPaidOffDay = $totalHolidays + $totalWeekOff + $totalPaidLeave;
-        $totalWDinMonth =  $totalDayinMonth-$totalPaidOffDay;
+        $totalWDinMonth = $totalDayinMonth - $totalPaidOffDay;
 
 
         $cwh = ($totalTwhMin / 60);
         $twh = ($totalWDinMonth) * ($shiftWH / 60);
-        $twhpercentage = $totalTwhMin != 0 && $shiftWH != 0 ? (($totalTwhMin / 60) / ($totalWDinMonth * ($shiftWH / 60))) * 100 : 0;
-        // dd($twhpercentage);
+        $twhpercentage = $totalTwhMin != 0 && $shiftWH != 0 ? (($cwh) / ($totalWDinMonth * ($shiftWH / 60))) * 100 : 0;
 
-        $rwh = ($totalWDinMonth) * ($shiftWH / 60) - $totalTwhMin / 60;
+        $rwh = $twh - $cwh;
 
-        $trwh = ($totalWDinMonth) * ($shiftWH / 60);
+        $trwh = $twh;
+        
 
-        $trwhpercentege = ((($totalWDinMonth) * ($shiftWH / 60) - $totalTwhMin / 60) / (($totalWDinMonth) * ($shiftWH / 60))) * 100;
+        $trwhpercentege = (($twh - $cwh) / $twh) * 100;
 
         $otwh = $totalOTMin / 60;
 
@@ -903,7 +906,7 @@ class Central_unit
     static function GetCount($Date)
     {
 
-        
+
         $leaveCount = 0;
         $misPunchCount = 0;
         $Present = 0;
@@ -951,7 +954,6 @@ class Central_unit
 
 
         return [$EmpCount ?? 0, $Present ?? 0, $AbsentCount ?? 0, $HalfDay ?? 0, $leaveCount ?? 0, $misPunchCount ?? 0, $Late ?? 0, $Overtime ?? 0];
-
     }
 
     // Attendance Summary of Indivisual Employee for a Month 
@@ -1060,9 +1062,9 @@ class Central_unit
                 }
                 // dd($status);
             } else {
-                $statusCounts[$status]++;
+                $statusCounts[$status]++; //issue on new account
             }
-            // dd($statusCounts);
+
 
         }
 
@@ -1073,25 +1075,23 @@ class Central_unit
 
     static function getEmpAttSumm($Emp)
     {
-        // calculate present, absent, halfday, holiday, weekoff;
+ 
 
         $employee = DB::table('employee_personal_details')->join('policy_master_endgame_method', 'employee_personal_details.master_endgame_id', '=', 'policy_master_endgame_method.id')
             ->where('employee_personal_details.business_id', Session::get('business_id'))
             ->where('employee_personal_details.emp_id', $Emp['emp_id'])
             ->select('emp_id', 'emp_name', 'employee_type', 'employee_contractual_type', 'emp_gender', 'holiday_policy_ids_list', 'weekly_policy_ids_list', 'shift_settings_ids_list', 'leave_policy_ids_list', 'method_name', 'method_switch', 'emp_shift_type', 'policy_master_endgame_method.created_at as AppliedFrom')
             ->first();
-
+       
         $holiday_policy = json_decode($employee->holiday_policy_ids_list ?? 0, true);
         $weekly_policy = json_decode($employee->weekly_policy_ids_list ?? 0, true);
         $shift_policy = json_decode($employee->shift_settings_ids_list ?? 0, true);
         $leave_policy = json_decode($employee->leave_policy_ids_list ?? 0, true);
 
-        // dd($holiday_policy);
 
 
 
-
-        if ($employee !== null && $employee->method_switch == 1) {
+        if ($employee !== null && ($employee->method_switch ?? 0) == 1) {
 
             $attendanceList = DB::table('attendance_list')
                 ->where('business_id', Session::get('business_id'))
@@ -1113,15 +1113,13 @@ class Central_unit
                 $shiftType = PolicyAttendanceShiftSetting::where([
                     'business_id' => Session::get('business_id'),
                     'id' => $employee->emp_shift_type,
-                ])
-                    ->first();
+                ])->first();
 
-                if ($shiftType->shift_type == 2) {
+                if ($shiftType->shift_type ?? false && $shiftType->shift_type != null && $shiftType->shift_type == 2) {
                     $shift = PolicyAttendanceShiftTypeItem::where([
                         'business_id' => Session::get('business_id'),
                         'id' => $attendanceList->attendance_shift ?? 0,
-                    ])
-                        ->first();
+                    ])->first();
                 } else {
                     $shift = PolicyAttendanceShiftTypeItem::where([
                         'business_id' => Session::get('business_id'),
@@ -1152,7 +1150,7 @@ class Central_unit
                 ->where([
                     'business_id' => Session::get('business_id'),
                     'emp_id' => $Emp['emp_id'],
-                    // 'status' => 1,
+                    'final_status' => 1,
                 ])
                 ->whereMonth('from_date', date('m'))
                 ->get();
@@ -1194,14 +1192,14 @@ class Central_unit
             $shiftEnd = $shift->shift_end ?? 0;
             $entryGracetime = ($lateEntry->grace_time_hr ?? 0) * 60 + ($lateEntry->grace_time_min ?? 0);
             $exitGracetime = ($earlyExit->grace_time_hr ?? 0) * 60 + ($lateEntry->grace_time_min ?? 0);
-            $markAbsentIf = $lateEntry->mark_half_day_hr * 60 + $earlyExit->mark_half_day_min ?? 0;
+            $markAbsentIf = ($lateEntry->mark_half_day_hr ?? 0) * 60 + ($earlyExit->mark_half_day_min ?? 0);
             $punchInLoc = $attendanceList->punch_in_address ?? 'Not Mark';
             $punchOutLoc = $attendanceList->punch_out_address ?? 'Not Mark';
             $in_selfie = $attendanceList->punch_in_selfie ?? '';
             $out_selfie = $attendanceList->punch_out_selfie ?? '';
             $shiftName = $shift->shift_name ?? 'Genral Shift';
             $breakTime = $shift->break_min ?? '00';
-            $maxOvertime = $overtimeRule->max_ot_hr * 60 + $overtimeRule->max_ot_min;
+            $maxOvertime = ($overtimeRule->max_ot_hr ?? 0) * 60 + ($overtimeRule->max_ot_min ?? 0);
             $shiftStartObj = Carbon::parse($shiftStart);
             $shiftEndObj = Carbon::parse($shiftEnd);
             $inTimeObj = Carbon::parse($inTime);
@@ -1348,7 +1346,7 @@ class Central_unit
             $absentHalfTime = date('H:i', strtotime($halfAbsentTimeObj));
 
             // Mark absent half day if early exit by
-            $earlyExitMin = $earlyExit->mark_half_day_hr * 60 + $earlyExit->mark_half_day_min;
+            $earlyExitMin = ($earlyExit->mark_half_day_hr ?? 0) * 60 + ($earlyExit->mark_half_day_min ?? 0);
             $shiftEndObj = Carbon::parse($shiftEnd);
             $earlyExitBefore = $shiftEndObj->subMinutes($earlyExitMin);
             $EarlyExitTime = date('H:i', strtotime($earlyExitBefore));
@@ -1443,17 +1441,21 @@ class Central_unit
                     $leaveTo = Carbon::parse($list->to_date);
                     $today = Carbon::parse($Emp['punch_date']);
                     // $today = Carbon::parse(date('Y-m-d'));
-
                     if ($today >= $leaveFrom && $today <= $leaveTo) {
-                        $remainingLeaves = $leaveDetail[$list->leave_category]['remaining'];
-                        $day = $leaveFrom->diffInDays($today) + 1;
-                        while ($day-- > 0) {
-                            if ($remainingLeaves != 0) {
-                                $status = 10; //paid leave
-                                $remainingLeaves--;
-                            } else {
-                                $status = 11; // unpaid leave
+                        // dd($leaveDetail);
+                        if (isset($leaveDetail[$list->leave_category]['remaining'])) {
+                            $remainingLeaves = $leaveDetail[$list->leave_category]['remaining'];
+                            $day = $leaveFrom->diffInDays($today) + 1;
+                            while ($day-- > 0) {
+                                if ($remainingLeaves != 0) {
+                                    $status = 10; //paid leave
+                                    $remainingLeaves--;
+                                } else {
+                                    $status = 11; // unpaid leave
+                                }
                             }
+                        } else {
+                            $status = 2;
                         }
                     } else {
                         foreach ($weekly_policy as $key => $wPolicy) {
@@ -1461,14 +1463,19 @@ class Central_unit
                                 ->where([
                                     'business_id' => Session::get('business_id'),
                                     'id' => $wPolicy,
-                                ])
-                                ->first();
-                            foreach (json_decode($weekOff->days) as $day) {
-                                if (date('N', strtotime($day)) == $dayName) {
-                                    $status = 7; // Week Off
-                                    break;
+                                ])->first();
+
+                            if ($weekOff != null) {
+                                foreach (json_decode($weekOff->days) as $day) {
+                                    if (date('N', strtotime($day)) == $dayName) {
+                                        $status = 7; // Week Off
+                                        break;
+                                    }
                                 }
+                            }else{
+                                $status = 2;
                             }
+
                         }
                     }
                 }
@@ -1480,12 +1487,17 @@ class Central_unit
                             'id' => $wPolicy,
                         ])
                         ->first();
-                    foreach (json_decode($weekOff->days) as $day) {
-                        if (date('N', strtotime($day)) == $dayName) {
-                            $status = 7; // Week Off
-                            break;
+                    if ($weekOff != null) {
+                        foreach (json_decode($weekOff->days) as $day) {
+                            if (date('N', strtotime($day)) == $dayName) {
+                                $status = 7; // Week Off
+                                break;
+                            }
                         }
+                    }else{
+                        $status = 2;
                     }
+
                 }
             }
 

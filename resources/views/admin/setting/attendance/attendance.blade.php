@@ -1,10 +1,4 @@
-{{-- @extends('admin.setting.setting')
-@section('subtitle')
-Attendance
-@endsection
-@section('css') --}}
-{{-- @extends('admin.setting.setting')
---}}
+
 @extends('admin.pagelayout.master')
 @section('title')
 Attendance | Create Shift
@@ -14,12 +8,6 @@ Attendance | Create Shift
 <style>
     .nav-link.icon {
         line-height: 0;
-    }
-
-    .modal-header,
-    .modal-footer {
-        background-color: #f8f8ff;
-        /* color: #fff; */
     }
 
     .modal-open {
@@ -887,12 +875,10 @@ Attendance | Create Shift
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-light" type="reset" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit" id="savechanges">Save
-                            & Apply</button>
+                        <button class="btn btn-danger" type="reset" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" type="submit" id="savechanges">Save & Apply</button>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>

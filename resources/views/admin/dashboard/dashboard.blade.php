@@ -325,7 +325,7 @@
                             $holidayM = date('m', strtotime($holiday->holiday_date));
                             $holidayY = date('Y', strtotime($holiday->holiday_date));
                             $holidayDayName = date('l', strtotime($holiday->holiday_date));
-                            if($holidayM >= date('m') &&  $holidayD >= date('d') && $holidayY >= date('Y') && ++$holidayCount <= 5){ ?>
+                            // if($holidayM >= date('m') &&  $holidayD >= date('d') && $holidayY >= date('Y') && ++$holidayCount <= 5){ ?>
                                 <li class="item">
                                     <div class="card px-4 py-4 ">
                                         <div class="d-flex comming_events calendar-icon icons">
@@ -344,7 +344,7 @@
                                         </div>
                                     </div>
                                 </li>
-                                <?php } ?>
+                                
                             @endforeach
                         </ul>
                     </div>

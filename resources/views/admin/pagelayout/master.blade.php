@@ -14,13 +14,12 @@
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-
     <!-- FAVICON -->
     <link rel="icon" href={{ asset('assets/logo/f_fav.png?v=0.2') }} type="image/x-icon" />
     <!-- BOOTSTRAP CSS -->
     <link href="{{ asset('assets/plugins/bootstrap/css/bootstrap.css') }}" rel="stylesheet" />
     <!-- STYLE CSS -->
-    <link href="{{ asset('assets/css/style.css?v=2.7') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/css/style.css?v=3.1') }}" rel="stylesheet" />
     <link href="{{ asset('assets/css/plugins.css') }}" rel="stylesheet" />
     <!-- ANIMATE CSS -->
     <link href="{{ asset('assets/css/animated.css') }}" rel="stylesheet" />
@@ -39,14 +38,8 @@
 <body class="app sidebar-mini ltr">
     @include('sweetalert::alert')
     <style>
-        .modal-header {
-            background: #1877f2;
-            color: white;
-        }
-
         body *::-webkit-scrollbar-thumb,
         body *:hover::-webkit-scrollbar-thumb {
-
             /* color: #f1f4fb; */
             background: #1877f2;
         }
@@ -57,6 +50,12 @@
             -webkit-transition: 0.3s;
             transition: 0.3s;
         }
+
+        /* span[aria-hidden="true"] {
+            color: white;
+        } */
+
+        
     </style>
     <!-- SWITCHER -->
     <div class="switcher-wrapper">
@@ -391,7 +390,6 @@
     </div>
     <!--- END GLOBAL-LOADER -->
 
-
     <div class="page">
         <div class="page-main">
 
@@ -410,7 +408,6 @@
                     <!-- PAGE HEADER -->
                     @include('admin.layout.breadcrumb')
                     <!-- END PAGE HEADER -->
-
 
                     {{-- MAIN CONTENT --}}
                     @yield('content')

@@ -150,11 +150,9 @@ function print_city(city_id, city_index) {
       [i]
     );
 
-    console.log(city_arr[i]);
+    // console.log(city_arr[i]);
   }
-  $('#city_id').trigger('change');
-
-  document.getElementById('printCity').innerHTML = city_arr[i];
+  // $('#city_id').trigger('change');
 
 
 }

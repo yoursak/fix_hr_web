@@ -282,7 +282,7 @@ Attendance | Create Shift
         <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
             <li><a href="{{ url('/admin') }}">Dashboard</a></li>
             <li><a href="{{ url('admin/settings/attendance') }}">Role-permission</a></li>
-            <li><a href="{{ url('admin/settings/attendance') }}">Approval Settings</a></li>
+            <!-- <li><a href="{{ url('admin/settings/attendance') }}">Approval Settings</a></li> -->
             {{-- <li><a href="{{ url('/admin/requests/misspunch') }}">Request</a></li> --}}
 
             <li class="active"><span><b>Approval Settings</b></span></li>
@@ -318,6 +318,7 @@ Attendance | Create Shift
                         </div>
 
                         <div class="tab-pane " id="tab3">
+                            <x-approval-management.misspunch-approval></x-approval-management.mispunch-approval>
 
                         </div>
                         <div class="tab-pane  " id="tab4">

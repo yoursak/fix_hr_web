@@ -103,6 +103,7 @@ Support	       :   support@spruko.com
 83. Padding
 84. Typography
 85. Width
+86. Status Color
 
 */
 /* ###### Fonts ####### */
@@ -26549,7 +26550,7 @@ footer.footer {
 
 .page-title {
   margin: 0;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: 500;
   line-height: 2.5rem;
   position: relative;
@@ -50264,6 +50265,18 @@ ul.inbox-pagination li {
   font-weight: 300;
 }
 
+.modal-header{
+  background-color: #1877F2;
+}
+
+.modal-title{
+  color: #fff !important;
+}
+
+span[aria-hidden="true"] {
+            color: #fff;
+        }
+
 .files .progress {
   width: 200px;
 }
@@ -58559,4 +58572,115 @@ a.text-dark:hover, a.text-dark:focus {
 
 .w-200 {
   width: 200px;
+}
+
+
+/*------ Status Color -------*/
+
+.present-status {
+  color: #0dcd94;
+}
+
+.present-status-badge {
+  color: #0dcd94;
+  font-size: 11px;
+  font-weight: bolder;
+  padding: 2px;
+  background-color: rgba(1, 195, 83, 0.15);
+}
+
+.absent-status {
+  color: #f11541;
+}
+
+.absent-status-badge {
+  color: #f11541;
+  font-size: 11px;
+  font-weight: bolder;
+  padding: 2px;
+  background-color: rgba(241, 21, 65, 0.15);
+}
+
+.halfday-status {
+  color: #8fb31d;
+}
+
+.halfday-status-badge {
+  color: #8fb31d;
+  font-size: 11px;
+  font-weight: bolder;
+  padding: 2px;
+  background-color: #8fb31d30;
+}
+
+.holiday-status {
+  color: purple;
+}
+
+.holiday-status-badge {
+  color: purple;
+  font-size: 11px;
+  font-weight: bolder;
+  padding: 2px;
+  background-color: rgba(128, 0, 128, 0.105);
+}
+
+.mispunch-status {
+  color: orange;
+}
+
+.mispunch-status-badge {
+  color: orange;
+  font-size: 11px;
+  font-weight: bolder;
+  padding: 2px;
+  background-color: rgba(255, 166, 0, 0.121);
+}
+
+.weekoff-status {
+  color: gray;
+}
+
+.weekoff-status-badge {
+  color: gray;
+  font-size: 11px;
+  font-weight: bolder;
+  padding: 2px;
+  background-color: rgba(128, 128, 128, 0.099);
+}
+
+.leave-status {
+  color: brown;
+}
+
+.leave-status-badge {
+  color: brown;
+  font-size: 11px;
+  font-weight: bolder;
+  padding: 2px;
+  background-color: rgba(165, 42, 42, 0.155);
+}
+
+.late-status {
+  color: #F70D1A;
+}
+
+.late-status-badge {
+  color: #F70D1A;
+  font-size: 11px;
+  font-weight: bolder;
+  padding: 2px;
+  background-color: #f70d1944;
+}
+
+.overtime-status {
+  color: #fe7f00;
+}
+
+.overtime-status-badge {
+  color: #fe7f00;
+  font-size: 11px;
+  font-weight: bolder;
+  padding: 2px;
+  background-color: #fe7f0063;
 }

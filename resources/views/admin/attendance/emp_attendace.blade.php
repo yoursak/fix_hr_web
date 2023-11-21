@@ -160,33 +160,15 @@
 
     @endphp
 
-    <div class=" p-0 py-2">
+    <div class=" p-0 py-2 mb-2">
         <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
             <li><a href="{{ url('/admin') }}">Dashboard</a></li>
             {{-- <li><a href="{{ url('/admin/requests/leaves') }}">Attendance</a></li> --}}
-            <li class="active"><span><b>Attendance</b></span></li>
+            <li class="active"><span><b>Monthly Attendance</b></span></li>
         </ol>
     </div>
     <!-- PAGE HEADER -->
-    <div class="page-header d-xl-flex d-block">
-        <div class="page-leftheader">
-            <div class="page-title">Attendance</div>
-        </div>
-        <div class="page-rightheader ms-md-auto">
-            <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
-                {{-- <div class="btn-list">
-                    <a onclick="window.print()" class="btn btn-primary me-3">Print Page</a>
-                    <button class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title=""
-                        data-bs-original-title="E-mail"> <i class="feather feather-mail"></i> </button>
-                    <button class="btn btn-light" data-bs-placement="top" data-bs-toggle="tooltip" title=""
-                        data-bs-original-title="Contact"> <i class="feather feather-phone-call"></i> </button>
-                    <button class="btn btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" title=""
-                        data-bs-original-title="Info"> <i class="feather feather-info"></i> </button>
-                </div> --}}
-            </div>
-        </div>
-    </div>
-    <!--END PAGE HEADER -->
+    
 
     <!-- ROW -->
 
@@ -195,27 +177,27 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <p class="form-label">Branch</p>
                                 <select name='country-dd' id="country-dd" class="form-control"
                                     data-nodays='{{ date('t') }}' data-modays='{{ date('d') }}'
                                     data-currentMonth='{{ date('m') }}' data-currentYear='{{ date('Y') }}' required>
-                                    <option value="">--- Select Branch ---</option>
+                                    <option value="">Select Branch </option>
                                     @foreach ($Branch as $data)
-                                        <option value="{{ $data->branch_id }}">
+                                        <option value="{{ $data->branch_id }}"> 
                                             {{ $data->branch_name }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <p class="form-label">Department</p>
                                 <div class="form-group mb-3">
                                     <select id="state-dd" name="department_id" class="form-control" required>
-                                        <option value="">--- Select Deparment ---</option>
+                                        <option value="">Select Department </option>
                                         @foreach ($Department as $data)
                                             <option value="{{ $data->depart_id }}">
                                                 {{ $data->depart_name }}
@@ -226,13 +208,12 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <p class="form-label">Designation</p>
                                 <div class="form-group mb-3">
-                                    <select id="desig-dd" name="designation_id" class="form-control" required>
-                                        <option value="">--- Select Designation ---</option>
+                                    <select id="desig-dd" name="designation_id" class="form-control " required>
+                                        <option value="">Select Designation </option>
                                         @foreach ($Designation as $data)
                                             <option value="{{ $data->desig_id }}">
                                                 {{ $data->desig_name }}
@@ -243,14 +224,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="row">
-                                <div class="col-5">
+                                <div class="col-6">
                                     <div class="form-group">
                                         <p class="form-label">Year</p>
                                         <div class="form-group mb-3">
-                                            <select name="year" id="yearFilter" class="form-control" required>
-                                                <option value="">--- Year ---</option>
+                                            <select name="year" id="yearFilter" class="form-control " required>
+                                                <option value="">Select Year</option>
                                                 @for ($year = date('Y'); $year >= date('Y') - 20; $year--)
                                                     <option value="{{ $year }}">{{ $year }}</option>
                                                 @endfor
@@ -258,12 +239,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-7">
+                                <div class="col-6">
                                     <div class="form-group">
                                         <p class="form-label">Month</p>
                                         <div class="form-group mb-3">
-                                            <select name="month" id="monthFilter" class="form-control" required>
-                                                <option value="">--- Month ---</option>
+                                            <select name="month" id="monthFilter" class="form-control " required>
+                                                <option value="">Select Month</option>
                                                 @for ($month = 1; $month <= 12; $month++)
                                                     <option value="{{ $month }}">
                                                         {{ date('F', mktime(0, 0, 0, $month, 1)) }}</option>
@@ -273,7 +254,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -514,7 +494,7 @@
                                     <div class="col-sm-12 mt-5">
                                         <div class="tl-content tl-content-active">
 
-                                            <div class="tl-header">
+                                            <div class="tl-header d-none" id="timeline1">
                                                 <span class="tl-marker"></span>
                                                 <div class="row">
                                                     <div class="col-10">
@@ -534,7 +514,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="tl-header">
+                                            <div class="tl-header d-none" id="timeline2">
                                                 <span class="tl-marker"></span>
                                                 <div class="row">
                                                     <div class="col-10">
@@ -737,6 +717,16 @@
                 var overTime = $(context).data('overtime');
                 var inSelfie = $(context).data('inselfie');
                 var outSelfie = $(context).data('outselfie');
+
+                console.log(outTime == '00:00');
+
+                if(inTime != '00:00'){
+                    $('#timeline1').removeClass('d-none');
+                }
+                if(outTime != '00:00'){
+                    $('#timeline2').removeClass('d-none');
+                }
+
                 $('#modalPunchIn').html(inTime);
                 $('#puchInAt').html(inTime);
                 $('#modalPunchOut').html(outTime);

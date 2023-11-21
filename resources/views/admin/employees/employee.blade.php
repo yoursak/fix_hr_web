@@ -251,17 +251,16 @@
                                 <div class="form-group mb-3">
                                     <select id="filter-department" name="department_id" class="form-control" required>
                                         <option value="">Select Deparment Name</option>
-                                        @foreach ($Department as $data)
+                                        {{-- @foreach ($Department as $data)
                                             <option value="{{ $data->depart_id }}">
                                                 {{ $data->depart_name }}
                                             </option>
-                                        @endforeach
+                                        @endforeach --}}
                                     </select>
 
                                 </div>
                             </div>
                         </div>
-
                         <div class="col-md-3">
                             <div class="form-group">
                                 <p class="form-label">Designation</p>
@@ -329,7 +328,7 @@
                                         <td><span class="mb-1 fs-14">{{ $item->emp_id }}</span></td>
                                         <td><span class="mb-1 fs-14">{{ $branch->branch_name ?? ' ' }}</span></td>
                                         <td><span class="mb-1 fs-14">{{ $depart->depart_name ?? '' }}</span></td>
-                                        <td><span class="mb-1 fs-14">{{ $item->emp_date_of_joining }}</span></td>
+                                        <td><span class="mb-1 fs-14">{{ \Carbon\Carbon::parse($item->emp_date_of_joining)->format('d-m-Y')  }}</span></td>
                                         <td><span class="mb-1 fs-14">{{ $item->emp_mobile_number }}</span></td>
                                         <td>
                                             @if (in_array('Employee.Update', $permissions))
@@ -929,12 +928,97 @@
         //         }
         //     });
         // });
+        $(document).ready(function() {
+            $('#filter-branch').on('change', function() {
+                var branch_id = this.value;
+                // console.log(branch_id);
+                $("#filter-department").html('');
+                $("#filter-designation").html('');
+
+                $.ajax({
+                    url: "{{ url('admin/settings/business/allfilterdepartment') }}",
+                    type: "POST",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        brand_id: branch_id
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+    
+                        // console.log(result);
+                        $('#filter-department').html(
+                            '<option value="" name="department">Select Department Name</option>'
+                        );
+                        console.log(result.department);
+                        $.each(result.department, function(key, value) {
+                            $("#filter-department").append('<option name="department" value="' +
+                                value
+                                .depart_id + '">' + value.depart_name +
+                                '</option>');
+                        });
+    
+                        $('#filter-designation').html(
+                            '<option value="">Select Designation Name</option>');
+                    }
+                });
+            });
+            $('#filter-department').on('change', function() {
+                var depart_id = this.value;
+                var branch_id = $('#filter-branch').val();
+                console.log("aaaaaa ", branch_id);
+                console.log("depart_id "+depart_id);
+                $("#filter-designation").html('');
+                $.ajax({
+                    url: "{{ url('admin/settings/business/allfilterdesignation') }}",
+                    type: "POST",
+                    data: {
+                        branch_id:branch_id,
+                        depart_id: depart_id,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        console.log("res ",res);
+                        $('#filter-designation').html(
+                            '<option value="">Select Designation Name</option>');
+                        $.each(res.designation, function(key, value) {
+                            $("#filter-designation").append('<option value="' + value
+                                .desig_id + '">' + value.desig_name + '</option>');
+                        });
+                        $('#employee-dd').html(
+                            '<option value="">Select Employee Name</option>')
+                    }
+                });
+            });
+            // // employee
+            // $('#filter-department').on('change', function() {
+            //     var depart_id = this.value;
+            //     $("#employee-dd").html('');
+            //     $.ajax({
+            //         url: "{{ url('admin/settings/business/allemployeefilter') }}",
+            //         type: "POST",
+            //         data: {
+            //             _token: '{{ csrf_token() }}',
+            //             depart_id: depart_id,
+            //         },
+            //         dataType: 'json',
+            //         success: function(res) {
+            //             console.log(res);
+            //             $('#employee-dd').html('<option value="">Select Employee</option>');
+            //             $.each(res.employee, function(key, value) {
+            //                 $("#employee-dd").append('<option value="' + value.emp_id +
+            //                     '">' + value.emp_name + '</option>');
+            //             });
+            //         }
+            //     });
+            // });
+        });
 
         $(document).ready(function() {
             $('#filter-branch, #filter-department, #filter-designation').change(function() {
                 var branchId = $('#filter-branch').val();
-                // console.log(branchId);
                 var departmentId = $('#filter-department').val();
+                console.log("depart_id1 "+departmentId);
                 var designationId = $('#filter-designation').val();
                 $.ajax({
                     type: "POST",
@@ -954,7 +1038,7 @@
                             // console.log(employee);
                             let i = 1;
                             employee.forEach(el => {
-                                console.log("employee aa", el);
+                                // console.log("employee aa", el);
                                 var newRow = '<tr>' +
                                     '<td>' + i++ + '</td>' +
 
@@ -996,88 +1080,8 @@
                 });
             });
         });
-
-        $(document).ready(function() {
-            $('#filter-branch').on('change', function() {
-                var branch_id = this.value;
-                $("#filter-department").html('');
-                $.ajax({
-                    url: "{{ url('admin/settings/business/allfilterdepartment') }}",
-                    type: "POST",
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        brand_id: branch_id
-                    },
-                    dataType: 'json',
-                    success: function(result) {
-
-                        console.log(result);
-                        $('#filter-department').html(
-                            '<option value="" name="department">Select Department Name</option>'
-                        );
-                        $.each(result.department, function(key, value) {
-                            $("#filter-department").append('<option name="department" value="' +
-                                value
-                                .depart_id + '">' + value.depart_name +
-                                '</option>');
-                        });
-
-
-
-
-                        $('#desig-dd').html(
-                            '<option value="">Select Designation Name</option>');
-                    }
-                });
-            });
-            $('#filter-department').on('change', function() {
-                var depart_id = this.value;
-                $("#desig-dd").html('');
-                $.ajax({
-                    url: "{{ url('admin/settings/business/alldesignation') }}",
-                    type: "POST",
-                    data: {
-                        depart_id: depart_id,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    dataType: 'json',
-                    success: function(res) {
-                        console.log(res);
-                        $('#desig-dd').html(
-                            '<option value="">Select Designation Name</option>');
-                        $.each(res.designation, function(key, value) {
-                            $("#desig-dd").append('<option value="' + value
-                                .desig_id + '">' + value.desig_name + '</option>');
-                        });
-                        // $('#employee-dd').html(
-                        //     '<option value="">Select Employee Name</option>');
-
-                    }
-                });
-            });
-            // employee
-            $('#filter-department').on('change', function() {
-                var depart_id = this.value;
-                $("#employee-dd").html('');
-                $.ajax({
-                    url: "{{ url('admin/settings/business/allemployeefilter') }}",
-                    type: "POST",
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        depart_id: depart_id,
-                    },
-                    dataType: 'json',
-                    success: function(res) {
-                        console.log(res);
-                        $('#employee-dd').html('<option value="">Select Employee</option>');
-                        $.each(res.employee, function(key, value) {
-                            $("#employee-dd").append('<option value="' + value.emp_id +
-                                '">' + value.emp_name + '</option>');
-                        });
-                    }
-                });
-            });
-        });
+        
+        
         $(document).ready(function() {
             // Bind the "keyup" event to the input field
             $('#emp_id_sd').keyup(function() {
@@ -1134,37 +1138,46 @@
             });
         });
 
-        // $('#country-dd').on('change', function() {
-        //     var branch_id = this.value;
-        //     console.log("sahi ja raha hai");
-        //     $("#state-dd").html('');
-        //     $.ajax({
-        //         url: "{{ url('admin/settings/business/allrotationalshift') }}",
-        //         type: "POST",
-        //         data: {
-        //             _token: '{{ csrf_token() }}',
-        //             brand_id: branch_id
-        //         },
-        //         dataType: 'json',
-        //         success: function(result) {
+        $('#country-dd').on('change', function() {
+            var branch_id = this.value;
+            console.log("sahi ja raha hai");
+            $("#state-dddd").html('');
+            $.ajax({
+                url: "{{ url('admin/settings/business/allrotationalshift') }}",
+                type: "POST",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    brand_id: branch_id
+                },
+                dataType: 'json',
+                success: function(result) {
 
-        //             console.log("Result", result);
-        //             $('#state-dd').html(
-        //                 '<option value="" name="department">Select Department Name</option>'
-        //             );
-        //             // console.log(result.department.shift_type);
-        //             $.each(result.department, function(key, value) {
-        //                 // value.shift_type == 2
-        //                 $("#state-dd").append('<option name="department" value="' +
-        //                     value
-        //                     .id + '">' + value.shift_name +
-        //                     '</option>');
-        //             });
-        //             $('#desig-dd').html(
-        //                 '<option value="">Select Designation Name</option>');
-        //         }
-        //     });
-        // });
+                    console.log("Result", result);
+                    console.log("Result2", result.department[0]);
+                     if(result.department[0].shift_type == 2){
+                        console.log("shifttype2");
+                        $('#checkRotationalTypeItem').removeClass('d-none');
+                    $('#state-dddd').html(
+                        '<option value="" name="department">Select Rotational Type</option>'
+                    );
+                    console.log(result.department[0].shift_type);
+                    $.each(result.department, function(key, value) {
+                        // value.shift_type == 2
+                        $("#state-dddd").append('<option name="department" value="' +
+                            value
+                            .id + '">' + value.shift_name +
+                            '</option>');
+                    });
+                    }  else {
+                        $('#checkRotationalTypeItem').addClass('d-none');
+
+                        console.log("shifttypeother");
+                    }
+                    // $('#desig-dd').html(
+                    //     '<option value="">Select Designation Name</option>');
+                }
+            });
+        });
     </script>
     <script>
         function load() {

@@ -4,7 +4,7 @@
 
   $(".dropify").dropify({
     messages: {
-      default: "Upload Your Business Profile",
+      default: "Upload Image",
       replace: "Drag and drop or click to replace",
       remove: "Remove",
       error: "Ooops, something wrong appended.",

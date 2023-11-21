@@ -150,7 +150,7 @@
                                 ?>
                                 <p class="my-auto " style="color:rgb(34, 33, 29)"><i class="fe fe-user mx-2"></i>
                                     <?= $Rolee != '' ? $Rolee->roles_name : 'Role Name : null' ?>
-                                    <?= 'Date: '.date('d-m-y',strtotime($Role_id->created_at)) ?>
+                                    <?= '-Created at: '.date('d-m-y',strtotime($Role_id->created_at)) ?>
                                 
                                 </p>
 

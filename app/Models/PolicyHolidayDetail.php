@@ -28,10 +28,10 @@ class PolicyHolidayDetail extends Model
 	protected $table = 'policy_holiday_details';
 	protected $primaryKey = 'holiday_id';
 
-	protected $casts = [
-		'template_id' => 'int',
-		'holiday_date' => 'datetime'
-	];
+	// protected $casts = [
+	// 	'template_id' => 'int',
+	// 	'holiday_date' => 'datetime'
+	// ];
 
 	protected $fillable = [
 		'template_id',

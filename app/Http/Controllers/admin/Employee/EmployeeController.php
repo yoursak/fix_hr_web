@@ -49,8 +49,9 @@ class EmployeeController extends Controller
             ->select('policy_attendance_shift_settings.id as attendance_id', 'policy_attendance_shift_settings.shift_type_name')
             ->get();
 
-        $DATA = EmployeePersonalDetail::join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
-            ->where('employee_personal_details.business_id', Session::get('business_id'))
+        $DATA = EmployeePersonalDetail::
+        // join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+            where('employee_personal_details.business_id', Session::get('business_id'))
             ->orderBy('employee_personal_details.id', 'desc')
             ->get();
 
@@ -291,9 +292,10 @@ class EmployeeController extends Controller
 
     public function allEmployee(Request $request)
     {
+       
         $days = EmployeePersonalDetail::join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
             ->where('employee_personal_details.business_id', Session::get('business_id'))
-            ->where('branch_list.business_id', Session::get('business_id'))
+            // ->where('branch_list.business_id', Session::get('business_id'))
             ->where('employee_personal_details.emp_id', $request->employee_id)
             ->get();
         return response()->json(['get' => $days]);

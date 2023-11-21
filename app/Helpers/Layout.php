@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\admin\BranchList;
 use App\Models\admin\DepartmentList;
 use App\Models\admin\DesignationList;
-
+use Session;
 /**
  * Laravel Custom Helper
  *
@@ -31,21 +31,19 @@ use App\Models\admin\DesignationList;
     }
 
     public static function BranchName($id){
-      $data = BranchList::select('branch_name')->where('branch_id',$id)->first();
+      $data = BranchList::select('branch_name')->where('branch_id',$id)->where('business_id',Session::get('business_id'))->first();
       return $data ;
     }
 
     public static function DepartmentName($id){
-      $data = DepartmentList::select('depart_name')->where('depart_id',$id)->first();
+      $data = DepartmentList::select('depart_name')->where('depart_id',$id)->where('business_id',Session::get('business_id'))->first();
       // dd($data);
       return $data ;
 
     }
 
     public static function DasignationName($id){
-      $data = DesignationList::select('desig_name')->where('desig_id',$id)->first();
+      $data = DesignationList::select('desig_name')->where('desig_id',$id)->where('business_id',Session::get('business_id'))->first();
       return $data ;
     }
 }
-
-?>

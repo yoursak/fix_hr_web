@@ -580,6 +580,7 @@ class RulesManagement
             return [$check];
         } else {
             return [0];
+
         }
     }
 
@@ -640,8 +641,8 @@ class RulesManagement
         $statusCounts = DB::table('approval_status_list')
             ->where('business_id', self::allValueGet()[5])
             ->where('all_request_id', $ID)
-            ->where('status',2)
             ->where('approval_type_id', $ApprovalType)
+            ->where('status', 2)
             ->select('status')
             ->get();
 

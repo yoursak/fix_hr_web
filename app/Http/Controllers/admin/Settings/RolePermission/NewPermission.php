@@ -66,11 +66,6 @@ class NewPermission extends Controller
         $Modules = $rooted1->SidebarMenu();
         $moduleName = $accessPermission[0];
         $permission = $accessPermission[1];
-
-
-
-
-
         $send = compact('moduleName', 'permission', 'Modules', 'permissions', 'RolesData', 'EmployeeList', 'BranchList');
         return view('admin.setting.permissions.newPermission', $send);
     }
@@ -421,6 +416,7 @@ class NewPermission extends Controller
     // used Component X-ApprovalManagement
     public function ApprovalSubmit(Request $request)
     {
+        // dd($request->all());
         $businessID = Session::get('business_id');
         $loadType = $request->load;
         $radioBtn = $request->btnradio;
@@ -429,7 +425,14 @@ class NewPermission extends Controller
         $lastIndex = $approvalSelection[sizeof($approvalSelection) - 1];
         // dd($request->all(), $lastIndex);
         $point = ApprovalManagementCycle::where('business_id', $businessID)->where('approval_type_id', $loadType)->first();
-// !
+        // $root = DB::table('approval_status_list')
+        //     ->where('applied_cycle_type', 1)->where('approval_type_id', 2)->get();
+        // if ($root) {
+        
+        // }
+        // dd($root);
+
+        // !
         if (!isset($point)) { //?? false
             $save = ApprovalManagementCycle::insert([
                 'approval_type_id' => $loadType,
@@ -453,14 +456,35 @@ class NewPermission extends Controller
                 'role_id' => json_encode($approvalSelection),
             ]);
             // LeaveRequestList Update Particular BusinessID 'runtime_cycle_update' => $radioBtn
-            // $initialIndex
-            $load = RequestLeaveList::where('business_id', $businessID)->where('process_complete','!=',1)->update(['initial_level_role_id' => 0, 'forward_by_role_id' => $initialIndex, 'final_level_role_id' => $lastIndex, 'forward_by_status' => 0]);
+            // $initialIndex'initial_level_role_id' => 0,
+            // $loadmispunch = RequestLeaveList::where('business_id', $businessID)->where('process_complete', '==', $loadType)->update(['forward_by_role_id' => $initialIndex, 'final_level_role_id' => $lastIndex, 'forward_by_status' => 0]);
+// $loadType
+            $load = RequestLeaveList::where('business_id', $businessID)->where('process_complete', '0')->update(['forward_by_role_id' => $initialIndex, 'final_level_role_id' => $lastIndex, 'forward_by_status' => 0]);
+
+
             // DB::table('approval_status_list')->where('approval_type_id', 2)
             //     ->where('business_id', $businessID)->where('status', '!=', 1)->update([
             //         'applied_cycle_type' => $radioBtn
             //     ]);
             if (isset($update_all_ready) && isset($load)) {
-                Alert::success('', "Your Updated Approval System also Update Request Leave List");
+                if ($loadType == 2) {
+
+                    Alert::success('', "Your Updated Parallel Approval System   also Update Request Leave List");
+                }
+                if ($loadType == 1) {
+
+
+
+                    Alert::success('', "Your Updated Sequential Approval System   also Update Request Leave List");
+                }
+
+
+                // elseif ($loadType == 3) {
+
+                //     Alert::success('', "Your Updated Approval System also Update Request Mispunch List");
+                // }
+                // } elseif(isset($update_all_ready) && isset($load) && ($loadType==3)) {
+
             } else {
                 Alert::info('', "Not Updated Approval System ");
             }

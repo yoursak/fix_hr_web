@@ -99,7 +99,7 @@
 
             });
 
-            $(document).on('click', '.remove_item_btn', function(e) {
+            $(document).on('click', '.remove_item_btnl1', function(e) {
                 // e.preventDefault();
                 let row_item = $(this).parent().parent();
                 console.log(row_item);

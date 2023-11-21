@@ -41,11 +41,11 @@ class AttendanceController extends Controller
         $earlyExit = PolicyAttenRuleEarlyExit::where('business_id', Session::get('business_id'))
             ->where('switch_is', 1)
             ->first();
-        $earlyTime = $earlyExit->mark_half_day_hr * 60 + $earlyExit->mark_half_day_min;
+        $earlyTime = ($earlyExit->mark_half_day_hr??0) * 60 + ($earlyExit->mark_half_day_min??0);
         $hours1 = floor($earlyTime / 60);
-        $minutes1 = $earlyTime % 60;
+        $minutes1 = $earlyTime % 60; 
         $earlyExitTime = gmdate('H:i', $hours1 * 3600 + $minutes1 * 60);
-        $lateTime = $lateEntry->mark_half_day_hr * 60 + $lateEntry->mark_half_day_min;
+        $lateTime = ($lateEntry->mark_half_day_hr??0) * 60 + ($lateEntry->mark_half_day_min??0);
         // Calculate hours and minutes
         $hours = floor($lateTime / 60);
         $minutes = $lateTime % 60;
@@ -136,6 +136,16 @@ class AttendanceController extends Controller
     // ********************************** Start of Attendance Ajax Response By Aman ******************************
 
 
+    public function AttendanceByAjaxFilter(Request $request){
+        $month = $request->month;
+        $year = $request->year;
+        $empId = $request->emp_id;
+
+        $byAttendanceCalculation = Central_unit::attendanceByEmpDetails($empId, $year, $month);
+        $allStatusCount = Central_unit::attendanceCount($empId, $year, $month);
+        $getLeave = Central_unit::getEmpAttSumm(['emp_id' => $empId, 'punch_date' => date('Y-m-d')]);
+        return response()->json([$byAttendanceCalculation,$allStatusCount,$getLeave]);
+    }
 
     public function dashboardAttendanceCountFilter(Request $request)
     {

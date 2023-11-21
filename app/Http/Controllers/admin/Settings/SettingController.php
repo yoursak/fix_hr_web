@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\LoginAdmin;
+use App\Models\CameraPermission;
 use App\Models\LoginEmployee;
 use App\Models\PendingAdmin;
 use App\Models\ModelHasPermission;
@@ -100,6 +101,12 @@ class SettingController extends Controller
         }
     }
 
+        // public function editCameraAccessDataGet(Request $request)
+        // {
+        //     $data = CameraPermission::where('id', $request->id)->get();
+        //     return response()->json(['get' => $data]);
+        // }
+
     public function updateCamera(Request $request)
     {
 
@@ -170,7 +177,7 @@ class SettingController extends Controller
             ->get();
 
         if ($isPresent->count() == 0) {
-            $setMode = DB::table('attendance_mode')->insert([
+            $setMode = DB::table('policy_attendance_mode')->insert([
                 'business_id' => $request->session()->get('business_id'),
                 'attendance_active_methods' => json_encode($final_value),
                 'office_auto' => ($request->premisesIsAuto != 0 && $request->premisesActive === "on") ? $request->premisesIsAuto : 0,
@@ -194,7 +201,7 @@ class SettingController extends Controller
                 Alert::error('Failed', '')->persistent(true);
             }
         } else {
-            $updateMode = DB::table('attendance_mode')
+            $updateMode = DB::table('policy_attendance_mode')
                 ->where(['business_id' => $request->session()->get('business_id')])
                 ->update([
                     'business_id' => $request->session()->get('business_id'),
@@ -229,8 +236,8 @@ class SettingController extends Controller
     // account setting
     public function account()
     {
-        $accDetail = DB::table('business_details_list')
-            ->where('business_id', Session::get('business_id'))
+        // dd($request->all());
+        $accDetail = BusinessDetailsList::where('business_id', Session::get('business_id'))
             ->first();
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
@@ -300,8 +307,9 @@ class SettingController extends Controller
     public function uploadlogo(Request $request)
     {
         // echo $request->file('image')->store('uploads');
-
+        // dd($request->all());
         if ($request->image) {
+
             $validatedData = $request->validate([
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
                 // Adjust max size as needed
@@ -318,6 +326,9 @@ class SettingController extends Controller
                 ->where('business_id', Session::get('business_id'))
                 ->update(['business_logo' => $imageName]);
             if ($data) {
+                Alert::success('Data Updated', 'Updated  Created')->persistent(true);
+
+
                 // return $data;
                 return back();
             } else {
@@ -333,6 +344,7 @@ class SettingController extends Controller
                 'image_path' => $imageName,
             ]);
         }
+
         return back();
 
         //  else {
@@ -372,7 +384,13 @@ class SettingController extends Controller
             ->where('business_id', Session::get('business_id'))
             ->update(['business_name' => $request->business_name, 'business_categories' => $request->select]);
         // return $branch;
-        return back();
+
+        if (isset($branch)) {
+            Alert::success('Data Updated', 'Updated  Created')->persistent(true);
+            return back();
+        } else {
+            return back();
+        }
     }
     // sphoneupdate
     public function sphoneupdate(Request $request)
@@ -390,7 +408,8 @@ class SettingController extends Controller
     public function subscription()
     {
         // echo $request->all();
-        return view('admin.subscription.subscription');
+        $accDetail = BusinessDetailsList::where('business_id', Session::get('business_id'))->first();
+        return view('admin.subscription.subscription',compact('accDetail'));
     }
 
 
@@ -439,7 +458,17 @@ class SettingController extends Controller
             ->where('business_id', Session::get('business_id'))
             ->update(['client_name' => $request->name]);
         // return $branch;
-        return back();
+        // return back();
+        // if (isset($data)) {
+        //     Alert::success('Update Weekly Holidays')->persistent(true);
+        // } else {
+        //     Alert::info('Not Update Weely Holidays')->persistent(true);
+        if ($branch) {
+            Alert::success('Update Name')->persistent(true);
+        } else {
+            Alert::info('Not Updated Name')->persistent(true);
+        }
+        return redirect()->route('account.settings');
     }
 
     // business setting
@@ -499,11 +528,10 @@ class SettingController extends Controller
     public function allRotationalShift(Request $request)
     {
         $branch_ID = $request->brand_id;
-        $get = PolicyAttendanceShiftTypeItem::
-            join('policy_attendance_shift_settings', 'policy_attendance_shift_settings.id', '=', 'policy_attendance_shift_type_items.attendance_shift_id')
-           ->where('policy_attendance_shift_type_items.attendance_shift_id', $branch_ID)->where('policy_attendance_shift_type_items.business_id',Session::get('business_id'))
-           ->select('policy_attendance_shift_settings.shift_type', 'policy_attendance_shift_type_items.*')
-           ->get();
+        $get = PolicyAttendanceShiftTypeItem::join('policy_attendance_shift_settings', 'policy_attendance_shift_settings.id', '=', 'policy_attendance_shift_type_items.attendance_shift_id')
+            ->where('policy_attendance_shift_type_items.attendance_shift_id', $branch_ID)->where('policy_attendance_shift_type_items.business_id', Session::get('business_id'))
+            ->select('policy_attendance_shift_settings.shift_type', 'policy_attendance_shift_type_items.*')
+            ->get();
 
         // $get = DepartmentList::where('branch_id', $branch_ID)->where('b_id', Session::get('business_id'))->get();
         return response()->json(['department' => $get]);
@@ -512,21 +540,43 @@ class SettingController extends Controller
     public function allFilterDepartment(Request $request)
     {
         $branch_ID = $request->brand_id;
-        $get = EmployeePersonalDetail::where('branch_id', $branch_ID)->where('business_id', Session::get('business_id'))->get();
+        $get = EmployeePersonalDetail::join('department_list', 'department_list.depart_id', '=', 'employee_personal_details.department_id')
+            ->where('employee_personal_details.branch_id', $branch_ID)
+            ->where('employee_personal_details.business_id', Session::get('business_id'))
+            ->select('employee_personal_details.department_id as depart_id', 'department_list.depart_name')
+            ->distinct()
+            ->get();
         return response()->json(['department' => $get]);
+    }
+
+    public function allFilterDesignation(Request $request)
+    {
+        // return "chal";
+        // $branch_ID = $request->brand_id; 
+        $branch_ID = $request->branch_id;
+        $get = EmployeePersonalDetail::join('designation_list', 'designation_list.desig_id', '=', 'employee_personal_details.designation_id')
+            ->where('employee_personal_details.branch_id', $branch_ID)
+            ->where('employee_personal_details.department_id', $request->depart_id)
+            ->where('employee_personal_details.business_id', Session::get('business_id'))
+            ->select('designation_list.desig_id', 'designation_list.desig_name')
+            ->distinct()
+            ->get();
+        return response()->json(['designation' => $get]);
     }
 
     // designationDetails ajax list shows
     public function allDepartment(Request $request)
     {
+        // ::where('branch_id', $branch_ID)
         $branch_ID = $request->brand_id;
-        $get = DepartmentList::where('branch_id', $branch_ID)->where('b_id', Session::get('business_id'))->get();
+        $get = DepartmentList::where('b_id', Session::get('business_id'))->get();
         return response()->json(['department' => $get]);
     }
     public function allDesignation(Request $request)
     {
+        // 
+        // ->where('department_id', $request->depart_id)
         $get = DB::table('designation_list')
-            ->where('department_id', $request->depart_id)
             ->where('business_id', Session::get('business_id'))
             ->get();
         return response()->json(['designation' => $get]);
@@ -592,12 +642,16 @@ class SettingController extends Controller
             'business_id' => $request->session()->get('business_id'),
             'branch_id' => md5($request->session()->get('business_id') . $request->branch),
             'branch_name' => $request->branch,
+            'address' => $request->location,
+            'logitude' => $request->logitude,
+            'latitude' => $request->latitude
         ];
         $addBranch = DB::table('branch_list')->insert($data);
 
         if ($addBranch) {
             Alert::success('Added Success', 'Create Branch Successfully');
         }
+        // dd($request->all());
         return redirect()->route('admin.branch');
     }
 
@@ -634,7 +688,12 @@ class SettingController extends Controller
         $branch = DB::table('branch_list')
             ->where('id', $request->editBranchId)
             ->where('business_id', Session::get('business_id'))
-            ->update(['branch_name' => $request->editbranch]);
+            ->update([
+                'branch_name' => $request->editbranch,
+                'address' => $request->editaddress,
+                'logitude' => $request->logitudeedit,
+                'latitude' => $request->latitudeedit
+            ]);
 
         if ($branch) {
             Alert::success('Data Updated', 'Updated  Created')->persistent(true);
@@ -821,7 +880,6 @@ class SettingController extends Controller
     {
         // dd($id);
         $deleteTemp = PolicySettingLeavePolicy::where('id', $request->poli_id)
-
             ->delete();
         $deleteLeaves = PolicySettingLeaveCategory::where('leave_policy_id', $request->poli_id)
             ->delete();
@@ -874,7 +932,7 @@ class SettingController extends Controller
 
     public function leavePolicySubmit(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         // if (empty($request->category_name)) {
         //     Alert::info('Not Added', 'Pleace Enter You Category Name, Your Leave-Policy Not Added');
         //     return back();
@@ -896,7 +954,7 @@ class SettingController extends Controller
             'updated_at' => now('Asia/Kolkata'),
         ];
         // dd($storeData);
-        $truechecking_id = DB::table('setting_leave_policy')->insert($storeData);
+        $truechecking_id = DB::table('policy_setting_leave_policy')->insert($storeData);
         // dd($truechecking_id);
         if ($truechecking_id) {
             $latestID = PolicySettingLeavePolicy::latest()

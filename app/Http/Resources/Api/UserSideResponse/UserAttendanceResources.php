@@ -4,6 +4,7 @@ namespace App\Http\Resources\Api\UserSideResponse;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Carbon\Carbon;
+
 class UserAttendanceResources extends JsonResource
 {
     public function toArray($request)
@@ -43,6 +44,9 @@ class UserAttendanceResources extends JsonResource
             'total_working_hour' => $this->total_working_hour ?? '',
             'approved_by_role_id' => $this->approved_by_role_id ?? '',
             'approved_by_emp_id' => $this->approved_by_emp_id ?? '',
+            'shift_name' => $this->shift_name ?? '',
+            'shift_start' => is_string($this->shift_start) ? Carbon::createFromFormat('H:i:s', $this->shift_start)->format('H:i:s') : '00:00:00',
+            'shift_end' => is_string($this->shift_end) ? Carbon::createFromFormat('H:i:s', $this->shift_end)->format('H:i:s') : '00:00:00',
             'created_at' => $this->created_at ?? '',
             'updated_at' => $this->updated_at ?? '',
         ];

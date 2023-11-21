@@ -13,12 +13,6 @@
             line-height: 0;
         }
 
-        .modal-header,
-        .modal-footer {
-            background-color: #f8f8ff;
-            /* color: #fff; */
-        }
-
         .modal-open {
             overflow: hidden
         }
@@ -473,7 +467,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-12">
+                            {{-- <div class="col-12">
                                 <div class="form-group">
                                     <p class="form-label">Designation</p>
                                     <div class="form-group mb-3">
@@ -482,7 +476,7 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-12">
                                 <div class="form-group">
                                     <p class="form-label">Employee</p>
@@ -826,9 +820,6 @@
                                 .depart_id + '">' + value.depart_name +
                                 '</option>');
                         });
-
-
-
 
                         $('#desig-dd').html(
                             '<option value="">Select Designation Name</option>');

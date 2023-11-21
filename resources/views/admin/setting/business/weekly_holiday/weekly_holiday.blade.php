@@ -1,7 +1,7 @@
 @extends('admin.pagelayout.master')
 
 @section('title')
-    Business / Weekly Holiday
+Weekly Holiday
 @endsection
 
 @section('css')
@@ -11,7 +11,7 @@
     <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
         <li><a href="{{ url('/admin') }}">Dashboard</a></li>
         {{-- <li><a href="{{ url('admin/settings/business')}}">Settings</a></li> --}}
-        <li><a href="{{ url('admin/settings/business')}}">Business Setting</a></li>
+        <li><a href="{{ url('admin/settings/business')}}">Business Settings</a></li>
         <li class="active"><span><b>Weekly Holiday</b></span></li>
     </ol>
 </div>
@@ -41,7 +41,7 @@
 </div><!-- pd-y-30 --> --}}
     <!-- LARGE MODAL -->
     <div class="modal fade" id="modaldemo3">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content modal-content-demo">
                 <div class="modal-header">
                     <h6 class="modal-title">Weekoff/Weekly Holiday</h6><button aria-label="Close" class="btn-close"
@@ -106,8 +106,8 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-light" data-bs-dismiss="modal">Close</button> <button
-                            class="btn btn-primary me-0" type="submit">Save & Continue</button>
+                        <button class="btn btn-danger" type="reset" data-bs-dismiss="modal">Close</button> 
+                        <button class="btn btn-primary me-0" type="submit">Save & Continue</button>
                     </div>
                 </form>
             </div>
@@ -256,7 +256,7 @@
 
         <div class="modal fade" id="editDeleteModel" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
 
                     <form action="{{ route('delete.DeleteWeeklyPolicy') }}" method="POST">
@@ -267,18 +267,16 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            <p>Weekly Policy Name <b>
-                                </b></p>
-                            <h4 id="assign_emp"></h4><b>
-                            </b>
-                            <p></p>
+                        <div class="modal-body text-center">
+            
+                            <h4 class="mt-5">Are you sure you want to delete <span id="assign_emp"></span> ?</h4><b>
+      
 
-                            Are you sure you want to delete this item?
+                            
                         </div>
                         <div class="modal-footer">
 
-                            <a class="btn btn-light" data-bs-dismiss="modal">Close</a>
+                            <a class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
                             <button type="submit" class="btn btn-danger" id="">Delete</button>
                         </div>
                     </form>

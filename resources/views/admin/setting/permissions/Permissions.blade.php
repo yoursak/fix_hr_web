@@ -245,9 +245,11 @@
             <form action="{{ route('role.add') }}" method="post">
                 @csrf
                 <div class="modal-content modal-content-demo">
-                    <div class="modal-header border-0">
-                        <h4 class="modal-title ms-2">Add New Role</h4><button aria-label="Close" class="btn-close"
-                            data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add New Role</h5>
+                        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         <div class="row p-3">

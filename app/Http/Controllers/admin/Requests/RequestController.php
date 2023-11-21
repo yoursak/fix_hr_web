@@ -122,8 +122,6 @@ class RequestController extends Controller
     }
     public function EditLeaveDataGet(Request $request)
     {
-        // dd($request->all());
-        // return $request->id;
         $ApprovalManagement = DB::table('approval_management_cycle')
             ->where('business_id', Session::get('business_id'))
             ->where('approval_type_id', 2)
@@ -142,6 +140,7 @@ class RequestController extends Controller
     }
     public function ApproveLeave(Request $request)
     {
+        // dd($request->all());
         // cyclic dynamic data storing
         $Days = '';
         $status = 0;
@@ -149,6 +148,7 @@ class RequestController extends Controller
         $BID = RulesManagement::PassBy()[1];
         $FindRoleID = RulesManagement::PassBy()[3];
         $EmpID = RulesManagement::PassBy()[2];
+        // dd($FindRoleID);
         if ($request->days != null) {
             $Days = $request->days;
         } else {
@@ -156,36 +156,37 @@ class RequestController extends Controller
         }
 
         $Remark = $request->remark;
-        if ($request->approve === '1') {
+        if ($request->approve == '1') {
             $status = 1;
         }
-        if ($request->decline === '2') {
+        if ($request->decline == '2') {
             $status = 2;
         }
+        $ApprovalTypeID = 2; //leave processType
         $gatepass = RequestLeaveList::where('id', $request->id)
-            ->where('business_id', Session::get('business_id'))
-            ->update(['leave_type' => $request->time_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $Days]);
+            ->where('business_id', $BID)
+            ->update(['leave_type' => $request->leave_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $Days]);
         $ApprovalManagement = DB::table('approval_management_cycle')
-            ->where('business_id', Session::get('business_id'))
-            ->where('approval_type_id', 2)
+            ->where('business_id', $BID)
+            ->where('approval_type_id', $ApprovalTypeID)
             ->first();
-        // dd($existingRecord);
 
         // dd($request->all(), $status, $ApprovalManagement, $sd);
         if ($ApprovalManagement->cycle_type == 1) {
             // next forward
             $sd = DB::table('approval_management_cycle')
-                ->where('business_id', Session::get('business_id'))
-                ->where('approval_type_id', 2)
+                ->where('business_id', $BID)
+                ->where('approval_type_id', $ApprovalTypeID)
                 ->whereJsonContains('role_id', (string) $FindRoleID)
                 ->select('role_id')
                 ->first();
-            $value = DB::table('request_leave_list')->where('business_id', Session::get('business_id'))->where('id', $PID)->first();
+            $value = DB::table('request_leave_list')->where('business_id', $BID)->where('id', $PID)->first();
             if ($value->forward_by_role_id == $value->final_level_role_id) {
-                DB::table('request_leave_list')->where('id', $PID)->update([
-                    'process_complete' => 1,
-                    'final_status'=> RulesManagement::FinalRequestStatusSubmitFilterValue($PID,2)[0]//final status submit
-                ]);
+                DB::table('request_leave_list')->where('business_id', $BID)
+                    ->where('id', $PID)->update([
+                            'process_complete' => 1,
+                            'final_status' => RulesManagement::FinalRequestStatusSubmitFilterValue($PID, 2)[0] //final status submit
+                        ]);
             }
             if ($sd) {
                 $roleIds = json_decode($sd->role_id, true); // Decode the JSON array
@@ -203,7 +204,7 @@ class RequestController extends Controller
                     // dd($request->all(),$FindRoleID,$nextRoleId);
                     // Update the database for the current index
                     DB::table('request_leave_list')
-                        ->where('business_id', Session::get('business_id'))
+                        ->where('business_id', $BID)
                         ->where('id', $PID)
                         ->update([
                             'forward_by_role_id' => $nextRoleId,
@@ -211,36 +212,26 @@ class RequestController extends Controller
                         ]);
 
                     // Update the approval status for the current index
+                    //Sequential
                     DB::table('approval_status_list')
-                        ->where('approval_type_id', 2)
+                        ->where('approval_type_id', $ApprovalTypeID)
                         ->where('role_id', $FindRoleID)
                         ->where('business_id', $BID)
                         ->where('all_request_id', $PID)
                         ->insert([
+                            'applied_cycle_type' => 1,
                             'business_id' => $BID,
                             'approval_type_id' => 2,
                             'all_request_id' => $PID,
                             'role_id' => $FindRoleID,
                             'emp_id' => $EmpID,
                             'remarks' => ($Remark != null) ? $Remark : '',
-                            'clicked'=>1,
+                            'clicked' => 1,
                             'status' => $status,
                             'prev_role_id' => $prevRoleId,
                             'current_role_id' => $FindRoleID,
                             'next_role_id' => $nextRoleId,
                         ]);
-
-                    // Check if the next index is the last one in the array
-                    // if ($nextIndex === count($roleIds) - 1) {
-                    //     // Update the database for the next index and mark the process as complete
-                    //     DB::table('request_leave_list')
-                    //         ->where('business_id', Session::get('business_id'))
-                    //         ->where('id', $PID)
-                    //         ->update([
-                    //             'process_complete' => 1,
-                    //         ]);
-                    // }
-                    // }
                     Alert::success('', 'Status is Updated');
                 }
             }
@@ -249,143 +240,300 @@ class RequestController extends Controller
         // default case
         if ($ApprovalManagement->cycle_type == 2) {
             // dd($request->all());
-            DB::table('request_leave_list')->where('id', $PID)->update([
-                'process_complete' => 1
-            ]);
-            $loadcheck = DB::table('approval_status_list')->where('all_request_id', $PID)->first();
-
-            if ($loadcheck) {
-                DB::table('approval_status_list')
-                    ->where('business_id', $BID)
-                    ->where('approval_type_id', 2)
-                    ->where('all_request_id', $PID)
-                    ->update([
-                        'business_id' => $BID,
-                        'approval_type_id' => 2,
-                        'all_request_id' => $PID,
-                        'role_id' => $FindRoleID,
-                        'emp_id' => $EmpID,
-                        'remarks' => $Remark,
-                        'status' => $status,
+            DB::table('request_leave_list')->where('business_id', $BID)
+                ->where('id', $PID)->update([
+                        'process_complete' => 1,
+                        'final_status' => $status,
                     ]);
+            $loadCheck = DB::table('approval_status_list')
+                ->where('approval_type_id', $ApprovalTypeID)
+                ->where('business_id', $BID)
+                ->where('all_request_id', $PID)->first();
+
+            if ($loadCheck) {
+                // DB::table('approval_status_list')
+                //     ->where('business_id', $BID)
+                //     ->where('approval_type_id', $ApprovalTypeID)
+                //     ->where('all_request_id', $PID)
+                //     ->update([
+                //         'business_id' => $BID,
+                // 'applied_cycle_type' => 2,
+                //         'approval_type_id' => $ApprovalTypeID,
+                //         'all_request_id' => $PID,
+                //         'role_id' => $FindRoleID,
+                //         'emp_id' => $EmpID,
+                //         'remarks' => $Remark,
+                //         'status' => $status,
+                //     ]);
             } else {
+                //Parallel
                 DB::table('approval_status_list')
                     ->where('business_id', $BID)
-                    ->where('approval_type_id', 2)
+                    ->where('approval_type_id', $ApprovalTypeID)
                     ->where('all_request_id', $PID)
                     ->insert([
+                        'applied_cycle_type' => 2,
                         'business_id' => $BID,
-                        'approval_type_id' => 2,
+                        'approval_type_id' => $ApprovalTypeID,
                         'all_request_id' => $PID,
                         'role_id' => $FindRoleID,
                         'emp_id' => $EmpID,
+                        'clicked' => 1,
                         'remarks' => $Remark,
                         'status' => $status,
                     ]);
             }
-            // DB::table('request_leave_list')
-            //     ->where('id', $PID)
-            //     ->update([
-            //         'static_work_role_id' => $FindRoleID,
-            //         'static_work_emp_id' => $EmpID ?? 0,
-            //         'status' => $status,
-            //     ]);
             Alert::success('', 'Status is updated');
-
-            // dd('sd');
         }
-        // } else {
-        //     // Handle the case when
-
-        //     // the record is not found
-        //     echo 'No matching record found for: ' . $existingRecord;
-        //     Alert::info('', 'Status is Not Updated');
-
-        // }
         return redirect()->back();
-        // if (!$leavelRequestChecking) {
-        //     $loaded = DB::table('request_leave_list')->whereJsonContains('approved_by_role_id',$FindRoleID)->updateOrInsert(
-        //         [
-        //             'approved_by_role_id' => json_encode([$FindRoleID]),
-        //             'approved_by_emp_id' => json_encode([$EmpID]),
-        //             'approved_by_status' => json_encode(['1']),
-        //         ],
-        //     );
-        //     echo 'Record in present ' . $FindRoleID;
-        // } else {
-
-        //     echo 'Record in Not Present';
-        // }
-
-        // if (isset($ApprovalManagement)) {
-        //     if (!$leavelRequestChecking) {
-        //         $loaded = DB::table('request_leave_list')->updateOrInsert(
-        //             ['id' => $request->id],
-        //             [
-        //                 'approved_by_role_id' => json_encode([$FindRoleID]),
-        //                 'approved_by_emp_id' => json_encode([$EmpID]),
-        //                 'approved_by_status' => json_encode(['1']),
-        //             ],
-        //         );
-        //         echo 'Record in present ' . $FindRoleID;
-        //     } else {
-        //         echo 'Record in Not Present';
-        //     }
-        // }
-        // if (!$existingRecord) {
-        //     // Insert the record if it doesn't exist
-        //     DB::table('approval_management_cycle')->insert([
-        //         'approval_type_id' => 2,
-        //         'business_id' => Session::get('business_id'),
-        //         'role_id' => json_encode([$roleIdToCheck]),
-        //         // Other columns and their values
-        //     ]);
-        // } else {
-        //     // Update the record if it exists
-        //     DB::table('approval_management_cycle')
-        //         ->where('id', $existingRecord->id)
-        //         ->update([
-        //             // Update other columns as needed
-        //         ]);
-        // }
-
-        // dd($request->all(), $FindRoleID, $EmpID, $existingRecord, $ApprovalManagement);
-
-        // // $allRoleList=$ApprovalManagement->role_id;//$request->has('id') && $request->has('leave_type') && $request->has('from_date') && $request->has('to_date') && $request->has('days') && $request->has('submit') &&
-        // if ($request->has('approve')) {
-        //     // $gatepass = RequestLeaveList::where('id', $request->id)
-        //     // ->where('business_id', Session::get('business_id'))
-        //     // ->update(['leave_type' => $request->time_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $request->days, 'approved_by_role_id' => json_encode([$FindRoleID]), 'approved_by_emp_id' => json_encode([$EmpID]), 'approved_by_status' => json_encode(['1']), 'status' => $request->approve]);
-        //     // Check the current values of role_id
-        //     Alert::success('Your Leave Request has been Approve Successfully');
-
-        //     return back();
-        // } elseif ($request->has('remark')) {
-        //     $gatepass = RequestLeaveList::where('id', $request->id)
-        //         ->where('business_id', Session::get('business_id'))
-        //         ->update(['leave_type' => $request->time_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $request->days, 'remark' => $request->remark, 'status' => $request->submit]);
-        //     Alert::success('Your Gatepass Request has been Decline Successfully');
-        //     // , 'Updated  Created'
-        //     return back();
-        // } else {
-        //     Alert::error('Not Updated', 'Your Leave Request Detail Updating is Fail');
-        //     return back();
-        // }
-        // $toDate = Carbon::parse($request->to_date);
-        // $fromDate = Carbon::parse($request->from_date);
-
-        // $loaded = $toDate->diffInDays($fromDate);
-        // $branch = RequestLeaveList::where('id', $request->editLeaveId)
-        //     ->where('business_id', Session::get('business_id'))
-        //     ->update(['leave_type' => $request->leave_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $loaded, 'status' => $request->status]);
-        // if ($branch) {
-        //     Alert::success('Data Updated', 'Leave Request Approve Successfully');
-        // }
-        // return back();
     }
+
+    // } else {
+    //     // Handle the case when
+
+    //     // the record is not found
+    //     echo 'No matching record found for: ' . $existingRecord;
+    //     Alert::info('', 'Status is Not Updated');
+
+    // }
+    // if (!$leavelRequestChecking) {
+    //     $loaded = DB::table('request_leave_list')->whereJsonContains('approved_by_role_id',$FindRoleID)->updateOrInsert(
+    //         [
+    //             'approved_by_role_id' => json_encode([$FindRoleID]),
+    //             'approved_by_emp_id' => json_encode([$EmpID]),
+    //             'approved_by_status' => json_encode(['1']),
+    //         ],
+    //     );
+    //     echo 'Record in present ' . $FindRoleID;
+    // } else {
+
+    //     echo 'Record in Not Present';
+    // }
+
+    // if (isset($ApprovalManagement)) {
+    //     if (!$leavelRequestChecking) {
+    //         $loaded = DB::table('request_leave_list')->updateOrInsert(
+    //             ['id' => $request->id],
+    //             [
+    //                 'approved_by_role_id' => json_encode([$FindRoleID]),
+    //                 'approved_by_emp_id' => json_encode([$EmpID]),
+    //                 'approved_by_status' => json_encode(['1']),
+    //             ],
+    //         );
+    //         echo 'Record in present ' . $FindRoleID;
+    //     } else {
+    //         echo 'Record in Not Present';
+    //     }
+    // }
+    // if (!$existingRecord) {
+    //     // Insert the record if it doesn't exist
+    //     DB::table('approval_management_cycle')->insert([
+    //         'approval_type_id' => 2,
+    //         'business_id' => Session::get('business_id'),
+    //         'role_id' => json_encode([$roleIdToCheck]),
+    //         // Other columns and their values
+    //     ]);
+    // } else {
+    //     // Update the record if it exists
+    //     DB::table('approval_management_cycle')
+    //         ->where('id', $existingRecord->id)
+    //         ->update([
+    //             // Update other columns as needed
+    //         ]);
+    // }
+
+    // dd($request->all(), $FindRoleID, $EmpID, $existingRecord, $ApprovalManagement);
+
+    // // $allRoleList=$ApprovalManagement->role_id;//$request->has('id') && $request->has('leave_type') && $request->has('from_date') && $request->has('to_date') && $request->has('days') && $request->has('submit') &&
+    // if ($request->has('approve')) {
+    //     // $gatepass = RequestLeaveList::where('id', $request->id)
+    //     // ->where('business_id', Session::get('business_id'))
+    //     // ->update(['leave_type' => $request->time_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $request->days, 'approved_by_role_id' => json_encode([$FindRoleID]), 'approved_by_emp_id' => json_encode([$EmpID]), 'approved_by_status' => json_encode(['1']), 'status' => $request->approve]);
+    //     // Check the current values of role_id
+    //     Alert::success('Your Leave Request has been Approve Successfully');
+
+    //     return back();
+    // } elseif ($request->has('remark')) {
+    //     $gatepass = RequestLeaveList::where('id', $request->id)
+    //         ->where('business_id', Session::get('business_id'))
+    //         ->update(['leave_type' => $request->time_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $request->days, 'remark' => $request->remark, 'status' => $request->submit]);
+    //     Alert::success('Your Gatepass Request has been Decline Successfully');
+    //     // , 'Updated  Created'
+    //     return back();
+    // } else {
+    //     Alert::error('Not Updated', 'Your Leave Request Detail Updating is Fail');
+    //     return back();
+    // }
+    // $toDate = Carbon::parse($request->to_date);
+    // $fromDate = Carbon::parse($request->from_date);
+
+    // $loaded = $toDate->diffInDays($fromDate);
+    // $branch = RequestLeaveList::where('id', $request->editLeaveId)
+    //     ->where('business_id', Session::get('business_id'))
+    //     ->update(['leave_type' => $request->leave_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $loaded, 'status' => $request->status]);
+    // if ($branch) {
+    //     Alert::success('Data Updated', 'Leave Request Approve Successfully');
+    // }
+    // return back();
 
     public function ApproveMispunch(Request $request)
     {
+
+        // dd($request->all());
+
+        // cyclic dynamic data storing
+        $Days = '';
+        $status = 0;
+        $PID = $request->id;
+        $BID = RulesManagement::PassBy()[1];
+        $FindRoleID = RulesManagement::PassBy()[3];
+        $EmpID = RulesManagement::PassBy()[2];
+        if ($request->days != null) {
+            $Days = $request->days;
+        } else {
+            $Days = $request->days1;
+        }
+
+        $Remark = $request->remark;
+        if ($request->approve == '1') {
+            $status = 1;
+        }
+        if ($request->decline == '2') {
+            $status = 2;
+        }
+        $ApprovalTypeID = 3; //mispunch processType
+        $mispunch = RequestMispunchList::where('id', $request->id)
+            ->where('business_id', Session::get('business_id'))
+            ->update(['emp_miss_time_type' => $request->time_type, 'emp_miss_in_time' => $request->in_time, 'emp_miss_out_time' => $request->out_time, 'status' => $request->approve]);
+
+        // $gatepass = RequestLeaveList::where('id', $request->id)
+        //     ->where('business_id', $BID)
+        //     ->update(['leave_type' => $request->time_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $Days]);
+        $ApprovalManagement = DB::table('approval_management_cycle')
+            ->where('business_id', $BID)
+            ->where('approval_type_id', $ApprovalTypeID)
+            ->first();
+        // dd($request->all(), $status, $ApprovalManagement, $sd);
+        if ($ApprovalManagement->cycle_type == 1) {
+            // next forward
+            $sd = DB::table('approval_management_cycle')
+            ->where('business_id', $BID)
+            ->where('approval_type_id', $ApprovalTypeID)
+            ->whereJsonContains('role_id', (string) $FindRoleID)
+            ->select('role_id')
+            ->first();
+            $value = DB::table('request_mispunch_list')->where('business_id', $BID)->where('id', $PID)->first();
+            // dd($value);
+            if ($value->forward_by_role_id == $value->final_level_role_id) {
+                dd($sd);
+                DB::table('request_mispunch_list')->where('business_id', $BID)
+                    ->where('id', $PID)->update([
+                            'process_complete' => 1,
+                            'final_status' => RulesManagement::FinalRequestStatusSubmitFilterValue($PID, 3)[0] //final status submit
+                        ]);
+            }
+            if ($sd) {
+                // dd($sd);
+                $roleIds = json_decode($sd->role_id, true); // Decode the JSON array
+                $currentIndex = array_search($FindRoleID, $roleIds); // Find the current index of forward_by_role_id
+
+                if ($currentIndex !== false) {
+                    $nextIndex = $currentIndex + 1;
+                    $prevIndex = $currentIndex - 1;
+
+                    // Check if the next index is within the bounds of the array
+                    // if (isset($roleIds[$nextIndex])) {
+                    $nextRoleId = isset($roleIds[$nextIndex]) ? $roleIds[$nextIndex] : -1; //sensitive case if last next end then recall 0
+                    $prevRoleId = isset($roleIds[$prevIndex]) ? $roleIds[$prevIndex] : 0; //prev 1st start recall 0
+
+                    // dd($request->all(),$FindRoleID,$nextRoleId);
+                    // Update the database for the current index
+                    DB::table('request_mispunch_list')
+                        ->where('business_id', $BID)
+                        ->where('id', $PID)
+                        ->update([
+                            'forward_by_role_id' => $nextRoleId,
+                            'forward_by_status' => $status,
+                        ]);
+
+                    // Update the approval status for the current index
+                    //Sequential
+                    DB::table('approval_status_list')
+                        ->where('approval_type_id', $ApprovalTypeID)
+                        ->where('role_id', $FindRoleID)
+                        ->where('business_id', $BID)
+                        ->where('all_request_id', $PID)
+                        ->insert([
+                            'applied_cycle_type' => 1,
+                            'business_id' => $BID,
+                            'approval_type_id' => $ApprovalTypeID,
+                            'all_request_id' => $PID,
+                            'role_id' => $FindRoleID,
+                            'emp_id' => $EmpID,
+                            'remarks' => ($Remark != null) ? $Remark : '',
+                            'clicked' => 1,
+                            'status' => $status,
+                            'prev_role_id' => $prevRoleId,
+                            'current_role_id' => $FindRoleID,
+                            'next_role_id' => $nextRoleId,
+                        ]);
+                    Alert::success('', 'Status is Updated');
+                }
+            }
+        }
+
+        // default case
+        if ($ApprovalManagement->cycle_type == 2) {
+            // dd($request->all());
+            DB::table('request_mispunch_list')->where('business_id', $BID)
+                ->where('id', $PID)->update([
+                        'process_complete' => 1,
+                        'final_status' => $status,
+                    ]);
+            $loadCheck = DB::table('approval_status_list')
+                ->where('approval_type_id', $ApprovalTypeID)
+                ->where('business_id', $BID)
+                ->where('all_request_id', $PID)->first();
+
+            if ($loadCheck) {
+                // DB::table('approval_status_list')
+                //     ->where('business_id', $BID)
+                //     ->where('approval_type_id', $ApprovalTypeID)
+                //     ->where('all_request_id', $PID)
+                //     ->update([
+                //         'business_id' => $BID,
+                // 'applied_cycle_type' => 2,
+                //         'approval_type_id' => $ApprovalTypeID,
+                //         'all_request_id' => $PID,
+                //         'role_id' => $FindRoleID,
+                //         'emp_id' => $EmpID,
+                //         'remarks' => $Remark,
+                //         'status' => $status,
+                //     ]);
+            } else {
+                //Parallel
+                DB::table('approval_status_list')
+                    ->where('business_id', $BID)
+                    ->where('approval_type_id', $ApprovalTypeID)
+                    ->where('all_request_id', $PID)
+                    ->insert([
+                        'applied_cycle_type' => 2,
+                        'business_id' => $BID,
+                        'approval_type_id' => $ApprovalTypeID,
+                        'all_request_id' => $PID,
+                        'role_id' => $FindRoleID,
+                        'emp_id' => $EmpID,
+                        'clicked' => 1,
+                        'remarks' => $Remark,
+                        'status' => $status,
+                    ]);
+            }
+            Alert::success('', 'Mispunch Status is updated');
+        }
+        return redirect()->back();
+
+
+
         if ($request->has('id') && $request->has('time_type') && $request->has('in_time') && $request->has('out_time') && $request->has('approve')) {
             $attendance = AttendanceList::where('emp_id', $request->emp_id)
                 ->where('punch_date', $request->date)
@@ -478,7 +626,50 @@ class RequestController extends Controller
         // Session::flash('success', 'Succefully Deleted !');
         return back();
     }
+    // public function mispunch()
+    // {
+    //     // $staticLeaveType = $item = DB::table('employee_personal_details')
+    //     $staticLeaveType = DB::table('employee_personal_details')
+    //         ->join('attendance_list', 'employee_personal_details.emp_id', '=', 'attendance_list.emp_id')
+    //         ->where('attendance_list.punch_date', '!=', date('Y-m-d'))
+    //         ->select('employee_personal_details.emp_id')
+    //         ->get();
 
+    //     $TodayPresent = AttendanceList::where('business_id', Session::get('business_id'))
+    //         ->where('punch_date', '=', now()->toDateString())
+    //         ->get();
+
+    //     $PresetCount = count($TodayPresent);
+    //     $leaveCategory = DB::table('policy_setting_leave_category')
+    //         ->where('business_id', Session::get('business_id'))
+    //         ->get();
+    //     // dd($leaveCategory);
+    //     $shiftType = DB::table('static_leave_shift_type')->get();
+    //     $leaveType = DB::table('static_request_leave_type')->get();
+    //     $DATA = DB::table('request_leave_list')
+    //         ->join('employee_personal_details', 'request_leave_list.emp_id', '=', 'employee_personal_details.emp_id')
+    //         ->join('policy_setting_leave_category', 'policy_setting_leave_category.id', '=', 'request_leave_list.leave_category')
+    //         ->join('static_request_leave_type', 'static_request_leave_type.id', '=', 'request_leave_list.leave_type')
+    //         ->where('request_leave_list.business_id', Session::get('business_id'))
+    //         ->select('request_leave_list.*', 'static_request_leave_type.leave_day', 'policy_setting_leave_category.category_name', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.designation_id', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname')
+    //         ->orderBy('request_leave_list.id', 'desc')
+    //         ->get();
+    //     // dd($DATA);
+    //     $accessPermission = Central_unit::AccessPermission();
+    //     $moduleName = $accessPermission[0];
+    //     $permissions = $accessPermission[1];
+
+    //     // processCycle Seq. Parallel
+    //     $checkApprovalCycleType = RulesManagement::ApprovalGetDetails(2)[1];
+    //     $loginRoleID = RulesManagement::PassBy()[3];
+    //     $loginRoleBID = RulesManagement::PassBy()[1];
+    //     $loginEmpID = RulesManagement::PassBy()[2];
+
+    //     // current_RoleID
+    //     // dd($checkApprovalCycleType->cycle_type);
+    //     $root = compact('moduleName', 'permissions', 'checkApprovalCycleType', 'loginRoleBID', 'loginRoleID', 'loginEmpID', 'DATA', 'PresetCount', 'leaveCategory', 'leaveType', 'shiftType');
+    //     return view('admin.request.leave', $root);
+    // }
     // DestroyMispunch
     public function mispunch()
     {
@@ -507,7 +698,31 @@ class RequestController extends Controller
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
 
-        $root = compact('moduleName', 'permissions', 'DATA', 'StaticMisspunchTimeType');
+        // processCycle Seq. Parallel
+        $checkApprovalCycleType = RulesManagement::ApprovalGetDetails(3)[1];
+        // dd($checkApprovalCycleType);
+        $loginRoleID = RulesManagement::PassBy()[3];
+        $loginRoleBID = RulesManagement::PassBy()[1];
+        // dd($loginRoleBID);
+        $loginEmpID = RulesManagement::PassBy()[2];
+
+        $checkFistRoleId = DB::table('approval_management_cycle')->where('approval_type_id', 3)->where('business_id', Session::get('business_id'))->select('role_id')->first();
+        // dd($checkFistRoleId);
+// Assuming $checkFistRoleId is the result you showed
+        $roleIdData = json_decode($checkFistRoleId->role_id ?? 0);
+
+        if (!empty($roleIdData) && is_array($roleIdData)) {
+            $checkmfirstRoleId = $roleIdData[0];
+            // Now $firstRoleId contains the first element of the array
+            // dd($firstRoleId);
+        } else {
+            $checkmfirstRoleId = 0;
+            // Handle the case where $roleIdData is not a valid array
+            // It might be empty or not a valid JSON string
+            // dd("Invalid role_id data");
+        }
+
+        $root = compact('checkmfirstRoleId', 'checkApprovalCycleType', 'loginRoleBID', 'loginRoleID', 'loginEmpID', 'moduleName', 'permissions', 'DATA', 'StaticMisspunchTimeType');
 
         // $data = MispunchList::all();
         // dd($DATA);

@@ -413,7 +413,7 @@
             }
 
             var stepPosition = 'middle';
-            if (idx === 0) {
+            if (idx === 0) { 
                 stepPosition = 'first';
             } else if (idx === this.steps.length - 1) {
                 stepPosition = 'final';

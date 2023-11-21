@@ -11,6 +11,7 @@ use App\Models\StaticMisPunchTimeType;
 use App\Helpers\ReturnHelpers;
 use App\Http\Resources\Api\UserSideResponse\MispunchRequestResources;
 use App\Http\Resources\Api\UserSideResponse\MispunchStaticTimeTypeResources;
+use App\Models\ApprovalManagementCycle;
 
 // use App\Http\Resources\Api\MispunchRequestResources;
 use Carbon\Carbon;
@@ -122,20 +123,41 @@ class MispunchApiController extends Controller
         $requestDate = Carbon::createFromFormat('d-m-Y', $request->date);
         $currentYear = $requestDate;
         $currentMonth = $requestDate;
+        $load = 0;
+
         if ($business_id != null && $emp_id != null) {
             $checkAutomation = PolicyAttenRuleMisspunch::where('business_id', $business_id)->first();
             if ($checkAutomation->switch_is == 1) {
                 $emp = EmployeePersonalDetail::where('business_id', $business_id)
                     ->where('emp_id', $emp_id)
                     ->first();
-                if ($emp) {
+                if (isset($emp)) {
+
+                    // why type = 2 leave for  using approval system checking actived
+                    $approvalManagementCycle = ApprovalManagementCycle::where('business_id', $emp->business_id)
+                        ->where('approval_type_id', 3)
+                        ->first();
+                    if ($approvalManagementCycle != null) {
+                        $roleIds = json_decode($approvalManagementCycle->role_id, true); // Decode JSON string to PHP array
+
+                        // Get the first index value of role_id
+                        $firstRoleId = $roleIds[0] ?? null; // This will get the first value or null if it doesn't exist
+
+                        // Get the last index value of role_id
+                        $lastRoleId = end($roleIds); // Get the last value of the array
+
+                        // $load = $approvalManagementCycle->cycle_type;
+                        // dd($firstRoleId, $lastRoleId);
+                    }
+
                     $checkOccurrence = RequestMispunchList::where('emp_id', $emp_id)
                         ->where('business_id', $business_id)
                         ->whereYear('emp_miss_date', '=', $requestDate)
                         ->whereMonth('emp_miss_date', '=', $requestDate)
                         ->select('id')
                         ->count();
-                        // ->get();
+
+                    // ->get();
                     // dd(gettype($checkAutomation->occurance_count), gettype($checkOccurrence));
                     // dd($checkOccurrence, $checkAutomation->occurance_count);
                     if ($checkAutomation->occurance_count > $checkOccurrence) {
@@ -150,6 +172,12 @@ class MispunchApiController extends Controller
                         $data->emp_miss_out_time = $request->emp_miss_out_time;
                         $data->emp_working_hour = $request->emp_working_hour;
                         $data->reason = $request->reason;
+                        $data->forward_by_role_id = $firstRoleId ?? 0;
+                        $data->forward_by_status = 0;
+                        $data->final_level_role_id = $lastRoleId ?? 0;
+                        $data->final_status = 0;
+                        $data->process_complete = 0;
+                        $data->final_status = 0;
                         $data->status = 0;
                         if ($data->save()) {
                             // return $data;

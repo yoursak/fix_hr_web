@@ -112,7 +112,6 @@
 
         <!-- LARGE MODAL -->
         <div class="modal fade " id="addempmodal">
-
             <div class="modal-dialog modal-dialog-scrollable  modal-lg">
                 <div class="modal-content modal-content-demo">
                     <div class="modal-header">
@@ -363,7 +362,7 @@
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Select Shift Type</label>
                                                 <select name="country-dd" id="country-dd" class="form-control" required>
-                                                    <option value="">Select Branch Name</option>
+                                                    <option value="">Select Shift Type</option>
                                                     @foreach ($shiftAttendance as $shiftset)
                                                     <option   value="{{ $shiftset->attendance_id }}">
                                                         {{ $shiftset->shift_type_name }} |
@@ -386,15 +385,15 @@
                                                 </select> --}}
                                             </div>
 
-                                            <div class="col-md-4">
+                                            <div class="col-md-4 d-none" id="checkRotationalTypeItem">
                                                 <label class="form-label mb-0 mt-2">Select Rotational Type</label>
-                                                <select id="state-dd" name="department_id" class="form-control" required>
-                                                    <option value="">Select Deparment Name</option>
-                                                    @foreach ($Department as $data)
+                                                <select id="state-dddd" name="department_id" class="form-control" required>
+                                                    <option value="">Select Rotational Type</option>
+                                                    {{-- @foreach ($Department as $data)
                                                         <option value="{{ $data->depart_id }}">
                                                             {{ $data->depart_name }}
                                                         </option>
-                                                    @endforeach
+                                                    @endforeach --}}
                                                 </select>
             
                                                 {{-- <select name="update_shift_type" id="shift_type_sd" aria-label="Type"
@@ -427,7 +426,7 @@
                                                     <div class="form-group mb-3">
                                                         <select id="state-dd1" name="department_id1"
                                                             class="form-control" required>
-                                                            <option value="">Select Deparment Name</option>
+                                                            <option value="">Select Department Name</option>
                                                             @foreach ($Department as $data)
                                                                 <option value="{{ $data->depart_id }}">
                                                                     {{ $data->depart_name }}

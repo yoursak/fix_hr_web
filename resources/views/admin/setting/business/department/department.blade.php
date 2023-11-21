@@ -1,7 +1,7 @@
 {{-- @extends('admin.setting.setting') --}}
 @extends('admin.pagelayout.master')
 @section('title')
-    Salary / Department Setting
+    Department Settings
 @endsection
 
 @section('css')
@@ -22,7 +22,7 @@
             <li><a href="{{ url('/admin') }}">Dashboard</a></li>
             {{-- <li><a href="{{ url('admin/settings/business') }}">Settings</a></li> --}}
             <li><a href="{{ url('admin/settings/business') }}">Business Setting</a></li>
-            <li class="active"><span><b>Department Setting</b></span></li>
+            <li class="active"><span><b>Department Settings</b></span></li>
         </ol>
     </div>
     <form method="POST" action="{{ route('add.department') }}">
@@ -42,7 +42,7 @@
                 
             @endphp
             <div class="page-leftheader">
-                <div class="page-title">Department Setting</div>
+                <div class="page-title">Department Settings</div>
                 <p class="text-muted m-0">
                     <?= $deparmtnetCount[1] ?> Active Department
                 </p>
@@ -182,7 +182,7 @@
     </div> --}}
 
     <div class="modal fade" id="modaldemo2" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content modal-content-demo">
                 {{-- $item->depart_id --}}
 
@@ -281,16 +281,22 @@
     @foreach ($Department as $item)
         {{-- @dd($Department); --}}
         <div class="modal fade" id="departDeletebtn{{ $item->depart_id }}" data-bs-backdrop="static">
-            <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">
+            <div class="modal-dialog modal-dialog-centered  modal-md" role="document">
                 <div class="modal-content modal-content-demo">
-                    <div class="modal-body">
-                        <h3>Are you sure want to Delete, <span class="text-primary">{{ $item->depart_name }}</span> ?</h3>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirmation</h5>
+                        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <h4 class="mt-5">Are you sure want to Delete, <span class="text-primary">{{ $item->depart_name }}</span> ?</h4>
                     </div>
                     <div class="modal-footer">
-                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal">Decline</button>
+                        <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Decline</button>
                         <form method="POST" action="{{ route('delete.department', $item->depart_id) }}">
                             @csrf
-                            <button type="submit" data-confirm-delete="true" class="btn btn-success"
+                            <button type="submit" data-confirm-delete="true" class="btn btn-danger"
                                 data-bs-toggle="modal" data-bs-target="#">Delete</button>
                         </form>
                     </div>

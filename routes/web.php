@@ -39,7 +39,10 @@ use App\Http\Livewire\BusinessRegistration\GstValidation; //live-wire
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+// Route::get('/map',function(){
 
+//     return view('admin/setting/business/branches/demomap');
+// });
 
 
 Route::get('/thankyou', [LoginController::class, 'thankyou'])->name('login.thankyou');
@@ -195,6 +198,7 @@ Route::any('response', [PhonepeController::class, 'responseSubmit']);
             Route::any('/attendance_mark', [AttendanceController::class, 'attendanceMark'])->name('attendanceMark.checkboxUpdate');
             Route::any('/attendace_update', [AttendanceController::class, 'attendanceUpdate'])->name('attendance.update'); // modal attendace update route
             Route::any('/attendance_list_filter', [AttendanceController::class, 'attendanceListFilter']);
+            Route::post('/attendance_by_calculation', [AttendanceController::class, 'AttendanceByAjaxFilter']);
             Route::post('/attendance_calculation', [AttendanceController::class, 'allAttendanceCalculationAjax']);
             Route::post('/dashboard_attendance_count', [AttendanceController::class, 'dashboardAttendanceCountFilter']);
             Route::post('/monthly_attendance_calculation', [AttendanceController::class, 'monthlyAtendanceAjax'])->name('dashboardCount');
@@ -273,7 +277,7 @@ Route::any('response', [PhonepeController::class, 'responseSubmit']);
             });
 
             Route::prefix('/account')->group(function () {
-                Route::get('/', [SettingController::class, 'account']);
+                Route::get('/', [SettingController::class, 'account'])->name('account.settings');
                 Route::any('/businessdetail', [SettingController::class, 'BusinessDetail']);
                 // Route::put('/gatepassapprove/{id}', [RequestController::class, 'ApproveGatepass'])->name('admin.gatepassapprove');
 
@@ -298,6 +302,7 @@ Route::any('response', [PhonepeController::class, 'responseSubmit']);
                 // ajax dropdown  verify usefull
                 Route::post('/allrotationalshift', [SettingController::class, 'allRotationalShift']); //save
                 Route::post('/allfilterdepartment', [SettingController::class, 'allFilterDepartment']); //save
+                Route::post('/allfilterdesignation', [SettingController::class, 'allFilterDesignation']); //save
                 Route::post('/alldepartment', [SettingController::class, 'allDepartment']); //save
                 Route::post('/alldesignation', [SettingController::class, 'allDesignation']);
                 Route::post('/check', [SettingController::class, 'check']);
@@ -346,6 +351,7 @@ Route::any('response', [PhonepeController::class, 'responseSubmit']);
                 Route::get('/camera-access', [SettingController::class, 'cameraAccess']);
                 Route::post('/set-camera-access', [SettingController::class, 'accessCamera'])->name('accessCamera');
                 Route::post('/remove-camera-access/{id}', [SettingController::class, 'removeCamera'])->name('removeCamera');
+                // Route::any('/edit_camera_access_data', [SettingController::class, 'editCameraAccessDataGet']);
                 Route::post('/updateCameraAccess', [SettingController::class, 'updateCamera'])->name('updateCamera');
 
                 // ajax 

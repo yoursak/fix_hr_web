@@ -106,13 +106,9 @@
             $nss = new App\Helpers\Central_unit();
             $EmpID = $nss->EmpPlaceHolder();
             $Count = $centralUnit->AttendanceGetCount();
-// dd($Count);
             // dd($Count);
-            // dd($Count[4]);
-
         @endphp
         <!-- ROW -->
-
 
         <div class=" p-0 pb-4">
             <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
@@ -140,32 +136,33 @@
                     <div class="card-body pt-0 pb-3">
                         <div class="row mb-0 pb-0">
                             <div class="col-6 col-md-4 col-xl-2 text-center py-5">
-                                <span
-                                    class="avatar avatar-md bradius fs-20 bg-primary-transparent">{{ $Count[0] }}</span>
+                                <span class="avatar avatar-md bradius fs-20 bg-primary-transparent"
+                                    id="totalEmployeeCount">0</span>
                                 <h5 class="mb-0 mt-3">Total Employee</h5>
                             </div>
                             <div class=" col-6 col-md-4 col-xl-2 text-center py-5 ">
-                                <span
-                                    class="avatar avatar-md bradius fs-20 bg-success-transparent">{{ $Count[1] }}</span>
+                                <span class="avatar avatar-md bradius fs-20 bg-success-transparent"
+                                    id="presentEmployeeCount">0</span>
                                 <h5 class="mb-0 mt-3">Present</h5>
                             </div>
                             <div class="col-6 col-md-4 col-sm-6 col-xl-2 text-center py-5">
-                                <span
-                                    class="avatar avatar-md bradius fs-20 bg-danger-transparent">{{ $Count[2] }}</span>
+                                <span class="avatar avatar-md bradius fs-20 bg-danger-transparent"
+                                    id="absentEmployeeCount">0</span>
                                 <h5 class="mb-0 mt-3">Absent</h5>
                             </div>
                             <div class="col-6 col-md-4 col-sm-6 col-xl-2 text-center py-5">
-                                <span
-                                    class="avatar avatar-md bradius fs-20 bg-warning-transparent">{{ $Count[3] }}</span>
+                                <span class="avatar avatar-md bradius fs-20 bg-warning-transparent"
+                                    id="halfdayEmployeeCount">0</span>
                                 <h5 class="mb-0 mt-3">Half Days</h5>
                             </div>
                             <div class="col-6 col-md-4 col-sm-6 col-xl-2 text-center py-5 ">
-                                <span
-                                    class="avatar avatar-md bradius fs-20 bg-orange-transparent">{{ $Count[4] }}</span>
+                                <span class="avatar avatar-md bradius fs-20 bg-orange-transparent"
+                                    id="lateEmployeeCount">0</span>
                                 <h5 class="mb-0 mt-3">Late</h5>
                             </div>
                             <div class="col-6 col-md-4 col-sm-6 col-xl-2 text-center py-5">
-                                <span class="avatar avatar-md bradius fs-20 bg-pink-transparent">{{ $Count[5] }}</span>
+                                <span class="avatar avatar-md bradius fs-20 bg-pink-transparent"
+                                    id="leaveEmployeeCount">0</span>
                                 <h5 class="mb-0 mt-3">Leave</h5>
                             </div>
                         </div>
@@ -301,6 +298,19 @@
                                     <tbody class="my_body">
                                         @php
                                             $count = 1;
+                                            $statusCounts = [
+                                                1 => 0, // Present
+                                                2 => 0, // Absent
+                                                3 => 0, // Late
+                                                4 => 0, // Mispunch
+                                                5 => 0, // working
+                                                6 => 0, // Holiday
+                                                7 => 0, // Week Off
+                                                8 => 0, // Half Day
+                                                9 => 0, // Overtime
+                                                10 => 0, // Overtime
+                                                11 => 0, // Overtime
+                                            ];
                                         @endphp
                                         @foreach ($DATA as $item)
                                             @php
@@ -321,13 +331,12 @@
                                                 $seconds = str_pad($timeDifference->s, 2, '0', STR_PAD_LEFT);
                                                 $status = $resCode[0];
                                                 $occurance = $resCode[14];
-                                                // dd($status);
+                                                // dd($resCode);
                                             @endphp
                                             <tr>
 
                                                 <input type="text" name="emp_id[]" id="id"
                                                     value="{{ $item->emp_id }}" hidden>
-
 
                                                 @if ($item->attendance_status == 0)
                                                     <input type="text" name="myAttendanceCheck[]"
@@ -372,23 +381,94 @@
                                                             10 => 'Paid Leave',
                                                             11 => 'Unpaid Leave',
                                                         ];
+                                                        
                                                         $badgeColors = [
-                                                            1 => 'success',
-                                                            2 => 'danger',
-                                                            3 => 'success',
-                                                            4 => 'secondary',
-                                                            5 => 'secondary',
-                                                            6 => 'primary',
-                                                            7 => 'primary',
-                                                            8 => 'danger',
-                                                            9 => 'success',
-                                                            10 => 'success',
-                                                            11 => 'danger',
+                                                            1 => 'present-status-badge',
+                                                            2 => 'absent-status-badge',
+                                                            3 => 'present-status-badge',
+                                                            4 => 'mispunch-status-badge',
+                                                            5 => 'present-status-badge',
+                                                            6 => 'holiday-status-badge',
+                                                            7 => 'weekoff-status-badge',
+                                                            8 => 'halfday-status-badge',
+                                                            9 => 'present-status-badge',
+                                                            10 => 'present-status-badge',
+                                                            11 => 'leave-status-badge',
                                                         ];
                                                     @endphp
 
-                                                    <span id="statusLabelView"
-                                                        class="badge badge-{{ $badgeColors[$status] }}-light">{{ $statusLabels[$status] }}</span>
+                                                    @php
+                                                        //Early Exit Rule
+                                                        $earlyOccurrenceIs = $occurance[0];
+                                                        $earlyOccurrence = $occurance[1];
+                                                        $earlyOccurrencePenalty = $occurance[2];
+                                                        //Late Rule
+                                                        $lateOccurrenceIs = $occurance[3];
+                                                        $lateOccurrence = $occurance[4];
+                                                        $lateOccurrencePenalty = $occurance[5];
+                                                        //status print indicator
+                                                        $statusPrinted = false;
+                                                        // dd($occurance);
+                                                    @endphp
+
+                                                    @if ($status == 3)
+                                                        @if ($lateOccurrenceIs != 0 && $earlyOccurrenceIs != 0)
+                                                            @if ($lateOccurrenceIs == 1)
+                                                                @if ($statusCounts[3] >= $lateOccurrence)
+                                                                    @if ($lateOccurrencePenalty == 1)
+                                                                        $statusCounts[8]++;
+                                                                    @else
+                                                                        $statusCounts[2]++;
+                                                                    @endif
+                                                                    @php $statusPrinted = true; @endphp
+                                                                @endif
+                                                            @elseif ($lateOccurrenceIs == 2)
+                                                                @if ($totalLateTime >= $lateOccurrence)
+                                                                    @if ($lateOccurrencePenalty == 1)
+                                                                        $statusCounts[8]++;
+                                                                    @else
+                                                                        $statusCounts[2]++;
+                                                                    @endif
+                                                                    @php $statusPrinted = true; @endphp
+                                                                @endif
+                                                            @endif
+
+                                                            @if ($earlyOccurrenceIs == 1 && !$statusPrinted)
+                                                                @if ($statusCounts[3] >= $earlyOccurrence)
+                                                                    @if ($earlyOccurrencePenalty == 1)
+                                                                        <?php $statusCounts[8]++; ?>
+                                                                    @else
+                                                                        <?php $statusCounts[2]++; ?>
+                                                                    @endif
+                                                                    @php $statusPrinted = true; @endphp
+                                                                @endif
+                                                            @elseif ($earlyOccurrenceIs == 2 && !$statusPrinted)
+                                                                @if ($totalEarlyExitTime >= $earlyOccurrence && !$statusPrinted)
+                                                                    @if ($earlyOccurrencePenalty == 1)
+                                                                        <?php $statusCounts[8]++; ?>
+                                                                    @else
+                                                                        <?php $statusCounts[2]++; ?>
+                                                                    @endif
+                                                                    @php $statusPrinted = true; @endphp
+                                                                @endif
+                                                            @endif
+                                                        @else
+                                                            <span id="statusLabelView"
+                                                                class="{{ $badgeColors[3] }}">{{ $statusLabels[3] }}</span>
+                                                            @php $statusPrinted = true; @endphp
+                                                        @endif
+                                                    @endif
+
+                                                    @if (!$statusPrinted)
+                                                        <span id="statusLabelView"
+                                                            class="{{ $badgeColors[$status] }}">{{ $statusLabels[$status] }}</span>
+                                                        <? $statusCounts[$status]++; ?>
+                                                    @endif
+
+                                                    <?php $statusCounts[$status]++; ?>
+
+                                                    {{-- <span id="statusLabelView"
+                                                        class="badge badge-{{ $badgeColors[$status] }}-light">{{ $statusLabels[$status] }}</span> --}}
                                                 </td>
                                                 <td>{{ $item->punch_date }}</td>
                                                 <td><?= $ruleMange->Convert24To12($item->punch_in_time) ?> </td>
@@ -414,7 +494,7 @@
                                                 </td> --}}
                                                 <td><?= $item->emp_today_current_status == '2' ? $ruleMange->Convert24To12($item->punch_out_time) : '' ?>
                                                 </td>
-                                                <td><?= $item->emp_today_current_status == '2'? ($item->total_working_hour !== null && $item->total_working_hour != 'undefined' ? date('H:i', strtotime($item->total_working_hour)) . ' Min.' : ''): '' ?>
+                                                <td><?= $item->emp_today_current_status == '2' ? ($item->total_working_hour !== null && $item->total_working_hour != 'undefined' ? date('H:i', strtotime($item->total_working_hour)) . ' Min.' : '') : '' ?>
                                                 </td>
 
                                                 <td>{{ $lateBy }}</td>
@@ -477,16 +557,51 @@
                                 </table>
                             </div>
                         </div>
+                        {{-- @dd($statusCounts); --}}
                         <div class="card-footer">
                             <button class="btn btn-primary float-end" name="approveAll" value="1" id="approveAll"
-                                type="submit">Approve
-                                All</button>
+                                type="submit">Approve All</button>
                         </div>
+
+                        <input type="text" id="dailyAttendanceCount" data-totalEmployee="{{ $Count[0] }}"
+                            data-pesent="{{ $statusCounts[1] }}" data-absent="{{ $statusCounts[2] }}"
+                            data-halfday="{{ $statusCounts[8] }}" data-late="{{ $statusCounts[3] }}"
+                            data-leave="{{ $statusCounts[10] + $statusCounts[11] }}" hidden>
                     </form>
                 </div>
             </div>
         </div>
         <!-- END ROW -->
+
+        <script>
+            // Get count element and log it to the console
+            var countElement = document.getElementById('dailyAttendanceCount');
+            // console.log(countElement);
+
+            // Get employee elements by ID
+            var totalEmployee = document.getElementById('totalEmployeeCount');
+            var presentEmployee = document.getElementById('presentEmployeeCount');
+            var absentEmployee = document.getElementById('absentEmployeeCount');
+            var halfdayEmployee = document.getElementById('halfdayEmployeeCount');
+            var lateEmployee = document.getElementById('lateEmployeeCount');
+            var leaveEmployee = document.getElementById('leaveEmployeeCount');
+
+            // Get values from data attributes
+            var totalEmployeeValue = countElement.getAttribute('data-totalEmployee');
+            var presentValue = countElement.getAttribute('data-pesent');
+            var absentValue = countElement.getAttribute('data-absent');
+            var halfdayValue = countElement.getAttribute('data-halfday');
+            var lateValue = countElement.getAttribute('data-late');
+            var leaveValue = countElement.getAttribute('data-leave');
+
+            // Update innerHTML of presentEmployee element with presentValue
+            totalEmployee.innerHTML = totalEmployeeValue;
+            presentEmployee.innerHTML = presentValue;
+            absentEmployee.innerHTML = totalEmployeeValue - presentValue - halfdayValue - lateValue - leaveValue;
+            halfdayEmployee.innerHTML = halfdayValue;
+            lateEmployee.innerHTML = lateValue;
+            leaveEmployee.innerHTML = leaveValue;
+        </script>
 
         <!-- PRESENT MODAL -->
         <div class="modal fade" id="presentmodal">
@@ -508,7 +623,7 @@
                                         <h4 class="">Timesheet<span
                                                 class="fs-14 mx-3 text-muted">{{ date('d-M-y h:i a') }}</span></h4>
                                     </div>
-                                    <input type="text" id="Updateid" name="Updateid">
+                                    <input type="text" id="Updateid" name="Updateid" hidden>
                                     {{-- style="height: 260px" --}}
                                     <div class="col-sm-12 my-auto">
                                         <div class="row">
@@ -534,7 +649,7 @@
                                                     data-thickness="6" data-color="#0dcd94">
                                                     <div class="chart-circle-value text-muted" id="modalWorkingHr"
                                                         style="border:5px solid #0DCD94; border-radius: 50px;                                                     ">
-                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-4">
@@ -628,7 +743,7 @@
                             </div>
                         </div>
                         <div class="modal-footer PresentModalFooter">
-                            <a href="javascript:void(0);" class="btn btn-outline-primary"
+                            <a href="javascript:void(0);" class="btn btn-danger"
                                 data-bs-dismiss="modal">close</a>
                             <button href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-dismiss="modal" type="submit">Approve</button>
@@ -681,7 +796,7 @@
                     </div>
                     <div class="modal-footer d-flex">
                         <div>
-                            <a href="javascript:void(0);" class="btn btn-light" data-bs-toggle="modal"
+                            <a href="javascript:void(0);" class="btn btn-danger" data-bs-toggle="modal"
                                 data-bs-target="#presentmodal" data-bs-dismiss="modal"><i
                                     class="feather feather-arrow-left me-1"></i>Back</a>
                         </div>
@@ -938,13 +1053,13 @@
                 var punchOutSelfieV = $(context).data('punchoutselfie');
                 var attendancestatus = $(context).data('attendance_status');
                 var empTodayCurrentStatus = $(context).data('emp_today_current_status');
-                console.log("empTodayCurrentStatus "+empTodayCurrentStatus)
+                console.log("empTodayCurrentStatus " + empTodayCurrentStatus)
                 if (attendancestatus == 0) {
                     $('.PresentModalFooter').removeClass('d-none');
-                    
+
                 } else {
                     $('.PresentModalFooter').addClass('d-none');
-                    
+
                 }
                 if (punchQrMode == 0) {
                     var imageOutUrl = '/upload_image/' + punchOutSelfieV;
@@ -964,10 +1079,10 @@
                         $('#punchOutSelfieId').css('background-image', 'url(' + imageOutUrl + ')');
                         $('#fullOutTimeImage').attr('src', imageOutUrl);
                     }
-                    
+
                 }
-                
-                
+
+
                 var intimeWithoutSeconds = inTime.split(":").slice(0, 2).join(":"); // Remove the seconds
                 var outtimeWithoutSeconds = outTime.split(":").slice(0, 2).join(":"); // Remove the seconds
                 var overtimeWithoutSeconds = addtimesSecond ? addtimesSecond.split(":").slice(0, 2).join(":") : '';
@@ -976,8 +1091,8 @@
                 $('#puchInAt').html(punchInAtModel);
                 $('#modalPunchIn').val(intimeWithoutSeconds);
                 $('#punchOutAt').html(punchOutAtModel);
-                empTodayCurrentStatus == 2 ? $('#modalPunchOut').val(outtimeWithoutSeconds): '';
-                empTodayCurrentStatus == 2 ? $('#modalWorkingHr').html(twh): '';
+                empTodayCurrentStatus == 2 ? $('#modalPunchOut').val(outtimeWithoutSeconds) : '';
+                empTodayCurrentStatus == 2 ? $('#modalWorkingHr').html(twh) : '';
 
                 // $('#modalWorkingHr').html(twh);
                 $('#inLocation').html(inLoc);
