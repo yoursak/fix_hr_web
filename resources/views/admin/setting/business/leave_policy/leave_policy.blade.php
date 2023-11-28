@@ -290,7 +290,7 @@
         <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
             <li><a href="{{ url('/admin') }}">Dashboard</a></li>
             {{-- <li><a href="{{ url('admin/settings/business')}}">Settings</a></li> --}}
-            <li><a href="{{ url('admin/settings/business') }}">Business Setting</a></li>
+            <li><a href="{{ url('admin/settings/business') }}">Business Settings</a></li>
             <li class="active"><span><b>Leave Policy</b></span></li>
         </ol>
     </div>

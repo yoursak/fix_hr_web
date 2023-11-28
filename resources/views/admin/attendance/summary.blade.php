@@ -153,13 +153,13 @@
                                             <div class="btn btn-light btn-icon btn-sm" id="calenderbtn"
                                                 data-bs-toggle="tooltip" data-original-title="View">
 
-                                                @if (($resCode[1] + $resCode[3] + $resCode[9] + $resCode[8] / 2) > 0)
+                                                {{-- @if (($resCode[1] + $resCode[3] + $resCode[9] + $resCode[8] / 2) > 0) --}}
                                                     <a href="{{ route('attendance.byemployee', [$emp->emp_id]) }}">
                                                         <i class="feather feather-eye"></i>
                                                     </a>
-                                                @else
+                                                {{-- @else
                                                     <a>No Record</a>
-                                                @endif
+                                                @endif --}}
                                             </div>
                                         </td>
                                     </tr>

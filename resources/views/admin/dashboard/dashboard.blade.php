@@ -325,9 +325,9 @@
                             $holidayM = date('m', strtotime($holiday->holiday_date));
                             $holidayY = date('Y', strtotime($holiday->holiday_date));
                             $holidayDayName = date('l', strtotime($holiday->holiday_date));
-                            // if($holidayM >= date('m') &&  $holidayD >= date('d') && $holidayY >= date('Y') && ++$holidayCount <= 5){ ?>
+                            if(date('Y-m-d') <= date('Y-m-d', strtotime($holiday->holiday_date)) && ++$holidayCount <= 5){ ?>
                                 <li class="item">
-                                    <div class="card px-4 py-4 ">
+                                    <div class="card px-4 py-4">
                                         <div class="d-flex comming_events calendar-icon icons">
                                             <span class="date_time bg-pink-transparent bradius me-3"
                                                 style="border: solid 1px #1877f2;background-color:#fff"><span
@@ -344,6 +344,7 @@
                                         </div>
                                     </div>
                                 </li>
+                                <?php } ?>
                                 
                             @endforeach
                         </ul>
@@ -363,7 +364,7 @@
                                 $noticeM = date('M', strtotime($notice->date));
                                 $noticeY = date('Y', strtotime($notice->date));
                                 $noticeDayName = date('l', strtotime($notice->date)); ?>
-                                <?php if($noticeM >= date('m') &&  $noticeD >= date('d') && $noticeY >= date('Y') && ++$noticeCount <= 5){ ?>
+                                <?php if( date('Y-m-d',strtotime($noticeY.'-'.$noticeM.'-'.$noticeD)) <= date('Y-m-d') && ++$noticeCount <= 5){ ?>
                                 <li class="item">
                                     <div class="card px-4 py-4 ">
                                         <a href="{{ url('notice_uploads/' . $notice->file) }}" target="_blank"
@@ -458,10 +459,10 @@
                                                     {{ $resCode[1] + $resCode[3] + $resCode[9] + $resCode[8] / 2 }}</td>
                                                 <td class="text-center">{{ $resCode[2] }}</td>
                                                 <td class="text-center">{{ $resCode[8] }}</td>
-                                                <td class="text-center">{{ '0' }}</td>
+                                                <td class="text-center">0</td>
                                                 <td class="text-center">{{ $resCode[9] }}</td>
                                                 <td class="text-center">{{ $resCode[3] }}</td>
-                                                <td class="text-center">{{ '0' }}</td>
+                                                <td class="text-center">0</td>
                                                 <td class="text-center">{{ $resCode[1] }}</td>
                                                 <td class="text-center">
                                                     <div class="btn btn-light btn-icon btn-sm" id="calenderbtn"

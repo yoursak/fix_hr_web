@@ -190,7 +190,7 @@
                                             </div>
                                             <div class="col-sm-12 col-md-4">
                                                 <label class="form-label mb-0 mt-2">Gender</label>
-                                                <select class="form-control update_gender_sddd" aria-label="Type" id=""
+                                                <select class="form-control update_gender_sddd" aria-label="Type" id="gender_sd"
                                                     name="gender" required>
                                                     <option value="">Select Gender</option>
                                                     @foreach ($staticGender as $gender)
@@ -361,7 +361,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Select Shift Type</label>
-                                                <select name="country-dd" id="country-dd" class="form-control" required>
+                                                <select name="shift_type_name" id="shift_type_sd" class="form-control" required>
                                                     <option value="">Select Shift Type</option>
                                                     @foreach ($shiftAttendance as $shiftset)
                                                     <option   value="{{ $shiftset->attendance_id }}">
@@ -387,7 +387,7 @@
 
                                             <div class="col-md-4 d-none" id="checkRotationalTypeItem">
                                                 <label class="form-label mb-0 mt-2">Select Rotational Type</label>
-                                                <select id="state-dddd" name="department_id" class="form-control" required>
+                                                <select id="rotational_type_id" name="rotational_type_name" class="form-control" required>
                                                     <option value="">Select Rotational Type</option>
                                                     {{-- @foreach ($Department as $data)
                                                         <option value="{{ $data->depart_id }}">

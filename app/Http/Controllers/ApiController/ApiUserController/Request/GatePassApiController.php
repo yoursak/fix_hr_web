@@ -14,6 +14,7 @@ use App\Models\DesignationList;
 use App\Http\Resources\Api\UserSideResponse\GatepassRequestResources;
 use App\Http\Resources\Api\UserSideResponse\UserGatepassIdToDataResources;
 use App\Http\Resources\Api\UserSideResponse\StaticGoingThroughResponse;
+use App\Models\ApprovalManagementCycle;
 use App\Helpers\ReturnHelpers;
 use DB;
 use Carbon\Carbon;
@@ -31,6 +32,8 @@ class GatePassApiController extends Controller
     public function store(Request $request)
     {
         $business_id = $request->business_id;
+        $load = 0;
+
         $emp_id = $request->emp_id;
         $requestDate = Carbon::createFromFormat('d-m-Y', $request->date);
         $currentYear = $requestDate;
@@ -41,16 +44,31 @@ class GatePassApiController extends Controller
                 $emp = EmployeePersonalDetail::where('business_id', $business_id)
                     ->where('emp_id', $emp_id)
                     ->first();
-                if ($emp) {
+                if (isset($emp)) {
                     $checkOccurrence = RequestGatepassList::where('emp_id', $emp_id)
-                    ->where('business_id', $business_id)
-                    ->whereYear('date', '=', $currentYear)
-                    ->whereMonth('date', '=', $currentMonth)
-                    ->select('id')
-                    ->count();
+                        ->where('business_id', $business_id)
+                        ->whereYear('date', '=', $currentYear)
+                        ->whereMonth('date', '=', $currentMonth)
+                        ->select('id')
+                        ->count();
                     // dd(gettype($checkAutomation->occurance_count), gettype($checkOccurrence));
-                        // dd($checkOccurrence, $checkAutomation->occurance_count);
+                    // dd($checkOccurrence, $checkAutomation->occurance_count);
                     if ($checkAutomation->occurance_count > $checkOccurrence) {
+                        $approvalManagementCycle = ApprovalManagementCycle::where('business_id', $emp->business_id)
+                            ->where('approval_type_id', 4)
+                            ->first();
+                        if ($approvalManagementCycle != null) {
+                            $roleIds = json_decode($approvalManagementCycle->role_id, true); // Decode JSON string to PHP array
+
+                            // Get the first index value of role_id
+                            $firstRoleId = $roleIds[0] ?? null; // This will get the first value or null if it doesn't exist
+
+                            // Get the last index value of role_id
+                            $lastRoleId = end($roleIds); // Get the last value of the array
+
+                            // $load = $approvalManagementCycle->cycle_type;
+                            // dd($firstRoleId, $lastRoleId);
+                        }
                         $requestDate = Carbon::createFromFormat('d-m-Y', $request->date);
                         $data = new RequestGatepassList();
                         $data->business_id = $emp->business_id;
@@ -62,6 +80,12 @@ class GatePassApiController extends Controller
                         $data->in_time = $request->in_time;
                         $data->out_time = $request->out_time;
                         $data->reason = $request->reason;
+                        $data->forward_by_role_id = $firstRoleId ?? 0;
+                        $data->forward_by_status = 0;
+                        $data->final_level_role_id = $lastRoleId ?? 0;
+                        $data->final_status = 0;
+                        $data->process_complete = 0;
+                        $data->final_status = 0;
                         $data->status = 0;
                         if ($data->save()) {
                             return ReturnHelpers::jsonApiReturnSecond(GatepassRequestResources::collection([RequestGatepassList::find($data->id)])->all(), 1); // case 1 when the gatepass date store

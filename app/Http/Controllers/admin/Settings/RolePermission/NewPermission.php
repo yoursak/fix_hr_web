@@ -384,7 +384,6 @@ class NewPermission extends Controller
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
 
-
         $List = RulesManagement::ALLPolicyTemplates();
 
         $FinalEndGameRule = $List[0];
@@ -468,13 +467,9 @@ class NewPermission extends Controller
             //     ]);
             if (isset($update_all_ready) && isset($load)) {
                 if ($loadType == 2) {
-
                     Alert::success('', "Your Updated Parallel Approval System   also Update Request Leave List");
                 }
                 if ($loadType == 1) {
-
-
-
                     Alert::success('', "Your Updated Sequential Approval System   also Update Request Leave List");
                 }
 

@@ -752,7 +752,7 @@ class Central_unit
 
     // get count for different fields
 
-    function CalculateTimeDifference($inTime, $outTime)
+    static function CalculateTimeDifference($inTime, $outTime)
     {
         // Parse the input timestamps as Carbon objects
         $inTimeObj = Carbon::parse($inTime);
@@ -825,7 +825,7 @@ class Central_unit
             $shiftName = $resCode[6];
             $breakTime = $resCode[7];
             $overTime = $resCode[8];
-            $shiftWH = $resCode[9];
+            $shiftWH = $resCode[9] == 0 || ($resCode[9] ?? 0) ? 1 : $resCode[9];
             $twhMin = $resCode[10];
             $MaxOvertime = $resCode[11];
             $lateby = $resCode[12];
@@ -846,7 +846,7 @@ class Central_unit
         $allStatusCount = self::attendanceCount($Emp, $y, $m);
         // dd($twhMin);
         $twd = $allStatusCount[1] + $allStatusCount[2] + $allStatusCount[3] + $allStatusCount[4] + $allStatusCount[9] + $allStatusCount[8] + $allStatusCount[10] + $allStatusCount[11];
-        $present = $allStatusCount[1] + $allStatusCount[3] + $allStatusCount[9] + $allStatusCount[8] / 2;
+        $present = $allStatusCount[1] + $allStatusCount[3] + $allStatusCount[9];
         $absent = $allStatusCount[2];
         $late = $allStatusCount[3];
         $mispunch = $allStatusCount[4];
@@ -861,12 +861,13 @@ class Central_unit
 
         $cwh = ($totalTwhMin / 60);
         $twh = ($totalWDinMonth) * ($shiftWH / 60);
+
         $twhpercentage = $totalTwhMin != 0 && $shiftWH != 0 ? (($cwh) / ($totalWDinMonth * ($shiftWH / 60))) * 100 : 0;
 
         $rwh = $twh - $cwh;
 
         $trwh = $twh;
-        
+
 
         $trwhpercentege = (($twh - $cwh) / $twh) * 100;
 
@@ -1019,49 +1020,59 @@ class Central_unit
             $lateOccurrence = $occurance[4] ?? 0;
             $lateOccurrencePenalty = $occurance[5] ?? 0;
 
+            $statusPrinted = false;
+
 
             if ($status == 3) {
-                if ($lateOccurrenceIs != 0 && $earlyOccurrenceIs != 1) {
+                if ($lateOccurrenceIs != 0 && $earlyOccurrenceIs != 0) {
                     if ($lateOccurrenceIs == 1) {
                         if ($statusCounts[3] >= $lateOccurrence) {
+
                             if ($lateOccurrencePenalty == 1) {
                                 $statusCounts[8]++;
                             } else {
                                 $statusCounts[2]++;
                             }
+                            $statusPrinted = true;
                         }
                     } elseif ($lateOccurrenceIs == 2) {
+
                         if ($totalLateTime >= $lateOccurrence) {
                             if ($lateOccurrencePenalty == 1) {
                                 $statusCounts[8]++;
                             } else {
                                 $statusCounts[2]++;
                             }
+                            $statusPrinted = true;
                         }
                     }
 
-                    if ($earlyOccurrenceIs == 1) {
+                    if ($earlyOccurrenceIs == 1 && !$statusPrinted) {
                         if ($statusCounts[3] >= $earlyOccurrence) {
+
                             if ($earlyOccurrencePenalty == 1) {
                                 $statusCounts[8]++;
                             } else {
                                 $statusCounts[2]++;
                             }
-                        } elseif ($earlyOccurrenceIs == 2) {
-                            if ($totalEarlyExitTime >= $earlyOccurrence) {
-                                if ($earlyOccurrencePenalty == 1) {
-                                    $statusCounts[8]++;
-                                } else {
-                                    $statusCounts[2]++;
-                                }
+                            $statusPrinted = true;
+                        }
+                    } elseif ($earlyOccurrenceIs == 2 && !$statusPrinted) {
+                        if ($totalEarlyExitTime >= $earlyOccurrence) {
+                            if ($earlyOccurrencePenalty == 1) {
+                                $statusCounts[8]++;
+                            } else {
+                                $statusCounts[2]++;
                             }
+                            $statusPrinted = true;
                         }
                     }
                 } else {
                     $statusCounts[3]++;
                 }
                 // dd($status);
-            } else {
+            } 
+            if(!$statusPrinted) {
                 $statusCounts[$status]++; //issue on new account
             }
 
@@ -1075,14 +1086,14 @@ class Central_unit
 
     static function getEmpAttSumm($Emp)
     {
- 
+
 
         $employee = DB::table('employee_personal_details')->join('policy_master_endgame_method', 'employee_personal_details.master_endgame_id', '=', 'policy_master_endgame_method.id')
             ->where('employee_personal_details.business_id', Session::get('business_id'))
             ->where('employee_personal_details.emp_id', $Emp['emp_id'])
             ->select('emp_id', 'emp_name', 'employee_type', 'employee_contractual_type', 'emp_gender', 'holiday_policy_ids_list', 'weekly_policy_ids_list', 'shift_settings_ids_list', 'leave_policy_ids_list', 'method_name', 'method_switch', 'emp_shift_type', 'policy_master_endgame_method.created_at as AppliedFrom')
             ->first();
-       
+
         $holiday_policy = json_decode($employee->holiday_policy_ids_list ?? 0, true);
         $weekly_policy = json_decode($employee->weekly_policy_ids_list ?? 0, true);
         $shift_policy = json_decode($employee->shift_settings_ids_list ?? 0, true);
@@ -1107,7 +1118,7 @@ class Central_unit
                     break; // No need to continue checking if we found a match
                 }
             }
-
+            // dd()
             if ($shift_type_found) {
 
                 $shiftType = PolicyAttendanceShiftSetting::where([
@@ -1423,7 +1434,7 @@ class Central_unit
                             $status = 2; //Absent
                         }
                     } else {
-                        // dd();
+
                         if (date('Y-m-d', strtotime($Emp['punch_date'])) === date('Y-m-d')) {
                             $status = 1; // working
                         } else {
@@ -1472,7 +1483,7 @@ class Central_unit
                                         break;
                                     }
                                 }
-                            }else{
+                            } else {
                                 $status = 2;
                             }
 
@@ -1494,14 +1505,13 @@ class Central_unit
                                 break;
                             }
                         }
-                    }else{
+                    } else {
                         $status = 2;
                     }
 
                 }
             }
 
-            // dd($twhMin);
 
             return [
                 $status,
@@ -1551,4 +1561,5 @@ class Central_unit
     }
 
     // ********************************************************** End of Attendance Calculation By Aman ***************************************
+
 }

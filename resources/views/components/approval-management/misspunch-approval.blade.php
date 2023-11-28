@@ -8,7 +8,7 @@
                 <div class="row ">
                     <div class="col-xl-8">
                         <input type="text" name="load" value="3" hidden>
-                        <h4 class="card-title"><span>Leave Approval </span></h4>
+                        <h4 class="card-title"><span>Mispunch Approval </span></h4>
                     </div>
 
                     <div class="form-group row m-4">

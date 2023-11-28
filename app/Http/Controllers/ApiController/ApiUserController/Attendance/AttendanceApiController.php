@@ -258,7 +258,8 @@ class AttendanceApiController extends Controller
             })
             ->select('policy_master_endgame_method.id as method_id', 'policy_master_endgame_method.method_name as method_name', 'policy_attendance_shift_type_items.id as shift_item_id', 'policy_attendance_shift_type_items.shift_name as shift_template_name', 'static_attendance_shift_type.id  as shift_type_id', 'static_attendance_shift_type.name as shift_type_name', 'policy_attendance_shift_type_items.shift_start as shift_start_time', 'policy_attendance_shift_type_items.shift_end as shift_end_time', 'policy_attendance_shift_type_items.shift_hr as shift_hour', 'policy_attendance_shift_type_items.shift_min as shift_min', 'policy_attendance_shift_type_items.work_hr as working_hour', 'policy_attendance_shift_type_items.work_min as working_min', 'policy_attendance_shift_type_items.break_min as break_min', 'policy_attendance_shift_type_items.is_paid as is_paid')
             ->first();
-        // dd($DATA);
+
+
 
         if (isset($DATA)) {
             $startTime = strtotime($DATA->shift_start_time);
@@ -279,6 +280,97 @@ class AttendanceApiController extends Controller
                 $checkOutTime <= $extendedEndTime //checkin overall shift active and which shift checking , get details or shift get id in shift item
             ) {
                 $minutes = date('i', $checkInTime);
+                // Parallel process Segement needed addedd
+                //new data shifttype of name
+                $appliedShift_type_name = $DATA->shift_type_name;
+                $appliedShift_template_name = $DATA->shift_template_name;
+                $appliedShift_comp_start_time = $DATA->shift_start_time;
+                $appliedShift_comp_end_time = $DATA->shift_end_time;
+                $punchIn_shift_name = $DATA->shift_type_name;
+                $punchOut_shift_name = $DATA->shift_type_name;
+
+                // PUNCH-IN STORE Externals
+                $getAutomationLateEntry =  DB::table('policy_atten_rule_late_entry')->where('business_id', $business)->where('switch_is', 1)->first();
+                $getAutomationOverTime = DB::table('policy_atten_rule_overtime')->where('business_id', $business)->where('switch_is', 1)->first();
+                // PUNCH-OUT STORE Externals
+                $getAutomationEarlyExit = DB::table('policy_atten_rule_early_exit')->where('business_id', $business)->where('switch_is', 1)->first();
+
+                /* PUNCH-IN  Start getAutomationLateEntry */
+                $LateEntry_switch_is = 0;
+                $LateEntry_grace_time_hr = 0;
+                $LateEntry_grace_time_min = 0;
+                $LateEntry_occurance_is = 0;
+                $LateEntry_occurance_count = 0;
+                $LateEntry_occurance_hr = 0;
+                $LateEntry_occurance_min = 0;
+                $LateEntry_absent_is = 0;
+                $LateEntry_mark_half_day_hr = 0;
+                $LateEntry_mark_half_day_min = 0;
+                /* End getAutomationLateEntry */
+                /* PUNCH-IN  Start getAutomationOverTime */
+                $OverTime_switch_is = 0;
+                $OverTime_early_ot_hr = 0;
+                $OverTime_early_ot_min = 0;
+                $OverTime_late_ot_hr = 0;
+                $OverTime_late_ot_min = 0;
+                $OverTime_min_ot_hr = 0;
+                $OverTime_min_ot_min = 0;
+                $OverTime_max_ot_hr = 0;
+                $OverTime_max_ot_min = 0;
+                /* End getAutomationOverTime */
+
+                /* PUNCH-OUT Start getAutomationEarlyExit*/
+                $EarlyExit_switch_is = 0;
+                $EarlyExit_grace_time_hr = 0;
+                $EarlyExit_grace_time_min = 0;
+                $EarlyExit_occurance_is = 0;
+                $EarlyExit_occurance_count = 0;
+                $EarlyExit_occurance_hr = 0;
+                $EarlyExit_occurance_min = 0;
+                $EarlyExit_absent_is = 0;
+                $EarlyExit_mark_half_day_hr = 0;
+                $EarlyExit_mark_half_day_min = 0;
+
+                /*End getAutomationEarlyExit*/
+
+
+                if (isset($getAutomationLateEntry)) { //Late-Entry ->PUNCH_IN_TIME
+                    $LateEntry_switch_is = $getAutomationLateEntry->switch_is;
+                    $LateEntry_grace_time_hr = $getAutomationLateEntry->grace_time_hr;
+                    $LateEntry_grace_time_min = $getAutomationLateEntry->grace_time_min;
+                    $LateEntry_occurance_is = $getAutomationLateEntry->occurance_is;
+                    $LateEntry_occurance_count = $getAutomationLateEntry->occurance_count;
+                    $LateEntry_occurance_hr = $getAutomationLateEntry->occurance_hr;
+                    $LateEntry_occurance_min = $getAutomationLateEntry->occurance_min;
+                    $LateEntry_absent_is = $getAutomationLateEntry->absent_is;
+                    $LateEntry_mark_half_day_hr = $getAutomationLateEntry->mark_half_day_hr;
+                    $LateEntry_mark_half_day_min = $getAutomationLateEntry->mark_half_day_min;
+                }
+                if (isset($getAutomationOverTime)) { //Over-Time ->PUNCH_IN_TIME
+                    $OverTime_switch_is = $getAutomationOverTime->switch_is;
+                    $OverTime_early_ot_hr = $getAutomationOverTime->early_ot_hr;
+                    $OverTime_early_ot_min = $getAutomationOverTime->early_ot_min;
+                    $OverTime_late_ot_hr = $getAutomationOverTime->late_ot_hr;
+                    $OverTime_late_ot_min = $getAutomationOverTime->late_ot_min;
+                    $OverTime_min_ot_hr = $getAutomationOverTime->min_ot_hr;
+                    $OverTime_min_ot_min = $getAutomationOverTime->min_ot_min;
+                    $OverTime_max_ot_hr = $getAutomationOverTime->max_ot_hr;
+                    $OverTime_max_ot_min = $getAutomationOverTime->max_ot_min;
+                }
+                if (isset($getAutomationEarlyExit)) { //Over-Time ->PUNCH_OUT_TIME
+                    $EarlyExit_switch_is = $getAutomationEarlyExit->switch_is;
+                    $EarlyExit_grace_time_hr = $getAutomationEarlyExit->grace_time_hr;
+                    $EarlyExit_grace_time_min = $getAutomationEarlyExit->grace_time_min;
+                    $EarlyExit_occurance_is = $getAutomationEarlyExit->occurance_is;
+                    $EarlyExit_occurance_count = $getAutomationEarlyExit->occurance_count;
+                    $EarlyExit_occurance_hr = $getAutomationEarlyExit->occurance_hr;
+                    $EarlyExit_occurance_min = $getAutomationEarlyExit->occurance_min;
+                    $EarlyExit_absent_is = $getAutomationEarlyExit->absent_is;
+                    $EarlyExit_mark_half_day_hr = $getAutomationEarlyExit->mark_half_day_hr;
+                    $EarlyExit_mark_half_day_min = $getAutomationEarlyExit->mark_half_day_min;
+                }
+                // dd($EarlyExit_switch_is);
+
 
                 // Print the minutes
                 // echo "Minutes: " . $minutes;
@@ -319,7 +411,18 @@ class AttendanceApiController extends Controller
                                     'punch_out_latitude' => $punchOutLatitude,
                                     'punch_out_longitude' => $punchOutLongitude,
                                     'total_working_hour' => $totalWorking,
+                                    'punch_out_shift_name' => $punchOut_shift_name,
                                 ];
+                                // 'automate_early_exit_switch_is' => $EarlyExit_switch_is,
+                                // 'automate_early_exit_grace_time_hr' => $EarlyExit_grace_time_hr,
+                                // 'automate_early_exit_grace_time_min' => $EarlyExit_grace_time_min,
+                                // 'automate_early_exit_occurance_is' => $EarlyExit_occurance_is,
+                                // 'automate_early_exit_occurance_count' => $EarlyExit_occurance_count,
+                                // 'automate_early_exit_occurance_hr' => $EarlyExit_occurance_hr,
+                                // 'automate_early_exit_occurance_min' => $EarlyExit_occurance_min,
+                                // 'automate_early_exit_absent_is' => $EarlyExit_absent_is,
+                                // 'automate_early_exit_mark_half_day_hr' => $EarlyExit_mark_half_day_hr,
+                                // 'automate_early_exit_mark_half_day_min' => $EarlyExit_mark_half_day_min
                                 $loaded = AttendanceList::where('punch_date', $formattedDate)
                                     ->where('emp_id', $emp)
                                     ->where('emp_today_current_status', 1)
@@ -353,6 +456,40 @@ class AttendanceApiController extends Controller
                                     $collection->punch_in_latitude = $punchInLatitude;
                                     $collection->punch_in_longitude = $punchInLongitude;
                                     $collection->punch_in_address = $punchInAddress;
+                                    $collection->applied_shift_template_name = $appliedShift_template_name; //new data shifttype of name
+                                    $collection->applied_shift_type_name = $appliedShift_type_name;
+                                    $collection->applied_shift_comp_start_time = $appliedShift_comp_start_time;
+                                    $collection->applied_shift_comp_end_time = $appliedShift_comp_end_time;
+                                    $collection->punch_in_shift_name = $punchIn_shift_name; //punchIn shift Name
+                                    $collection->automate_late_entry_switch_is =  $LateEntry_switch_is; //start lateEntry
+                                    $collection->automate_late_entry_grace_time_hr = $LateEntry_grace_time_hr;
+                                    $collection->automate_late_grace_time_min = $LateEntry_grace_time_min;
+                                    $collection->automate_late_occurance_is = $LateEntry_occurance_is;
+                                    $collection->automate_late_occurance_count = $LateEntry_occurance_count;
+                                    $collection->automate_late_occurance_hr = $LateEntry_occurance_hr;
+                                    $collection->automate_late_occurance_min = $LateEntry_occurance_min;
+                                    $collection->automate_late_absent_is = $LateEntry_absent_is;
+                                    $collection->automate_late_mark_half_day_hr = $LateEntry_mark_half_day_hr;
+                                    $collection->automate_late_mark_half_day_min = $LateEntry_mark_half_day_min; //end lateEntry
+                                    $collection->automate_overtime_switch_is =   $OverTime_switch_is; //start OverTime
+                                    $collection->automate_overtime_early_ot_hr = $OverTime_early_ot_hr;
+                                    $collection->automate_overtime_early_ot_min = $OverTime_early_ot_min;
+                                    $collection->automate_overtime_late_ot_hr =  $OverTime_late_ot_hr;
+                                    $collection->automate_overtime_late_ot_min = $OverTime_late_ot_min;
+                                    $collection->automate_overtime_min_ot_hr =   $OverTime_min_ot_hr;
+                                    $collection->automate_overtime_min_ot_min =  $OverTime_min_ot_min;
+                                    $collection->automate_overtime_max_ot_hr =   $OverTime_max_ot_hr;
+                                    $collection->automate_overtime_max_ot_min =  $OverTime_max_ot_min; //end OverTime
+                                    $collection->automate_early_exit_switch_is = $EarlyExit_switch_is;
+                                    $collection->automate_early_exit_grace_time_hr =   $EarlyExit_grace_time_hr;
+                                    $collection->automate_early_exit_grace_time_min = $EarlyExit_grace_time_min;
+                                    $collection->automate_early_exit_occurance_is = $EarlyExit_occurance_is;
+                                    $collection->automate_early_exit_occurance_count  =  $EarlyExit_occurance_count;
+                                    $collection->automate_early_exit_occurance_hr = $EarlyExit_occurance_hr;
+                                    $collection->automate_early_exit_occurance_min  = $EarlyExit_occurance_min;
+                                    $collection->automate_early_exit_absent_is   =  $EarlyExit_absent_is;
+                                    $collection->automate_early_exit_mark_half_day_hr   =   $EarlyExit_mark_half_day_hr;
+                                    $collection->automate_early_exit_mark_half_day_min = $EarlyExit_mark_half_day_min;
                                     $collection->save();
                                     return response()->json(['result' => ['Dafault InTime' => date('h:i a', $startTime), 'Dafault OutTime' => date('h:i a', $endTime), 'PunchInTime' => date('h:i a', strtotime($punchInTime)), 'PunchOutTime' => date('h:i a', strtotime($punchOutTime)), 'message' => 'QR-Code Marked PunchIn Successfully Attendance', 'case' => 1], 'status' => true], 200);
                                 }
@@ -407,7 +544,19 @@ class AttendanceApiController extends Controller
                                     'punch_out_latitude' => $punchOutLatitude,
                                     'punch_out_longitude' => $punchOutLongitude,
                                     'total_working_hour' => $totalWorking,
+                                    'punch_out_shift_name' => $punchOut_shift_name,
                                 ];
+                                //   'automate_early_exit_switch_is' => $EarlyExit_switch_is,
+                                //   'automate_early_exit_grace_time_hr' => $EarlyExit_grace_time_hr,
+                                //   'automate_early_exit_grace_time_min' => $EarlyExit_grace_time_min,
+                                //   'automate_early_exit_occurance_is' => $EarlyExit_occurance_is,
+                                //   'automate_early_exit_occurance_count' => $EarlyExit_occurance_count,
+                                //   'automate_early_exit_occurance_hr' => $EarlyExit_occurance_hr,
+                                //   'automate_early_exit_occurance_min' => $EarlyExit_occurance_min,
+                                //   'automate_early_exit_absent_is' => $EarlyExit_absent_is,
+                                //   'automate_early_exit_mark_half_day_hr' => $EarlyExit_mark_half_day_hr,
+                                //   'automate_early_exit_mark_half_day_min' => $EarlyExit_mark_half_day_min
+
                                 $loaded = AttendanceList::where('punch_date', $formattedDate)
                                     ->where('emp_id', $emp)
                                     ->where('emp_today_current_status', 1)
@@ -441,6 +590,40 @@ class AttendanceApiController extends Controller
                                     $collection->punch_in_latitude = $punchInLatitude;
                                     $collection->punch_in_longitude = $punchInLongitude;
                                     $collection->punch_in_address = $punchInAddress;
+                                    $collection->applied_shift_template_name = $appliedShift_template_name; //new data shifttype of name
+                                    $collection->applied_shift_type_name = $appliedShift_type_name;
+                                    $collection->applied_shift_comp_start_time = $appliedShift_comp_start_time;
+                                    $collection->applied_shift_comp_end_time = $appliedShift_comp_end_time;
+                                    $collection->punch_in_shift_name = $punchIn_shift_name;
+                                    $collection->automate_late_entry_switch_is =  $LateEntry_switch_is; //start lateEntry
+                                    $collection->automate_late_entry_grace_time_hr = $LateEntry_grace_time_hr;
+                                    $collection->automate_late_grace_time_min = $LateEntry_grace_time_min;
+                                    $collection->automate_late_occurance_is = $LateEntry_occurance_is;
+                                    $collection->automate_late_occurance_count = $LateEntry_occurance_count;
+                                    $collection->automate_late_occurance_hr = $LateEntry_occurance_hr;
+                                    $collection->automate_late_occurance_min = $LateEntry_occurance_min;
+                                    $collection->automate_late_absent_is = $LateEntry_absent_is;
+                                    $collection->automate_late_mark_half_day_hr = $LateEntry_mark_half_day_hr;
+                                    $collection->automate_late_mark_half_day_min = $LateEntry_mark_half_day_min; //end lateEntry
+                                    $collection->automate_overtime_switch_is =   $OverTime_switch_is; //start OverTime
+                                    $collection->automate_overtime_early_ot_hr = $OverTime_early_ot_hr;
+                                    $collection->automate_overtime_early_ot_min = $OverTime_early_ot_min;
+                                    $collection->automate_overtime_late_ot_hr =  $OverTime_late_ot_hr;
+                                    $collection->automate_overtime_late_ot_min = $OverTime_late_ot_min;
+                                    $collection->automate_overtime_min_ot_hr =   $OverTime_min_ot_hr;
+                                    $collection->automate_overtime_min_ot_min =  $OverTime_min_ot_min;
+                                    $collection->automate_overtime_max_ot_hr =   $OverTime_max_ot_hr;
+                                    $collection->automate_overtime_max_ot_min =  $OverTime_max_ot_min; //end OverTime
+                                    $collection->automate_early_exit_switch_is = $EarlyExit_switch_is;
+                                    $collection->automate_early_exit_grace_time_hr =   $EarlyExit_grace_time_hr;
+                                    $collection->automate_early_exit_grace_time_min = $EarlyExit_grace_time_min;
+                                    $collection->automate_early_exit_occurance_is = $EarlyExit_occurance_is;
+                                    $collection->automate_early_exit_occurance_count  =  $EarlyExit_occurance_count;
+                                    $collection->automate_early_exit_occurance_hr = $EarlyExit_occurance_hr;
+                                    $collection->automate_early_exit_occurance_min  = $EarlyExit_occurance_min;
+                                    $collection->automate_early_exit_absent_is   =  $EarlyExit_absent_is;
+                                    $collection->automate_early_exit_mark_half_day_hr   =   $EarlyExit_mark_half_day_hr;
+                                    $collection->automate_early_exit_mark_half_day_min = $EarlyExit_mark_half_day_min;
                                     $collection->save();
                                     return response()->json(['result' => ['Dafault InTime' => date('h:i a', $startTime), 'Dafault OutTime' => date('h:i a', $endTime), 'PunchInTime' => date('h:i a', strtotime($punchInTime)), 'PunchOutTime' => date('h:i a', strtotime($punchOutTime)), 'message' => 'Selfie Marked PunchIn Successfully Attendance', 'case' => 1], 'status' => true], 200);
                                 }

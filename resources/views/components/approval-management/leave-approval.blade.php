@@ -27,7 +27,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <hr style="background: black" />

@@ -127,7 +127,7 @@
                         success: function(response) {
                             console.log(response.root);
                             if (response.root == 'owner') {
-                                window.location.href = "{{ url('/') }}";
+                                window.location.href = "{{ url('/dashboard') }}";
                             } 
                             else {
                                 window.location.href = "{{ url('/login') }}";
@@ -163,7 +163,7 @@
                         success: function(response) {
                             console.log(response.root);
                             if (response.root == 'admin') {
-                                window.location.href = "{{ url('/') }}";
+                                window.location.href = "{{ url('/dashboard') }}";
                             }
                              else {
                                 window.location.href = "{{ url('/login') }}";

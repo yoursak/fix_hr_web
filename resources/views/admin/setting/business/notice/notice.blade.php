@@ -67,9 +67,9 @@
                                     <td class="text-center"><a href="{{url('notice_uploads/'.$notice->file)}}"><span class="text-primary">View file</span></a></td>
                                     <td>
                                         <div class="d-flex">
-                                            <a type="" class="action-btns1" data-bs-toggle="modal"
+                                            <a type="" class="btn btn-sm btn-danger" data-bs-toggle="modal"
                                                 data-bs-target="#deletenoticemodal{{$notice->id}}" title="Delete"><i
-                                                    class="feather feather-trash-2 text-danger"></i></a>
+                                                    class="feather feather-trash-2 text-kight"></i></a>
                                         </div>
                                     </td>
                                 </tr>

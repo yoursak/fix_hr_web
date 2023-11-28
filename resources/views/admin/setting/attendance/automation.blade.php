@@ -10,16 +10,14 @@
     </style>
 @endsection
 @section('settings')
-
-<div class=" p-0 pt-2">
-    <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
-        <li><a href="{{ url('/admin') }}">Dashboard</a></li>
-        {{-- <li><a href="{{ url('admin/settings/attendance')}}">Settings</a></li> --}}
-        <li><a href="{{ url('admin/settings/attendance')}}">Attendace Setting</a></li>
-        <li class="active"><span><b>Automation Rules</b></span></li>
-    </ol>
-</div>
-
+    <div class=" p-0 pt-2">
+        <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
+            <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+            {{-- <li><a href="{{ url('admin/settings/attendance')}}">Settings</a></li> --}}
+            <li><a href="{{ url('admin/settings/attendance') }}">Attendace Setting</a></li>
+            <li class="active"><span><b>Automation Rules</b></span></li>
+        </ol>
+    </div>
 
     @php
         $lateEntryData;
@@ -28,16 +26,16 @@
         $breakData;
         $missPunchData;
         $gatePassData;
-        
+
         // dd($missPunchData);
-        
+
     @endphp
     <div class="page-header d-md-flex d-block">
         <div class="page-leftheader">
             <div class="page-title">Automation Rules</div>
-            
-                <p class="text-muted">Create rules to automate attemndance</p>
-            
+
+            <p class="text-muted">Create rules to automate attemndance</p>
+
         </div>
         {{-- <div class="page-rightheader ms-auto">
         <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
@@ -67,7 +65,7 @@
                                     <label class="custom-switch ms-auto">
                                         <input type="checkbox" name="lateEntry" onchange="showLateEntryContent()"
                                             id="lateEntryBtn" class="custom-switch-input"
-                                            {{ $lateEntryData != null && $lateEntryData->switch_is !=0 ? 'checked' : '' }}>
+                                            {{ $lateEntryData != null && $lateEntryData->switch_is != 0 ? 'checked' : '' }}>
                                         <span class="custom-switch-indicator"></span>
                                     </label>
                                 </div>
@@ -156,7 +154,8 @@
                                                 <input class="mb-4 ms-auto d-none"
                                                     value="{{ $lateEntryData != null ? $lateEntryData->occurance_count : '' }}"
                                                     name="lateEntryOccurenceCount" id="lateEntryOccurenceCount"
-                                                    type="text" placeholder="Times" style="width: 5rem; height: 1.5rem">
+                                                    type="text" placeholder="Times"
+                                                    style="width: 5rem; height: 1.5rem">
                                                 <?php } ?>
 
                                                 <?php if($lateEntryData!= null && ($lateEntryData->occurance_hr != 0 || $lateEntryData->occurance_min != 0)){ ?>
@@ -178,54 +177,14 @@
                                     </div>
                                 </div>
 
-                                <script>
-                                    function lateEntryOccurenceContent() {
-                                        var lateEntryOccurenceBtn = document.getElementById('lateEntryOccurenceBtn');
-                                        var lateEntryOccurenceContent = document.getElementById('lateEntryOccurenceContent');
-                                        var lateEntryOccurenceCount = document.getElementById('lateEntryOccurenceCount');
-
-                                        if (lateEntryOccurenceBtn.checked == true) {
-                                            lateEntryOccurenceContent.classList.remove('d-none');
-                                        } else {
-                                            lateEntryOccurenceContent.classList.add('d-none');
-                                            lateEntryOccurenceCount.value = '';
-                                        }
-                                    }
-
-                                    function countHour() {
-                                        var lateEntrySelectOccurance = document.getElementById('lateEntrySelectOccurance');
-                                        var lateEntryOccurenceHour = document.getElementById('lateEntryOccurenceHour');
-                                        var lateEntryOccurenceCount = document.getElementById('lateEntryOccurenceCount');
-                                        // console.log(lateEntryOccurenceCount);
-
-                                        if (lateEntrySelectOccurance.value == 1) {
-                                            lateEntryOccurenceCount.classList.remove('d-none');
-                                            lateEntryOccurenceHour.classList.add('d-none');
-                                            lateEntryOccurenceHour.value = '';
-                                        } else if (lateEntrySelectOccurance.value == 2) {
-                                            lateEntryOccurenceHour.classList.remove('d-none');
-                                            lateEntryOccurenceCount.classList.add('d-none');
-                                            lateEntryOccurenceCount.value = '';
-                                        } else {
-                                            lateEntryOccurenceHour.classList.add('d-none');
-                                            lateEntryOccurenceCount.classList.add('d-none');
-                                            lateEntryOccurenceHour.value = '';
-                                            lateEntryOccurenceCount.value = '';
-                                        }
-                                    }
-                                </script>
-
                                 <div class="d-flex my-1">
                                     <div class="col-6">
                                         <label class="custom-control custom-checkbox">
-                                            <?php if($lateEntryData!=null && $lateEntryData->absent_is != 0){ ?>
-                                            <input type="checkbox" class="custom-control-input"
+                                            {{-- <input type="checkbox" class="custom-control-input"
                                                 onchange="lateEntryDeductionPeriodContent()" name="lateEntryDeduction"
-                                                id="lateEntryDeductionBtn" value="1" checked><?php }else{ ?>
-                                            <input type="checkbox" class="custom-control-input"
-                                                onchange="lateEntryDeductionPeriodContent()" name="lateEntryDeduction"
-                                                id="lateEntryDeductionBtn" value="1"><?php } ?>
-                                            <span class="custom-control-label"></span>
+                                                id="lateEntryDeductionBtn" value="1"
+                                                {{ $lateEntryData != null && $lateEntryData->absent_is != 0 ? 'checked' : '' }}>
+                                            <span class="custom-control-label"></span> --}}
                                             <label class="form-label mx-1">Mark Absent</label>
                                         </label>
                                     </div>
@@ -248,13 +207,54 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <script>
-                                    function lateEntryDeductionPeriodContent() {
+                                    function lateEntryOccurenceContent() {
+                                        var lateEntryOccurenceBtn = document.getElementById('lateEntryOccurenceBtn');
+                                        var lateEntryOccurenceContent = document.getElementById('lateEntryOccurenceContent');
+                                        var lateEntryOccurenceCount = document.getElementById('lateEntryOccurenceCount');
                                         var lateEntryDeductionBtn = document.getElementById('lateEntryDeductionBtn');
                                         var lateEntryDeductionPeriodContent = document.getElementById('lateEntryDeductionPeriodContent');
 
-                                        if (lateEntryDeductionBtn.checked == true) {
+                                        if (lateEntryOccurenceBtn.checked == true) {
+                                            lateEntryOccurenceContent.classList.remove('d-none');
+                                            lateEntryDeductionPeriodContent.classList.remove('d-none');
+                                        } else {
+                                            lateEntryOccurenceContent.classList.add('d-none');
+                                            lateEntryDeductionPeriodContent.classList.add('d-none');
+                                            lateEntryOccurenceCount.value = '';
+                                        }
+                                    }
+
+                                    function countHour() {
+                                        var lateEntrySelectOccurance = document.getElementById('lateEntrySelectOccurance');
+                                        var lateEntryOccurenceHour = document.getElementById('lateEntryOccurenceHour');
+                                        var lateEntryOccurenceCount = document.getElementById('lateEntryOccurenceCount');
+
+                                        // console.log(lateEntryOccurenceCount);
+
+                                        if (lateEntrySelectOccurance.value == 1) {
+                                            lateEntryOccurenceCount.classList.remove('d-none');
+                                            lateEntryOccurenceHour.classList.add('d-none');
+                                            lateEntryOccurenceHour.value = '';
+                                        } else if (lateEntrySelectOccurance.value == 2) {
+                                            lateEntryOccurenceHour.classList.remove('d-none');
+                                            lateEntryOccurenceCount.classList.add('d-none');
+                                            lateEntryOccurenceCount.value = '';
+                                        } else {
+                                            lateEntryOccurenceHour.classList.add('d-none');
+                                            lateEntryOccurenceCount.classList.add('d-none');
+                                            lateEntryOccurenceHour.value = '';
+                                            lateEntryOccurenceCount.value = '';
+                                        }
+                                    }
+                                </script>
+
+                                <script>
+                                    function lateEntryDeductionPeriodContent() {
+                                        var lateEntryOccurenceBtn = document.getElementById('lateEntryOccurenceBtn');
+                                        var lateEntryDeductionPeriodContent = document.getElementById('lateEntryDeductionPeriodContent');
+
+                                        if (lateEntryOccurenceBtn.checked == true) {
                                             lateEntryDeductionPeriodContent.classList.remove('d-none');
                                         } else {
                                             lateEntryDeductionPeriodContent.classList.add('d-none');
@@ -406,13 +406,10 @@
                                 <div class="d-flex my-1">
                                     <div class="col-8">
                                         <label class="custom-control custom-checkbox">
-                                            <?php if(($earlyExitData != null) && ($earlyExitData->grace_time_hr != 0 || $earlyExitData->grace_time_min != 0)){ ?>
                                             <input type="checkbox" onchange="graceTimefunc()"
                                                 class="custom-control-input" name="graceTimeBtn" id="graceTimeBtn"
-                                                value="1" checked><?php }else{ ?>
-                                            <input type="checkbox" onchange="graceTimefunc()"
-                                                class="custom-control-input" name="graceTimeBtn" id="graceTimeBtn"
-                                                value="1"><?php }?>
+                                                value="1"
+                                                {{ $earlyExitData != null && ($earlyExitData->grace_time_hr != 0 || $earlyExitData->grace_time_min != 0) ? 'checked' : '' }}>
                                             <span class="custom-control-label"></span>
                                             <label class="form-label mx-1">Grace time for early exit</label>
                                         </label>
@@ -502,17 +499,50 @@
                                     </div>
                                 </div>
 
+                                <div class="d-flex my-1">
+                                    <div class="col-6">
+                                        <label class="custom-control custom-checkbox">
+                                            {{-- <input type="checkbox" onchange="earlyExitDeductionPeriodContent()"
+                                                class="custom-control-input" name="earlyExitDeduction"
+                                                id="earlyExitDeductionBtn" value="1" {{($earlyExitData != null) && $earlyExitData->absent_is != 0 ? 'checked' : ''}} >
+                                            <span class="custom-control-label"></span> --}}
+                                            <label class="form-label mx-1">Mark Absent</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-6 d-none" id="earlyExitDeductionPeriodContentId">
+                                        <div class="row">
+                                            <div class="text-end">
+                                                <select style="width: 5rem; height:1.5rem" id="earlyExitSelectAbsent"
+                                                    name="earlyExitSelectAbsent">
+                                                    <option value="0"
+                                                        {{ $earlyExitData != null && $earlyExitData->absent_is == '0' ? 'selected' : '' }}>
+                                                        Select</option>
+                                                    <option value="1"
+                                                        {{ $earlyExitData != null && $earlyExitData->absent_is == '1' ? 'selected' : '' }}>
+                                                        Half Day</option>
+                                                    <option value="2"
+                                                        {{ $earlyExitData != null && $earlyExitData->absent_is == '2' ? 'selected' : '' }}>
+                                                        Full Day</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <script>
                                     function earlyExitOccurenceContent() {
                                         var earlyExitOccurenceBtn = document.getElementById('earlyExitOccurenceBtn');
                                         var earlyExitOccurenceContent = document.getElementById('earlyExitOccurenceContent');
                                         var earlyExitOccurenceCount = document.getElementById('earlyExitOccurenceCount');
+                                        var earlyExitDeductionPeriodContentid = document.getElementById('earlyExitDeductionPeriodContentId');
 
                                         // alert('hello');
                                         if (earlyExitOccurenceBtn.checked == true) {
                                             earlyExitOccurenceContent.classList.remove('d-none');
+                                            earlyExitDeductionPeriodContentid.classList.remove('d-none');
                                         } else {
                                             earlyExitOccurenceContent.classList.add('d-none');
+                                            earlyExitDeductionPeriodContentid.classList.add('d-none');
                                             earlyExitOccurenceCount.value = '';
                                         }
                                     }
@@ -541,50 +571,17 @@
                                     }
                                 </script>
 
-                                <div class="d-flex my-1">
-                                    <div class="col-6">
-                                        <label class="custom-control custom-checkbox">
-                                            <?php if(($earlyExitData != null) && $earlyExitData->absent_is != 0){ ?>
-                                            <input type="checkbox" onchange="earlyExitDeductionPeriodContent()"
-                                                class="custom-control-input" name="earlyExitDeduction"
-                                                id="earlyExitDeductionBtn" value="1" checked><?php }else{ ?>
-                                            <input type="checkbox" onchange="earlyExitDeductionPeriodContent()"
-                                                class="custom-control-input" name="earlyExitDeduction"
-                                                id="earlyExitDeductionBtn" value="1"><?php } ?>
-                                            <span class="custom-control-label"></span>
-                                            <label class="form-label mx-1">Mark Absent</label>
-                                        </label>
-                                    </div>
-                                    <div class="col-6 d-none" id="earlyExitDeductionPeriodContent">
-                                        <div class="row">
-                                            <div class="text-end">
-                                                <select style="width: 5rem; height:1.5rem" id="earlyExitSelectAbsent"
-                                                    name="earlyExitSelectAbsent">
-                                                    <option value="0"
-                                                        {{ $earlyExitData != null && $earlyExitData->absent_is == '0' ? 'selected' : '' }}>
-                                                        Select</option>
-                                                    <option value="1"
-                                                        {{ $earlyExitData != null && $earlyExitData->absent_is == '1' ? 'selected' : '' }}>
-                                                        Half Day</option>
-                                                    <option value="2"
-                                                        {{ $earlyExitData != null && $earlyExitData->absent_is == '2' ? 'selected' : '' }}>
-                                                        Full Day</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <script>
                                     function earlyExitDeductionPeriodContent() {
-                                        var earlyExitDeductionBtn = document.getElementById('earlyExitDeductionBtn');
-                                        var earlyExitDeductionPeriodContent = document.getElementById('earlyExitDeductionPeriodContent');
+                                        var earlyExitOccurenceBtn = document.getElementById('earlyExitOccurenceBtn');
+                                        // var earlyExitDeductionBtn = document.getElementById('earlyExitDeductionBtn');
+                                        var earlyExitDeductionPeriodContentid = document.getElementById('earlyExitDeductionPeriodContentId');
 
-                                        // alert('hello');
-                                        if (earlyExitDeductionBtn.checked == true) {
-                                            earlyExitDeductionPeriodContent.classList.remove('d-none');
+                                        if (earlyExitOccurenceBtn.checked == true) {
+                                            // alert('hello');
+                                            earlyExitDeductionPeriodContentid.classList.remove('d-none');
                                         } else {
-                                            earlyExitDeductionPeriodContent.classList.add('d-none');
+                                            earlyExitDeductionPeriodContentid.classList.add('d-none');
                                         }
                                     }
                                 </script>
@@ -977,7 +974,7 @@
                                     <label class="custom-switch ms-auto">
                                         <input type="checkbox" onchange="overtimeContent()" name="overtime"
                                             id="overtimeBtn" class="custom-switch-input"
-                                            {{ $overtimeData != null && $overtimeData->switch_is !=0 ? 'checked' : '' }}>
+                                            {{ $overtimeData != null && $overtimeData->switch_is != 0 ? 'checked' : '' }}>
                                         <span class="custom-switch-indicator"></span>
                                     </label>
                                 </div>
@@ -1072,12 +1069,12 @@
                                     <div class="d-none" id="minMaxOverTimeBtnContent">
                                         <div class="d-flex justify-content-center my-1">
                                             <div class="mx-2">
-                                                <label class="form-label mx-1">Min</label>
+                                                <label class="form-label mx-1" hidden>Min</label>
                                                 <input class="mb-4"
                                                     value="{{ $overtimeData ? $overtimeData->min_ot_hr : '' }}: {{ $overtimeData ? $overtimeData->min_ot_min : '' }}"
                                                     name="minOverTime" id="minOverTimeBtn" type="text"
                                                     placeholder="HH:MM" class="text-center"" maxlength="5"
-                                                    oninput="formatTime(this)" style="width: 5rem; height: 1.5rem">
+                                                    oninput="formatTime(this)" style="width: 5rem; height: 1.5rem" hidden>
                                             </div>
                                             <div class="mx-2">
                                                 <label class="form-label mx-1">Max</label>
@@ -1196,7 +1193,7 @@
                                     <label class="custom-switch ms-auto">
                                         <input type="checkbox" onchange="missPunchContent()" name="missPunch"
                                             onchange="" id="missPunchBtn" class="custom-switch-input"
-                                            {{ $missPunchData != null && $missPunchData->switch_is !=0 ? 'checked' : '' }}>
+                                            {{ $missPunchData != null && $missPunchData->switch_is != 0 ? 'checked' : '' }}>
                                         <span class="custom-switch-indicator"></span>
                                     </label>
                                 </div>
@@ -1207,7 +1204,6 @@
                             </p>
 
                             <div class="my-3" id="missPunchContent">
-
                                 <div class="my-1 d-flex">
                                     <div class="col-8">
                                         <label class="custom-control custom-checkbox">
@@ -1221,8 +1217,8 @@
                                     </div>
                                     <div class="col-4 text-end d-none" id="missPunchOccurenceContent">
                                         {{-- <div class="row d-flex justify-content-around"> --}}
-                                            {{-- <div class="col-7 text-end"> --}}
-                                                {{-- <select onchange="missPunchCountHour()" style="width: 5rem; height:1.5rem"
+                                        {{-- <div class="col-7 text-end"> --}}
+                                        {{-- <select onchange="missPunchCountHour()" style="width: 5rem; height:1.5rem"
                                                     id="missPunchSelectOccurence" name="missPunchSelectOccurence">
                                                     <option value="0"
                                                         {{ $missPunchData != null && $missPunchData->occurance_is == 0 ? 'selected' : '' }}>
@@ -1234,72 +1230,33 @@
                                                         {{ $missPunchData != null && $missPunchData->occurance_is == 2 ? 'selected' : '' }}>
                                                         Hour</option>
                                                 </select> --}}
-                                            {{-- </div> --}}
-                                            {{-- <div class="col-5 d-flex"> --}}
-                                                <input
-                                                    class="mb-4 mr-auto"
-                                                    value="{{ $missPunchData ? $missPunchData->occurance_count : '' }}"
-                                                    name="missPunchOccurenceCount" id="missPunchOccurenceCount"
-                                                    placeholder="Times" type="number" min="0"
-                                                    style="width: 5rem; height: 1.5rem">
-                                                {{-- <input
+                                        {{-- </div> --}}
+                                        {{-- <div class="col-5 d-flex"> --}}
+                                        <input class="mb-4 mr-auto"
+                                            value="{{ $missPunchData ? $missPunchData->occurance_count : '' }}"
+                                            name="missPunchOccurenceCount" id="missPunchOccurenceCount"
+                                            placeholder="Times" type="number" min="0"
+                                            style="width: 5rem; height: 1.5rem">
+                                        {{-- <input
                                                     class="mb-4 ms-auto {{ $missPunchData != null && $missPunchData->occurance_is == 2 ? '' : 'd-none' }}"
                                                     value="{{ $missPunchData ? $missPunchData->occurance_hr : '' }}:{{ $missPunchData ? $missPunchData->occurance_min : '' }}"
                                                     name="missPunchOccurenceHour" id="missPunchOccurenceHour"
                                                     type="text" placeholder="HH:MM" class="text-center""
                                                     maxlength="5" oninput="formatTime(this)"
                                                     style="width: 5rem; height: 1.5rem"> --}}
-                                            {{-- </div> --}}
+                                        {{-- </div> --}}
                                         {{-- </div> --}}
                                     </div>
-                                    <script>
-                                        function missPunchCountHour() {
-                                            // <input class="mb-4 d-none" value="" name="lateEntryOccurenceHour" id="lateEntryOccurenceHour" type="text" placeholder="HH:MM" class="text-center"" maxlength="5" oninput="formatTime(this)" style="width: 5rem; height: 1.5rem">
-                                            var missPunchSelectOccurence = document.getElementById('missPunchSelectOccurence');
-                                            var missPunchOccurenceHour = document.getElementById('missPunchOccurenceHour');
-                                            var missPunchOccurenceCount = document.getElementById('missPunchOccurenceCount');
-                                            // console.log(missPunchOccurenceCount);
 
-                                            if (missPunchSelectOccurence.value == 1) {
-                                                missPunchOccurenceCount.classList.remove('d-none');
-                                                missPunchOccurenceHour.classList.add('d-none');
-                                                missPunchOccurenceHour.value = '';
-                                            } else if (missPunchSelectOccurence.value == 2) {
-                                                missPunchOccurenceHour.classList.remove('d-none');
-                                                missPunchOccurenceCount.classList.add('d-none');
-                                                missPunchOccurenceCount.value = '';
-                                            } else {
-                                                missPunchOccurenceHour.classList.add('d-none');
-                                                missPunchOccurenceCount.classList.add('d-none');
-                                                missPunchOccurenceHour.value = '';
-                                                missPunchOccurenceCount.value = '';
-                                            }
-                                        }
-
-                                        function missPunchOccurenceContent() {
-                                            var missPunchOccurenceBtn = document.getElementById('missPunchOccurenceBtn');
-                                            var missPunchOccurenceContent = document.getElementById('missPunchOccurenceContent');
-                                            var missPunchOccurenceCount = document.getElementById('missPunchOccurenceCount');
-
-                                            // alert('hello');
-                                            if (missPunchOccurenceBtn.checked == true) {
-                                                missPunchOccurenceContent.classList.remove('d-none');
-                                            } else {
-                                                missPunchOccurenceContent.classList.add('d-none');
-                                                missPunchOccurenceCount.value = '';
-                                            }
-                                        }
-                                    </script>
                                 </div>
-
                                 <div class="d-flex my-1">
                                     <div class="col-6">
                                         <label class="custom-control custom-checkbox">
-                                            <input type="checkbox" onchange="missPunchDeductionPeriodContent()"
+                                            {{-- <input type="checkbox" onchange="missPunchDeductionPeriodContent()"
                                                 class="custom-control-input" name="missPunchDeduction"
                                                 id="missPunchDeductionBtn" value="1"
                                                 {{ $missPunchData != null && $missPunchData->absent_is != 0 ? 'checked' : '' }}>
-                                            <span class="custom-control-label"></span>
+                                            <span class="custom-control-label"></span> --}}
                                             <label class="form-label mx-1">Mark Absent</label>
                                         </label>
                                     </div>
@@ -1322,14 +1279,55 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <script>
-                                    function missPunchDeductionPeriodContent() {
-                                        var missPunchDeductionBtn = document.getElementById('missPunchDeductionBtn');
+                                    function missPunchCountHour() {
+                                        // <input class="mb-4 d-none" value="" name="lateEntryOccurenceHour" id="lateEntryOccurenceHour" type="text" placeholder="HH:MM" class="text-center"" maxlength="5" oninput="formatTime(this)" style="width: 5rem; height: 1.5rem">
+                                        var missPunchSelectOccurence = document.getElementById('missPunchSelectOccurence');
+                                        var missPunchOccurenceHour = document.getElementById('missPunchOccurenceHour');
+                                        var missPunchOccurenceCount = document.getElementById('missPunchOccurenceCount');
+                                        // console.log(missPunchOccurenceCount);
+
+                                        if (missPunchSelectOccurence.value == 1) {
+                                            missPunchOccurenceCount.classList.remove('d-none');
+                                            missPunchOccurenceHour.classList.add('d-none');
+                                            missPunchOccurenceHour.value = '';
+                                        } else if (missPunchSelectOccurence.value == 2) {
+                                            missPunchOccurenceHour.classList.remove('d-none');
+                                            missPunchOccurenceCount.classList.add('d-none');
+                                            missPunchOccurenceCount.value = '';
+                                        } else {
+                                            missPunchOccurenceHour.classList.add('d-none');
+                                            missPunchOccurenceCount.classList.add('d-none');
+                                            missPunchOccurenceHour.value = '';
+                                            missPunchOccurenceCount.value = '';
+                                        }
+                                    }
+
+                                    function missPunchOccurenceContent() {
+                                        var missPunchOccurenceBtn = document.getElementById('missPunchOccurenceBtn');
+                                        var missPunchOccurenceContent = document.getElementById('missPunchOccurenceContent');
+                                        var missPunchOccurenceCount = document.getElementById('missPunchOccurenceCount');
                                         var missPunchDeductionPeriodContent = document.getElementById('missPunchDeductionPeriodContent');
 
                                         // alert('hello');
-                                        if (missPunchDeductionBtn.checked == true) {
+                                        if (missPunchOccurenceBtn.checked == true) {
+                                            missPunchOccurenceContent.classList.remove('d-none');
+                                            missPunchDeductionPeriodContent.classList.remove('d-none');
+                                        } else {
+                                            missPunchOccurenceContent.classList.add('d-none');
+                                            missPunchDeductionPeriodContent.classList.add('d-none');
+                                            missPunchOccurenceCount.value = '';
+                                        }
+                                    }
+                                </script>
+                                <script>
+                                    function missPunchDeductionPeriodContent() {
+                                        var missPunchOccurenceBtn = document.getElementById('missPunchOccurenceBtn');
+                                        // var missPunchDeductionBtn = document.getElementById('missPunchDeductionBtn');
+                                        var missPunchDeductionPeriodContent = document.getElementById('missPunchDeductionPeriodContent');
+
+                                        // alert('hello');
+                                        if (missPunchOccurenceBtn.checked == true) {
                                             missPunchDeductionPeriodContent.classList.remove('d-none');
                                         } else {
                                             missPunchDeductionPeriodContent.classList.add('d-none');
@@ -1337,6 +1335,73 @@
                                     }
                                 </script>
 
+                                <div class="my-1 d-flex">
+                                    <div class="col-8">
+                                        <label class="custom-control custom-checkbox">
+                                            <input type="checkbox" onchange="missPunchRequestFunc()"
+                                                class="custom-control-input" name="missPunchRequest"
+                                                id="missPunchRequestBtn" value="1"
+                                                {{ $missPunchData != null && ($missPunchData->request_day ?? 0) != 0 ? 'checked' : '' }}>
+                                            <span class="custom-control-label"></span>
+                                            <label class="form-label mx-1">Can mispunch request</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-4 text-end d-none" id="missPunchRequestId">
+                                        <input class="mb-4 mr-auto" value="{{ $missPunchData->request_day ?? 0 }}"
+                                            name="missPunchRequestDay" id="missPunchRequestDay" placeholder="Days"
+                                            type="number" min="0" style="width: 5rem; height: 1.5rem">
+                                    </div>
+
+                                </div>
+                                <div class="d-flex my-1">
+                                    <div class="col-6">
+                                        <label class="custom-control custom-checkbox">
+                                            {{-- <input type="checkbox" onchange="missPunchDeductionPeriodContent()"
+                                                class="custom-control-input" name="missPunchDeduction"
+                                                id="missPunchDeductionBtn" value="1"
+                                                {{ $missPunchData != null && $missPunchData->absent_is != 0 ? 'checked' : '' }}>
+                                            <span class="custom-control-label"></span> --}}
+                                            <label class="form-label mx-1">Mark Absent</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-6 d-none" id="missPunchDayDeduction">
+                                        <div class="row">
+                                            <div class="text-end">
+                                                <select style="width: 5rem; height:1.5rem" id="missPunchDaySelectAbsent"
+                                                    name="missPunchDaySelectAbsent">
+                                                    <option value="0"
+                                                        {{ $missPunchData != null && $missPunchData->request_day_absent_is == 0 ? 'selected' : '' }}>
+                                                        Select</option>
+                                                    <option value="1"
+                                                        {{ $missPunchData != null && $missPunchData->request_day_absent_is == 1 ? 'selected' : '' }}>
+                                                        Half Day</option>
+                                                    <option value="2"
+                                                        {{ $missPunchData != null && $missPunchData->request_day_absent_is == 2 ? 'selected' : '' }}>
+                                                        Full Day</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    missPunchRequestFunc()
+
+                                    function missPunchRequestFunc() {
+                                        var missPunchRequestBtn = document.getElementById('missPunchRequestBtn');
+                                        var missPunchRequestId = document.getElementById('missPunchRequestId');
+                                        var missPunchRequestD = document.getElementById('missPunchRequestDay');
+                                        var missPunchDaySelectAbsent = document.getElementById('missPunchDayDeduction');
+                                        // alert('Hello');
+                                        if (missPunchRequestBtn.checked == true) {
+                                            missPunchRequestId.classList.remove('d-none');
+                                            missPunchDaySelectAbsent.classList.remove('d-none');
+                                        } else {
+                                            missPunchRequestId.classList.add('d-none');
+                                            missPunchDaySelectAbsent.classList.add('d-none');
+                                            missPunchRequestD.value = '';
+                                        }
+                                    }
+                                </script>
                             </div>
                         </div>
                     </div>
@@ -1423,7 +1488,7 @@
                                     <label class="custom-switch ms-auto">
                                         <input type="checkbox" onchange="gatePassContent()" name="gatePass"
                                             onchange="" id="gatePassBtn" class="custom-switch-input"
-                                            {{ $gatePassData != null && $gatePassData->switch_is != 0  ? 'checked' : '' }}>
+                                            {{ $gatePassData != null && $gatePassData->switch_is != 0 ? 'checked' : '' }}>
                                         <span class="custom-switch-indicator"></span>
                                     </label>
                                 </div>
@@ -1449,7 +1514,7 @@
                                     <div class="col-4 text-end d-none" id="gatePassOccurenceContent">
                                         {{-- <div class="row d-flex justify-content-around">
                                             <div class="col-7 text-end"> --}}
-                                                {{-- <select onchange="gatePassCountHour()" style="width: 5rem; height:1.5rem"
+                                        {{-- <select onchange="gatePassCountHour()" style="width: 5rem; height:1.5rem"
                                                     id="gatePassSelectOccurence" name="gatePassSelectOccurence">
                                                     <option value="0"
                                                         {{ $gatePassData != null && $gatePassData->occurance_is == 0 ? 'selected' : '' }}>
@@ -1461,202 +1526,203 @@
                                                         {{ $gatePassData != null && $gatePassData->occurance_is == 2 ? 'selected' : '' }}>
                                                         Hour</option>
                                                 </select> --}}
-                                            {{-- </div>
+                                        {{-- </div>
                                             <div class="col-5 d-flex"> --}}
-                                                <input
-                                                    class="mb-4 "
-                                                    value="{{$gatePassData->occurance_count }}"
-                                                    name="gatePassOccurenceCount" id="gatePassOccurenceCount"
-                                                    placeholder="Times" type="number" min="0"
-                                                    style="width: 5rem; height: 1.5rem" ">
-                                                                            {{-- <input class="mb-4 ms-auto {{ $gatePassData != null && $gatePassData->occurance_is == 2 ? '' : 'd-none' }}" value="{{ $gatePassData ? $gatePassData->occurance_hr : '' }}:{{ $gatePassData ? $gatePassData->occurance_min : '' }}" name="gatePassOccurenceHour"
+                                        <input class="mb-4 " value="{{ $gatePassData->occurance_count }}"
+                                            name="gatePassOccurenceCount" id="gatePassOccurenceCount" placeholder="Times"
+                                            type="number" min="0" style="width: 5rem; height: 1.5rem" ">
+                                                                                            {{-- <input class="mb-4 ms-auto {{ $gatePassData != null && $gatePassData->occurance_is == 2 ? '' : 'd-none' }}" value="{{ $gatePassData ? $gatePassData->occurance_hr : '' }}:{{ $gatePassData ? $gatePassData->occurance_min : '' }}" name="gatePassOccurenceHour"
                                                                                 id="gatePassOccurenceHour" type="text" placeholder="HH:MM" class="text-center""
                                                     maxlength="5" oninput="formatTime(this)"
                                                     style="width: 5rem; height: 1.5rem"> --}}
-                                            {{-- </div>
+                                                            {{-- </div>
                                         </div> --}}
-                                    </div>
-                                    <script>
-                                        function gatePassCountHour() {
-                                            // <input class="mb-4 d-none" value="" name="lateEntryOccurenceHour" id="lateEntryOccurenceHour" type="text" placeholder="HH:MM" class="text-center"" maxlength="5" oninput="formatTime(this)" style="width: 5rem; height: 1.5rem">
-                                            var gatePassSelectOccurence = document.getElementById('gatePassSelectOccurence');
-                                            var gatePassOccurenceHour = document.getElementById('gatePassOccurenceHour');
-                                            var gatePassOccurenceCount = document.getElementById('gatePassOccurenceCount');
-                                            // console.log(gatePassOccurenceCount);
+                                                    </div>
+                                                    <script>
+                                                        function gatePassCountHour() {
+                                                            // <input class="mb-4 d-none" value="" name="lateEntryOccurenceHour" id="lateEntryOccurenceHour" type="text" placeholder="HH:MM" class="text-center"" maxlength="5" oninput="formatTime(this)" style="width: 5rem; height: 1.5rem">
+                                                            var gatePassSelectOccurence = document.getElementById('gatePassSelectOccurence');
+                                                            var gatePassOccurenceHour = document.getElementById('gatePassOccurenceHour');
+                                                            var gatePassOccurenceCount = document.getElementById('gatePassOccurenceCount');
+                                                            // console.log(gatePassOccurenceCount);
 
-                                            if (gatePassSelectOccurence.value == 1) {
-                                                gatePassOccurenceCount.classList.remove('d-none');
-                                                gatePassOccurenceHour.classList.add('d-none');
-                                                gatePassOccurenceHour.value = '';
-                                            } else if (gatePassSelectOccurence.value == 2) {
-                                                gatePassOccurenceHour.classList.remove('d-none');
-                                                gatePassOccurenceCount.classList.add('d-none');
-                                                gatePassOccurenceCount.value = '';
-                                            } else {
-                                                gatePassOccurenceHour.classList.add('d-none');
-                                                gatePassOccurenceCount.classList.add('d-none');
-                                                gatePassOccurenceHour.value = '';
-                                                gatePassOccurenceCount.value = '';
-                                            }
-                                        }
+                                                            if (gatePassSelectOccurence.value == 1) {
+                                                                gatePassOccurenceCount.classList.remove('d-none');
+                                                                gatePassOccurenceHour.classList.add('d-none');
+                                                                gatePassOccurenceHour.value = '';
+                                                            } else if (gatePassSelectOccurence.value == 2) {
+                                                                gatePassOccurenceHour.classList.remove('d-none');
+                                                                gatePassOccurenceCount.classList.add('d-none');
+                                                                gatePassOccurenceCount.value = '';
+                                                            } else {
+                                                                gatePassOccurenceHour.classList.add('d-none');
+                                                                gatePassOccurenceCount.classList.add('d-none');
+                                                                gatePassOccurenceHour.value = '';
+                                                                gatePassOccurenceCount.value = '';
+                                                            }
+                                                        }
 
 
-                                        function gatePassOccurenceContent() {
-                                            var gatePassOccurenceBtn = document.getElementById('gatePassOccurenceBtn');
-                                            var gatePassOccurenceContent = document.getElementById('gatePassOccurenceContent');
-                                            var gatePassOccurenceCount = document.getElementById('gatePassOccurenceCount');
+                                                        function gatePassOccurenceContent() {
+                                                            var gatePassOccurenceBtn = document.getElementById('gatePassOccurenceBtn');
+                                                            var gatePassOccurenceContent = document.getElementById('gatePassOccurenceContent');
+                                                            var gatePassOccurenceCount = document.getElementById('gatePassOccurenceCount');
 
-                                            // alert('hello');
-                                            if (gatePassOccurenceBtn.checked == true) {
-                                                gatePassOccurenceContent.classList.remove('d-none');
-                                            } else {
-                                                gatePassOccurenceContent.classList.add('d-none');
-                                                gatePassOccurenceCount.value = '';
-                                            }
-                                        }
-                                    </script>
-                                </div>
+                                                            // alert('hello');
+                                                            if (gatePassOccurenceBtn.checked == true) {
+                                                                gatePassOccurenceContent.classList.remove('d-none');
+                                                            } else {
+                                                                gatePassOccurenceContent.classList.add('d-none');
+                                                                gatePassOccurenceCount.value = '';
+                                                            }
+                                                        }
+                                                    </script>
+                                                </div>
 
-                                <div class="d-flex my-1">
-                                    <div class="col-6">
-                                        <label class="custom-control custom-checkbox">
-                                            <input type="checkbox" onchange="gatePassDeductionPeriodContent()"
-                                                class="custom-control-input" name="gatePassDeduction"
-                                                id="gatePassDeductionBtn" value="1"
-                                                {{ $gatePassData != null && $gatePassData->absent_is != 0 ? 'checked' : '' }}>
-                                            <span class="custom-control-label"></span>
-                                            <label class="form-label mx-1">Mark Absent</label>
-                                        </label>
-                                    </div>
-                                    <div class="col-6 d-none" id="gatePassDeductionPeriodContent">
-                                        <div class="row">
-                                            <div class="text-end">
-                                                <select style="width: 5rem; height:1.5rem" id="gatePasSelectAbsent"
-                                                    name="gatePasSelectAbsent">
-                                                    <option value="0"
-                                                        {{ $gatePassData != null && $gatePassData->absent_is == 0 ? 'selected' : '' }}>
-                                                        Select</option>
-                                                    <option value="1"
-                                                        {{ $gatePassData != null && $gatePassData->absent_is == 1 ? 'selected' : '' }}>
-                                                        Half Day</option>
-                                                    <option value="2"
-                                                        {{ $gatePassData != null && $gatePassData->absent_is == 2 ? 'selected' : '' }}>
-                                                        Full Day</option>
-                                                </select>
+                                                <div class="d-flex my-1">
+                                                    <div class="col-6">
+                                                        <label class="custom-control custom-checkbox">
+                                                            <input type="checkbox" onchange="gatePassDeductionPeriodContent()"
+                                                                class="custom-control-input" name="gatePassDeduction"
+                                                                id="gatePassDeductionBtn" value="1"
+                                                                {{ $gatePassData != null && $gatePassData->absent_is != 0 ? 'checked' : '' }}>
+                                                            <span class="custom-control-label"></span>
+                                                            <label class="form-label mx-1">Mark Absent</label>
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-6 d-none" id="gatePassDeductionPeriodContent">
+                                                        <div class="row">
+                                                            <div class="text-end">
+                                                                <select style="width: 5rem; height:1.5rem" id="gatePasSelectAbsent"
+                                                                    name="gatePasSelectAbsent">
+                                                                    <option value="0"
+                                                                        {{ $gatePassData != null && $gatePassData->absent_is == 0 ? 'selected' : '' }}>
+                                                                        Select</option>
+                                                                    <option value="1"
+                                                                        {{ $gatePassData != null && $gatePassData->absent_is == 1 ? 'selected' : '' }}>
+                                                                        Half Day</option>
+                                                                    <option value="2"
+                                                                        {{ $gatePassData != null && $gatePassData->absent_is == 2 ? 'selected' : '' }}>
+                                                                        Full Day</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <script>
+                                                    function gatePassDeductionPeriodContent() {
+                                                        var gatePassDeductionBtn = document.getElementById('gatePassDeductionBtn');
+                                                        var gatePassDeductionPeriodContent = document.getElementById('gatePassDeductionPeriodContent');
+
+                                                        // alert('hello');
+                                                        if (gatePassDeductionBtn.checked == true) {
+                                                            gatePassDeductionPeriodContent.classList.remove('d-none');
+                                                        } else {
+                                                            gatePassDeductionPeriodContent.classList.add('d-none');
+                                                        }
+                                                    }
+                                                </script>
                                             </div>
+
                                         </div>
                                     </div>
-                                </div>
 
-                                <script>
-                                    function gatePassDeductionPeriodContent() {
-                                        var gatePassDeductionBtn = document.getElementById('gatePassDeductionBtn');
-                                        var gatePassDeductionPeriodContent = document.getElementById('gatePassDeductionPeriodContent');
+                                    <script>
+                                        function gatePassContent() {
+                                            var gatePassBtn = document.getElementById('gatePassBtn');
+                                            var gatePassContent = document.getElementById('gatePassContent');
+                                            var gatePassContentCheckbox = gatePassContent.querySelectorAll('[type="checkbox"]');
+                                            var gatePassContentSelect = gatePassContent.querySelectorAll('select');
+                                            var gatePassContentInput = gatePassContent.querySelectorAll('[type="number"]');
 
-                                        // alert('hello');
-                                        if (gatePassDeductionBtn.checked == true) {
-                                            gatePassDeductionPeriodContent.classList.remove('d-none');
-                                        } else {
-                                            gatePassDeductionPeriodContent.classList.add('d-none');
+                                            // console.log(breakContentcheckboxes);
+                                            if (gatePassBtn.checked == true) {
+                                                gatePassenableFields(gatePassContentCheckbox);
+                                                gatePassenableFields(gatePassContentSelect);
+                                                gatePassenableFields(gatePassContentInput);
+                                            } else {
+                                                gatePassEmpty(gatePassContentCheckbox);
+                                                gatePassdisableFields(gatePassContentCheckbox);
+                                                gatePassUnSelect(gatePassContentSelect);
+                                                gatePassdisableFields(gatePassContentSelect);
+                                                gatePassdisableFields(gatePassContentInput);
+                                            }
+
+                                            gatePassOccurenceContent();
+                                            gatePassDeductionPeriodContent();
+
+                                            var switchBtn = gatePassBtn.checked;
+                                            $.ajax({
+                                                url: "{{ url('admin/settings/attendance/automation/set') }}",
+                                                type: "POST",
+                                                data: {
+                                                    gatePassSwitch: switchBtn,
+                                                    _token: '{{ csrf_token() }}'
+                                                },
+                                                dataType: 'json',
+                                                success: function(result) {
+                                                    console.log(result);
+
+                                                }
+                                            });
                                         }
-                                    }
-                                </script>
+
+                                        function gatePassUnSelect(elements) {
+                                            for (var i = 0; i < elements.length; i++) {
+                                                elements[i].selectedIndex = 0;
+                                            }
+                                        }
+
+                                        function gatePassenableFields(elements) {
+                                            elements.forEach(element => {
+                                                element.disabled = false;
+                                            });
+                                        }
+
+                                        function gatePassdisableFields(elements) {
+                                            elements.forEach(element => {
+                                                element.disabled = true;
+                                            });
+                                        }
+
+                                        function gatePassEmpty(element) {
+                                            element.forEach(element => {
+                                                element.checked = false;
+                                            });
+                                        }
+                                        gatePassContent();
+                                    </script>
+
+                                </div>
                             </div>
 
+                            <script>
+                                function formatTime(input) {
+                                    const value = input.value.replace(/\D/g, ''); // Remove non-numeric characters
+                                    if (value.length > 4) {
+                                        input.value = value.substring(0, 4);
+                                    }
+                                    if (value.length === 3) {
+                                        input.value = `${value.substring(0, 2)}:${value.substring(2)}`;
+                                    } else if (value.length >= 2) {
+                                        input.value = `${value.substring(0, 2)}:${value.substring(2, 4)}`;
+                                    }
+                                    console.log(input.value);
+                                }
+                            </script>
+
+                            <div class="col-12">
+                                <div class="d-flex">
+                                    <a href="" class="btn btn-danger ms-auto">Cancel</a>
+                                    <button type="submit" class="btn btn-md btn-primary mx-5">Save and Apply</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <script>
-                        function gatePassContent() {
-                            var gatePassBtn = document.getElementById('gatePassBtn');
-                            var gatePassContent = document.getElementById('gatePassContent');
-                            var gatePassContentCheckbox = gatePassContent.querySelectorAll('[type="checkbox"]');
-                            var gatePassContentSelect = gatePassContent.querySelectorAll('select');
-                            var gatePassContentInput = gatePassContent.querySelectorAll('[type="number"]');
-
-                            // console.log(breakContentcheckboxes);
-                            if (gatePassBtn.checked == true) {
-                                gatePassenableFields(gatePassContentCheckbox);
-                                gatePassenableFields(gatePassContentSelect);
-                                gatePassenableFields(gatePassContentInput);
-                            } else {
-                                gatePassEmpty(gatePassContentCheckbox);
-                                gatePassdisableFields(gatePassContentCheckbox);
-                                gatePassUnSelect(gatePassContentSelect);
-                                gatePassdisableFields(gatePassContentSelect);
-                                gatePassdisableFields(gatePassContentInput);
-                            }
-
-                            gatePassOccurenceContent();
-                            gatePassDeductionPeriodContent();
-
-                            var switchBtn = gatePassBtn.checked;
-                            $.ajax({
-                                url: "{{ url('admin/settings/attendance/automation/set') }}",
-                                type: "POST",
-                                data: {
-                                    gatePassSwitch: switchBtn,
-                                    _token: '{{ csrf_token() }}'
-                                },
-                                dataType: 'json',
-                                success: function(result) {
-                                    console.log(result);
-
-                                }
-                            });
-                        }
-
-                        function gatePassUnSelect(elements) {
-                            for (var i = 0; i < elements.length; i++) {
-                                elements[i].selectedIndex = 0;
-                            }
-                        }
-
-                        function gatePassenableFields(elements) {
-                            elements.forEach(element => {
-                                element.disabled = false;
-                            });
-                        }
-
-                        function gatePassdisableFields(elements) {
-                            elements.forEach(element => {
-                                element.disabled = true;
-                            });
-                        }
-
-                        function gatePassEmpty(element) {
-                            element.forEach(element => {
-                                element.checked = false;
-                            });
-                        }
-                        gatePassContent();
-                    </script>
-
                 </div>
             </div>
-
-            <script>
-                function formatTime(input) {
-                    const value = input.value.replace(/\D/g, ''); // Remove non-numeric characters
-                    if (value.length > 4) {
-                        input.value = value.substring(0, 4);
-                    }
-                    if (value.length === 3) {
-                        input.value = `${value.substring(0, 2)}:${value.substring(2)}`;
-                    } else if (value.length >= 2) {
-                        input.value = `${value.substring(0, 2)}:${value.substring(2, 4)}`;
-                    }
-                    console.log(input.value);
-                }
-            </script>
-
-            <div class="col-12">
-                <div class="d-flex">
-                    <a href="" class="btn btn-danger ms-auto">Cancel</a>
-                    <button type="submit" class="btn btn-md btn-primary mx-5">Save and Apply</button>
-                </div>
-            </div>
-        </div>
-
-    </form>
+                    
+            {{-- < --}}
+        </form>
 @endsection

@@ -226,6 +226,7 @@ class EmployeeController extends Controller
             'emp_pin_code' => $request->update_pincode,
             'emp_address' => $request->update_address,
             'emp_shift_type' => $request->update_shift_type,
+            'emp_rotational_shift_type_item' => $request->update_rotational_type ? $request->update_rotational_type : '0',
             'branch_id' => $request->update_branch,
             'department_id' => $request->update_department,
             'designation_id' => $request->update_designation,
@@ -293,10 +294,14 @@ class EmployeeController extends Controller
     public function allEmployee(Request $request)
     {
        
-        $days = EmployeePersonalDetail::join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+        $days = EmployeePersonalDetail::
+        // join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+        //     ->
+            join('policy_attendance_shift_settings', 'policy_attendance_shift_settings.id', '=', 'employee_personal_details.emp_shift_type')
             ->where('employee_personal_details.business_id', Session::get('business_id'))
             // ->where('branch_list.business_id', Session::get('business_id'))
             ->where('employee_personal_details.emp_id', $request->employee_id)
+            ->select('employee_personal_details.*', 'policy_attendance_shift_settings.shift_type')
             ->get();
         return response()->json(['get' => $days]);
     }

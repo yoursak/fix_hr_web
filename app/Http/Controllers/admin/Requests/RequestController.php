@@ -28,21 +28,74 @@ use Session;
 
 class RequestController extends Controller
 {
-    // gatepass home page
+
     public function gatepass()
     {
-        $accessPermission = Central_unit::AccessPermission();
-        $moduleName = $accessPermission[0];
-        $permissions = $accessPermission[1];
-        $going_through = DB::table('static_going_through_type')->get();
-        $DATA = RequestGatepassList::join('employee_personal_details', 'request_gatepass_list.emp_id', '=', 'employee_personal_details.emp_id')
+        // $staticLeaveType = $item = DB::table('employee_personal_details')
+        $staticLeaveType = DB::table('employee_personal_details')
+            ->join('attendance_list', 'employee_personal_details.emp_id', '=', 'attendance_list.emp_id')
+            ->where('attendance_list.punch_date', '!=', date('Y-m-d'))
+            ->select('employee_personal_details.emp_id')
+            ->get();
+
+        $TodayPresent = AttendanceList::where('business_id', Session::get('business_id'))
+            ->where('punch_date', '=', now()->toDateString())
+            ->get();
+
+        $PresetCount = count($TodayPresent);
+        $leaveCategory = DB::table('policy_setting_leave_category')
+            ->where('business_id', Session::get('business_id'))
+            ->get();
+        // dd($leaveCategory);
+        $shiftType = DB::table('static_leave_shift_type')->get();
+        $leaveType = DB::table('static_request_leave_type')->get();
+        // $DATA = DB::table('request_gatepass_list')
+        //     // ->join('employee_personal_details', 'request_gatepass_list.emp_id', '=', 'employee_personal_details.emp_id')
+        //     // ->join('policy_setting_leave_category', 'policy_setting_leave_category.id', '=', 'request_gatepass_list.leave_category')
+        //     // ->join('static_request_leave_type', 'static_request_leave_type.id', '=', 'request_gatepass_list.leave_type')
+        //     // ->where('request_gatepass_list.business_id', Session::get('business_id'))
+        //     // ->select('request_gatepass_list.*', 'static_request_leave_type.leave_day', 'policy_setting_leave_category.category_name', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.designation_id', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname')
+        //     ->orderBy('request_gatepass_list.id', 'desc')
+        //     ->get();
+            $DATA = RequestGatepassList::join('employee_personal_details', 'request_gatepass_list.emp_id', '=', 'employee_personal_details.emp_id')
             ->where('request_gatepass_list.business_id', Session::get('business_id'))
             ->select('request_gatepass_list.*', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.designation_id', 'employee_personal_details.emp_mobile_number')
             ->orderBy('request_gatepass_list.id', 'DESC')
             ->get();
-        $root = compact('moduleName', 'permissions', 'DATA', 'going_through');
+        // dd($DATA);
+        $accessPermission = Central_unit::AccessPermission();
+        $moduleName = $accessPermission[0];
+        $permissions = $accessPermission[1];
+
+        // processCycle Seq. Parallel
+        $checkApprovalCycleType = RulesManagement::ApprovalGetDetails(4)[1];
+        $loginRoleID = RulesManagement::PassBy()[3];
+        $loginRoleBID = RulesManagement::PassBy()[1];
+        $loginEmpID = RulesManagement::PassBy()[2];
+
+        $going_through = DB::table('static_going_through_type')->get();
+
+
+        // current_RoleID
+        // dd($checkApprovalCycleType->cycle_type);
+        $root = compact('moduleName', 'going_through', 'permissions', 'checkApprovalCycleType', 'loginRoleBID', 'loginRoleID', 'loginEmpID', 'DATA', 'PresetCount', 'leaveCategory', 'leaveType', 'shiftType');
         return view('admin.request.gatepass', $root);
     }
+    // gatepass home page
+    // public function gatepass()
+    // {
+    //     $accessPermission = Central_unit::AccessPermission();
+    //     $moduleName = $accessPermission[0];
+    //     $permissions = $accessPermission[1];
+    //     $going_through = DB::table('static_going_through_type')->get();
+    //     $DATA = RequestGatepassList::join('employee_personal_details', 'request_gatepass_list.emp_id', '=', 'employee_personal_details.emp_id')
+    //         ->where('request_gatepass_list.business_id', Session::get('business_id'))
+    //         ->select('request_gatepass_list.*', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.designation_id', 'employee_personal_details.emp_mobile_number')
+    //         ->orderBy('request_gatepass_list.id', 'DESC')
+    //         ->get();
+    //     $root = compact('moduleName', 'permissions', 'DATA', 'going_through');
+    //     return view('admin.request.gatepass', $root);
+    // }
 
     // delete gatepass detail
     public function DestroyGatepass(Request $request)
@@ -54,27 +107,182 @@ class RequestController extends Controller
         return back();
     }
 
+    
     // gatepas approve
     public function ApproveGatepass(Request $request)
     {
+        // cyclic dynamic data storing
         // dd($request->all());
-        if ($request->has('id') && $request->has('in_time') && $request->has('approve')) {
-            $gatepass = RequestGatepassList::where('id', $request->id)
-                ->where('business_id', Session::get('business_id'))
-                ->update(['out_time' => $request->out_time, 'in_time' => $request->in_time, 'status' => $request->approve]);
-            Alert::success('Your Gatepass Request has been Approve Successfully');
-            return back();
-        } elseif ($request->has('id') && $request->has('in_time') && $request->has('submit') && $request->has('remark')) {
-            $gatepass = RequestGatepassList::where('id', $request->id)
-                ->where('business_id', Session::get('business_id'))
-                ->update(['status' => $request->submit, 'remark' => $request->remark]);
-            Alert::success('Your Gatepass Request has been Decline Successfully');
-            return back();
-        } else {
-            Alert::error('Not Updated', 'Your Gatepass Detail Updation is Fail');
-            return back();
+        $Days = '';
+        $status = 0;
+        $PID = $request->id;
+        $BID = RulesManagement::PassBy()[1];
+        $FindRoleID = RulesManagement::PassBy()[3];
+        $EmpID = RulesManagement::PassBy()[2];
+        // dd($FindRoleID);
+        // if ($request->days != null) {
+        //     $Days = $request->days;
+        // } else {
+        //     $Days = $request->days1;
+        // }
+        
+        $Remark = $request->remark;
+        if ($request->approve == '1') {
+            $status = 1;
         }
+        if ($request->decline == '2') {
+            $status = 2;
+        }
+        $ApprovalTypeID = 4; //Gatepass processType
+        $gatepass = RequestGatepassList::where('id', $request->id)
+        ->where('business_id', Session::get('business_id'))
+        ->update(['out_time' => $request->out_time, 'in_time' => $request->in_time]);
+        // $gatepass = RequestLeaveList::where('id', $request->id)
+        //     ->where('business_id', $BID)
+        //     ->update(['leave_type' => $request->leave_type, 'from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $Days]);
+        $ApprovalManagement = DB::table('approval_management_cycle')
+        ->where('business_id', $BID)
+        ->where('approval_type_id', $ApprovalTypeID)
+        ->first();
+
+        // dd($request->all(), $status, $ApprovalManagement, $sd);
+        if ($ApprovalManagement->cycle_type == 1) { //sequential
+            // next forward
+            $sd = DB::table('approval_management_cycle')
+                ->where('business_id', $BID)
+                ->where('approval_type_id', $ApprovalTypeID)
+                ->whereJsonContains('role_id', (string) $FindRoleID)
+                ->select('role_id')
+                ->first();
+            $value = DB::table('request_gatepass_list')->where('business_id', $BID)->where('id', $PID)->first();
+            if ($value->forward_by_role_id == $value->final_level_role_id) {
+                DB::table('request_gatepass_list')->where('business_id', $BID)
+                    ->where('id', $PID)->update([
+                            'process_complete' => 1,
+                            'final_status' => RulesManagement::FinalRequestStatusSubmitFilterValue($PID, 4)[0] //final status submit
+                        ]);
+            }
+            if ($sd) {
+                $roleIds = json_decode($sd->role_id, true); // Decode the JSON array
+                $currentIndex = array_search($FindRoleID, $roleIds); // Find the current index of forward_by_role_id
+
+                if ($currentIndex !== false) {
+                    $nextIndex = $currentIndex + 1;
+                    $prevIndex = $currentIndex - 1;
+
+                    // Check if the next index is within the bounds of the array
+                    // if (isset($roleIds[$nextIndex])) {
+                    $nextRoleId = isset($roleIds[$nextIndex]) ? $roleIds[$nextIndex] : -1; //sensitive case if last next end then recall 0
+                    $prevRoleId = isset($roleIds[$prevIndex]) ? $roleIds[$prevIndex] : 0; //prev 1st start recall 0
+
+                    // dd($request->all(),$FindRoleID,$nextRoleId);
+                    // Update the database for the current index
+                    DB::table('request_gatepass_list')
+                        ->where('business_id', $BID)
+                        ->where('id', $PID)
+                        ->update([
+                            'forward_by_role_id' => $nextRoleId,
+                            'forward_by_status' => $status,
+                        ]);
+
+                    // Update the approval status for the current index
+                    //Sequential
+                    DB::table('approval_status_list')
+                        ->where('approval_type_id', $ApprovalTypeID)
+                        ->where('role_id', $FindRoleID)
+                        ->where('business_id', $BID)
+                        ->where('all_request_id', $PID)
+                        ->insert([
+                            'applied_cycle_type' => 1,
+                            'business_id' => $BID,
+                            'approval_type_id' => 2,
+                            'all_request_id' => $PID,
+                            'role_id' => $FindRoleID,
+                            'emp_id' => $EmpID,
+                            'remarks' => ($Remark != null) ? $Remark : '',
+                            'clicked' => 1,
+                            'status' => $status,
+                            'prev_role_id' => $prevRoleId,
+                            'current_role_id' => $FindRoleID,
+                            'next_role_id' => $nextRoleId,
+                        ]);
+                    Alert::success('', 'Status is Updated');
+                }
+            }
+        }
+        // dd($ApprovalManagement);
+
+        // default case
+        if ($ApprovalManagement->cycle_type == 2) { // paraller
+            DB::table('request_gatepass_list')->where('business_id', $BID)
+            ->where('id', $PID)->update([
+                'process_complete' => 1,
+                'final_status' => $status,
+            ]);
+            $loadCheck = DB::table('approval_status_list')
+            ->where('approval_type_id', $ApprovalTypeID)
+            ->where('business_id', $BID)
+            ->where('all_request_id', $PID)->first();
+            // dd($loadCheck);
+
+            if ($loadCheck) {
+                // DB::table('approval_status_list')
+                //     ->where('business_id', $BID)
+                //     ->where('approval_type_id', $ApprovalTypeID)
+                //     ->where('all_request_id', $PID)
+                //     ->update([
+                //         'business_id' => $BID,
+                // 'applied_cycle_type' => 2,
+                //         'approval_type_id' => $ApprovalTypeID,
+                //         'all_request_id' => $PID,
+                //         'role_id' => $FindRoleID,
+                //         'emp_id' => $EmpID,
+                //         'remarks' => $Remark,
+                //         'status' => $status,
+                //     ]);
+            } else {
+                //Parallel
+                DB::table('approval_status_list')
+                    ->where('business_id', $BID)
+                    ->where('approval_type_id', $ApprovalTypeID)
+                    ->where('all_request_id', $PID)
+                    ->insert([
+                        'applied_cycle_type' => 2,
+                        'business_id' => $BID,
+                        'approval_type_id' => $ApprovalTypeID,
+                        'all_request_id' => $PID,
+                        'role_id' => $FindRoleID,
+                        'emp_id' => $EmpID,
+                        'clicked' => 1,
+                        'remarks' => $Remark,
+                        'status' => $status,
+                    ]);
+            }
+            Alert::success('', 'Status is updated');
+        }
+        return redirect()->back();
     }
+    // public function ApproveGatepass(Request $request)
+    // {
+    //     // dd($request->all());
+    //     if ($request->has('id') && $request->has('in_time') && $request->has('approve')) {
+    //         $gatepass = RequestGatepassList::where('id', $request->id)
+    //             ->where('business_id', Session::get('business_id'))
+    //             ->update(['out_time' => $request->out_time, 'in_time' => $request->in_time, 'status' => $request->approve]);
+    //         Alert::success('Your Gatepass Request has been Approve Successfully');
+    //         return back();
+    //     } elseif ($request->has('id') && $request->has('in_time') && $request->has('submit') && $request->has('remark')) {
+    //         $gatepass = RequestGatepassList::where('id', $request->id)
+    //             ->where('business_id', Session::get('business_id'))
+    //             ->update(['status' => $request->submit, 'remark' => $request->remark]);
+    //         Alert::success('Your Gatepass Request has been Decline Successfully');
+    //         return back();
+    //     } else {
+    //         Alert::error('Not Updated', 'Your Gatepass Detail Updation is Fail');
+    //         return back();
+    //     }
+    // }
+    
 
     public function leaves()
     {
@@ -138,6 +346,7 @@ class RequestController extends Controller
             ->first();
         return response()->json(['get' => $data]);
     }
+
     public function ApproveLeave(Request $request)
     {
         // dd($request->all());

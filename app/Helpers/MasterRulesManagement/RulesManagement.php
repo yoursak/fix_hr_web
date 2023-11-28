@@ -703,7 +703,7 @@ class RulesManagement
         self::$currentDay = $now->day;
         self::$currentMonth = $now->month;
         self::$currentYear = $now->year;
-
+// dd($UserType);
         return [self::$Today, self::$currentDay, self::$currentMonth, self::$currentYear, self::$UserType, self::$BusinessID, self::$BranchID, self::$LoginRole, self::$LoginEmpID, self::$LoginModelID, self::$LoginName, self::$LoginEmail, self::$LoginBusinessImage];
     }
 

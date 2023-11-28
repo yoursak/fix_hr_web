@@ -301,7 +301,7 @@ Attendance | Create Shift
                             <li class=""><a href="#tab1" class="active" data-bs-toggle="tab">Attendance Approval
                                 </a></li>
                             <li><a href="#tab2" data-bs-toggle="tab">Leave Approval</a></li>
-                            <li><a href="#tab3" data-bs-toggle="tab">Misspunch Approval</a></li>
+                            <li><a href="#tab3" data-bs-toggle="tab">Mispunch Approval</a></li>
                             <li><a href="#tab4" data-bs-toggle="tab">Gatepass Approval</a></li>
                         </ul>
                     </div>
@@ -322,6 +322,8 @@ Attendance | Create Shift
 
                         </div>
                         <div class="tab-pane  " id="tab4">
+                            {{-- <x-approval-management.misspunch-approval></x-approval-management.mispunch-approval> --}}
+                                <x-approval-management.gatepass-approval></x-approval-management.gatepass-approval>
 
                         </div>
                     </div>
@@ -489,13 +491,7 @@ Attendance | Create Shift
                                             </select>
                                         </div>
                                     </div>
-
-
-
-
                                 </div>
-
-
                             </div>
                         </div>
                     </div>

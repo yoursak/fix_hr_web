@@ -411,7 +411,7 @@
                 </div>
                 <form action="{{ route('updateCamera') }}" method="post">
                     @csrf
-                    <input type="text" id="upCaAcId" name="id" class="form-control" value="">
+                    <input type="text" id="upCaAcId" name="id" class="form-control" value="" hidden>
                     <div class="modal-body">
                         <div class="row mx-2">
                             <div class="my-3">

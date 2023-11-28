@@ -76,6 +76,10 @@
                 background-clip: content-box;
                 box-shadow: 0 0 15px -2px #8c8c96;
             }
+
+            tr {
+                line-height: 1.5;
+            }
         </style>
     @endsection
 
@@ -288,7 +292,7 @@
                                             {{-- <th class="border-bottom-0">Atten-Mode</th> --}}
                                             <th class="border-bottom-0">Punch Out</th>
                                             <th class="border-bottom-0">Working Hour</th>
-                                            <th class="border-bottom-0">Late By</th>
+                                            {{-- <th class="border-bottom-0">Late By</th> --}}
                                             <th class="border-bottom-0">Working From</th>
                                             <th class="border-bottom-0">Attendance</th>
                                             <th class="border-bottom-0">Action
@@ -325,11 +329,13 @@
                                                 $timeDifference = $centralUnit->CalculateTimeDifference($inTime, $outTime);
                                                 $resCode = $centralUnit->getEmpAttSumm(['emp_id' => $item->emp_id, 'punch_date' => date('Y-m-d', strtotime($item->punch_date))]);
                                                 // dd($resCode);
-                                                $lateBy = $ruleMange->CalculateLateBy($shiftStart, $inTime, $grachTimeHr, $grachTimeMin);
+                                                // $lateBy = $ruleMange->CalculateLateBy($shiftStart, $inTime, $grachTimeHr, $grachTimeMin);
                                                 $hours = str_pad($timeDifference->h, 2, '0', STR_PAD_LEFT);
                                                 $minutes = str_pad($timeDifference->i, 2, '0', STR_PAD_LEFT);
                                                 $seconds = str_pad($timeDifference->s, 2, '0', STR_PAD_LEFT);
                                                 $status = $resCode[0];
+                                                $lateby = $resCode[12];
+                                                $earlyExitBy = $resCode[13];
                                                 $occurance = $resCode[14];
                                                 // dd($resCode);
                                             @endphp
@@ -381,7 +387,7 @@
                                                             10 => 'Paid Leave',
                                                             11 => 'Unpaid Leave',
                                                         ];
-                                                        
+
                                                         $badgeColors = [
                                                             1 => 'present-status-badge',
                                                             2 => 'absent-status-badge',
@@ -411,7 +417,7 @@
                                                         // dd($occurance);
                                                     @endphp
 
-                                                    @if ($status == 3)
+                                                    @if ($status == 3 || $status == 12)
                                                         @if ($lateOccurrenceIs != 0 && $earlyOccurrenceIs != 0)
                                                             @if ($lateOccurrenceIs == 1)
                                                                 @if ($statusCounts[3] >= $lateOccurrence)
@@ -452,6 +458,10 @@
                                                                     @php $statusPrinted = true; @endphp
                                                                 @endif
                                                             @endif
+                                                        @elseif($status == 12)
+                                                            <span id="statusLabelView"
+                                                                class="{{ $badgeColors[12] }}">{{ $statusLabels[12] }}</span>
+                                                            @php $statusPrinted = true; @endphp
                                                         @else
                                                             <span id="statusLabelView"
                                                                 class="{{ $badgeColors[3] }}">{{ $statusLabels[3] }}</span>
@@ -468,10 +478,16 @@
                                                     <?php $statusCounts[$status]++; ?>
 
                                                     {{-- <span id="statusLabelView"
-                                                        class="badge badge-{{ $badgeColors[$status] }}-light">{{ $statusLabels[$status] }}</span> --}}
+                                                        class="present-status-badge">Present</span> --}}
                                                 </td>
                                                 <td>{{ $item->punch_date }}</td>
-                                                <td><?= $ruleMange->Convert24To12($item->punch_in_time) ?> </td>
+                                                <td><?= $ruleMange->Convert24To12($item->punch_in_time) ?>
+                                                    @if ($lateby > 0)
+                                                        <br><span class="late-status fs-11 fw-bolder">
+                                                            {{ $lateby > 0 ? 'Late By: ' . (intval($lateby / 60) ? intval($lateby / 60) . ' Hr ' : '') . (intval($lateby % 60) ? intval($lateby % 60) . ' Min' : '') : '' }}
+                                                        </span>
+                                                    @endif
+                                                </td>
                                                 {{-- <td>
                                                     @if ($item->marked_in_mode == 1)
                                                         <span class="">QR Code</span>
@@ -492,12 +508,18 @@
                                                         <span class=""> | Selfie</span>
                                                     @endif
                                                 </td> --}}
-                                                <td><?= $item->emp_today_current_status == '2' ? $ruleMange->Convert24To12($item->punch_out_time) : '' ?>
+                                                <td>
+                                                    <?= $item->emp_today_current_status == '2' ? $ruleMange->Convert24To12($item->punch_out_time) : '' ?>
+                                                    @if ($earlyExitBy > 0)
+                                                        <br><span class="late-status fs-11 fw-bolder">
+                                                            {{ $earlyExitBy > 0 ? 'Early Exit By: ' . (intval($earlyExitBy / 60) ? intval($earlyExitBy / 60) . ' Hr ' : '') . (intval($earlyExitBy % 60) ? intval($earlyExitBy % 60) . ' Min' : '') : '' }}
+                                                        </span>
+                                                    @endif
                                                 </td>
                                                 <td><?= $item->emp_today_current_status == '2' ? ($item->total_working_hour !== null && $item->total_working_hour != 'undefined' ? date('H:i', strtotime($item->total_working_hour)) . ' Min.' : '') : '' ?>
                                                 </td>
 
-                                                <td>{{ $lateBy }}</td>
+                                                {{-- <td>{{ $lateBy }}</td> --}}
                                                 <td>{{ $item->method_name }}</td>
                                                 <td>
                                                     @if ($item->attendance_status == 0)
@@ -743,8 +765,7 @@
                             </div>
                         </div>
                         <div class="modal-footer PresentModalFooter">
-                            <a href="javascript:void(0);" class="btn btn-danger"
-                                data-bs-dismiss="modal">close</a>
+                            <a href="javascript:void(0);" class="btn btn-danger" data-bs-dismiss="modal">close</a>
                             <button href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-dismiss="modal" type="submit">Approve</button>
                         </div>
@@ -873,18 +894,139 @@
                         },
                         success: function(data) {
                             var tbody = $('.my_body');
+                            var empData = data['resData'];
+                            var allStatusCount = data['allStatusCount'];
+                            var employeeCount = data['empCount'];
+                            var emptyArray = [employeeCount,0,0,0,0,0,0,0,0,0,0,0,0];
                             tbody.empty();
                             console.log(data);
                             $.each(data, function(index, employee) {
-                                console.log("employee ", employee);
-
+                                // console.log("employee ", employee);
+                                // var allStatusCount = empData[el.emp_id][14];
                                 if (employee !== null && Array.isArray(employee) && employee
                                     .length != []) {
-                                    console.log("ja raha hai");
+                                    // console.log("ja raha hai");
                                     let i = 1;
+                                    
 
                                     employee.forEach(el => {
-                                        // console.log("employee aa", el);
+                                        var occurance = empData[el.emp_id][14];
+                                        //Early Exit Rule
+                                        var earlyOccurrenceIs = occurance[0];
+                                        var earlyOccurrence = occurance[1];
+                                        var earlyOccurrencePenalty = occurance[2];
+                                        //Late Rule
+                                        var lateOccurrenceIs = occurance[3];
+                                        var lateOccurrence = occurance[4];
+                                        var lateOccurrencePenalty = occurance[5];
+                                        var totalLateTime = empData[el.emp_id][12];
+                                        var totalEarlyExitTime = empData[el.emp_id][
+                                            13
+                                        ];
+                                        var statusPrinted = false;
+
+                                        if (empData[el.emp_id][0] === 3 || empData[
+                                                el.emp_id][0] === 12) {
+                                            if (lateOccurrenceIs !== 0 &&
+                                                earlyOccurrenceIs !== 0) {
+                                                if (lateOccurrenceIs === 1) {
+                                                    if (allStatusCount[el.emp_id][
+                                                        3] >= lateOccurrence) {
+                                                        if (lateOccurrencePenalty ===
+                                                            1) {
+                                                                emptyArray[8]++;
+                                                            statusLabelView =
+                                                                '<span id="statusLabelView" class="halfday-status-badge">Halfday</span>';
+                                                        } else {
+                                                            emptyArray[2]++;
+                                                            statusLabelView =
+                                                                '<span id="statusLabelView" class="absent-status-badge">Absent</span>';
+                                                        }
+                                                        statusPrinted = true;
+                                                    }
+                                                } else if (lateOccurrenceIs === 2) {
+                                                    if (totalLateTime >=
+                                                        lateOccurrence) {
+                                                        if (lateOccurrencePenalty ===
+                                                            1) {
+                                                                emptyArray[8]++;
+                                                            statusLabelView =
+                                                                '<span id="statusLabelView" class="halfday-status-badge">Halfday</span>';
+                                                        } else {
+                                                            emptyArray[2]++;
+                                                            statusLabelView =
+                                                                '<span id="statusLabelView" class="absent-status-badge">Absent</span>';
+                                                        }
+                                                        statusPrinted = true;
+                                                    }
+                                                }
+
+                                                if (earlyOccurrenceIs === 1 && !
+                                                    statusPrinted) {
+                                                    if (allStatusCount[el.emp_id][
+                                                            12] >=
+                                                        earlyOccurrence) {
+                                                        if (earlyOccurrencePenalty ===
+                                                            1) {
+                                                                emptyArray[8]++;
+                                                            statusLabelView =
+                                                                '<span id="statusLabelView" class="halfday-status-badge">Halfday</span>';
+                                                        } else {
+                                                            emptyArray[2]++;
+                                                            statusLabelView =
+                                                                '<span id="statusLabelView" class="absent-status-badge">Absent</span>';
+                                                        }
+                                                        statusPrinted = true;
+                                                    }
+                                                } else if (earlyOccurrenceIs ===
+                                                    2 && !statusPrinted) {
+                                                    if (totalEarlyExitTime >=
+                                                        earlyOccurrence) {
+                                                        if (earlyOccurrencePenalty ===
+                                                            1) {
+                                                                emptyArray[8]++;
+                                                            statusLabelView =
+                                                                '<span id="statusLabelView" class="halfday-status-badge">Halfday</span>';
+                                                        } else {
+                                                            emptyArray[2]++;
+                                                            statusLabelView =
+                                                                '<span id="statusLabelView" class="absent-status-badge">Absent</span>';
+                                                        }
+                                                        statusPrinted = true;
+                                                    }
+                                                }
+                                            } else if (empData[el.emp_id][0] ===
+                                                12) {
+                                                    emptyArray[12]++;
+                                                statusLabelView =
+                                                    '<span id="statusLabelView" class="present-status-badge">Present</span>';
+                                            } else {
+                                                emptyArray[3]++;
+                                                statusLabelView =
+                                                    '<span id="statusLabelView" class="present-status-badge">Present</span>';
+                                            }
+                                        }
+
+                                        // Additional condition based on the new requirement
+                                        if (!statusPrinted) {
+                                            statusLabelView = (
+                                                empData[el.emp_id][0] === 8 ?
+                                                '<span id="statusLabelView" class="halfday-status-badge">Halfday</span>' :
+                                                (empData[el.emp_id][0] === 2 ?
+                                                    '<span id="statusLabelView" class="absent-status-badge">Absent</span>' :
+                                                    (empData[el.emp_id][0] ===
+                                                        4 ?
+                                                        '<span id="statusLabelView" class="mispunch-status-badge">Mispunch</span>' :
+                                                        '<span id="statusLabelView" class="present-status-badge">Present</span>'
+                                                    ))
+                                            );
+                                            emptyArray[empData[el.emp_id][0]]++;
+                                        }
+
+                                        
+                                        console.log(emptyArray);
+
+
                                         $('#myAttendanceCheck' + el.id).val(el
                                             .attendance_status);
                                         var lateTime = calculateLateBy(el
@@ -908,15 +1050,30 @@
                                             </div>
                                         </div>` + '</td>' +
                                             '<td>' + el.emp_id + '</td>' +
-                                            '<td>' + '' + '</td>' +
+                                            '<td>' +
+                                                statusLabelView
+                                            +
+                                            '</td>' +
                                             '<td>' + el.punch_date + '</td>' +
                                             '<td>' + convert24To12(el
-                                                .punch_in_time) +
-                                            '</td>' +
+                                                .punch_in_time) + (empData[el
+                                                    .emp_id][
+                                                    12
+                                                ] > 0 ?
+                                                '<br><span class="late-status fs-11 fw-bolder">Late By:' +
+                                                parseInt(empData[el.emp_id][12] /
+                                                    60) + 'Hr ' + parseInt(empData[
+                                                    el.emp_id][12] % 60) +
+                                                'Min</span>' : '') + '</td>' +
                                             '<td>' + (el.emp_today_current_status ==
-                                                '2' ?
-                                                convert24To12(el.punch_out_time) :
-                                                '') +
+                                                '2' ? convert24To12(el
+                                                    .punch_out_time) : '') + (
+                                                empData[el.emp_id][13] > 0 ?
+                                                '<br><span class="late-status fs-11 fw-bolder">Early Exit By:' +
+                                                parseInt(empData[el.emp_id][13] /
+                                                    60) + 'Hr ' + parseInt(empData[
+                                                    el.emp_id][13] % 60) +
+                                                'Min</span>' : '') + '</td>' +
                                             '</td>' +
                                             '<td>' + ((el.total_working_hour !==
                                                     null &&
@@ -928,14 +1085,16 @@
                                                         0, 2).join(":")) + ' ' +
                                                 'Min.' : ''
                                             ) + '</td>' +
-                                            '<td>' + lateTime + '</td>' +
+                                            // '<td>' + lateTime + '</td>' +
                                             // '<td>' + el.shift_start + el.shift_end + el.grace_time_hr + el.grace_time_min+ '</td>' +
                                             '<td>' + el.method_name + '</td>' +
-                                            '<td>' + (el.attendance_status == 0 ?
-                                                `<span class="badge badge-danger">Pending</span>` :
-                                                (el.attendance_status == 1 ?
-                                                    `<span class="badge badge-success">Approved</span>` :
-                                                    '')) + '</td>' +
+                                            '<td>' + (empData[el.emp_id][0] === 4 ?
+                                                `<span class="badge badge-secondary">Mispunch</span>` :
+                                                (el.attendance_status == 0 ?
+                                                    `<span class="badge badge-danger">Pending</span>` :
+                                                    (el.attendance_status == 1 ?
+                                                        `<span class="badge badge-success">Approved</span>` :
+                                                        ''))) + '</td>' +
 
                                             '<td><div class="d-flex justify-content-end">'
                                         newRow += el.attendance_status != 1 ?

@@ -399,7 +399,7 @@
     </section>
     <!--end about area-->
     <!--start video area-->
-    {{-- <section id="video-area" class="bg-2">
+    <section id="video-area" class="bg-2">
         <div class="video-area-circle">
             <img class="circle1" src="{{ asset('assets/demo_file/new-assets/images/asset-8.png') }}" alt="">
             <img class="circle2" src="{{ asset('assets/demo_file/new-assets/images/asset-8.png') }}" alt="">
@@ -408,8 +408,8 @@
         <div class="video-cont d-table text-center">
             <div class="d-table-cell align-middle">
                 <div class="video-overlay"></div>
-                <a class="popup-video" href="https://www.youtube.com/watch?v=om4qTKMuPPs"><i
-                        class="icofont-ui-play"></i></a>
+                {{-- <a class="popup-video" href="https://www.youtube.com/watch?v=om4qTKMuPPs"><i
+                        class="icofont-ui-play"></i></a> --}}
             </div>
         </div>
         <div class="container">
@@ -485,7 +485,7 @@
                 <!--end counter single-->
             </div>
         </div>
-    </section> --}}
+    </section>
     <!--end video area-->
     <!--start awesome feature area-->
     <section id="awesome-feat-area" class="bg-2" data-scroll-index="1">
@@ -1145,7 +1145,8 @@
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
                                                 data-dismiss="modal">Close</button>
-                                            <a href="{{url('/login')}}" type="button" class="btn btn-primary">Login Now</a>
+                                            <a href="{{ url('/login') }}" type="button"
+                                                class="btn btn-primary">Login Now</a>
                                         </div>
                                     </div>
                                 </div>

@@ -1617,6 +1617,8 @@ class SettingController extends Controller
                     'occurance_hr' => isset($request->missPunchOccurenceHour) ? $splitedMissPunchOccurenceHour[0] : 0,
                     'occurance_min' => isset($request->missPunchOccurenceHour) ? $splitedMissPunchOccurenceHour[1] : 0,
                     'absent_is' => $request->missPunchSelectAbsent,
+                    'request_day' => $request->missPunchRequestDay ?? 0,
+                    'request_day_absent_is' => $request->missPunchDaySelectAbsent ?? 0,
                     'business_id' => Session::get('business_id'),
                 ]);
 
@@ -1630,6 +1632,8 @@ class SettingController extends Controller
                     'occurance_hr' => isset($request->missPunchOccurenceHour) ? $splitedMissPunchOccurenceHour[0] : 0,
                     'occurance_min' => isset($request->missPunchOccurenceHour) ? $splitedMissPunchOccurenceHour[1] : 0,
                     'absent_is' => $request->missPunchSelectAbsent,
+                    'request_day' => $request->missPunchRequestDay ?? 0,
+                    'request_day_absent_is' => $request->missPunchDaySelectAbsent ?? 0,
                 ]);
 
                 if ($updateMissPunchData) {

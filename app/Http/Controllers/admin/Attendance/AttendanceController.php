@@ -143,7 +143,7 @@ class AttendanceController extends Controller
 
         $byAttendanceCalculation = Central_unit::attendanceByEmpDetails($empId, $year, $month);
         $allStatusCount = Central_unit::attendanceCount($empId, $year, $month);
-        $getLeave = Central_unit::getEmpAttSumm(['emp_id' => $empId, 'punch_date' => date('Y-m-d')]);
+        $getLeave = Central_unit::getEmpAttSumm(['emp_id' => $empId, 'punch_date' => date($year.'-'.$month.'-'.'d')]);
         return response()->json([$byAttendanceCalculation,$allStatusCount,$getLeave]);
     }
 

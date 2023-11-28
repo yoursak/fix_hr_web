@@ -733,7 +733,7 @@
                                     <?php
                                     if ($checkApprovalCycleType == 1) {
                                         $current_status_particular_tb = DB::table('approval_status_list')
-                                            ->where('approval_type_id', 2)
+                                            ->where('approval_type_id', 3)
                                             ->where('applied_cycle_type', 1)
                                             ->where('emp_id', $loginEmpID)
                                             ->where('role_id', $loginRoleID)
@@ -743,7 +743,7 @@
                                     }
                                     if ($checkApprovalCycleType == 2) {
                                         $current_status_particular_tb = DB::table('approval_status_list')
-                                            ->where('approval_type_id', 2)
+                                            ->where('approval_type_id', 3)
                                             ->where('applied_cycle_type', 2)
                                             ->where('all_request_id', $item->id)
                                             ->first();

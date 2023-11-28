@@ -1,16 +1,14 @@
 @extends('admin.pagelayout.master')
-<script src="{{ asset('assets/js/cities.js?v=2.34') }}">
-</script>
+<script src="{{ asset('assets/js/cities.js?v=2.34') }}"></script>
 @section('title')
     Employee
 @endsection
 
 @section('js')
     <script src="{{ asset('assets/plugins/formwizard/jquery.smartWizard.js?v1.3') }}"></script>
-    <script src="{{ asset('assets/plugins/formwizard/fromwizard.js?v3.76') }}"></script>
+    <script src="{{ asset('assets/plugins/formwizard/fromwizard.js?v3.80') }}"></script>
     <script src="{{ asset('assets/plugins/fileupload/js/dropify.js') }}"></script>
     <script src="{{ asset('assets/js/filupload.js?v=10') }}"></script>
-    {{-- <script src=""></script> --}}
     <script>
         LoaderPackageDropify('load', 'Employee Bulk Upload Select Excel File');
     </script>
@@ -328,7 +326,9 @@
                                         <td><span class="mb-1 fs-14">{{ $item->emp_id }}</span></td>
                                         <td><span class="mb-1 fs-14">{{ $branch->branch_name ?? ' ' }}</span></td>
                                         <td><span class="mb-1 fs-14">{{ $depart->depart_name ?? '' }}</span></td>
-                                        <td><span class="mb-1 fs-14">{{ \Carbon\Carbon::parse($item->emp_date_of_joining)->format('d-m-Y')  }}</span></td>
+                                        <td><span
+                                                class="mb-1 fs-14">{{ \Carbon\Carbon::parse($item->emp_date_of_joining)->format('d-m-Y') }}</span>
+                                        </td>
                                         <td><span class="mb-1 fs-14">{{ $item->emp_mobile_number }}</span></td>
                                         <td>
                                             @if (in_array('Employee.Update', $permissions))
@@ -450,23 +450,6 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
-                                                {{-- <div class="custom-controls-stacked d-md-flex">
-                                                    <label class="custom-control custom-radio me-4">
-                                                        <input type="radio" class="custom-control-input"
-                                                            name="update_gender" value="1">
-                                                        <span class="custom-control-label">Male</span>
-                                                    </label>
-                                                    <label class="custom-control custom-radio me-4">
-                                                        <input type="radio" class="custom-control-input"
-                                                            name="update_gender" value="2">
-                                                        <span class="custom-control-label">Female</span>
-                                                    </label>
-                                                    <label class="custom-control custom-radio me-4">
-                                                        <input type="radio" class="custom-control-input"
-                                                            name="update_gender" value="3">
-                                                        <span class="custom-control-label">Other</span>
-                                                    </label>
-                                                </div> --}}
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label mb-0 mt-2">Marital Status</label>
@@ -574,15 +557,9 @@
                                                 <label class="form-label mb-0 mt-2">Address Line 1</label>
                                                 <textarea iid="address_sd" type="text" class="update_address_sddd form-control" placeholder="Address"
                                                     name="update_address" cols="30" rows="2" required></textarea>
-                                                {{-- <input id="address_sd" type="text"
-                                                    class="update_address_sddd form-control" placeholder="Address"
-                                                    name="address"> --}}
                                             </div>
-
                                         </div>
                                     </div>
-
-
                                 </div>
 
                                 <div id="step-12" class="" style="height: 448px">
@@ -615,22 +592,19 @@
                                                 </select>
                                             </div>
 
-                                            {{-- <div class="col-md-4">
+                                            <div class="col-md-4" id="select_rotational_div">
                                                 <label class="form-label mb-0 mt-2">Select Rotational Type</label>
-                                                <select name="update_shift_type" id="shift_type_sd" aria-label="Type"
-                                                    class="update_shifttype_sddd form-control custom-select"
+                                                <select name="update_rotational_type" id="roatational_type_id" aria-label="Type"
+                                                    class="update_roatational_type_sddd form-control custom-select"
                                                     data-placeholder="Select Type">
                                                     <option value="">Select Shift Type</option>
-                                                    @foreach ($shiftAttendance as $shiftset)
-                                                        <option value="{{ $shiftset->attendance_id }}">
-                                                            {{ $shiftset->shift_type_name }}</option>
-                                                    @endforeach
+
                                                 </select>
-                                            </div> --}}
+                                            </div>
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <p class="form-label">Branch</p>
+                                                    <label class="form-label mb-0 mt-2">Branch</label>
                                                     <select name="update_branch" id="country-dd2"
                                                         class="update_branchname_sddd form-control" required>
                                                         <option value="" class="">Select
@@ -645,36 +619,32 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <p class="form-label">Department</p>
-                                                    <div class="form-group mb-3">
-                                                        <select id="state-dd2" name="update_department"
-                                                            class="update_department_sddd form-control" required>
-                                                            <option value="" class="">
-                                                                Select Deparment Name</option>
-                                                            @foreach ($Department as $data)
-                                                                <option value="{{ $data->depart_id }}">
-                                                                    {{ $data->depart_name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
+                                                    <label class="form-label mb-0 mt-2">Department</label>
+                                                    <select id="state-dd2" name="update_department"
+                                                        class="update_department_sddd form-control" required>
+                                                        <option value="" class="">
+                                                            Select Deparment Name</option>
+                                                        @foreach ($Department as $data)
+                                                            <option value="{{ $data->depart_id }}">
+                                                                {{ $data->depart_name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <p class="form-label">Designation</p>
-                                                    <div class="form-group mb-3">
-                                                        <select id="desig-dd" name="update_designation"
-                                                            class="update_designationname_sddd form-control" required>
-                                                            <option value="">Select Designation Name</option>
-                                                            @foreach ($Designation as $data)
-                                                                <option value="{{ $data->desig_id }}">
-                                                                    {{ $data->desig_name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
+                                                    <label class="form-label mb-0 mt-2">Designation</label>
+                                                    <select id="desig-dd" name="update_designation"
+                                                        class="update_designationname_sddd form-control" required>
+                                                        <option value="">Select Designation Name</option>
+                                                        @foreach ($Designation as $data)
+                                                            <option value="{{ $data->desig_id }}">
+                                                                {{ $data->desig_name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </div>
 
@@ -759,14 +729,6 @@
         function windowreload() {
             window.location.reload();
         }
-
-        // $(document).ready(function() {
-        //     $('#country-dd').change(function() {
-        //         var selectedValue = $(this).val();
-        //         console.log("ja raha hai");
-        //         console.log(selectedValue);
-        //     });
-        // });
     </script>
 
 
@@ -813,7 +775,6 @@
 
         function openEditModel(context) {
             $("#updateempmodal").modal("show");
-
             var id = $(context).data('id');
             $('#setId').val(id);
             $.ajax({
@@ -827,17 +788,26 @@
                 dataType: 'json',
                 cache: true,
                 success: function(result) {
-                    // console.log(result);
-                    // console.log("Edit modal" + result.get[0].profile_photo);
+                    console.log(result);
+                    // check shift type rotational or not
+                    if (result.get[0].shift_type == 2) {
+                        $('#select_rotational_div').removeClass('d-none');
+                        var rotaCheck = result.get[0].emp_rotational_shift_type_item;
+                        $('#shift_type_sd').trigger('change');
+                        roatationalItem(result.get[0].emp_shift_type, result.get[0]
+                            .emp_rotational_shift_type_item);
+                        $('.update_roatational_type_sddd').val(result.get[0].emp_rotational_shift_type_item);
+                    } else {
+                        $('#select_rotational_div').addClass('d-none');
+                    }
+                    // set the values
                     if (result.get[0].emp_id) {
                         $("input[name='update_gender']").filter("[value='" + result.get[0]
                             .emp_gender + "']").prop(
                             'checked', true);
-                        // console.log("city: " + result.get[0].emp_city);
                         $('#sts2').val(result.get[0].emp_state);
                         $('#sts2').trigger('change');
                         var dataat = $('#sts2').val();
-                        // console.log("Dad: ", dataat[0]);
                         $('#state24').val(result.get[0].emp_city);
                         $('.update_name_sd').val(result.get[0].emp_name);
                         $('.update_mname_sddd').val(result.get[0].emp_mname);
@@ -883,6 +853,7 @@
                     } else {}
                 },
             });
+
         }
 
         function drofiyimage(id) {
@@ -907,27 +878,6 @@
             });
         }
 
-        // $('#state-dd').on('change', function() {
-        //     var depart_id = this.value;
-        //     $("#employee-dd").html('');
-        //     $.ajax({
-        //         url: "{{ url('admin/settings/business/allemployeefilter') }}",
-        //         type: "POST",
-        //         data: {
-        //             _token: '{{ csrf_token() }}',
-        //             depart_id: depart_id,
-        //         },
-        //         dataType: 'json',
-        //         success: function(res) {
-        //             console.log(res);
-        //             $('#employee-dd').html('<option value="">Select Employee</option>');
-        //             $.each(res.employee, function(key, value) {
-        //                 $("#employee-dd").append('<option value="' + value.emp_id +
-        //                     '">' + value.emp_name + '</option>');
-        //             });
-        //         }
-        //     });
-        // });
         $(document).ready(function() {
             $('#filter-branch').on('change', function() {
                 var branch_id = this.value;
@@ -944,19 +894,20 @@
                     },
                     dataType: 'json',
                     success: function(result) {
-    
+
                         // console.log(result);
                         $('#filter-department').html(
                             '<option value="" name="department">Select Department Name</option>'
                         );
                         console.log(result.department);
                         $.each(result.department, function(key, value) {
-                            $("#filter-department").append('<option name="department" value="' +
+                            $("#filter-department").append(
+                                '<option name="department" value="' +
                                 value
                                 .depart_id + '">' + value.depart_name +
                                 '</option>');
                         });
-    
+
                         $('#filter-designation').html(
                             '<option value="">Select Designation Name</option>');
                     }
@@ -966,19 +917,19 @@
                 var depart_id = this.value;
                 var branch_id = $('#filter-branch').val();
                 console.log("aaaaaa ", branch_id);
-                console.log("depart_id "+depart_id);
+                console.log("depart_id " + depart_id);
                 $("#filter-designation").html('');
                 $.ajax({
                     url: "{{ url('admin/settings/business/allfilterdesignation') }}",
                     type: "POST",
                     data: {
-                        branch_id:branch_id,
+                        branch_id: branch_id,
                         depart_id: depart_id,
                         _token: '{{ csrf_token() }}'
                     },
                     dataType: 'json',
                     success: function(res) {
-                        console.log("res ",res);
+                        console.log("res ", res);
                         $('#filter-designation').html(
                             '<option value="">Select Designation Name</option>');
                         $.each(res.designation, function(key, value) {
@@ -1018,7 +969,7 @@
             $('#filter-branch, #filter-department, #filter-designation').change(function() {
                 var branchId = $('#filter-branch').val();
                 var departmentId = $('#filter-department').val();
-                console.log("depart_id1 "+departmentId);
+                console.log("depart_id1 " + departmentId);
                 var designationId = $('#filter-designation').val();
                 $.ajax({
                     type: "POST",
@@ -1080,8 +1031,8 @@
                 });
             });
         });
-        
-        
+
+
         $(document).ready(function() {
             // Bind the "keyup" event to the input field
             $('#emp_id_sd').keyup(function() {
@@ -1138,10 +1089,80 @@
             });
         });
 
-        $('#country-dd').on('change', function() {
+        function roatationalItem(e, rotational) {
+            // console.log(e);
+            $("#roatational_type_id").html('');
+            $.ajax({
+                url: "{{ url('admin/settings/business/allrotationalshift') }}",
+                type: "POST",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    brand_id: e
+                },
+                dataType: 'json',
+                success: function(result) {
+                    console.log("choter ", result);
+                    if (result.department[0].shift_type == 2) {
+                        $('#select_rotational_div').removeClass('d-none');
+                        console.log("shifttype2");
+                        $('#roatational_type_id').html(
+                            '<option value="" name="update">Select Rotational Type</option>'
+                        );
+                        $.each(result.department, function(key, value) {
+                            // value.shift_type == 2
+                            $("#roatational_type_id").append('<option name="department" value="' +
+                                value
+                                .id + '">' + value.shift_name +
+                                '</option>');
+                        });
+                        $('#roatational_type_id').val(rotational);
+                    }
+                }
+            });
+        }
+
+        $('#shift_type_sd').on('change', function() {
             var branch_id = this.value;
-            console.log("sahi ja raha hai");
-            $("#state-dddd").html('');
+            console.log("sahi ja raha hai ", branch_id);
+            $("#roatational_type_id").html('');
+            if (branch_id) {
+                $.ajax({
+                    url: "{{ url('admin/settings/business/allrotationalshift') }}",
+                    type: "POST",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        brand_id: branch_id
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+                        // console.log(result);
+                        if (result.department[0].shift_type == 2) {
+                            $('#select_rotational_div').removeClass('d-none');
+                            $('#roatational_type_id').html(
+                                '<option value="" name="department">Select Rotational Type</option>'
+                            );
+                            console.log(result.department[0].shift_type);
+                            $.each(result.department, function(key, value) {
+                                // value.shift_type == 2
+                                $("#roatational_type_id").append(
+                                    '<option name="department" value="' +
+                                    value
+                                    .id + '">' + value.shift_name +
+                                    '</option>');
+                            });
+                        } else {
+                            $('#select_rotational_div').addClass('d-none');
+                        }
+                    }
+                });
+            } else {
+                $('#select_rotational_div').addClass('d-none');
+            }
+        });
+
+        $('#shift_type_sd').on('change', function() {
+            var branch_id = this.value;
+            $("#rotational_type_id").html('');
             $.ajax({
                 url: "{{ url('admin/settings/business/allrotationalshift') }}",
                 type: "POST",
@@ -1154,21 +1175,21 @@
 
                     console.log("Result", result);
                     console.log("Result2", result.department[0]);
-                     if(result.department[0].shift_type == 2){
+                    if (result.department[0].shift_type == 2) {
                         console.log("shifttype2");
                         $('#checkRotationalTypeItem').removeClass('d-none');
-                    $('#state-dddd').html(
-                        '<option value="" name="department">Select Rotational Type</option>'
-                    );
-                    console.log(result.department[0].shift_type);
-                    $.each(result.department, function(key, value) {
-                        // value.shift_type == 2
-                        $("#state-dddd").append('<option name="department" value="' +
-                            value
-                            .id + '">' + value.shift_name +
-                            '</option>');
-                    });
-                    }  else {
+                        $('#rotational_type_id').html(
+                            '<option value="" name="department">Select Rotational Type</option>'
+                        );
+                        console.log(result.department[0].shift_type);
+                        $.each(result.department, function(key, value) {
+                            // value.shift_type == 2
+                            $("#rotational_type_id").append('<option name="department" value="' +
+                                value
+                                .id + '">' + value.shift_name +
+                                '</option>');
+                        });
+                    } else {
                         $('#checkRotationalTypeItem').addClass('d-none');
 
                         console.log("shifttypeother");
