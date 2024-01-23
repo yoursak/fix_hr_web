@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 // /public_html/app/Models/admin
 use App\Helpers\ReturnHelpers;
 use App\Helpers\ApiResponse;
+use App\Helpers\Central_unit;
+use App\Models\AttendanceMonthlyCount;
 use App\Models\LoginEmployee;
 use App\Models\EmployeePersonalDetail;
 use App\Http\Resources\Api\UserSideResponse\EmployeeResource;
@@ -261,4 +263,33 @@ class EmployeeApiController extends Controller
 
         // $emp = EmployeePersonalDetail::where('business_id', $business_id)->get();
     }
+
+   public function dashboardcount(Request $request)
+   {
+    
+    $business_id = $request->business_id;
+    $emp_id = $request->emp_id;
+    $year = $request->year;
+    $month = $request->month;
+    $daliyempdetail = AttendanceMonthlyCount::where('business_id', $business_id)->where('emp_id', $emp_id)->where('year', $year)->where('month', $month)->first();
+    //dd($daliyempdetail);
+    if($daliyempdetail){
+        $present = $daliyempdetail->present ?? 0;
+        $absent = $daliyempdetail->absent ?? 0;
+        $late = $daliyempdetail->late ?? 0;
+        $early_exit = $daliyempdetail->early_exit ??0;
+        $mispunch = $daliyempdetail->mispunch ?? 0;
+        $holiday = $daliyempdetail->holiday ?? 0;
+        $week_off = $daliyempdetail->week_off ?? 0;
+        $half_day = $daliyempdetail->half_day ?? 0;
+        $overtime = $daliyempdetail->overtime ?? 0;
+        $leave = $daliyempdetail->leave ?? 0;
+        if($daliyempdetail){
+            return response()->json(['result' => $daliyempdetail, 'status' => true], 200);
+         }
+        return response()->json(['result' => [], 'status' => false], 404);
+    }
+   }
+
+
 }

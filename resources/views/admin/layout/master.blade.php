@@ -7,6 +7,7 @@
     <title>FixHR - @yield('title')</title>
     @include('admin.layout.head')
     @yield('css');
+    @livewireStyles
 </head>
 
 <body class="app sidebar-mini ltr">
@@ -380,9 +381,10 @@
 
     <!-- BACK TO TOP -->
     <a href="#top" id="back-to-top"><span class="feather feather-chevrons-up"></span></a>
-
     @yield('script');
     @include('admin.layout.script');
+    @livewireScripts
+
 </body>
 
 <!-- Developed By fixingfots.com/FixingDots/index2    /3.x [XR&CO'2014], Tue, 18 Jul 2023 06:20:43 GMT -->

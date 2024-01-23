@@ -21,7 +21,7 @@
         <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
             <li><a href="{{ url('/admin') }}">Dashboard</a></li>
             {{-- <li><a href="{{ url('admin/settings/business') }}">Settings</a></li> --}}
-            <li><a href="{{ url('admin/settings/business') }}">Business Setting</a></li>
+            <li><a href="{{ url('admin/settings/business') }}">Business Settings</a></li>
             <li class="active"><span><b>Department Settings</b></span></li>
         </ol>
     </div>
@@ -221,8 +221,8 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-outline-dark cancel" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary savebtn">Update Continue</button>
+                        <button class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary savebtn">Update & Continue</button>
 
                     </div>
                 </form>
@@ -269,7 +269,7 @@
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
                         @csrf
-                        <button type="reset" class="btn btn-outline-dark cancel"
+                        <button type="reset" class="btn btn-danger cancel"
                             data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary savebtn">Continue</button>
                     </div>
@@ -293,7 +293,7 @@
                         <h4 class="mt-5">Are you sure want to Delete, <span class="text-primary">{{ $item->depart_name }}</span> ?</h4>
                     </div>
                     <div class="modal-footer">
-                        <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Decline</button>
+                        <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <form method="POST" action="{{ route('delete.department', $item->depart_id) }}">
                             @csrf
                             <button type="submit" data-confirm-delete="true" class="btn btn-danger"

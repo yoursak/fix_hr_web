@@ -14,7 +14,7 @@ class MispunchRequestResources extends JsonResource
             'emp_id' => $this->emp_id ?? '',
             'emp_mobile_no' => $this->emp_mobile_no ?? '',
             'emp_miss_date' => $this->emp_miss_date ?? '',
-            'emp_miss_time_type' =>(string) $this->emp_miss_time_type ?? '',
+            'emp_miss_time_type' => $this->time_type ?? '',
             'emp_miss_in_time' => $this->emp_miss_in_time ?? '',
             'emp_miss_out_time' => $this->emp_miss_out_time ?? '',
             // 'emp_miss_in_time' => $this->emp_miss_in_time ? Carbon::parse($this->emp_miss_in_time)->format('h:i A') : '' ?? '',
@@ -22,7 +22,7 @@ class MispunchRequestResources extends JsonResource
             'emp_working_hour' => $this->emp_working_hour ?? '',
             'reason' => $this->reason ?? '',
             'remark' => $this->remark ?? '',
-            'status' => $this->status ?? '',
+            'status' => $this->final_status ?? '',
             'created_at' => $this->created_at ?? '',
             'updated_at' => $this->updated_at ?? '',
         ];

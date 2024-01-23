@@ -131,7 +131,7 @@ class CreateBusinessController extends Controller
 
             // Creating Roles & Permissions
             $modules = DB::table('static_sidebar_menu')->get();
-            $permission = array('View', 'Create', 'Update', 'Delete');
+            $permission = array('All','View', 'Create', 'Update', 'Delete');
 
             foreach ($modules as $key => $module) {
                 $i = 0;

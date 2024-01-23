@@ -4,9 +4,9 @@
     <title>FixHRAdmin</title>
 </head>
 <body>
-    <p>Dear {{ $details['name']}}</p>  
+    <p>Dear {{ $details['name']}},</p>  
 
-    <p>{{ $details['title'] }}</p>
+    {{-- <p>{{ $details['title'] }}</p> --}}
     <p>{{ $details['body'] }}, No need of password. You can access by OTP</p>
 
     <p>Login Now: <span>https://phplaravel-1083191-3790162.cloudwaysapps.com/</span></p>

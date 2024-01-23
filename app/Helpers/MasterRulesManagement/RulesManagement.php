@@ -12,6 +12,10 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\ModelHasPermission;
+
+use App\Models\LoginAdmin;
+use App\Models\LoginEmployee;
+use App\Models\PendingAdmin;
 use App\Models\AdminNotice;
 use App\Models\BusinessDetailsList;
 use App\Models\RequestLeaveList;
@@ -39,6 +43,12 @@ use App\Models\ApprovalManagementCycle;
 use App\Models\PolicySettingRoleAssignPermission;
 use App\Models\PolicyAttendanceShiftTypeItem;
 use App\Models\StaticApprovalName;
+// use Illuminate\Support\Facades\Crypt;
+use App\Models\StaticCountryModel;
+use App\Models\StaticStatesModel;
+use App\Models\StaticCityModel;
+use App\Models\StaticEmployeeJoinBloodGroup;
+use App\Models\StaticEmployeeJoinEmpType;
 
 //  PACKAGES POWER => DEVELOPED BY JAYANT
 class RulesManagement
@@ -59,6 +69,7 @@ class RulesManagement
         // self::$LoginEmail = Session::get('login_email');
         // self::$LoginBusinessImage = Session::get('login_business_image'); //bimg
         self::allValueGet(); //self::temp storage data
+        // dd(session('model_id'));
         // dd(self::$BusinessID,self::$UserType,self::$BranchID,self::$LoginRole,self::$LoginModelID,self::$LoginEmail,self::$LoginName);
         // like storage AT BusinessLoad ID 5
     }
@@ -67,12 +78,85 @@ class RulesManagement
     {
         return "Hello THIS IS Rule MANAGEMENT, $parameter!";
     }
+    public static function removeSpaces($string)
+    {
+        return str_replace(' ', '', $string);
+    }
 
     // Todays Status started
     public static function TodayStatus()
     {
-        return [self::allValueGet()[0], 0];
+        $load = Session::get('business_id');
+        // $data = "aman ' .$load  . '";
+        return [self::allValueGet()[0], $load];
     }
+
+    // Checking Country-State-City
+    public static function getCheckingBusinessCheck($branch, $department, $designation)
+    {
+        $SessionBusiness = Session::get('business_id');
+
+        $Branch = BranchList::where('business_id', $SessionBusiness)->where('branch_name', '=', $branch)->first();
+        $Department = DepartmentList::where('business_id', $SessionBusiness)->where('depart_name', '=', $department)->first();
+        $Designation = DesignationList::where('business_id', $SessionBusiness)->where('desig_name', '=', $designation)->first();
+
+        if ($Branch != null && $Department != null && $Designation != null) {
+            return [$Branch->branch_name, $Department->depart_name, $Designation->desig_name];
+        } else {
+            return ['', '', ''];
+        }
+    }
+
+    // Checking Country-State-City
+    public static function getCheckingCountryStateCity($country, $state, $city)
+    {
+        //remove space
+        $countries = self::removeSpaces($country);
+        $states = self::removeSpaces($state);
+        $cities = self::removeSpaces($city);
+        $AllCountry = StaticCountryModel::where('name', '=', $countries)->first();
+        $AllStates = null;
+        $AllCities = null;
+
+        if ($AllCountry != null) {
+            $AllStates = StaticStatesModel::where('country_id',$AllCountry->id)
+                ->where('name', '=', $states)
+                ->first();
+        }
+
+        if ($AllStates != null) {
+            $AllCities = StaticCityModel::where('state_id', $AllStates->id)
+                ->where('name', '=', $cities)
+                ->first();
+        }
+
+        if ($AllCountry != null && $AllStates != null && $AllCities != null) {
+            return [$AllCountry->name, $AllStates->name, $AllCities->name];
+        } else {
+            return [ '', '', ''];
+        }
+    }
+    public static function getCheckingEmployeeType($empID)
+    {
+        $empType = self::removeSpaces($empID);
+        $load = StaticEmployeeJoinEmpType::where('emp_type', '=', $empType)->first();
+        if ($load != null) {
+            return [$load->type_id];
+        } else {
+            return [''];
+        }
+    }
+    public static function getCheckingBloodGroup($bloodGroup)
+    {
+        $bloodgroup = self::removeSpaces($bloodGroup);
+        $load = StaticEmployeeJoinBloodGroup::where('blood_group', '=', $bloodgroup)->first();
+        if ($load != null) {
+            return [$load->id];
+        } else {
+            return [''];
+        }
+    }
+   
 
     // access permission hard word STEP 1
     public static function AccessPermission()
@@ -129,8 +213,7 @@ class RulesManagement
         $branchList = DB::table('branch_list')
             ->where('business_id', self::allValueGet()[5])
             ->get();
-        $leavePolicy = PolicySettingLeavePolicy::where('business_id', self::allValueGet()[5])
-            ->get();
+        $leavePolicy = PolicySettingLeavePolicy::where('business_id', self::allValueGet()[5])->get();
         $holidayPolicy = DB::table('policy_holiday_template')
             ->where('business_id', self::allValueGet()[5])
             ->get();
@@ -198,8 +281,7 @@ class RulesManagement
         $branchList = DB::table('branch_list')
             ->where('business_id', $BID)
             ->get(); //call by ApiResponse ,
-        $leavePolicy = PolicySettingLeavePolicy::where('business_id', $BID)
-            ->get();
+        $leavePolicy = PolicySettingLeavePolicy::where('business_id', $BID)->get();
         $holidayPolicy = DB::table('policy_holiday_template')
             ->where('business_id', $BID)
             ->get();
@@ -349,8 +431,7 @@ class RulesManagement
         $holidayCount = DB::table('policy_holiday_template')
             ->where('business_id', self::allValueGet()[5])
             ->count();
-        $leaveCount = PolicySettingLeavePolicy::where('business_id', self::allValueGet()[5])
-            ->count();
+        $leaveCount = PolicySettingLeavePolicy::where('business_id', self::allValueGet()[5])->count();
         $weeklyholidayCount = DB::table('policy_weekly_holiday_list')
             ->where('business_id', self::allValueGet()[5])
             ->count();
@@ -359,6 +440,7 @@ class RulesManagement
             ->where('business_id', self::allValueGet()[5])
             ->select('emp_attendance_method')
             ->count();
+
         if ($branch != null || $department != null || $designation != null || $adminCount != null || $holidayCount != null || $leaveCount != null || $weeklyholidayCount != null || $EmployeeAttendanceMethod != null) {
             return [$branch, $department, $designation, $adminCount, $holidayCount, $leaveCount, $weeklyholidayCount, $$EmployeeAttendanceMethod];
         } else {
@@ -375,6 +457,19 @@ class RulesManagement
         //     $query->where('designation_id', $designationId);
         // })
         // ->get();
+    }
+
+    static function AssociatedUser($ID)
+    {
+        $AssociatedUser = DB::table('employee_personal_details')
+            ->where('business_id', self::allValueGet()[5])
+            ->where('master_endgame_id', $ID)
+            ->count();
+        if ($AssociatedUser != null) {
+            return [$AssociatedUser, 0, 0, 0, 0, 0, 0, 0];
+        } else {
+            return [0, 0, 0, 0, 0, 0, 0, 0];
+        }
     }
 
     static function SectionEmployeeCounters()
@@ -430,10 +525,8 @@ class RulesManagement
     {
         $getRoleAssignID = self::allValueGet()[7];
         if ($getRoleAssignID != null) {
-
             return [$getRoleAssignID, 0];
         } else {
-
             return [0, 0];
         }
     }
@@ -571,25 +664,26 @@ class RulesManagement
     // {
 
     // }
-    static public function RoleName($ID)
+    public static function RoleName($ID)
     {
-
-        $check = DB::table('policy_setting_role_create')->where('id', $ID)->first();
+        $check = DB::table('policy_setting_role_create')
+            ->where('id', $ID)
+            ->first();
 
         if ($check != null) {
             return [$check];
         } else {
             return [0];
-
         }
     }
 
     // Upcoming Approval-Management SettingUpdated
     // 0 index get All Details
-    static public function ApprovalGetDetails($approvalTypeID)
+    public static function ApprovalGetDetails($approvalTypeID)
     {
         // StaticApprovalName ApprovalManagementCycle
-        $AttendanceApproval = DB::table('approval_management_cycle')->where('business_id', self::allValueGet()[5])
+        $AttendanceApproval = DB::table('approval_management_cycle')
+            ->where('business_id', self::allValueGet()[5])
             ->where('approval_type_id', $approvalTypeID)
             ->first();
         // Checking Approval Cycle Type like Sequential ,Parallel
@@ -600,7 +694,11 @@ class RulesManagement
         // || $CycleType->cycle_type != null
 
         if ($AttendanceApproval != null) {
-            $CycleType = DB::table('approval_management_cycle')->where('business_id', self::allValueGet()[5])->where('cycle_type', $AttendanceApproval->cycle_type)->select('cycle_type')->first();
+            $CycleType = DB::table('approval_management_cycle')
+                ->where('business_id', self::allValueGet()[5])
+                ->where('cycle_type', $AttendanceApproval->cycle_type)
+                ->select('cycle_type')
+                ->first();
             $cycleType = 2;
             if ($CycleType->cycle_type != null) {
                 $cycleType = $CycleType->cycle_type;
@@ -611,9 +709,13 @@ class RulesManagement
         }
     }
     // Current Status Leave Approval Checking Set
-    static public function CheckLeaveApprovalStatus($primaryID, $bID, $findRoleID)
+    public static function CheckLeaveApprovalStatus($primaryID, $bID, $findRoleID)
     {
-        $findRole = DB::table('request_leave_list')->where('id', $primaryID)->where('business_id', $bID)->select('approved_by_status', 'approved_by_emp_id', 'approved_by_role_id')->first();
+        $findRole = DB::table('request_leave_list')
+            ->where('id', $primaryID)
+            ->where('business_id', $bID)
+            ->select('approved_by_status', 'approved_by_emp_id', 'approved_by_role_id')
+            ->first();
 
         if ($findRole != null) {
             return [$findRole];
@@ -622,8 +724,9 @@ class RulesManagement
         }
     }
 
-    public function MonthlyData($year, $month) //api month attendance
+    public function MonthlyData($year, $month)
     {
+        //api month attendance
         // Create a Carbon object representing the first day of the specified month and year.
         // $startDate = Carbon::createFromDate($year, $month, 1);
         // $endDate = $startDate->endOfMonth();
@@ -635,8 +738,8 @@ class RulesManagement
         }, $nextMonth);
     }
 
-    // 
-    static public function FinalRequestStatusSubmitFilterValue($ID, $ApprovalType)
+    //
+    public static function FinalRequestStatusSubmitFilterValue($ID, $ApprovalType)
     {
         $statusCounts = DB::table('approval_status_list')
             ->where('business_id', self::allValueGet()[5])
@@ -657,7 +760,7 @@ class RulesManagement
         }
         // $maxStatusValue = $statusCounts->firstWhere('count', 2) ? 2 : 1;
 
-        //  dd($maxStatusValue, $count);  
+        //  dd($maxStatusValue, $count);
         if ($maxStatusValue != null) {
             return [$maxStatusValue];
         } else {
@@ -665,22 +768,1235 @@ class RulesManagement
         }
     }
 
+    public static function RequestGatePassApprovalManage($checkApprovalCycleType, $itemIteration, $itemID, $approvalTypeIdStatic, $loginRoleID)
+    {
+        $loginRoleBID = self::allValueGet()[5];
+        // checking the current status approvalStatusList
+        $checkingCover = DB::table('approval_status_list')
+            ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
+            ->where('business_id', $loginRoleBID)
+            ->where('approval_type_id', $approvalTypeIdStatic)
+            ->where('all_request_id', $itemID)
+            ->orderBy('approval_status_list.created_at', 'desc')
+            ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+            ->first();
 
+        $LatestRemark = $checkingCover != null ? $checkingCover->remarks : ''; // latest remark according to approval typeid = 4 and last entry with the primary id
+        $LatestStatusName = $checkingCover != null ? $checkingCover->request_response : '';
+        $LatestStatusValue = $checkingCover->status ?? 0;
+        $LatestRequestColor = $checkingCover->request_color ?? 0;
+        $LatestRequestBtnColor = $checkingCover->btn_color ?? 0;
+        $LatestTooltipColor = $checkingCover->tooltip_color ?? 0;
+
+        $LastDeclineStatusRemark = DB::table('approval_status_list')
+            ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
+            ->where('business_id', $loginRoleBID)
+            ->where('approval_type_id', $approvalTypeIdStatic)
+            ->where('all_request_id', $itemID)
+            ->where('status', 2)
+            ->orderBy('approval_status_list.created_at', 'desc')
+            ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+            ->first();
+
+        if ($checkApprovalCycleType == 1) {
+            // sequential type check
+            if ($checkingCover != null) {
+                $checkingCoversLoad = DB::table('approval_status_list')
+                    ->where('business_id', $loginRoleBID)
+                    ->where('role_id', $loginRoleID)
+                    ->where('approval_type_id', $approvalTypeIdStatic)
+                    ->where('all_request_id', $itemID)
+                    ->orderBy('approval_status_list.created_at', 'desc')
+                    ->first();
+
+                if ($checkingCoversLoad) {
+                    // approval status list action performed or not
+                    $CheckCurrentStaticStatus = DB::table('approval_status_list')
+                        ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
+                        ->where('approval_status_list.business_id', $loginRoleBID)
+                        ->where('approval_status_list.role_id', $loginRoleID)
+                        ->where('approval_status_list.approval_type_id', $approvalTypeIdStatic)
+                        ->where('approval_status_list.all_request_id', $itemID)
+                        ->orderBy('approval_status_list.created_at', 'desc')
+                        ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+                        ->first();
+                    // dd($CheckCurrentStaticStatus);
+                    if ($CheckCurrentStaticStatus != null) {
+                        $CheckingRole = self::RoleName($CheckCurrentStaticStatus->next_role_id)[0]; // check the next role id
+                        $ForwardName = $CheckingRole->roles_name ?? 0;
+
+                        if ($itemIteration->process_complete == 1) {
+                            // if all final process completer
+                            $SD = DB::table('request_gatepass_list')
+                                ->join('static_status_request', 'request_gatepass_list.final_status', '=', 'static_status_request.id')
+                                ->where('request_gatepass_list.business_id', $loginRoleBID)
+                                ->where('request_gatepass_list.id', $itemID)
+                                ->select('request_gatepass_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+                                ->first();
+                            $ForwardStaticName = self::RoleName($checkingCover->role_id)[0]->roles_name;
+                            $statusIcon = $SD->final_status == 1 ? '<i class="ion-checkmark-circled"></i> ' : '<i class="ion-close-circled"></i> ';
+                            $statusColor = $SD->request_color;
+                            $statusResponse = $SD->request_response;
+                            if ($SD->final_status == 2 && $LatestStatusValue == 1) {
+                                // dd("kya chal raha");
+                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+
+                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $DeclinedName . ' <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-clock"></i> ' . nl2br($statusResponse) . '</small>';
+
+                                // return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $statusResponse . '  By ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '" data-bs-original-title="Declined ' . $ForwardName . '">' . $statusIcon . ' ' . $statusResponse . '</small>';
+                                // dd($LatestStatusValue);
+                            } elseif ($SD->final_status == 1) {
+                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $statusResponse . '  By ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '" data-bs-original-title="Declined ' . $ForwardName . '">' . $statusIcon . ' ' . $statusResponse . '</small>';
+                            } else {
+                                // dd($SD->final_status);
+                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardStaticName . ' <b><br> Remark : ' . nl2br($LatestRemark) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-clock"></i> ' . nl2br($statusResponse) . '</small>';
+                            }
+
+                            // return '<small><span class="' . $statusColor . '">' . $statusIcon . ' ' . $statusResponse . '</span></small>';
+                        } else {
+                            $ForwardStaticName = self::RoleName($itemIteration->forward_by_role_id)[0]->roles_name;
+
+                            if ($LatestStatusValue == 1) {
+                                // dd($CheckingRole);
+                                // dd($CheckCurrentStaticStatus->request_response);
+                                // dd($ForwardName);
+                                // return '<small class="' . $CheckCurrentStaticStatus->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatus->request_response . '" data-bs-original-title="Forward To ' . $ForwardName . '">' . $CheckCurrentStaticStatus->request_response . '</small>';
+                                return '<small class="' . $LatestRequestColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '" data-bs-original-title="Forward To ' . $ForwardName . '">' . $LatestStatusName . '</small>';
+                            }
+                            if ($LatestStatusValue == 2) {
+                                // dd($CheckCurrentStaticStatus);
+
+                                // return '<small class="' . $CheckCurrentStaticStatus->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardName . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatus->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatus->request_response . '"><i class="ion-clock"></i>' . nl2br($CheckCurrentStaticStatus->request_response) . '</small>';
+                                // return '<small class="' . $CheckCurrentStaticStatus->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatus->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatus->request_response . '"><i class="ion-clock"></i>' . nl2br($CheckCurrentStaticStatus->request_response) . '</small>';
+                                return '<small class="' . $LatestRequestColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . ' <b><br> Remark : ' . nl2br($LatestRemark) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="ion-clock"></i> ' . nl2br($LatestStatusName) . '</small>';
+                            }
+
+                            $checkingLoad = DB::table('approval_management_cycle')
+                                ->where('business_id', Session::get('business_id'))
+                                ->where('approval_type_id', $approvalTypeIdStatic)
+                                ->whereJsonContains('role_id', (string) $loginRoleID)
+                                ->select('role_id')
+                                ->first();
+
+                            $roleIds = json_decode($checkingLoad->role_id, true);
+                            $currentIndex = array_search($loginRoleID, $roleIds);
+                            $nextIndex = $currentIndex + 1;
+                            $nextRoleId = isset($roleIds[$nextIndex]) ? $roleIds[$nextIndex] : -1;
+
+                            $ApprovedName = DB::table('approval_status_list')
+                                ->where('all_request_id', $itemID)
+                                ->where('approval_status_list.business_id', $loginRoleBID)
+                                ->where('approval_status_list.role_id', $loginRoleID)
+                                ->where('approval_type_id', $approvalTypeIdStatic)
+                                ->first();
+                            $CheckingLoad = DB::table('approval_status_list')
+                                ->where('all_request_id', $itemID)
+                                ->where('approval_type_id', $approvalTypeIdStatic)
+                                ->where('role_id', $ApprovedName->next_role_id ?? 0)
+                                ->first();
+
+                            $gotoPow = self::RoleName($CheckingLoad->role_id ?? 0)[0];
+                            $ApprovedName2 = $gotoPow->roles_name ?? 0;
+                            if ($ApprovedName2 != 0) {
+                                // dd($CheckingLoad);
+                                if (isset($CheckingLoad)) {
+                                    if ($CheckingLoad->status == 1) {
+                                        // return '<br><small>Approved To ' . $ApprovedName2 . '</small>';
+                                    }
+                                    if ($CheckingLoad->status == 2) {
+                                        // dd($ForwardStaticName);
+                                        // return '<br><small>Decliend To ' . $ApprovedName2 . '</small>';
+                                    }
+                                } else {
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    $requestGet = DB::table('approval_status_list')
+                        ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
+                        ->where('approval_status_list.all_request_id', $itemID)
+                        ->where('approval_status_list.next_role_id', $loginRoleID)
+                        ->where('approval_status_list.applied_cycle_type', 1)
+                        ->where('approval_status_list.approval_type_id', '=', $approvalTypeIdStatic)
+                        ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+                        ->first();
+                    // dd($requestGet);
+                    if ($requestGet ?? false) {
+                        $CheckingRole = self::RoleName($requestGet->current_role_id ?? 0)[0];
+                        $ForwardName = $CheckingRole->roles_name ?? 0;
+                        $HoverStatus = $requestGet->status == 1 ? 'Approved By ' : 'Declined By ';
+                        if ($requestGet->status == 1 && $LastDeclineStatusRemark) {
+                            // dd($requestGet);
+                            $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+
+                            // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<br>Declined By ' . $DeclinedName . '<b><br>  Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                        } elseif ($requestGet->status == 1) {
+                            // dd($requestGet);
+                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                            // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b><br> Remark : ' . nl2br($requestGet->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                        } else {
+                            // dd($requestGet);
+
+                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b><br> Remark : ' . nl2br($requestGet->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                        }
+                        // dd($CheckCurrentStaticStatusSecond);
+                    } else {
+                        $CheckCurrentStaticStatusSecond = DB::table('request_gatepass_list')
+                            ->join('approval_status_list', 'approval_status_list.all_request_id', '=', 'request_gatepass_list.id')
+                            ->join('static_status_request', 'request_gatepass_list.final_status', '=', 'static_status_request.id')
+                            ->where('approval_status_list.approval_type_id', $approvalTypeIdStatic)
+                            ->where('request_gatepass_list.id', $itemID)
+                            ->where('request_gatepass_list.business_id', $loginRoleBID)
+                            ->select('request_gatepass_list.*', 'approval_status_list.id as approval_id', 'approval_status_list.applied_cycle_type', 'approval_status_list.business_id', 'approval_status_list.approval_type_id', 'approval_status_list.all_request_id', 'approval_status_list.role_id', 'approval_status_list.emp_id as approval_emp_id', 'approval_status_list.remarks', 'approval_status_list.status', 'approval_status_list.applied_cycle_type', 'approval_status_list.prev_role_id', 'approval_status_list.current_role_id', 'approval_status_list.next_role_id', 'approval_status_list.clicked', 'static_status_request.id as status_request_id', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+                            ->orderBy('approval_status_list.created_at', 'desc')
+                            ->first();
+                        // dd($CheckCurrentStaticStatusSecond);
+                        if ($CheckCurrentStaticStatusSecond) {
+                            $CheckingRole = self::RoleName($CheckCurrentStaticStatusSecond->role_id)[0];
+                            // dd($CheckCurrentStaticStatusSecond->status);
+                            $HoverStatus = $CheckCurrentStaticStatusSecond->status == 1 ? 'Approved By ' : 'Declined By ';
+                            $ForwardNameGET = $CheckingRole->roles_name ?? 0;
+                            if ($CheckCurrentStaticStatusSecond->final_status == 1) {
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardNameGET . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                                // dd($CheckCurrentStaticStatusSecond);
+                                // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body"  data-bs-placement="top" data-bs-content="Approved by ' . $ForwardNameGET . '" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                            } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
+                                // dd($CheckCurrentStaticStatusSecond->final_status);
+                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $DeclinedName . '<b><br> Remark :' . $LastDeclineStatusRemark->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+
+                                // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br>'.$DeclinedName .' Remark :' . $LastDeclineStatusRemark->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+
+                                // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $ForwardNameGET . '"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                            } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
+                                // dd('hi');
+                                // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $LatestStatusName . '</small>';
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+
+                                // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                            } else {
+                                if ($CheckCurrentStaticStatusSecond->status == 1 && $LastDeclineStatusRemark) {
+                                    // dd("hii");
+                                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved By ' . $ForwardNameGET . ' <b><br>' . $DeclinedName . ' Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Approved"><i class="ion-close-circled"></i> Pending</small>';
+                                } elseif ($CheckCurrentStaticStatusSecond->status == 1) {
+                                    // dd($CheckCurrentStaticStatusSecond);
+
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardNameGET . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="ion-clock"></i> Pending</small>';
+                                    // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved By ' . $ForwardNameGET . ' <b><br>'. $DeclinedName .' Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> Pending</small>';
+
+                                    // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-placement="top" data-bs-content="' . $HoverStatus . $ForwardNameGET . '" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-checkmark-circled"></i> Pending</small>';
+                                    // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                                } elseif ($CheckCurrentStaticStatusSecond->status == 2) {
+                                    // dd('hii');
+                                    // dd($CheckCurrentStaticStatusSecond->request_response);
+                                    // dd($ForwardNameGET);
+                                    // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i>  Pending</small>';
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> Pending</small>';
+
+                                    // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> Pending</small>';
+                                }
+                                // return '<span class="badge badge-warning-light"><i class="ion-wand"></i> Pending</span>';
+                            }
+                        } else {
+                            return '<span class="badge badge-primary-light">Requested</span>';
+
+                            // return '<span class="badge badge-warning-light"><i class="ion-wand"></i>Requested</span>';
+                        }
+
+                        // return '<span class="badge badge-warning-light"><i class="ion-wand"></i> Pending</span>';
+                    }
+                }
+            } else {
+                return '<span class="badge badge-primary-light">Requested</span>';
+            }
+        }
+
+        if ($checkApprovalCycleType == 2) {
+            $CheckCurrentStaticStatusSecond = DB::table('request_gatepass_list')
+                ->join('approval_status_list', 'approval_status_list.all_request_id', '=', 'request_gatepass_list.id')
+                ->join('static_status_request', 'request_gatepass_list.final_status', '=', 'static_status_request.id')
+                ->where('approval_status_list.approval_type_id', $approvalTypeIdStatic)
+                ->where('request_gatepass_list.id', $itemID)
+                ->where('request_gatepass_list.business_id', $loginRoleBID)
+                ->orderBy('approval_status_list.created_at', 'desc')
+                ->first();
+            // ->where('approval_status_list.applied_cycle_type', 2)
+            // return $itemID;
+            if (!empty($CheckCurrentStaticStatusSecond)) {
+                $CheckingRole = self::RoleName($CheckCurrentStaticStatusSecond->role_id)[0];
+                $check = DB::table('business_details_list')
+                    ->where('business_id', $CheckCurrentStaticStatusSecond->business_id)
+                    ->where('call_back_id', $CheckCurrentStaticStatusSecond->role_id)
+                    ->first();
+                // dd($CheckCurrentStaticStatusSecond);
+                $ForwardNameGET = $CheckingRole !== null && $CheckingRole !== 0 ? $CheckingRole->roles_name : ($check !== null ? 'Owner' : 0);
+                if ($CheckCurrentStaticStatusSecond->final_status == 1) {
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved by ' . $ForwardNameGET . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+
+                    // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body"  data-bs-placement="top" data-bs-content="Approved by ' . $ForwardNameGET . '" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
+                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+
+                    // dd("datga");
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $DeclinedName . ' <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $ForwardNameGET . '"><i class="ion-clock"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
+                } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
+                    // dd($CheckCurrentStaticStatusSecond);
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
+
+                    // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                } else {
+                    return '<span class="badge badge-primary-light">Requested</span>';
+
+                    // return '<span class="badge badge-warning-light"><i class="ion-wand"></i> Pending</span>';
+                }
+            } else {
+                return '<span class="badge badge-primary-light">Requested</span>';
+            }
+        }
+    }
+
+    public static function RequestLeaveApprovalManage($checkApprovalCycleType, $itemIteration, $itemID, $approvalTypeIdStatic, $loginRoleID)
+    {
+        $loginRoleBID = self::allValueGet()[5];
+
+        $checkingCover = DB::table('approval_status_list')
+            ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
+            ->where('business_id', $loginRoleBID)
+            ->where('approval_type_id', $approvalTypeIdStatic)
+            ->where('all_request_id', $itemID)
+            ->orderBy('approval_status_list.created_at', 'desc')
+            ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+            ->first();
+        $LatestRemark = $checkingCover != null ? $checkingCover->remarks : ''; // lateset remark according to approvaltypeid = 4 and last entry with the primary id
+        $LatestStatusName = $checkingCover != null ? $checkingCover->request_response : '';
+        $LatestStatusValue = $checkingCover->status ?? 0;
+        $LatestRequestColor = $checkingCover->request_color ?? 0;
+        $LatestRequestBtnColor = $checkingCover->btn_color ?? 0;
+        $LatestTooltipColor = $checkingCover->tooltip_color ?? 0;
+
+        $LastDeclineStatusRemark = DB::table('approval_status_list')
+            ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
+            ->where('business_id', $loginRoleBID)
+            ->where('approval_type_id', $approvalTypeIdStatic)
+            ->where('all_request_id', $itemID)
+            ->where('status', 2)
+            ->orderBy('approval_status_list.created_at', 'desc')
+            ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+            ->first();
+        if ($checkApprovalCycleType == 1) {
+            // Check for Pending Status
+            if ($checkingCover != null) {
+                $checkingCoversLoad = DB::table('approval_status_list')
+                    ->where('business_id', $loginRoleBID)
+                    ->where('role_id', $loginRoleID)
+                    ->where('approval_type_id', $approvalTypeIdStatic)
+                    ->where('all_request_id', $itemID)
+                    ->orderBy('approval_status_list.created_at', 'desc')
+                    ->first();
+
+                if ($checkingCoversLoad) {
+                    $CheckCurrentStaticStatus = DB::table('approval_status_list')
+                        ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
+                        ->where('approval_status_list.business_id', $loginRoleBID)
+                        ->where('approval_status_list.approval_type_id', $approvalTypeIdStatic)
+                        ->where('approval_status_list.all_request_id', $itemID)
+                        ->orderBy('approval_status_list.created_at', 'desc')
+                        ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+                        ->first();
+
+                    if ($CheckCurrentStaticStatus != null) {
+                        $CheckingRole = self::RoleName($CheckCurrentStaticStatus->next_role_id)[0];
+                        $ForwardName = $CheckingRole->roles_name ?? 0;
+
+                        if ($itemIteration->process_complete == 1) {
+                            // if all final process completer
+                            $SD = DB::table('request_leave_list')
+                                ->join('static_status_request', 'request_leave_list.final_status', '=', 'static_status_request.id')
+                                ->where('request_leave_list.business_id', $loginRoleBID)
+                                ->where('request_leave_list.id', $itemID)
+                                ->select('request_leave_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+                                ->first();
+                            $ForwardStaticName = self::RoleName($checkingCover->role_id)[0]->roles_name;
+                            $statusIcon = $SD->final_status == 1 ? '<i class="ion-checkmark-circled"></i>' : '<i class="ion-close-circled"></i>';
+                            $statusColor = $SD->request_color;
+                            $statusResponse = $SD->request_response;
+                            if ($SD->final_status == 2 && $LatestStatusValue == 1) {
+                                // dd("kya chal raha");
+                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+
+                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $DeclinedName . ' <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-clock"></i> ' . nl2br($statusResponse) . '</small>';
+                            } elseif ($SD->final_status == 1) {
+                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $statusResponse . '  By ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '" data-bs-original-title="Declined ' . $ForwardName . '">' . $statusIcon . ' ' . $statusResponse . '</small>';
+                            } else {
+                                // dd($SD->final_status);
+                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardStaticName . ' <b><br> Remark : ' . nl2br($LatestRemark) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-clock"></i> ' . nl2br($statusResponse) . '</small>';
+                            }
+                        } else {
+                            // $forwared = true;
+                            $ForwardStaticName = self::RoleName($itemIteration->forward_by_role_id)[0]->roles_name;
+
+                            if ($LatestStatusValue == 1) {
+                                return '<small class="' . $LatestRequestColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '" data-bs-original-title="Forward To ' . $ForwardName . '">' . $LatestStatusName . '</small>';
+                            }
+                            if ($LatestStatusValue == 2) {
+                                return '<small class="' . $LatestRequestColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . ' <b><br> Remark : ' . nl2br($LatestRemark) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="ion-clock"></i> ' . nl2br($LatestStatusName) . '</small>';
+                            }
+
+                            $checkingLoad = DB::table('approval_management_cycle')
+                                ->where('business_id', Session::get('business_id'))
+                                ->where('approval_type_id', $approvalTypeIdStatic)
+                                ->whereJsonContains('role_id', (string) $loginRoleID)
+                                ->select('role_id')
+                                ->first();
+
+                            $roleIds = json_decode($checkingLoad->role_id, true);
+                            $currentIndex = array_search($loginRoleID, $roleIds);
+                            $nextIndex = $currentIndex + 1;
+                            $nextRoleId = isset($roleIds[$nextIndex]) ? $roleIds[$nextIndex] : -1;
+
+                            $ApprovedName = DB::table('approval_status_list')
+                                ->where('all_request_id', $itemID)
+                                ->where('approval_status_list.business_id', $loginRoleBID)
+                                ->where('approval_status_list.role_id', $loginRoleID)
+                                ->where('approval_type_id', $approvalTypeIdStatic)
+                                ->first();
+                            $CheckingLoad = DB::table('approval_status_list')
+                                ->where('all_request_id', $itemID)
+                                ->where('approval_type_id', $approvalTypeIdStatic)
+                                ->where('role_id', $ApprovedName->next_role_id ?? 0)
+                                ->first();
+
+                            $gotopow = self::RoleName($CheckingLoad->role_id ?? 0)[0];
+                            $ApprovedName2 = $gotopow->roles_name ?? 0;
+
+                            if ($ApprovedName2 != 0) {
+                                if (isset($CheckingLoad)) {
+                                    if ($CheckingLoad->status == 1) {
+                                        // return '<br><small>Approved To ' . $ApprovedName2 . '</small>';
+                                    }
+                                    if ($CheckingLoad->status == 2) {
+                                        // return '<br><small>Decliend To ' . $ApprovedName2 . '</small>';
+                                    }
+                                } else {
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    $requestGet = DB::table('approval_status_list')
+                        ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
+                        ->where('approval_status_list.all_request_id', $itemID)
+                        ->where('approval_status_list.next_role_id', $loginRoleID)
+                        ->where('approval_status_list.applied_cycle_type', 1)
+                        ->where('approval_status_list.approval_type_id', '=', $approvalTypeIdStatic)
+                        ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+                        ->first();
+                    // dd($requestGet);
+                    if ($requestGet ?? false) {
+                        $CheckingRole = self::RoleName($requestGet->current_role_id ?? 0)[0];
+                        $ForwardName = $CheckingRole->roles_name ?? 0;
+                        $HoverStatus = $requestGet->status == 1 ? 'Approved By ' : 'Declined By ';
+                        if ($requestGet->status == 1 && $LastDeclineStatusRemark) {
+                            // dd($requestGet);
+                            $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+
+                            // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<br>Declined By ' . $DeclinedName . '<b><br>  Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                        } elseif ($requestGet->status == 1) {
+                            // dd($requestGet);
+                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                            // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b><br> Remark : ' . nl2br($requestGet->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                        } else {
+                            // dd($requestGet);
+
+                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b><br> Remark : ' . nl2br($requestGet->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                        }
+                    } else {
+                        $CheckCurrentStaticStatusSecond = DB::table('request_leave_list')
+                            ->join('approval_status_list', 'approval_status_list.all_request_id', '=', 'request_leave_list.id')
+                            ->join('static_status_request', 'request_leave_list.final_status', '=', 'static_status_request.id')
+                            ->where('approval_status_list.approval_type_id', $approvalTypeIdStatic)
+                            ->where('request_leave_list.id', $itemID)
+                            ->where('request_leave_list.business_id', $loginRoleBID)
+                            ->select('request_leave_list.*', 'approval_status_list.id as approval_id', 'approval_status_list.applied_cycle_type', 'approval_status_list.business_id', 'approval_status_list.approval_type_id', 'approval_status_list.all_request_id', 'approval_status_list.role_id', 'approval_status_list.emp_id as approval_emp_id', 'approval_status_list.remarks', 'approval_status_list.status', 'approval_status_list.applied_cycle_type', 'approval_status_list.prev_role_id', 'approval_status_list.current_role_id', 'approval_status_list.next_role_id', 'approval_status_list.clicked', 'static_status_request.id as status_request_id', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+                            ->orderBy('approval_status_list.created_at', 'desc')
+                            ->first();
+                        // dd($CheckCurrentStaticStatusSecond);
+                        $CheckingRole = self::RoleName($CheckCurrentStaticStatusSecond->role_id)[0];
+                        $HoverStatus = $CheckCurrentStaticStatusSecond->status == 1 ? 'Approved By ' : 'Declined By ';
+                        $ForwardNameGET = $CheckingRole->roles_name ?? 0;
+                        if ($CheckCurrentStaticStatusSecond) {
+                            $CheckingRole = self::RoleName($CheckCurrentStaticStatusSecond->role_id)[0];
+                            // dd($CheckCurrentStaticStatusSecond->status);
+                            $HoverStatus = $CheckCurrentStaticStatusSecond->status == 1 ? 'Approved By ' : 'Declined By ';
+                            $ForwardNameGET = $CheckingRole->roles_name ?? 0;
+                            if ($CheckCurrentStaticStatusSecond->final_status == 1) {
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardNameGET . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                                // dd($CheckCurrentStaticStatusSecond);
+                                // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body"  data-bs-placement="top" data-bs-content="Approved by ' . $ForwardNameGET . '" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                            } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
+                                // dd($CheckCurrentStaticStatusSecond->final_status);
+                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $DeclinedName . '<b><br> Remark :' . $LastDeclineStatusRemark->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+
+                                // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br>'.$DeclinedName .' Remark :' . $LastDeclineStatusRemark->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+
+                                // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $ForwardNameGET . '"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                            } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
+                                // dd('hi');
+                                // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $LatestStatusName . '</small>';
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+
+                                // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                            } else {
+                                if ($CheckCurrentStaticStatusSecond->status == 1 && $LastDeclineStatusRemark) {
+                                    // dd("nii");
+                                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved By ' . $ForwardNameGET . ' <b><br>' . $DeclinedName . ' Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Approved"><i class="ion-close-circled"></i> Pending</small>';
+                                } elseif ($CheckCurrentStaticStatusSecond->status == 1) {
+                                    // dd($CheckCurrentStaticStatusSecond);
+
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardNameGET . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="ion-clock"></i> Pending</small>';
+                                    // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved By ' . $ForwardNameGET . ' <b><br>'. $DeclinedName .' Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> Pending</small>';
+
+                                    // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-placement="top" data-bs-content="' . $HoverStatus . $ForwardNameGET . '" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-checkmark-circled"></i> Pending</small>';
+                                    // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                                } elseif ($CheckCurrentStaticStatusSecond->status == 2) {
+                                    // dd('hii');
+                                    // dd($CheckCurrentStaticStatusSecond->request_response);
+                                    // dd($ForwardNameGET);
+                                    // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i>  Pending</small>';
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> Pending</small>';
+
+                                    // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> Pending</small>';
+                                }
+                                // return '<span class="badge badge-warning-light"><i class="ion-wand"></i> Pending</span>';
+                            }
+                        } else {
+                            return '<span class="badge badge-primary-light">Requested</span>';
+
+                            // return '<span class="badge badge-warning-light"><i class="ion-wand"></i>Requested</span>';
+                        }
+
+                        // return '<span class="badge badge-warning-light"><i class="ion-wand"></i> Padding</span>';
+                    }
+                }
+            } else {
+                return '<span class="badge badge-primary-light">Requested</span>';
+            }
+        }
+
+        if ($checkApprovalCycleType == 2) {
+            $CheckCurrentStaticStatusSecond = DB::table('request_leave_list')
+                ->join('approval_status_list', 'approval_status_list.all_request_id', '=', 'request_leave_list.id')
+                ->join('static_status_request', 'request_leave_list.final_status', '=', 'static_status_request.id')
+                ->where('approval_status_list.approval_type_id', $approvalTypeIdStatic)
+                ->where('request_leave_list.id', $itemID)
+                ->where('request_leave_list.business_id', $loginRoleBID)
+                ->orderBy('approval_status_list.created_at', 'desc')
+                ->first();
+            if (!empty($CheckCurrentStaticStatusSecond)) {
+                $CheckingRole = self::RoleName($CheckCurrentStaticStatusSecond->role_id)[0];
+                $check = DB::table('business_details_list')
+                    ->where('business_id', $CheckCurrentStaticStatusSecond->business_id)
+                    ->where('call_back_id', $CheckCurrentStaticStatusSecond->role_id)
+                    ->first();
+                // dd($CheckCurrentStaticStatusSecond);
+                $ForwardNameGET = $CheckingRole !== null && $CheckingRole !== 0 ? $CheckingRole->roles_name : ($check !== null ? 'Owner' : 0);
+                if ($CheckCurrentStaticStatusSecond->final_status == 1) {
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved by ' . $ForwardNameGET . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+
+                    // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body"  data-bs-placement="top" data-bs-content="Approved by ' . $ForwardNameGET . '" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
+                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+
+                    // dd("datga");
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $DeclinedName . ' <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $ForwardNameGET . '"><i class="ion-clock"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
+                } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
+                    // dd($CheckCurrentStaticStatusSecond);
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
+
+                    // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                } else {
+                    return '<span class="badge badge-primary-light">Requested</span>';
+
+                    // return '<span class="badge badge-warning-light"><i class="ion-wand"></i> Pending</span>';
+                }
+            } else {
+                return '<span class="badge badge-primary-light">Requested</span>';
+            }
+        }
+    }
+
+    public static function RequestMispunchApprovalManage($checkApprovalCycleType, $itemIteration, $itemID, $approvalTypeIdStatic, $loginRoleID)
+    {
+        $loginRoleBID = self::allValueGet()[5];
+        $checkingCover = DB::table('approval_status_list')
+            ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
+            ->where('business_id', $loginRoleBID)
+            ->where('approval_type_id', $approvalTypeIdStatic)
+            ->where('all_request_id', $itemID)
+            ->orderBy('approval_status_list.created_at', 'desc')
+            ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+            ->first();
+        $LatestRemark = $checkingCover != null ? $checkingCover->remarks : ''; // lateset remark according to approvaltypeid = 4 and last entry with the primary id
+        $LatestStatusName = $checkingCover != null ? $checkingCover->request_response : '';
+        $LatestStatusValue = $checkingCover->status ?? 0;
+        $LatestRequestColor = $checkingCover->request_color ?? 0;
+        $LatestRequestBtnColor = $checkingCover->btn_color ?? 0;
+        $LatestTooltipColor = $checkingCover->tooltip_color ?? 0;
+        // dd($itemID);
+        // dd($checkingCover);
+        $LastDeclineStatusRemark = DB::table('approval_status_list')
+            ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
+            ->where('business_id', $loginRoleBID)
+            ->where('approval_type_id', $approvalTypeIdStatic)
+            ->where('all_request_id', $itemID)
+            ->where('status', 2)
+            ->orderBy('approval_status_list.created_at', 'desc')
+            ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+            ->first();
+        $RoleRedCode = DB::table('request_mispunch_list')
+            ->join('static_status_request', 'request_mispunch_list.final_status', '=', 'static_status_request.id')
+            ->where('request_mispunch_list.business_id', $loginRoleBID)
+            ->where('request_mispunch_list.id', $itemID)
+            ->select('request_mispunch_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+            ->first();
+        if ($checkApprovalCycleType == 1) {
+            // Check for Pending Status
+            if ($checkingCover != null) {
+                $checkingCoversLoad = DB::table('approval_status_list')
+                    ->where('business_id', $loginRoleBID)
+                    ->where('role_id', $loginRoleID)
+                    ->where('approval_type_id', $approvalTypeIdStatic)
+                    ->where('all_request_id', $itemID)
+                    ->orderBy('approval_status_list.created_at', 'desc')
+                    ->first();
+                // dd($checkingCoversLoad);
+
+                if ($checkingCoversLoad) {
+                    $CheckCurrentStaticStatus = DB::table('approval_status_list')
+                        ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
+                        ->where('approval_status_list.business_id', $loginRoleBID)
+                        ->where('approval_status_list.role_id', $loginRoleID)
+                        ->where('approval_status_list.approval_type_id', $approvalTypeIdStatic)
+                        ->where('approval_status_list.all_request_id', $itemID)
+                        ->orderBy('approval_status_list.created_at', 'desc')
+                        ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+                        ->first();
+
+                    if ($CheckCurrentStaticStatus != null) {
+                        $CheckingRole = self::RoleName($CheckCurrentStaticStatus->next_role_id)[0];
+                        $ForwardName = $CheckingRole->roles_name ?? 0;
+                        // dd($item->process_complete);
+
+                        if ($itemIteration->process_complete == 1) {
+                            $SD = DB::table('request_mispunch_list')
+                                ->join('static_status_request', 'request_mispunch_list.final_status', '=', 'static_status_request.id')
+                                ->where('request_mispunch_list.business_id', $loginRoleBID)
+                                ->where('request_mispunch_list.id', $itemID)
+                                ->select('request_mispunch_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+                                ->first();
+
+                            // dd($checkingCover);
+                            $ForwardStaticName = self::RoleName($checkingCover->role_id)[0]->roles_name;
+                            $statusIcon = $SD->final_status == 1 ? '<i class="ion-checkmark-circled"></i> ' : '<i class="ion-close-circled"></i> ';
+
+                            // $statusIcon = $SD->final_status == 1 ? '<i class="ion-checkmark-circled"></i>' : '<i class="ion-close-circled"></i>';
+                            $statusColor = $SD->request_color;
+                            $statusResponse = $SD->request_response;
+                            if ($SD->final_status == 2 && $LatestStatusValue == 1) {
+                                // dd("kya chal raha");
+                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+
+                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $DeclinedName . ' <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-clock"></i> ' . nl2br($statusResponse) . '</small>';
+
+                                // return'<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $statusResponse . '  By ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '" data-bs-original-title="Declined ' . $ForwardName . '">' . $statusIcon . ' ' . $statusResponse . '</small>';
+                                // dd($LatestStatusValue);
+                            } elseif ($SD->final_status == 1) {
+                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $statusResponse . '  By ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '" data-bs-original-title="Declined ' . $ForwardName . '">' . $statusIcon . ' ' . $statusResponse . '</small>';
+                            } else {
+                                // dd($SD->final_status);
+                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardStaticName . ' <b><br> Remark : ' . nl2br($LatestRemark) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-clock"></i> ' . nl2br($statusResponse) . '</small>';
+                            }
+                        } else {
+                            $ForwardStaticName = self::RoleName($itemIteration->forward_by_role_id)[0]->roles_name;
+
+                            if ($LatestStatusValue == 1) {
+                                // dd($CheckingRole);
+                                // dd($CheckCurrentStaticStatus->request_response);
+                                // dd($ForwardName);
+                                // return'<small class="' . $CheckCurrentStaticStatus->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatus->request_response . '" data-bs-original-title="Forward To ' . $ForwardName . '">' . $CheckCurrentStaticStatus->request_response . '</small>';
+                                return '<small class="' . $LatestRequestColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '" data-bs-original-title="Forward To ' . $ForwardName . '">' . $LatestStatusName . '</small>';
+                            }
+                            if ($LatestStatusValue == 2) {
+                                // dd($CheckCurrentStaticStatus);
+
+                                // return'<small class="' . $CheckCurrentStaticStatus->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardName . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatus->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatus->request_response . '"><i class="ion-clock"></i>' . nl2br($CheckCurrentStaticStatus->request_response) . '</small>';
+                                // return'<small class="' . $CheckCurrentStaticStatus->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatus->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatus->request_response . '"><i class="ion-clock"></i>' . nl2br($CheckCurrentStaticStatus->request_response) . '</small>';
+                                return '<small class="' . $LatestRequestColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . ' <b><br> Remark : ' . nl2br($LatestRemark) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="ion-clock"></i> ' . nl2br($LatestStatusName) . '</small>';
+                            }
+
+                            $checkingLoad = DB::table('approval_management_cycle')
+                                ->where('business_id', Session::get('business_id'))
+                                ->where('approval_type_id', $approvalTypeIdStatic)
+                                ->whereJsonContains('role_id', (string) $loginRoleID)
+                                ->select('role_id')
+                                ->first();
+
+                            $roleIds = json_decode($checkingLoad->role_id, true);
+                            $currentIndex = array_search($loginRoleID, $roleIds);
+                            $nextIndex = $currentIndex + 1;
+                            $nextRoleId = isset($roleIds[$nextIndex]) ? $roleIds[$nextIndex] : -1;
+
+                            $ApprovedName = DB::table('approval_status_list')
+                                ->where('all_request_id', $itemID)
+                                ->where('approval_status_list.business_id', $loginRoleBID)
+                                ->where('approval_status_list.role_id', $loginRoleID)
+                                ->where('approval_type_id', 3)
+                                ->first();
+                            $CheckingLoad = DB::table('approval_status_list')
+                                ->where('all_request_id', $itemID)
+                                ->where('approval_type_id', $approvalTypeIdStatic)
+                                ->where('role_id', $ApprovedName->next_role_id ?? 0)
+                                ->first();
+                            // ->where('role_id', $nextRoleId)
+
+                            $gotopow = self::RoleName($CheckingLoad->role_id ?? 0)[0];
+                            $ApprovedName2 = $gotopow->roles_name ?? 0;
+
+                            if ($ApprovedName2 != 0) {
+                                // dd($CheckingLoad);
+                                if (isset($CheckingLoad)) {
+                                    if ($CheckingLoad->status == 1) {
+                                        // return'<br><small>Approved To ' . $ApprovedName2 . '</small>';
+                                    }
+                                    if ($CheckingLoad->status == 2) {
+                                        // return'<br><small>Decliend To ' . $ApprovedName2 . '</small>';
+                                    }
+                                } else {
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    $requestGet = DB::table('approval_status_list')
+                        ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
+                        ->where('approval_status_list.all_request_id', $itemID)
+                        ->where('approval_status_list.next_role_id', $loginRoleID)
+                        ->where('approval_status_list.applied_cycle_type', 1)
+                        ->where('approval_status_list.approval_type_id', '=', $approvalTypeIdStatic)
+                        ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+                        ->first();
+                    // dd($requestGet);
+                    if ($requestGet ?? false) {
+                        $CheckingRole = self::RoleName($requestGet->current_role_id ?? 0)[0];
+                        $ForwardName = $CheckingRole->roles_name ?? 0;
+                        $HoverStatus = $requestGet->status == 1 ? 'Approved By ' : 'Declined By ';
+                        if ($requestGet->status == 1 && $LastDeclineStatusRemark) {
+                            // dd($requestGet);
+                            $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b><br>Declined By' . $DeclinedName . '</br>  Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                        } elseif ($requestGet->status == 1) {
+                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                        } else {
+                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b><br>  Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                        }
+                    } else {
+                        // dd($CheckCurrentStaticStatusSecond);} else {
+                        $CheckCurrentStaticStatusSecond = DB::table('request_mispunch_list')
+                            ->join('approval_status_list', 'approval_status_list.all_request_id', '=', 'request_mispunch_list.id')
+                            ->join('static_status_request', 'request_mispunch_list.final_status', '=', 'static_status_request.id')
+                            ->where('approval_status_list.approval_type_id', $approvalTypeIdStatic)
+                            ->where('request_mispunch_list.id', $itemID)
+                            ->where('request_mispunch_list.business_id', $loginRoleBID)
+                            ->orderBy('approval_status_list.created_at', 'desc')
+                            ->select('request_mispunch_list.*', 'approval_status_list.id as approval_id', 'approval_status_list.applied_cycle_type', 'approval_status_list.business_id', 'approval_status_list.approval_type_id', 'approval_status_list.all_request_id', 'approval_status_list.role_id', 'approval_status_list.emp_id as approval_emp_id', 'approval_status_list.remarks', 'approval_status_list.status', 'approval_status_list.applied_cycle_type', 'approval_status_list.prev_role_id', 'approval_status_list.current_role_id', 'approval_status_list.next_role_id', 'approval_status_list.clicked', 'static_status_request.id as status_request_id', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+                            ->first();
+
+                        $CheckingRole = self::RoleName($CheckCurrentStaticStatusSecond->role_id)[0];
+                        $ForwardNameGET = $CheckingRole->roles_name ?? 0;
+                        // dd($CheckCurrentStaticStatusSecond);
+                        if ($CheckCurrentStaticStatusSecond) {
+                            $CheckingRole = self::RoleName($CheckCurrentStaticStatusSecond->role_id)[0];
+                            // dd($CheckCurrentStaticStatusSecond->status);
+                            $HoverStatus = $CheckCurrentStaticStatusSecond->status == 1 ? 'Approved By ' : 'Declined By ';
+                            $ForwardNameGET = $CheckingRole->roles_name ?? 0;
+                            if ($CheckCurrentStaticStatusSecond->final_status == 1) {
+                                // dd("chc");
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardNameGET . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                                // dd($CheckCurrentStaticStatusSecond);
+                                // return'<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body"  data-bs-placement="top" data-bs-content="Approved by ' . $ForwardNameGET . '" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                            } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
+                                // dd($CheckCurrentStaticStatusSecond->final_status);
+                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $DeclinedName . '<b><br> Remark :' . $LastDeclineStatusRemark->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+
+                                // return'<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br>'.$DeclinedName .' Remark :' . $LastDeclineStatusRemark->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+
+                                // return'<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $ForwardNameGET . '"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                            } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
+                                // dd('hi');
+                                // return'<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $LatestStatusName . '</small>';
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+
+                                // return'<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                            } else {
+                                if ($CheckCurrentStaticStatusSecond->status == 1 && $LastDeclineStatusRemark) {
+                                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved By ' . $ForwardNameGET . ' <b><br>' . $DeclinedName . ' Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Approved"><i class="ion-close-circled"></i> Pending</small>';
+                                } elseif ($CheckCurrentStaticStatusSecond->status == 1) {
+                                    // dd($CheckCurrentStaticStatusSecond);
+
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardNameGET . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="ion-clock"></i> Pending</small>';
+                                    // return'<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved By ' . $ForwardNameGET . ' <b><br>'. $DeclinedName .' Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> Pending</small>';
+
+                                    // return'<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-placement="top" data-bs-content="' . $HoverStatus . $ForwardNameGET . '" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-checkmark-circled"></i> Pending</small>';
+                                    // return'<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                                } elseif ($CheckCurrentStaticStatusSecond->status == 2) {
+                                    // dd('hii');
+                                    // dd($CheckCurrentStaticStatusSecond->request_response);
+                                    // dd($ForwardNameGET);
+                                    // return'<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i>  Pending</small>';
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> Pending</small>';
+
+                                    // return'<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> Pending</small>';
+                                }
+                                // return'<span class="badge badge-warning-light"><i class="ion-wand"></i> Pending</span>';
+                            }
+                        } else {
+                            return '<span class="badge badge-primary-light">Requested</span>';
+
+                            // return'<span class="badge badge-warning-light"><i class="ion-wand"></i>Requested</span>';
+                        }
+
+                        // return'<span class="badge badge-warning-light"><i class="ion-wand"></i> Pending</span>';
+                    }
+                }
+            } else {
+                return '<span class="badge badge-primary-light">Requested</span>';
+            }
+        }
+
+        if ($checkApprovalCycleType == 2) {
+            $CheckCurrentStaticStatusSecond = DB::table('request_mispunch_list')
+                ->join('approval_status_list', 'approval_status_list.all_request_id', '=', 'request_mispunch_list.id')
+                ->join('static_status_request', 'request_mispunch_list.final_status', '=', 'static_status_request.id')
+                ->where('approval_status_list.approval_type_id', $approvalTypeIdStatic)
+                ->where('request_mispunch_list.id', $itemID)
+                ->where('request_mispunch_list.business_id', $loginRoleBID)
+                ->orderBy('approval_status_list.created_at', 'desc')
+                ->first();
+
+            if (!empty($CheckCurrentStaticStatusSecond)) {
+                $CheckingRole = self::RoleName($CheckCurrentStaticStatusSecond->role_id)[0];
+                // dd($CheckingRole);
+                $check = DB::table('business_details_list')
+                    ->where('business_id', $CheckCurrentStaticStatusSecond->business_id)
+                    ->where('call_back_id', $CheckCurrentStaticStatusSecond->role_id)
+                    ->first();
+                $ForwardNameGET = $CheckingRole !== null && $CheckingRole !== 0 ? $CheckingRole->roles_name : ($check !== null ? 'Owner' : 0);
+
+                if ($CheckCurrentStaticStatusSecond->final_status == 1) {
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved by ' . $ForwardNameGET . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
+                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $DeclinedName . ' <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $ForwardNameGET . '"><i class="ion-clock"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
+                } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
+                } else {
+                    return '<span class="badge badge-primary-light">Requested</span>';
+                }
+            } else {
+                return '<span class="badge badge-primary-light">Requested</span>';
+            }
+        }
+    }
+
+    public static function AttendanceApprovalManage($checkApprovalCycleType, $itemIteration, $itemID, $approvalTypeIdStatic, $loginRoleID)
+    {
+        $loginRoleBID = self::allValueGet()[5];
+
+        // checkig the current status approvalStatusList
+        $checkingCover = DB::table('approval_status_list')
+            ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
+            ->where('business_id', $loginRoleBID)
+            ->where('approval_type_id', $approvalTypeIdStatic)
+            ->where('all_request_id', $itemID)
+            ->orderBy('approval_status_list.created_at', 'desc')
+            ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+            ->first();
+        $LatestRemark = $checkingCover != null ? $checkingCover->remarks : ''; // lateset remark according to approvaltypeid = 4 and last entry with the primary id
+        $LatestStatusName = $checkingCover != null ? $checkingCover->request_response : '';
+        $LatestStatusValue = $checkingCover->status ?? 0;
+        $LatestRequestColor = $checkingCover->request_color ?? 0;
+        $LatestRequestBtnColor = $checkingCover->btn_color ?? 0;
+        $LatestTooltipColor = $checkingCover->tooltip_color ?? 0;
+        $LastDeclineStatusRemark = DB::table('approval_status_list')
+            ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
+            ->where('business_id', $loginRoleBID)
+            ->where('approval_type_id', $approvalTypeIdStatic)
+            ->where('all_request_id', $itemID)
+            ->where('status', 2)
+            ->orderBy('approval_status_list.created_at', 'desc')
+            ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+            ->first();
+        $RoleRedCode = DB::table('attendance_list')
+            ->join('static_status_request', 'attendance_list.final_status', '=', 'static_status_request.id')
+            ->where('attendance_list.business_id', $loginRoleBID)
+            ->where('attendance_list.id', $itemID)
+            ->select('attendance_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+            ->first();
+
+        if ($checkApprovalCycleType == 1) {
+            // sequentinal type check
+
+            if ($checkingCover != null) {
+                $checkingCoversLoad = DB::table('approval_status_list')
+                    ->where('business_id', $loginRoleBID)
+                    ->where('role_id', $loginRoleID)
+                    ->where('approval_type_id', $approvalTypeIdStatic)
+                    ->where('all_request_id', $itemID)
+                    ->orderBy('approval_status_list.created_at', 'desc')
+                    ->first();
+                if ($checkingCoversLoad) {
+                    // approval status list action performed or not
+                    $CheckCurrentStaticStatus = DB::table('approval_status_list')
+                        ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
+                        ->where('approval_status_list.business_id', $loginRoleBID)
+                        ->where('approval_status_list.role_id', $loginRoleID)
+                        ->where('approval_status_list.approval_type_id', $approvalTypeIdStatic)
+                        ->where('approval_status_list.all_request_id', $itemID)
+                        ->orderBy('approval_status_list.created_at', 'desc')
+                        ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+                        ->first();
+
+                    if ($CheckCurrentStaticStatus != null) {
+                        $CheckingRole = self::RoleName($CheckCurrentStaticStatus->next_role_id)[0]; // check the next role id
+
+                        $ForwardName = $CheckingRole->roles_name ?? 0;
+                        // dd($item->process_complete);
+                        if ($itemIteration->process_complete == 1) {
+                            // if all final process completer
+                            $SD = DB::table('attendance_list')
+                                ->join('static_status_request', 'attendance_list.final_status', '=', 'static_status_request.id')
+                                ->where('attendance_list.business_id', $loginRoleBID)
+                                ->where('attendance_list.id', $itemID)
+                                ->select('attendance_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+                                ->first();
+                            $ForwardStaticName = self::RoleName($checkingCover->role_id)[0]->roles_name;
+                            $statusIcon = $SD->final_status == 1 ? '<i class="ion-checkmark-circled"></i> ' : '<i class="ion-close-circled"></i> ';
+                            $statusColor = $SD->request_color;
+                            $statusResponse = $SD->request_response;
+                            if ($SD->final_status == 2 && $LatestStatusValue == 1) {
+                                // dd("kya chal raha");
+                                // dd($LastDeclineStatusRemark);
+                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+
+                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $DeclinedName . ' <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-clock"></i> ' . nl2br($statusResponse) . '</small>';
+
+                                // return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $statusResponse . '  By ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '" data-bs-original-title="Declined ' . $ForwardName . '">' . $statusIcon . ' ' . $statusResponse . '</small>';
+                                // dd($LatestStatusValue);
+                            } elseif ($SD->final_status == 1) {
+                                // dd($item->final_status);
+
+                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $statusResponse . '  By ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '" data-bs-original-title="Declined ' . $ForwardName . '">' . $statusIcon . ' ' . $statusResponse . '</small>';
+                            } else {
+                                // dd($SD->final_status);
+                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardStaticName . ' <b><br> Remark : ' . nl2br($LatestRemark) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-clock"></i> ' . nl2br($statusResponse) . '</small>';
+                            }
+
+                            // return '<small><span class="' . $statusColor . '">' . $statusIcon . ' ' . $statusResponse . '</span></small>';
+                        } else {
+                            $ForwardStaticName = self::RoleName($itemIteration->forward_by_role_id)[0]->roles_name;
+
+                            if ($LatestStatusValue == 1) {
+                                // dd($CheckingRole);
+                                // dd($CheckCurrentStaticStatus->request_response);
+                                // dd($ForwardName);
+                                // return '<small class="' . $CheckCurrentStaticStatus->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatus->request_response . '" data-bs-original-title="Forward To ' . $ForwardName . '">' . $CheckCurrentStaticStatus->request_response . '</small>';
+                                return '<small class="' . $LatestRequestColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '" data-bs-original-title="Forward To ' . $ForwardName . '">' . $LatestStatusName . '</small>';
+                            }
+                            if ($LatestStatusValue == 2) {
+                                // dd($CheckCurrentStaticStatus);
+
+                                // return '<small class="' . $CheckCurrentStaticStatus->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardName . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatus->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatus->request_response . '"><i class="ion-clock"></i>' . nl2br($CheckCurrentStaticStatus->request_response) . '</small>';
+                                // return '<small class="' . $CheckCurrentStaticStatus->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatus->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatus->request_response . '"><i class="ion-clock"></i>' . nl2br($CheckCurrentStaticStatus->request_response) . '</small>';
+                                return '<small class="' . $LatestRequestColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . ' <b><br> Remark : ' . nl2br($LatestRemark) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="ion-clock"></i> ' . nl2br($LatestStatusName) . '</small>';
+                            }
+
+                            $checkingLoad = DB::table('approval_management_cycle')
+                                ->where('business_id', Session::get('business_id'))
+                                ->where('approval_type_id', $approvalTypeIdStatic)
+                                ->whereJsonContains('role_id', (string) $loginRoleID)
+                                ->select('role_id')
+                                ->first();
+
+                            $roleIds = json_decode($checkingLoad->role_id, true);
+                            $currentIndex = array_search($loginRoleID, $roleIds);
+                            $nextIndex = $currentIndex + 1;
+                            $nextRoleId = isset($roleIds[$nextIndex]) ? $roleIds[$nextIndex] : -1;
+
+                            $ApprovedName = DB::table('approval_status_list')
+                                ->where('all_request_id', $itemID)
+                                ->where('approval_status_list.business_id', $loginRoleBID)
+                                ->where('approval_status_list.role_id', $loginRoleID)
+                                ->where('approval_type_id', $approvalTypeIdStatic)
+                                ->first();
+                            $CheckingLoad = DB::table('approval_status_list')
+                                ->where('all_request_id', $itemID)
+                                ->where('approval_type_id', $approvalTypeIdStatic)
+                                ->where('role_id', $ApprovedName->next_role_id ?? 0)
+                                ->first();
+
+                            $gotopow = self::RoleName($CheckingLoad->role_id ?? 0)[0];
+                            $ApprovedName2 = $gotopow->roles_name ?? 0;
+                            if ($ApprovedName2 != 0) {
+                                // dd($CheckingLoad);
+                                if (isset($CheckingLoad)) {
+                                    if ($CheckingLoad->status == 1) {
+                                        // return '<br><small>Approved To ' . $ApprovedName2 . '</small>';
+                                    }
+                                    if ($CheckingLoad->status == 2) {
+                                        // dd($ForwardStaticName);
+                                        // return '<br><small>Decliend To ' . $ApprovedName2 . '</small>';
+                                    }
+                                } else {
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    $requestGet = DB::table('approval_status_list')
+                        ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
+                        ->where('approval_status_list.all_request_id', $itemID)
+                        ->where('approval_status_list.next_role_id', $loginRoleID)
+                        ->where('approval_status_list.applied_cycle_type', 1)
+                        ->where('approval_status_list.approval_type_id', '=', $approvalTypeIdStatic)
+                        ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+                        ->first();
+
+                    if ($requestGet ?? false) {
+                        $CheckingRole = self::RoleName($requestGet->current_role_id ?? 0)[0];
+                        $ForwardName = $CheckingRole->roles_name ?? 0;
+                        $HoverStatus = $requestGet->status == 1 ? 'Approved By ' : 'Declined By ';
+                        if ($requestGet->status == 1 && $LastDeclineStatusRemark) {
+                            // dd($requestGet);
+                            $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+
+                            // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b><br>' . $DeclinedName . '  Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                        } elseif ($requestGet->status == 1) {
+                            // dd($requestGet);
+                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                            // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b><br> Remark : ' . nl2br($requestGet->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                        } else {
+                            // dd($requestGet);
+
+                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b><br> Remark : ' . nl2br($requestGet->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                        }
+                        // dd($CheckCurrentStaticStatusSecond);
+                    } else {
+                        $CheckCurrentStaticStatusSecond = DB::table('attendance_list')
+                            ->join('approval_status_list', 'approval_status_list.all_request_id', '=', 'attendance_list.id')
+                            ->join('static_status_request', 'attendance_list.final_status', '=', 'static_status_request.id')
+                            ->where('approval_status_list.approval_type_id', $approvalTypeIdStatic)
+                            ->where('attendance_list.id', $itemID)
+                            ->where('attendance_list.business_id', $loginRoleBID)
+                            ->select('attendance_list.*', 'approval_status_list.id as approval_id', 'approval_status_list.applied_cycle_type', 'approval_status_list.business_id', 'approval_status_list.approval_type_id', 'approval_status_list.all_request_id', 'approval_status_list.role_id', 'approval_status_list.emp_id as approval_emp_id', 'approval_status_list.remarks', 'approval_status_list.status', 'approval_status_list.applied_cycle_type', 'approval_status_list.prev_role_id', 'approval_status_list.current_role_id', 'approval_status_list.next_role_id', 'approval_status_list.clicked', 'static_status_request.id as status_request_id', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
+                            ->orderBy('approval_status_list.created_at', 'desc')
+                            ->first();
+
+                        if ($CheckCurrentStaticStatusSecond) {
+                            $CheckingRole = self::RoleName($CheckCurrentStaticStatusSecond->role_id)[0];
+                            // dd($CheckCurrentStaticStatusSecond->status);
+                            $HoverStatus = $CheckCurrentStaticStatusSecond->status == 1 ? 'Approved By ' : 'Declined By ';
+                            $ForwardNameGET = $CheckingRole->roles_name ?? 0;
+                            if ($CheckCurrentStaticStatusSecond->final_status == 1) {
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardNameGET . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                                // dd($CheckCurrentStaticStatusSecond);
+                                // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body"  data-bs-placement="top" data-bs-content="Approved by ' . $ForwardNameGET . '" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                            } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
+                                // dd($CheckCurrentStaticStatusSecond->final_status);
+                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id ?? 0)[0]->roles_name ?? 0;
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $DeclinedName . '<b><br> Remark :' . $LastDeclineStatusRemark->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+
+                                // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br>'.$DeclinedName .' Remark :' . $LastDeclineStatusRemark->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+
+                                // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $ForwardNameGET . '"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                            } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
+                                // dd('hi');
+                                // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $LatestStatusName . '</small>';
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+
+                                // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                            } else {
+                                if ($CheckCurrentStaticStatusSecond->status == 1 && $LastDeclineStatusRemark) {
+                                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved By ' . $ForwardNameGET . ' <b><br>' . $DeclinedName . ' Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Approved"><i class="ion-close-circled"></i> Pending</small>';
+                                } elseif ($CheckCurrentStaticStatusSecond->status == 1) {
+                                    // dd($CheckCurrentStaticStatusSecond);
+
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardNameGET . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="ion-clock"></i> Pending</small>';
+                                    // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved By ' . $ForwardNameGET . ' <b><br>'. $DeclinedName .' Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> Pending</small>';
+
+                                    // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-placement="top" data-bs-content="' . $HoverStatus . $ForwardNameGET . '" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-checkmark-circled"></i> Pending</small>';
+                                    // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                                } elseif ($CheckCurrentStaticStatusSecond->status == 2) {
+                                    // dd('hii');
+                                    // dd($CheckCurrentStaticStatusSecond->request_response);
+                                    // dd($ForwardNameGET);
+                                    // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i>  Pending</small>';
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> Pending</small>';
+
+                                    // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> Pending</small>';
+                                }
+                                // return '<span class="badge badge-warning-light"><i class="ion-wand"></i> Pending</span>';
+                            }
+                        } else {
+                            return '<span class="badge badge-primary-light">Requested</span>';
+
+                            // return '<span class="badge badge-warning-light"><i class="ion-wand"></i>Requested</span>';
+                        }
+
+                        // return '<span class="badge badge-warning-light"><i class="ion-wand"></i> Pending</span>';
+                    }
+                }
+            } else {
+                return '<span class="badge badge-primary-light">Requested</span>';
+            }
+        }
+
+        if ($checkApprovalCycleType == 2) {
+            $CheckCurrentStaticStatusSecond = DB::table('attendance_list')
+                ->join('approval_status_list', 'approval_status_list.all_request_id', '=', 'attendance_list.id')
+                ->join('static_status_request', 'attendance_list.final_status', '=', 'static_status_request.id')
+                ->where('approval_status_list.approval_type_id', $approvalTypeIdStatic)
+                ->where('attendance_list.id', $itemID)
+                ->where('attendance_list.business_id', $loginRoleBID)
+                ->orderBy('approval_status_list.created_at', 'desc')
+                // ->where('approval_status_list.applied_cycle_type', 2)
+                ->first();
+            if (!empty($CheckCurrentStaticStatusSecond)) {
+                $CheckingRole = self::RoleName($CheckCurrentStaticStatusSecond->role_id)[0];
+                $check = DB::table('business_details_list')
+                    ->where('business_id', $CheckCurrentStaticStatusSecond->business_id)
+                    ->where('call_back_id', $CheckCurrentStaticStatusSecond->role_id)
+                    ->first();
+                // dd($CheckCurrentStaticStatusSecond);
+                $ForwardNameGET = $CheckingRole !== null && $CheckingRole !== 0 ? $CheckingRole->roles_name : ($check !== null ? 'Owner' : 0);
+                if ($CheckCurrentStaticStatusSecond->final_status == 1) {
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved by ' . $ForwardNameGET . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+
+                    // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body"  data-bs-placement="top" data-bs-content="Approved by ' . $ForwardNameGET . '" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
+                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+
+                    // dd("datga");
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $DeclinedName . ' <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $ForwardNameGET . '"><i class="ion-clock"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
+                } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
+                    // dd($CheckCurrentStaticStatusSecond);
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
+
+                    // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                } else {
+                    return '<span class="badge badge-primary-light">Requested</span>';
+
+                    // return '<span class="badge badge-warning-light"><i class="ion-wand"></i> Pending</span>';
+                }
+            } else {
+                return '<span class="badge badge-primary-light">Requested</span>';
+            }
+        }
+    }
 
     // all details get session
     public static function PassBy()
     {
         return [self::allValueGet()[4], self::allValueGet()[5], self::allValueGet()[8], self::allValueGet()[7]];
+        // dd(self::allValueGet()[5]);
     }
 
-    // $currentDate = date('Y-m-d');
-    // echo "Standard Date Format: $currentDate";
+    // USING Gateways SET BY JAYANT
+    protected static function ReloadSession2Data()
+    {
+        //..protected Layer
+        Session::put('user_type', Session::get('user_type'));
+        Session::put('business_id', Session::get('business_id'));
+        Session::put('branch_id', Session::get('branch_id'));
+        Session::put('login_name', Session::get('login_name'));
+        Session::put('login_email', Session::get('login_email'));
+        Session::put('login_role', Session::get('login_role'));
+        Session::put('login_business_image', Session::get('login_business_image') != null ? Session::get('login_business_image') : 'assets/images/users/16.jpg');
+        if (Session::get('user_type') == 'owner') {
+            Session::put('model_id', Session::get('model_id'));
+        }
+        if (Session::get('user_type') == 'admin') {
+            Session::put('login_emp_id', Session::get('login_emp_id'));
+        }
+    }
+    // after complete payment store same datas
+    protected static function ReloadSession1Data($LoadModel)
+    {
+        $decryptedArray = json_decode($LoadModel, true);
 
-    // $currentTime24 = date('H:i:s');
-    // echo "Standard 24-Hour Time Format: $currentTime24";
+        if ($decryptedArray['user_type'] == 'owner') {
+            Session::put('user_type', $decryptedArray['user_type']);
+            Session::put('business_id', $decryptedArray['business_id']);
+            Session::put('branch_id', $decryptedArray['branch_id']);
+            Session::put('model_id', $decryptedArray['model_id']);
+            Session::put('login_role', $decryptedArray['login_role']);
+            Session::put('login_name', $decryptedArray['login_name']);
+            Session::put('login_email', $decryptedArray['login_email']);
+            Session::put('login_business_image', $decryptedArray['login_business_image']);
+        }
+        if ($decryptedArray['user_type'] == 'admin') {
+            Session::put('user_type', $decryptedArray['user_type']);
+            Session::put('business_id', $decryptedArray['business_id']);
+            Session::put('branch_id', $decryptedArray['branch_id']);
+            Session::put('login_emp_id', $decryptedArray['login_emp_id']);
+            Session::put('login_role', $decryptedArray['login_role']); //role table role id link model_has_role
+            Session::put('login_name', $decryptedArray['login_name']);
+            Session::put('login_email', $decryptedArray['login_email']);
+            Session::put('login_business_image', $decryptedArray['login_business_image']);
+        }
+        return $decryptedArray;
+    }
+    public static function callReloadStep2SessionData()
+    {
+        return self::ReloadSession2Data(); //store
+    }
+    public static function callReloadStep1SessionData($LoadModel)
+    {
+        return self::ReloadSession1Data($LoadModel); //put
+    }
+    // MAIN Responsible LOADED
+    public static function PatternMatch($combinedString)
+    {
+        $mode1 = '';
+        $mode2 = '';
+        $pattern = '/^(.*?)@(.*?)$/';
+        preg_match($pattern, $combinedString, $matches);
 
-    // $currentTime12 = date('h:i A');
-    // echo "Standard 12-Hour Time Format: $currentTime12";
+        if (count($matches) === 3) {
+            $uniqueId = $matches[1]; // Contains the value before '@'
+            $businessId = $matches[2]; // Contains the value after '@'
+            $mode1 = $uniqueId;
+            $mode2 = $businessId;
+            return [$mode1, $mode2];
+        } else {
+            return [$mode1, $mode2];
+            // Regex didn't match the pattern
+            // Handle the case where the string format is unexpected
+        }
+    }
 
     // loaded as constructor used
     public static function allValueGet()
@@ -703,7 +2019,7 @@ class RulesManagement
         self::$currentDay = $now->day;
         self::$currentMonth = $now->month;
         self::$currentYear = $now->year;
-// dd($UserType);
+        // dd($LoginModelID);
         return [self::$Today, self::$currentDay, self::$currentMonth, self::$currentYear, self::$UserType, self::$BusinessID, self::$BranchID, self::$LoginRole, self::$LoginEmpID, self::$LoginModelID, self::$LoginName, self::$LoginEmail, self::$LoginBusinessImage];
     }
 

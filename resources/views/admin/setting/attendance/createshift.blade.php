@@ -617,7 +617,7 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-light" type="reset" data-bs-dismiss="modal">Close</button>
-                            <button class="btn btn-primary" type="submit" id="updateButton">Save changes</button>
+                            <button class="btn btn-primary" type="submit" id="updateButton">Update & Continue</button>
                         </div>
 
                     </div>
@@ -722,7 +722,7 @@
                             <div class="modal-footer">
                                 <button class="btn btn-light" type="reset" data-bs-dismiss="modal">Close</button>
                                 <button class="btn btn-primary" name="EditShiftOpenShiftSubmit" value="OpenSubmit"
-                                    type="submit" id="savechanges">Save changes</button>
+                                    type="submit" id="savechanges">Save & Continue</button>
                             </div>
                         </form>
                     </div>
@@ -980,7 +980,7 @@
                                 timer: 2000,
                                 timerProgressBar: true,
                                 title: 'Update Successful',
-                                text: 'Rotational Shift is Updated Successfully.',
+                                // text: 'Rotational Shift is Updated Successfully.',
                                 icon: 'success',
                             }).then(() => {
                                 // Reload the page after the alert is closed
@@ -1986,7 +1986,7 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-light" type="reset" data-bs-dismiss="modal">Close</button>
-                            <button class="btn btn-primary" type="submit" id="savechanges">Save changes</button>
+                            <button class="btn btn-primary" type="submit" id="savechanges">Save & Continue</button>
                         </div>
                     </form>
                     <script>

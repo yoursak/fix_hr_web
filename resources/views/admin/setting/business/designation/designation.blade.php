@@ -182,9 +182,9 @@
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
                         @csrf
-                        <button type="reset" class="btn btn-outline-dark cancel"
+                        <button type="reset" class="btn btn-danger cancel"
                             data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary savebtn">Continue</button>
+                        <button type="submit" class="btn btn-primary savebtn">Save & Continue</button>
                     </div>
                 </form>
             </div>
@@ -243,8 +243,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <a class="btn btn-outline-dark cancel" data-bs-dismiss="modal">Cancel</a>
-                        <button type="submit" class="btn btn-primary savebtn">Update Continue</button>
+                        <a class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
+                        <button type="submit" class="btn btn-primary savebtn">Update & Continue</button>
 
                     </div>
                 </form>
@@ -270,9 +270,10 @@
                         <h4 class="mt-5">Are you sure want to Delete, <span class="text-primary">{{ $item->desig_name }}</span> ?</h4>
                     </div>
                     <div class="modal-footer">
-                        <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Decline</button>
+                        <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <form method="POST" action="{{ route('delete.designation', $item->desig_id) }}">
                             @csrf
+                            
                             <button type="submit" class="btn btn-danger" data-bs-toggle="modal"
                                 data-bs-target="#">Delete</button>
                         </form>

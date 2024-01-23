@@ -101,7 +101,7 @@ Branch Settings
                         <tr>
                             <th class="border-bottom-0">S. No.</th>
                             <th class="border-bottom-0">Branch Name</th>
-
+                            <th class="border-bottom-0">Branch Email</th>
                             <th class="border-bottom-0">Action</th>
                         </tr>
                     </thead>
@@ -114,6 +114,7 @@ Branch Settings
                         <tr>
                             <td>{{ $count++ }}</td>
                             <td>{{ $item->branch_name }}</td>
+                            <td>{{ $item->branch_email }}</td>
 
                             <td>
                                 <div class="d-flex">
@@ -125,14 +126,14 @@ Branch Settings
 
                                     <a class="btn action-btns  btn-sm btn-primary" data-bs-target="#editBranchName"
                                         onclick="openEditDesignation(this)" data-id='<?= $item->id ?>'
-                                        data-branch_name='<?= $item->branch_name ?>'
+                                        data-branch_name='<?= $item->branch_name ?>' data-branch_email='<?= $item->branch_email ?>'
                                         data-address='<?= $item->address ?>' data-logitude='<?= $item->logitude ?>'
                                         data-latitude='<?= $item->latitude ?>' data-bs-toggle="modal" href="#">
                                         <i class='feather feather-edit'></i></a>
                                     @endif
                                     @if (in_array('Employee.Delete', $permissions))
                                     <a class="action-btns btn btn-sm btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#branchDeletebtn{{ $item->id }}" id="BranchEditbtn"
+                                     onclick="ItemDeleteModel(this)"   data-branch_id='<?= $item->branch_id ?>' data-branch_name='<?= $item->branch_name ?>' data-bs-target="#branchDeletebtn" id="BranchEditbtn"
                                         title="Edit">
                                         <i class="feather feather-trash "></i>
                                     </a>
@@ -166,6 +167,9 @@ Branch Settings
                             <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Branch Name</p>
                             <input class="form-control" id="editbranchNameId" placeholder="Branch Name" type="text"
                                 name="editbranch">
+                                <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Branch Email</p>
+                            <input class="form-control" id="editbranchEmailId" placeholder="Branch Email" type="email"
+                                name="editemail">
                             <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Address Name</p>
                             <input class="form-control " id="editaddressNameId" type="text" placeholder="Address Name"
                                 name="editaddress">
@@ -177,8 +181,8 @@ Branch Settings
                         </div>
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
-                        <a class="btn btn-outline-danger cancel" data-bs-dismiss="modal">Cancel</a>
-                        <button type="submit" class="btn btn-primary savebtn">Continue</button>
+                        <a class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</a>
+                        <button type="submit" class="btn btn-primary savebtn">Update & Continue</button>
                     </div>
                 </form>
             </div>
@@ -198,6 +202,8 @@ Branch Settings
                         <div class="col-lg">
                             <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Branch Name</p>
                             <input class="form-control" name="branch" placeholder="Branch Name" type="text" required>
+                            <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Branch Email</p>
+                            <input class="form-control" name="email" placeholder="Branch Email" type="email" required>
 
                             <p class="mb-0 pb-0 text-dark fs-13 mt-1 ">Address Name</p>
                             {{-- <input class="form-control" placeholder="Address Name" type="text" value=""
@@ -216,39 +222,40 @@ Branch Settings
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
                         @csrf
-                        <button type="reset" class="btn btn-outline-dark cancel" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary savebtn">Continue</button>
+                        <button type="reset" class="btn btn-danger cancel" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary savebtn">Save & Continue</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
     {{-- modal for delete confirmation --}}
-    @foreach ($branch as $item)
-        <div class="modal fade" id="branchDeletebtn{{ $item->id }}" data-bs-backdrop="static">
-            <div class="modal-dialog modal-dialog-centered  modal-md" role="document">
-                <div class="modal-content modal-content-demo">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirmation</h5>
-                        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body text-center">
-                        <h4 class="mt-5">Are you sure want to Delete, <span class="text-primary">{{ $item->branch_name }}</span> ?</h4>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">Decline</button>
-                        <form method="POST" action="{{ route('delete.branch', $item->id) }}">
-                            @csrf
-                            <button type="submit" class="btn btn-danger" data-bs-toggle="modal"
-                                data-bs-target="#">Delete</button>
-                        </form>
-                    </div>
+    <div>
+        <div class="modal fade" id="branchDeletebtn" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+
+                    <form action="{{ route('delete.branch') }}" method="POST">
+                        @csrf
+                        <input type="text" id="branch_id" name="branch_id" hidden>
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Confirm Deletion</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                        <h4 class="mt-5">Are you sure want to Delete, <span class="text-primary" id="assign_branch">{{ $item->branch_id }}</span> ?</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <a class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
+                            <button type="submit" class="btn btn-danger" id="">Delete</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    @endforeach
+    </div>
     <script>
         let map;
         let editMap;
@@ -256,15 +263,25 @@ Branch Settings
         let latitudeEdit;
         let addressEdit;
 
+        function ItemDeleteModel(context) {
+            var id = $(context).data('branch_id');
+            var name = $(context).data('branch_name')
+            $('#branch_id').val(id);
+            $('#assign_branch').text(name);
+
+        }
+
         function openEditDesignation(context) {
             var id = $(context).data('id');
             var branch_name = $(context).data('branch_name');
+            var branch_email = $(context).data('branch_email');
             var address = $(context).data('address');
             var logitude = $(context).data('logitude');
             var latitude= $(context).data('latitude');
             console.log(id);
             $('#editId').val(id);
             $('#editbranchNameId').val(branch_name);
+            $('#editbranchEmailId').val(branch_email);
             $('#editaddressNameId').val(address);
             $('#logituder2').val(logitude);
             $('#latituder2').val(latitude);

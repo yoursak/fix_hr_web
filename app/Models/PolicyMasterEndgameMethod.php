@@ -29,9 +29,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PolicyMasterEndgameMethod extends Model
 {
-	
-	protected $table = 'policy_master_endgame_method';
 
+	protected $table = 'policy_master_endgame_method';
+	protected $primary_key = 'id';
 	// protected $casts = [
 	// 	'method_switch' => 'bool',
 	// 	'policy_preference' => 'int',

@@ -20,7 +20,7 @@ class UserMisspunchIdToDataResources extends JsonResource
             'emp_name' => $this->emp_name ?? '',
             'emp_mobile_no' => $this->emp_mobile_no ?? '',
             'emp_miss_date' => $this->emp_miss_date ?? '',
-            'emp_miss_time_type' => $this->emp_miss_time_type ?? '',
+            'emp_miss_time_type' => $this->time_type ?? '',
             'emp_miss_in_time' => $this->emp_miss_in_time ?? '',
             'emp_miss_out_time' => $this->emp_miss_out_time ?? '',
             'emp_working_hour' => $this->emp_working_hour ?? '',

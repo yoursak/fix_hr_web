@@ -132,7 +132,6 @@ class MispunchApiController extends Controller
                     ->where('emp_id', $emp_id)
                     ->first();
                 if (isset($emp)) {
-
                     // why type = 2 leave for  using approval system checking actived
                     $approvalManagementCycle = ApprovalManagementCycle::where('business_id', $emp->business_id)
                         ->where('approval_type_id', 3)
@@ -157,9 +156,6 @@ class MispunchApiController extends Controller
                         ->select('id')
                         ->count();
 
-                    // ->get();
-                    // dd(gettype($checkAutomation->occurance_count), gettype($checkOccurrence));
-                    // dd($checkOccurrence, $checkAutomation->occurance_count);
                     if ($checkAutomation->occurance_count > $checkOccurrence) {
                         $requestDate = Carbon::createFromFormat('d-m-Y', $request->date);
                         $data = new RequestMispunchList();
@@ -178,7 +174,7 @@ class MispunchApiController extends Controller
                         $data->final_status = 0;
                         $data->process_complete = 0;
                         $data->final_status = 0;
-                        $data->status = 0;
+                        // $data->status = 0;
                         if ($data->save()) {
                             // return $data;
                             return ReturnHelpers::jsonApiReturnSecond(MispunchRequestResources::collection([RequestMispunchList::find($data->id)])->all(), 1); // case 1 when the gatepass date store
@@ -194,8 +190,35 @@ class MispunchApiController extends Controller
                     return response()->json(['result' => [], 'case' => 4, 'status' => false], 404); // case 4 when the employee not found
                 }
             } else {
+                $emp = EmployeePersonalDetail::where('business_id', $business_id)
+                    ->where('emp_id', $emp_id)
+                    ->first();
+                $requestDate = Carbon::createFromFormat('d-m-Y', $request->date);
+                $data = new RequestMispunchList();
+                $data->business_id = $emp->business_id;
+                $data->emp_id = $request->emp_id;
+                $data->emp_miss_date = $requestDate->toDateString();
+                $data->emp_mobile_no = $emp->emp_mobile_number;
+                $data->emp_miss_time_type = $request->emp_miss_time_type;
+                $data->emp_miss_in_time = $request->emp_miss_in_time;
+                $data->emp_miss_out_time = $request->emp_miss_out_time;
+                $data->emp_working_hour = $request->emp_working_hour;
+                $data->reason = $request->reason;
+                $data->forward_by_role_id = $firstRoleId ?? 0;
+                $data->forward_by_status = 0;
+                $data->final_level_role_id = $lastRoleId ?? 0;
+                $data->final_status = 0;
+                $data->process_complete = 0;
+                $data->final_status = 0;
+                // $data->status = 0;
+                if ($data->save()) {
+                    // return $data;
+                    return ReturnHelpers::jsonApiReturnSecond(MispunchRequestResources::collection([RequestMispunchList::find($data->id)])->all(), 1); // case 1 when the gatepass date store
+                } else {
+                    return response()->json(['result' => [], 'case' => 2, 'status' => true]); // case 2 when the gatepass record not store
+                }
                 // return 'case 5 gatepass switch off';
-                return response()->json(['result' => [], 'case' => 5, 'status' => false]); // case 5 gatepass switch off
+                // return response()->json(['result' => [], 'case' => 5, 'status' => false]); // case 5 gatepass switch off
             }
         } else {
             // return 'case 6 when the rquired field is null';
@@ -218,39 +241,58 @@ class MispunchApiController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function mispunchupdate(Request $request)
     {
-        $data = MispunchList::find($id);
+        // return $request->all();
+        $id = $request->id;
+        $business_id = $request->business_id;
+        $emp_id = $request->emp_id;
+        $data = RequestMispunchList::where('business_id', $business_id)
+            ->where('emp_id', $emp_id)
+            ->where('id', $id)
+            ->first();
         if ($data) {
-            $data->business_id = $request->business_id ?? $data->business_id;
-            $data->branch_id = $request->branch_id ?? $data->branch_id;
-            $data->department_id = $request->department_id ?? $data->department_id;
-            $data->designation_id = $request->designation_id ?? $data->designation_id;
-            $data->emp_id = $request->emp_id ?? $data->emp_id;
-            $data->emp_name = $request->emp_name ?? $data->emp_name;
-            $data->emp_mobile_no = $request->emp_mobile_no ?? $data->emp_mobile_no;
-            $data->emp_miss_date = $request->emp_miss_date ?? $data->emp_miss_date;
-            $data->emp_miss_time_type = $request->emp_miss_time_type ?? $data->emp_miss_time_type;
-            $data->emp_miss_in_time = $request->to_date ?? $data->emp_miss_in_time;
-            $data->emp_miss_out_time = $request->days ?? $data->emp_miss_out_time;
-            $data->reason = $request->reason ?? $data->reason;
-            $data->status = $request->status ?? $data->status;
-            if ($data->update()) {
-                return ReturnHelpers::jsonApiReturn(MispunchRequestResources::collection([MispunchList::find($data->id)])->all());
+            if ($data->forward_by_status == 0 && $data->final_status == 0 && $data->process_complete == 0) {
+                $data->id = $request->id ?? $data->id;
+                $data->business_id = $request->business_id ?? $data->business_id;
+                $data->emp_id = $request->emp_id ?? $data->emp_id;
+                $data->emp_miss_date = $request->emp_miss_date ?? $data->emp_miss_date;
+                $data->emp_miss_time_type = $request->emp_miss_time_type ?? $data->emp_miss_time_type;
+                $data->emp_miss_in_time = $request->emp_miss_in_time ?? $data->emp_miss_in_time;
+                $data->emp_miss_out_time = $request->emp_miss_out_time ?? $data->emp_miss_out_time;
+                $data->emp_working_hour = $request->emp_working_hour ?? $data->emp_working_hour;
+                $data->reason = $request->reason ?? $data->reason;
+                $data->forward_by_role_id = $request->forward_by_role_id ?? $data->forward_by_role_id;
+                $data->forward_by_status = $request->forward_by_status ?? $data->forward_by_status;
+                $data->final_level_role_id = $request->final_level_role_id ?? $data->final_level_role_id;
+                $data->final_status = $request->final_status ?? $data->final_status;
+                $data->process_complete = $request->process_complete ?? $data->process_complete;
+                $submit = $data->update();
+                if ($submit) {
+                    return response()->json(['result' => [], 'status' => true, 'case' => 1]); // case 1 update
+                }
+                return response()->json(['result' => [], 'status' => false, 'case' => 2]); // case 2 when the action perform
             }
-            return response()->json(['result' => [], 'status' => false]);
+            return response()->json(['result' => ['You cannot update your request, your request is a process you can not update it.'], 'status' => false, 'case' => 3]); // case 3 when the action perform
         }
-        return response()->json(['result' => [], 'status' => false], 404);
+        return response()->json(['result' => [], 'status' => false, 'case' => 4], 404); // case 4 when the data not found
     }
 
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $data = MispunchList::find($id);
+        $data = RequestMispunchList::where('business_id', $request->business_id)
+            ->where('emp_id', $request->emp_id)
+            ->where('id', $request->id)
+            ->first();
         if ($data) {
-            $data->delete();
-            return response()->json(['result' => true, 'status' => true]);
+            if ($data->forward_by_status == 0 && $data->final_status == 0 && $data->process_complete == 0) {
+                $data->delete();
+                return response()->json(['result' => true, 'status' => true, 'case' => 1]);
+            } else {
+                return response()->json(['result' => 'You cannot delete your request, your request is under process you can not delete it.', 'status' => false, 'case' => 2]);
+            }
         } else {
-            return response()->json(['result' => [], 'status' => false]);
+            return response()->json(['result' => [], 'status' => false, 'case' => 3], 404);
         }
     }
 }

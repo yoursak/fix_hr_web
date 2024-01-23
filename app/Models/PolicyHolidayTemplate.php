@@ -28,14 +28,14 @@ class PolicyHolidayTemplate extends Model
 	protected $primaryKey = 'temp_id';
 
 	protected $casts = [
-		'temp_from' => 'datetime',
-		'temp_to' => 'datetime'
+		// 'temp_from' => 'datetime',
+		// 'temp_to' => 'datetime'
 	];
 
 	protected $fillable = [
-		'temp_name',
-		'temp_from',
-		'temp_to',
-		'business_id'
+		// 'temp_name',
+		// 'temp_from',
+		// 'temp_to',
+		// 'business_id'
 	];
 }

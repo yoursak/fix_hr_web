@@ -35,7 +35,7 @@ use Illuminate\Database\Eloquent\Model;
 class BusinessDetailsList extends Model
 {
 	protected $table = 'business_details_list';
-
+	protected $primary_key='id';
 	// protected $casts = [
 	// 	'business_categories' => 'int',
 	// 	'business_type' => 'int'

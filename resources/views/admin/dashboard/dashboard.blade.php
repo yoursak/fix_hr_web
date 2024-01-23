@@ -43,6 +43,7 @@
             @php
                 $root = new App\Helpers\Central_unit();
                 $Count = $root->GetCount(date('Y-m-d'));
+                $DailyCount = $root->getDailyCountForDashboardAndDailyList(Session::get('business_id'),date('Y-m-d'));
             @endphp
             <div class="page-header d-flex">
                 <div class="page-leftheader">
@@ -106,7 +107,7 @@
                             <div class="card text-center">
                                 <div class="card-body"> <span>Total Employee</span>
                                     <h3 class=" mb-1 mt-1 text-primary  font-weight-bold" id="totalEmpCount">
-                                        {{ $Count[0] }}</h3>
+                                        {{ $DailyCount['totalEmp'] }}</h3>
                                 </div>
                             </div>
                         </div>
@@ -114,7 +115,7 @@
                             <div class="card text-center">
                                 <div class="card-body "> <span>Present</span>
                                     <h3 class=" mb-1 mt-1  font-weight-bold"><span class="present-status"
-                                            id="totalPresentCount">{{ $Count[1] }}</span></h3>
+                                            id="totalPresentCount">{{$DailyCount['present']}}</span></h3>
                                 </div>
                             </div>
                         </div>
@@ -122,7 +123,7 @@
                             <div class="card text-center">
                                 <div class="card-body"> <span>Absent</span>
                                     <h3 class=" mb-1 mt-1 font-weight-bold"><span class="absent-status"
-                                            id="totalAbsentCount">{{ $Count[2] }}</span></h3>
+                                            id="totalAbsentCount">{{$DailyCount['absent']}}</span></h3>
                                 </div>
                             </div>
                         </div>
@@ -130,7 +131,7 @@
                             <div class="card text-center">
                                 <div class="card-body"> <span>Half Day</span>
                                     <h3 class=" mb-1 mt-1 font-weight-bold"><span class="halfday-status"
-                                            id="totalHalfDayCount">{{ $Count[3] }}</span></h3>
+                                            id="totalHalfDayCount">{{$DailyCount['halfday']}}</span></h3>
                                 </div>
                             </div>
                         </div>
@@ -138,7 +139,7 @@
                             <div class="card text-center">
                                 <div class="card-body"> <span>Leave</span>
                                     <h3 class=" mb-1 mt-1  font-weight-bold"><span class="leave-status"
-                                            id="totalLeaveCount">{{ $Count[4] }}</span></h3>
+                                            id="totalLeaveCount">{{$DailyCount['leave']}}</span></h3>
                                 </div>
                             </div>
                         </div>
@@ -154,7 +155,7 @@
                             <div class="card text-center">
                                 <div class="card-body"> <span>Late In</span>
                                     <h3 class=" mb-1 mt-1  font-weight-bold"><span class="late-status"
-                                            id="totalLateCount">{{ $Count[6] }}</span></h3>
+                                            id="totalLateCount">{{$DailyCount['late']}}</span></h3>
                                 </div>
                             </div>
                         </div>
@@ -162,7 +163,7 @@
                             <div class="card text-center">
                                 <div class="card-body"> <span>Overtime</span>
                                     <h3 class=" mb-1 mt-1 font-weight-bold"><span class="overtime-status"
-                                            id="totalOvertimeCount">{{ $Count[7] }}</span></h3>
+                                            id="totalOvertimeCount">{{$DailyCount['leave']}}</span></h3>
                                 </div>
                             </div>
                         </div>
@@ -171,7 +172,6 @@
                 <script>
                     function dashboardCountAjax(context) {
                         var date = context.value;
-                        // console.log(date);
 
                         $.ajax({
                             url: "{{ url('/admin/attendance/dashboard_attendance_count') }}",
@@ -183,14 +183,14 @@
                             dataType: 'json',
                             success: function(result) {
                                 console.log(result);
-                                document.getElementById('totalEmpCount').innerHTML = result[0];
-                                document.getElementById('totalPresentCount').innerHTML = result[1];
-                                document.getElementById('totalAbsentCount').innerHTML = result[2];
-                                document.getElementById('totalHalfDayCount').innerHTML = result[3];
-                                document.getElementById('totalLeaveCount').innerHTML = result[4];
-                                document.getElementById('totalMispunchCount').innerHTML = result[5];
-                                document.getElementById('totalLateCount').innerHTML = result[6];
-                                document.getElementById('totalOvertimeCount').innerHTML = result[7];
+                                document.getElementById('totalEmpCount').innerHTML = result.totalEmp;
+                                document.getElementById('totalPresentCount').innerHTML = result.present;
+                                document.getElementById('totalAbsentCount').innerHTML = result.absent;
+                                document.getElementById('totalHalfDayCount').innerHTML = result.halfday;
+                                document.getElementById('totalLeaveCount').innerHTML = result.leave;
+                                document.getElementById('totalMispunchCount').innerHTML = result.mispunch;
+                                document.getElementById('totalLateCount').innerHTML = result.late;
+                                document.getElementById('totalOvertimeCount').innerHTML = result.overtime;
 
                             }
                         });
@@ -436,43 +436,55 @@
                                             // dd($resCode);
                                         @endphp
                                         @if ($resCode[1] + $resCode[3] + $resCode[9] + $resCode[8] / 2 != 0)
-                                            <tr>
-                                                <td>
-                                                    <div class="d-flex">
-                                                        <span class="avatar avatar-md brround me-3 rounded-circle"
-                                                            style="background-image: url('/employee_profile/{{ $emp->profile_photo }}')"></span>
-                                                        <div class="me-3 mt-0 mt-sm-1 d-block">
+                                        <tr>
+                                 
+                                            <td>
+                                                <div class="d-flex">
+                                                    <span class="avatar avatar-md brround me-3 rounded-circle"
+                                                        style="background-image: url('/employee_profile/{{ $emp->profile_photo }}')"></span>
+                                                    <div class="me-3 mt-0 mt-sm-1 d-block">
+                                                        <h6 class="mb-1 fs-14">
                                                             <a href="{{ route('employeeProfile', [$emp->emp_id]) }}">
-                                                                <h6 class="mb-1 fs-14">
-                                                                    {{ $emp->emp_name }}&nbsp;{{ $emp->emp_mname }}&nbsp;{{ $emp->emp_lname }}
-                                                                </h6>
+                                                                {{ $emp->emp_name }}&nbsp;{{ $emp->emp_mname }}&nbsp;{{ $emp->emp_lname }}
                                                             </a>
-                                                            <p class="text-muted mb-0 fs-12">
-                                                                <?= $root->DesingationIdToName($emp->designation_id) ?>
-                                                            </p>
-                                                        </div>
+                                                        </h6>
+                                                        <p class="text-muted mb-0 fs-12">
+                                                            <?= $root->DesingationIdToName($emp->designation_id) ?>
+                                                        </p>
                                                     </div>
-                                                </td>
-                                                <td>{{ $emp->emp_id }}</td>
-
-                                                <td class="text-center">
-                                                    {{ $resCode[1] + $resCode[3] + $resCode[9] + $resCode[8] / 2 }}</td>
-                                                <td class="text-center">{{ $resCode[2] }}</td>
-                                                <td class="text-center">{{ $resCode[8] }}</td>
-                                                <td class="text-center">0</td>
-                                                <td class="text-center">{{ $resCode[9] }}</td>
-                                                <td class="text-center">{{ $resCode[3] }}</td>
-                                                <td class="text-center">0</td>
-                                                <td class="text-center">{{ $resCode[1] }}</td>
-                                                <td class="text-center">
-                                                    <div class="btn btn-light btn-icon btn-sm" id="calenderbtn"
-                                                        data-bs-toggle="tooltip" data-original-title="View">
+                                                </div>
+                                            </td>
+                                            <td>{{ $emp->emp_id }}</td>
+                                            <td class="text-center" id="{{ $emp->emp_id }}['present']">
+                                                {{ $resCode[1] + $resCode[3] + $resCode[9] + $resCode[12]}}
+                                            </td>
+                                            {{-- @dd($resCode[8]); --}}
+                                            <td class="text-center" id="{{ $emp->emp_id }}['absent']">{{ $resCode[2] }}
+                                            </td>
+                                            <td class="text-center" id="{{ $emp->emp_id }}['halfday']">{{ $resCode[8] }}
+                                            </td>
+                                            <td class="text-center" id="{{ $emp->emp_id }}['paidleave']">{{$resCode[10] }}
+                                            </td>
+                                            <td class="text-center" id="{{ $emp->emp_id }}['mispunch']">{{ $resCode[4] }}
+                                            </td>
+                                            <td class="text-center" id="{{ $emp->emp_id }}['overtime']">{{ $resCode[9] }}
+                                            </td>
+                                            <td class="text-center" id="{{ $emp->emp_id }}['fine']">{{ $resCode[8] }}</td>
+                                            <td class="text-center" id="{{ $emp->emp_id }}['total']">{{ $resCode[1] + $resCode[3] + $resCode[9] + $resCode[12] + ($resCode[8] / 2) }}</td>
+                                            <td class="text-center">
+                                                <div class="btn btn-light btn-icon btn-sm" id="calenderbtn"
+                                                    data-bs-toggle="tooltip" data-original-title="View">
+    
+                                                    {{-- @if (($resCode[1] + $resCode[3] + $resCode[9] + $resCode[8] / 2) > 0) --}}
                                                         <a href="{{ route('attendance.byemployee', [$emp->emp_id]) }}">
                                                             <i class="feather feather-eye"></i>
                                                         </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                                    {{-- @else
+                                                        <a>No Record</a>
+                                                    @endif --}}
+                                                </div>
+                                            </td>
+                                        </tr>
 
                                             @php
                                                 if ($limit-- <= 0) {

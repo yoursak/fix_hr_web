@@ -1,7 +1,7 @@
 @extends('admin.pagelayout.master')
 
 @section('title')
-    Employee Attendance Detail
+Monthly Attendance
 @endsection
 
 @section('js')
@@ -263,22 +263,21 @@
                             <label class="form-label">Note:</label>
                         </div>
                         <div>
-                            <span class="present-status-badge me-2"><i
-                                    class="feather feather-check-circle present-status"></i> ---&gt; Present</span>
-                            <span class="absent-status-badge me-2"><i class="feather feather-x-circle absent-status"></i>
+                            <span class="present-status-badge me-2">P ---&gt; Present</span>
+                            <span class="absent-status-badge me-2">A
                                 ---&gt; Absent</span>
 
-                            <span class="halfday-status-badge me-2"><i class="fa fa-adjust halfday-status"></i> ---&gt;
+                            <span class="halfday-status-badge me-2">HD---&gt;
                                 Half Day</span>
-                            <span class="weekoff-status-badge me-2"><i class="fa fa-calendar-check-o weekoff-status"></i>
+                            <span class="weekoff-status-badge me-2">WO
                                 ---&gt;
                                 Week Off</span>
-                            <span class="holiday-status-badge me-2"><i class="fa fa-star holiday-status"></i> ---&gt;
+                            <span class="holiday-status-badge me-2">HO ---&gt;
                                 Holiday</span>
-                            <span class="leave-status-badge me-2"><i class="fa fa-certificate leave-status"></i>
+                            <span class="leave-status-badge me-2">L
                                 ---&gt;
                                 Leave</span>
-                            <span class="mispunch-status-badge me-2"><i class="fa fa-history mispunch-status"></i> ---&gt;
+                            <span class="mispunch-status-badge me-2">MSP ---&gt;
                                 Mis-punch</span>
 
                         </div>
@@ -302,23 +301,22 @@
                                                             colspan="1" aria-label="1" style="width: 14.5px;">
                                                             {{ $day }}</th>
                                                     @endwhile
-                                                    <th class="border-bottom-0 sorting_disabled" rowspan="1"
+                                                    {{-- <th class="border-bottom-0 sorting_disabled" rowspan="1"
                                                         colspan="1" aria-label="Total" style="width: 44.625px;">Total
-                                                    </th>
+                                                    </th> --}}
                                                 </tr>
                                             </thead>
                                             <tbody id="resBody" class="my_body">
                                                 @foreach ($Emp as $key => $emp)
                                                     {{-- @dd($root->getEmpAttSumm(['emp_id'=>'IT009','punch_date'=>date('Y-m-13')])); --}}
                                                     <tr class="odd border border-bottum">
-                                                        <td class="reorder sorting_1">
+                                                        <td class="reorder sorting_01">
                                                             <div class="d-flex">
                                                                 <span class="avatar avatar-md brround me-3 rounded-circle"
                                                                     style="background-image: url('/employee_profile/{{ $emp->profile_photo }}')"></span>
                                                                 <div class="me-3 mt-0 mt-sm-2 d-block">
                                                                     <h6 class="mb-1 fs-14">
-                                                                        <a
-                                                                            href="{{ route('employeeProfile', [$emp->emp_id]) }}">
+                                                                        <a href="{{ route('employeeProfile', [$emp->emp_id]) }}">
                                                                             {{ $emp->emp_name }}&nbsp;{{ $emp->emp_mname }}&nbsp;{{ $emp->emp_lname }}
                                                                         </a>
                                                                     </h6>
@@ -329,18 +327,22 @@
                                                             </div>
                                                         </td>
                                                         @php
+                                                        $allStatusCount = $root->attendanceCount($emp->emp_id, date('Y'), date('m'));
                                                             $day = 0;
                                                             $present = 0;
                                                             $halfday = 0;
                                                             $totalTwhMin = 0;
                                                             $totalOTMin = 0;
+
+                                                            // dd()
                                                         @endphp
 
                                                         @while ($day++ < date('t'))
                                                             <td>
                                                                 <div class="hr-listd">
                                                                     @php
-                                                                        if ($day <= date('d')) {
+                                                                        if ($day <= date('d') && date('d-m-Y',strtotime(($day).'-'.date('m-Y'))) >= date('d-m-Y',strtotime($emp->emp_date_of_joining))) {
+                                                                            
                                                                             $resCode = $root->getEmpAttSumm(['emp_id' => $emp->emp_id, 'punch_date' => date('Y-m-' . $day)]);
                                                                             $status = $resCode[0];
                                                                             $inTime = $resCode[1] != 0 ? date('h:i A', strtotime($resCode[1])) : '00:00';
@@ -376,43 +378,52 @@
                                                                         data-outselfie="{{ $outSelfie }}"
                                                                         class="hr-listmodal"></a>
 
-                                                                    @if ($resCode[0] == 1 || $resCode[0] == 3 || $resCode[0] == 9)
+                                                                    @if ($resCode[0] == 1 || $resCode[0] == 3 || $resCode[0] == 9 || $resCode[0] == 12)
                                                                         <?php $present++; ?>
-                                                                        <span
-                                                                            class="feather feather-check-circle present-status"></span>
+                                                                        <h6 class="mb-1 fs-14">
+                                                                            <span class="present-status">P</span>
+                                                                        </h6>
                                                                     @elseif ($resCode[0] == 2)
-                                                                        <span
-                                                                            class="feather feather-x-circle absent-status"></span>
+                                                                    <h6 class="mb-1 fs-14">
+                                                                        <span class="absent-status">A</span>
+                                                                    </h6>
                                                                     @elseif ($resCode[0] == 6)
-                                                                        <i class="fa fa-star holiday-status"></i>
+                                                                    <h6 class="mb-1 fs-14">
+                                                                        <span class="holiday-status">HO</span>
+                                                                    </h6>
                                                                     @elseif ($resCode[0] == 4)
-                                                                        <i class="fa fa-history mispunch-status"></i>
+                                                                    <h6 class="mb-1 fs-14">
+                                                                        <span class="mispunch-status">MSP</span>
+                                                                    </h6>
                                                                     @elseif ($resCode[0] == 7)
-                                                                        <i
-                                                                            class="fa fa-calendar-check-o weekoff-status"></i>
+                                                                    <h6 class="mb-1 fs-14">
+                                                                        <span class="weekoff-status">WO</span>
+                                                                    </h6>
                                                                     @elseif ($resCode[0] == 10 || $resCode[0] == 11)
-                                                                        <i class="fa fa-certificate leave-status"></i>
+                                                                    <h6 class="mb-1 fs-14">
+                                                                        <span class="leave-status">L</span>
+                                                                    </h6>
                                                                     @elseif ($resCode[0] == 8)
-                                                                        <?php $halfday++; ?>
-                                                                        <span class=""><i
-                                                                                class="fa fa-adjust halfday-status"></i></span>
+                                                                    <h6 class="mb-1 fs-14">
+                                                                        <span class="halfday-status">HD</span>
+                                                                    </h6>
                                                                     @else
-                                                                        <span class=""> </span>
+                                                                        <span class="">-</span>
                                                                     @endif
 
                                                                 </div>
                                                             </td>
                                                         @endwhile
 
-                                                        <td>
+                                                        {{-- <td>
                                                             <h6 class="mb-0">
                                                                 <span
-                                                                    class="text-primary">{{ $present + $halfday }}</span>
+                                                                    class="text-primary">{{ $allStatusCount[1] }}</span>
                                                                 <span
                                                                     class="my-auto fs-8 font-weight-normal text-muted">/</span>
                                                                 <span class="">{{ $day - 1 }}</span>
                                                             </h6>
-                                                        </td>
+                                                        </td> --}}
                                                     </tr>
                                                 @endforeach
 
@@ -648,30 +659,30 @@
                                     result[1][empID].forEach(status => {
 
                                         if (++day <= tillCount) {
-                                            if (status === 1 || status === 3 ||
+                                            if (status === 1 || status === 3 || status === 12 ||
                                                 status === 9) {
                                                 present++;
                                                 newRow +=
-                                                    '<td><div class="hr-listd"><span class="feather feather-check-circle text-success"></span></div></td>';
+                                                    '<td><div class="hr-listd">P</div></td>';
                                             } else if (status === 2) {
                                                 newRow +=
-                                                    '<td><div class="hr-listd"><span class="feather feather-x-circle text-danger"></span></div></td>';
+                                                    '<td><div class="hr-listd">ABS</div></td>';
                                             } else if (status === 6) {
                                                 newRow +=
-                                                    '<td><div class="hr-listd"><span class="fa fa-star holiday-status"></span></div></td>';
+                                                    '<td><div class="hr-listd">HO</div></td>';
                                             } else if (status === 4) {
                                                 newRow +=
-                                                    '<td><div class="hr-listd"><i class="fa fa-history mispunch-status"></i></div></td>';
+                                                    '<td><div class="hr-listd">MSP</div></td>';
                                             } else if (status === 7) {
                                                 newRow +=
-                                                    '<td><div class="hr-listd"><i class="fa fa-calendar-check-o weekoff-status"></i></div></td>';
+                                                    '<td><div class="hr-listd">WO</div></td>';
                                             } else if (status === 10 || status ===
                                                 11) {
                                                 newRow +=
-                                                    '<td><div class="hr-listd"><i class="fa fa-certificate leave-status"></i></div></td>';
+                                                    '<td><div class="hr-listd">L</div></td>';
                                             } else if (status === 8) {
                                                 newRow +=
-                                                    '<td><div class="hr-listd"><i class="fa fa-adjust halfday-status"></i></div></td>';
+                                                    '<td><div class="hr-listd">HD</div></td>';
                                                 halfday++;
                                             } else {
                                                 newRow +=
@@ -684,15 +695,7 @@
                                     });
                                 }
 
-                                newRow += `
-                                <td>
-                                    <h6 class="mb-0">
-                                        <span class="text-primary">` + (present + (halfday / 2)) + `</span>
-                                        <span class="my-auto fs-8 font-weight-normal text-muted">/</span>
-                                        <span>` + days + `</span>
-                                    </h6>
-                                </td>
-                            </tr>`;
+                                newRow += ``;
 
                                 resBody.insertAdjacentHTML('beforeend', newRow);
 

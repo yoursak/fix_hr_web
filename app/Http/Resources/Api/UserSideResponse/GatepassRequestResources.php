@@ -18,7 +18,7 @@ class GatepassRequestResources extends JsonResource
             'in_time' => $this->in_time ?? '',
             'out_time' => $this->out_time ?? '',
             'reason' => $this->reason ?? '',
-            'status' => $this->status ?? '',
+            'status' => $this->final_status ?? '',
             'created_at' => $this->created_at ?? '',
             'updated_at' => $this->updated_at ?? ''
            

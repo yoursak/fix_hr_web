@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\BranchList;
 
 /**
  * Class EmployeePersonalDetail
@@ -57,6 +58,11 @@ class EmployeePersonalDetail extends Model
 {
 	protected $table = 'employee_personal_details';
 
+	public function branch()
+	{
+		return $this->belongsTo(BranchList::class, 'branch_id');
+	}
+	// protected $primary_key = 'id';
 	// protected $casts = [
 	// 	'master_endgame_id' => 'int',
 	// 	'department_id' => 'int',
@@ -90,6 +96,7 @@ class EmployeePersonalDetail extends Model
 	// 	'is_admin',
 	// 	'role_id',
 	// 	'employee_type',
+	// 'assign_shift_type'
 	// 	'employee_contractual_type',
 	// 	'emp_mobile_number',
 	// 	'emp_email',
@@ -114,4 +121,5 @@ class EmployeePersonalDetail extends Model
 	// 	'emp_status',
 	// 	'profile_photo'
 	// ];
+
 }

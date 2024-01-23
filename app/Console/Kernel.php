@@ -4,34 +4,30 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Carbon\Carbon;
+use Session;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * Define the application's command schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-     * @return void
-     */
-    // protected function schedule(Schedule $schedule)
-    // {
-    //     // $schedule->command('inspire')->hourly();
-    // }
+    protected $commands = [
+        \App\Console\Commands\AutoAttendanceCron::class,
+        \App\Console\Commands\CleanupOtps::class,
+    ];
 
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            // Calculate the timestamp for 2 minutes ago
-            $twoMinutesAgo = Carbon::now()->subMinutes(1);
-    
-            // Update records older than 2 minutes to have a null OTP
+            // Calculate the timestamp for 5 minutes ago
+            $twoMinutesAgo = Carbon::now()->subMinutes(5);
+
+            // Update records where OTP was sent 5 minutes ago or earlier
             DB::table('login_admin')
-                ->where('otp', '!=', null)
-                ->where('created_at', '<=', $twoMinutesAgo)
+                ->where('otp_sent_at', '<=', $twoMinutesAgo)
                 ->update(['otp' => null]);
         })->everyMinute();
 
-        $schedule->command('field:update-null')->everyMinute();
+
+        $schedule->command('command:autoAttendanceCron')->daily();
     }
 
     /**

@@ -253,6 +253,29 @@
                     </div>
                 </div>
             </div>
+            <div class="col-xl-6">
+                <div class="card custom-card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-2 my-auto">
+                                <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                        class="nav-icon fa fa-bell"></i></span>
+                            </div>
+                            <div class="col-10 d-flex justify-content-between">
+                                <div class="my-auto"><a href="#">
+                                        <h5 class="my-auto text-dark">Comp-Off & LWP Policy</h5>
+                                    </a>
+                                    <p class="my-auto">Comp-Off & LWP Activated</p>
+                                </div>
+                                <div class="my-auto"> <a href="{{ url('admin/settings/business/compoff-lwop') }}"><i
+                                            class="fa fa-angle-double-right fs-20 my-auto"></i></a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             @if (in_array('Manage Employee Data Setting.View', $permissions))
                 <!-- <div class="col-xl-6">
             <div class="card custom-card">

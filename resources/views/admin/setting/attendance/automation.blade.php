@@ -29,6 +29,7 @@
 
         // dd($missPunchData);
 
+
     @endphp
     <div class="page-header d-md-flex d-block">
         <div class="page-leftheader">
@@ -741,7 +742,7 @@
                                         <?php //dd($breakData->break_extra_hr);
                                         ?>
                                         <input class="mb-4 d-none"
-                                            value="<?= $breakData != null ? $breakData->break_extra_hr . ' : ' . $breakData->break_extra_min : '' ?>"
+                                            value="<?=// $breakData != null ? $breakData->break_extra_hr . ' : ' . $breakData->break_extra_min : '' ?>"
                                             id="extraTimeForBreakBtn" name="extraBreakTime" type="text"
                                             placeholder="HH:MM" class="text-center" maxlength="5"
                                             oninput="formatTime(this)" style="width: 5rem; height: 1.5rem">
@@ -1069,12 +1070,12 @@
                                     <div class="d-none" id="minMaxOverTimeBtnContent">
                                         <div class="d-flex justify-content-center my-1">
                                             <div class="mx-2">
-                                                <label class="form-label mx-1" hidden>Min</label>
+                                                <label class="form-label mx-1" >Min</label>
                                                 <input class="mb-4"
                                                     value="{{ $overtimeData ? $overtimeData->min_ot_hr : '' }}: {{ $overtimeData ? $overtimeData->min_ot_min : '' }}"
                                                     name="minOverTime" id="minOverTimeBtn" type="text"
                                                     placeholder="HH:MM" class="text-center"" maxlength="5"
-                                                    oninput="formatTime(this)" style="width: 5rem; height: 1.5rem" hidden>
+                                                    oninput="formatTime(this)" style="width: 5rem; height: 1.5rem" >
                                             </div>
                                             <div class="mx-2">
                                                 <label class="form-label mx-1">Max</label>
@@ -1187,7 +1188,7 @@
                         <div class="row">
                             <div class="d-flex justify-content-between">
                                 <div class="my-auto">
-                                    <a class="font-weight-semibold fs-18 ms-3">Miss Punch Rule</a>
+                                    <a class="font-weight-semibold fs-18 ms-3">Mis-Punch Rule</a>
                                 </div>
                                 <div class="d-flex my-auto">
                                     <label class="custom-switch ms-auto">
@@ -1210,7 +1211,7 @@
                                             <input type="checkbox" onchange="missPunchOccurenceContent()"
                                                 class="custom-control-input" name="missPunchOccurence"
                                                 id="missPunchOccurenceBtn" value="1"
-                                                {{ $missPunchData->occurance_count != null ? 'checked' : '' }}>
+                                                {{ ($missPunchData->occurance_count ?? 0 )!= null ? 'checked' : '' }}>
                                             <span class="custom-control-label"></span>
                                             <label class="form-label mx-1">Set Occurence</label>
                                         </label>
@@ -1343,7 +1344,7 @@
                                                 id="missPunchRequestBtn" value="1"
                                                 {{ $missPunchData != null && ($missPunchData->request_day ?? 0) != 0 ? 'checked' : '' }}>
                                             <span class="custom-control-label"></span>
-                                            <label class="form-label mx-1">Can mispunch request</label>
+                                            <label class="form-label mx-1">Send mispunch request before</label>
                                         </label>
                                     </div>
                                     <div class="col-4 text-end d-none" id="missPunchRequestId">
@@ -1506,7 +1507,7 @@
                                             <input type="checkbox" onchange="gatePassOccurenceContent()"
                                                 class="custom-control-input" name="gatePassOccurence"
                                                 id="gatePassOccurenceBtn" value="1"
-                                                {{ $gatePassData->occurance_count != null ? 'checked' : '' }}>
+                                                {{ ($gatePassData->occurance_count ?? 0) != null ? 'checked' : '' }}>
                                             <span class="custom-control-label"></span>
                                             <label class="form-label mx-1">Set Occurence</label>
                                         </label>
@@ -1528,7 +1529,7 @@
                                                 </select> --}}
                                         {{-- </div>
                                             <div class="col-5 d-flex"> --}}
-                                        <input class="mb-4 " value="{{ $gatePassData->occurance_count }}"
+                                        <input class="mb-4 " value="{{ $gatePassData->occurance_count ?? 0 }}"
                                             name="gatePassOccurenceCount" id="gatePassOccurenceCount" placeholder="Times"
                                             type="number" min="0" style="width: 5rem; height: 1.5rem" ">
                                                                                             {{-- <input class="mb-4 ms-auto {{ $gatePassData != null && $gatePassData->occurance_is == 2 ? '' : 'd-none' }}" value="{{ $gatePassData ? $gatePassData->occurance_hr : '' }}:{{ $gatePassData ? $gatePassData->occurance_min : '' }}" name="gatePassOccurenceHour"

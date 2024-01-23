@@ -853,6 +853,7 @@
         $('#empPermission').addClass(effect);
         $('#asignAdmin').addClass(effect);
         $('#addNewAdmin').addClass(effect);
+        $('#export1').addClass(effect);
     }); // hide modal with effect
 
 
@@ -900,5 +901,4 @@
  *
  *
  */ --}}
- @livewireScripts
  {{-- loaded --}}

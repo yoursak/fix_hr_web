@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\EmployeePersonalDetail;
 
 /**
  * Class BranchList
@@ -38,4 +39,10 @@ class BranchList extends Model
 		'is_active',
 		'address'
 	];
+	// Define the inverse relationship to employee_personal_details
+	public function employeePersonalDetails()
+	{
+		return $this->hasMany(EmployeePersonalDetail::class, 'branch_id');
+	}
+	
 }

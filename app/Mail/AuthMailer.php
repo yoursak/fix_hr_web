@@ -31,7 +31,7 @@ class AuthMailer extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Auth Mailer',
+            subject: 'OTP Authentication',
         );
     }
 

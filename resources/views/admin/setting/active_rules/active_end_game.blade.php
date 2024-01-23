@@ -1,271 +1,23 @@
-{{-- @extends('admin.setting.setting')
---}}
 @extends('admin.pagelayout.master')
 @section('title')
-    Attendance | Create Shift
+    Setup Activation | Create Shift
 @endsection
 @section('css')
-    <style>
-        .nav-link.icon {
-            line-height: 0;
-        }
-
-        .modal-header,
-        .modal-footer {
-            background-color: #f8f8ff;
-            /* color: #fff; */
-        }
-
-        .modal-open {
-            overflow: hidden
-        }
-
-        .modal-open .modal {
-            overflow-x: hidden;
-            overflow-y: auto
-        }
-
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1050;
-            display: none;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            outline: 0
-        }
-
-        .modal-dialog {
-            position: relative;
-            width: auto;
-            margin: .5rem;
-            pointer-events: none
-        }
-
-        .modal.fade .modal-dialog {
-            transition: -webkit-transform .3s ease-out;
-            transition: transform .3s ease-out;
-            transition: transform .3s ease-out, -webkit-transform .3s ease-out;
-            -webkit-transform: translate(0, -50px);
-            transform: translate(0, -50px)
-        }
-
-        @media (prefers-reduced-motion:reduce) {
-            .modal.fade .modal-dialog {
-                transition: none
-            }
-        }
-
-        .modal.show .modal-dialog {
-            -webkit-transform: none;
-            transform: none
-        }
-
-        .modal.modal-static .modal-dialog {
-            -webkit-transform: scale(1.02);
-            transform: scale(1.02)
-        }
-
-        .modal-dialog-scrollable {
-            display: -ms-flexbox;
-            display: flex;
-            max-height: calc(100% - 1rem)
-        }
-
-        .modal-dialog-scrollable .modal-content {
-            max-height: calc(100vh - 1rem);
-            overflow: hidden
-        }
-
-        .modal-dialog-scrollable .modal-footer,
-        .modal-dialog-scrollable .modal-header {
-            -ms-flex-negative: 0;
-            flex-shrink: 0
-        }
-
-        .modal-dialog-scrollable .modal-body {
-            overflow-y: auto
-        }
-
-        .modal-dialog-centered {
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex-align: center;
-            align-items: center;
-            min-height: calc(100% - 1rem)
-        }
-
-        .modal-dialog-centered::before {
-            display: block;
-            height: calc(100vh - 1rem);
-            height: -webkit-min-content;
-            height: -moz-min-content;
-            height: min-content;
-            content: ""
-        }
-
-        .modal-dialog-centered.modal-dialog-scrollable {
-            -ms-flex-direction: column;
-            flex-direction: column;
-            -ms-flex-pack: center;
-            justify-content: center;
-            height: 100%
-        }
-
-        .modal-dialog-centered.modal-dialog-scrollable .modal-content {
-            max-height: none
-        }
-
-        .modal-dialog-centered.modal-dialog-scrollable::before {
-            content: none
-        }
-
-        .modal-content {
-            position: relative;
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex-direction: column;
-            flex-direction: column;
-            width: 100%;
-            pointer-events: auto;
-            background-color: #fff;
-            background-clip: padding-box;
-            border: 1px solid rgba(0, 0, 0, .2);
-            border-radius: .3rem;
-            outline: 0
-        }
-
-        .modal-backdrop {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1040;
-            width: 100vw;
-            height: 100vh;
-            background-color: #000
-        }
-
-        .modal-backdrop.fade {
-            opacity: 0
-        }
-
-        .modal-backdrop.show {
-            opacity: .5
-        }
-
-        .modal-header {
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex-align: start;
-            align-items: flex-start;
-            -ms-flex-pack: justify;
-            justify-content: space-between;
-            padding: 1rem 1rem;
-            border-bottom: 1px solid #dee2e6;
-            border-top-left-radius: calc(.3rem - 1px);
-            border-top-right-radius: calc(.3rem - 1px)
-        }
-
-        .modal-header .close {
-            padding: 1rem 1rem;
-            margin: -1rem -1rem -1rem auto
-        }
-
-        .modal-title {
-            margin-bottom: 0;
-            line-height: 1.5
-        }
-
-        .modal-body {
-            position: relative;
-            -ms-flex: 1 1 auto;
-            flex: 1 1 auto;
-            padding: 1rem
-        }
-
-        .modal-footer {
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex-wrap: wrap;
-            flex-wrap: wrap;
-            -ms-flex-align: center;
-            align-items: center;
-            -ms-flex-pack: end;
-            justify-content: flex-end;
-            padding: .75rem;
-            border-top: 1px solid #dee2e6;
-            border-bottom-right-radius: calc(.3rem - 1px);
-            border-bottom-left-radius: calc(.3rem - 1px)
-        }
-
-        .modal-footer>* {
-            margin: .25rem
-        }
-
-        .modal-scrollbar-measure {
-            position: absolute;
-            top: -9999px;
-            width: 50px;
-            height: 50px;
-            overflow: scroll
-        }
-
-        @media (min-width:576px) {
-            .modal-dialog {
-                max-width: 500px;
-                margin: 1.75rem auto
-            }
-
-            .modal-dialog-scrollable {
-                max-height: calc(100% - 3.5rem)
-            }
-
-            .modal-dialog-scrollable .modal-content {
-                max-height: calc(100vh - 3.5rem)
-            }
-
-            .modal-dialog-centered {
-                min-height: calc(100% - 3.5rem)
-            }
-
-            .modal-dialog-centered::before {
-                height: calc(100vh - 3.5rem);
-                height: -webkit-min-content;
-                height: -moz-min-content;
-                height: min-content
-            }
-
-            .modal-sm {
-                max-width: 300px
-            }
-        }
-
-        @media (min-width:992px) {
-
-            .modal-lg,
-            .modal-xl {
-                max-width: 800px
-            }
-        }
-
-        @media (min-width:1200px) {
-            .modal-xl {
-                max-width: 1140px
-            }
-        }
-    </style>
 @endsection
 
 @section('content')
-
+    <style>
+        .custom-switch-indicator {
+            background: red;
+            /* Change this to the desired red color */
+        }
+    </style>
     {{--
 
 <head>
     <link href="{{asset('assets/css/plugins.css')}}" rel="stylesheet" />
-    <link href="{{asset('assets/css/style.css')}}" rel="stylesheet" />
-    <link href="{{asset('assets/css/plugins.css')}}" rel="stylesheet" />
+<link href="{{asset('assets/css/style.css')}}" rel="stylesheet" />
+<link href="{{asset('assets/css/plugins.css')}}" rel="stylesheet" />
 
 </head> --}}
 
@@ -298,12 +50,12 @@
                 <div class="page-rightheader ms-auto">
                     {{-- <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
                         <div class="d-lg-flex d-block"> --}}
-                            <div class="btn-list d-flex">
-                                <a class="modal-effect btn btn-primary mx-3 ms-auto" data-effect="effect-scale"
-                                    data-bs-toggle="modal" href="#additionalModals" id="btnOpen">Create Active Method</a>
-                            </div>
+                    <div class="btn-list d-flex">
+                        <a class="modal-effect btn btn-primary mx-3 ms-auto" data-effect="effect-scale"
+                            data-bs-toggle="modal" href="#additionalModals" id="btnOpen">Create Active Method</a>
+                    </div>
 
-                        {{-- </div>
+                    {{-- </div>
                     </div> --}}
                 </div>
             </div>
@@ -315,7 +67,7 @@
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header p-5">
-                            <h5 class="modal-title" id="exampleModalLongTitle" style="font-size:18px;">Create Method
+                            <h5 class="modal-title" id="exampleModalLongTitle">Create Method
                             </h5>
                             <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
@@ -357,7 +109,7 @@
                                             </div>
                                             <div class="col-md-4" id="businessleavel">
                                                 <div class="form-group ">
-                                                    <label class="form-label">Business Level </label>
+                                                    <label class="form-label">Business Name </label>
                                                     <input type="text" id="" name="b_id"
                                                         value="<?= session('business_id') ?>" hidden>
                                                     <input type="text" class="form-control" name="businessname"
@@ -391,7 +143,9 @@
                                                 <div class="form-group">
                                                     <label class="form-label">Shift Settings List</label>
                                                     <select class="form-control select2" name="shiftsetting[]"
-                                                        data-placeholder="Choose Weekly Policy" multiple required>
+                                                        data-placeholder="Choose Shift Policy" multiple required>
+                                                        <option label="Choose Shift Policy">
+                                                        </option>
                                                         @php
                                                             $no = 1;
                                                         @endphp
@@ -407,36 +161,51 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label class="form-label"> Leave Policy List</label>
-                                                    <select class="form-control select2" name="leavepolicy[]"
-                                                        data-placeholder="Choose Leave Policy" multiple required>
-                                                        @php
-                                                            $no = 1;
-                                                        @endphp
+
+                                                <div class="form-group ">
+                                                    <label class="form-label">Leave Policy List</label>
+                                                    <select class="form-control select2 custom-select" id="leavepolicy"
+                                                        name="leavepolicy" data-placeholder="Choose Leave Policy" required>
+                                                        <option label="Choose Leave Policy">
+                                                        </option>
+
                                                         @empty(!$LeavePolicy)
                                                             @foreach ($LeavePolicy as $item)
                                                                 <option value="<?= $item->id ?>">
-                                                                    <?= $no++ ?>&nbsp;|&nbsp;
+
                                                                     <?= $item->policy_name ?>&nbsp;
                                                                 </option>
                                                             @endforeach
                                                         @endempty
                                                     </select>
                                                 </div>
+                                                {{-- <div class="form-group">
+                                                <label class="form-label"> Leave Policy List</label>
+                                                <select class="form-control select2" name="leavepolicy[]" data-placeholder="Choose Leave Policy" multiple required>
+                                                    @php
+                                                    $no = 1;
+                                                    @endphp
+                                                    @empty(!$LeavePolicy)
+                                                    @foreach ($LeavePolicy as $item)
+                                                    <option value="<?= $item->id ?>">
+                                                        <?= $no++ ?>&nbsp;|&nbsp;
+                                                        <?= $item->policy_name ?>&nbsp;
+                                                    </option>
+                                                    @endforeach
+                                                    @endempty
+                                                </select>
+                                            </div> --}}
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label class="form-label"> Holiday Policy List</label>
-                                                    <select class="form-control select2" name="holidaypolicy[]"
-                                                        data-placeholder="Choose Holiday Policy" multiple required>
-                                                        @php
-                                                            $no = 1;
-                                                        @endphp
+                                                    <select class="form-control select2" name="holidaypolicy"
+                                                        data-placeholder="Choose Holiday Policy" required>
+                                                        <option label="Choose Holiday Policy"></option>
+
                                                         @empty(!$HolidayPolicy)
                                                             @foreach ($HolidayPolicy as $item)
                                                                 <option value="<?= $item->temp_id ?>">
-                                                                    <?= $no++ ?>&nbsp;|&nbsp;
                                                                     <?= $item->temp_name ?>&nbsp;
                                                                 </option>
                                                             @endforeach
@@ -444,26 +213,58 @@
 
                                                     </select>
                                                 </div>
+                                                {{-- <div class="form-group">
+                                                <label class="form-label"> Holiday Policy List</label>
+                                                <select class="form-control select2" name="holidaypolicy[]" data-placeholder="Choose Holiday Policy" multiple required>
+                                                    @php
+                                                    $no = 1;
+                                                    @endphp
+                                                    @empty(!$HolidayPolicy)
+                                                    @foreach ($HolidayPolicy as $item)
+                                                    <option value="<?= $item->temp_id ?>">
+                                                        <?= $no++ ?>&nbsp;|&nbsp;
+                                                        <?= $item->temp_name ?>&nbsp;
+                                                    </option>
+                                                    @endforeach
+                                                    @endempty
+
+                                                </select>
+                                            </div> --}}
                                             </div>
 
                                             <div class="col-md-3">
                                                 <div class="form-group">
-                                                    <label class="form-label"> Weekly Policy List</label>
-                                                    <select class="form-control select2" name="weeklypolicy[]"
-                                                        data-placeholder="Choose Weekly Policy" multiple required>
-                                                        @php
-                                                            $no = 1;
-                                                        @endphp
+                                                    <label class="form-label"> Choose Weekly Policy</label>
+                                                    <select class="form-control select2" name="weeklypolicy"
+                                                        data-placeholder="Choose Weekly Policy" required>
+                                                        <option label="Choose Weekly Policy"></option>
+
                                                         @empty(!$weeklyPolicy)
                                                             @foreach ($weeklyPolicy as $item)
                                                                 <option value="<?= $item->id ?>">
-                                                                    <?= $no++ ?>&nbsp;|&nbsp;
                                                                     <?= $item->name ?>&nbsp;
                                                                 </option>
                                                             @endforeach
                                                         @endempty
+
                                                     </select>
                                                 </div>
+                                                {{-- <div class="form-group">
+                                                <label class="form-label"> Weekly Policy List</label>
+                                                <select class="form-control select2" name="weeklypolicy[]" data-placeholder="Choose Weekly Policy" multiple required>
+                                                    @php
+                                                    $no = 1;
+                                                    @endphp
+                                                    @empty(!$weeklyPolicy)
+                                                    @foreach ($weeklyPolicy as $item)
+                                                    <option value="<?= $item->id ?>">
+                                                        <?= $no++ ?>&nbsp;|&nbsp;
+                                                        <?= $item->name ?>&nbsp;
+                                                    </option>
+                                                    @endforeach
+                                                    @endempty
+                                                </select>
+                                            </div> --}}
                                             </div>
 
 
@@ -501,7 +302,8 @@
                                 <tr>
                                     <th class="border-bottom-0 w-10">S.No.</th>
                                     <th class="border-bottom-0">Method Name</th>
-                                    <th class="border-bottom-0">Method On/Off</th>
+                                    <th class="border-bottom-0">Setup On/Off</th>
+                                    <th class="border-bottom-0">Associated Employee</th>
                                     <th class="border-bottom-0">Policy Preference</th>
                                     <th class="border-bottom-0">Level Type</th>
                                     <th class="border-bottom-0">Shift Policy List</th>
@@ -540,6 +342,14 @@
                                                 </label>
                                             </div>
                                         </td>
+
+                                        <td class="font-weight-semibold">
+                                            @php
+                                                $CountingAssociated = $power->AssociatedUser($item->id)[0];
+                                                print_r($CountingAssociated);
+                                            @endphp
+                                        </td>
+
                                         <td class="font-weight-semibold">
                                             <?= $item->policy_name ?>
                                         </td>
@@ -576,58 +386,76 @@
                                         </td>
                                         <td class="font-weight-semibold">
                                             <?php
-                                            if ($item->leave_policy_ids_list ?? false) {
-                                                // Decode the JSON string into an array of IDs
-                                                $holidayPolicyIds = json_decode($item->leave_policy_ids_list);
-                                            
-                                                if ($holidayPolicyIds !== null) {
-                                                    // Check if the decoded JSON is not null (i.e., it's valid JSON)
-                                                    // Loop through the IDs and display the corresponding names
-                                                    foreach ($holidayPolicyIds as $id) {
-                                                        // Call the GetValues function to retrieve the object
-                                                        $load = $power->GetValues($id)[0];
-                                            
-                                                        if ($load !== null) {
-                                                            // Check if the object is not null
-                                                            echo $load->policy_name . ', '; // Add a comma and space between names if needed
-                                                        } else {
-                                                            // Handle cases where an object is not found
-                                                            echo 'Unknown'; // You can use a default value or an appropriate message here
-                                                        }
-                                                    }
-                                                } else {
-                                                    // Handle cases where the JSON is invalid or empty
-                                                    echo 'Unknown'; // You can use a default value or an appropriate message here
-                                                }
+                                            $load = $power->GetValues($item->leave_policy_ids_list)[0];
+                                            if ($load !== null) {
+                                                // Check if the object is not null
+                                                echo $load->policy_name; // Add a comma and space between names if needed
+                                            } else {
+                                                // Handle cases where an object is not found
+                                                echo 'empty'; // You can use a default value or an appropriate message here
                                             }
+                                            
+                                            // if ($item->leave_policy_ids_list ?? false) {
+                                            //     // Decode the JSON string into an array of IDs
+                                            //     $holidayPolicyIds = json_decode($item->leave_policy_ids_list);
+                                            
+                                            //     if ($holidayPolicyIds !== null) {
+                                            //         // Check if the decoded JSON is not null (i.e., it's valid JSON)
+                                            //         // Loop through the IDs and display the corresponding names
+                                            //         foreach ($holidayPolicyIds as $id) {
+                                            //             // Call the GetValues function to retrieve the object
+                                            //             $load = $power->GetValues($id)[0];
+                                            
+                                            //             if ($load !== null) {
+                                            //                 // Check if the object is not null
+                                            //                 echo $load->policy_name . ', '; // Add a comma and space between names if needed
+                                            //             } else {
+                                            //                 // Handle cases where an object is not found
+                                            //                 echo 'Unknown'; // You can use a default value or an appropriate message here
+                                            //             }
+                                            //         }
+                                            //     } else {
+                                            //         // Handle cases where the JSON is invalid or empty
+                                            //         echo 'Unknown'; // You can use a default value or an appropriate message here
+                                            //     }
+                                            // }
+                                            
                                             ?>
                                         </td>
                                         <td class="font-weight-semibold">
                                             <?php
-                                            if ($item->holiday_policy_ids_list ?? false) {
-                                                // Decode the JSON string into an array of IDs
-                                                $holidayPolicyIds = json_decode($item->holiday_policy_ids_list);
-                                            
-                                                if ($holidayPolicyIds !== null) {
-                                                    // Check if the decoded JSON is not null (i.e., it's valid JSON)
-                                                    // Loop through the IDs and display the corresponding names
-                                                    foreach ($holidayPolicyIds as $id) {
-                                                        // Call the GetValues function to retrieve the object
-                                                        $load = $power->GetValues($id)[1];
-                                            
-                                                        if ($load !== null) {
-                                                            // Check if the object is not null
-                                                            echo $load->temp_name . ', '; // Add a comma and space between names if needed
-                                                        } else {
-                                                            // Handle cases where an object is not found
-                                                            echo 'Unknown'; // You can use a default value or an appropriate message here
-                                                        }
-                                                    }
-                                                } else {
-                                                    // Handle cases where the JSON is invalid or empty
-                                                    echo 'Unknown'; // You can use a default value or an appropriate message here
-                                                }
+                                            $load = $power->GetValues($item->holiday_policy_ids_list)[1];
+                                            if ($load !== null) {
+                                                // Check if the object is not null
+                                                echo $load->temp_name; // Add a comma and space between names if needed
+                                            } else {
+                                                // Handle cases where an object is not found
+                                                echo 'empty'; // You can use a default value or an appropriate message here
                                             }
+                                            // if ($item->holiday_policy_ids_list ?? false) {
+                                            //     // Decode the JSON string into an array of IDs
+                                            //     $holidayPolicyIds = json_decode($item->holiday_policy_ids_list);
+                                            
+                                            //     if ($holidayPolicyIds !== null) {
+                                            //         // Check if the decoded JSON is not null (i.e., it's valid JSON)
+                                            //         // Loop through the IDs and display the corresponding names
+                                            //         foreach ($holidayPolicyIds as $id) {
+                                            //             // Call the GetValues function to retrieve the object
+                                            //             $load = $power->GetValues($id)[1];
+                                            
+                                            //             if ($load !== null) {
+                                            //                 // Check if the object is not null
+                                            //                 echo $load->temp_name . ', '; // Add a comma and space between names if needed
+                                            //             } else {
+                                            //                 // Handle cases where an object is not found
+                                            //                 echo 'Unknown'; // You can use a default value or an appropriate message here
+                                            //             }
+                                            //         }
+                                            //     } else {
+                                            //         // Handle cases where the JSON is invalid or empty
+                                            //         echo 'Unknown'; // You can use a default value or an appropriate message here
+                                            //     }
+                                            // }
                                             ?>
                                         </td>
 
@@ -635,30 +463,38 @@
 
                                         <td class="font-weight-semibold">
                                             <?php
-                                            if ($item->weekly_policy_ids_list ?? false) {
-                                                // Decode the JSON string into an array of IDs
-                                                $holidayPolicyIds = json_decode($item->weekly_policy_ids_list);
-                                            
-                                                if ($holidayPolicyIds !== null) {
-                                                    // Check if the decoded JSON is not null (i.e., it's valid JSON)
-                                                    // Loop through the IDs and display the corresponding names
-                                                    foreach ($holidayPolicyIds as $id) {
-                                                        // Call the GetValues function to retrieve the object
-                                                        $load = $power->GetValues($id)[2];
-                                            
-                                                        if ($load !== null) {
-                                                            // Check if the object is not null
-                                                            echo $load->name . ', '; // Add a comma and space between names if needed
-                                                        } else {
-                                                            // Handle cases where an object is not found
-                                                            echo 'Unknown'; // You can use a default value or an appropriate message here
-                                                        }
-                                                    }
-                                                } else {
-                                                    // Handle cases where the JSON is invalid or empty
-                                                    echo 'Unknown'; // You can use a default value or an appropriate message here
-                                                }
+                                            $load = $power->GetValues($item->weekly_policy_ids_list)[2];
+                                            if ($load !== null) {
+                                                // Check if the object is not null
+                                                echo $load->name; // Add a comma and space between names if needed
+                                            } else {
+                                                // Handle cases where an object is not found
+                                                echo 'empty'; // You can use a default value or an appropriate message here
                                             }
+                                            // if ($item->weekly_policy_ids_list ?? false) {
+                                            //     // Decode the JSON string into an array of IDs
+                                            //     $holidayPolicyIds = json_decode($item->weekly_policy_ids_list);
+                                            
+                                            //     if ($holidayPolicyIds !== null) {
+                                            //         // Check if the decoded JSON is not null (i.e., it's valid JSON)
+                                            //         // Loop through the IDs and display the corresponding names
+                                            //         foreach ($holidayPolicyIds as $id) {
+                                            //             // Call the GetValues function to retrieve the object
+                                            //             $load = $power->GetValues($id)[2];
+                                            
+                                            //             if ($load !== null) {
+                                            //                 // Check if the object is not null
+                                            //                 echo $load->name . ', '; // Add a comma and space between names if needed
+                                            //             } else {
+                                            //                 // Handle cases where an object is not found
+                                            //                 echo 'Unknown'; // You can use a default value or an appropriate message here
+                                            //             }
+                                            //         }
+                                            //     } else {
+                                            //         // Handle cases where the JSON is invalid or empty
+                                            //         echo 'Unknown'; // You can use a default value or an appropriate message here
+                                            //     }
+                                            // }
                                             ?>
                                         </td>
 
@@ -666,30 +502,30 @@
                                             @empty(!$attendanceModePolicy)
                                                 @foreach ($attendanceModePolicy as $item)
                                                     <?php
-                                                    if ($item->office_auto != null && $item->office_auto != 0) {
-                                                    ?>
+                                    if ($item->office_auto != null && $item->office_auto != 0) {
+                                    ?>
                                                     <small>Office&nbsp;|&nbsp;Auto</small>
                                                     <?php
-                                                    }
-                                                    if (($item->office_qr != null && $item->office_qr != 0) || ($item->office_face_id != null && $item->office_face_id != 0) || ($item->office_selfie	 != null && $item->office_selfie	 != 0)) {
-                                                    ?>
+                                    }
+                                    if (($item->office_qr != null && $item->office_qr != 0) || ($item->office_face_id != null && $item->office_face_id != 0) || ($item->office_selfie     != null && $item->office_selfie     != 0)) {
+                                    ?>
                                                     <small>Office&nbsp;|&nbsp;Manual</small>
                                                     <?php  }
-                                                    if ($item->outdoor_auto != null && $item->outdoor_auto != 0) { ?>
+                                    if ($item->outdoor_auto != null && $item->outdoor_auto != 0) { ?>
                                                     <small> Out Door&nbsp;|&nbsp;Auto</small>
                                                     <?php }
-                                                    if ($item->outdoor_selfie != null && $item->outdoor_selfie != 0) {
-                                                    ?>
+                                    if ($item->outdoor_selfie != null && $item->outdoor_selfie != 0) {
+                                    ?>
                                                     <small>Out Door&nbsp;|&nbsp;Manual</small>
 
                                                     <?php }
-                                                    if ($item->wfh_auto != null && $item->wfh_auto != 0) {
-                                                    ?>
+                                    if ($item->wfh_auto != null && $item->wfh_auto != 0) {
+                                    ?>
                                                     <small> Remote&nbsp;|&nbsp;Auto</small>
                                                     <?php
-                                                    }
-                                                    if ($item->wfh_selfie != null && $item->wfh_selfie != 0) {
-                                                    ?>
+                                    }
+                                    if ($item->wfh_selfie != null && $item->wfh_selfie != 0) {
+                                    ?>
                                                     <small> Remote&nbsp;|&nbsp;Manual</small>
 
                                                     <?php } ?>
@@ -697,7 +533,7 @@
                                             @endempty
                                         </td>
                                         <td class="font-weight-semibold">
-                                            @empty(!$attendanceTrackInOut->id)
+                                            @empty(!($attendanceTrackInOut->id ?? 0))
                                                 <option value="1">
                                                     <?php if ($attendanceTrackInOut->track_in_out != null && $attendanceTrackInOut->track_in_out != 0) { ?>
                                                     <?= 'Track In & Out Time' ?>&nbsp;
@@ -725,8 +561,7 @@
                                                 onclick="DeleteMasterModel(this)" data-ids='<?= $load_id ?>'
                                                 data-b_id='<?= $item->business_id ?>'
                                                 data-loaded='<?= $method_name ?? false ? $method_name : '' ?>'
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#editdeleteModal">
+                                                data-bs-toggle="modal" data-bs-target="#editdeleteModal">
                                                 <i class="feather feather-trash" data-bs-toggle="tooltip"
                                                     data-original-title="View/Edit"></i>
                                             </a>
@@ -742,7 +577,38 @@
         </div>
 
         {{-- edit section created --}}
+        <div class="container">
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form id="modalForm">
+                            @csrf
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Confirm Deactivation</h5>
+                                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true" data-bs-dismiss="modal">×</span>
+                                </button>
+                                <!-- <a type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</a> -->
+                            </div>
+                            <div class="modal-body">
 
+                                <p> The associated policy will not function if you deactivate the setup. </p>
+
+                            </div>
+                            <div class="modal-footer">
+                                <!-- <a type="close" class="btn  btn-secondary" data-bs-dismiss="modal">Cancel</a> -->
+                                <button class="btn btn-light" id="cancelButton" onclick="loadedCall(this)"
+                                    type="reset" value="1" data-bs-dismiss="modal">Cancel</button>
+                                <button class="btn btn-danger" onclick="loadedCall(this)" value="0"
+                                    type="submit">Deactivated</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="container">
             <div class="modal fade" id="editMasterCreated">
                 <div class="modal-dialog modal-xl">
@@ -793,7 +659,7 @@
                                             </div>
                                             <div class="col-md-4" id="editbusinessleavel">
                                                 <div class="form-group ">
-                                                    <label class="form-label">Business Level </label>
+                                                    <label class="form-label">Business Name </label>
                                                     <input type="text" id="b_id" name="b_id"
                                                         value="<?= session('business_id') ?>" hidden>
                                                     <input type="text" class="form-control" name="businessname"
@@ -843,28 +709,61 @@
                                                     </select>
                                                 </div>
                                             </div>
+
                                             <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label class="form-label"> Leave Policy List</label>
-                                                    <select class="form-control select2" id="editleavepolicy"
-                                                        name="editleavepolicy[]" data-placeholder="Choose Leave Policy"
-                                                        multiple required>
-                                                        @php
-                                                            $no = 1;
-                                                        @endphp
+                                                <div class="form-group ">
+                                                    <label class="form-label">Leave Policy List</label>
+                                                    <select class="form-control select2 custom-select"
+                                                        id="editleavepolicy" name="editleavepolicy"
+                                                        data-placeholder="Choose Leave Policy" required>
+                                                        <option label="Choose Leave Policy">
+                                                        </option>
+
                                                         @empty(!$LeavePolicy)
                                                             @foreach ($LeavePolicy as $item)
                                                                 <option value="<?= $item->id ?>">
-                                                                    <?= $no++ ?>&nbsp;|&nbsp;
                                                                     <?= $item->policy_name ?>&nbsp;
                                                                 </option>
                                                             @endforeach
                                                         @endempty
                                                     </select>
                                                 </div>
+                                                <!-- <div class="form-group">
+                                                                    <label class="form-label"> Leave Policy List</label>
+                                                                    <select class="form-control select2" id="editleavepolicy" name="editleavepolicy[]" data-placeholder="Choose Leave Policy" multiple required>
+                                                                        @php
+                                                                            $no = 1;
+                                                                        @endphp
+                                                                        @empty(!$LeavePolicy)
+        @foreach ($LeavePolicy as $item)
+        <option value="<?= $item->id ?>">
+                                                                                                <?= $no++ ?>&nbsp;|&nbsp;
+                                                                                                <?= $item->policy_name ?>&nbsp;
+                                                                                            </option>
+        @endforeach
+    @endempty
+                                                                    </select>
+                                                                </div> -->
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="form-group">
+                                                <div class="form-group ">
+                                                    <label class="form-label">Holiday Policy List</label>
+                                                    <select class="form-control select2 custom-select"
+                                                        id="editholidaypolicy" name="editholidaypolicy"
+                                                        data-placeholder="Choose Holiday Policy" required>
+                                                        <option label="Choose Holiday Policy">
+                                                        </option>
+
+                                                        @empty(!$HolidayPolicy)
+                                                            @foreach ($HolidayPolicy as $item)
+                                                                <option value="<?= $item->temp_id ?>">
+                                                                    <?= $item->temp_name ?>&nbsp;
+                                                                </option>
+                                                            @endforeach
+                                                        @endempty
+                                                    </select>
+                                                </div>
+                                                {{-- <div class="form-group">
                                                     <label class="form-label"> Holiday Policy List</label>
                                                     <select class="form-control select2" id="editholidaypolicy"
                                                         name="editholidaypolicy[]"
@@ -882,11 +781,28 @@
                                                         @endempty
 
                                                     </select>
-                                                </div>
+                                                </div> --}}
                                             </div>
 
                                             <div class="col-md-3">
-                                                <div class="form-group">
+                                                <div class="form-group ">
+                                                    <label class="form-label">Weekly Policy List</label>
+                                                    <select class="form-control select2 custom-select"
+                                                        id="editweeklypolicy" name="editweeklypolicy"
+                                                        data-placeholder="Choose Weekly Policy" required>
+                                                        <option label="Choose Weekly Policy">
+                                                        </option>
+
+                                                        @empty(!$weeklyPolicy)
+                                                            @foreach ($weeklyPolicy as $item)
+                                                                <option value="<?= $item->id ?>">
+                                                                    <?= $item->name ?>&nbsp;
+                                                                </option>
+                                                            @endforeach
+                                                        @endempty
+                                                    </select>
+                                                </div>
+                                                {{-- <div class="form-group">
                                                     <label class="form-label"> Weekly Policy List</label>
                                                     <select class="form-control select2" id="editweeklypolicy"
                                                         name="editweeklypolicy[]" data-placeholder="Choose Weekly Policy"
@@ -903,7 +819,7 @@
                                                             @endforeach
                                                         @endempty
                                                     </select>
-                                                </div>
+                                                </div> --}}
                                             </div>
 
 
@@ -940,20 +856,20 @@
                         <input type="text" id="bl" name="bid" hidden>
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Confirm Deletion</h5>
-                            <a type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</a>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true" data-bs-dismiss="modal">×</span>
+                            </button>
+                            <!-- <a type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</a> -->
                         </div>
                         <div class="modal-body">
 
-                            <p>Method Name <b>
-                                </b></p>
-                            <h4 id="load_name"></h4><b>
-                            </b>
-                            <p></p>
+                            <p>Setup : <b><span id="load_name"></span></b> </p>
 
-                            Are you sure you want to delete this item?
+                            Are you sure you want to delete this item ?
                         </div>
                         <div class="modal-footer">
-                            <a type="close" class="btn  btn-secondary" data-bs-dismiss="modal">Cancel</a>
+                            <!-- <a type="close" class="btn  btn-secondary" data-bs-dismiss="modal">Cancel</a> -->
+                            <button class="btn btn-light" type="reset" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
                         </div>
 
@@ -1013,6 +929,13 @@
         }
     </script>
     <script>
+        var loadcheck = '';
+
+        function loadedCall(context) {
+            loadcheck = context.value;
+            console.log(context.value);
+        }
+
         function callBack(business_id, eid) {
 
             $('.custom-switch-checkbox').on('change', function() {
@@ -1021,32 +944,56 @@
                     // Checkbox is checked, show a SweetAlert2 success alert
                     Swal.fire({
                         timer: 2000,
+                        text: 'Setup is Active Now',
                         timerProgressBar: true,
-                        title: 'Method is Active Mode!',
+                        title: '',
                         icon: 'success'
+
                     }).then(function() {
                         values(1, business_id, eid);
-                        window.location.reload(true);
+
 
                     });
                 } else {
 
                     // Checkbox is unchecked, show a SweetAlert2 info alert
-                    Swal.fire({
-                        timer: 2000,
-                        timerProgressBar: true,
-                        title: 'Method is Deactive Mode!',
-                        icon: 'info'
-                    }).then(function() {
-                        values(0, business_id, eid);
-                        window.location.reload(true);
+                    $(document).ready(function() {
+                        $('#myModal').modal('show');
 
-                        // window.location.reload(true);
+                        $('#cancelButton').on('click', function(e) {
+                            e.preventDefault(); // Prevent the default action of the button (if any)
+                            console.log("Cancel button clicked");
+                            values(1, business_id, eid);
+                        });
+                        $('#modalForm').on('submit', function(e) {
+                            e.preventDefault(); // Prevent the default form submission
+                            console.log(loadcheck.type);
+
+                            Swal.fire({
+                                timer: 2000,
+                                timerProgressBar: true,
+                                text: 'Setup has been Deactivated Successfully !',
+                                icon: 'info',
+                                showClass: {
+                                    popup: 'swal2-noanimation',
+                                    backdrop: 'swal2-noanimation'
+                                }
+                            }).then(function() {
+
+                                values(0, business_id, eid);
+                            });
+
+                            // Other actions you want to perform on modal form submission
+                            return true; // Return true to submit the form
+                        });
                     });
+
+
                 }
 
             });
         }
+
 
         function values(load, business_id, eid) {
             console.log(load, business_id, eid);
@@ -1062,6 +1009,7 @@
                 dataType: 'json',
                 success: function(result) {
                     console.log(result);
+                    window.location.reload(true);
                 }
             });
 

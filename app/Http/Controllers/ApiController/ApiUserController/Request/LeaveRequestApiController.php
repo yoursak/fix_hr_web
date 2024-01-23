@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ApiController\ApiUserController\Request;
 
+use App\Helpers\Central_unit;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\EmployeePersonalDetail;
@@ -10,7 +11,6 @@ use App\Models\StaticLeaveShiftType;
 use App\Models\StaticRequestLeaveType;
 use App\Models\PolicySettingLeavePolicy;
 use App\Helpers\ReturnHelpers;
-// /public_html/app/Http/Resources/Api/UserSideResponse
 use App\Http\Resources\Api\UserSideResponse\LeaveRequestResources;
 use DB;
 use App\Http\Resources\Api\UserSideResponse\StaticLeaveShiftTypeResources;
@@ -83,6 +83,21 @@ class LeaveRequestApiController extends Controller
                 // $load = $approvalManagementCycle->cycle_type;
                 // dd($firstRoleId, $lastRoleId);
             }
+
+            $empData = [
+                'empID' => $emp->emp_id,
+                'businessID' => $emp->business_id,
+                'fullOrHafDay' => $request->leave_type,
+                'leaveID' => $request->leave_category,
+                'shift' => $request->shift_type,
+                'from' => $request->from_date,
+                'to' => $request->to_date,
+                'day' => $request->days,
+            ];
+
+            $leaveCalculation = Central_unit::calculateLeaveCountApi($empData);
+
+            // dd($leaveCalculation);
             // else {
             //     $load = 2; //default
             // }
@@ -91,8 +106,8 @@ class LeaveRequestApiController extends Controller
             $leave->emp_id = $emp->emp_id;
             $leave->emp_mobile_no = $emp->emp_mobile_number;
             $leave->leave_type = $request->leave_type;
-            $leave->leave_category = ($request->leave_category != null) ? $request->leave_category : '0';
-            $leave->shift_type = ($request->shift_type != null) ? $request->shift_type : '0';
+            $leave->leave_category = $request->leave_category != null ? $request->leave_category : '0';
+            $leave->shift_type = $request->shift_type != null ? $request->shift_type : '0';
             $leave->from_date = $request->from_date;
             $leave->to_date = $request->to_date;
             $leave->days = $request->days;
@@ -106,6 +121,18 @@ class LeaveRequestApiController extends Controller
             // $leave->runtime_cycle_update = $load; //$approvalManagementCycle->cycle_type;
 
             if ($leave->save()) {
+                // $empData = [
+                //     'empID' => $emp->emp_id,
+                //     'businessID' => $emp->business_id,
+                //     'fullOrHafDay' => $request->leave_type,
+                //     'leaveID' => $request->leave_category,
+                //     'shift' => $request->shift_type,
+                //     'from' => $request->from_date,
+                //     'to' => $request->to_date,
+                //     'day' => $request->days,
+                // ];
+
+                // $leaveCalculation = Central_unit::calculateLeaveCountApi($empData);
                 //     return $leave;
                 return ReturnHelpers::jsonApiReturn(UserLeaveIdToDataResources::collection([RequestLeaveList::find($leave->id)])->all());
             }
@@ -127,18 +154,20 @@ class LeaveRequestApiController extends Controller
                 ->where('business_id', $business_id)
                 ->first();
             if ($emp) {
-                $leave = RequestLeaveList
-                    ::join('policy_setting_leave_category', 'policy_setting_leave_category.id', '=', 'request_leave_list.leave_category')
+                // return $emp;
+                $leave = RequestLeaveList::join('policy_setting_leave_category', 'policy_setting_leave_category.id', '=', 'request_leave_list.leave_category')
                     ->join('static_request_leave_type', 'static_request_leave_type.id', '=', 'request_leave_list.leave_type')
                     ->where('request_leave_list.emp_id', $EmpID)
                     ->where(function ($query) use ($FindMonthYear, $EmpID) {
-
-                        if ((!empty($FindMonthYear)) && (!empty($EmpID))) {
+                        if (!empty($FindMonthYear) && !empty($EmpID)) {
                             $year = substr($FindMonthYear, 0, 4); // Extract the year (e.g., '2023')
                             $month = substr($FindMonthYear, 5, 2); // Extract the month (e.g., '11')
-                            $query->where('request_leave_list.emp_id', $EmpID)->whereYear('request_leave_list.from_date', $year)->whereMonth('request_leave_list.from_date', $month);
+                            // $query->where('request_leave_list.emp_id', $EmpID)->whereYear('request_leave_list.from_date', $year)->whereMonth('request_leave_list.from_date', $month);
+                            $query
+                                ->where('request_leave_list.emp_id', $EmpID)
+                                ->whereYear('request_leave_list.created_at', $year)
+                                ->whereMonth('request_leave_list.created_at', $month);
                         }
-
 
                         // $query
                         //     ->where(function ($query) use ($requestDate) {
@@ -171,26 +200,6 @@ class LeaveRequestApiController extends Controller
         } else {
             return response()->json(['result' => [], 'case' => 4, 'status' => false], 404); // case 4 when the rquired field is null
         }
-
-        // return $request->all();
-        // $leaveTest = DB::table('leave_request_list')
-        // ->join('employee_personal_details', 'employee_personal_details.emp_id', '=' , 'leave_request_list.emp_id')
-        // ->where('leave_request_list.emp_id', $id)
-        // ->select('leave_request_list.*')
-        // ->get();
-        // return $leaveTest;
-        // $emp = DB::table('employee_personal_details')
-        //     ->where('emp_id', $id)
-        //     ->first();
-        // $leave = DB::table('leave_request_list')
-        //     ->where('emp_id', $id)
-        //     ->orderBy('id', 'desc')
-        //     ->get();
-        // if ($emp != null && (count($leave) != 0)) {
-        //     return ReturnHelpers::jsonApiReturn(UserLeaveIdToDataResources::collection($leave)->all());
-        // } else {
-        //     return response()->json(['result' => [], 'status' => false], 404);
-        // }
     }
     public function currentStatusLeaveRequest(Request $request)
     {
@@ -207,11 +216,9 @@ class LeaveRequestApiController extends Controller
         if (isset($goto)) {
             // return $goto;
             return ReturnHelpers::jsonApiReturnSecond(CurrentLeaveRequestStatus::collection($goto)->all(), 1); // case 1 when the leave date find
-
         } else {
             return response()->json(['result' => [], 'case' => 3, 'status' => false], 404); // case 3 when the employee not found
         }
-        // ->where('approval_status_list.emp_id', $request->emp_id) //additional add empID Checking
     }
 
     public function show($id)
@@ -224,43 +231,58 @@ class LeaveRequestApiController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function leaveUpdate(Request $request)
     {
-        $leave = LeaveRequestList::find($id);
+        $id = $request->id;
+        $businessId = $request->business_id;
+        $EmpID = $request->emp_id;
+        $leave = RequestLeaveList::join('policy_setting_leave_category', 'policy_setting_leave_category.id', '=', 'request_leave_list.leave_category')
+            ->join('static_request_leave_type', 'static_request_leave_type.id', '=', 'request_leave_list.leave_type')
+            ->where('request_leave_list.id', $id)
+            ->where('request_leave_list.business_id', $businessId)
+            ->where('request_leave_list.emp_id', $EmpID)
+            ->select('request_leave_list.*', 'policy_setting_leave_category.category_name', 'static_request_leave_type.leave_day')
+            ->first();
         if ($leave) {
-            $leave->business_id = $request->business_id ?? $leave->business_id;
-            $leave->branch_id = $request->branch_id ?? $leave->branch_id;
-            $leave->department_id = $request->department_id ?? $leave->department_id;
-            $leave->designation_id = $request->designation_id ?? $leave->designation_id;
-            $leave->emp_id = $request->emp_id ?? $leave->emp_id;
-            $leave->emp_name = $request->emp_name ?? $leave->emp_name;
-            $leave->emp_mobile_no = $request->emp_mobile_no ?? $leave->emp_mobile_no;
-            $leave->leave_type = $request->leave_type ?? $leave->leave_type;
-            $leave->leave_category = $request->leave_category ?? $leave->leave_category;
-            $leave->shift_type = $request->shift_type ?? $leave->shift_type;
-            $leave->from_date = $request->from_date ?? $leave->from_date;
-            $leave->to_date = $request->to_date ?? $leave->to_date;
-            $leave->days = $request->days ?? $leave->days;
-            $leave->reason = $request->reason ?? $leave->reason;
-            $leave->status = $request->status ?? $leave->status;
-
-            if ($leave->update()) {
-                return ReturnHelpers::jsonApiReturn(LeaveRequestResources::collection([LeaveRequestList::find($leave->id)])->all());
+            if ($leave->forward_by_status == 0 && $leave->final_status == 0 && $leave->process_complete == 0) {
+                $leave->id = $request->id ?? $leave->id;
+                $leave->business_id = $request->business_id ?? $leave->business_id;
+                $leave->emp_id = $request->emp_id ?? $leave->emp_id;
+                $leave->leave_type = $request->leave_type ?? $leave->leave_type;
+                $leave->leave_category = $request->leave_category ?? $leave->leave_category;
+                $leave->shift_type = $request->shift_type ?? $leave->shift_type;
+                $leave->from_date = $request->from_date ?? $leave->from_date;
+                $leave->to_date = $request->to_date ?? $leave->to_date;
+                $leave->reason = $request->reason ?? $leave->reason;
+                $leave->days = $request->days ?? $leave->days;
+                $leave->forward_by_role_id = $request->forward_by_role_id ?? $leave->forward_by_role_id;
+                $leave->forward_by_status = $request->forward_by_status ?? $leave->forward_by_status;
+                $leave->final_level_role_id = $request->final_level_role_id ?? $leave->final_level_role_id;
+                $leave->final_status = $request->final_status ?? $leave->final_status;
+                $leave->process_complete = $request->process_complete ?? $leave->process_complete;
+                $submit = $leave->update();
+                if ($submit) {
+                    return response()->json(['result' => [], 'status' => true, 'case' => 1]); // case 1 update
+                }
+                return response()->json(['result' => [], 'status' => false, 'case' => 2]); // case 2 not update
             }
-            return response()->json(['result' => [], 'status' => false]);
+            return response()->json(['result' => [], 'status' => false, 'case' => 3]); // case 3 when the action perform
         }
-        return response()->json(['result' => [], 'status' => false], 404);
+        return response()->json(['result' => [], 'status' => false, 'case' => 4], 404); // case 4 when the data not found
     }
 
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        // return true;
-        $leave = LeaveRequestList::find($id);
-        if ($data) {
-            $data->delete();
-            return response()->json(['result' => true, 'status' => true]);
+        $leave = RequestLeaveList::where('business_id', $request->business_id)->where('emp_id', $request->emp_id)->where('id', $request->id)->first();
+        if ($leave) {
+            if ($leave->forward_by_status == 0 && $leave->final_status == 0 && $leave->process_complete == 0) {
+                $leave->delete();
+                return response()->json(['result' => true, 'status' => true, 'case' => 1]);
+            }else{
+                return response()->json(['result' => 'You cannot delete your request, your request is a process you can not delete it.', 'status' => false, 'case'=>2]);
+            }
         } else {
-            return response()->json(['result' => [], 'status' => false], 404);
+            return response()->json(['result' => [], 'status' => false , 'case' =>3], 404);
         }
     }
 }

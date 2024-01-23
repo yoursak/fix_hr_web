@@ -1,24 +1,25 @@
 @extends('admin.pagelayout.master')
 
 @section('title')
-Weekly Holiday
+    Weekly Holiday
 @endsection
 
 @section('css')
 @endsection
 @section('content')
-<div class=" p-0 mt-3">
-    <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
-        <li><a href="{{ url('/admin') }}">Dashboard</a></li>
-        {{-- <li><a href="{{ url('admin/settings/business')}}">Settings</a></li> --}}
-        <li><a href="{{ url('admin/settings/business')}}">Business Settings</a></li>
-        <li class="active"><span><b>Weekly Holiday</b></span></li>
-    </ol>
-</div>
+    <div class=" p-0 mt-3">
+        <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
+            <li><a href="{{ url('/admin') }}">Dashboard</a></li>
+            {{-- <li><a href="{{ url('admin/settings/business')}}">Settings</a></li> --}}
+            <li><a href="{{ url('admin/settings/business') }}">Business Settings</a></li>
+            <li class="active"><span><b>Weekly Holiday</b></span></li>
+        </ol>
+    </div>
     <div class="page-header d-md-flex d-block">
         <div class="page-leftheader">
             <div class="page-title">Weekly Holiday</div>
-            <p class="text-muted m-0">Assign weekly off days of your business to automatically mark attendance for those days.
+            <p class="text-muted m-0">Assign weekly off days of your business to automatically mark attendance for those
+                days.
             </p>
         </div>
         <div class="page-rightheader ms-md-auto">
@@ -44,61 +45,83 @@ Weekly Holiday
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content modal-content-demo">
                 <div class="modal-header">
-                    <h6 class="modal-title">Weekoff/Weekly Holiday</h6><button aria-label="Close" class="btn-close"
+                    <h6 class="modal-title">Weekoff/Weekly Holiday</h6>
+                    <button aria-label="Close" class="btn-close" type="reset" onclick="SelectWeekOff(this)" value="0"
                         data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <form method="POST" action="{{ route('create.CreateWeeklyPolicy') }}">
                     @csrf
                     <div class="modal-body">
-                        <div class="form-group row  ">
+                        <div class="form-group row">
                             <label for="weekname" class="col-sm-3 col-form-label fs-14">Weekly off template name</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" name="templatename" id="weekname"
-                                    placeholder="Enter Week Off Policy Name">
+                                    placeholder="Enter Week Off Policy Name" required>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="form-group row">
+                            <label for="weekname" class="col-sm-3 col-form-label fs-14">Select Week Off Type</label>
+
+                            <div class="col-sm-9">
+                                <select name="selectWeekOffPolicy" id="selectBox" class="form-control"
+                                    onchange="SelectWeekOff(this)" required>
+                                    <option value="">Select Week Off Policy</option>
+                                    @foreach ($staticweekoffType as $staticweekoffitem)
+                                    <option value="{{$staticweekoffitem->id}}">{{$staticweekoffitem->week_off_type_name}}</option>
+                                        
+                                    @endforeach
+                                    {{-- <option value="1">5-Day Week-> Saturday & Sunday are off</option>
+                                    <option value="2">6-Day Week-> Only Sunday is off</option>
+                                    <option value="3">2nd & 4th Saturday off-> Apart from sunday</option>
+                                    <option value="4">Other</option> --}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row d-none" id="firstWeekOff">
                             <div class="col-xl-12">
                                 <div class="form-group m-0">
                                     <div class="fs-14 mb-4">Weekly Holiday Days</div>
                                     <div class="custom-controls-stacked">
 
                                         <label class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" name="days[]"
+                                            <input type="checkbox" class="custom-control-input first second" name="days[]"
                                                 value="Monday">
                                             <span class="custom-control-label">Monday</span>
                                         </label>
                                         <label class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" name="days[]"
+                                            <input type="checkbox" class="custom-control-input first second" name="days[]"
                                                 value="Tuesday">
                                             <span class="custom-control-label">Tuesday</span>
                                         </label>
                                         <label class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" name="days[]"
+                                            <input type="checkbox" class="custom-control-input first second" name="days[]"
                                                 value="Wednesday">
                                             <span class="custom-control-label">Wednesday</span>
                                         </label>
                                         <label class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" name="days[]"
+                                            <input type="checkbox" class="custom-control-input first second" name="days[]"
                                                 value="Thursday">
                                             <span class="custom-control-label">Thursday</span>
                                         </label>
                                         <label class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" name="days[]"
+                                            <input type="checkbox" class="custom-control-input first second" name="days[]"
                                                 value="Friday">
                                             <span class="custom-control-label">Friday</span>
                                         </label>
 
                                         <label class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" name="days[]"
+                                            <input type="checkbox" class="custom-control-input second onecreate" name="days[]"
                                                 value="Saturday">
-                                            <span class="custom-control-label">Saturday</span>
+                                            <span class="custom-control-label ">Saturday 
                                         </label>
-                                        <label class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" name="days[]"
+                                        <label class="custom-control custom-checkbox ">
+                                            <input type="checkbox" class="custom-control-input onecreate twocreate" name="days[]"
                                                 value="Sunday">
-                                            <span class="custom-control-label">Sunday</span>
+                                            <span class="custom-control-label ">Sunday</span>
                                         </label>
+                                        <span id="SaturdayDescription"
+                                                    class="d-none fs-12" style="color: red">Note:- Alternate Saturday off (1st, 3rd, and 5th Saturdays are working in a month).
+                                                    </span></span>
                                     </div>
                                 </div>
                             </div>
@@ -106,7 +129,7 @@ Weekly Holiday
 
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-danger" type="reset" data-bs-dismiss="modal">Close</button> 
+                        <button class="btn btn-danger" type="reset" data-bs-dismiss="modal">Close</button>
                         <button class="btn btn-primary me-0" type="submit">Save & Continue</button>
                     </div>
                 </form>
@@ -114,65 +137,71 @@ Weekly Holiday
         </div>
     </div>
 
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Weekly Holiday List</h3>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Weekly Holiday List</h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
 
-                    <table class="table  table-vcenter text-nowrap  border-bottom " id="file-datatable">
-                        <thead>
+                <table class="table  table-vcenter text-nowrap  border-bottom " id="file-datatable">
+                    <thead>
+                        <tr>
+                            <th class="border-bottom-0 w-10">S.No.</th>
+                            <th class="border-bottom-0">Policy Name</th>
+
+                            <th class="border-bottom-0">Week off Type</th>
+                            <th class="border-bottom-0">Weekly</th>
+
+                            <th class="border-bottom-0">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $j = 1;
+                        @endphp
+                        @foreach ($data as $item)
                             <tr>
-                                <th class="border-bottom-0 w-10">S.No.</th>
-                                <th class="border-bottom-0">Policy Name</th>
+                                <td class="font-weight-semibold">{{ $j++ }}.</td>
+                                <td class="font-weight-semibold">{{ $item->name }}</td>
+                                <td class="font-weight-semibold"> {{$item->week_off_type_name}}</td>
 
-                                <th class="border-bottom-0">Weekly</th>
+                                <td class="font-weight-semibold">
 
-                                <th class="border-bottom-0">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $j = 1;
-                            @endphp
-                            @foreach ($data as $item)
-                                <tr>
-                                    <td class="font-weight-semibold">{{ $j++ }}.</td>
-                                    <td class="font-weight-semibold">{{ $item->name }}</td>
-                                    <td class="font-weight-semibold">
-
-                                        @php
-                                            $holidays = json_decode($item->days);
-                                        @endphp
-                                        @if (is_array($holidays) || is_object($holidays))
-                                            @foreach ($holidays as $holiday)
-                                                {{ $holiday }}
-                                            @endforeach
+                                    @php
+                                        $holidays = json_decode($item->days);
+                                    @endphp
+                                    @if (is_array($holidays) || is_object($holidays))
+                                        @foreach ($holidays as $holiday)
+                                            {{ $holiday }} 
+                                            @if (!$loop->last)
+                                            |
                                         @endif
-                                    </td>
-                                    <td>
-                                        <a class="btn action-btns  btn-primary btn-icon btn-sm" href="javascript:void(0);"
-                                            onclick="openEditModel(this)" data-id='<?= $item->id ?>'
-                                            data-bs-toggle="modal" data-bs-target="#editBranchName">
-                                            <i class="feather feather-edit" data-bs-toggle="tooltip"
-                                                data-original-title="View/Edit"></i>
-                                        </a>
+                                        @endforeach
+                                    @endif
+                                </td>
+                                <td>
+                                    <a class="btn action-btns  btn-primary btn-icon btn-sm" href="javascript:void(0);"
+                                        onclick="openEditModel(this)" data-id='<?= $item->id ?>' data-bs-toggle="modal"
+                                        data-bs-target="#editBranchName">
+                                        <i class="feather feather-edit" data-bs-toggle="tooltip"
+                                            data-original-title="View/Edit"></i>
+                                    </a>
 
-                                        <a class="btn action-btns  btn-danger btn-icon btn-sm" href="javascript:void(0);"
-                                            onclick="ItemDeleteModel(this)" data-id='<?= $item->id ?>'
-                                            data-weekly_name='<?= $item->name ?>' data-bs-toggle="modal"
-                                            data-bs-target="#editDeleteModel"><i class="feather feather-trash"></i>
-                                        </a>
+                                    <a class="btn action-btns  btn-danger btn-icon btn-sm" href="javascript:void(0);"
+                                        onclick="ItemDeleteModel(this)" data-id='<?= $item->id ?>'
+                                        data-weekly_name='<?= $item->name ?>' data-bs-toggle="modal"
+                                        data-bs-target="#editDeleteModel"><i class="feather feather-trash"></i>
+                                    </a>
 
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
+    </div>
 
 
     <div class="row">
@@ -195,7 +224,25 @@ Weekly Holiday
                                     name</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" name="edit_weekname" id="edit_weekname"
-                                        placeholder="name">
+                                        placeholder="name" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="weekname" class="col-sm-3 col-form-label fs-14">Select Week Off Type</label>
+
+                                <div class="col-sm-9">
+                                    <select name="selectWeekOffPolicyUpdate" id="edit_selectBox" class="form-control"
+                                        onchange="SelectWeekOffUpdate(this)" required>
+                                        <option value="">Select Week Off Policy</option>
+                                        @foreach ($staticweekoffType as $staticweekoffitem)
+                                        <option value="{{$staticweekoffitem->id}}">{{$staticweekoffitem->week_off_type_name}}</option>
+                                            
+                                        @endforeach
+                                        {{-- <option value="1">5-Day Week-> Saturday & Sunday are off</option>
+                                        <option value="2">6-Day Week-> Only Sunday is off</option>
+                                        <option value="3">2nd & 4th Saturday off-> Apart from sunday</option>
+                                        <option value="4">Other</option> --}}
+                                    </select>
                                 </div>
                             </div>
                             <div class="row">
@@ -206,39 +253,49 @@ Weekly Holiday
                                             {{-- 
                                                     {{ in_array('Monday', $days) ? 'checked' : 'null' }} --}}
                                             <label>
-                                                <input type="checkbox" name="holidays[]" value="Monday">
+                                                <input type="checkbox" class="updateUncheck   three" name="holidays[]"
+                                                    value="Monday">
                                                 Monday
 
                                             </label><br>
                                             <label>
-                                                <input type="checkbox" name="holidays[]" value="Tuesday">
+                                                <input type="checkbox" class="updateUncheck   three" name="holidays[]"
+                                                    value="Tuesday">
                                                 Tuesday
                                             </label><br>
 
                                             <label>
-                                                <input type="checkbox" name="holidays[]" value="Wednesday">
+                                                <input type="checkbox" class="updateUncheck   three" name="holidays[]"
+                                                    value="Wednesday">
                                                 Wednesday
                                             </label><br>
 
                                             <label>
-                                                <input type="checkbox" name="holidays[]" value="Thursday">
+                                                <input type="checkbox" class="updateUncheck three" name="holidays[]"
+                                                    value="Thursday">
                                                 Thursday
                                             </label><br>
 
                                             <label>
-                                                <input type="checkbox" name="holidays[]" value="Friday">
+                                                <input type="checkbox" class="updateUncheck three" name="holidays[]"
+                                                    value="Friday">
                                                 Friday
                                             </label><br>
 
                                             <label>
-                                                <input type="checkbox" name="holidays[]" value="Saturday">
-                                                Saturday
+                                                <input type="checkbox" class="updateUncheck one  three" name="holidays[]"
+                                                    value="Saturday">
+                                                Saturday 
                                             </label><br>
 
                                             <label>
-                                                <input type="checkbox" name="holidays[]" value="Sunday">
+                                                <input type="checkbox" class="updateUncheck one two three"
+                                                    name="holidays[]" value="Sunday">
                                                 Sunday
-                                            </label><br>
+                                            </label>
+                                            <br>
+                                            <span id="updateSaturdayDescription" class="d-none fs-12"
+                                                    style="color: red">Note:- Alternate Saturday off (1st, 3rd, and 5th Saturdays are working in a month).</span>
                                         </div>
                                     </div>
                                 </div>
@@ -246,8 +303,8 @@ Weekly Holiday
 
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-light" data-bs-dismiss="modal">Close</button> <button
-                                class="btn btn-primary me-0" type="submit">Save & Continue</button>
+                            <button class="btn btn-danger" data-bs-dismiss="modal">Close</button> <button
+                                class="btn btn-primary me-0" type="submit">Update & Continue</button>
                         </div>
                     </form>
                 </div>
@@ -268,11 +325,9 @@ Weekly Holiday
                                 aria-label="Close"></button>
                         </div>
                         <div class="modal-body text-center">
-            
-                            <h4 class="mt-5">Are you sure you want to delete <span id="assign_emp"></span> ?</h4><b>
-      
 
-                            
+                            <h4 class="mt-5">Are you sure you want to delete this weekoff policy ?</h4><b>
+                                {{-- <span id="assign_emp"></span> --}}
                         </div>
                         <div class="modal-footer">
 
@@ -287,6 +342,85 @@ Weekly Holiday
 
 
     <script>
+        function SelectWeekOffUpdate(context) {
+            $('.updateUncheck').prop('checked', false);
+            console.log(context.value);
+            if (context.value == 1) {
+                $('#updateSaturdayDescription').addClass('d-none');
+                $('.updateUncheck').prop('disabled', true);
+                $('.one').prop('disabled', false);
+                $('.custom-control-input').prop('checked', false);
+                $('.one').prop('required', true);
+
+            } else if (context.value == 2) {
+                $('#updateSaturdayDescription').addClass('d-none');
+
+                $('.updateUncheck').prop('disabled', true);
+                $('.two').prop('disabled', false);
+                $('.two').prop('required', true);
+
+
+            } else if (context.value == 3) {
+                $('#updateSaturdayDescription').removeClass('d-none');
+
+                $('.updateUncheck').prop('disabled', true);
+                $('.one').prop('disabled', false);
+                $('.one').prop('required', true);
+
+            } else if (context.value == 4) {
+                $('#updateSaturdayDescription').addClass('d-none');
+
+                $('.updateUncheck').prop('disabled', false);
+            }
+        }
+
+        function SelectWeekOff(context) {
+            console.log(context.value);
+            if (context.value == 1) {
+                $('#SaturdayDescription').addClass('d-none');
+                $('#firstWeekOff').removeClass('d-none');
+                // $('.second').prop('disabled', false);
+
+                $('.custom-control-input').prop('disabled', true);
+                $('.onecreate').prop('disabled', false);
+                $('.custom-control-input').prop('checked', false);
+                $('.onecreate').prop('checked', true);
+                
+
+            } else if (context.value == 2) {
+                // Disable the checkbox
+                $('#SaturdayDescription').addClass('d-none');
+                $('#firstWeekOff').addClass('d-none');
+                $('#firstWeekOff').removeClass('d-none');
+                $('.second').prop('disabled', true);
+                $('.custom-control-input').prop('checked', false);
+                $('.twocreate').prop('checked', true);
+                $('.twocreate').prop('disabled', false);
+
+            } else if (context.value == 3) {
+                $('#SaturdayDescription').removeClass('d-none');
+                $('#firstWeekOff').removeClass('d-none');
+                $('.second').prop('disabled', false);
+                $('.custom-control-input').prop('disabled', true);
+                $('.custom-control-input').prop('checked', false);
+                $('.onecreate').prop('checked', true);
+                $('.onecreate').prop('disabled', false);
+
+
+            } else if (context.value == 4) {
+                $('#SaturdayDescription').addClass('d-none');
+                $('#firstWeekOff').removeClass('d-none');
+                $('.second').prop('disabled', false);
+                $('.first').prop('disabled', false);
+                $('.twocreate').prop('disabled', false);
+                $('.custom-control-input').prop('checked', false);
+            } else if (context.value == 0) {
+                $('#SaturdayDescription').addClass('d-none');
+                $('#firstWeekOff').addClass('d-none');
+                $('#selectBox').prop('selectedIndex', 0);
+            }
+        }
+
         function openEditModel(context) {
             var id = $(context).data('id');
             $('#weekly_id').val(id);
@@ -299,9 +433,31 @@ Weekly Holiday
                 },
                 dataType: 'json',
                 success: function(result) {
-
                     if (result.get[0].days && result.get[0].name) {
                         $('#edit_weekname').val(result.get[0].name);
+                        $('#edit_selectBox').val(result.get[0].weekend_policy);
+                        if (result.get[0].weekend_policy == 1) {
+                            $('#updateSaturdayDescription').addClass('d-none');
+                            $('.updateUncheck').prop('disabled', true);
+                $('.one').prop('required', true);
+
+                            // $('.one').prop('disabled', false);
+                        } else if (result.get[0].weekend_policy == 2) {
+                            $('#updateSaturdayDescription').addClass('d-none');
+                            $('.updateUncheck').prop('disabled', true);
+                            $('.two').prop('disabled', false);
+                $('.two').prop('required', true);
+
+                        } else if (result.get[0].weekend_policy == 3) {
+                            $('#updateSaturdayDescription').removeClass('d-none');
+                            $('.updateUncheck').prop('disabled', true);
+                $('.one').prop('required', true);
+
+                            $('.one').prop('disabled', false);
+                        } else if (result.get[0].weekend_policy == 4) {
+                            $('#updateSaturdayDescription').addClass('d-none');
+                            $('.updateUncheck').prop('disabled', false);
+                        }
                         var daysArray = JSON.parse(result.get[0].days);
                         console.log("Parsed daysArray:", daysArray); // Debugging statement
                         $('input[name="holidays[]"]').each(function() {

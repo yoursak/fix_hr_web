@@ -114,7 +114,7 @@
 
     <!-- ADD LEAVE MODAL -->
     <div class="modal fade" id="addnoticemodal">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add New Notice</h5>
@@ -127,7 +127,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label class="form-label">Title</label>
-                            <input class="form-control" name="title" placeholder="Title">
+                            <input class="form-control" name="title" placeholder="Title" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Select Date:</label>
@@ -136,19 +136,20 @@
                                     <div class="input-group-text">
                                         <i class="feather feather-calendar"></i>
                                     </div>
-                                </div><input class="form-control fc-datepicker" name="date" placeholder="DD-MM-YYYY" type="date">
+                                </div><input class="form-control fc-datepicker" name="date" placeholder="dd/mm/yy" type="date" id="datepicker" required>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Description:</label>
-                            <textarea  name="description" cols="100"></textarea>
-                        </div>
+                        
                         <div class="form-group">
                             <label class="form-label">Attachment:</label>
                             <div class="form-group">
                                 <label class="form-label"></label>  
                                 <input class="form-control" type="file" name="image" required>
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description:</label>
+                            <textarea  name="description" cols="100" style="width: 100%"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

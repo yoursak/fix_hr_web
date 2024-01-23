@@ -32,7 +32,7 @@
         @endphp --}}
     {{-- <div class=""> --}}
 
-        {{-- @dd($DATA); --}}
+    {{-- @dd($DATA); --}}
 
     <div class=" p-0 pb-4">
         <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
@@ -61,7 +61,8 @@
                     <li class="my-5"><span
                             class="fs-16"><b>{{ $DATA->emp_name ?? '' }}&nbsp;{{ $DATA->emp_mname ?? '' }}&nbsp;{{ $DATA->emp_lname ?? '' }}</b></span><span
                             class="fs-16 mx-2"></span></li>
-                    <li class="my-5"><span class="fs-16">{{ $DATA->desig_name ?? '' }}</span><span class="fs-16 mx-2"></span>
+                    <li class="my-5"><span class="fs-16">{{ $DATA->desig_name ?? '' }}</span><span
+                            class="fs-16 mx-2"></span>
                     </li>
                     <li class="my-5"><span class="fs-16"><b>Employee ID :
                                 {{ $DATA->emp_id ?? '' }}</b></span><span class="fs-16 mx-2"></span></li>
@@ -124,9 +125,9 @@
                                 @endif
                             </span></li>
                         <li class="my-5"><span class="fs-16"><b>State:</b></span><span class="fs-16 mx-2"
-                            onload="print_state($DATA->emp_state)" id="printState">Chhattishgarh</span></li>
-                        <li class="my-5"><span class="fs-16"><b>City:</b></span><span
-                                class="fs-16 mx-2" onload="print_city($DATA->emp_city,$DATA->emp_state)" id="printCity">Raipur</span></li>
+                                onload="print_state($DATA->emp_state)" id="printState">Chhattishgarh</span></li>
+                        <li class="my-5"><span class="fs-16"><b>City:</b></span><span class="fs-16 mx-2"
+                                onload="print_city($DATA->emp_city,$DATA->emp_state)" id="printCity">Raipur</span></li>
                         <li class="my-5"><span class="fs-16"><b>Zip Code:</b></span><span
                                 class="fs-16 mx-2">{{ $DATA->emp_pin_code ?? '' }}</span></li>
                         <li class="my-5"><span class="fs-16"><b>Address:</b></span><span
@@ -140,6 +141,8 @@
                 <div class="card-body ms-xl-5">
                     <ul>
                         <li class="my-5"><span class="fs-24"><b>Company Information</b></span></li>
+                        <li class="my-5"><span class="fs-16"><b>Assign Setup:</b></span><span
+                                class="fs-16 mx-2">{{ $DATA->setup_name ?? '' }}</span></li>
                         <li class="my-5"><span class="fs-16"><b>Branch:</b></span><span
                                 class="fs-16 mx-2">{{ $DATA->branch_name ?? ' ' }}</span></li>
                         <li class="my-5"><span class="fs-16"><b>Department:</b></span><span
@@ -147,7 +150,7 @@
                         <li class="my-5"><span class="fs-16"><b>Designation:</b></span><span
                                 class="fs-16 mx-2">{{ $DATA->desig_name ?? '' }}</span></li>
                         <li class="my-5"><span class="fs-16"><b>Shift Type:</b></span><span
-                                class="fs-16 mx-2">{{ $DATA->shift_type_name ?? '' ?? 'Not Allotted' }}</span></li>
+                                class="fs-16 mx-2">{{ $DATA->shift_type_name ?? ('' ?? 'Not Allotted') }}</span></li>
                         <li class="my-5"><span class="fs-16"><b>Attendance Method:</b></span><span
                                 class="fs-16 mx-2">{{ $DATA->method_name ?? '' }}</span></li>
                     </ul>

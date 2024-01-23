@@ -34,10 +34,15 @@ class PolicyHolidayDetail extends Model
 	// ];
 
 	protected $fillable = [
-		'template_id',
-		'business_id',
-		'holiday_name',
-		'day',
-		'holiday_date'
+		// 'template_id',
+		// 'business_id',
+		// 'holiday_name',
+		// 'day',
+		// 'holiday_date'
 	];
+
+	public function template()
+	{
+		return $this->belongsTo(PolicyHolidayTemplate::class, 'template_id');
+	}
 }

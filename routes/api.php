@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\MigrationController;
+use App\Http\Controllers\FirebasePushController;
 use App\Http\Controllers\ApiController\CommonApiController;
 // use App\Http\Controllers\ApiController\LeaveRequestApiController;
 use App\Http\Controllers\ApiController\MisspuchApiController;
@@ -23,6 +24,7 @@ use App\Http\Controllers\ApiController\ApiUserController\Login\EmployeeLoginApiC
 use App\Http\Controllers\ApiController\ApiUserController\Employee\EmployeeApiController;
 use App\Http\Controllers\ApiController\ApiUserController\Request\GatePassApiController;
 use App\Http\Controllers\ApiController\ApiUserController\Attendance\AttendanceApiController;
+use App\Http\Controllers\ApiController\ApiUserController\Holiday\PolicyHolidayTemplate;
 
 
 /*
@@ -35,17 +37,21 @@ use App\Http\Controllers\ApiController\ApiUserController\Attendance\AttendanceAp
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+// Route::any('leave_edit', [LeaveRequestApiController::class, 'leaveUpdate']);
 
 // Full Employee Section *****************************************************
 Route::prefix('user')->group(function () {
     Route::prefix('/employee')->group(function () {
         Route::post('/login', [EmployeeLoginApiController::class, 'login']); //QA
         Route::any('/verify_otp', [EmployeeLoginApiController::class, 'VerifiedOtp']);
-
+   
         Route::any('/master_rule', [EmployeeLoginApiController::class, 'MasterRule']);
         Route::any('/attendance_mode', [EmployeeLoginApiController::class, 'AttendanceMode']);
         Route::any('/shift_type_list', [EmployeeLoginApiController::class, 'ShiftTypeList']);
+        Route::any('daily_details', [EmployeeApiController::class, 'dashboardcount']);
+
         Route::prefix('attendance')->group(function () {
+            Route::any('daily_details', [EmployeeApiController::class, 'dashboardcount']);
             // Route::get('/detail', [AttendanceApiController::class, 'index']); 
             Route::any('/current_attendances_status', [AttendanceApiController::class, 'currentAttendanceStatus']);
             Route::post('/detail', [AttendanceApiController::class, 'store']);
@@ -59,21 +65,21 @@ Route::prefix('user')->group(function () {
         });
 
         Route::post('employee_details', [EmployeeApiController::class, 'show']);
+      //  Route::any('daily_details', [EmployeeApiController::class, 'dashboardcount']);
 
         // Leave Request
         Route::prefix('leaverequest')->group(function () {
             // Route::get('detail',[LeaveRequestApiController::class, 'index']);
             Route::post('detail', [LeaveRequestApiController::class, 'store']);
             Route::get('detail/{id}', [LeaveRequestApiController::class, 'show']);
+            Route::any('leave_edit', [LeaveRequestApiController::class, 'leaveUpdate']);
             Route::any('leave_data_list', [LeaveRequestApiController::class, 'leaveDataList']); //show list 
             Route::any('leave_request_status', [LeaveRequestApiController::class, 'currentStatusLeaveRequest']);
             Route::any('leave_shift_type', [LeaveRequestApiController::class, 'staticLeaveShiftType']); //static_leave_shift_type
             Route::any('request_leave_type', [LeaveRequestApiController::class, 'staticRequestLeaveType']); // static_request_leave_type
             Route::post('leave_category', [LeaveRequestApiController::class, 'policySettingLeaveCategory']); //policy_setting_leave_category
-
+            Route::post('delete', [LeaveRequestApiController::class, 'destroy']);
             // Route::get('leaveidtodata/{id}', [LeaveRequestApiController::class, 'leaveIdToData']);
-            Route::put('detail/{id}', [LeaveRequestApiController::class, 'update']);
-            Route::delete('detail/{id}', [LeaveRequestApiController::class, 'destroy']);
         });
         // Gate Pass Request
         Route::prefix('gatepassrequest')->group(function () {
@@ -84,8 +90,8 @@ Route::prefix('user')->group(function () {
             Route::post('gatepass_data', [GatePassApiController::class, 'gatepassIdData']);
             Route::post('/gatepass_month_filter_data', [GatePassApiController::class, 'gatepassMonthFilterData']);
             Route::get('detail/{id}', [GatePassApiController::class, 'show']);
-            Route::put('detail/{id}', [GatePassApiController::class, 'update']);
-            Route::any('delete', [GatePassApiController::class, 'destroy']);
+            Route::any('gate_pass_edit', [GatePassApiController::class, 'gatepassupdate']);//edit_gate_pass
+            Route::any('delete', [GatePassApiController::class, 'destroy']);//gate_pass_delete
         });
 
         // MisPunch Request
@@ -95,10 +101,16 @@ Route::prefix('user')->group(function () {
             Route::get('detail/{id}', [MispunchApiController::class, 'show']);
             Route::any('mispunch_data_list', [MispunchApiController::class, 'mispunchDataList']);
             Route::post('store', [MispunchApiController::class, 'store']);
-            Route::put('detail/{id}', [MispunchApiController::class, 'update']);
+            Route::any('mispunch_edit', [MispunchApiController::class, 'mispunchupdate']);  //edit_mis_punch_route
+            Route::post('delete', [MispunchApiController::class, 'destroy']); //delete_mis_punch_route
+
             Route::delete('detail/{id}', [MispunchApiController::class, 'destroy']);
 
             // Route::delete('detail/{id}',[MispunchApiController::class, 'destroy'])
+        });
+
+        Route::prefix('holiday_policy')->group(function () {
+            Route::any('list', [PolicyHolidayTemplate::class, 'index']);
         });
     });
 });
@@ -113,8 +125,11 @@ Route::any('/bussinesscheck', [CommonApiController::class, 'businesscheck']);
 // Admin Call
 Route::prefix('admin')->group(function () {
     Route::post('/login', [ApiLoginController::class, 'login']);
+    Route::any('/verify_otp_owner', [ApiLoginController::class, 'VerifiedOtp']); //owner
+    Route::any('/verify_otp_admin', [ApiLoginController::class, 'VerifiedOtpAdmin']); //admin
+    Route::any('/logout', [ApiLoginController::class, 'Logout']);
+    Route::any('/notification', [FirebasePushController::class, 'sendNotification']);
 
-    Route::any('/verify_otp', [ApiLoginController::class, 'VerifiedOtp']);
     Route::middleware(['auth:admin'])->group(function () {
 
         Route::get('/branchlist/{id}', [EmployeeController::class, 'branchList']);
@@ -129,8 +144,6 @@ Route::prefix('admin')->group(function () {
 
         Route::prefix('employee')->group(function () {
             Route::post('/personal_details', [AttendanceController::class, 'allEmployeePersonalData']);
-
-
         });
 
         Route::prefix('requests')->group(function () {
@@ -138,13 +151,11 @@ Route::prefix('admin')->group(function () {
             Route::prefix('filter_list')->group(function () {
                 Route::any('leave', [ApiRequestAdminController::class, 'allRequestLeaveList']); //Mode attendances
                 Route::any('/misspunch_list', [ApiRequestAdminController::class, 'allRequestMissPunchList']);
-     
             });
 
             // Route::post('/personal_details', [AttendanceController::class, 'allEmployeePersonalData']);
 
         });
-
     });
     // Route::group(['middleware' => 'apilogincheck'], function () {
     //     Route::prefix('employee')->group(function () {

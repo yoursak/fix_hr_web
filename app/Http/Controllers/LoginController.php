@@ -44,13 +44,13 @@ class LoginController extends BaseController
         if (isset($User) != false) {
             $details = [
                 'name' => $User->name,
-                'title' => 'OTP Genrated',
-                'body' => ' Your FixHR Admin Login one time PIN is: ' . "$otp",
+                // 'title' => 'OTP Genrated',
+                'body' => ' Your FixHR Admin Login One Time Password (OTP) is: ' . "$otp",
             ];
-            // $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
+            $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
 
             // isset($sendMail)
-            if (true) {
+            if ($sendMail) {
                 // define('STDIN', fopen("php://stdin", "r"));
 
                 // echo "calling Schedular";
@@ -78,10 +78,10 @@ class LoginController extends BaseController
                     'title' => 'OTP Genrated',
                     'body' => ' Your FixHR Admin Login one time PIN is: ' . "$otp",
                 ];
-                // $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
+                $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
 
-                // isset($sendMail)
-                if (true) {
+                // true
+                if ($sendMail) {
 
                     $first = PendingAdmin::where('emp_email', $request->email)->update(['otp' => $otp]);
                     // dd($otp);
@@ -103,7 +103,7 @@ class LoginController extends BaseController
     }
     public function handleCardClick(Request $request)
     {
-
+        
         if (isset($request->card_type1)) {
 
             $cardType = $request->input('card_type1');
@@ -112,7 +112,7 @@ class LoginController extends BaseController
             $mainloodLoad1 = BusinessDetailsList::where('business_id', $businessId)->first();
             // model_has_permission 
             $load = ModelHasPermission::where('business_id', $businessId)->first();
-
+           
             if ($actualCardType === 'owner') {
                 // Set session data for the owner card
                 if ($mainloodLoad1) {

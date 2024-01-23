@@ -81,11 +81,11 @@
         }
 
         /* #WeekOffCell {
-                                border: solid #b9d6fb 2px;
-                            }
-                            #HolidayCell{
-                                border: solid rgba(128, 0, 128, 0.445) 2px;
-                            } */
+                                                    border: solid #b9d6fb 2px;
+                                                }
+                                                #HolidayCell{
+                                                    border: solid rgba(128, 0, 128, 0.445) 2px;
+                                                } */
     </style>
 @endsection
 
@@ -111,9 +111,8 @@
         $byAttendanceCalculation = $root->attendanceByEmpDetails($emp->emp_id, date('Y'), date('m'));
         $allStatusCount = $root->attendanceCount($emp->emp_id, date('Y'), date('m'));
         $getLeave = $root->getEmpAttSumm(['emp_id' => $emp->emp_id, 'punch_date' => date('Y-m-d')]);
-
-        // dd($getLeave);
-
+        // $setCountOnce = $root->setCountAtOnceForDailyAndMonthly();
+        // dd($setCountOnce);
     @endphp
 
     <!-- PAGE HEADER -->
@@ -214,7 +213,7 @@
                                 </div>
                                 <div class="col-md-4 col-lg-3 col-sm-6 text-center py-5">
                                     <span class="avatar avatar-md bradius fs-20 leave-status-badge"
-                                        id="getLeaveRemainCount">{{ $byAttendanceCalculation[4] }}</span>
+                                        id="getLeaveRemainCount">{{ $allStatusCount[10] + $allStatusCount[11] }}</span>
                                     <h5 class="mb-0 mt-3">Leave</h5>
                                 </div>
                             </div>
@@ -266,77 +265,6 @@
                             </div>
 
                         </div>
-                        <script>
-                            function getAttendanceData() {
-                                var month = document.getElementById('dataMonth');
-                                var year = document.getElementById('dataYear').value;
-                                var empId = month.getAttribute('data-empId');
-
-                                console.log(month.value + ' ' + year + ' ' + empId);
-
-                                // getElement By Id for count
-
-                                var earlyCount = document.getElementById('getEarlyCount');
-                                var presentCount = document.getElementById('getPresentCount');
-                                var absentCount = document.getElementById('getAbsentCount');
-                                var halfDayCount = document.getElementById('getHalfDayCount');
-                                var lateCount = document.getElementById('getLateCount');
-                                var holidayCount = document.getElementById('getHolidayCount');
-                                var misPunchCount = document.getElementById('getMisPunchCount');
-                                var leaveRemainCount = document.getElementById('getLeaveRemainCount');
-                                // work hour
-                                var cwhCount = document.getElementById('getcwhCount');
-                                var twhCount = document.getElementById('gettwhCount');
-                                // remaining hour
-                                var rwhCount = document.getElementById('getrwhCount');
-                                var trwhCount = document.getElementById('gettrwhCount');
-                                // overtime hour
-                                var otwhCount = document.getElementById('getotwhCount');
-                                var totwhCount = document.getElementById('gettotwhCount');
-                                // ptogress bar 
-                                var progress1 = document.getElementById('progress1');
-                                var progress2 = document.getElementById('progress2');
-                                var progress3 = document.getElementById('progress3');
-
-                                $.ajax({
-                                    url: "{{ url('/admin/attendance/attendance_by_calculation') }}",
-                                    type: "POST",
-                                    data: {
-                                        month: month.value,
-                                        year: year,
-                                        emp_id: empId,
-                                        _token: '{{ csrf_token() }}'
-                                    },
-                                    dataType: 'json',
-                                    success: function(result) {
-                                        console.log(result);
-                                        var counts = result[0];
-
-                                        presentCount.innerHTML = counts[1];
-                                        absentCount.innerHTML = counts[2];
-                                        lateCount.innerHTML = counts[3];
-                                        misPunchCount.innerHTML = counts[4];
-                                        holidayCount.innerHTML = counts[5];
-                                        halfDayCount.innerHTML = counts[7];
-                                        leaveRemainCount.innerHTML = counts[9];
-                                        earlyCount.innerHTML = counts[19];
-
-                                        cwhCount.innerHTML = parseFloat(counts[10]).toFixed(2);
-                                        twhCount.innerHTML = counts[11];
-                                        progress1.innerHTML = parseFloat(counts[12]).toFixed(2) + '%';
-                                        progress1.style.width = counts[12] + '%';
-                                        rwhCount.innerHTML = parseFloat(counts[13]).toFixed(2);
-                                        trwhCount.innerHTML = counts[14];
-                                        progress2.innerHTML = parseFloat(counts[15]).toFixed(2) + '%';
-                                        progress2.style.width = counts[15] + '%';
-                                        otwhCount.innerHTML = parseFloat(counts[16]).toFixed(2);
-                                        totwhCount.innerHTML = counts[17];
-                                        progress3.innerHTML = parseFloat(counts[18]).toFixed(2) + '%';
-                                        progress3.style.width = counts[18] + '%';
-                                    }
-                                });
-                            }
-                        </script>
                     </div>
                 </div>
                 {{-- <div class="card-body">
@@ -375,7 +303,7 @@
                                     <th class="border-bottom-0">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="attendanceBody">
                                 @php
 
                                     $sno = 0;
@@ -487,7 +415,7 @@
                                                 $lateOccurrencePenalty = $occurance[5];
                                                 //status print indicator
                                                 $statusPrinted = false;
-                                                // dd($lateOccurrenceIs != 0 && $earlyOccurrenceIs != 0);
+                                                // dd($lateOccurrenceIs);
                                             @endphp
 
                                             @if ($status == 3 || $status == 12)
@@ -597,6 +525,184 @@
                                 @endwhile
                             </tbody>
                         </table>
+                        <script>
+                            function getAttendanceData() {
+                                var tBody = document.getElementById('attendanceBody');
+                                var month = document.getElementById('dataMonth');
+                                var year = document.getElementById('dataYear').value;
+                                var empId = month.getAttribute('data-empId');
+
+                                console.log(month.value + ' ' + year + ' ' + empId);
+
+                                // getElement By Id for count
+
+                                var earlyCount = document.getElementById('getEarlyCount');
+                                var presentCount = document.getElementById('getPresentCount');
+                                var absentCount = document.getElementById('getAbsentCount');
+                                var halfDayCount = document.getElementById('getHalfDayCount');
+                                var lateCount = document.getElementById('getLateCount');
+                                var holidayCount = document.getElementById('getHolidayCount');
+                                var misPunchCount = document.getElementById('getMisPunchCount');
+                                var leaveRemainCount = document.getElementById('getLeaveRemainCount');
+                                // work hour
+                                var cwhCount = document.getElementById('getcwhCount');
+                                var twhCount = document.getElementById('gettwhCount');
+                                // remaining hour
+                                var rwhCount = document.getElementById('getrwhCount');
+                                var trwhCount = document.getElementById('gettrwhCount');
+                                // overtime hour
+                                var otwhCount = document.getElementById('getotwhCount');
+                                var totwhCount = document.getElementById('gettotwhCount');
+                                // ptogress bar 
+                                var progress1 = document.getElementById('progress1');
+                                var progress2 = document.getElementById('progress2');
+                                var progress3 = document.getElementById('progress3');
+
+                                $.ajax({
+                                    url: "{{ url('/admin/attendance/attendance_by_calculation') }}",
+                                    type: "POST",
+                                    data: {
+                                        month: month.value,
+                                        year: year,
+                                        emp_id: empId,
+                                        _token: '{{ csrf_token() }}'
+                                    },
+                                    dataType: 'json',
+                                    success: function(result) {
+                                        // console.log(result);
+                                        var counts = result[0];
+
+                                        presentCount.innerHTML = counts[1];
+                                        absentCount.innerHTML = counts[2];
+                                        lateCount.innerHTML = counts[3];
+                                        misPunchCount.innerHTML = counts[4];
+                                        holidayCount.innerHTML = counts[5];
+                                        halfDayCount.innerHTML = counts[7];
+                                        leaveRemainCount.innerHTML = counts[9];
+                                        earlyCount.innerHTML = counts[19];
+
+                                        cwhCount.innerHTML = parseFloat(counts[10]).toFixed(2);
+                                        twhCount.innerHTML = counts[11];
+                                        progress1.innerHTML = parseFloat(counts[12]).toFixed(2) + '%';
+                                        progress1.style.width = counts[12] + '%';
+                                        rwhCount.innerHTML = parseFloat(counts[13]).toFixed(2);
+                                        trwhCount.innerHTML = counts[14];
+                                        progress2.innerHTML = parseFloat(counts[15]).toFixed(2) + '%';
+                                        progress2.style.width = counts[15] + '%';
+                                        otwhCount.innerHTML = parseFloat(counts[16]).toFixed(2);
+                                        totwhCount.innerHTML = counts[17];
+                                        progress3.innerHTML = parseFloat(counts[18]).toFixed(2) + '%';
+                                        progress3.style.width = counts[18] + '%';
+
+
+                                        // elements.sort((a, b) => a.date - b.date);
+                                        var employeeElements = result[1].sort((a, b) => new Date(a.date) - new Date(b.date));
+                                        console.log(employeeElements);
+                                        tBody.innerHTML = ''; // Clear the existing content
+                                        var key = 0;
+                                        const uniqueDatesSet = new Set();
+
+                                        var statusLabels = {
+                                            0: 'Present',
+                                            1: 'Present',
+                                            2: 'Absent',
+                                            3: 'Present',
+                                            4: 'Mispunch',
+                                            5: 'Working',
+                                            6: 'Holiday',
+                                            7: 'Week Off',
+                                            8: 'Halfday',
+                                            9: 'Present',
+                                            10: 'Paid Leave',
+                                            11: 'Unpaid Leave',
+                                            12: 'Present',
+                                        };
+
+                                        var badgeColors = {
+                                            0: 'present-status-badge',
+                                            1: 'present-status-badge',
+                                            2: 'absent-status-badge',
+                                            3: 'present-status-badge',
+                                            4: 'mispunch-status-badge',
+                                            5: 'present-status-badge',
+                                            6: 'holiday-status-badge',
+                                            7: 'weekoff-status-badge',
+                                            8: 'halfday-status-badge',
+                                            9: 'present-status-badge',
+                                            10: 'present-status-badge',
+                                            11: 'leave-status-badge',
+                                            12: 'present-status-badge',
+                                        };
+
+                                        employeeElements.forEach(element => {
+
+                                            const currentDate = new Date(element.date);
+                                            const currentDateStr = currentDate.toISOString();
+
+                                            if (!uniqueDatesSet.has(currentDateStr)) {
+                                                uniqueDatesSet.add(currentDateStr);
+                                                var date = element.date;
+                                                var newElement = '<tr>' +
+                                                    '<td>' + ++key + '</td>' +
+                                                    '<td>' + date + '</td>' +
+                                                    '<td>' + element.dayName + '</td>' +
+                                                    '<td>' +
+                                                    '<span id="statusLabelView" class="' + badgeColors[element
+                                                        .status] + '">' +
+                                                    statusLabels[element.status] +
+                                                    '</span>' +
+                                                    '</td>' +
+                                                    '<td>' + element.in +
+                                                    (element.late > 0 ?
+                                                        `<br><span class="late-status fs-11 fw-bolder">
+                                                    Late By: ${element.late > 0 ?
+                                                        `${Math.floor(element.late / 60)} Hr ${element.late % 60} Min` :
+                                                        ''}
+                                                </span>` :
+                                                        '') +
+                                                    '</td>' +
+                                                    '<td>' + element.out +
+                                                    (element.early > 0 ?
+                                                        `<br><span class="late-status fs-11 fw-bolder">
+                                                        Early Exit By: ${element.early > 0 ?
+                                                            `${Math.floor(element.early / 60)} Hr ${element.early % 60} Min` :
+                                                            ''}
+                                                    </span>` :
+                                                        '') +
+                                                    '</td>' +
+                                                    '<td>' + (element.workingHour || '00:00') +
+                                                    (element.overtime > 0 ?
+                                                        `<br><span class="overtime-status fs-11 fw-bolder">
+                                                        overtime: ${element.overtime > 0 ?
+                                                            `${Math.floor(element.overtime / 60)} Hr ${element.overtime % 60} Min` :
+                                                            ''}
+                                                    </span>` :
+                                                        '') +
+                                                    '</td>' +
+                                                    '<td>' +
+                                                    '<a class="btn btn-light btn-icon btn-sm" data-in="{{ $inTime }}" ' +
+                                                    'data-out="{{ $outTime }}" data-twh="{{ $workingHour }}" ' +
+                                                    'data-inloc="{{ $punchInLoc }}" data-outloc="{{ $punchOutLoc }}" ' +
+                                                    'data-shiftname="{{ $shiftName }}" data-breakmin="{{ $breakTime }}" ' +
+                                                    'data-overtime="{{ $overTime }}" data-inselfie="{{ $inSelfie }}" ' +
+                                                    'data-outselfie="{{ $outSelfie }}" onclick="showPresentModal(this)">' +
+                                                    '<i class="feather feather-eye" data-bs-toggle="tooltip" ' +
+                                                    'data-original-title="View"></i>' +
+                                                    '</a>' +
+                                                    '</td>' +
+                                                    '</tr>';
+
+                                                tBody.innerHTML += newElement;
+
+                                            }
+
+
+                                        });
+
+                                    }
+                                });
+                            }
+                        </script>
                     </div>
                 </div>
             </div>
