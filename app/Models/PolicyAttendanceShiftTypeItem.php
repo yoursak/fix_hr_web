@@ -35,20 +35,7 @@ use Illuminate\Database\Eloquent\Model;
 class PolicyAttendanceShiftTypeItem extends Model
 {
 	protected $table = 'policy_attendance_shift_type_items';
-
-	// protected $casts = [
-	// 	'attendance_shift_id' => 'int',
-	// 	'shift_start' => 'time:h:i',
-	// 	'shift_hr' => 'int',
-	// 	'shift_end' => 'time:h:i',
-	// 	'shift_min' => 'int',
-	// 	'work_hr' => 'int',
-	// 	'work_min' => 'int',
-	// 	'break_min' => 'int',
-	// 	'is_active' => 'bool',
-	// 	'is_paid' => 'bool'
-	// ];
-
+	protected $primary_key = 'id';
 	protected $fillable = [
 		'attendance_shift_id',
 		'business_id',

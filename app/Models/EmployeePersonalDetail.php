@@ -12,7 +12,7 @@ use App\Models\BranchList;
 
 /**
  * Class EmployeePersonalDetail
- * 
+ *
  * @property int $id
  * @property string|null $business_id
  * @property string|null $branch_id
@@ -57,69 +57,62 @@ use App\Models\BranchList;
 class EmployeePersonalDetail extends Model
 {
 	protected $table = 'employee_personal_details';
-
+	protected $primary_key = 'id';
+	protected $business_id = 'business_id';
 	public function branch()
 	{
 		return $this->belongsTo(BranchList::class, 'branch_id');
 	}
-	// protected $primary_key = 'id';
-	// protected $casts = [
-	// 	'master_endgame_id' => 'int',
-	// 	'department_id' => 'int',
-	// 	'designation_id' => 'int',
-	// 	'is_admin' => 'bool',
-	// 	'role_id' => 'int',
-	// 	'employee_type' => 'int',
-	// 	'employee_contractual_type' => 'int',
-	// 	'emp_mobile_number' => 'float',
-	// 	'emp_date_of_birth' => 'datetime',
-	// 	'emp_date_of_joining' => 'datetime',
-	// 	'emp_gender' => 'bool',
-	// 	'emp_marital_status' => 'bool',
-	// 	'emp_caste' => 'bool',
-	// 	'emp_blood_group' => 'bool',
-	// 	'emp_select_id' => 'bool',
-	// 	'emp_attendance_method' => 'bool',
-	// 	'emp_status' => 'bool'
-	// ];
 
-	// protected $fillable = [
-	// 	'business_id',
-	// 	'branch_id',
-	// 	'emp_id',
-	// 	'master_endgame_id',
-	// 	'emp_name',
-	// 	'emp_mname',
-	// 	'emp_lname',
-	// 	'department_id',
-	// 	'designation_id',
-	// 	'is_admin',
-	// 	'role_id',
-	// 	'employee_type',
-	// 'assign_shift_type'
-	// 	'employee_contractual_type',
-	// 	'emp_mobile_number',
-	// 	'emp_email',
-	// 	'emp_date_of_birth',
-	// 	'emp_date_of_joining',
-	// 	'emp_gender',
-	// 	'emp_marital_status',
-	// 	'emp_caste',
-	// 	'emp_blood_group',
-	// 	'emp_select_id',
-	// 	'emp_select_id_number',
-	// 	'emp_nationality',
-	// 	'emp_address',
-	// 	'emp_country',
-	// 	'emp_state',
-	// 	'emp_city',
-	// 	'emp_pin_code',
-	// 	'emp_shift_type',
-	// 	'emp_reporting_manager',
-	// 	'emp_imei_no',
-	// 	'emp_attendance_method',
-	// 	'emp_status',
-	// 	'profile_photo'
-	// ];
-
+	protected $fillable = [
+		'emp_id',
+		'business_id',
+		'emp_name',
+		'emp_mname',
+		'emp_lname',
+		'emp_mobile_number',
+		'emp_email',
+		'emp_date_of_birth',
+		'emp_gender',
+		'emp_marital_status',
+		'emp_date_of_joining',
+		'emp_nationality',
+		'emp_religion',
+		'emp_category',
+		'emp_blood_group',
+		'emp_gov_select_id',
+		'emp_gov_select_id_number',
+		'branch_id',
+		'department_id',
+		'designation_id',
+		'employee_type',
+		'emp_country',
+		'emp_state',
+		'emp_city',
+		'emp_pin_code',
+		'emp_address',
+		'master_endgame_id',
+		'emp_attendance_method',
+		'emp_shift_type',
+		'assign_shift_type',
+		'emp_reporting_manager',
+		'active_emp',
+		'employee_contractual_type',
+		'emp_rotational_shift_type_item',
+		'assign_shift_start_time',
+		'assign_shift_end_time',
+		'static_role',
+		'role_id',
+        'grade',
+        'budget_code',
+        'account_code',
+        'bank_ifsc_code',
+        'bank_name',
+        'bank_branch_name',
+        'bank_account_no',
+        'bank_branch_code',
+        'bank_micr_code',
+        'bank_address_line1',
+        'bank_address_line2'
+	];
 }

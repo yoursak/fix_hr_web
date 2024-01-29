@@ -33,17 +33,26 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
     protected $month;
     protected $year;
     protected $day;
-
-    public function __construct($Emp, $length, $export_type, $month, $year, $day)
+    protected $BranchName;
+    public function __construct($Emp, $length, $export_type, $month, $year, $day,$BranchName)
     {
-        // dd($Emp,$length, $export_type, $month , $year, $day);
+
+
         $leaveList = [];
         $businessDetails = DB::table("business_details_list")->where("business_id", Session::get('business_id'))->first();
         $branchDetails = DB::table("branch_list")->where("branch_id", Session::get('branch_id'))->where("business_id", Session::get('business_id'))->first();
-        $leaveType = DB::table('employee_leave_balance')->distinct()->pluck('leave_type');
-        foreach ($leaveType as $key => $value) {
-            $leaveType = DB::table('static_leave_type')->where('id', $value)->first();
-            $leaveList[$key] = $leaveType->Name;
+        // $leaveType = DB::table('employee_leave_balance')->distinct()->pluck('leave_type');
+        $leaveTypes = DB::table('policy_setting_leave_category')
+            ->join('static_leave_category', 'policy_setting_leave_category.category_name', '=', 'static_leave_category.id')
+            ->where('business_id', Session::get('business_id'))
+            ->groupBy('category_name')
+            ->get();
+
+        foreach ($leaveTypes as $key => $Type) {
+            $leaveList[$key] = [
+                'name'=>$Type->name,
+                'categoryId'=>$Type->category_name,
+            ];
         }
 
         $this->leaveTypes = $leaveList;
@@ -55,6 +64,7 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
         $this->month = $month;
         $this->year = $year;
         $this->day = $day;
+        $this->BranchName = $BranchName;
     }
     public function startCell(): string
     {
@@ -67,9 +77,11 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
             $data = [];
             foreach ($this->Emp as $key => $item) {
                 $monthDay = $this->month == date('m') ? date('j') : date('t');
-                $dataWithActive = ['S.no.' => ++$key,
-                    'Name' => $item->emp_name,
-                    'EmpId' => $item->emp_id,];
+                $dataWithActive = [
+                    'S.no.' => ++$key,
+                    'Name' => $item->emp_name . ' ' . $item->emp_mname . ' ' . $item->emp_lname,
+                    'EmpId' => $item->emp_id,
+                ];
 
                 for ($count = 1; $count <= $monthDay; $count++) {
                     // dd($count);
@@ -87,23 +99,21 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
                     } elseif ($resCode[0] == 7) {
                         $dataWithActive[$count] = 'WO';
                     } elseif ($resCode[0] == 10 || $resCode[0] == 11) {
-                        $dataWithActive[$count] = 'L';
+                        $leave = Central_unit::getEmpLeaveDetails($item->emp_id, date($this->year . '-' . $this->month . '-' . $count));
+                        $dataWithActive[$count] = $leave->sort_name;
                     } elseif ($resCode[0] == 8) {
                         $dataWithActive[$count] = 'HD';
                     } else {
-                        // dd($resCode[0]);
                         $dataWithActive[$count] = 'A';
                     }
                 }
 
                 $monthlyCount = DB::table('attendance_monthly_count')->where('month', $this->month)->where('year', $this->year)->where('emp_id', $item->emp_id)->first();
-                // dd($monthlyCount);
-                $total = ($monthlyCount->present ?? 0) + ($monthlyCount->half_day ?? 0) / 2 + ($monthlyCount->overtime ?? 0) + ($monthlyCount->late ?? 0) + ($monthlyCount->early_exit ?? 0);
+                $total = ($monthlyCount->present ?? 0) + ($monthlyCount->half_day ?? 0) / 2;
                 $dataWithActive = array_merge($dataWithActive, [($monthlyCount->present ?? 0), ($monthlyCount->absent ?? 0), ($monthlyCount->half_day ?? 0), ($monthlyCount->leave ?? 0), ($monthlyCount->week_off ?? 0), ($monthlyCount->holiday ?? 0), ($monthlyCount->mispunch ?? 0), ($monthlyCount->overtime ?? 0), ($monthlyCount->late ?? 0), ($monthlyCount->early_exit ?? 0), ($total ?? 0)]);
 
                 $data[$key + 8] = $dataWithActive;
             }
-            // dd($data);
             return collect($data);
 
         } elseif ($this->export_type == 1) {
@@ -115,12 +125,12 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
             }
 
             foreach ($this->Emp as $key => $item) {
-                $resCode = Central_unit::attendanceCount($item->emp_id, date('Y'), date('m'));
+
                 $monthData = DB::table('attendance_monthly_count')->where(['emp_id' => $item->emp_id, 'month' => date('m'), 'year' => date('Y')])->where("business_id", Session::get('business_id'))->first();
                 // dd($monthData);
                 $rowData = [
                     'S.no.' => ++$key,
-                    'Name' => $item->emp_name,
+                    'Name' => $item->emp_name . ' ' . $item->emp_mname . ' ' . $item->emp_lname,
                     'EmpId' => $item->emp_id,
                     'Present' => ($monthData->present ?? 0) + ($monthData->late ?? 0) + ($monthData->early_exit ?? 0) + ($monthData->overtime ?? 0),
                     'Absent' => ($monthData->absent ?? 0),
@@ -140,15 +150,18 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
         } else if ($this->export_type == 10) {
             $data = [];
             foreach ($this->Emp as $key => $item) {
+                $leaveData = [];
                 $monthDay = date('t');
-                $dataWithActive = ['S.no.' => ++$key,
-                    'Name' => $item->emp_name,
+                $dataWithActive = [
+                    'S.no.' => ++$key,
+                    'Name' => $item->emp_name . ' ' . $item->emp_mname . ' ' . $item->emp_lname,
                     'EmpId' => $item->emp_id,
                     'DOJ' => $item->emp_date_of_joining,
                 ];
 
                 foreach ($this->leaveTypes as $value) {
-                    $dataWithActive = array_merge($dataWithActive, ['-', '-', '-', '-', '-', '-', '-']);
+                    $leaveData = Central_unit::calculateLeaveCountApi($item->emp_id,$value['categoryId'],$this->month,$this->year);
+                    $dataWithActive = array_merge($dataWithActive, [$leaveData['opening'], $leaveData['alloted'], $leaveData['used'], $leaveData['remaining']]);
                 }
 
                 $data[$key + 8] = $dataWithActive;
@@ -161,8 +174,19 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
             foreach ($this->Emp as $key => $item) {
                 $attendanceDate = date('Y-m-d', strtotime($this->year . '-' . $this->month . '-' . $this->day));
                 $empDailyAttendance = DB::table('attendance_list')->where(['punch_date' => $attendanceDate, 'emp_id' => $item->emp_id, 'business_id' => Session::get('business_id')])->first();
-                $empStatus = DB::table('static_status_attendance')->where('id', ($empDailyAttendance->today_status ?? 2))->first();
-                // dd($empDailyAttendance);
+                if (!$empDailyAttendance) {
+                    $resCode = Central_unit::getEmpAttSumm(['emp_id' => $item->emp_id, 'punch_date' => $attendanceDate]);
+                    if ($resCode[0] == 10) {
+                        $leave = Central_unit::getEmpLeaveDetails($item->emp_id, $attendanceDate);
+                        $empStatus = $leave->name;
+                    } else {
+                        $empStatus = DB::table('static_status_attendance')->where('id', ($empDailyAttendance->today_status ?? 2))->first();
+                        $empStatus = $empStatus->status_labels;
+                    }
+                } else {
+                    $empStatus = DB::table('static_status_attendance')->where('id', ($empDailyAttendance->today_status ?? 2))->first();
+                    $empStatus = $empStatus->status_labels;
+                }
                 $shiftStartTime = ($empDailyAttendance->applied_shift_comp_start_time ?? 0) != 0 ? Carbon::createFromFormat('H:i:s', $empDailyAttendance->applied_shift_comp_start_time) : '-';
                 $shiftEndTime = ($empDailyAttendance->applied_shift_comp_end_time ?? 0) != 0 ? Carbon::createFromFormat('H:i:s', $empDailyAttendance->applied_shift_comp_end_time) : '-';
                 $punchInTime = ($empDailyAttendance->punch_in_time ?? 0) != 0 ? Carbon::createFromFormat('H:i:s', $empDailyAttendance->punch_in_time) : '-';
@@ -177,14 +201,18 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
                 $punchOut = ($empDailyAttendance->punch_out_time ?? 0) != 0 ? $punchOutTime->format('g:i A') : '-';
                 $punchInOutStatus = ($empDailyAttendance->emp_today_current_status ?? 0);
 
+                $empDetails = DB::table('employee_personal_details')->where(['business_id' => Session::get('business_id'), 'emp_id' => $item->emp_id])->first();
+                $shift = $empDetails->assign_shift_type == 2 ? DB::table('policy_attendance_shift_type_items')->where('id', $empDetails->emp_rotational_shift_type_item)->first() : DB::table('policy_attendance_shift_type_items')->where('attendance_shift_id', $empDetails->emp_shift_type)->first();
+                // dd($shift);
+
                 $dataWithActive = [
                     'S.No.' => ++$key,
-                    'Name' => $item->emp_name,
+                    'Name' => $item->emp_name . ' ' . $item->emp_mname . ' ' . $item->emp_lname,
                     'EmpId' => $item->emp_id,
-                    'Shift Name' => ($empDailyAttendance->applied_shift_template_name ?? '-'),
-                    'Shift Start' => ($shiftStart ?? '-'),
-                    'Shift End' => ($shiftEnd ?? '-'),
-                    'Status' => ($empStatus->status_labels ?? '-'),
+                    'Shift Name' => isset($empDailyAttendance) ? ($empDailyAttendance->applied_shift_template_name ?? '-') : ($shift->shift_name ?? '-'),
+                    'Shift Start' => isset($empDailyAttendance) ? ($shiftStart ?? '-') : ($shift->shift_start ?? '-'),
+                    'Shift End' => isset($empDailyAttendance) ? ($shiftEnd ?? '-') : ($shift->shift_end ?? '-'),
+                    'Status' => ($empStatus ?? '-'),
                     'Punch In' => $punchInOutStatus >= 1 ? ($punchIn ?? '-') : '-',
                     'Punch Out' => $punchInOutStatus == 2 ? ($punchOut ?? '-') : '-',
                     'Break' => ($empDailyAttendance->brack_time ?? '-'),
@@ -198,16 +226,24 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
             }
             // dd($data);
             return collect($data);
-        } else {
+        } else if ($this->export_type == 11) {
             $data = [];
             $dayStart = 0;
             $NofDayInMonth = $this->DataLength - 7;
             while ($NofDayInMonth >= ++$dayStart) {
                 $attendanceDate = date('Y-m-d', strtotime($dayStart . '-' . $this->month . '-' . $this->year));
-                // dd($attendanceDate);
                 $empDailyAttendance = DB::table('attendance_list')->where(['punch_date' => $attendanceDate, 'emp_id' => $this->Emp->emp_id, 'business_id' => Session::get('business_id')])->first();
                 $Status = Central_unit::getEmpAttSumm(['punch_date' => $attendanceDate, 'emp_id' => $this->Emp->emp_id]);
-                $empStatus = DB::table('static_status_attendance')->where('id', ($Status[0] ?? 2))->first();
+
+                if ($Status[0] == 10) {
+                    $leave = Central_unit::getEmpLeaveDetails($this->Emp->emp_id, $attendanceDate);
+                    $empStatus = $leave->name;
+                } else {
+                    $empStatus = DB::table('static_status_attendance')->where('id', ($empDailyAttendance->today_status ?? 2))->first();
+                    $empStatus = $empStatus->status_labels;
+                }
+
+                // $empStatus = DB::table('static_status_attendance')->where('id', ($Status[0] ?? 2))->first();
                 $shiftStartTime = ($empDailyAttendance->applied_shift_comp_start_time ?? 0) != 0 ? Carbon::createFromFormat('H:i:s', $empDailyAttendance->applied_shift_comp_start_time) : '-';
                 $shiftEndTime = ($empDailyAttendance->applied_shift_comp_end_time ?? 0) != 0 ? Carbon::createFromFormat('H:i:s', $empDailyAttendance->applied_shift_comp_end_time) : '-';
                 $punchInTime = ($empDailyAttendance->punch_in_time ?? 0) != 0 ? Carbon::createFromFormat('H:i:s', $empDailyAttendance->punch_in_time) : '-';
@@ -228,7 +264,7 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
                     'Shift Name' => ($empDailyAttendance->applied_shift_template_name ?? '-'),
                     'Shift Start' => ($shiftStart ?? '-'),
                     'Shift End' => ($shiftEnd ?? '-'),
-                    'Status' => ($empStatus->status_labels ?? '-'),
+                    'Status' => ($empStatus ?? '-'),
                     'Punch In' => ($punchIn ?? '-'),
                     'Punch Out' => ($punchOut ?? '-'),
                     'Break' => ($empDailyAttendance->brack_time ?? '-'),
@@ -240,9 +276,47 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
 
                 $data[$dayStart + 7] = $dataWithActive;
             }
-            // dd($data);
+            return collect($data);
+        } else if ($this->export_type == 12) {
+            $NofDayInMonth = $this->DataLength - 7;
+            $dayStart = 0;
+            $key = 0;
+            while ($NofDayInMonth >= ++$dayStart) {
+                $dateFor = date('Y-m-d', strtotime($this->year . '-' . $this->month . '-' . $dayStart));
+
+                $timeLog = self::getTimeLog($dateFor);
+                if (isset($timeLog)) {
+
+                    $dataWithActive[] = [
+                        'S#' => ++$key,
+                        'Punch Date' => $timeLog->punch_date,
+                        'Day' => date('l', strtotime($timeLog->punch_date)),
+                        'Shift Name' => $timeLog->applied_shift_template_name,
+                        'Shift Start' => $timeLog->applied_shift_comp_start_time,
+                        'Shift End' => $timeLog->applied_shift_comp_end_time,
+                        'Punch In' => $timeLog->prev_in_time,
+                        'Punch Out' => $timeLog->prev_out_time,
+                        'Working Hour' => $timeLog->prev_total_work,
+                        'AR Date' => $timeLog->change_date,
+                        'AR In Time' => $timeLog->punch_in_time,
+                        'AR Out Time' => $timeLog->punch_out_time,
+                        'AR Hour' => $timeLog->total_working_hour,
+                        'AR By' => $timeLog->changer_name,
+                        'Remark' => $timeLog->reason,
+                    ];
+                } else {
+                    continue;
+                }
+
+            }
+
+            $data[$dayStart + 7] = $dataWithActive;
+            $this->logLength = count($dataWithActive);
+
+            // dd(count($dataWithActive))s
             return collect($data);
         }
+
     }
 
     public function headings(): array
@@ -259,7 +333,6 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
 
             $load = array_merge($load, ['P', 'A', 'HD', 'L', 'WO', 'HO', 'MSP', 'OT', 'LE', 'EE', 'Total']);
             $this->endPosition = array_search('Total', $load);
-
         } else if ($this->export_type == 1) {
             $load = [
                 'S.No.',
@@ -282,7 +355,7 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
                 'DOJ',
             ];
             foreach ($this->leaveTypes as $key => $value) {
-                $load = array_merge($load, ['Opening', 'Accrued', 'Availed Upto Last  Month', 'Availed Current Month', 'Balance', 'Future / Unapprove Days Leave Applied', 'Leave Balance Available For Application ']);
+                $load = array_merge($load, ['Opening', 'Alloted', 'Taken', 'Remaining']);
             }
 
             $this->firstStartPosition = array_search('Opening', $load);
@@ -303,7 +376,7 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
                 'Overtime',
                 'Total Working Hour',
             ];
-        } else {
+        } else if ($this->export_type == 11) {
             $load = [
                 'S#',
                 'Date',
@@ -320,7 +393,26 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
                 'Overtime',
                 'Total Working Hour',
             ];
+        } else if ($this->export_type == 12) {
+            $load = [
+                'S#',
+                'Date',
+                'Day',
+                'Shift Name',
+                'Shift Start',
+                'Shift End',
+                'Punch In',
+                'Punch Out',
+                'Working Hour',
+                'AR Date',
+                'AR In Time',
+                'AR Out Time',
+                'AR Hour',
+                'AR By',
+                'Remark',
+            ];
         }
+
         return $load;
 
     }
@@ -358,7 +450,7 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
                         ],
                     ]);
                     $event->sheet->getDelegate()->mergeCells('C5:I5');
-                    $event->sheet->getDelegate()->setCellValue('C5', $this->branchName);
+                    $event->sheet->getDelegate()->setCellValue('C5', $this->BranchName);
 
                     $event->sheet->setShowGridlines(false);
 
@@ -489,13 +581,13 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
                                 $position += 1;
                                 $firstStart = Coordinate::stringFromColumnIndex($position);
 
-                                $position += 6;
+                                $position += 3;
                                 $firstEnd = Coordinate::stringFromColumnIndex($position);
 
 
                                 $event->sheet->getDelegate()->mergeCells('A7:D7');
                                 $event->sheet->getDelegate()->mergeCells($firstStart . '7:' . $firstEnd . '7');
-                                $event->sheet->getDelegate()->setCellValue($firstStart . '7', $value);
+                                $event->sheet->getDelegate()->setCellValue($firstStart . '7', $value['name']);
 
                                 $boldStyle = $event->sheet->getDelegate()->getStyle('A7:' . $firstEnd . '8');
                                 $boldStyle->getFont()->setBold(true);
@@ -519,13 +611,13 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
                             while ($positionCounter <= $position) {
                                 $Cell = Coordinate::stringFromColumnIndex($positionCounter++);
                                 $event->sheet->getColumnDimension($Cell)->setAutoSize(false);
-                                $event->sheet->getColumnDimension($Cell)->setWidth(10);
+                                $event->sheet->getColumnDimension($Cell)->setWidth(12);
                                 $event->sheet->getDelegate()->getStyle($Cell)->getAlignment()->setWrapText(true);
                             }
 
 
                             // die;
-    
+
                         } else {
                             // "Opening" not found in headers
                             dd("Opening not found in headers");
@@ -571,16 +663,15 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
                         }
 
                         $Count = DB::table('attendance_daily_count')->where('business_id', Session::get('business_id'))->where('date', date('Y-m-d', strtotime($this->year . '-' . $this->month . '-' . $this->day)))->first();
-                        // dd($Count);
-                        $present = $Count->present + $Count->late + $Count->early + $Count->early + $Count->overtime;
+                        $present = $Count->present;
                         $event->sheet->getDelegate()->mergeCells('A' . $this->DataLength + 1 . ':N' . $this->DataLength + 1);
-                        $event->sheet->getDelegate()->setCellValue('A' . $this->DataLength + 1, ' Present-' . $present . ',  Absent-' . $Count->absent . ',  Halfday-' . $Count->halfday . ', Mispunch-' . $Count->mispunch . ',  Late-,  Early-,  Leave-' . $Count->leave . ',');
+                        $event->sheet->getDelegate()->setCellValue('A' . $this->DataLength + 1, ' Present-' . $present . ',  Absent-' . $Count->absent . ',  Halfday-' . $Count->halfday . ', Mispunch-' . $Count->mispunch . ',  Late-' . $Count->late . ',  Early-' . $Count->early . ',  Leave-' . $Count->leave . ',');
                         $event->sheet->getStyle('A' . $this->DataLength + 1)->getFont()->setBold(true);
 
                         $event->sheet->getDelegate()->mergeCells('A' . $this->DataLength + 3 . ':N' . $this->DataLength + 3);
                         $event->sheet->getDelegate()->setCellValue('A' . $this->DataLength + 3, 'Exported By: ' . Session::get('login_name') . ' At: ' . now());
 
-                    } else {
+                    } else if ($this->export_type == 11) {
 
                         $event->sheet->getDelegate()->mergeCells('A7:C7');
                         $event->sheet->getDelegate()->setCellValue('A7', 'Action Details');
@@ -659,10 +750,61 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
                         $boldStyle->getFont()->setBold(true);
                         $boldStyle->getFont()->setBold(true)->setSize(10);
                         // dd($func);
-    
+
+                    } else if ($this->export_type == 12) {
+
+                        $event->sheet->getDelegate()->mergeCells('J2:L2');
+                        $event->sheet->getDelegate()->setCellValue('J2', 'Name: ' . $this->Emp->emp_name . ' ' . $this->Emp->emp_mname);
+                        $event->sheet->getDelegate()->mergeCells('J3:L3');
+                        $event->sheet->getDelegate()->setCellValue('J3', 'Employee ID: ' . $this->Emp->emp_id);
+                        $event->sheet->getDelegate()->mergeCells('J4:L4');
+
+                        $boldStyle1 = $event->sheet->getDelegate()->getStyle('J2:L2');
+                        $boldStyle1->getFont()->setBold(true);
+
+                        $boldStyle2 = $event->sheet->getDelegate()->getStyle('J3:L3');
+                        $boldStyle2->getFont()->setBold(true);
+
+
+                        $event->sheet->getDelegate()->getStyle('A7:N7')->getAlignment()
+                            ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+                            ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
+
+                        $event->sheet->getColumnDimension('A')->setAutoSize(false);
+                        $event->sheet->getColumnDimension('A')->setWidth(5);
+                        $event->sheet->getDelegate()->getStyle('A')->getAlignment()->setWrapText(true);
+
+                        $event->sheet->getDelegate()->getStyle('A8:A' . $this->DataLength + 1)->getAlignment()
+                            ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+                            ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
+
+                        $event->sheet->getDelegate()->setCellValue('D4', 'For the Date of  ' . date('d-M-Y') . ' ' . date('l'));
+
+                        $event->sheet->getDelegate()->setCellValue('C3', 'Employee Monthly Attendance Regularization Report');
+                        $event->sheet->getDelegate()->freezePane('A9');
+                        $event->sheet->getDelegate()->setAutoFilter('A8:O8');
+
+                        $boldStyle = $event->sheet->getDelegate()->getStyle('A8:O8');
+                        $boldStyle->getFont()->setBold(true);
+
+                        $boldBorderStyle = $event->sheet->getDelegate()->getStyle('A8:O' . $this->logLength + 8)->getBorders();
+                        $boldBorderStyle->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+
+                        $event->sheet->getDelegate()->getStyle('A8:O' . $this->logLength)->getAlignment()
+                            ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+                            ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
+
+                        $columns = ['E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'];
+
+                        foreach ($columns as $column) {
+                            $event->sheet->getColumnDimension($column)->setAutoSize(false);
+                            $event->sheet->getColumnDimension($column)->setWidth(15);
+                            $event->sheet->getDelegate()->getStyle($column)->getAlignment()->setWrapText(true);
+                        }
                     }
-
-
                 } catch (\Exception $e) {
                     \Log::error('Error adding image to Excel sheet: ' . $e->getMessage());
                     \Log::error('Stack trace: ' . $e->getTraceAsString());
@@ -686,6 +828,7 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
         $totalWorkHour = $empAttendance
             ->where('emp_id', $this->Emp->emp_id)
             ->whereMonth('punch_date', $this->month)
+            ->whereYear('punch_date', $this->year)
             ->get();
 
         foreach ($totalWorkHour as $workHour) {
@@ -708,7 +851,7 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
 
 
         $counts = DB::table('attendance_monthly_count')->where('emp_id', $this->Emp->emp_id)->where('month', $this->month)->where('year', $this->year)->first();
-        $present = $counts->present + $counts->overtime + $counts->late + $counts->early_exit;
+        $present = $counts->present;
         $halfDay = $counts->half_day;
         $leaves = $counts->leave;
         $holiday = $counts->holiday;
@@ -717,9 +860,21 @@ class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithE
 
         $stringValue = 'Total Duration: ' . $totalHours . ' hours and ' . $totalMinutes . ' mins , PresentDays = ' . $present . ', HalfDays = ' . $halfDay . ', Leaves = ' . $leaves . ', Week Off = ' . $weekOff . ', Holiday = ' . $holiday . ', Absent + MSP (Deductible) = 0.00, MSP = ' . $mispunch . ', Total OverTime Duration : ' . $totalOTHours . ' hours and ' . $totalOTMinutes . ' mins';
 
-        // dd($stringValue);
-
         return $stringValue;
+    }
+
+    public function getTimeLog($date)
+    {
+        $attendance = DB::table('attendance_list')
+            ->join('attendance_time_log', 'attendance_list.punch_date', '=', 'attendance_time_log.punch_date')
+            ->where('attendance_list.emp_id', $this->Emp->emp_id)
+            ->where('attendance_list.business_id', Session::get('business_id'))
+            ->where('attendance_time_log.punch_date', $date)
+            ->latest('attendance_time_log.created_at')
+            // ->select('attendance_time_log.*')
+            ->first();
+
+        return $attendance;
     }
 
 }

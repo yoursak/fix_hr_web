@@ -31,7 +31,7 @@ use Illuminate\Database\Eloquent\Model;
 class PolicyAttenRuleOvertime extends Model
 {
 	protected $table = 'policy_atten_rule_overtime';
-
+	protected $primary_key = 'id';
 	protected $casts = [
 		'switch_is' => 'bool',
 		'early_ot_hr' => 'int',

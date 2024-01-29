@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
 class StaticAttendanceShiftType extends Model
 {
 	protected $table = 'static_attendance_shift_type';
+	protected $primary_id = 'id';
 	public $timestamps = false;
 
 	protected $fillable = [

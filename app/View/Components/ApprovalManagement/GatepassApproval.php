@@ -55,6 +55,16 @@ class GatepassApproval extends Component
         $attendanceShiftPolicy = $List[7];
         $attendanceTrackInOut = $List[8];
         $adminRoleList = $List[10];
+        $newRoleObject = (object) [
+            'id' => 1,
+            'business_id' => Session::get('business_id'),
+            'branch_id' => Session::get('branch_id'),
+            'roles_name' => 'Owner',
+            'description' => 'Owner has complete access to assign all the bussiness.',
+        ];
+
+        // Add the new object to the array
+        $adminRoleList[] = $newRoleObject;
         // dd($adminRoleList);
         // dd($adminRoleList);
         // dd($attendanceTrackInOut)

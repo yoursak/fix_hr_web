@@ -27,19 +27,18 @@ class AttendanceHolidayList extends Model
 {
     protected $table = 'attendance_holiday_list';
     protected $primaryKey = 'id';
+    protected $business_id = 'business_id';
 
-    // protected $casts = [
-    // 	'template_id' => 'int',
-    // 	'holiday_date' => 'datetime'
-    // ];
 
     protected $fillable = [
+        'master_end_method_id',
         'business_id',
+        'process_check',
+        'holiday_type_id',
         'name',
         'day',
         'holiday_date',
         'from_start',
         'to_end'
     ];
-
 }

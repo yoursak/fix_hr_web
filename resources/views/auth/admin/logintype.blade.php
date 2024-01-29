@@ -32,7 +32,7 @@
         <div class="card col-md-12 col-lg-12 p-5">
             <div class="row align-items-center ">
                 <h3>Welcome to FixHR</h3>
-                <p>Please provide details as asked below for a unique account creation</p>
+                <p>Please Provide Details as Asked Below for a Unique Account Creation</p>
                 <?php
                 $Helper = new App\Helpers\Central_unit();
                 $root = DB::table('business_details_list')
@@ -65,7 +65,7 @@
                             <div class="offer-content">
                                 <h3 class="lead font-weight-semibold"><b>{{ $cardBusinessName }}</b></h3>
                                 <p>
-                                    To record attendance details of my employee
+                                    To Record Attendance Details of My Employees
 
                                 </p>
                             </div>
@@ -95,7 +95,7 @@
                             </div>
                             <div class="offer-content">
                                 <h3 class="lead font-weight-semibold"><b>{{ $adminBusinessName }}</b></h3>
-                                <p>To access attendance details of the company</p>
+                                <p>To Access Attendance Details of The Company</p>
                             </div>
                         </div>
                     </form>

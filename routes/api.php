@@ -14,6 +14,7 @@ use App\Http\Controllers\ApiController\UploadImageApiController;
 use App\Http\Controllers\ApiController\ApiAdminController\ApiLoginController;
 use App\Http\Controllers\ApiController\ApiAdminController\Employee\EmployeeController;
 use App\Http\Controllers\ApiController\ApiAdminController\Attendance\AttendanceController;
+use App\Http\Controllers\ApiController\ApiAdminController\Home\DashobardController;
 use App\Http\Controllers\ApiController\ApiAdminController\Request\ApiRequestAdminController;
 use App\Http\Controllers\ApiController\ApiAdminController\Setting\BusinessController;
 
@@ -24,8 +25,7 @@ use App\Http\Controllers\ApiController\ApiUserController\Login\EmployeeLoginApiC
 use App\Http\Controllers\ApiController\ApiUserController\Employee\EmployeeApiController;
 use App\Http\Controllers\ApiController\ApiUserController\Request\GatePassApiController;
 use App\Http\Controllers\ApiController\ApiUserController\Attendance\AttendanceApiController;
-use App\Http\Controllers\ApiController\ApiUserController\Holiday\PolicyHolidayTemplate;
-
+use App\Http\Controllers\ApiController\ApiUserController\Setting\SettingUserApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,28 +44,33 @@ Route::prefix('user')->group(function () {
     Route::prefix('/employee')->group(function () {
         Route::post('/login', [EmployeeLoginApiController::class, 'login']); //QA
         Route::any('/verify_otp', [EmployeeLoginApiController::class, 'VerifiedOtp']);
-   
+
         Route::any('/master_rule', [EmployeeLoginApiController::class, 'MasterRule']);
         Route::any('/attendance_mode', [EmployeeLoginApiController::class, 'AttendanceMode']);
         Route::any('/shift_type_list', [EmployeeLoginApiController::class, 'ShiftTypeList']);
-        Route::any('daily_details', [EmployeeApiController::class, 'dashboardcount']);
-
+        Route::prefix('login')->group(function () {
+            Route::post('/multiple_login', [EmployeeLoginApiController::class, 'getMultipleLogin']);
+        });
         Route::prefix('attendance')->group(function () {
             Route::any('daily_details', [EmployeeApiController::class, 'dashboardcount']);
-            // Route::get('/detail', [AttendanceApiController::class, 'index']); 
-            Route::any('/current_attendances_status', [AttendanceApiController::class, 'currentAttendanceStatus']);
+            // Route::get('/detail', [AttendanceApiController::class, 'index']);
+            Route::any('/today_attendances_status', [AttendanceApiController::class, 'currentAttendanceStatus']);
+            Route::any('/current_attendances_status', [AttendanceApiController::class, 'currentStatusAttendanceRequest']);
             Route::post('/detail', [AttendanceApiController::class, 'store']);
             Route::post('attendance_store', [AttendanceApiController::class, 'storeAttendance']);
             Route::get('detail/{id}', [AttendanceApiController::class, 'show']);
             Route::any('/attendance_data_list', [AttendanceApiController::class, 'attendanceDataList']);
+            Route::any('/attendance_data_location_tab_list', [AttendanceApiController::class, 'checkLocationTabList']);
             Route::any('filter_attendance', [AttendanceApiController::class, 'filterAttenDetail']);
             Route::any('attendance_detail', [AttendanceApiController::class, 'attendanceDetail']);
             Route::put('detail/{id}', [AttendanceApiController::class, 'update']);
             Route::delete('detail/{id}', [AttendanceApiController::class, 'destroy']);
+
+            // attendance Mode
+            Route::any('allow_business_mode', [AttendanceApiController::class, 'attendanceAcceptOnBusiness']);
         });
 
         Route::post('employee_details', [EmployeeApiController::class, 'show']);
-      //  Route::any('daily_details', [EmployeeApiController::class, 'dashboardcount']);
 
         // Leave Request
         Route::prefix('leaverequest')->group(function () {
@@ -73,12 +78,14 @@ Route::prefix('user')->group(function () {
             Route::post('detail', [LeaveRequestApiController::class, 'store']);
             Route::get('detail/{id}', [LeaveRequestApiController::class, 'show']);
             Route::any('leave_edit', [LeaveRequestApiController::class, 'leaveUpdate']);
-            Route::any('leave_data_list', [LeaveRequestApiController::class, 'leaveDataList']); //show list 
+            Route::any('leave_data_list', [LeaveRequestApiController::class, 'leaveDataList']); //show list
             Route::any('leave_request_status', [LeaveRequestApiController::class, 'currentStatusLeaveRequest']);
             Route::any('leave_shift_type', [LeaveRequestApiController::class, 'staticLeaveShiftType']); //static_leave_shift_type
             Route::any('request_leave_type', [LeaveRequestApiController::class, 'staticRequestLeaveType']); // static_request_leave_type
             Route::post('leave_category', [LeaveRequestApiController::class, 'policySettingLeaveCategory']); //policy_setting_leave_category
             Route::post('delete', [LeaveRequestApiController::class, 'destroy']);
+
+            Route::any('leave_balance', [LeaveRequestApiController::class, 'leaveBalanceList']);
             // Route::get('leaveidtodata/{id}', [LeaveRequestApiController::class, 'leaveIdToData']);
         });
         // Gate Pass Request
@@ -90,8 +97,9 @@ Route::prefix('user')->group(function () {
             Route::post('gatepass_data', [GatePassApiController::class, 'gatepassIdData']);
             Route::post('/gatepass_month_filter_data', [GatePassApiController::class, 'gatepassMonthFilterData']);
             Route::get('detail/{id}', [GatePassApiController::class, 'show']);
-            Route::any('gate_pass_edit', [GatePassApiController::class, 'gatepassupdate']);//edit_gate_pass
-            Route::any('delete', [GatePassApiController::class, 'destroy']);//gate_pass_delete
+            Route::any('gate_pass_edit', [GatePassApiController::class, 'gatepassupdate']); //edit_gate_pass
+            Route::any('delete', [GatePassApiController::class, 'destroy']); //gate_pass_delete
+            Route::any('gatepass_request_status', [GatePassApiController::class, 'currentStatusGatePassRequest']);
         });
 
         // MisPunch Request
@@ -103,14 +111,14 @@ Route::prefix('user')->group(function () {
             Route::post('store', [MispunchApiController::class, 'store']);
             Route::any('mispunch_edit', [MispunchApiController::class, 'mispunchupdate']);  //edit_mis_punch_route
             Route::post('delete', [MispunchApiController::class, 'destroy']); //delete_mis_punch_route
-
             Route::delete('detail/{id}', [MispunchApiController::class, 'destroy']);
+            Route::any('current_mispunch_status', [MispunchApiController::class, 'currentStatusMisspunchRequest']);
 
-            // Route::delete('detail/{id}',[MispunchApiController::class, 'destroy'])
+            Route::any('find_mispunch_status', [MispunchApiController::class, 'findOutMisPunchRequest']);
         });
 
-        Route::prefix('holiday_policy')->group(function () {
-            Route::any('list', [PolicyHolidayTemplate::class, 'index']);
+        Route::prefix('settings')->group(function () {
+            Route::any('holiday_list', [SettingUserApiController::class, 'policyHolidayDataList']);
         });
     });
 });
@@ -125,17 +133,26 @@ Route::any('/bussinesscheck', [CommonApiController::class, 'businesscheck']);
 // Admin Call
 Route::prefix('admin')->group(function () {
     Route::post('/login', [ApiLoginController::class, 'login']);
-    Route::any('/verify_otp_owner', [ApiLoginController::class, 'VerifiedOtp']); //owner
-    Route::any('/verify_otp_admin', [ApiLoginController::class, 'VerifiedOtpAdmin']); //admin
+    Route::any('/verify_otp', [ApiLoginController::class, 'VerifiedOtp']); //owner
     Route::any('/logout', [ApiLoginController::class, 'Logout']);
     Route::any('/notification', [FirebasePushController::class, 'sendNotification']);
 
+    Route::any('/dashboard_count', [DashobardController::class, 'getDashboardCount']);
+    Route::any('/pending_approval_count', [DashobardController::class, 'getPendingApprovalCount']);
+    Route::any('/today_attendance_list', [AttendanceController::class, 'getTodayAttendanceList']);
+    Route::any('/today_attendance_report', [DashobardController::class, 'getTodayAttendanceReport']);
+    Route::prefix('camera_permission')->group(function () {
+        Route::any('/camera_login_permission', [ApiLoginController::class, 'cameraLogin']);
+        Route::any('/camera_verify_permission', [ApiLoginController::class, 'cameraVerifyPermission']);
+    });
+
+
     Route::middleware(['auth:admin'])->group(function () {
+
 
         Route::get('/branchlist/{id}', [EmployeeController::class, 'branchList']);
         Route::get('/departmentlist/{id}', [EmployeeController::class, 'departmentList']);
-        Route::any('/allemployee', [EmployeeController::class, 'employeeList']);
-        Route::any('/camera_permission', [ApiLoginController::class, 'cameraPermission']); //check_camera
+        Route::any('/allemployee', [EmployeeController::class, 'employeeList']); //cameraPermission check_camera
         Route::any('/attendance_list', [AttendanceController::class, 'allAttendanceList']);
         Route::any('/attend', [ApiLoginController::class, 'attendence']); //Mode attendances
         Route::get('/business_name/{business_id}', [BusinessController::class, 'nameBusiness']); //Mode attendances

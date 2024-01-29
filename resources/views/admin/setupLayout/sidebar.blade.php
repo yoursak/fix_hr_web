@@ -18,7 +18,7 @@ $Helper1 = new App\Helpers\Layout();
     @endphp
     <aside class="app-sidebar ">
         <div class="app-sidebar__logo">
-            <a class="header-brand" href="index.html">
+            <a class="header-brand">
                 <img src="{{ asset('assets/logo/FixHR.png?v=0.2') }}" class="header-brand-img desktop-lgo"
                     alt="FixingDotslogo">
                 <img src="{{ asset('assets/logo/Fix_HR_Dark.png?v=0.10') }}" class="header-brand-img dark-logo"
@@ -38,43 +38,44 @@ $Helper1 = new App\Helpers\Layout();
                 <ul class="side-menu">
 
                     <li class="slide">
-                        <a class="side-menu__item" href="{{ url('setup/account-settings') }}">
+                        <a class="side-menu__item" class="text-white">
                             <i class="feather feather-home sidemenu_icon"></i>
                             <span class="side-menu__label">Dashboard</span>
                         </a>
                     </li>
 
                     <li class="slide">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <li class="slide">
+                            <a class="side-menu__item" class="text-white">
+                                <i class="feather feather-settings sidemenu_icon"></i>
+                                <span class="side-menu__label">Settings</span>
+                            </a>
+                        </li>
+                        {{-- <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                             <i class="feather feather-settings sidemenu_icon"></i>
                             <span class="side-menu__label">Settings</span><i class="angle fa fa-angle-right"></i></a>
                         <ul class="slide-menu" style="background-color:  #1034A6; border-radius:7px;">
-
-                            {{-- <li class="side-menu-label1"><a href="{{ url('settings/attendancesetting') }}">Attendance
-                                    Setting</a></li> --}}
-
-                            <li><a href="{{ url('setup/account-settings') }}" class="slide-item"> Account Setting
+                            <li><a class="text-white slide-item"> Account Setting
                                 </a>
                             </li>
-                            <li><a href="{{ url('/setup/business-settings') }}" class="slide-item"> Business
+                            <li><a class="text-white slide-item"> Business
                                     Setting</a>
                             </li>
-                            <li><a href="{{ url('setup/attendance-settings') }}" class="slide-item"> Attendance
+                            <li><a class="text-white slide-item"> Attendance
                                     Setting</a></li>
 
-                            <li><a href="{{ url('setup/set-all-mode') }}" class="slide-item"> Setup Activation </a></li>
-
-
-                        </ul>
+                            <li><a class="text-white slide-item"> Setup Activation </a></li>
+                        </ul> --}}
                     </li>
-
-                    <li class="slide">
-                        <a class="side-menu__item" href="" data-bs-toggle="modal" data-bs-target="#LogoutModal">
-                            <i class="fe fe-log-out sidemenu_icon"></i>
-                            <span class="side-menu__label">Log Out</span>
-                        </a>
-                    </li>
-                </ul>
+                    {{-- @if (in_array('Subscription.Create', $permissions))
+                        <li class="slide">
+                            <a class="side-menu__item" class="text-white">
+                                <i class="feather feather-lock sidemenu_icon"></i>
+                                <span class="side-menu__label">Subscription</span>
+                            </a>
+                        </li>
+                    @endif
+                </ul> --}}
 
             </div>
         </div>
@@ -82,7 +83,7 @@ $Helper1 = new App\Helpers\Layout();
 </div>
 
 <!-- MODAL -->
-<div class="modal fade modal-effect" id="LogoutModal">
+{{-- <div class="modal fade modal-effect" id="LogoutModal">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content tx-size-sm">
             <div class="modal-body text-center">
@@ -94,5 +95,5 @@ $Helper1 = new App\Helpers\Layout();
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 <!-- END MODAL -->

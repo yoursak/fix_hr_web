@@ -25,16 +25,17 @@ use Illuminate\Database\Eloquent\Model;
 class DepartmentList extends Model
 {
 	protected $table = 'department_list';
-	protected $primaryKey = 'depart_id';
+	// protected $primaryKey = 'depart_id';
 
-	protected $casts = [
-		'status' => 'int'
-	];
+	// protected $casts = [
+	// 	'status' => 'int'
+	// ];
 
-	protected $fillable = [
-		'b_id',
-		'branch_id',
-		'depart_name',
-		'status'
-	];
+	// protected $fillable = [
+	// 	'depart_id',
+	// 	'b_id',
+	// 	'branch_id',
+	// 	'depart_name',
+	// 	'status'
+	// ];
 }

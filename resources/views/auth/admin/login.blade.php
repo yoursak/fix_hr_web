@@ -23,7 +23,7 @@
                     </div>
                     <button class="btn btn-block btn-primary mt-3 mb-4 rounded" style="background-color:#1877F2" type="submit">Send OTP</button>
                 </form>
-                <p class="mb-0 text-muted">Don’t have an account? <a href="{{ url('/signup') }}" class="f-w-400" style="color:#1877F2">SignUp</a></p>
+                <p class="mb-0 text-muted">Don’t have any Account? <a href="{{ url('/signup') }}" class="f-w-400" style="color:#1877F2">SignUp</a></p>
             </div>
         </div>
     </div>

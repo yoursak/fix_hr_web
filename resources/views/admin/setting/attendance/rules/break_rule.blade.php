@@ -76,7 +76,7 @@
                                             <div class="col-xl-5">
                                                 <div class="form-group row">
                                                     <div class="col-md-12">
-                                                        <select name="somename" class="form-control SlectBox" id="occurence">
+                                                        <select name="somename" class="form-control SlectBox" id="Occurrence">
                                                             <!--placeholder-->
                                                             <option title="Volvo is a car"  value="count">Count</option>
                                                             <option value="hour">Hour</option>

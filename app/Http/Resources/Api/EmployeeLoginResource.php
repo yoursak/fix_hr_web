@@ -13,7 +13,7 @@ class EmployeeLoginResource extends JsonResource
             // 'id' => $this->id ?? $this->login_employee->id,
             'emp_id' => $this->emp_id ?? '',
             'business_id' => $this->business_id ?? '',
-            // 'name' => $this->name ?? '',
+            'name' => $this->name ?? '',
             'email' => $this->email ?? '',
             'country_code' => $this->country_code ?? '',
             'phone' => $this->phone ?? '',

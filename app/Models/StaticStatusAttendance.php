@@ -21,9 +21,11 @@ class StaticStatusAttendance extends Model
 {
 	protected $table = 'static_status_attendance';
 	public $timestamps = false;
+	protected $primary_key = 'id';
 
 	protected $fillable = [
 		'status_labels',
-		'badge_colors'
+		'badge_colors',
+		'label'
 	];
 }

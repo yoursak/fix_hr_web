@@ -46,139 +46,90 @@ use App\Models\PolicySettingLeavePolicy;
 use App\Models\PolicySettingRoleAssignPermission;
 use App\Models\PolicyAttendanceShiftTypeItem;
 use App\Models\PolicyHolidayDetail;
+use Carbon\Carbon;
 
 class BusinessController extends Controller
 {
     public function CreateHolidays(Request $request)
     {
         // dd($request->all());
-        // return $request->all();
-
-            // return true;
-        
-        $tempFrom = $request->temp_from;
-        $updateItems = $request->updated_items;
-        if (isset($updateItems)) {
-            $template = PolicyHolidayTemplate::insert([
-                'temp_name' => $request->temp_name,
-                'temp_from' => date('Y-m-d', strtotime($request->temp_from . '-01')),
-                'temp_to' => date('Y-m-d', strtotime($request->temp_to . '-30')),
-                'business_id' => $request->session()->get('business_id'),
-            ]);
-            $temp_obj = PolicyHolidayTemplate::where(['temp_name' => $request->temp_name, 'temp_from' => date('Y-m-d', strtotime($request->temp_from . '-01')), 'temp_to' => date('Y-m-d', strtotime($request->temp_to . '-30')), 'business_id' => $request->session()->get('business_id')])->first();
-
-            foreach ($updateItems as $item) {
-                PolicyHolidayDetail::insert([
-                    'template_id' => $temp_obj->temp_id,
-                    'business_id' => $request->session()->get('business_id'),
-                    'holiday_name' => $item['name'],
-                    'holiday_date' => $item['date'],
-                    'day' => $item['day'],
+        $hoidayCreateData = $request->hiddenHolidayCreate;
+        $holidayName = $request->temp_name;
+        $hoildayFrom = $request->temp_from;
+        $hoildayTo = $request->temp_to;
+        $businessId = Session::get('business_id');
+        if (isset($holidayName)) {
+            if ($request->has('temp_name')) {
+                $template = PolicyHolidayTemplate::insert([
+                    'temp_name' => $holidayName,
+                    'temp_from' => date('Y-m-d', strtotime($hoildayFrom . '-01')),
+                    'temp_to' => date('Y-m-d', strtotime($hoildayTo . '-30')),
+                    'business_id' => $businessId,
                 ]);
+                $temp_obj = PolicyHolidayTemplate::where(['temp_name' => $holidayName, 'temp_from' => date('Y-m-d', strtotime($hoildayFrom . '-01')), 'temp_to' => date('Y-m-d', strtotime($hoildayTo . '-30')), 'business_id' => $businessId])->first();
+                $i = 0;
+                $hiddenHolidayData  = json_decode($request->input('hiddenHolidayCreate'), true);
+                foreach ($hiddenHolidayData  as $item) {
+                    $holiday = PolicyHolidayDetail::insert([
+                        'template_id' => $temp_obj->temp_id,
+                        'business_id' => $businessId,
+                        'holiday_name' => $item['name'],
+                        'holiday_date' => date('Y-m-d', strtotime(str_replace('/', '-', $item['date']))),
+                        'day' => $item['day'],
+                    ]);
+                }
+                if (isset($template) && isset($holiday)) {
+                    Alert::success('', 'Your Holiday policy has been created successfully');
+                } else {
+                    Alert::error('', 'Your Holiday policy has not been created');
+                }
             }
-            
-            return true;
         } else {
-            return false;
+            Alert::error('', 'Your Holiday policy has not been created');
         }
-
-        // $holidayName = $request->holiday_name;
-        // if (isset($holidayName)) {
-        //     if ($request->has('temp_name')) {
-        //         $template = PolicyHolidayTemplate::insert([
-        //             'temp_name' => $request->temp_name,
-        //             'temp_from' => date('Y-m-d', strtotime($request->temp_from . '-01')),
-        //             'temp_to' => date('Y-m-d', strtotime($request->temp_to . '-30')),
-        //             'business_id' => $request->session()->get('business_id'),
-        //         ]);
-
-        //         $i = 0;
-        //         foreach ($request->holiday_name as $key => $holiday) {
-        //             $holiday = PolicyHolidayDetail::insert([
-        //                 'holiday_name' => $request->holiday_name[$i],
-        //                 'day' => $request->holiday_day[$i],
-        //                 'holiday_date' => $request->holiday_date[$i],
-        //                 'business_id' => $request->session()->get('business_id'),
-        //                 'template_id' => $temp_id->temp_id,
-        //             ]);
-        //             $i++;
-        //         }
-
-        //         if ($template && $holiday) {
-        //             Alert::success('', 'Your Holiday Policy has been created Successfully');
-        //         } else {
-        //             Alert::error('', 'Your Holiday Policy has not been created');
-        //         }
-        //     }
-        // } else {
-        //     Alert::error('', 'Your Holiday Policy not created');
-        // }
-        // return redirect('/admin/settings/business/holiday_policy');
+        return redirect()->back();
     }
 
     public function UpdateHoliday(Request $request)
     {
-        // return $request->updated_items;
-        $updateHolidayId = $request->updateId;
-        $updateName = $request->updateName;
-        $updateFrom = $request->updateFrom;
-        $updateTo = $request->updateTo;
+        // dd($request->all());
+        $updateHolidayId = $request->update_temp_id;
+        $updateName = $request->update_temp_name;
+        $updateFrom = $request->update_temp_from;
+        $updateTo = $request->update_temp_to;
         $bID = Session::get('business_id');
         $check = PolicyHolidayDetail::where('template_id', $updateHolidayId)
             ->where('business_id', $bID)
             ->delete();
-
-        if (isset($check)) {
+        if ((true)) {
             PolicyHolidayTemplate::where('temp_id', $updateHolidayId)
                 ->where('business_id', $bID)
-                ->update(['temp_name' => $updateName, 'temp_from' => date('Y-m-d', strtotime($updateFrom . '-01')), 'temp_to' => date('Y-m-d', strtotime($updateTo . '-' . date('t', strtotime($updateTo . '-01'))))]);
-            // Assuming $request->updated_items is an array of updated items
-            $updatedItems = $request->input('updated_items');
-            foreach ($updatedItems as $item) {
-                PolicyHolidayDetail::insert([
-                    'template_id' => $request->updateId,
+                ->update([
+                    'temp_name' => $updateName,
+                    'temp_from' => date('Y-m-d', strtotime($updateFrom . '-01')),
+                    'temp_to' => date('Y-m-d', strtotime($updateTo . '-' . date('t', strtotime($updateTo . '-01')))),
+                ]);
+
+            // Assuming $request->updated_items is a JSON string
+            $hiddenHolidayData  = json_decode($request->input('hiddenHolidayData'), true);
+            // dd($hiddenHolidayData);
+            foreach ($hiddenHolidayData  as $item) {
+                // dd(date('Y-m-d', strtotime(str_replace('/', '-', $item['day']))));
+                $data = PolicyHolidayDetail::insert([
+                    'template_id' => $request->update_temp_id,
                     'business_id' => $bID,
                     'holiday_name' => $item['name'],
-                    'holiday_date' => $item['date'],
+                    'holiday_date' => date('Y-m-d', strtotime(str_replace('/', '-', $item['date']))),
                     'day' => $item['day'],
                 ]);
             }
-            return response()->json(['message' => true]);
+            // return response()->json(['message' => true]);
+            Alert::success('', 'Your Holiday policy has been updated Successfully');
         } else {
-            return response()->json(['message' => false]);
+            // return response()->json(['message' => false]);
+            Alert::error('', 'Your Holiday policy has not been updated');
         }
-        // }
-
-        // if ($request->has('update_temp_name')) {
-        //     $updateTemp = PolicyHolidayTemplate::where([
-        //         'temp_id' => $request->update_temp_id,
-        //         'business_id' => $request->session()->get('business_id'),
-        //     ])->update([
-        //         'temp_name' => $request->update_temp_name,
-        //         'temp_from' => date('Y-m-d', strtotime($request->update_temp_from . '-01')),
-        //         'temp_to' => date('Y-m-d', strtotime($request->update_temp_to . '-30')),
-        //     ]);
-
-        //     if ($request->has('update_name')) {
-        //         foreach ($request->update_name as $key => $value) {
-        //             $holiday = PolicyHolidayDetail::insert([
-        //                 'holiday_name' => $request->update_name[$key],
-        //                 'day' => $request->update_day[$key],
-        //                 'holiday_date' => $request->update_date[$key],
-        //                 'business_id' => $request->session()->get('business_id'),
-        //                 'template_id' => $request->update_temp_id,
-        //             ]);
-        //         }
-        //         if ($holiday) {
-        //             Alert::success('', 'Your Holiday Policy has been Updated Successfully');
-        //         } else {
-        //             Alert::error('failed', 'Your Holiday Policy has not been Updated Successfully');
-        //         }
-        //     }
-        //     Alert::success('', 'Your Holiday Policy has been Updated Successfully');
-        // }
-
-        // return back();
+        return  redirect()->back();
     }
 
     public function DeleteHoliday(Request $request)
@@ -199,12 +150,12 @@ class BusinessController extends Controller
             ->count();
         // dd($checkmat);
         if ($checkmat === 0) {
-            // $holiday_template = PolicyHolidayTemplate::where('temp_id' => $request->holiday_policy_id)->delete();
-            // $holiday = PolicyHolidayDetail::where('template_id' => $request->holiday_policy_id)->delete();
+            $holiday_template = PolicyHolidayTemplate::where('temp_id', $request->holiday_policy_id)->delete();
+            $holiday = PolicyHolidayDetail::where('template_id', $request->holiday_policy_id)->delete();
             if ($holiday_template && $holiday) {
-                Alert::success('', 'Holiday Policy has been Deleted Successfully');
+                Alert::success('', 'Your Holiday policy has been deleted successfully');
             } else {
-                Alert::error('', 'Your Holiday Policy has not been Deleted!');
+                Alert::error('', 'Your Holiday policy has not been deleted');
                 // Alert::error('', 'You cannot delete the policy if you have an employee associated with it.')->persistent(true);
             }
         } else {

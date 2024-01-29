@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="zxx">
 
@@ -58,6 +59,11 @@
         .navbar-nav {
             background-color: #1877f2;
         }
+
+        #awesome-feat-area {
+            padding: 0 px 0 0px;
+        }
+
     </style>
 </head>
 
@@ -177,7 +183,7 @@
                     <div class="caption two d-table">
                         <div class="d-table-cell align-middle">
                             <h1 class="mb-3">Empowering Business with FixHR Solutions</h1>
-                            <h4 class="text-dark font-open-sans">Fix HR is the most unique web and mobile app, designed
+                            <h4 class="text-dark font-open-sans">Fix HR is the most unique mobile and web based software, designed
                                 for managing attendance records of startups, small businesses, and supporting modern
                                 companies.</h4>
                             <div class="caption-btns v2">
@@ -227,9 +233,8 @@
                                 <i class="icon-gear"></i>
                             </div>
                             <h3>Quick Setup</h3>
-                            <p align="justify">The app is really easy to install, the complete setup process will take
-                                less than 1
-                                minute of your time.</p>
+                            <p align="justify">The app is really easy to install, the complete business setup process will take
+                                few minutes of your time.</p>
                         </div>
                         <img class="hover-shape-1 hover-shape"
                             src="{{ asset('assets/demo_file/new-assets/images/shape-one.svg') }}" alt="Shape One">
@@ -359,17 +364,17 @@
                             using computerized software and specific devices. This approach ensures that your employees
                             are only paid for the time they work. The attendance system provides a precise view of the
                             company's labor costs.</p>
-                        <p>Our customers use our app, to adopt next-generation development practices, deliver new
+                        <p>Our customer uses our application to adopt next-generation development practices, deliver new
                             applications, and modernize existing applications.</p>
                     </div>
-                    <div class="about-info row">
+                    {{-- <div class="about-info row">
                         <div class="col-md-6 col-6">
                             <div class="about-info-single">
                                 <div class="icon">
                                     <i class="icon-employee"></i>
                                 </div>
                                 <div class="content">
-                                    <h3>17,501</h3>
+                                    <h3>0</h3>
                                     <p>Premium User</p>
                                 </div>
                             </div>
@@ -380,12 +385,12 @@
                                     <i class="icon-eye-tracking"></i>
                                 </div>
                                 <div class="content">
-                                    <h3>1,987</h3>
+                                    <h3>50</h3>
                                     <p>Daily Visitors</p>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
                 <!--end about content-->
             </div>
@@ -442,7 +447,7 @@
                             <img src="{{ asset('assets/demo_file/new-assets/images/icon-like-1.png') }}"
                                 class="img-fluid" alt="">
                         </div>
-                        <h2>5,289</h2>
+                        <h2>0</h2>
                         <p>5 star Rating</p>
                     </div>
                 </div>
@@ -454,7 +459,7 @@
                             <img src="{{ asset('assets/demo_file/new-assets/images/icon-user-1.png') }}"
                                 class="img-fluid" alt="">
                         </div>
-                        <h2>4,188</h2>
+                        <h2>0</h2>
                         <p>Happy Users</p>
                     </div>
                 </div>
@@ -466,7 +471,7 @@
                             <img src="{{ asset('assets/demo_file/new-assets/images/icon-cloud-1.png') }}"
                                 class="img-fluid" alt="">
                         </div>
-                        <h2>9,087</h2>
+                        <h2>0</h2>
                         <p>app download</p>
                     </div>
                 </div>
@@ -478,7 +483,7 @@
                             <img src="{{ asset('assets/demo_file/new-assets/images/icon-trophy-1.png') }}"
                                 class="img-fluid" alt="">
                         </div>
-                        <h2>26</h2>
+                        <h2>0</h2>
                         <p>Best Awards</p>
                     </div>
                 </div>
@@ -500,8 +505,7 @@
                     <div class="section-heading text-center">
                         <h5>an exhaustive thriving list of</h5>
                         <h2>Awesome Features</h2>
-                        <p>We've gone over everything you could possibly want to know about Fix HR, from how exactly the
-                            Fix HR works.Some Simple Steps to journey.</p>
+                        <p>We've mentioned everything you could possibly want to know about Fix HR. Some snapshots of our FixHR application are: </p>
                     </div>
                 </div>
                 <!--end section heading-->
@@ -594,9 +598,9 @@
                                 <img src="{{ asset('assets/demo_file/new-assets/images/icon-responsive.png') }}"
                                     class="img-fluid" alt="">
                             </div>
-                            <h3>Multi Lavel Approval System</h3>
+                            <h3>Multi Level Approval System</h3>
                             <p align="justify">Fix HR web application provides you to create or define custom workflows
-                                for approval from managers, HRs, and administrators, to enable enhanced transparency.
+                                for approval from managers, HR, and administrators, to enable enhanced transparency.
                             </p>
                         </div>
 
@@ -606,7 +610,7 @@
                                     class="img-fluid" alt="">
                             </div>
                             <h3>Easy to Manage Your All Data</h3>
-                            <p>Fix HR is Best app to help you take control of your device data.Apps that have the power
+                            <p>Fix HR is Best app to help you take control of your device data. Apps that have the power
                                 to transform workflows, improve client relationships,boost your productivity and
                                 organize your life. </p>
                         </div>
@@ -697,12 +701,12 @@
         <div class="container">
             <div class="row">
                 <!--start section heading-->
-                <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
+                <div class="col-lg-7 offset-lg-3 col-md-8 offset-md-2">
                     <div class="section-heading text-center">
                         <h5>Be the first to know</h5>
                         <h2 class="text-white">About New Features</h2>
                         <p class="text-light">If you want to receive monthly updates from us just pop your email in the
-                            box. We think that spam is for jerks. And jerks we are not.</p>
+                            box.</p>
                     </div>
                 </div>
                 <!--end section heading-->
@@ -713,7 +717,7 @@
                     <div class="newsletter-form two">
                         <form id="mc-newsletter" action="https://pixner.net/Fix HR/demo/newsletter/config.php"
                             method="post">
-                            <div class="newsletter-input-bx">
+                            <div class="newsletter-input-bx" style="border: #fff 1px solid" >
                                 <input type="email" class="form-control" id="mc-email" name="mc-email"
                                     placeholder="Enter Your Email" required>
                                 <button type="submit">SUBSCRIBE</button>
@@ -1159,7 +1163,7 @@
     </section>
     <!--end custom plan area-->
     <!--start team area-->
-    <section id="team-area" data-scroll-index="4">
+    {{-- <section id="team-area" data-scroll-index="4">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
@@ -1172,9 +1176,9 @@
                 </div>
             </div>
 
-            {{-- md sir and kunal sirs profile  --}}
 
-            {{-- <div class="row mt-5 text-center d-xl-flex justify-content-center">
+
+            <div class="row mt-5 text-center d-xl-flex justify-content-center">
                 <!--start team single-->
                 <div class="col-lg-2">
                     <div class="team-single text-end ">
@@ -1217,7 +1221,7 @@
                     </div>
                 </div>
                 <!--end team single-->
-            </div> --}}
+            </div>
 
             <div class="row mt-5">
                 <!--start team single-->
@@ -1332,7 +1336,7 @@
                 <!--end team single-->
             </div>
         </div>
-    </section>
+    </section> --}}
     <!--end team area-->
     <!--start testimonial area-->
     <section id="testimonial-area">
@@ -1341,7 +1345,7 @@
                 <!--start section heading-->
                 <div class="col-md-8 offset-md-2">
                     <div class="section-heading text-center">
-                        <h5>Trusted by 50,000+ User</h5>
+                        <h5>Trusted User</h5>
                         <h2>A Word From Our Customers</h2>
                         <p>Our passion drives us to work hard and deliver outstanding results so we can be the best app
                             development company. Hear what our clients have to say about Fix HR.</p>
@@ -1520,7 +1524,7 @@
                                         <p class="m-0"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
                                                 class="fas fa-star"></i><i class="fas fa-star"></i><i
                                                 class="fas fa-star-half"></i></p>
-                                        <p class="font-light">125,064 ratings</p>
+                                        <p class="font-light">200 ratings</p>
                                     </div>
                                 </div>
                             </div>
@@ -1528,13 +1532,13 @@
                                 <div class="app-reviews">
                                     <h6>Reviews</h6>
                                     <div class="rating-number float-left">
-                                        <h2>4.7</h2>
+                                        <h2>4.5</h2>
                                     </div>
                                     <div class="rating-details float-left">
                                         <p class="m-0"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
                                                 class="fas fa-star"></i><i class="fas fa-star"></i><i
                                                 class="fas fa-star-half"></i></p>
-                                        <p class="font-light">125,064 ratings</p>
+                                        <p class="font-light">150 ratings</p>
                                     </div>
                                 </div>
                             </div>
@@ -1746,10 +1750,10 @@
 
             <div class="footer-copyright">
                 <div class="row">
-                    <div class="col-lg-6 col-md-7">
-                        <p class="text-primary">&copy; 2023 Fix HR | All right reserved.</p>
+                    <div class="col-lg-12 col-md-12 text-center">
+                        <p class="text-dark"><b>&copy; 2023 Fix HR | All right reserved | Designed by <a style="color: #1877f2; font-width:bold; font-size:16px" href="https://fixingdots.com/" target="blank">FixingDots</a>.</b></p>
                     </div>
-                    <div class="col-lg-6 col-md-5">
+                    {{-- <div class="col-lg-6 col-md-5">
                         <div class="footer-social text-right">
                             <ul>
                                 <li><a href="#"><i class="icofont-facebook"></i></a></li>
@@ -1757,7 +1761,7 @@
                                 <li><a href="#"><i class="icofont-twitter"></i></a></li>
                             </ul>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
 class StaticAttendanceMethod extends Model
 {
 	protected $table = 'static_attendance_methods';
+	protected $primary_key = 'id';
 	public $timestamps = false;
 
 	protected $fillable = [

@@ -24,8 +24,8 @@ class PersonalEmployeeDetails extends JsonResource
             'employee_type' => $this->employee_type ?? '',
             'emp_mobile_number' => $this->emp_mobile_number ?? '',
             'emp_email' => $this->emp_email ?? '',
-            // 'date' => $this->date ? date('d-m-Y', strtotime($this->date)) : '',
-
+            'active_employee_id' => $this->active_employee_id ?? '',            // 'date' => $this->date ? date('d-m-Y', strtotime($this->date)) : '',
+            'active_employee_name' => $this->active_employee_name ?? '',
             'emp_date_of_birth' => $this->emp_date_of_birth ? date('d-m-Y', strtotime($this->emp_date_of_birth)) : '' ?? '',
             'emp_date_of_joining' => $this->emp_date_of_joining ? date('d-m-Y', strtotime($this->emp_date_of_joining)) : ''  ?? '',
             'emp_gender' => $this->emp_gender ?? '',

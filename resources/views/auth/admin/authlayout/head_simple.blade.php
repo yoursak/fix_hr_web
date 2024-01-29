@@ -6,7 +6,7 @@
 <meta name="keywords" content="">
 <meta name="author" content="" />
 <!--FAVICON -->
-<link rel="icon" href="{{ asset('assets/images/brand/favicon.ico') }}" type="image/x-icon" />
+<link rel="icon" href="{{ asset('assets/images/brand/favicon.ico') }}" type="image/x-icon" />   
 <!-- BOOTSTRAP CSS -->
 <link href="{{ asset('assets/plugins/bootstrap/css/bootstrap.css') }}" rel="stylesheet" />
 <!-- STYLE CSS -->

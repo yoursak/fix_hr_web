@@ -12,9 +12,8 @@
 </head>
 
 <body>
-
-    @include('sweetalert::alert')
     <div class="auth-wrapper">
+        @include('sweetalert::alert')
         @yield('content')
     </div>
 

@@ -27,22 +27,22 @@ use App\Models\EmployeePersonalDetail;
 class BranchList extends Model
 {
 	protected $table = 'branch_list';
-
-	protected $casts = [
-		'is_active' => 'bool'
-	];
-
+	protected $primary_key = 'id';
+	protected $business_id = 'business_id';
 	protected $fillable = [
 		'business_id',
 		'branch_id',
 		'branch_name',
+		'branch_email',
 		'is_active',
-		'address'
+		'address',
+		'logitude',
+		'latitude'
 	];
 	// Define the inverse relationship to employee_personal_details
 	public function employeePersonalDetails()
 	{
 		return $this->hasMany(EmployeePersonalDetail::class, 'branch_id');
 	}
-	
+
 }

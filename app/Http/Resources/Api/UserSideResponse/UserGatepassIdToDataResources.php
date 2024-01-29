@@ -20,11 +20,16 @@ class UserGatepassIdToDataResources extends JsonResource
             'going_through' => $this->going_through ?? '',
             'in_time' => $this->in_time ?? '',
             'out_time' => $this->out_time ?? '',
-            'reason' => $this->reason ?? '', 
-            'remark' => $this->remark ?? '', 
-            'status' => $this->status ?? '', 
-            'created_at' => $this->created_at ?? '', 
-            'updated_at' => $this->updated_at ?? '', 
+            'reason' => $this->reason ?? '',
+            'remark' => $this->remark ?? '',
+            'status' => $this->status ?? '',
+            'forward_by_role_id' => (string)$this->forward_by_role_id ?? '',
+            'forward_by_status' => (string)$this->forward_by_status ?? '',
+            'final_level_role_id' => (string)$this->final_level_role_id ?? '',
+            'final_status' => (string)$this->final_status ?? '',
+            'process_complete' => (int)$this->process_complete ?? '',
+            'created_at' => $this->created_at ?? '',
+            'updated_at' => $this->updated_at ?? '',
         ];
     }
 }

@@ -43,7 +43,7 @@ class AttendanceApproval extends Component
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
         $List = RulesManagement::ALLPolicyTemplates();
-
+// dd($permissions);    
         $FinalEndGameRule = $List[0];
         $BusinessDetails = $List[1];
         $BranchList = $List[2];
@@ -54,7 +54,19 @@ class AttendanceApproval extends Component
         $attendanceShiftPolicy = $List[7];
         $attendanceTrackInOut = $List[8];
         $adminRoleList = $List[10];
-// dd($adminRoleList);
+        // dd($adminRoleList);
+        $newRoleObject = (object) [
+            'id' => 1,
+            'business_id' => Session::get('business_id'),
+            'branch_id' => Session::get('branch_id'),
+            'roles_name' => 'Owner',
+            'description' => 'Owner has complete access to assign all the bussiness.',
+        ];
+
+        // Add the new object to the array
+        $adminRoleList[] = $newRoleObject;
+        // dd($adminRoleList);
+        // dd($adminRoleList);
         // dd($attendanceTrackInOut)
         // $attendaceShift = DB::table('attendance_shift_settings')->get();
         // alert()->success('Success Title', 'Success Message');
@@ -68,7 +80,6 @@ class AttendanceApproval extends Component
         // if($casePass==1)
         // {
 
-           
         return view('components.approval-management.attendance-approval', $root);
     }
 }

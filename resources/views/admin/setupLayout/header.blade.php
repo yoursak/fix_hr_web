@@ -57,12 +57,12 @@ $Helper=new Central_unit;
                                 </a>
                             </div>
 
-                            <div class="dropdown header-notify">
-                                <a class="nav-link icon" data-bs-toggle="sidebar-right" data-bs-target=".sidebar-right">
-                                    <i class="feather feather-bell header-icon"></i>
-                                    <span class="bg-dot"></span>
-                                </a>
-                            </div>
+                                {{-- <div class="dropdown header-notify">
+                                    <a class="nav-link icon" data-bs-toggle="sidebar-right" data-bs-target=".sidebar-right">
+                                        <i class="feather feather-bell header-icon"></i>
+                                        <span class="bg-dot"></span>
+                                    </a>
+                                </div> --}}
                             <div class="dropdown header-notify my-auto">
                                 <?php if(Session::has('business_id')){ ?>
                                 <div class="me-3 mt-0 mt-sm-1 d-block text-center">
@@ -82,12 +82,13 @@ $Helper=new Central_unit;
                             <div class="dropdown profile-dropdown">
                                 <a href="javascript:void(0);" class="nav-link  ps-0 leading-none"
                                     data-bs-toggle="dropdown">
+                                    
                                     <span>
                                         <img src="{{ asset('business_logo/' . Session::get('login_business_image')) }}"
                                             alt="img" class="avatar avatar-md rounded-circle">
                                     </span>
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated">
+                                {{-- <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated">
                                     <a class="dropdown-item d-flex" href="profile1.html">
                                         <i class="feather feather-user me-3 fs-16 my-auto"></i>
                                         <div class="mt-1">Profile</div>
@@ -105,7 +106,7 @@ $Helper=new Central_unit;
                                         <i class="feather feather-power me-3 fs-16 my-auto"></i>
                                         <div class="mt-1">Log Out</div>
                                     </a>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>

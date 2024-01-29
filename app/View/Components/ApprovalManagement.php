@@ -27,10 +27,12 @@ class ApprovalManagement extends Component
      *
      * @return void
      */
+    
     public function __construct()
     {
         //
     }
+
 
     /**
      * Get the view / contents that represent the component.
@@ -54,8 +56,8 @@ class ApprovalManagement extends Component
         $attendanceModePolicy = $List[6];
         $attendanceShiftPolicy = $List[7];
         $attendanceTrackInOut = $List[8];
-        $adminRoleList=$List[10];
-        // dd($adminRoleList);
+        $adminRoleList = $List[10];
+// dd($adminRoleList);
         // dd($attendanceTrackInOut)
         // $attendaceShift = DB::table('attendance_shift_settings')->get();
         // alert()->success('Success Title', 'Success Message');
@@ -65,8 +67,13 @@ class ApprovalManagement extends Component
         // Alert::success('Success', 'Updated Rule Method Successfully');
 
         // dd($LeavePolicy);
-        $root = compact('moduleName', 'permissions', 'BusinessDetails', 'FinalEndGameRule', 'BranchList', 'LeavePolicy', 'HolidayPolicy', 'weeklyPolicy', 'attendanceModePolicy', 'attendanceShiftPolicy', 'attendanceTrackInOut','adminRoleList');
- 
-        return view('components.approval-management',$root);
+        $root = compact('moduleName', 'permissions', 'BusinessDetails', 'FinalEndGameRule', 'BranchList', 'LeavePolicy', 'HolidayPolicy', 'weeklyPolicy', 'attendanceModePolicy', 'attendanceShiftPolicy', 'attendanceTrackInOut', 'adminRoleList');
+        // if($casePass==1)
+        // {
+
+        //     return view('components.approval-management', $root);
+        // }
+        return view('components.approval-leaveManagement', $root);
+        
     }
 }

@@ -27,11 +27,8 @@ use Illuminate\Database\Eloquent\Model;
 class PolicyAttendanceShiftSetting extends Model
 {
 	protected $table = 'policy_attendance_shift_settings';
-
-	// protected $casts = [
-	// 	'shift_type' => 'bool',
-	// 	'shift_weekly_repeat' => 'int'
-	// ];
+	protected $primary_key = 'id';
+	protected $business_id = 'business_id';
 
 	protected $fillable = [
 		'business_id',

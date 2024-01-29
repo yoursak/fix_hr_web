@@ -1,13 +1,13 @@
 <div>
     <!-- This is Readerstacks Hello World Component -->
 
-    <div class="form-group form-row">
+    <div id="p1" class="form-group form-row">
         <form action="{{ route('approval_submit') }}" method="POST">
             @csrf
             <div class="modal-body">
-
                 <div class="row ">
                     <div class="col-xl-8">
+                        <input type="text" name="load" value="1">
                         <h4 class="card-title"><span>Attendance Approval </span></h4>
                     </div>
 
@@ -15,15 +15,14 @@
                         <label for="inputPassword" class="col-sm-2 col-form-label">Approval Cycle</label>
                         <div class="col-sm-5">
                             <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                <input type="radio" class="btn-check" name="btnradio" id="btnradiomonth"
-                                    value="1" checked>
+                                <input type="radio" class="btn-check" name="btnradio" id="btnradiomonth" value="1"
+                                    checked>
                                 <label class="btn btn-outline-primary" for="btnradiomonth">Sequential
                                     {{-- (Chain) --}}
                                 </label>
-                                <input type="radio" class="btn-check" name="btnradio" id="btnradioyear"
-                                    value="2">
+                                <input type="radio" class="btn-check" name="btnradio" id="btnradioyear" value="2">
                                 <label class="btn btn-outline-primary" for="btnradioyear">
-                                    Parallel {{-- Simultaneous  --}}
+                                    Parallel {{-- Simultaneous --}}
                                 </label>
                             </div>
                         </div>
@@ -52,16 +51,11 @@
             </div>
         </form>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-    <?php
-    
-    //    dd($BranchList);
-    ?>
+   
     <script>
         var leave_id = 1;
         $(document).ready(function() {
+
             $(".add_item_btn").click(function(e) {
 
                 // e.preventDefault();
@@ -153,6 +147,52 @@
             //     //     }
             //     // });
             // });
+        });
+        
+        $(document).ready(function() {
+
+                    $.ajax({
+                url: '{{url("/Role-permission/approval_get_set")}}', // Replace with your API endpoint URL
+                method: 'GET',
+                dataType: 'json',
+                success: function(get) {
+
+                    console.log(get.data.role_id);
+                    // var roleIds = JSON.parse(get.data.role_id);
+
+                    // // The 'data' variable now contains the data from the server
+                    // // Loop through the data to create and populate the select options
+                    // for (var i = 0; i < roleIds.length; i++) {
+
+                    // var container = $('<div class="row">');
+
+                    // var selectInput = '<select id="approval_select" name="approval_select[]" class="form-select">';
+                    //     roleIds.forEach(function(role) {
+                    //     selectInput += '<option value="' + role.id + '">' + role.roles_name + '</option>';
+                    // });
+                    // selectInput += '</select>';
+                    // // Append the select input to the form
+                    // container.append(
+                    //     `<div class="row">    
+                    //         <div class="card-body col-xl-8 pt-3" id=""> 
+                    //             <label for="inputCity" class="form-label">Select Role</label> 
+                    //             ${selectInput}
+                    //         </div>
+                    //         <div class="col-xl-2 pt-3"> 
+                    //         </div>
+                    //         <div class="col-xl-2 pt-3 text-end"> 
+                    //             <label for="inputCity" class="form-label ">&nbsp;</label> 
+                    //             <button type="button" class="btn btn-outline-danger remove_item_btn"><i class="feather feather-trash"></i></button>  
+                    //         </div> 
+                    //     </div>`
+                    // );
+                    // $("#show_item").append(container);
+                    // }
+                },
+                error: function(error) {
+                    // Handle the error, e.g., display an error message
+                }
+            });
         });
     </script>
 </div>

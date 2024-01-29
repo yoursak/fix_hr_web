@@ -17,8 +17,8 @@ class EmployeeLoginResource extends JsonResource
             'email' => $this->email ?? '',
             'country_code' => $this->country_code ?? '',
             'phone' => $this->phone ?? '',
-            // 'otp' => $this->otp ?? '',
-            // 'otp_created_at' => $this->otp_created_at ?? '',
+            'otp' => $this->otp ?? '',
+            'otp_created_at' => $this->otp_created_at ?? '',
         ];
     }
 }

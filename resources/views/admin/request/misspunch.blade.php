@@ -46,7 +46,7 @@
                             <div class="form-group">
                                 <p class="form-label">Branch</p>
                                 <select name='branch_id' id="country-dd" class="form-control" required>
-                                    <option value="">--- Select Branch ---</option>
+                                    <option value="">Select Branch Name</option>
                                     @empty(!$Branch)
                                         @foreach ($Branch as $data)
                                             <option value="{{ $data->branch_id }}">
@@ -62,7 +62,7 @@
                                 <p class="form-label">Department</p>
                                 <div class="form-group mb-3">
                                     <select id="state-dd" name="department_id" class="form-control" required>
-                                        <option value="">--- Select Deparment---</option>
+                                        <option value="">Select Deparment Name</option>
                                         @foreach ($Department as $data)
                                         <option value="{{ $data->depart_id }}">
                                             {{ $data->depart_name }}
@@ -77,7 +77,7 @@
                                 <p class="form-label">Designation</p>
                                 <div class="form-group mb-3">
                                     <select id="desig-dd" name="designation_id" class="form-control" required>
-                                        <option value="">--- Select Designation ---</option>
+                                        <option value="">Select Designation Name</option>
                                         @foreach ($Designation as $data)
                                             <option value="{{ $data->desig_id }}">
                                                 {{ $data->desig_name }}
@@ -302,9 +302,9 @@
         </div>
     </div>
     <!-- Edit Modal -->
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
-    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
         function openEditModel(context) {
@@ -390,10 +390,11 @@
             $('#country-dd, #state-dd, #desig-dd').change(function() {
                 // Get selected values
                 var branchId = $('#country-dd').val();
+                console.log(branchId);
                 var departmentId = $('#state-dd').val();
-                // console.log(departmentId);
+                console.log(departmentId);
                 var designationId = $('#desig-dd').val();
-                // console.log(designationId);
+                console.log(designationId);
 
                 // Make an AJAX request to filter employees
                 $.ajax({
@@ -406,7 +407,7 @@
                         designation_id: designationId
                     },
                     success: function(data) {
-                        console.log("data "+data);
+                        console.log(data);
                         // Update the table body with the filtered data
                         var tbody = $('.my_body');
                         tbody.empty();
@@ -551,7 +552,7 @@
         });
         function convert24To12(time24) {
             // Check if time24 is null or undefined
-            if (time24 == null || time24 == '') {
+            if (time24 == null) {
                 return ''; // Return an empty string or handle the null case as needed
             }
 

@@ -28,6 +28,34 @@ use Illuminate\Support\Str;
 // API BY ATTENDANCE SECTION
 class AttendanceController extends BaseController
 {
+
+
+    public function getTodayAttendanceList(Request $request)
+    {
+        $businessID = $request->business_id;
+        $date = $request->date; // Assuming $request->date is a valid date in 'Y-m-d' format
+        $preview = DB::table('attendance_list')
+            ->join('employee_personal_details', 'attendance_list.emp_id', '=', 'employee_personal_details.emp_id')
+            ->where('attendance_list.business_id', $businessID)
+            ->where(function ($query) use ($date) {
+                if (!empty($date)) {
+                    $query->whereDate('attendance_list.punch_date', $date); // Use whereDate to compare the full date
+                }
+            })
+            ->select('employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.emp_shift_type', 'employee_personal_details.emp_attendance_method', 'employee_personal_details.profile_photo', 'attendance_list.*')
+            ->orderby('attendance_list.id', 'desc')
+            ->get();
+
+        $formattedData = AttendanceListResource::collection($preview);
+
+        if ($formattedData) {
+
+            return response()->json(['result' => $formattedData, 'status' => true],200);
+        } else {
+            return response()->json(['result' => [], 'status' => false], 404);
+        }
+    }
+
     // business_id call by -> admin/attendance_list/b_id //filters
     public function allAttendanceList(Request $request)
     {
@@ -59,7 +87,7 @@ class AttendanceController extends BaseController
 
         if ($formattedData) {
 
-            return response()->json(['result' => $formattedData, 'status' => true]);
+            return response()->json(['result' => $formattedData, 'status' => true],200);
         }
         return response()->json(['result' => [], 'status' => false], 404);
     }
@@ -88,9 +116,8 @@ class AttendanceController extends BaseController
 
         if ($formattedData) {
             $collectionDashboardShow = ['Present' => 5, 'Absent' => 0, 'Half Days' => 0, 'Weekly Off' => 0, 'Leave' => 0, 'Overtime' => 0, 'Miss Punch' => 0, 'Late In' => 0];
-            return response()->json([ 'dashboard' => $collectionDashboardShow ,'result' => $formattedData,'status' => true], 200);
+            return response()->json(['dashboard' => $collectionDashboardShow, 'result' => $formattedData, 'status' => true], 200);
         }
         return response()->json(['result' => [], 'status' => false], 404);
-
     }
 }

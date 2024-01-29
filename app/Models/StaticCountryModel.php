@@ -26,5 +26,4 @@ class StaticCountryModel extends Model
 {
     protected $table = 'static_countries';
     protected $primaryKey = 'id';
-
 }

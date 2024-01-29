@@ -27,18 +27,16 @@ class PolicyHolidayDetail extends Model
 {
 	protected $table = 'policy_holiday_details';
 	protected $primaryKey = 'holiday_id';
-
-	// protected $casts = [
-	// 	'template_id' => 'int',
-	// 	'holiday_date' => 'datetime'
-	// ];
+	protected $business_id = 'business_id';
+	protected $created_at = false;
+	protected $updated_at = false;
 
 	protected $fillable = [
-		// 'template_id',
-		// 'business_id',
-		// 'holiday_name',
-		// 'day',
-		// 'holiday_date'
+		'template_id',
+		'business_id',
+		'holiday_name',
+		'day',
+		'holiday_date'
 	];
 
 	public function template()

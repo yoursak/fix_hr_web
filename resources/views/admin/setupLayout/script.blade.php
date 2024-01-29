@@ -156,7 +156,7 @@
 <script src="{{asset('assets/plugins/vertical-scroll/vertical-scroll.js')}}"></script> --}}
 
 {{-- /** JQuery && Javascript Function Start
- * 
+ *
  *
  * @package		JQuery && Javascript
  * @subpackage  Central Script File
@@ -189,7 +189,7 @@
                     id: 1,
                     name: 'item1',
                     startDate: '2019-03-01',
-                    endDate: '2019-03-03',  
+                    endDate: '2019-03-03',
                     customClass: 'greenClass'
                 },
                 {
@@ -234,7 +234,7 @@
             $('#unpaidbreak').addClass('d-none');
             $('#unpaidbreaktbl').addClass('d-block');
             $('#unpaiddelete').removeClass('d-none');
-            
+
         })
 
     });
@@ -259,8 +259,8 @@
 
     //Late Entry Rule Page
     $(document).ready(function() {
-        $('#occurence').change(function() {
-            $val = $('#occurence').val();
+        $('#Occurrence').change(function() {
+            $val = $('#Occurrence').val();
             if ($val == 'count') {
                 $('#o_time').addClass('d-none');
                 $('#o_count').removeClass('d-none');
@@ -856,9 +856,9 @@
     }); // hide modal with effect
 
 
-    // geting permission data 
+    // geting permission data
     $(document).ready(function(){
-        $('#selectAdmin').change(function () { 
+        $('#selectAdmin').change(function () {
             alert("sdfsdf");
             // e.preventDefault();
             // alert($(this).val());
@@ -891,7 +891,7 @@
 </script>
 
 {{-- /** JQuery && Javascript Function End
- * 
+ *
  *
  * @package		JQuery && Javascript
  * @subpackage  Central Script File

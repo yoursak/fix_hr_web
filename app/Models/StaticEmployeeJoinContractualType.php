@@ -19,12 +19,13 @@ use Illuminate\Database\Eloquent\Model;
 class StaticEmployeeJoinContractualType extends Model
 {
 	protected $table = 'static_employee_join_contractual_type';
+	protected $primaryKey = 'id';
 	public $incrementing = false;
 	public $timestamps = false;
 
-	protected $casts = [
-		'id' => 'int'
-	];
+	// protected $casts = [
+	// 	'id' => 'int'
+	// ];
 
 	protected $fillable = [
 		'id',

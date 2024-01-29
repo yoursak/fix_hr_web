@@ -31,20 +31,18 @@ class GstValidation extends Component
 
             if (strpos($content, 'Trade Name') !== false && strpos($content, 'Legal Name') !== false && strpos($content, 'Constitution of business') !== false) {
                 // "Trade Name" found, consider it as valid
-                $this->isValid = true;
+                $this->isValid = '1';
                 $this->tradeName = true;
-
             } else {
                 // "Trade Name" not found, consider it as not valid
-                $this->isValid = false;
+                $this->isValid = '2';
                 $this->tradeName = null;
             }
         } else {
             // Handle the case where the HTTP request fails
-            $this->isValid = false;
+            $this->isValid = '2';
             $this->tradeName = false;
         }
-
     }
     public function render()
     {

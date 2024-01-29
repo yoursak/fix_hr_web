@@ -36,6 +36,7 @@ class LoginController extends BaseController
 
     public function login_otp(Request $request)
     {
+        // dd($request->all());
         $request->session()->put('email', $request->email);
         $User = LoginAdmin::where('email', $request->email)->first();
         // dd($request->all());
@@ -62,7 +63,7 @@ class LoginController extends BaseController
                 // $output = Artisan::output();
 
                 $User->update(['otp' => $otp]);
-                Alert::success('', 'Otp has been Send Successfully to Your Registered Email Id');
+                Alert::success('', 'OTP has been Sent Successfully to Your Registered Email Id');
                 return view('auth.admin.otp');
             } else {
                 Alert::warning('', "Email Id not Found  Kindly Register Your Business First");
@@ -103,7 +104,7 @@ class LoginController extends BaseController
     }
     public function handleCardClick(Request $request)
     {
-        
+
         if (isset($request->card_type1)) {
 
             $cardType = $request->input('card_type1');
@@ -112,7 +113,7 @@ class LoginController extends BaseController
             $mainloodLoad1 = BusinessDetailsList::where('business_id', $businessId)->first();
             // model_has_permission 
             $load = ModelHasPermission::where('business_id', $businessId)->first();
-           
+
             if ($actualCardType === 'owner') {
                 // Set session data for the owner card
                 if ($mainloodLoad1) {
@@ -120,7 +121,7 @@ class LoginController extends BaseController
                     Session::put('business_id', $businessId);
                     Session::put('branch_id', '');
                     Session::put('model_id', $load->model_id);
-                    Session::put('login_role', $mainloodLoad1->call_back_id);//atteched by CallID role old 0 backup id
+                    Session::put('login_role', 1); //$mainloodLoad1->call_back_id 1atteched by CallID role old 0 backup id //onwer on bid
                     Session::put('login_name', $mainloodLoad1->client_name);
                     Session::put('login_email', $mainloodLoad1->business_email);
                     Session::put('login_business_image', $mainloodLoad1->business_logo);
@@ -158,11 +159,10 @@ class LoginController extends BaseController
 
                 return response()->json(['root' => $actualCardType1]);
             }
-
-            // return response()->json(['root' => $request->all()]);
         }
 
         // if ($actualCardType === 'superadmin') {
+        // return response()->json(['root' => $request->all()]);
         //     $mainloodLoad2 = EmployeePersonalDetail::where('business_id', $businessId)->where('emp_email', $request->session()->get('email'))->first();
         //     $infoBusinessDetails = BusinessDetailsList::where('business_id', $businessId)->first();
         //     if ($mainloodLoad2) {
@@ -198,7 +198,7 @@ class LoginController extends BaseController
             if (isset($check_otp)) {
                 if ($check_otp != null) {
 
-                    Alert::success('', "Your Otp has been Verified Successfully");
+                    Alert::success('', "Your OTP has been Verified Successfully");
 
                     // Alert::success('Otp Authentication', 'Your Otp Verified Successfully');
                 }
@@ -224,14 +224,14 @@ class LoginController extends BaseController
                         // Alert::success('Login Successfully', 'Now you are a Admin Position at FixingDots');
                         return view('auth.admin.logintype');
                     } else {
-                        Alert::warning('', " Your Otp Authentication is Incorrect !");
+                        Alert::warning('', " Your OTP Authentication is Incorrect !");
 
                         // Alert::warning('Otp Aauthentication', 'Your Otp Aauthentication is Incorrect !');
                         return view('auth.admin.otp');
                     }
                 }
             } else {
-                Alert::warning('', " Your Otp Authentication is Incorrect !");
+                Alert::warning('', " Your OTP Authentication is Incorrect !");
 
                 // Alert::warning('Otp Aauthentication', 'Your Otp Aauthentication is Incorrect !');
                 return view('auth.admin.otp');
@@ -297,7 +297,7 @@ class LoginController extends BaseController
     {
         Session::flush(); // removes all session data
         Session()->flush();
-        return  redirect('login'); //->to();
+        return redirect('login'); //->to();
         // return view('auth.admin.thanks');
     }
 }

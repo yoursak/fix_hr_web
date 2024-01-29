@@ -24,10 +24,13 @@ use Illuminate\Database\Eloquent\Model;
 class PolicyWeeklyHolidayList extends Model
 {
 	protected $table = 'policy_weekly_holiday_list';
-
+	protected $primary_id = 'id';
+	protected $business_id = 'business_id';
+	
 	protected $fillable = [
 		'business_id',
 		'name',
+		'weekend_policy',
 		'days'
 	];
 }

@@ -5,257 +5,8 @@
 Attendance | Create Shift
 @endsection
 @section('css')
-<style>
-    .nav-link.icon {
-        line-height: 0;
-    }
 
-    .modal-header,
-    .modal-footer {
-        background-color: #f8f8ff;
-        /* color: #fff; */
-    }
 
-    .modal-open {
-        overflow: hidden
-    }
-
-    .modal-open .modal {
-        overflow-x: hidden;
-        overflow-y: auto
-    }
-
-    .modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 1050;
-        display: none;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        outline: 0
-    }
-
-    .modal-dialog {
-        position: relative;
-        width: auto;
-        margin: .5rem;
-        pointer-events: none
-    }
-
-    .modal.fade .modal-dialog {
-        transition: -webkit-transform .3s ease-out;
-        transition: transform .3s ease-out;
-        transition: transform .3s ease-out, -webkit-transform .3s ease-out;
-        -webkit-transform: translate(0, -50px);
-        transform: translate(0, -50px)
-    }
-
-    @media (prefers-reduced-motion:reduce) {
-        .modal.fade .modal-dialog {
-            transition: none
-        }
-    }
-
-    .modal.show .modal-dialog {
-        -webkit-transform: none;
-        transform: none
-    }
-
-    .modal.modal-static .modal-dialog {
-        -webkit-transform: scale(1.02);
-        transform: scale(1.02)
-    }
-
-    .modal-dialog-scrollable {
-        display: -ms-flexbox;
-        display: flex;
-        max-height: calc(100% - 1rem)
-    }
-
-    .modal-dialog-scrollable .modal-content {
-        max-height: calc(100vh - 1rem);
-        overflow: hidden
-    }
-
-    .modal-dialog-scrollable .modal-footer,
-    .modal-dialog-scrollable .modal-header {
-        -ms-flex-negative: 0;
-        flex-shrink: 0
-    }
-
-    .modal-dialog-scrollable .modal-body {
-        overflow-y: auto
-    }
-
-    .modal-dialog-centered {
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-align: center;
-        align-items: center;
-        min-height: calc(100% - 1rem)
-    }
-
-    .modal-dialog-centered::before {
-        display: block;
-        height: calc(100vh - 1rem);
-        height: -webkit-min-content;
-        height: -moz-min-content;
-        height: min-content;
-        content: ""
-    }
-
-    .modal-dialog-centered.modal-dialog-scrollable {
-        -ms-flex-direction: column;
-        flex-direction: column;
-        -ms-flex-pack: center;
-        justify-content: center;
-        height: 100%
-    }
-
-    .modal-dialog-centered.modal-dialog-scrollable .modal-content {
-        max-height: none
-    }
-
-    .modal-dialog-centered.modal-dialog-scrollable::before {
-        content: none
-    }
-
-    .modal-content {
-        position: relative;
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        width: 100%;
-        pointer-events: auto;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid rgba(0, 0, 0, .2);
-        border-radius: .3rem;
-        outline: 0
-    }
-
-    .modal-backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 1040;
-        width: 100vw;
-        height: 100vh;
-        background-color: #000
-    }
-
-    .modal-backdrop.fade {
-        opacity: 0
-    }
-
-    .modal-backdrop.show {
-        opacity: .5
-    }
-
-    .modal-header {
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-align: start;
-        align-items: flex-start;
-        -ms-flex-pack: justify;
-        justify-content: space-between;
-        padding: 1rem 1rem;
-        border-bottom: 1px solid #dee2e6;
-        border-top-left-radius: calc(.3rem - 1px);
-        border-top-right-radius: calc(.3rem - 1px)
-    }
-
-    .modal-header .close {
-        padding: 1rem 1rem;
-        margin: -1rem -1rem -1rem auto
-    }
-
-    .modal-title {
-        margin-bottom: 0;
-        line-height: 1.5
-    }
-
-    .modal-body {
-        position: relative;
-        -ms-flex: 1 1 auto;
-        flex: 1 1 auto;
-        padding: 1rem
-    }
-
-    .modal-footer {
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
-        -ms-flex-align: center;
-        align-items: center;
-        -ms-flex-pack: end;
-        justify-content: flex-end;
-        padding: .75rem;
-        border-top: 1px solid #dee2e6;
-        border-bottom-right-radius: calc(.3rem - 1px);
-        border-bottom-left-radius: calc(.3rem - 1px)
-    }
-
-    .modal-footer>* {
-        margin: .25rem
-    }
-
-    .modal-scrollbar-measure {
-        position: absolute;
-        top: -9999px;
-        width: 50px;
-        height: 50px;
-        overflow: scroll
-    }
-
-    @media (min-width:576px) {
-        .modal-dialog {
-            max-width: 500px;
-            margin: 1.75rem auto
-        }
-
-        .modal-dialog-scrollable {
-            max-height: calc(100% - 3.5rem)
-        }
-
-        .modal-dialog-scrollable .modal-content {
-            max-height: calc(100vh - 3.5rem)
-        }
-
-        .modal-dialog-centered {
-            min-height: calc(100% - 3.5rem)
-        }
-
-        .modal-dialog-centered::before {
-            height: calc(100vh - 3.5rem);
-            height: -webkit-min-content;
-            height: -moz-min-content;
-            height: min-content
-        }
-
-        .modal-sm {
-            max-width: 300px
-        }
-    }
-
-    @media (min-width:992px) {
-
-        .modal-lg,
-        .modal-xl {
-            max-width: 800px
-        }
-    }
-
-    @media (min-width:1200px) {
-        .modal-xl {
-            max-width: 1140px
-        }
-    }
-</style>
 @endsection
 
 @section('content')
@@ -271,6 +22,8 @@ Attendance | Create Shift
 
 {{-- @endsection
 @section('settings') --}}
+@if (in_array('Approval Setup.All', $permissions) || in_array('Approval Setup.View', $permissions))
+
 <?php
     
     $power = new App\Helpers\MasterRulesManagement\RulesManagement();
@@ -282,19 +35,16 @@ Attendance | Create Shift
         <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
             <li><a href="{{ url('/admin') }}">Dashboard</a></li>
             <li><a href="{{ url('admin/settings/attendance') }}">Role-permission</a></li>
-            <!-- <li><a href="{{ url('admin/settings/attendance') }}">Approval Settings</a></li> -->
-            {{-- <li><a href="{{ url('/admin/requests/misspunch') }}">Request</a></li> --}}
-
             <li class="active"><span><b>Approval Settings</b></span></li>
         </ol>
     </div>
     <div class="card ">
-        <div class="card-header border-bottom-0">
+        <div class="card-header">
             <h3 class="card-title">Approval Settings</h3>
         </div>
         <div class="card-body p-6">
             <div class="panel panel-primary">
-                <div class="tab-menu-heading">
+                <div class="tab-menu-heading border">
                     <div class="tabs-menu ">
                         <!-- Tabs -->
                         <ul class="nav panel-tabs">
@@ -306,9 +56,10 @@ Attendance | Create Shift
                         </ul>
                     </div>
                 </div>
-                <div class="panel-body tabs-menu-body">
+                <div class="panel-body tabs-menu-body border-0">
                     <div class="tab-content">
                         <div class="tab-pane active " id="tab1">
+                        
                             <x-approval-management.attendance-approval></x-approval-management.attendance-approval>
                         </div>
 
@@ -1091,4 +842,5 @@ Attendance | Create Shift
             });
         }
 </script>
+@endif
 @endsection

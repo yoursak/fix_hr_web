@@ -28,6 +28,8 @@ use Illuminate\Database\Eloquent\Model;
 class LoginEmployee extends Model
 {
 	protected $table = 'login_employee';
+	protected $primary_key = "id";
+	protected $business_id = "business_id";
 
 	protected $casts = [
 		'otp_created_at' => 'datetime'
@@ -40,6 +42,7 @@ class LoginEmployee extends Model
 		'country_code',
 		'phone',
 		'otp',
-		'otp_created_at'
+		'otp_created_at',
+		'notification_key'
 	];
 }

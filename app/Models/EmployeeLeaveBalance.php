@@ -35,32 +35,33 @@ use Illuminate\Database\Eloquent\Model;
 class EmployeeLeaveBalance extends Model
 {
 	protected $table = 'employee_leave_balance';
+	protected $primary_key = 'id';
+	protected $business_id = 'business_id';
+	protected $branch_id = 'branch_id';
+
 
 	protected $casts = [
 		'year' => 'datetime',
 		'leave_type' => 'int',
-		'leave_id' => 'int',
-		'leave_cycle' => 'bool',
-		'opening' => 'int',
-		'accured' => 'int',
-		'availed_last_month' => 'int',
-		'availed_current_month' => 'int',
-		'balance' => 'int',
-		'un_approved_leave_applied' => 'int',
-		'available_leave_balance' => 'int'
+		'opening' => 'float',
+		'accured' => 'float',
+		'availed_current_month' => 'float',
+		'balance' => 'float',
+		'un_approved_leave_applied' => 'float',
+		'available_leave_balance' => 'float'
 	];
+	//	'leave_id' => 'int',
+	// 'leave_cycle' => 'bool',
 
 	protected $fillable = [
-		'business_id',
 		'emp_id',
+		'business_id',
+		'branch_id',
 		'month',
 		'year',
 		'leave_type',
-		'leave_id',
-		'leave_cycle',
 		'opening',
 		'accured',
-		'availed_last_month',
 		'availed_current_month',
 		'balance',
 		'un_approved_leave_applied',

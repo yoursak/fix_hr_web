@@ -63,25 +63,40 @@ class NewPermission extends Controller
         $RolesData = PolicySettingRoleCreate::where('business_id', Session::get('business_id'))->get();
         $EmployeeList = EmployeePersonalDetail::where('business_id', Session::get('business_id'))->get();
         $permissions = Permission::where('business_id', Session::get('business_id'))->get();
+
+        // dd($accessPermission);
         $Modules = $rooted1->SidebarMenu();
         $moduleName = $accessPermission[0];
         $permission = $accessPermission[1];
-
+        // dd($permission);
         $send = compact('moduleName', 'permission', 'Modules', 'permissions', 'RolesData', 'EmployeeList', 'BranchList');
         return view('admin.setting.permissions.newPermission', $send);
     }
 
     public function createRoleSubmit(Request $request)
     {
-        // dd($request->all());
+        if($request->permissio == null){
+            Alert::info('', 'Permission assigned not created');
+            return redirect()->back();
+        }
+        $checkGet = PolicySettingRoleCreate::first();
         $BusinessID = $request->business_id;
-        // $branchID = $request->session()->get('branch_id');
-        $storeData = [
-            'business_id' => $BusinessID,
-            'branch_id' => Session::get('branch_id'),
-            'roles_name' => $request->role_name,
-            'description' => $request->description,
-        ];
+        if ($checkGet == null) {
+            $storeData = [
+                'id' => 2,
+                'business_id' => $BusinessID,
+                'branch_id' => Session::get('branch_id'),
+                'roles_name' => $request->role_name,
+                'description' => $request->description,
+            ];
+        } else {
+            $storeData = [
+                'business_id' => $BusinessID,
+                'branch_id' => Session::get('branch_id'),
+                'roles_name' => $request->role_name,
+                'description' => $request->description,
+            ];
+        }
         $truechecking_id = PolicySettingRoleCreate::insert($storeData);
 
         // $adminRole = Role::create(['name' => $request->role_name, 'branch_id' => Session::get('branch_id'), 'business_id' => $BusinessID]);
@@ -107,9 +122,9 @@ class NewPermission extends Controller
                 }
             }
             // session()->flash('success', 'Setup is Active Now');
-            Alert::success('Added', 'Your Create Role Added Successfully');
+            Alert::success('', 'Your Role has been created Successfully');
         } else {
-            Alert::info('Not Added', 'Your Role Not Added');
+            Alert::info('', 'Your Role has not created');
         }
 
         return redirect('Role-permission/role_permission');
@@ -118,6 +133,7 @@ class NewPermission extends Controller
 
     public function createAssignPermission(Request $request)
     {
+// dd($request->all());
         //QA OK
         // dd($request->all());
         $BusinessID = Session::get('business_id');
@@ -126,7 +142,8 @@ class NewPermission extends Controller
         $branchID = $request->branch_id;
         $departmentID = $request->department_id;
         $designationID = $request->designation_id;
-
+        $permissionType = $request->permissiontype_id;
+        $prmissionBranchName = json_encode($request->input('branchname_id'));
         $load = EmployeePersonalDetail::where('emp_id', $empID)
             ->where('business_id', $BusinessID)
             ->first();
@@ -146,7 +163,6 @@ class NewPermission extends Controller
                 //         'branch_id' => $branchID,
                 //         'department_id' => $departmentID,
                 //         'designation_id' => $designationID
-
                 //     ];
                 //     $truechecking_id = PolicySettingRoleAssignPermission::update($storeData);
                 //     EmployeePersonalDetail::where('emp_id', $empID)->where('business_id', $BusinessID)->update(['role_id' => $roleID]);
@@ -164,15 +180,19 @@ class NewPermission extends Controller
                     'branch_id' => $branchID,
                     'department_id' => $departmentID,
                     'designation_id' => $designationID,
+                    'permission_type' => $permissionType,
+                    'permission_branch_id' => $prmissionBranchName
                 ];
                 $truechecking_id = PolicySettingRoleAssignPermission::insert($storeData);
                 $get = EmployeePersonalDetail::where('emp_id', $empID)
                     ->where('business_id', $BusinessID)
                     ->first();
+                // static_login_type_selected
                 $empDetails = EmployeePersonalDetail::where('emp_id', $empID)
                     ->where('business_id', $BusinessID)
-                    ->update(['role_id' => $roleID, 'is_admin' => 2]);
+                    ->update(['role_id' => $roleID, 'static_role' => 2]);
                 $empLoginAdmin = LoginAdmin::insert([
+                    'static_role' => 2,
                     'business_id' => $BusinessID,
                     'name' => $get->emp_name,
                     'email' => $get->emp_email,
@@ -190,35 +210,42 @@ class NewPermission extends Controller
                         ];
                         $sendMail = Mail::to($get->emp_email)->send(new AdminMailer($details));
 
-                        Alert::success('Added', ' Permission Assigned Successfully and Updated RoleID');
+                        Alert::success('', ' Permission Assigned Successfully and Updated RoleID');
                     } else {
-                        Alert::info('Not Added', "Permission doesn't  Created!");
+                        Alert::info('', "Permission doesn't  Created!");
                     }
                 }
             }
         }
-        return back();
+        return redirect()->back();
     }
 
     public function GetAssignUser(Request $request)
     {
-        $get = PolicySettingRoleItem::where('role_create_id', $request->role_id)->get();
+        $get = PolicySettingRoleItem::where('role_create_id', $request->role_id)->where('business_id', Session::get('business_id'))->get();
         return response()->json(['checking' => $get]);
     }
 
     // permission edit
     public function previewAssignedUsers(Request $request)
     {
+        // dd($request->all());
+        if($request->permissions == null){
+            Alert::info('', 'Permission assigned not updated');
+            return redirect()->back();
+        }
+        // dd($request->permissions);
         if (Session::get('business_id') != null && Session::get('branch_id') != null) {
             $role = $request->role;
             $businessId = Session::get('business_id');
             $branch = Session::get('branch_id');
 
+            $checkRoleCreate = DB::table('policy_setting_role_create')->where('business_id', Session::get('business_id'))->where('id', $request->role)->update(['roles_name' => $request->role_name_edit, 'description' => $request->description_edit]);
+
             $delete = PolicySettingRoleItem::where('role_create_id', $role)
                 ->where('business_id', $businessId)
                 ->where('branch_id', $branch)
                 ->delete();
-
             // // 2. Update existing data (if needed)
             // // If you need to update existing records, do it here.
 
@@ -238,19 +265,25 @@ class NewPermission extends Controller
 
                         PolicySettingRoleItem::insert($collectionDataSet);
                     }
-                    Alert::success('Updated', 'Permission Assigned Successfully Updated');
+
+                    Alert::success('', 'Permission Assigned has been Successfully Updated');
                 } else {
                     Alert::success('Not Updated', 'Permission Assigned Not Updated!');
                 }
             }
         }
         if (Session::get('business_id') != null) {
+            $checkRoleCreate = DB::table('policy_setting_role_create')->where('business_id', Session::get('business_id'))->where('id', $request->role)->update(['roles_name' => $request->role_name_edit, 'description' => $request->description_edit]);
+
             $role = $request->role;
             $businessId = Session::get('business_id');
 
             $delete = PolicySettingRoleItem::where('role_create_id', $role)
                 ->where('business_id', $businessId)
                 ->delete();
+                $hiii = PolicySettingRoleItem::where('role_create_id', $role)
+                ->where('business_id', $businessId)
+                ->get();
 
             // // 2. Update existing data (if needed)
             // // If you need to update existing records, do it here.
@@ -261,6 +294,7 @@ class NewPermission extends Controller
                 $permissions = $request->permissions;
 
                 if (isset($latestLeavePolicyID)) {
+                    // dd($request->all());
                     foreach ($permissions as $permission) {
                         $collectionDataSet = [
                             'role_create_id' => $latestLeavePolicyID,
@@ -269,132 +303,205 @@ class NewPermission extends Controller
                             'model_name' => $permission,
                         ];
 
-                        PolicySettingRoleItem::insert($collectionDataSet);
+                       $nio =  PolicySettingRoleItem::insert($collectionDataSet);
                     }
-                    Alert::success('Updated', 'Permission Assigned Successfully Updated');
+                    // dd($nio);
+                    Alert::success('', 'Permission Assigned has been Successfully Updated');
                 } else {
                     Alert::success('Not Updated', 'Permission Assigned Not Updated!');
                 }
             }
         }
-        return back();
+        return redirect()->back();
     }
 
     // delete permission
     public function deletePermission(Request $request)
     {
-        $getID = $request->role_set;
-        $businessID = Session::get('business_id');
-        $branchID = Session::get('branch_id');
-        // dd($businessID);
-        if ($businessID != null && $branchID != null) {
-            $deleted = PolicySettingRoleCreate::where('id', $getID)
-                ->where('business_id', $businessID)
-                ->where('branch_id', $branchID)
-                ->delete();
-            $load = PolicySettingRoleAssignPermission::where('role_id', $getID)
-                ->where('business_id', $businessID)
-                ->where('branch_id', $branchID)
-                ->delete();
-            $lao = EmployeePersonalDetail::where('role_id', $getID)
-                ->where('business_id', $businessID)
-                ->where('branch_id', $branchID)
-                ->update(['role_id' => 0]);
-
-            if ($deleted) {
-                // Delete related permissions or items if needed
-                PolicySettingRoleItem::where('role_create_id', $getID)
+        // dd($request->all());
+        $assocatedUsers = $request->assocated_Users;
+        if ($assocatedUsers == null) {
+            $getID = $request->role_set;
+            $businessID = Session::get('business_id');
+            $branchID = Session::get('branch_id');
+            // dd($businessID);
+            if ($businessID != null && $branchID != null) {
+                $deleted = PolicySettingRoleCreate::where('id', $getID)
                     ->where('business_id', $businessID)
                     ->where('branch_id', $branchID)
                     ->delete();
+                $load = PolicySettingRoleAssignPermission::where('role_id', $getID)
+                    ->where('business_id', $businessID)
+                    ->where('branch_id', $branchID)
+                    ->delete();
+                $lao = EmployeePersonalDetail::where('role_id', $getID)
+                    ->where('business_id', $businessID)
+                    ->where('branch_id', $branchID)
+                    ->update(['role_id' => 0, 'static_role' => 3]);
 
-                Alert::success('Deleted', 'Role and associated permissions deleted successfully');
-            } else {
-                Alert::error('Error', 'Role deletion failed');
+                if (isset($deleted)) {
+                    // Delete related permissions or items if needed
+                    PolicySettingRoleItem::where('role_create_id', $getID)
+                        ->where('business_id', $businessID)
+                        ->where('branch_id', $branchID)
+                        ->delete();
+
+                    Alert::success('Deleted', 'Role and associated permissions deleted successfully');
+                } else {
+                    Alert::error('Error', 'Role deletion failed');
+                }
             }
-        }
-        if ($businessID != null) {
-            // Perform the deletion of the role with the given ID
-            $deleted = PolicySettingRoleCreate::where('id', $getID)
-                ->where('business_id', $businessID)
-                ->delete();
-            $load = PolicySettingRoleAssignPermission::where('role_id', $getID)
-                ->where('business_id', $businessID)
-                ->delete();
-            EmployeePersonalDetail::where('role_id', $getID)
-                ->where('business_id', $businessID)
-                ->update(['role_id' => 0]);
-            // DB::table('roles')->where('business_id', $businessID)->delete();
-            if ($deleted && $load) {
-                // Delete related permissions or items if needed
-                PolicySettingRoleItem::where('role_create_id', $getID)
+            if ($businessID != null) {
+                // Perform the deletion of the role with the given ID
+                $deleted = PolicySettingRoleCreate::where('id', $getID)
                     ->where('business_id', $businessID)
                     ->delete();
-                Alert::success('Deleted', 'Role and associated permissions deleted successfully');
-            } else {
-                Alert::error('Error', 'Role deletion failed');
+                // $load = PolicySettingRoleAssignPermission::where('role_id', $getID)
+                //     ->where('business_id', $businessID)
+                //     ->delete();
+                EmployeePersonalDetail::where('role_id', $getID)
+                    ->where('business_id', $businessID)
+                    ->update(['role_id' => 0, 'static_role' => 3]);
+                // DB::table('roles')->where('business_id', $businessID)->delete();
+                if ($deleted) {
+                    // Delete related permissions or items if needed
+                    PolicySettingRoleItem::where('role_create_id', $getID)
+                        ->where('business_id', $businessID)
+                        ->delete();
+                    Alert::success('', 'Role has been deleted successfully');
+                } else {
+                    Alert::error('', 'Role has not deleted');
+                }
             }
+        } else {
+            Alert::error('', 'You can not delete the role if you have an employee associated with it.');
         }
         return back(); // Redirect to the role listing page
     }
 
     public function DeleteAdminAssign(Request $request)
     {
-        // dd($request->all());
         $businessId = Session::get('business_id');
         $branchId = Session::get('branch_id');
         $empId = $request->emp_id;
+        $roleId = $request->role_id;
 
-        // Check if both business_id and branch_id match before updating and deleting
-        if ($businessId && $branchId) {
-            $updateResult = DB::table('employee_personal_details')
-                ->where('business_id', $businessId)
-                ->where('branch_id', $branchId)
-                ->where('emp_id', $empId)
-                ->update(['role_id' => 0]);
+        $testAssignRoleCount = DB::table('policy_setting_role_assign_permission')
+            ->where('business_id', Session::get('business_id'))
+            ->where('role_id', $roleId)
+            ->count();
+        // dd($testAssignRoleCount);
+        if ($testAssignRoleCount != 1) {
+            if ($businessId && $branchId) {
+                // Check if both business_id and branch_id match before updating and deleting
+                $updateResult = DB::table('employee_personal_details')
+                    ->where('business_id', $businessId)
+                    ->where('branch_id', $branchId)
+                    ->where('emp_id', $empId)
+                    ->update(['role_id' => 0, 'static_role' => 3]);
 
-            $deleteResult = PolicySettingRoleAssignPermission::where('business_id', $businessId)
-                ->where('branch_id', $branchId)
-                ->where('emp_id', $empId)
-                ->delete();
-            $getDatails = EmployeePersonalDetail::where('business_id', $businessId)
-                ->where('emp_id', $empId)
-                ->first();
-            $deletelogin = DB::table('login_admin')
-                ->where('business_id', $getDatails->business_id)
-                ->where('email', $getDatails->emp_email)
-                ->delete();
+                $deleteResult = PolicySettingRoleAssignPermission::where('business_id', $businessId)
+                    ->where('branch_id', $branchId)
+                    ->where('emp_id', $empId)
+                    ->delete();
+                $getDatails = EmployeePersonalDetail::where('business_id', $businessId)
+                    ->where('emp_id', $empId)
+                    ->first();
+                $deletelogin = DB::table('login_admin')
+                    ->where('business_id', $getDatails->business_id)
+                    ->where('email', $getDatails->emp_email)
+                    ->delete();
 
-            if ($updateResult !== false && $deleteResult !== false && $deletelogin !== false) {
-                Alert::success('Deleted Assigned Admin');
+                if ($updateResult !== false && $deleteResult !== false && $deletelogin !== false) {
+                    Alert::success('', 'Admin has been deleted successfully');
+                } else {
+                    Alert::error('Not Deleted');
+                }
+            } elseif ($businessId) {
+                $updateResult = DB::table('employee_personal_details')
+                    ->where('business_id', $businessId)
+                    ->where('emp_id', $empId)
+                    ->update(['role_id' => 0, 'static_role' => 3]);
+
+                $deleteResult = PolicySettingRoleAssignPermission::where('business_id', $businessId)
+                    ->where('emp_id', $empId)
+                    ->delete();
+
+                $getDatails = EmployeePersonalDetail::where('business_id', $businessId)
+                    ->where('emp_id', $empId)
+                    ->first();
+                $deletelogin = DB::table('login_admin')
+                    ->where('business_id', $getDatails->business_id)
+                    ->where('email', $getDatails->emp_email)
+                    ->delete();
+
+                if ($updateResult !== false && $deleteResult !== false && $deletelogin !== false) {
+                    Alert::success('', 'Assigned Role has been deleted successfully');
+                } else {
+                    Alert::error('Not Deleted');
+                }
             } else {
-                Alert::error('Not Deleted');
-            }
-        } elseif ($businessId) {
-            $updateResult = DB::table('employee_personal_details')
-                ->where('business_id', $businessId)
-                ->where('emp_id', $empId)
-                ->update(['role_id' => 0]);
-
-            $deleteResult = PolicySettingRoleAssignPermission::where('business_id', $businessId)
-                ->where('emp_id', $empId)
-                ->delete();
-
-            $getDatails = EmployeePersonalDetail::where('business_id', $businessId)
-                ->where('emp_id', $empId)
-                ->first();
-            $deletelogin = DB::table('login_admin')
-                ->where('business_id', $getDatails->business_id)
-                ->where('email', $getDatails->emp_email)
-                ->delete();
-
-            if ($updateResult !== false && $deleteResult !== false && $deletelogin !== false) {
-                Alert::success('Deleted Assigned Admin');
-            } else {
-                Alert::error('Not Deleted');
+                Alert::error('Invalid Business ID or Branch ID');
             }
         } else {
-            Alert::error('Invalid Business ID or Branch ID');
+            $testAssingOrNot = ApprovalManagementCycle::where('business_id', $businessId)
+                ->whereJsonContains('role_id', $roleId)
+                ->get();
+            if (!$testAssingOrNot) {
+                if ($businessId && $branchId) {
+                    // Check if both business_id and branch_id match before updating and deleting
+                    $updateResult = DB::table('employee_personal_details')
+                        ->where('business_id', $businessId)
+                        ->where('branch_id', $branchId)
+                        ->where('emp_id', $empId)
+                        ->update(['role_id' => 0, 'static_role' => 3]);
+
+                    $deleteResult = PolicySettingRoleAssignPermission::where('business_id', $businessId)
+                        ->where('branch_id', $branchId)
+                        ->where('emp_id', $empId)
+                        ->delete();
+                    $getDatails = EmployeePersonalDetail::where('business_id', $businessId)
+                        ->where('emp_id', $empId)
+                        ->first();
+                    $deletelogin = DB::table('login_admin')
+                        ->where('business_id', $getDatails->business_id)
+                        ->where('email', $getDatails->emp_email)
+                        ->delete();
+
+                    if ($updateResult !== false && $deleteResult !== false && $deletelogin !== false) {
+                        Alert::success('', 'Admin has been deleted successfully');
+                    } else {
+                        Alert::error('Not Deleted');
+                    }
+                } elseif ($businessId) {
+                    $updateResult = DB::table('employee_personal_details')
+                        ->where('business_id', $businessId)
+                        ->where('emp_id', $empId)
+                        ->update(['role_id' => 0, 'static_role' => 3]);
+
+                    $deleteResult = PolicySettingRoleAssignPermission::where('business_id', $businessId)
+                        ->where('emp_id', $empId)
+                        ->delete();
+
+                    $getDatails = EmployeePersonalDetail::where('business_id', $businessId)
+                        ->where('emp_id', $empId)
+                        ->first();
+                    $deletelogin = DB::table('login_admin')
+                        ->where('business_id', $getDatails->business_id)
+                        ->where('email', $getDatails->emp_email)
+                        ->delete();
+
+                    if ($updateResult !== false && $deleteResult !== false && $deletelogin !== false) {
+                        Alert::success('Deleted Assigned Admin');
+                    } else {
+                        Alert::error('Not Deleted');
+                    }
+                } else {
+                    Alert::error('Invalid Business ID or Branch ID');
+                }
+            } else {
+                Alert::error('', 'You can not remove employee if you have an employee assigned for approval system.');
+            }
         }
 
         return back();
@@ -419,6 +526,7 @@ class NewPermission extends Controller
         $attendanceModePolicy = $List[6];
         $attendanceShiftPolicy = $List[7];
         $attendanceTrackInOut = $List[8];
+        // dd($accessPermission);
         // dd($attendanceTrackInOut)
         // $attendaceShift = DB::table('attendance_shift_settings')->get();
         // alert()->success('Success Title', 'Success Message');
@@ -495,7 +603,9 @@ class NewPermission extends Controller
             // $loadmispunch = RequestLeaveList::where('business_id', $businessID)->where('process_complete', '==', $loadType)->update(['forward_by_role_id' => $initialIndex, 'final_level_role_id' => $lastIndex, 'forward_by_status' => 0]);
             // $loadType
             if ($loadType == 1) {
-                $load = DB::table('attendance_list')->where('process_complete', '0')->update(['forward_by_role_id' => $initialIndex, 'final_level_role_id' => $lastIndex, 'forward_by_status' => 0]);
+                $load = DB::table('attendance_list')
+                    ->where('process_complete', '0')
+                    ->update(['forward_by_role_id' => $initialIndex, 'final_level_role_id' => $lastIndex, 'forward_by_status' => 0]);
                 $NameType = 'Attendance';
             } elseif ($loadType == 2) {
                 $load = RequestLeaveList::where('business_id', $businessID)
@@ -522,10 +632,12 @@ class NewPermission extends Controller
             //     ]);
             if (isset($update_all_ready) && isset($load)) {
                 if ($radioBtn == 2) {
-                    Alert::success('', "Your Updated Parallel Approval System   also Update Request $NameType List");
+                    // Alert::success('', "Your Updated Parallel Approval System has Update Request $NameType List");
+                    Alert::success('', 'Your Approval system has been updated successfully');
                 }
                 if ($radioBtn == 1) {
-                    Alert::success('', "Your Updated Sequential Approval System   also Update Request $NameType List");
+                    // Alert::success('', "Your Updated Sequential Approval System also Update Request $NameType List");
+                    Alert::success('', 'Your Approval system has been updated successfully');
                 }
             } else {
                 Alert::info('', 'Not Updated Approval System ');

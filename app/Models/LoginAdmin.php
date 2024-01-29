@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
+
 /**
  * Class LoginAdmin
  * 
@@ -31,18 +32,19 @@ class LoginAdmin extends Model
 {
 	use HasApiTokens;
 	protected $table = 'login_admin';
+	protected $primary_key = 'id';
 
 	protected $casts = [
+		'business_id' => 'string',
+		'static_role' => 'int',
 		'otp_created_at' => 'datetime',
-		'is_verified' => 'bool'
+		'is_verified' => 'bool',
+		'api_token' => 'string'
 	];
-
-	// protected $hidden = [
-	// 	'api_token'
-	// ];
 
 	protected $fillable = [
 		'business_id',
+		'static_role',
 		'name',
 		'email',
 		'country_code',

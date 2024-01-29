@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\admin\Settings;
 
 use App\Http\Controllers\Controller;
-
 use Illuminate\Support\Facades\DB;
 use App\Models\LoginAdmin;
 use App\Models\CameraPermission;
@@ -42,6 +41,7 @@ use App\Models\PolicySettingLeaveCategory;
 use App\Models\StaticBusinessTypeList;
 use App\Models\StaticBusinessCategoriesList;
 use App\Models\PolicyMasterEndgameMethod;
+use App\Models\Subscription;
 use Session;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Helpers\Central_unit;
@@ -49,11 +49,11 @@ use Carbon\Carbon;
 use File;
 use App\Models\admin\setupsettings\MasterEndGameModel;
 use App\Helpers\MasterRulesManagement\RulesManagement;
+use App\Models\AttendanceHolidayList;
 use Ixudra\Curl\Facades\Curl;
 use Illuminate\Http\Request;
 use Dipesh79\LaravelPhonePe\LaravelPhonePe;
-
-// Use Alert;
+use Illuminate\Support\Facades\Route;
 
 class SettingController extends Controller
 {
@@ -66,6 +66,9 @@ class SettingController extends Controller
 
     public function cameraAccess()
     {
+        $accessPermission = Central_unit::AccessPermission();
+        $moduleName = $accessPermission[0];
+        $permissions = $accessPermission[1];
         $modes = DB::table('static_attendance_methods')->get();
         $bName = DB::table('business_details_list')
             ->where('business_id', Session::get('business_id'))
@@ -76,63 +79,68 @@ class SettingController extends Controller
             ->orderBy('camera_permission.id', 'DESC')
             ->select('camera_permission.*', 'static_attendance_methods.id as attmethodid', 'static_attendance_methods.method_name')
             ->get();
-        // DB::table('permissions')->where('business_id','32aa02ecf0c952bbbf449ec9f5a28606')->update(['business_id'=>'e3d64177e51bdff82b499e116796fe74']);
+        $Type = DB::table('static_attendance_mode')->whereIn('id', [1, 2])->get();
 
-        // dd("D");
-
-        return view('admin.setting.attendance.cameraAccess', compact(['bName', 'cameraAccess', 'modes']));
+        return view('admin.setting.attendance.cameraAccess', compact(['bName', 'cameraAccess', 'modes', 'Type', 'permissions']));
     }
 
     public function accessCamera(Request $request)
     {
-        // dd($request->all());
+        $Branch = DB::table('branch_list')
+            ->where('business_id', Session::get('business_id'))
+            ->where('branch_id', $request->branch)
+            ->first();
+        // dd($Branch->branch_email);
         if ($request->has('mode') && $request->has('imei')) {
             $accessRequest = DB::table('camera_permission')->insert([
                 'mode_check' => $request->mode,
+                'type_check' => $request->type,
                 'business_check' => 1,
-                'branch_check' => 0,
+                'branch_check' => 1,
                 'business_id' => Session::get('business_id'),
-                'mobile_ip' => $request->ip,
+                'branch_id' => $request->branch,
+                'branch_email' => $Branch->branch_email,
                 'imei_number' => $request->imei,
                 'check_camera' => $request->cameraAccess == 'on' ? 1 : 0,
             ]);
 
             if ($accessRequest) {
-                Alert::success('Successfully Added Camera Permission')->persistent(true);
+                Alert::success('', 'Your Camera permissiong has been successfully created')->persistent(true);
             } else {
-                Alert::error('Failed Not !')->persistent(true);
+                Alert::error('', 'Your Camera permissiong has not been created')->persistent(true);
             }
 
-            return redirect('admin/settings/attendance/camera-access');
+            return redirect()->back();
         }
     }
 
-    // public function editCameraAccessDataGet(Request $request)
-    // {
-    //     $data = CameraPermission::where('id', $request->id)->get();
-    //     return response()->json(['get' => $data]);
-    // }
+
 
     public function updateCamera(Request $request)
     {
         // dd($request->all());
 
         $updateAccessRequest = DB::table('camera_permission')
-            ->where(['business_id' => Session::get('business_id'), 'id' => $request->id])
+            ->where('business_id', Session::get('business_id'))
+            ->where('id', $request->id)
             ->update([
                 'mode_check' => $request->updatemode,
-                'mobile_ip' => $request->updateip,
+                'type_check' => $request->type,
+                'business_check' => 1,
+                'business_id' => Session::get('business_id'),
+                'branch_check' => 1,
+                'branch_email' => $request->update_branch_email,
+                'branch_id' => $request->branch,
                 'imei_number' => $request->updateimei,
                 'check_camera' => $request->updatecameraAccess == 'on' ? 1 : 0,
             ]);
 
         if (isset($updateAccessRequest)) {
-            Alert::success('Successfully Update Camera Permission');
+            Alert::success('', 'Your Camera access persmission has been updated successfully');
         } else {
-            Alert::error('Failed');
+            Alert::error('', 'Your Camera access persmission has not been updated');
         }
-
-        return redirect('admin/settings/attendance/camera-access');
+        return redirect()->back();
     }
 
     public function removeCamera(Request $request, $id)
@@ -146,13 +154,12 @@ class SettingController extends Controller
                 ->delete();
 
             if ($removeCameraAccess) {
-                Alert::success('Successfully Removed')->persistent(true);
+                Alert::success('', 'Your Camera access has been deleted successfully')->persistent(true);
             } else {
-                Alert::error('Failed')->persistent(true);
+                Alert::error('', 'Your Camera access has not been deleted')->persistent(true);
             }
         }
-
-        return redirect('admin/settings/attendance/camera-access');
+        return redirect()->back();
     }
 
     public function index()
@@ -200,7 +207,7 @@ class SettingController extends Controller
             ]);
 
             if ($setMode) {
-                Alert::success('Successfully Created Attendance Mode Active', '')->persistent(true);
+                Alert::success('', 'Your Attendance mode has been activated successfully', '')->persistent(true);
             } else {
                 Alert::error('Failed', '')->persistent(true);
             }
@@ -225,28 +232,37 @@ class SettingController extends Controller
                 ]);
 
             if ($updateMode) {
-                Alert::success('Successfully Updated Attendance Mode Active', '')->persistent(true);
+                Alert::success('', 'Your Attendance mode  has been activated successfully')->persistent(true);
             } else {
-                Alert::error('Failed', '')->persistent(true);
+                Alert::error('', 'Your Attendance mode has not been activated')->persistent(true);
             }
         }
 
         // return redirect()->to('/admin/settings/attendance/mode');
 
-        // return Redirect::back();
-        return self::attendance();
+        return redirect()->back();
     }
 
     // account setting
     public function account()
     {
-        // dd($request->all());
+        $currentRouteName = Route::currentRouteName();
+        // dd($currentRouteName);
         $accDetail = BusinessDetailsList::where('business_id', Session::get('business_id'))->first();
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
-
-        return view('admin.setting.account.account', compact('permissions', 'moduleName', 'accDetail'));
+        $statefind = DB::table('static_states')
+            ->where('country_id', $accDetail->country)
+            ->orderBy('name', 'asc')
+            ->get();
+        // dd($statefind);
+        $citiesfind = DB::table('static_cities')
+            ->where('state_id', $accDetail->state)
+            ->orderBy('name', 'asc')
+            ->get();
+        // dd($citiesfind);
+        return view('admin.setting.account.account', compact('permissions', 'moduleName', 'accDetail', 'statefind', 'citiesfind'));
     }
 
     public function BusinessDetail(Request $request)
@@ -258,6 +274,89 @@ class SettingController extends Controller
         return response()->json(['get' => $BAddDetail]);
     }
 
+    // account setting page start
+    public function uploadlogo(Request $request)
+    {
+        if ($request->image) {
+            $validatedData = $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+            // Get the uploaded image file
+            $image = $request->file('image');
+            $path = public_path('business_logo/');
+            $imageName = date('d-m-Y') . '_' . md5($image) . '.' . $request->image->extension();
+            $data = $request->image->move($path, $imageName);
+            $data = DB::table('business_details_list')
+                ->where('id', $request->editlogoId)
+                ->where('business_id', Session::get('business_id'))
+                ->update(['business_logo' => $imageName]);
+            if ($data) {
+                session()->put('login_business_image', $imageName);
+                Alert::success('', 'Your Business logo has been updated successfully')->persistent(true);
+            } else {
+                Alert::success('', 'Your Business logo has not been updated')->persistent(true);
+            }
+        } else {
+            $data = DB::table('business_details_list')
+                ->where('id', $request->editlogoId)
+                ->where('business_id', Session::get('business_id'))->first();
+            if ($data) {
+                Alert::success('', 'Your Business logo has been updated successfully')->persistent(true);
+            } else {
+                Alert::success('', 'Your Business logo has not been updated')->persistent(true);
+            }
+        }
+        return redirect()->back();
+    }
+
+    public function sbussinessnameupdate(Request $request)
+    {
+        $sbussinessnameupdate = DB::table('business_details_list')
+            ->where('id', $request->editBranchId)
+            ->where('business_id', Session::get('business_id'))
+            ->update(['business_name' => $request->business_name, 'business_categories' => $request->select]);
+        // return $branch;
+
+        if (isset($sbussinessnameupdate)) {
+            Alert::success('', 'Your Business category has been updated successfully')->persistent(true);
+        } else {
+            Alert::info('', 'Your Business category has not been updated')->persistent(true);
+        }
+        return redirect()->back();
+    }
+
+    // sphoneupdate
+    public function sphoneupdate(Request $request)
+    {
+        // dd($request->all());
+        $data = DB::table('business_details_list')
+            ->where('id', $request->editBranchId)
+            ->where('business_id', Session::get('business_id'))
+            ->update(['mobile_no' => $request->phone]);
+        // return $branch;
+        if (isset($data)) {
+            Alert::success('', 'Your Phone number has been updated successfully')->persistent(true);
+        } else {
+            Alert::success('', 'Your Phone number has not been updated')->persistent(true);
+        }
+        return redirect()->back();
+    }
+
+    public function sbtypeupdate(Request $request)
+    {
+        // dd($request->all());
+        $data = DB::table('business_details_list')
+            ->where('id', $request->editBtypeId)
+            ->where('business_id', Session::get('business_id'))
+            ->update(['business_type' => $request->select]);
+        // return $branch;
+        if (isset($data)) {
+            Alert::success('', 'Your Business type has been updated successfully')->persistent(true);
+        } else {
+            Alert::info('', 'Your Business type has not been updated')->persistent(true);
+        }
+        return redirect()->back();
+    }
     // sbussinesstype.update
     public function semailupdate(Request $request)
     {
@@ -273,7 +372,7 @@ class SettingController extends Controller
     public function saddressupdate(Request $request)
     {
         // dd($request->all());
-        $branch = DB::table('business_details_list')
+        $address = DB::table('business_details_list')
             ->where('id', $request->editBranchId)
             ->where('business_id', Session::get('business_id'))
             ->update([
@@ -283,132 +382,39 @@ class SettingController extends Controller
                 'city' => $request->city,
                 'pin_code' => $request->pincode,
             ]);
-        // $branch = DB::table('business_details_list')->where('id', $request->editBranchId)->where('business_id', Session::get('business_id'))->update(['business_address' = $request->address, 'country' = $request->country , 'state' = $request->state , 'city' = $request->city , 'pincode' = $request->pincode]);
-        // $branch->business_address = $request->address;
-        // $branch->country = $request->country;
-        // $branch->state = $request->state;
-        // $branch->city = $request->city;
-        // $branch->pincode = $request->pincode;
-        // $branch->update();
 
-        // return $branch;
-        return back();
-    }
-
-    public function sbtypeupdate(Request $request)
-    {
-        // dd($request->all());
-        $branch = DB::table('business_details_list')
-            ->where('id', $request->editBtypeId)
-            ->where('business_id', Session::get('business_id'))
-            ->update(['business_type' => $request->select]);
-        // return $branch;
-        return back();
-    }
-
-    public function uploadlogo(Request $request)
-    {
-        // echo $request->file('image')->store('uploads');
-        // dd($request->all());
-        if ($request->image) {
-            $validatedData = $request->validate([
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                // Adjust max size as needed
-            ]);
-            // Get the uploaded image file
-            $image = $request->file('image');
-            $path = public_path('business_logo/');
-            $imageName = date('d-m-Y') . '_' . md5($image) . '.' . $request->image->extension();
-            $data = $request->image->move($path, $imageName);
-            // return $data;
-            // return $path;
-            $data = DB::table('business_details_list')
-                ->where('id', $request->editlogoId)
-                ->where('business_id', Session::get('business_id'))
-                ->update(['business_logo' => $imageName]);
-            if ($data) {
-                Alert::success('Data Updated', 'Updated  Created')->persistent(true);
-
-                // return $data;
-                return back();
-            } else {
-                return 'hasfail';
-            }
-            // $image  = new Image();
-            // $image->name = $imageName;
-            // $image->save();
-
-            // Return a response with information about the uploaded image
-            return response()->json([
-                'message' => 'Image uploaded successfully.',
-                'image_path' => $imageName,
-            ]);
-        }
-
-        return back();
-
-        //  else {
-        //     return response()->json(['result' => [], 'status' => false], 404);
-        // }
-
-        // echo "<pre>";
-        // print_r($request->all());
-        // echo "</pre>";
-
-        // $image = $request->file('image');
-        // $path = public_path('business_logo/');
-        // $imageName = date('d-m-Y') . '_' . md5($image) . '.' . $request->image->getClientOriginalExtension();
-        // $request->image->move($path, $imageName);
-
-        // $image  = new Image();
-        // $image->name = $imageName;
-        // $image->save();
-
-        // Return a response with information about the uploaded image
-        // return response()->json([
-        //     'message' => 'Image uploaded successfully.',
-        //     'image_path' => $imageName,
-        // ]);
-        // return $imageName;
-
-        // $branch = DB::table('business_details_list')->where('id', $request->editlogo)->where('business_id', Session::get('business_id'))->update(['business_logo' => $request->logo]);
-        // return $branch;
-        // return back();
-    }
-
-    public function sbussinessnameupdate(Request $request)
-    {
-        // dd($request->all());
-        $branch = DB::table('business_details_list')
-            ->where('id', $request->editBranchId)
-            ->where('business_id', Session::get('business_id'))
-            ->update(['business_name' => $request->business_name, 'business_categories' => $request->select]);
-        // return $branch;
-
-        if (isset($branch)) {
-            Alert::success('Data Updated', 'Updated  Created')->persistent(true);
-            return back();
+        if (isset($address)) {
+            Alert::success('', 'Your Business address has been updated successfully')->persistent(true);
         } else {
-            return back();
+            Alert::info('', 'Your Business address has not been updated')->persistent(true);
         }
+        return redirect()->back();
     }
-    // sphoneupdate
-    public function sphoneupdate(Request $request)
+
+    public function getCountryStateCityAjax(Request $request)
     {
-        // dd($request->all());
-        $branch = DB::table('business_details_list')
-            ->where('id', $request->editBranchId)
-            ->where('business_id', Session::get('business_id'))
-            ->update(['mobile_no' => $request->phone]);
-        // return $branch;
-        return back();
+        $City = DB::table('static_cities')
+            ->where('state_id', $request->state)
+            ->orderBy('Name')
+            ->get();
+        $states = DB::table('static_states')
+            ->where('country_id', $request->country)
+            ->orderBy('Name')
+            ->get();
+
+        return response()->json(['states' => $states, 'city' => $City]);
     }
 
     public function subscription()
     {
-        // echo $request->all();
+        $accessPermission = Central_unit::AccessPermission();
+        $moduleName = $accessPermission[0];
+        $permissions = $accessPermission[1];
+        $subscriptionTable = Subscription::leftJoin('static_subscription_plan', 'subscription.plan_id', '=', 'static_subscription_plan.id')->where('business_id', Session::get('business_id'))->where('user_type', 1)->select('static_subscription_plan.plan_name as planName', 'subscription.*')->get();
+
+        // dd($accessPermission);
         $accDetail = BusinessDetailsList::where('business_id', Session::get('business_id'))->first();
-        return view('admin.subscription.subscription', compact('accDetail'));
+        return view('admin.subscription.subscription', compact('accDetail', 'permissions', 'moduleName', 'subscriptionTable'));
     }
 
     function callExternalData()
@@ -449,23 +455,16 @@ class SettingController extends Controller
 
     public function nameupdate(Request $request)
     {
-        // dd($request->all());
-        $branch = DB::table('business_details_list')
+        $name = DB::table('business_details_list')
             ->where('id', $request->editBranchId)
             ->where('business_id', Session::get('business_id'))
             ->update(['client_name' => $request->name]);
-        // return $branch;
-        // return back();
-        // if (isset($data)) {
-        //     Alert::success('Update Weekly Holidays')->persistent(true);
-        // } else {
-        //     Alert::info('Not Update Weely Holidays')->persistent(true);
-        if ($branch) {
-            Alert::success('Update Name')->persistent(true);
+        if (isset($name)) {
+            Alert::success('', 'Your Name has been updated successfully')->persistent(true);
         } else {
-            Alert::info('Not Updated Name')->persistent(true);
+            Alert::info('', 'Your Name has not been updated')->persistent(true);
         }
-        return redirect()->route('account.settings');
+        return redirect()->back();
     }
 
     // business setting
@@ -616,6 +615,7 @@ class SettingController extends Controller
     {
         $get = DB::table('employee_personal_details')
             ->where('business_id', Session::get('business_id'))
+            ->where('employee_personal_details.active_emp', '1')
             ->when(request('branch_id'), function ($query, $branchId) {
                 return $query->where('branch_id', $branchId);
             })
@@ -628,6 +628,16 @@ class SettingController extends Controller
             ->get();
         return response()->json(['employee' => $get]);
     }
+    public function allPermissionType()
+    {
+        $get = DB::table('static_permission_type')->get();
+        return response()->json(['permission' => $get]);
+    }
+    public function allBranch()
+    {
+        $get = DB::table('branch_list')->where('business_id', Session::get('business_id'))->get();
+        return response()->json(['branch' => $get]);
+    }
     public function designationDetails(Request $request)
     {
         // return response()->json(['editDesignationResult'=>$getvalue]);
@@ -636,7 +646,6 @@ class SettingController extends Controller
     // addition functions
     public function AddBranch(Request $request)
     {
-        // dd($request->all());
         $data = [
             'business_id' => $request->session()->get('business_id'),
             'branch_id' => md5($request->session()->get('business_id') . $request->branch),
@@ -649,9 +658,9 @@ class SettingController extends Controller
         $addBranch = DB::table('branch_list')->insert($data);
 
         if ($addBranch) {
-            Alert::success('', 'Your Branch has been Created Successfully')->persistent(true);
+            Alert::success('', 'Your Branhc has been created successfully')->persistent(true);
         }
-        return redirect()->route('admin.branch');
+        return redirect()->back();
     }
 
     public function AddDepartment(Request $request)
@@ -661,27 +670,25 @@ class SettingController extends Controller
         $department->depart_name = $request->department;
         $department->status = 0;
         if ($department->save()) {
-            Alert::success('', 'Your Department has been Created Successfully')->persistent(true);
+            Alert::success('', 'Your Department has been created successfully')->persistent(true);
         }
-        return redirect()->route('admin.department');
+        return redirect()->back();
     }
     public function AddDesignation(Request $request)
     {
         $designation = new DesignationList();
         $designation->business_id = $request->session()->get('business_id');
         $designation->desig_name = $request->designation;
-        // $designation->department_id = $request->department;
-        // $designation->branch_id = $request->branch;
-
         if ($designation->save()) {
-            Alert::success('', 'Your Designation has been Created Successfully')->persistent(true);
+            Alert::success('', 'Your Designation has been created successfully')->persistent(true);
         }
-        return redirect()->route('admin.designation');
+        return redirect()->back();
     }
 
     // update Functions
     public function UpdateBranch(Request $request)
     {
+        // dd($request->all());
         $branch = DB::table('branch_list')
             ->where('id', $request->editBranchId)
             ->where('business_id', Session::get('business_id'))
@@ -693,10 +700,12 @@ class SettingController extends Controller
                 'latitude' => $request->latitudeedit,
             ]);
 
-        if ($branch) {
-            Alert::success('', 'Your Branch has been Updated Successfully')->persistent(true);
-            return redirect()->route('admin.branch');
+        if (isset($branch)) {
+            Alert::success('', 'Your Branch has been updated successfully')->persistent(true);
+        } else {
+            Alert::info('', 'Your Branch has not been updated')->persistent(true);
         }
+        return redirect()->back();
     }
     public function UpdateDepartment(Request $request)
     {
@@ -704,17 +713,16 @@ class SettingController extends Controller
             ->where('b_id', $request->session()->get('business_id'))
             ->update([
                 'b_id' => $request->session()->get('business_id'),
-                // 'branch_id' => $request->editbranch,
                 'depart_name' => $request->editdepartment,
             ]);
 
-        if ($department) {
-            Alert::success('', 'Your Department has been Updated Successfully')->persistent(true);
+        if (isset($department)) {
+            Alert::success('', 'Your Department has been updated successfully')->persistent(true);
         } else {
-            Alert::info('Not Updated Department')->persistent(true);
+            Alert::info('', 'Your Department has not been updated')->persistent(true);
         }
 
-        return redirect()->route('admin.department');
+        return redirect()->back();
     }
     public function UpdateDesignation(Request $request)
     {
@@ -722,20 +730,19 @@ class SettingController extends Controller
             ->where('business_id', $request->session()->get('business_id'))
             ->update([
                 'business_id' => $request->session()->get('business_id'),
-                // 'branch_id' => $request->editbranch,
-                // 'department_id' => $request->editdepartment,
                 'desig_name' => $request->editdesignation,
             ]);
-        if ($designation) {
-            Alert::success('', 'Your Designation has been Updated Successfully')->persistent(true);
+        if (isset($designation)) {
+            Alert::success('', 'Your Designation has been updated successfully')->persistent(true);
+        } else {
+            Alert::info('', 'Your Designation has not been updated')->persistent(true);
         }
-        return redirect()->route('admin.designation');
+        return redirect()->back();
     }
 
     // Delete Functions
     public function DeleteBranch(Request $request)
     {
-        // dd($request->all());
         $branch_id = $request->branch_id;
         $checkmat = DB::table('employee_personal_details')
             ->where('business_id', Session::get('business_id'))
@@ -744,20 +751,19 @@ class SettingController extends Controller
         if (isset($checkmat)) {
             Alert::error('', 'You cannot delete the Branch if you have an employee associated with it.')->persistent(true);
         } else {
-            $roos = DB::table('branch_list')
-                ->where('branch_id  ', $branch_id)
+            $roos = BranchList::where('business_id', Session::get('business_id'))
+                ->where('branch_id', $branch_id)
                 ->delete();
-            Alert::success('', 'Your Branch has been Deleted Successfully')->persistent(true);
+            Alert::success('', 'Your Branch has been deleted successfully')->persistent(true);
         }
-        return redirect()->route('admin.branch');
+        return redirect()->back();
     }
 
     public function DeleteDepartment($departID)
     {
         $checkmat = DB::table('employee_personal_details')
-            ->where('designation_id', '=', $departID)
+            ->where('department_id', '=', $departID)
             ->first();
-        // dd($checkmat);
         $department = DB::table('department_list')
             ->where('depart_id', $departID)
             ->first();
@@ -767,9 +773,9 @@ class SettingController extends Controller
             $roos = DB::table('department_list')
                 ->where('depart_id', $departID)
                 ->delete();
-            Alert::success('', 'Your Department has been Deleted Successfully.')->persistent(true);
+            Alert::success('', 'Your Department has been deleted successfully.')->persistent(true);
         }
-        return redirect()->route('admin.department');
+        return redirect()->back();
     }
 
     public function DeleteDesignation($id)
@@ -782,16 +788,19 @@ class SettingController extends Controller
             Alert::error('', 'You cannot delete the designation if you have an employee associated with it.')->persistent(true);
         } else {
             $designation = DesignationList::where('desig_id', $id)->delete();
-            Alert::success('', 'Your Designation has been Deleted Successfully.')->persistent(true);
+            Alert::success('', 'Your Designation has been deleted successfully.')->persistent(true);
         }
-        return redirect()->route('admin.designation');
+        return redirect()->back();
     }
 
     public function holidayPolicy()
     {
+        $accessPermission = Central_unit::AccessPermission();
+        $moduleName = $accessPermission[0];
+        $permissions = $accessPermission[1];
+        $masterEndAssignCheck = PolicyMasterEndgameMethod::where('business_id', Session::get('business_id'))->select('holiday_policy_ids_list')->get();
         $holidayPolicy = PolicyHolidayTemplate::where('business_id', Session::get('business_id'))->get();
-        // dd($holidayPolicy);
-        return view('admin.setting.business.holiday_policy.holiday_policy', compact('holidayPolicy'));
+        return view('admin.setting.business.holiday_policy.holiday_policy', compact('holidayPolicy', 'masterEndAssignCheck', 'permissions'));
     }
     public function inviteEmpl()
     {
@@ -805,39 +814,50 @@ class SettingController extends Controller
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
-
-        $Leaves = PolicySettingLeaveCategory::where('business_id', $request->session()->get('business_id'))->get();
+        $getleavepolicy = DB::table('policy_master_endgame_method')->where('business_id', Session::get('business_id'))->select('leave_policy_ids_list')->get();
+        $Leaves = PolicySettingLeaveCategory::where('business_id', session()->get('business_id'))->get();
         $leavePolicy = PolicySettingLeavePolicy::where('business_id', Session::get('business_id'))->get();
-        // dd($leavePolicy);
-        return view('admin.setting.business.leave_policy.leave_policy', compact('leavePolicy', 'Leaves', 'BranchList', 'permissions', 'moduleName'));
+        $leaveType = DB::table('static_leave_category')
+            ->where('id', '!=', '8')
+            ->where('id', '!=', '9')
+            ->get();
+        $applicableTo = DB::table('static_leave_category_applicable_to')->get();
+        return view('admin.setting.business.leave_policy.leave_policy', compact('leaveType', 'leavePolicy', 'Leaves', 'BranchList', 'permissions', 'moduleName', 'applicableTo', 'getleavepolicy'));
     }
     // aJAX JAY
     public function allLeavePolicy(Request $request)
     {
-        $send = PolicySettingLeaveCategory::where('leave_policy_id', $request->leave_policy_id)->get();
+        $send = PolicySettingLeaveCategory::join('static_leave_category', 'static_leave_category.id', '=', 'policy_setting_leave_category.category_name')
+            ->where('business_id', Session::get('business_id'))
+            ->where('leave_policy_id', $request->leave_policy_id)
+            ->select('policy_setting_leave_category.*', 'static_leave_category.name as static_category_name', 'static_leave_category.description')
+            ->get();
         return response()->json(['get' => $send]);
     }
 
     public function allHolidayPolicy(Request $request)
     {
-        $send = PolicyHolidayDetail::where('template_id', $request->leave_policy_id)->orderBy('holiday_date')->get();
+        $send = PolicyHolidayDetail::where('template_id', $request->leave_policy_id)
+            ->orderBy('holiday_date')
+            ->get();
         return response()->json(['get' => $send]);
     }
 
     // Confirm Method set in AJAX
     public function updateLeavePolicy(Request $request)
     {
-        // return response()->json(['message' => $request->all()]);
-
-        $leaveID = $request->leave_policy_id;
-        $policyName = $request->leave_name;
+        // dd($request->all());
+        // code by umesh
+        $leaveID = $request->role;
+        $policyName = $request->edit_policys;
         $bID = Session::get('business_id');
-
+        $branchID = $request->session()->get('branch_id');
+        $btnradioedit = $request->btnradioedit;
         // Delete existing records for the given leave policy and busine
+        // $check = true;
         $check = PolicySettingLeaveCategory::where('leave_policy_id', $leaveID)
             ->where('business_id', $bID)
             ->delete();
-
         // Check if records were successfully deleted
         if (isset($check)) {
             PolicySettingLeavePolicy::where('id', $leaveID)
@@ -845,147 +865,149 @@ class SettingController extends Controller
                 ->update(['policy_name' => $policyName]);
             // Assuming $request->updated_items is an array of updated items
             $updatedItems = $request->input('updated_items');
-
-            // Insert the updated items into the table
-            foreach ($updatedItems as $item) {
-                PolicySettingLeaveCategory::insert([
-                    'leave_policy_id' => $request->leave_policy_id,
-                    'business_id' => $bID,
-                    'category_name' => $item['category_name'],
-                    'days' => $item['days'],
-                    'unused_leave_rule' => $item['unused_leave_rule'],
-                    'carry_forward_limit' => $item['carry_forward_limit'],
-                    'applicable_to' => $item['applicable_to'],
-                ]);
+            $latestLeavePolicyID = $request->role; //generate policy ID run time
+            $CategoryName = $request->category_name_edit ?? 0;
+            $Days = $request->days_edit ?? 0;
+            $UnusedLeaveRule = $request->unused_leave_rule_edit ?? 0;
+            $carryForwardLimit = $request->carry_forward_limit_edit ?? 0;
+            $applicationTo = $request->applicable_to_edit ?? 0;
+            $leaveCycleMy = $request->leave_cycle_my_edit ?? 0;
+            $ms = 0;
+            $cfl = 0;
+            if ($request->category_name_edit) {
+                for ($i = 0; $i < sizeof($request->category_name_edit ?? 0); $i++) {
+                    $collectionDataSet = [
+                        'leave_policy_id' => $latestLeavePolicyID,
+                        'business_id' => $bID,
+                        'category_name' => $CategoryName[$i],
+                        'leave_cycle_monthly_yearly' => $leaveCycleMy[$i],
+                        'days' => $Days[$i],
+                        'unused_leave_rule' => $UnusedLeaveRule[$i],
+                        'carry_forward_limit' => $UnusedLeaveRule[$i] != 1 ? $carryForwardLimit[$cfl] : '0',
+                        'applicable_to' => $applicationTo[$i],
+                        'created_at' => now('Asia/Kolkata'),
+                        'updated_at' => now('Asia/Kolkata'),
+                    ];
+                    PolicySettingLeaveCategory::insert($collectionDataSet);
+                    if ($UnusedLeaveRule[$i] != 1) {
+                        $cfl++;
+                    }
+                    if ($applicationTo[$i] != 1) {
+                        $ms++;
+                    }
+                }
             }
-            return response()->json(['message' => true]);
+
+            Alert::success('', 'Your Leave policy has been updated successfully')->persistent(true);
         } else {
-            return response()->json(['message' => false]);
+            Alert::info('Not Added', 'Your Leave policy has not been pdated')->persistent(true);
         }
+        return back();
+
+
     }
 
-    // public function DeleteLeave(Request $request)
-    // {
-    //     $data = $request->state;
-    //     $leaveDelete = DB::table('setting_leave_category')
-    //         ->where('id', $data)
-    //         ->delete();
-    //     return response()->json([$leaveDelete]);
-    // }
+
     public function DeleteLeavePolicy(Request $request)
     {
-        // dd($id);
-        $deleteTemp = PolicySettingLeavePolicy::where('id', $request->poli_id)->delete();
-        $deleteLeaves = PolicySettingLeaveCategory::where('leave_policy_id', $request->poli_id)->delete();
+        $validateMethod = DB::table('policy_master_endgame_method')
+            ->where('leave_policy_ids_list', $request->poli_id)
+            ->first();
+        // dd($validateMethod->method_name);
 
-        if (isset($deleteTemp) && isset($deleteLeaves)) {
-            Alert::success('Successfully Deleted Leave-Policy ')->persistent(true);
+        if (isset($validateMethod)) {
+            Alert::error('', 'You cannot delete the policy if you have an employee associated with it.');
         } else {
-            Alert::error('Failed')->persistent(true);
+            $deleteTemp = PolicySettingLeavePolicy::where('id', $request->poli_id)->delete();
+            $deleteLeaves = PolicySettingLeaveCategory::where('leave_policy_id', $request->poli_id)->delete();
+
+            if (isset($deleteTemp) && isset($deleteLeaves)) {
+                Alert::success('', 'Your Leave policy has been deleted successfully')->persistent(true);
+            } else {
+                Alert::error('', 'Your Leave policy has not been deleted')->persistent(true);
+            }
         }
         return back();
     }
-    public function UpdateLeaveTemp(Request $request)
+    // update check master engame assign or not
+    public function UpdateCheMastEndLeavePolicy(Request $request)
     {
-        // dd($request->all());
+        $validateMethod = DB::table('policy_master_endgame_method')
+            ->where('leave_policy_ids_list', $request->leave_policy_id)
+            ->first();
+        // dd($validateMethod->method_name);
 
-        // if ($request->has('Tempid')) {
-        //     $updateTemp = DB::table('setting_leave_policy')
-        //         ->where('id', $request->Tempid)
-        //         ->update([
-        //             'policy_name' => $request->Update_policyname,
-        //             'leave_policy_cycle_monthly' => $request->btnradio,
-        //             'leave_period_from' => $request->update_leave_periodfrom,
-        //             'leave_period_to' => $request->update_leave_periodto,
-        //         ]);
-        // }
-
-        // if ($request->has('category_name')) {
-        //     foreach ($request->category_name as $key => $category) {
-        //         $leave = PolicySettingLeaveCategory::insert([
-        //             'leave_policy_id' => $request->Tempid,
-        //             'business_id' => $request->session()->get('business_id'),
-        //             'branch_id' => $request->session()->get('branch_id'),
-        //             'category_name' => $request->category_name[$key],
-        //             'days' => $request->update_days[$key],
-        //             'unused_leave_rule' => $request->update_unused_leave_rule[$key],
-        //             'carry_forward_limit' => $request->update_carry_forward_limit[$key],
-        //             'applicable_to' => $request->update_applicable_to[$key],
-        //         ]);
-        //     }
-        // }
-
-        // if ($updateTemp || $leave) {
-        //     Alert::success('Successfully Updated', '');
-        //     return back();
-        // } else {
-        //     Alert::error('Failed', '');
-        //     return back();
-        // }
+        if (isset($validateMethod)) {
+            return response()->json(['get' => '1']);
+        } else {
+            return response()->json(['get' => '2']);
+        }
+        return back();
     }
+
 
     public function leavePolicySubmit(Request $request)
     {
-        // dd($request->all());
-        // if (empty($request->category_name)) {
-        //     Alert::info('Not Added', 'Pleace Enter You Category Name, Your Leave-Policy Not Added');
-        //     return back();
-        // }
-
-        // }
-        // return back();
         $BusinessID = $request->session()->get('business_id');
         $branchID = $request->session()->get('branch_id');
+        $firstDayOfMonth = $request->leave_periodfrom . '-01';
+        $lastDayOfMonth = $request->leave_periodto . '-01';
+        $carbonFirstDay = Carbon::createFromFormat('Y-m-d', $firstDayOfMonth);
+        $carbonLastDay = Carbon::createFromFormat('Y-m-d', $lastDayOfMonth)->endOfMonth();
+        $formattedLastDay = $carbonLastDay->format('Y-m-d');
         $storeData = [
             'business_id' => $BusinessID,
-            'branch_id' => $branchID != '' ? $branchID : '',
             'policy_name' => $request->policyname,
-            'leave_policy_cycle_monthly' => $request->btnradio != 1 ? 0 : 1,
-            'leave_policy_cycle_yearly' => $request->btnradio != 2 ? 0 : 2,
-            'leave_period_from' => $request->leave_periodfrom,
-            'leave_period_to' => $request->leave_periodto,
+            'sandwich_leaves_count' => $request->btnradio != 1 ? 0 : 1,
+            'sandwich_leaves_ignore' => $request->btnradio != 2 ? 0 : 2,
+            'leave_period_from' => $carbonFirstDay,
+            'leave_period_to' => $formattedLastDay,
             'created_at' => now('Asia/Kolkata'),
             'updated_at' => now('Asia/Kolkata'),
         ];
         // dd($storeData);
-        $truechecking_id = DB::table('policy_setting_leave_policy')->insert($storeData);
-        // dd($truechecking_id);
+        if ($BusinessID != null || $branchID != null || $request->policyname != null || $request->category_name != null || $request->days != null) {
+            $truechecking_id = DB::table('policy_setting_leave_policy')->insert($storeData);
+        }
         if ($truechecking_id) {
             $latestID = PolicySettingLeavePolicy::latest()
                 ->select('id')
                 ->first();
             if (isset($latestID)) {
                 $latestLeavePolicyID = $latestID->id; //generate policy ID run time
-                // dd($latestLeavePolicyID);
-
                 $CategoryName = $request->category_name;
                 $Days = $request->days;
                 $UnusedLeaveRule = $request->unused_leave_rule;
                 $carryForwardLimit = $request->carry_forward_limit;
                 $applicationTo = $request->applicable_to;
-
+                $leaveCycleMy = $request->leave_cycle_my;
+                $ms = 0;
+                $cfl = 0;
                 for ($i = 0; $i < sizeof($request->category_name); $i++) {
-                    // dd($UnusedLeaveRule);
                     $collectionDataSet = [
                         'leave_policy_id' => $latestLeavePolicyID,
                         'business_id' => $BusinessID,
-                        'branch_id' => $branchID,
                         'category_name' => $CategoryName[$i],
+                        'leave_cycle_monthly_yearly' => $leaveCycleMy[$i],
                         'days' => $Days[$i],
                         'unused_leave_rule' => $UnusedLeaveRule[$i],
-                        'carry_forward_limit' => $carryForwardLimit[$i],
+                        'carry_forward_limit' => $UnusedLeaveRule[$i] != 1 ? $carryForwardLimit[$cfl] : '0',
                         'applicable_to' => $applicationTo[$i],
                         'created_at' => now('Asia/Kolkata'),
                         'updated_at' => now('Asia/Kolkata'),
                     ];
-                    // print_r($collectionDataSet);
-                    // dd($collectionDataSet);
                     PolicySettingLeaveCategory::insert($collectionDataSet);
+                    if ($UnusedLeaveRule[$i] != 1) {
+                        $cfl++;
+                    }
+                    if ($applicationTo[$i] != 1) {
+                        $ms++;
+                    }
                 }
             }
-            Alert::success('Added', 'Your Leave-Policy Added Successfully')->persistent(true);
+            Alert::success('', 'Your Leave policy has been added successfully')->persistent(true);
         } else {
-            Alert::info('Not Added', 'Your Leave-Policy Not Added')->persistent(true);
+            Alert::info('', 'Your Leave policy has not been added')->persistent(true);
         }
         return back();
     }
@@ -1014,15 +1036,19 @@ class SettingController extends Controller
             ->join('static_week_off_type', 'policy_weekly_holiday_list.weekend_policy', '=', 'static_week_off_type.id')
             ->select('policy_weekly_holiday_list.*', 'static_week_off_type.week_off_type_name')
             ->get();
+        // check master endgame assign or not
+        $checkMaEnAssOrNot = DB::table('policy_master_endgame_method')->where('business_id', Session::get('business_id'))->select('weekly_policy_ids_list')->get();
         $staticweekoffType = DB::table('static_week_off_type')->get();
-        // dd($data);
+        $accessPermission = Central_unit::AccessPermission();
+        $moduleName = $accessPermission[0];
+        $permissions = $accessPermission[1];
         $days = [];
 
         foreach ($data as $item) {
             $days = json_decode($item->days, true); // Assuming 'days' column contains JSON data
         }
 
-        return view('admin.setting.business.weekly_holiday.weekly_holiday', compact('data', 'days', 'staticweekoffType'));
+        return view('admin.setting.business.weekly_holiday.weekly_holiday', compact('data', 'days', 'staticweekoffType', 'checkMaEnAssOrNot', 'permissions'));
     }
     // AJAX BY JAY
     public function allWeeklyHoliday(Request $request)
@@ -1036,31 +1062,41 @@ class SettingController extends Controller
     public function createWeeklyHoliday(Request $request)
     {
         // dd($request->all());
-        $data = new PolicyWeeklyHolidayList();
-        // return back();
-        $data->business_id = Session::get('business_id');
-        $data->name = $request->templatename;
-        $data->weekend_policy = $request->selectWeekOffPolicy;
-        $data->days = json_encode($request->days);
-        if ($data->save()) {
-            Alert::success('', 'Your Week Off Policy has been Created Successfully')->persistent(true);
+        if ($request->has('templatename') && $request->has('selectWeekOffPolicy') && $request->has('days')) {
+            $data = new PolicyWeeklyHolidayList();
+            // return back();
+            $data->business_id = Session::get('business_id');
+            $data->name = $request->templatename;
+            $data->weekend_policy = $request->selectWeekOffPolicy;
+            $data->days = json_encode($request->days);
+            if ($data->save()) {
+                Alert::success('', 'Your Week off policy has been created successfully')->persistent(true);
+            } else {
+                Alert::info('', 'Your Week off policy has not been created')->persistent(true);
+            }
         } else {
-            Alert::info('Not Create Weely Holidays')->persistent(true);
+            Alert::info('', 'Your Week off policy has not been created')->persistent(true);
         }
-        return back();
+        return redirect()->back();
     }
     public function updateWeeklyHoliday(Request $request)
     {
-        $data = DB::table('policy_weekly_holiday_list')
-            ->where('id', $request->id)
-            ->where('business_id', Session::get('business_id'))
-            ->update(['name' => $request->edit_weekname, 'weekend_policy' => $request->selectWeekOffPolicyUpdate, 'days' => json_encode($request->holidays)]);
-        if (isset($data)) {
-            Alert::success('', 'Your Week Off Policy has been Updated Successfully')->persistent(true);
+        // dd($request->all());
+        if ($request->has('id') && $request->has('edit_weekname') && $request->has('selectWeekOffPolicyUpdate') && $request->has('holidays')) {
+
+            $data = DB::table('policy_weekly_holiday_list')
+                ->where('id', $request->id)
+                ->where('business_id', Session::get('business_id'))
+                ->update(['name' => $request->edit_weekname, 'weekend_policy' => $request->selectWeekOffPolicyUpdate, 'days' => json_encode($request->holidays)]);
+            if (isset($data)) {
+                Alert::success('', 'Your Week off policy has been updated successfully')->persistent(true);
+            } else {
+                Alert::info('', 'Your Week off policy has not updated')->persistent(true);
+            }
         } else {
-            Alert::info('', 'Your Week Off Policy has not been Updated Successfully')->persistent(true);
+            Alert::info('', 'Your Week off policy has not updated')->persistent(true);
         }
-        return back();
+        return redirect()->back();
     }
     public function deleteWeeklyHoliday(Request $request)
     {
@@ -1076,11 +1112,11 @@ class SettingController extends Controller
                 ->where('id', $request->weekly_policy_id)
                 ->where('business_id', Session::get('business_id'))
                 ->delete();
-            Alert::success('', 'Your Policy has been Deleted Successfully')->persistent(true);
+            Alert::success('', 'Your Week off policy has been deleted successfully')->persistent(true);
         } else {
             Alert::error('', 'You cannot delete the policy if you have an employee associated with it.')->persistent(true);
         }
-        return back();
+        return redirect()->back();
     }
     // end weekly holiday
 
@@ -1104,19 +1140,11 @@ class SettingController extends Controller
 
         $Modes = PolicyAttendanceMode::where('business_id', Session()->get('business_id'))->first();
         $List = RulesManagement::ALLPolicyTemplates();
-
         $FinalEndGameRule = $List[0];
+        // dd($List);
 
         $AttendanceData = RulesManagement::AttendaceMethodTypeCounter();
 
-        // $BusinessDetails = $List[1];
-        // $BranchList = $List[2];
-        // $LeavePolicy = $List[3];
-        // $HolidayPolicy = $List[4];
-        // $weeklyPolicy = $List[5];
-        // $attendanceModePolicy = $List[6];
-        // $attendanceShiftPolicy = $List[7];
-        // $attendanceTrackInOut = $List[8];
         return view('admin.setting.attendance.attendance', compact('Modes', 'Track', 'FinalEndGameRule', 'permissions', 'moduleName', 'AttendanceData'));
     }
 
@@ -1129,23 +1157,14 @@ class SettingController extends Controller
         $List = RulesManagement::ALLPolicyTemplates();
 
         $FinalEndGameRule = $List[0];
-        // $BusinessDetails = $List[1];
-        // $BranchList = $List[2];
-        // $LeavePolicy = $List[3];
-        // $HolidayPolicy = $List[4];
-        // $weeklyPolicy = $List[5];
-        // $attendanceModePolicy = $List[6];
-        // $attendanceShiftPolicy = $List[7];
-        // $attendanceTrackInOut = $List[8];
+
         $EmployeeInfomation = $List[9];
 
         $BusinessDetails = DB::table('business_details_list')
             ->where('business_id', Session::get('business_id'))
             ->first();
         $AttMode = PolicyAttendanceMode::where('business_id', Session::get('business_id'))->first();
-        // $Temp = DB::table('attendance_access')
-        //     ->where('business_id', Session::get('business_id'))
-        //     ->get();
+
 
         return view('admin.setting.attendance.attendance_acccess', compact('permissions', 'moduleName', 'FinalEndGameRule', 'BusinessDetails', 'AttMode', 'EmployeeInfomation'));
     }
@@ -1189,11 +1208,9 @@ class SettingController extends Controller
     public function ActiveMode()
     {
         $accessPermission = Central_unit::AccessPermission();
-
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
         $List = RulesManagement::ALLPolicyTemplates();
-
         $FinalEndGameRule = $List[0];
         $BusinessDetails = $List[1];
         $BranchList = $List[2];
@@ -1203,28 +1220,14 @@ class SettingController extends Controller
         $attendanceModePolicy = $List[6];
         $attendanceShiftPolicy = $List[7];
         $attendanceTrackInOut = $List[8];
-        // dd($attendanceTrackInOut)
-        // $attendaceShift = DB::table('policy_attendance_shift_settings')->get();
-        // alert()->success('Success Title', 'Success Message');
 
-        // alert()->success('Success Title', 'Success Message');
-        // alert()->success('Success Title', 'Success Message');
-        // Alert::success('Success', 'Updated Rule Method Successfully');
-
-        // dd($FinalEndGameRule);
         $root = compact('moduleName', 'permissions', 'BusinessDetails', 'FinalEndGameRule', 'BranchList', 'LeavePolicy', 'HolidayPolicy', 'weeklyPolicy', 'attendanceModePolicy', 'attendanceShiftPolicy', 'attendanceTrackInOut');
         return view('admin.setting.active_rules.active_end_game', $root);
     }
     // End Games Rule Submit form
     public function FinalStartRuleEndGame(Request $request)
     {
-        // $checking = DB::table('policy_master_endgame_method')
-        //     ->where('business_id', $request->b_id)
-        //     ->first();
-        // if (isset($checking)) {
-        //     Alert::error('Failed Final Rules Already Created!');
-        // } else {
-        // 'branch_id' => json_encode($request->input('branhcid')),
+
         $data = [
             'business_id' => $request->b_id,
             'method_name' => $request->methodname,
@@ -1236,22 +1239,16 @@ class SettingController extends Controller
             'holiday_policy_ids_list' => $request->holidaypolicy, // json_encode($request->input('holidaypolicy')),
             'weekly_policy_ids_list' => $request->weeklypolicy, // json_encode($request->input('weeklypolicy')),
         ];
-        //  'attendance_mode_list' => json_encode($request->input("attendancemode")),
-        //'track_in_out_ids_list' => json_encode($request->input("trackpunch"))
+
 
         $load = PolicyMasterEndgameMethod::insert($data);
         if (isset($load)) {
-            Alert::success('', 'Your Setup has been created Successfully')->persistent(true);
+            Alert::success('', 'Your Setup has been created successfully')->persistent(true);
         } else {
-            Alert::error('', 'Your Setup is not created !')->persistent(true);
+            Alert::error('', 'Your Setup has been not created')->persistent(true);
         }
-        // }
 
-        // 'depart_id	' => json_decode($request->input("depart_id")),
-        // 'automation_rules_list' => json_encode($request->input("automationrules")),
-
-        // return self::ActiveMode();
-        return redirect()->to('admin/attendance/active_mode_set');
+        return redirect()->back();
         // dd($leavePolicyIds);
     }
 
@@ -1264,26 +1261,17 @@ class SettingController extends Controller
     // edit_master_rule
     public function editMasterRules(Request $request)
     {
-        // Start a database transaction
-        // DB::beginTransaction();
-        // try {
-        //     // Find and delete the existing record based on business_id
-        //     PolicyMasterEndgameMethod::where('business_id', $request->edit_bid)
-        //         ->where('id', $request->edit_id)
-        //         ->delete();
 
-        //     // Create an array with the new data
-        //     // 'branch_id' => json_encode($request->input('editbranhcid')),
         $data = [
             'business_id' => $request->edit_bid,
-            'method_switch' => 1, //($request->switch != 0) ? $request->switch : 0
+            'method_switch' => 0, //($request->switch != 0) ? $request->switch : 0
             'method_name' => $request->edit_mname,
             'policy_preference' => $request->editpolicypreference,
             'level_type' => 1,
             'leave_policy_ids_list' => $request->editleavepolicy, // json_encode($request->input('editleavepolicy')),
             'holiday_policy_ids_list' => $request->editholidaypolicy, //json_encode($request->input('editholidaypolicy')),
             'weekly_policy_ids_list' => $request->editweeklypolicy, // json_encode($request->input('editweeklypolicy')),
-            'shift_settings_ids_list' => $request->editshiftsetting // json_encode($request->input('editshiftsetting')),
+            'shift_settings_ids_list' => $request->editshiftsetting, // json_encode($request->input('editshiftsetting')),
         ];
 
         //     // Insert the new data into the database
@@ -1291,37 +1279,151 @@ class SettingController extends Controller
         //     // Commit the transaction if all operations were successful
         //     DB::commit();
         if ($load) {
-            Alert::success('', 'Your Setup has been Updated Successfully')->persistent(true);
+            Alert::success('', 'Your Setup has been updated successfully')->persistent(true);
         } else {
-            Alert::info('', 'Your Setup is not updated !')->persistent(true);
+            Alert::info('', 'Your Setup has been not updated')->persistent(true);
         }
-        //     Alert::success('Success', 'Your Final Rules Activation is Updated')->persistent(true);
-        //     // return redirect()->route('attendance.activeMode');
-        // } catch (\Exception $e) {
-        //     // Handle any exceptions and rollback the transaction if an error occurs
-        //     DB::rollback();
-        //     // Handle the error, log it, or return an error response
-        // }
-        // dd($request->all());
-        return redirect()->to('admin/attendance/active_mode_set');
+
+        return redirect()->back();
         // return self::ActiveMode();
     }
 
     // mode_master_rule switch ON/OFF
+    // long time set in JAYANT
     public function modeMasterRules(Request $request)
     {
-        $loaded = PolicyMasterEndgameMethod::where('business_id', $request->b_id)
-            ->where('id', $request->e_id)
-            ->update(['method_switch' => $request->checked]);
+        $activeCheck = $request->checked; //1 or  0
+        $masterId = $request->e_id;
+        $BusinessID = $request->b_id;
+        $holidayPolicyID = $request->holiday_policy_id;
+        $weeklyPolicyID = $request->weekly_policy_id;
 
-        // $loaded = PolicyMasterEndgameMethod::where(['business_id' => $request->b_id, 'id' => $request->e_id])
-        //     ->update(['method_switch' => 1]);
-        // PolicyMasterEndgameMethod::where('business_id', $request->b_id)
-        //     ->where('id', '!=', $request->e_id)
-        //     ->update(['method_switch' => 0]);
+        // $mode = AttendanceHolidayList::where('business_id', $BusinessID)->delete();
+        $loaded = PolicyMasterEndgameMethod::where('business_id', $BusinessID)
+            ->where('id', $masterId)
+            ->update(['method_switch' => $activeCheck]);
 
-        // EmployeePersonalDetail::where('business_id', $request->b_id)
-        //     ->update(['master_endgame_id' => $request->e_id]);
+
+        if ($activeCheck != 0) {
+            // Return the filtered "Monday" entries
+            $policyHoliday = PolicyHolidayTemplate::where('business_id', $BusinessID)
+                ->where('temp_id', $holidayPolicyID)
+                ->where('holiday_type_id', 1)
+                ->first();
+            $sd = AttendanceHolidayList::where('business_id', $BusinessID)
+                ->where('master_end_method_id', $masterId)
+                ->where('holiday_package_id', $holidayPolicyID)
+                ->where('holiday_type_id', 1)
+                ->first();
+            if (!isset($sd)) {
+                $policyHolidayItems = PolicyHolidayDetail::where('business_id', $BusinessID)
+                    ->where('template_id', $policyHoliday->temp_id)
+                    ->get();
+                $dataToInsert = $policyHolidayItems
+                    ->map(function ($item) use ($policyHoliday, $holidayPolicyID, $masterId) {
+                        return [
+                            'process_check' => 0,
+                            'master_end_method_id' => $masterId,
+                            'from_start' => $policyHoliday->temp_from,
+                            'to_end' => $policyHoliday->temp_to,
+                            'holiday_type_id' => 1, //type of cycle in mana. type of holiday
+                            'holiday_package_id' => $holidayPolicyID,
+                            'business_id' => $item->business_id,
+                            'name' => $item->holiday_name,
+                            'day' => $item->day,
+                            'holiday_date' => $item->holiday_date,
+                        ];
+                    })
+                    ->toArray();
+                AttendanceHolidayList::where('attendance_holiday_list', '<>', 1)->where('business_id', Session::get('business_id'))->insert($dataToInsert);
+
+                $delete = AttendanceHolidayList::where('attendance_holiday_list', 0)->where('business_id', Session::get('business_id'))->get();
+                if ($delete) {
+                    $delete->delete();
+                }
+            }
+            $sd2 = AttendanceHolidayList::where('business_id', $BusinessID)
+                ->where('master_end_method_id', $masterId)
+                ->where('holiday_package_id', $weeklyPolicyID)
+                ->where('holiday_type_id', 2)
+                ->first();
+            if (!isset($sd2)) {
+                $getweeklyID = PolicyWeeklyHolidayList::where('business_id', $BusinessID)
+                    ->where('id', $weeklyPolicyID)
+                    ->select('days', 'weekend_policy')
+                    ->first();
+                $year = Carbon::now()->year; // Get the current year
+                $mondaysInYear = []; //currentyearFiltering process
+                $dataToInsert = []; //insert new data store
+
+                // Loop through each day of the year
+
+                for ($month = 1; $month <= 12; $month++) {
+                    $totalDaysInMonth = Carbon::createFromDate($year, $month, 1)->daysInMonth;
+                    for ($day = 1; $day <= $totalDaysInMonth; $day++) {
+                        // Loop through all possible days
+                        // Check if the date is valid and if it's a Monday
+                        if (checkdate($month, $day, $year) && Carbon::createFromDate($year, $month, $day)) {
+                            $formattedDate = [
+                                'day' => Carbon::createFromDate($year, $month, $day)->format('l'),
+                                'weekly_no' => Carbon::createFromDate($year, $month, $day)->format('N'),
+                                'date' => Carbon::createFromDate($year, $month, $day)->format('d-m-Y'),
+                                'number' => intval((Carbon::createFromDate($year, $month, $day)->format('d') - 1) / 7),
+                            ];
+                            $mondaysInYear[] = $formattedDate; // Store day name and date together
+                        }
+                    }
+                }
+
+                $collectionArray = json_decode($getweeklyID->days); //['Sunday','studart']
+                $methodApply = $getweeklyID->weekend_policy;
+
+                $filteredDays = array_filter($mondaysInYear, function ($item) use ($collectionArray, $methodApply) {
+                    if ($methodApply == 1) {
+                        if ($item['weekly_no'] == 6 || $item['weekly_no'] == 7) {
+                            // Filter Saturdays and Sundays (1: all Saturday and Sunday)
+                            return in_array($item['day'], $collectionArray);
+                        }
+                    } elseif ($methodApply == 2) {
+                        if ($item['weekly_no'] == 7) {
+                            // Filter only Sundays (2: Sunday-off)
+                            return in_array($item['day'], $collectionArray);
+                        }
+                    } elseif ($methodApply == 3) {
+                        if (($item['weekly_no'] == 6 && $item['number'] == 1) || $item['weekly_no'] == 7 || ($item['weekly_no'] == 6 && $item['number'] == 3) || $item['weekly_no'] == 7) {
+                            // Filter 2nd or 4th Saturday and all Sundays (3: 2nd or 4th Saturday also set all Sundays)
+                            return in_array($item['day'], $collectionArray);
+                        }
+                        // Other array list data loaded
+                    } else {
+                        return in_array($item['day'], $collectionArray);
+                    }
+                });
+
+                foreach ($filteredDays as $filteredDay) {
+                    $dataToInsert[] = [
+                        'process_check' => 0,
+                        'master_end_method_id' => $masterId,
+                        'from_start' => $policyHoliday->temp_from,
+                        'to_end' => $policyHoliday->temp_to,
+                        'holiday_type_id' => 2,
+                        'holiday_package_id' => $weeklyPolicyID,
+                        'business_id' => $BusinessID,
+                        'name' => 'Weekly Off', // Replace with the appropriate holiday name
+                        'day' => $filteredDay['day'],
+                        'holiday_date' => Carbon::createFromFormat('d-m-Y', $filteredDay['date'])->toDateString(), // Convert date format if needed
+                    ];
+                    // Insert the prepared data into the AttendanceHolidayList table
+                }
+                AttendanceHolidayList::where('attendance_holiday_list', '<>', 1)->where('business_id', Session::get('business_id'))->insert($dataToInsert);
+
+                $delete = AttendanceHolidayList::where('attendance_holiday_list', 0)->where('business_id', Session::get('business_id'))->get();
+                if ($delete) {
+                    $delete->delete();
+                }
+            }
+        }
+
         return response()->json($request->all());
     }
 
@@ -1341,17 +1443,14 @@ class SettingController extends Controller
             $load = PolicyMasterEndgameMethod::where('business_id', $request->bid)
                 ->where('id', $PID)
                 ->delete();
-            Alert::success('', 'You Setup has been deleted Successfully')->persistent(true);
+            Alert::success('', 'You setup has been deleted successfully')->persistent(true);
         } else {
             // Failed Final Rules Not Deleted
             Alert::error('', 'You cannot delete the setup if you have an employee associated with it.')->persistent(true);
         }
-        // Alert::success('Success Title', 'Success Message')->persistent(true);
-        // return redirect('admin/attendance/active_mode_set')->with('success', 'Task Created Successfully!');
-        // return self::ActiveMode();
-        return redirect()->to('admin/attendance/active_mode_set');
-        // return redirect()->to('');
-        // return url('admin/attendance/active_mode_set');
+
+        return redirect()->back();
+
     }
 
     // automation rule
@@ -1385,7 +1484,6 @@ class SettingController extends Controller
 
     public function setAutomationRule(Request $request)
     {
-        // dd($request->all());
 
         if ($request->dataLateEntry) {
             if ($request->dataLateEntry == 'true') {
@@ -1499,9 +1597,7 @@ class SettingController extends Controller
         $splitedMissPunchOccurenceHour = explode(':', $request->missPunchOccurenceHour);
         $splitedGatePassOccurenceHour = explode(':', $request->gatePassOccurenceHour);
 
-        // dd($splitedMaxOverTime);
 
-        // isset($splitedLateEntryMarkHalfDayMinutes[1]) ? dd($splitedLateEntryMarkHalfDayMinutes[1]) : dd('0');
 
         if ($request->lateEntry == 'on') {
             $lateEntryData = DB::table('policy_atten_rule_late_entry')
@@ -1559,7 +1655,7 @@ class SettingController extends Controller
                     'occurance_is' => $request->earlyExitSelectOccurence,
                     'occurance_count' => $request->earlyExitOccurenceCount,
                     'occurance_hr' => isset($request->earlyExitOccurenceHour) ? $splitedEarlyExitOccurenceHour[0] : 0,
-                    'occurance_min' => isset($request->earlyExitOccurenceHour) ? $splitedEarlyExitOccurenceHour[1] : 1,
+                    'occurance_min' => isset($request->earlyExitOccurenceHour) ? $splitedEarlyExitOccurenceHour[1] : 0,
                     'absent_is' => $request->earlyExitSelectAbsent,
                     'mark_half_day_hr' => isset($request->earlyExitBy) ? $splitedEarlyExitBy[0] : 0,
                     'mark_half_day_min' => isset($request->earlyExitBy) ? $splitedEarlyExitBy[1] : 0,
@@ -1577,7 +1673,7 @@ class SettingController extends Controller
                         'occurance_is' => $request->earlyExitSelectOccurence,
                         'occurance_count' => $request->earlyExitOccurenceCount,
                         'occurance_hr' => isset($request->earlyExitOccurenceHour) ? $splitedEarlyExitOccurenceHour[0] : 0,
-                        'occurance_min' => isset($request->earlyExitOccurenceHour) ? $splitedEarlyExitOccurenceHour[1] : 1,
+                        'occurance_min' => isset($request->earlyExitOccurenceHour) ? $splitedEarlyExitOccurenceHour[1] : 0,
                         'absent_is' => $request->earlyExitSelectAbsent,
                         'mark_half_day_hr' => isset($request->earlyExitBy) ? $splitedEarlyExitBy[0] : 0,
                         'mark_half_day_min' => isset($request->earlyExitBy) ? $splitedEarlyExitBy[1] : 0,
@@ -1743,6 +1839,11 @@ class SettingController extends Controller
             }
         }
 
+        if (($updateGatePassData ?? false) || ($updateMissPunchData ?? false) || ($updateBreakData ?? false) || ($updateOvertimeData ?? false) || ($updateEarlyExitData ?? false) || ($updateLateEntryData ?? false)) {
+            Alert::success('', 'Your Automation rule has been created successfully');
+        } else {
+            Alert::warning('', 'Your Automation rule is not updated');
+        }
         return back();
     }
 
@@ -1790,15 +1891,18 @@ class SettingController extends Controller
 
     public function notice(Request $request)
     {
+        $accessPermission = Central_unit::AccessPermission();
+        $moduleName = $accessPermission[0];
+        $permissions = $accessPermission[1];
         $Notice = DB::table('admin_notices')
             ->where('business_id', $request->session()->get('business_id'))
             ->get();
-        // dd($Notice);
-        return view('admin.setting.business.notice.notice', compact('Notice'));
+        return view('admin.setting.business.notice.notice', compact('Notice', 'permissions'));
     }
+
+
     public function createNotice(Request $request)
     {
-        // dd($request->all());
         // admin_notices
         $validatedData = $request->validate([
             'image' => 'required',
@@ -1822,10 +1926,10 @@ class SettingController extends Controller
                 'branch_id' => $request->session()->get('branch_id'),
             ]);
 
-            if ($notice) {
-                Alert::success('Successfully Added !')->persistent(true);
+            if (isset($notice)) {
+                Alert::success('', 'Your Notice has been created successfully')->persistent(true);
             } else {
-                Alert::error('Failed')->persistent(true);
+                Alert::error('', 'Your Notice has not been created')->persistent(true);
             }
         }
 
@@ -1859,14 +1963,13 @@ class SettingController extends Controller
                 ->delete();
 
             if ($deleteNotice && $deleteFile) {
-                Alert::success('Successfully Deleted')->persistent(true);
+                Alert::success('', 'Your Notice has been deleted successfully')->persistent(true);
             } else {
-                Alert::error('Deletion Failed')->persistent(true);
+                Alert::error('', 'Your Notice has not been deleted')->persistent(true);
             }
         } else {
             Alert::error('This data is already deleted')->persistent(true);
         }
-
-        return back();
+        return redirect()->back();
     }
 }

@@ -33,30 +33,31 @@ use Illuminate\Database\Eloquent\Model;
 class RequestLeaveList extends Model
 {
 	protected $table = 'request_leave_list';
-
-	// protected $casts = [
-	// 	'leave_type' => 'bool',
-	// 	'leave_category' => 'bool',
-	// 	'shift_type' => 'bool',
-	// 	'from_date' => 'datetime',
-	// 	'to_date' => 'datetime',
-	// 	'days' => 'int',
-	// 	'status' => 'bool'
-	// ];
-
-	// protected $fillable = [
-	// 	'business_id',
-	// 	'emp_id',
-	// 'runtime_cycle_update',
-	// 	'emp_mobile_no',
-	// 	'leave_type',
-	// 	'leave_category',
-	// 	'shift_type',
-	// 	'from_date',
-	// 	'to_date',
-	// 	'days',
-	// 	'reason',
-	// 	'remark',
-	// 	'status'
-	// ];
+	protected $primary_key = 'id';
+	protected $business_id = 'business_id';
+	protected $fillable = [
+		'business_id',
+		'emp_id',
+		'leave_type',
+		'leave_category',
+		'shift_type',
+		'from_date',
+		'to_date',
+		'days',
+		'reason',
+		'forward_by_role_id',
+		'forward_by_status',
+		'final_level_role_id',
+		'final_status',
+		'process_complete',
+		'leave_remaining',
+		'leave_summary_debit_value',
+		'leave_summary_unpaid_value	',
+		'apply_date'
+	];
+	protected $casts = [
+		'leave_remaining' => 'float',
+		'leave_summary_debit_value' => 'float',
+		'leave_summary_unpaid_value' => 'float'
+	];
 }

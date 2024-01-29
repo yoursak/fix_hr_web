@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Resources\Api\UserSideResponse;
 
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -9,8 +10,8 @@ class LeaveCategoryResources extends JsonResource
     {
         return [
             'id' => $this->id ?? $this->id,
-            'category_name' => $this->category_name ?? '',
+            'category_name' => $this->name ?? '',
+            'disabled' => $this->disabled ?? 0
         ];
     }
 }
-?>

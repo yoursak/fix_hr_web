@@ -34,20 +34,7 @@ use Illuminate\Database\Eloquent\Model;
 class PolicyAttendanceMode extends Model
 {
 	protected $table = 'policy_attendance_mode';
-
-	// protected $casts = [
-	// 	'office_auto' => 'bool',
-	// 	'office_manual' => 'bool',
-	// 	'office_qr' => 'bool',
-	// 	'office_face_id' => 'bool',
-	// 	'office_selfie' => 'bool',
-	// 	'outdoor_auto' => 'bool',
-	// 	'outdoor_manual' => 'bool',
-	// 	'outdoor_selfie' => 'bool',
-	// 	'wfh_auto' => 'bool',
-	// 	'wfh_manual' => 'bool',
-	// 	'wfh_selfie' => 'bool'
-	// ];
+	protected $primary_id = 'id';
 
 	protected $fillable = [
 		'business_id',

@@ -9,31 +9,76 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\employee;
 use App\Mail\AuthMailer;
 use App\Models\LoginEmployee;
+use App\Models\EmployeePersonalDetail;
 use Carbon\Carbon;
 // use App\Models\employee\LoginEmployee;
 use App\Http\Resources\Api\UserSideResponse\EmployeeLoginResource;
 use App\Helpers\ReturnHelpers;
 use App\Helpers\MasterRulesManagement\RulesManagement;
-
+use App\Http\Resources\Api\UserSideResponse\MultipleLogin;
+use Symfony\Component\DomCrawler\Crawler;
+use Illuminate\Support\Facades\Http;
 
 class EmployeeLoginApiController extends Controller
 {
     public function login(Request $request)
     {
-        $admin = LoginEmployee::where('phone', $request->phone)->first();
-        // return $admin;
-        // dd($chckRules);
-        if ($admin) {
-            $rulesMangement = new RulesManagement();
-            $checkRules = $rulesMangement->ALLPolicyTemplatesByIDCall($admin->business_id);
-            
-            // $request = DB::table('login_employee')->where('id',$admin->id)->all();
-            // return $request;
-            // return response()->json(['result'=>["EmployeeDetail" =>[$admin],"MasterRule" => $checkRules[0], "AttendanceMode" => $checkRules[6]], 'status' => true]);
-            // , [$checkRules[0], $checkRules[6]
-            return ReturnHelpers::jsonApiReturn(EmployeeLoginResource::collection([DB::table('login_employee')->where('emp_id', $admin->emp_id)->first()]));
+        $phoneno = $request->phone;
+        $otp = mt_rand(100000, 999999);
+        $encodedOTP = urlencode($otp);
+        $app = "https://fixhr.app";
+        $message = "Your One-Time Password (OTP) is {$encodedOTP}. Please enter this code to proceed. Thanks {$app} NSL LIFE";
+
+        $url = "https://mobicomm.dove-sms.com/submitsms.jsp?user=KesarE&key=8360975400XX&senderid=NSLSMS&mobile={$phoneno}&message=" . urlencode($message) . "&accusage=6";
+
+        $response = Http::withoutVerifying()->get($url);
+
+        // return  ReturnHelpers::jsonApiReturn(EmployeeLoginResource::collection([DB::table('login_employee')->where('emp_id', $admin->emp_id)->first()]), 200);
+        $admin = LoginEmployee::where('phone', $phoneno)->first();
+        if ($admin && $response->successful()) {
+
+            if ($admin) {
+                $updateset = LoginEmployee::where('phone', $admin->phone)->update([
+                    'otp' => $otp,
+                    'otp_created_at' => Carbon::now(),
+                ]);
+                return response()->json(['result' => EmployeeLoginResource::collection([DB::table('login_employee')->where('emp_id', $admin->emp_id)->first()]), 'message' => 'OTP has been Sent Successfully', 'status' => true, 'case' => 1], 200);
+            } else {
+                return response()->json(['result' => [], 'message' => 'You are Unauthorized to Login', 'status' => true, 'case' => 2], 200);
+            }
+        } else {
+            return response()->json(['result' => [], 'message' => 'Server Not Found ! Please try after some Time.', 'status' => false, 'case' => 3], 404);
         }
-        return response()->json(['result' => [], 'status' => false], 404);
+    }
+
+    public function VerifiedOtp(Request $request)
+    {
+        $phoneno = $request->phone;
+        $Otp = $request->otp;
+        $fcmToken = $request->fcm_token;
+        $verify = LoginEmployee::where('phone', $phoneno)->first();
+
+        if ($verify) {
+            $otpCreationTime = Carbon::parse($verify->otp_created_at);
+            $expirationTime = $otpCreationTime->addMinutes(10);
+
+            if (Carbon::now()->lt($expirationTime)) {
+                if ($verify->otp === $Otp) {
+                    LoginEmployee::where('phone', $phoneno)->update([
+                        'otp' => null,
+                        'otp_created_at' => null,
+                        'notification_key' => $fcmToken
+                    ]);
+                    return response()->json(['result' => LoginEmployee::where('phone', $phoneno)->select('emp_id', 'business_id', 'email', 'phone')->first(), 'status' => true, 'case' => 1], 200); // ReturnHelpers::jsonApiReturn([EmployeeLoginResource::collection(['Employee_login' => LoginEmployee::find($verify->id)])->all(), 'status' => true, 'case' => 1], 200);
+                } else {
+                    return response()->json(['result' => 'Incorrect OTP', 'status' => false, 'case' => 2], 200);
+                }
+            } else {
+                return response()->json(['result' => 'OTP has expired.', 'status' => false, 'case' => 3], 200);
+            }
+        } else {
+            return response()->json(['result' => 'Invalid OTP', 'status' => false, 'case' => 4], 404);
+        }
     }
 
 
@@ -66,95 +111,119 @@ class EmployeeLoginApiController extends Controller
         }
         return response()->json(['result' => [], 'status' => false]);
     }
+
+    public function getMultipleLogin(Request $request)
+    {
+        $userPhoneNo = $request->phone;
+        $checked = EmployeePersonalDetail::where('emp_mobile_number', $userPhoneNo)->get();
+
+        if (!empty($checked)) {
+
+            return response()->json([
+                'result' => MultipleLogin::collection($checked),
+                'case' => 1,
+                'status' => true,
+                'message' => 'found multiple account this number',
+            ], 200);
+        } else {
+
+            return response()->json([
+                'result' => [],
+                'case' => 2,
+                'status' => false,
+                'message' => 'Not Multiple Account ',
+            ], 200);
+        }
+    }
 }
 //****************************************************************************************************************
 //****************************************Email Login Check with otp*********************************************
 //****************************************************************************************************************
 
- // public function login1(Request $request)
-    // {
-    //     $admin = LoginEmployee::where('email', $request->email)->first();
-    //     $otp = rand(100000, 999999); // Ensure OTP is generated as a six-digit number
-    //     if ($admin) {
-    //         $details = [
-    //             'name' => $admin->name,
-    //             'title' => 'Mail from fixingdots.com ',
-    //             'body' => 'Your FixHR Admin Login one time PIN is: ' . "$otp",
-    //         ];
-    //         $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
-    //         if ($sendMail) {
-    //             $updateset = LoginEmployee::where('email', $request->email)->update([
-    //                 'otp' => $otp,
-    //                 'otp_created_at' => Carbon::now(), // Store the OTP creation time
-    //             ]);
+// public function login1(Request $request)
+// {
+//     $admin = LoginEmployee::where('email', $request->email)->first();
+//     $otp = rand(100000, 999999); // Ensure OTP is generated as a six-digit number
+//     if ($admin) {
+//         $details = [
+//             'name' => $admin->name,
+//             'title' => 'Mail from fixingdots.com ',
+//             'body' => 'Your FixHR Admin Login one time PIN is: ' . "$otp",
+//         ];
+//         $sendMail = Mail::to($request->email)->send(new AuthMailer($details));
+//         if ($sendMail) {
+//             $updateset = LoginEmployee::where('email', $request->email)->update([
+//                 'otp' => $otp,
+//                 'otp_created_at' => Carbon::now(), // Store the OTP creation time
+//             ]);
 
-    //             if ($updateset) {
-    //                 $adminroot = LoginEmployee::where('email', $request->email)->first();
-    //                 // return $adminroot;   
+//             if ($updateset) {
+//                 $adminroot = LoginEmployee::where('email', $request->email)->first();
+//                 // return $adminroot;   
 
-    //                 // Store admin information in the session
-    //                 session(['admin' => $adminroot]);
-    //                 // return true;
-    //             return ReturnHelpers::jsonApiReturn(EmployeeLoginResource::collection([LoginEmployee::find($adminroot->id)])->all());
-
-
-    //             }
-    //         }
-    //     }
-    // }
+//                 // Store admin information in the session
+//                 session(['admin' => $adminroot]);
+//                 // return true;
+//             return ReturnHelpers::jsonApiReturn(EmployeeLoginResource::collection([LoginEmployee::find($adminroot->id)])->all());
 
 
-    // public function VerifiedOtp(Request $request)
-    // {
-    //     $admin = LoginEmployee::where('email', $request->email)->first();
+//             }
+//         }
+//     }
+// }
 
-    //     if ($admin) {
-    //         $otpCreationTime = Carbon::parse($admin->otp_created_at);
-    //         $expirationTime = $otpCreationTime->addMinutes(5);
 
-    //         if (Carbon::now()->lt($expirationTime)) {
-    //             if ($admin->otp === $request->otp) {
-    //                 // Reset the OTP and its creation time to null
-    //                 LoginEmployee::where('email', $request->email)->update([
-    //                     'otp' => null,
-    //                     'otp_created_at' => null,
-    //                     'is_verified' => null,
-    //                 ]);
-    //                 return ReturnHelpers::jsonApiReturn(EmployeeLoginResource::collection(['Employee_login' =>LoginEmployee::find($admin->id)])->all());
+// public function VerifiedOtp(Request $request)
+// {
+//     $admin = LoginEmployee::where('email', $request->email)->first();
 
-    //                 // return response()->json(['Admin_login' => $admin]);
-    //             } else {
-    //                 return response()->json(['Admin_login' => 'Incorrect OTP']);
-    //             }
-    //         } else {
-    //             return response()->json(['Admin_login' => 'OTP has expired.']);
-    //         }
-    //     } else {
-    //         return response()->json(['Admin_login' => 'Invalid OTP']);
-    //     }
-    //*********************************************************************************************************************************
+//     if ($admin) {
+//         $otpCreationTime = Carbon::parse($admin->otp_created_at);
+//         $expirationTime = $otpCreationTime->addMinutes(5);
 
-    // public function index()
-    // {
-    //     //
-    // }
+//         if (Carbon::now()->lt($expirationTime)) {
+//             if ($admin->otp === $request->otp) {
+//                 // Reset the OTP and its creation time to null
+//                 LoginEmployee::where('email', $request->email)->update([
+//                     'otp' => null,
+//                     'otp_created_at' => null,
+//                     'is_verified' => null,
+//                 ]);
+//                 return ReturnHelpers::jsonApiReturn(EmployeeLoginResource::collection(['Employee_login' =>LoginEmployee::find($admin->id)])->all());
 
-    // public function store(Request $request)
-    // {
-    //     //
-    // }
+//                 // return response()->json(['Admin_login' => $admin]);
+//             } else {
+//                 return response()->json(['Admin_login' => 'Incorrect OTP']);
+//             }
+//         } else {
+//             return response()->json(['Admin_login' => 'OTP has expired.']);
+//         }
+//     } else {
+//         return response()->json(['Admin_login' => 'Invalid OTP']);
+//     }
+//*********************************************************************************************************************************
 
-    // public function show($id)
-    // {
-    //     //
-    // }
+// public function index()
+// {
+//     //
+// }
 
-    // public function update(Request $request, $id)
-    // {
-    //     //
-    // }
+// public function store(Request $request)
+// {
+//     //
+// }
 
-    // public function destroy($id)
-    // {
-    //     //
-    // }
+// public function show($id)
+// {
+//     //
+// }
+
+// public function update(Request $request, $id)
+// {
+//     //
+// }
+
+// public function destroy($id)
+// {
+//     //
+// }

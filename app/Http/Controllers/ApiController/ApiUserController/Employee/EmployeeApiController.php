@@ -17,6 +17,7 @@ use App\Models\LoginEmployee;
 use App\Models\EmployeePersonalDetail;
 use App\Http\Resources\Api\UserSideResponse\EmployeeResource;
 use App\Http\Resources\Api\UserSideResponse\PersonalEmployeeDetails;
+use App\Http\Resources\Api\UserSideResponse\UserDashboardCount;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Auth;
 // use Illuminate\Support\Facades\Validator;
@@ -71,15 +72,15 @@ class EmployeeApiController extends Controller
         } else {
             if (
                 EmployeePersonalDetail::where('emp_email', $request->email)
-                    ->get()
-                    ->first()
+                ->get()
+                ->first()
             ) {
                 $data['msg'] = 'Email address already exists';
                 return response()->json(['result' => [$data], 'status' => false]);
             } elseif (
                 EmployeePersonalDetail::where('emp_mobile_number', $request->mobile_no)
-                    ->get()
-                    ->first()
+                ->get()
+                ->first()
             ) {
                 $data['msg'] = 'Mobile number already exists';
                 return response()->json(['result' => [$data], 'status' => false]);
@@ -138,17 +139,18 @@ class EmployeeApiController extends Controller
             ->where('employee_personal_details.business_id', $business_id)
             ->select('policy_attendance_shift_settings.shift_type')
             ->first(); // Use first() to retrieve a single row
-            $now = (int)$now->shift_type;
+        $now = (int)$now->shift_type;
         $item = DB::table('employee_personal_details')
             ->where('employee_personal_details.emp_id', $emp_id)
             ->where('employee_personal_details.business_id', $business_id)
             ->select('emp_rotational_shift_type_item')
-            ->first(); 
-            $item = (int) $item->emp_rotational_shift_type_item;
-            // dd($item);
+            ->first();
+        $item = (int) $item->emp_rotational_shift_type_item;
+        // dd($item);
         $emp = DB::table('employee_personal_details')
             ->join('static_employee_join_gender_type as employeegender', 'employee_personal_details.emp_gender', '=', 'employeegender.id')
             ->join('static_employee_join_emp_type as employeetype', 'employee_personal_details.employee_type', '=', 'employeetype.type_id')
+            ->leftJoin('static_employee_join_active_type', 'employee_personal_details.active_emp', '=', 'static_employee_join_active_type.id')
             ->join('policy_master_endgame_method as mem', 'employee_personal_details.master_endgame_id', '=', 'mem.id')
             ->join('static_attendance_endgame_policypreference as policypreference', 'mem.policy_preference', '=', 'policypreference.id')
             ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
@@ -175,16 +177,14 @@ class EmployeeApiController extends Controller
                     $query->where('attendanceShift.shift_type', $now);
                 }
             })
-            ->select('employee_personal_details.*', 'employeegender.gender_type as gender', 'policypreference.policy_name', 'mem.method_name', 'mem.method_switch', 'mem.method_name', 'mem.leave_policy_ids_list', 'mem.holiday_policy_ids_list', 'mem.weekly_policy_ids_list', 'mem.shift_settings_ids_list', 'employeetype.emp_type as emp_type_name', 'am1.method_name as attendance_method_name', 'static_attendance_shift_type.name as attendance_shift_name', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name', 'policy_attendance_shift_type_items.shift_start', 'policy_attendance_shift_type_items.shift_end')
+            ->select('employee_personal_details.*', 'employee_personal_details.active_emp as active_employee_id', 'static_employee_join_active_type.name as active_employee_name', 'employeegender.gender_type as gender', 'policypreference.policy_name', 'mem.method_name', 'mem.method_switch', 'mem.method_name', 'mem.leave_policy_ids_list', 'mem.holiday_policy_ids_list', 'mem.weekly_policy_ids_list', 'mem.shift_settings_ids_list', 'employeetype.emp_type as emp_type_name', 'am1.method_name as attendance_method_name', 'static_attendance_shift_type.name as attendance_shift_name', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name', 'policy_attendance_shift_type_items.shift_start', 'policy_attendance_shift_type_items.shift_end')
             ->first();
-        // dd($emp);
-
         if (isset($emp)) {
             return ReturnHelpers::jsonApiReturn(PersonalEmployeeDetails::collection([$emp])->all());
         }
         return response()->json(['result' => [], 'status' => false], 404);
     }
-    
+
     public function update(Request $request, $emp_id)
     {
         $emp = EmployeePersonalDetail::where('emp_id', $emp_id)->first();
@@ -257,39 +257,26 @@ class EmployeeApiController extends Controller
 
     public function departmenttoallEmployeeList($branch_id)
     {
-        // return true;
         return ApiResponse::allBranch($branch_id);
-        // return ApiResponse::allBranch($branch_id);
-
-        // $emp = EmployeePersonalDetail::where('business_id', $business_id)->get();
     }
 
-   public function dashboardcount(Request $request)
-   {
-    
-    $business_id = $request->business_id;
-    $emp_id = $request->emp_id;
-    $year = $request->year;
-    $month = $request->month;
-    $daliyempdetail = AttendanceMonthlyCount::where('business_id', $business_id)->where('emp_id', $emp_id)->where('year', $year)->where('month', $month)->first();
-    //dd($daliyempdetail);
-    if($daliyempdetail){
-        $present = $daliyempdetail->present ?? 0;
-        $absent = $daliyempdetail->absent ?? 0;
-        $late = $daliyempdetail->late ?? 0;
-        $early_exit = $daliyempdetail->early_exit ??0;
-        $mispunch = $daliyempdetail->mispunch ?? 0;
-        $holiday = $daliyempdetail->holiday ?? 0;
-        $week_off = $daliyempdetail->week_off ?? 0;
-        $half_day = $daliyempdetail->half_day ?? 0;
-        $overtime = $daliyempdetail->overtime ?? 0;
-        $leave = $daliyempdetail->leave ?? 0;
-        if($daliyempdetail){
-            return response()->json(['result' => $daliyempdetail, 'status' => true], 200);
-         }
-        return response()->json(['result' => [], 'status' => false], 404);
+    public function dashboardcount(Request $request)
+    {
+        $business_id = $request->business_id;
+        $emp_id = $request->emp_id;
+        $year = $request->year;
+        $month = $request->month;
+
+        $daliyempdetail = AttendanceMonthlyCount::where('business_id', $business_id)
+            ->where('emp_id', $emp_id)
+            ->where('year', $year)
+            ->where('month', $month)
+            ->first();
+
+        if ($daliyempdetail) {
+            return response()->json(['result' => new UserDashboardCount($daliyempdetail), 'status' => true, 'case' => 1], 200);
+        }
+
+        return response()->json(['result' => null, 'status' => false, 'case' => 1], 404);
     }
-   }
-
-
 }

@@ -26,20 +26,20 @@ use Illuminate\Support\Str;
 class ApiServiceController extends BaseController
 {
     // use HasApiTokens, Notifiable,
-    
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-  
-   
+
+
     public function checkLogin(Request $request) {
 
 
         // $user =DB::table('login_admin')->where('email', $request->user_email)->get();
-    
+
         return response()->json(['login'=>$request->user_email]);
     }
     public function Test(Request $request)
     {
-        // // business name ,, 
+        // // business name ,,
         // // $tableName1 = 'busienss_login_' . ApiResponse::concatenateFirstCharacters($request->table_name) . '_dyn_' . ApiResponse::getFirstWord($userName);
         // // $useremail=$request->user_email;
         // // $checking =DB::table('business_login'.ApiResponse::concatenateFirstCharacters($request->table_name) . '_dyn_' . ApiResponse::getFirstWord($useremail))->get();

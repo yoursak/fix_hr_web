@@ -19,9 +19,11 @@ use Illuminate\Database\Eloquent\Model;
 class StaticEmployeeJoinReligion extends Model
 {
 	protected $table = 'static_employee_join_religion';
+	protected $primary_key = 'id';
 	public $timestamps = false;
 
 	protected $fillable = [
+		'id',
 		'religion_name'
 	];
 }

@@ -1,40 +1,95 @@
 @extends('auth/admin/authlayout.master')
 @section('title', 'Login Verify')
 @section('content')
-<div class="card">
-    <div class="row align-items-center">
-        <div class="col-md-12">
-            <div class="card-body">
-                <img src="{{ asset('assets/logo/FixHR.png') }}" alt="" class="img-fluid mb-4">
-                <h1 class="h3  mb-3">Welcome to <span style="color: black"><b>Fix<span style="color: #1877F2">HR</span></b></span></h1>
-                <p class="h5 font-weight-normal mb-4 leading-normal">Make Your Human Resource Online</p>
-                <h4 class="p-0 f-w-400"><b>Verify OTP</b></h4>
-                <form method="post" action="{{ route('login.submit') }}">
-                    @csrf
-                    <span>Otp Sent to Your Registered Email </span>
+    <div class="card">
+        <div class="row align-items-center">
+            <div class="col-md-12">
+                <div class="card-body">
+                    <img src="{{ asset('assets/logo/FixHR.png') }}" alt="" class="img-fluid mb-4">
+                    <h1 class="h3  mb-3">Welcome to <span style="color: black"><b>Fix<span
+                                    style="color: #1877F2">HR</span></b></span></h1>
+                    <p class="h5 font-weight-normal mb-4 leading-normal">Make Your Human Resource Online</p>
+                    <h4 class="p-0 f-w-400"><b>Verify OTP</b></h4>
+                    <form method="post" action="{{ route('login.submit') }}">
+                        @csrf
+                        <span>OTP Sent To Your Registered Email </span>
 
-                    <div class="input-group mt-3 mb-2">
-                        <input type="text" name="otp" class="form-control" placeholder="Enter your 6 digit otp" required>
-                    </div>
-                    <div class="text-start">
-                        @if (Session::has('otpFail'))
-                        <span class="text-danger fs-14"><i class="fa fa-warning mx-1"></i>{{ Session::get('Fail')
-                            }}</span>
-                        @endif
-                    </div>
-                    <button class="btn btn-block btn-primary mt-3 mb-4 rounded" style="background-color: #1877F2" type="submit">Verify OTP</button>
-                    <p class="mb-0 text-muted">OTP not received? <a href="{{url('login/otp')}}" class="f-w-400" style="color: #1877F2">Resend</a></p>
-                </form>
+                        <div class="input-group mt-3 mb-2">
+                            <input type="text" onchange="checkLength(this)" maxlength="6" name="otp"
+                                class="form-control" placeholder="Enter Your 6 Digit OTP" required>
+                        </div>
+                        <div class="text-end">
+                            <span class="text-danger" id="otpInputErr" style="float:left; font-size:11px"></span>
+                        </div>
+                        <script>
+                            function checkLength(e) {
+                                var otpInputBoxError = document.getElementById('otpInputErr');
+                                if (e.value.length !== 6) {
+                                    otpInputBoxError.innerHTML = 'OTP should be 6 digits.';
+                                } else {
+                                    otpInputBoxError.innerHTML = '';
+                                }
+                            }
+                        </script>
+                        <div class="text-start">
+                            @if (Session::has('otpFail'))
+                                <span class="text-danger fs-14"><i
+                                        class="fa fa-warning mx-1"></i>{{ Session::get('Fail') }}</span>
+                            @endif
+                        </div>
+                        <button class="btn btn-block btn-primary mt-3 mb-4 rounded" style="background-color: #1877F2"
+                            type="submit">Verify OTP</button>
+                        <p class="mb-0 text-muted">OTP Not Received? <a href="{{ url('#') }}" class="f-w-400"
+                                style="color: #1877F2" id="countdown" onclick="countDownStart()">Resend OTP</a></p>
+                                <input type="text" id="emailHidden" value="{{Session::get('email')}}" hidden>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="text-center">
-    <div class="saprator my-2"><span>OR</span></div>
-    <button class="btn text-white bg-facebook mb-2 mr-2  wid-40 px-0 hei-40 rounded-circle"><i class="fab fa-facebook-f"></i></button>
-    <button class="btn text-white bg-googleplus mb-2 mr-2 wid-40 px-0 hei-40 rounded-circle"><i class="fab fa-google-plus-g"></i></button>
-    <button class="btn text-white bg-twitter mb-2  wid-40 px-0 hei-40 rounded-circle"><i class="fab fa-twitter"></i></button>
-</div>
+    <script>
+        let timeLeft = 30;
+        let countdownInterval;
 
+        function countDownStart() {
+            var email = document.getElementById('emailHidden').value;
+            $.ajax({
+                url: "{{ url('login/otp') }}",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    email: email,
+                },
+                type: "POST",
+                dataType: 'json',
+                success: function(data) {
+                    console.log('Hogya');
+                }
+            });
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        function updateCountdown() {
+            const countdownElement = document.getElementById('countdown');
+            countdownElement.textContent = 'Wait for ' + timeLeft + ' Sec';
+
+            if (timeLeft > 0) {
+                timeLeft--;
+            } else {
+                countdownElement.textContent = 'Resend OTP ';
+                timeLeft = 30;
+                clearInterval(countdownInterval); // Clear the interval after a single round
+            }
+        }
+    </script>
+
+    <div class="text-center">
+        <div class="saprator my-2"><span>OR</span></div>
+        <button class="btn text-white bg-facebook mb-2 mr-2  wid-40 px-0 hei-40 rounded-circle"><i
+                class="fab fa-facebook-f"></i></button>
+        <button class="btn text-white bg-googleplus mb-2 mr-2 wid-40 px-0 hei-40 rounded-circle"><i
+                class="fab fa-google-plus-g"></i></button>
+        <button class="btn text-white bg-twitter mb-2  wid-40 px-0 hei-40 rounded-circle"><i
+                class="fab fa-twitter"></i></button>
+    </div>
 @endsection

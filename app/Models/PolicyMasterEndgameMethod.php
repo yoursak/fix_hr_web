@@ -32,21 +32,17 @@ class PolicyMasterEndgameMethod extends Model
 
 	protected $table = 'policy_master_endgame_method';
 	protected $primary_key = 'id';
-	// protected $casts = [
-	// 	'method_switch' => 'bool',
-	// 	'policy_preference' => 'int',
-	// 	'level_type' => 'bool'
-	// ];
+	protected $business_id = 'business_id';
 
-	// protected $fillable = [
-	// 	'business_id',
-	// 	'method_switch',
-	// 	'method_name',
-	// 	'policy_preference',
-	// 	'level_type',
-	// 	'leave_policy_ids_list',
-	// 	'holiday_policy_ids_list',
-	// 	'weekly_policy_ids_list',
-	// 	'shift_settings_ids_list'
-	// ];
+	protected $fillable = [
+		'business_id',
+		'method_switch',
+		'method_name',
+		'policy_preference',
+		'level_type',
+		'leave_policy_ids_list',
+		'holiday_policy_ids_list',
+		'weekly_policy_ids_list',
+		'shift_settings_ids_list'
+	];
 }

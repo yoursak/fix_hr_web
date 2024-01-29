@@ -12,7 +12,8 @@ class UserAttendanceResources extends JsonResource
 
         return [
             // 'emp_id' => $this->emp_id ?? '',
-            'id' => $this->id,
+            'attendance_id' => (string) $this->id ?? '',
+            'today_status' => (int) $this->today_status ?? 2,
             'emp_id' => $this->emp_id ?? $this->emp_id,
             'business_id' => $this->business_id ?? '',
             'branch_id' => $this->branch_id ?? '',
@@ -32,8 +33,8 @@ class UserAttendanceResources extends JsonResource
             'attendance_shift' => (string) $this->attendance_shift ?? '',
             'applied_shift_template_name' => (string) $this->applied_shift_template_name ?? '',
             'applied_shift_type_name' => (string) $this->applied_shift_type_name ?? '',
-            'applied_shift_comp_start_time' => is_string($this->applied_shift_comp_start_time ) ? Carbon::createFromFormat('H:i:s', $this->applied_shift_comp_start_time )->format('H:i:s') : '00:00:00',
-            'applied_shift_comp_end_time' => is_string($this->applied_shift_comp_end_time ) ? Carbon::createFromFormat('H:i:s', $this->applied_shift_comp_end_time )->format('H:i:s') : '00:00:00',
+            'applied_shift_comp_start_time' => is_string($this->applied_shift_comp_start_time) ? Carbon::createFromFormat('H:i:s', $this->applied_shift_comp_start_time)->format('H:i:s') : '00:00:00',
+            'applied_shift_comp_end_time' => is_string($this->applied_shift_comp_end_time) ? Carbon::createFromFormat('H:i:s', $this->applied_shift_comp_end_time)->format('H:i:s') : '00:00:00',
             'punch_in_shift_name' => (string) $this->punch_in_shift_name ?? '',
             'punch_out_shift_name' => (string) $this->punch_out_shift_name ?? '',
             'punch_date' => $this->punch_date ?? '',
@@ -56,8 +57,8 @@ class UserAttendanceResources extends JsonResource
             'shift_name' => $this->shift_name ?? '',
             'shift_start' => is_string($this->shift_start) ? Carbon::createFromFormat('H:i:s', $this->shift_start)->format('H:i:s') : '00:00:00',
             'shift_end' => is_string($this->shift_end) ? Carbon::createFromFormat('H:i:s', $this->shift_end)->format('H:i:s') : '00:00:00',
-            'created_at' => $this->created_at ?? '',
-            'updated_at' => $this->updated_at ?? '',
+            // 'created_at' => $this->created_at ?? '',
+            // 'updated_at' => $this->updated_at ?? '',
         ];
     }
 }

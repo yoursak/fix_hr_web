@@ -15,6 +15,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="{{ config('app.cdn') }}"></script>
 
+    <link href="{{ asset('assets/css/customeModel.css?v=3.1') }}" rel="stylesheet" />
     <!-- FAVICON -->
     <link rel="icon" href={{ asset('assets/logo/f_fav.png?v=0.2') }} type="image/x-icon" />
     <!-- BOOTSTRAP CSS -->
@@ -359,7 +360,7 @@
     <!-- BACK TO TOP -->
     <a href="#top" id="back-to-top"><span class="feather feather-chevrons-up"></span></a>
     <!-- BACK TO TOP -->
-    
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> ignor --}}
     <script src="{{asset('assets/plugins/jquery/jquery.min.js')}}"></script>
@@ -418,7 +419,7 @@
 
     <!-- SWITCHER JS -->
     <script src="{{asset('assets/switcher/js/switcher.js')}}"></script>
- 
+
 </body>
 
 </html>
