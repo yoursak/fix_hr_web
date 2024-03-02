@@ -50,11 +50,12 @@ class CreateBusinessController extends Controller
 
     public function getCity(Request $request)
     {
+
         $City = DB::table('static_cities')
             ->where('state_id', $request->state)
             ->orderBy('Name')
             ->get();
-
+        // dd($City);
         return response()->json(['city' => $City]);
     }
 

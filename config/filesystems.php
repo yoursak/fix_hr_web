@@ -28,18 +28,36 @@ return [
     |
     */
 
+    // 'root' => storage_path('app'),
     'disks' => [
 
+        // 'local' => [
+        //     'driver' => 'local',
+        //     'root' => storage_path('app'),//Storage in app side
+        //     'throw' => false,
+        // ],
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app'),
-            'throw' => false,
+            'root' => public_path('uploads'), //Public in public path side
         ],
-
+        'livewire_conntected' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public'),
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+            'throw' => true,
+        ],
+        'temp_livewire' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/livewire-tmp'),
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+            'throw' => true,
+        ],
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
             'throw' => false,
         ],

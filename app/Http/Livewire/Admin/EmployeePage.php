@@ -27,6 +27,7 @@ use App\Models\StaticEmployeeJoinCategoryCaste;
 use App\Models\StaticEmployeeJoinBloodGroup;
 use App\Models\StaticEmployeeJoinGovtDocType;
 use App\Models\StaticEmployeeJoinReligion;
+use App\Models\GradeList;
 use App\Helpers\Central_unit;
 use App\Exports\AddEmployeeDetails;
 use App\Exports\ExportEmployeeDetails;
@@ -44,6 +45,7 @@ use App\Models\StaticCountryModel;
 use App\Models\StaticStatesModel;
 use App\Models\StaticCityModel;
 use App\Models\PolicyAttendanceMode;
+use App\Models\PolicySettingRoleAssignPermission;
 use App\Models\StaticAttendanceMode;
 use App\Models\Image;
 use App\Livewire\UploadPhoto;
@@ -69,12 +71,13 @@ class EmployeePage extends Component
 
     protected $paginationTheme = 'bootstrap';
     public $currentPage = 1;
+
     // employee_type
     public $employee_type;
     public $employee_contractual_type;
 
     // Start Edit Section
-    public $count_value, $emp_id, $business_id, $assign_shift_type, $first_name, $middle_name, $last_name, $phone_no, $email, $dob, $gender, $marital_status, $caste_category, $blood_group, $select_govt_type, $select_govt_id_no, $nationality, $country, $state, $city, $pin_code, $address, $doj, $emp_shift_type, $select_rotation_type, $branch, $department, $designation, $religion, $attendance_method, $report_manager, $master_endgame_id, $branch_id, $profile_image, $empID, $update_ifsc_code, $update_bank_name, $update_branch_name, $update_branch_code, $update_bank_accountno, $update_micr_code, $update_bank_address_line1, $update_bank_address_line2, $update_grade, $update_budget_code, $update_account_code;
+    public $count_value, $emp_id, $business_id, $assign_shift_type, $first_name, $middle_name, $last_name, $phone_no, $email, $dob, $gender, $marital_status, $caste_category, $blood_group, $select_govt_type, $select_govt_id_no, $nationality, $country, $state, $city, $pin_code, $address, $doj, $emp_shift_type, $select_rotation_type, $branch, $department, $designation, $religion, $attendance_method, $report_manager, $reporting_manager_names, $master_endgame_id, $branch_id, $profile_image, $empID, $update_ifsc_code, $update_bank_name, $update_branch_name, $update_branch_code, $update_bank_accountno, $update_micr_code, $update_bank_address_line1, $update_bank_address_line2, $update_grade, $update_budget_code, $update_account_code;
     public $editShiftStartTime, $editShiftEndTime;
     // public $assign_shift_type_runtime;
     public $rotational_shift_active = 0;
@@ -89,8 +92,19 @@ class EmployeePage extends Component
     public $branchFilter, $departmentFilter, $designationFilter, $activeFilter, $searchFilter, $sortBy;
     public $perPage;
     protected $tableShows;
+    protected $getReportingList;
+    public $fast;
+
+    // create tiems opne model new Employee Add
+    public $EmployeeTypeCheck; //Employee Type Checked
 
     protected EmployeePersonalDetail $employeePersonalDetails;
+
+    // Searching Report Manager
+    public $enter_searching;
+    public $listReportManager = [];
+
+
 
     public function mount()
     {
@@ -99,18 +113,46 @@ class EmployeePage extends Component
         $this->currentStep = 1;
         $this->newCurrentStep = 1;
         $this->getAssignShiftType();
+        $this->fast = 1;
+
+
+        // Employee Type-ID
+        $this->employee_type = "";
+        $this->EmployeeTypeCheck = 0;
+
         // $this->employeePersonalDetails = new EmployeePersonalDetail();
         // $this->tableShows =  EmployeePersonalDetail::class;
     }
+    public function updated()
+    {
+        $this->listReportManager = EmployeePersonalDetail::where('business_id', Session::get('business_id'))
+            ->where('employee_personal_details.emp_name', 'like', '%' . $this->enter_searching . '%')
+            ->orWhere('employee_personal_details.emp_mname', 'like', '%' . $this->enter_searching . '%')
+            ->orWhere('employee_personal_details.emp_lname', 'like', '%' . $this->enter_searching . '%')
+            ->orWhere('employee_personal_details.emp_id', 'like', '%' . $this->enter_searching . '%')
+            ->get()
+            ->toArray();
+    }
 
+    // Employee ID Bug set to 0
     public function EmployeeType()
     {
-        $this->employee_type = '';
+        $this->employee_type = "";
+        $this->EmployeeTypeCheck = 0;
     }
+
+    // show-hide mode
+    public function showHideModel()
+    {
+        $this->EmployeeTypeCheck = (int) $this->employee_type;
+    }
+
     public function hydrate()
     {
         $this->getData();
 
+        $this->EmployeeTypeCheck;
+        $this->employee_type;
         $this->branchFilter;
         $this->departmentFilter;
         $this->designationFilter;
@@ -198,6 +240,12 @@ class EmployeePage extends Component
         return [];
     }
 
+    #[AssignGradeList]
+    public function getGradeList()
+    {
+        return GradeList::where('business_id', $this->business_id)->get();
+    }
+
     #[AssignRotationalShift]
     public function getAssignRotationalShift()
     {
@@ -228,9 +276,7 @@ class EmployeePage extends Component
     #[AssignAttendanceMethod]
     public function getAssignAttendanceMethod()
     {
-        $load = PolicyAttendanceMode::where('business_id', Session::get('business_id'))
-            ->select('attendance_active_methods')
-            ->first();
+        $load = PolicyAttendanceMode::where('business_id', Session::get('business_id'))->select('attendance_active_methods')->first();
 
         if ($load) {
             $selectedIDs = json_decode($load->attendance_active_methods);
@@ -255,8 +301,37 @@ class EmployeePage extends Component
             $this->validate([
                 'first_name' => 'required|string', //|min:4|max:50
                 'last_name' => 'required|string', //|min:4
-                'phone_no' => 'required|min:11|numeric',
-                'email' => 'required|email',
+                'phone_no' => [
+                    'required',
+                    'numeric',
+                    'min:11',
+                    function ($attribute, $value, $fail) {
+                        // Custom logic to check for uniqueness based on business rules
+                        $exists = LoginEmployee::Where('business_id', $this->business_id)
+                            ->Where('emp_id', '!=', $this->emp_id)
+                            ->Where('phone', '=', $this->phone_no)
+                            ->exists();
+
+                        // dd($exists);
+                        if ($exists) {
+                            $fail('The Phone no has already been taken.');
+                        }
+                    },
+                ],
+                'email' => [
+                    'required',
+                    'email',
+                    function ($attribute, $value, $fail) {
+                        // Custom logic to check for uniqueness based on business rules
+                        $existingEmployee = EmployeePersonalDetail::where('business_id',  $this->business_id)
+                            ->where('emp_id', '!=', $this->emp_id)
+                            ->where('emp_email', '=', $this->email)
+                            ->exists();
+                        if ($existingEmployee) {
+                            $fail('The Email has already been taken.');
+                        }
+                    },
+                ],
                 'dob' => 'required|date|before:' . now()->subYears(18)->format('Y-m-d'),
                 'gender' => 'required|in:1,2,3',
                 'doj' => 'required',
@@ -308,7 +383,7 @@ class EmployeePage extends Component
                 'designation' => 'required|nullable',
                 'attendance_method' => 'required|nullable|in:1,2,3',
                 'master_endgame_id' => 'required|nullable',
-                'report_manager' => 'required|nullable|string',
+                'report_manager' => 'string', //required|nullable|
                 'emp_shift_type' => 'required|nullable',
                 'country' => 'required|nullable',
                 'state' => 'required|nullable',
@@ -317,18 +392,18 @@ class EmployeePage extends Component
                 'address' => 'required|string',
             ]);
         } elseif ($this->currentStep == 3) {
-            $this->validate([
-                'update_ifsc_code' => 'required|nullable|string',
-                'update_bank_name' => 'required|nullable|string',
-                'update_branch_name' => 'required|nullable|string',
-                'update_branch_code' => 'required|nullable|string',
-                'update_bank_accountno' => 'required|nullable|string',
-                'update_micr_code' => 'required|nullable|string',
-                'update_bank_address_line1' => 'required|nullable|string',
-                'update_grade' => 'required|nullable',
-                'update_budget_code' => 'required|nullable|string',
-                'update_account_code' => 'required|nullable|string'
-            ]);
+            // $this->validate([
+            //     'update_ifsc_code' => 'size:11', //required|nullable|
+            //     'update_bank_name' => 'string',//required|nullable
+            //     'update_branch_name' => 'string',
+            //     'update_branch_code' => 'string',
+            //     'update_bank_accountno' => 'string',
+            //     'update_micr_code' => 'string',
+            //     'update_bank_address_line1' => 'string',
+            //     'update_grade' => 'nullable',
+            //     'update_budget_code' => 'string',
+            //     'update_account_code' => 'string'
+            // ]);
         }
     }
     public function change()
@@ -339,16 +414,15 @@ class EmployeePage extends Component
     // Edit Model Set all type of values
     public function editStudent($data)
     {
-        // $data; //
+        $this->getReportingList();
+        // $data;
         $decodedData = json_decode($data);
 
         $studentId = $decodedData[0];
         $empId = $decodedData[1];
         $businessID = $decodedData[2];
-        $student = EmployeePersonalDetail::where('id', $studentId)
-            ->where('emp_id', $empId)
-            ->where('business_id', $businessID)
-            ->first();
+        $student = EmployeePersonalDetail::where('id', $studentId)->where('emp_id', $empId)->where('business_id', $businessID)->first();
+
         if ($student) {
             $this->emp_id = $student->emp_id;
             $this->isEnabled = $student->active_emp != 0 ? true : false; //marked not present
@@ -382,27 +456,43 @@ class EmployeePage extends Component
             $this->designation = $student->designation_id;
             $this->attendance_method = $student->emp_attendance_method;
             $this->report_manager = $student->emp_reporting_manager;
+            $this->reporting_manager_names = $student->emp_reporting_manager_names; // $getDetails ? $getDetails->emp_name : '';
             $this->master_endgame_id = $student->master_endgame_id;
-            $this->update_ifsc_code =  $student->bank_ifsc_code;
-            $this->update_bank_name =   $student->bank_name;
-            $this->update_branch_code =  $student->bank_branch_code; // = $this->update_branch_code;
-            $this->update_branch_name =   $student->bank_branch_name; // = $this->update_branch_name;
+            $this->update_ifsc_code = $student->bank_ifsc_code;
+            $this->update_bank_name = $student->bank_name;
+            $this->update_branch_code = $student->bank_branch_code; // = $this->update_branch_code;
+            $this->update_branch_name = $student->bank_branch_name; // = $this->update_branch_name;
             $this->update_bank_accountno = $student->bank_account_no;
-            $this->update_micr_code =   $student->bank_micr_code; //= $this->update_micr_code;
-            $this->update_bank_address_line1 =   $student->bank_address_line1; // = $this->update_bank_address_line1;
-            $this->update_bank_address_line2 =  $student->bank_address_line2; // = $this->update_bank_address_line2;
+            $this->update_micr_code = $student->bank_micr_code; //= $this->update_micr_code;
+            $this->update_bank_address_line1 = $student->bank_address_line1; // = $this->update_bank_address_line1;
+            $this->update_bank_address_line2 = $student->bank_address_line2; // = $this->update_bank_address_line2;
             $this->update_grade = $student->grade; // = $this->update_grade;
             $this->update_budget_code = $student->budget_code; // = $this->update_budget_code;
-            $this->update_account_code =  $student->account_code; // = $this->update_account_code;
+            $this->update_account_code = $student->account_code; // = $this->update_account_code;
             $this->selectRotationalCheck();
         } else {
             return redirect()->to('/admin/employee');
         }
     }
 
+    // Current Reporting Manager Checking
+    public function getReportingManager($BIDs, $RIDs)
+    {
+        // $assignReportingManagerName = '';
+        if ($RIDs != null) {
+            $getDetails =  EmployeePersonalDetail::where('business_id', $BIDs)
+                ->where('emp_id', $RIDs)
+                ->select('emp_name', 'emp_mname', 'emp_lname')
+                ->first();
+            return  $getDetails ?  $getDetails->emp_name . ' ' . $getDetails->emp_mname . ' ' . $getDetails->emp_lname  : '';
+        } else {
+            return '';
+        }
+        // return $assignReportingManagerName;
+    }
+
     public function updateSubmit()
     {
-        //  dd($this->getAssignAttendanceMethod());
 
         $this->validateData();
         $this->resetErrorBag();
@@ -428,11 +518,15 @@ class EmployeePage extends Component
                 ->where('id', $this->emp_shift_type)
                 ->first();
             if ($CheckingShiftType->shift_type == 2) {
-                $ModeCheckR1 = PolicyAttendanceShiftTypeItem::where('business_id', $this->business_id)->where('id', $this->select_rotation_type)->first();
+                $ModeCheckR1 = PolicyAttendanceShiftTypeItem::where('business_id', $this->business_id)
+                    ->where('id', $this->select_rotation_type)
+                    ->first();
                 $this->editShiftStartTime = $ModeCheckR1->shift_start;
                 $this->editShiftEndTime = $ModeCheckR1->shift_end;
-            } else if ($CheckingShiftType->shift_type != 2 && $CheckingShiftType->shift_type != 0) {
-                $ModeCheckR2 = PolicyAttendanceShiftTypeItem::where('business_id', $this->business_id)->where('attendance_shift_id', $this->emp_shift_type)->first();
+            } elseif ($CheckingShiftType->shift_type != 2 && $CheckingShiftType->shift_type != 0) {
+                $ModeCheckR2 = PolicyAttendanceShiftTypeItem::where('business_id', $this->business_id)
+                    ->where('attendance_shift_id', $this->emp_shift_type)
+                    ->first();
                 $this->editShiftStartTime = $ModeCheckR2->shift_start;
                 $this->editShiftEndTime = $ModeCheckR2->shift_end;
                 // dd($ModeCheckR2->shift_start, $ModeCheckR2->shift_end);
@@ -471,6 +565,7 @@ class EmployeePage extends Component
             $student->designation_id = $this->designation;
             $student->emp_attendance_method = $this->attendance_method;
             $student->emp_reporting_manager = $this->report_manager;
+            $student->emp_reporting_manager_names = $this->getReportingManager($this->business_id, $this->report_manager);
             $student->master_endgame_id = $this->master_endgame_id;
             $student->bank_ifsc_code = $this->update_ifsc_code;
             $student->bank_name = $this->update_bank_name;
@@ -487,32 +582,38 @@ class EmployeePage extends Component
             if ($this->isEnabled != false) {
                 $student->active_emp = 1;
             } else {
-                LoginEmployee::where('emp_id', $this->emp_id)->where('business_id', $this->business_id)->delete();
+                LoginEmployee::where('emp_id', $this->emp_id)
+                    ->where('business_id', $this->business_id)
+                    ->where('phone', $this->phone_no)
+                    ->delete();
                 $student->active_emp = 0;
             }
             $student->update();
 
-
             if ($this->country != null) {
-                $firstLoad = LoginEmployee::where('emp_id', $this->emp_id)->where('business_id', $this->business_id)->first();
+                $firstLoad = LoginEmployee::where('emp_id', $this->emp_id)
+                    ->where('business_id', $this->business_id)
+                    ->where('phone', $this->phone_no)
+                    ->first();
 
-                $modeCountry = StaticCountryModel::where('id', $this->country)->select('phonecode')->first();
-                if (isset($firstLoad)) {
-                    LoginEmployee::where('emp_id', $this->emp_id)->where('business_id', $this->business_id)->update([
-                        'emp_id' => $this->emp_id,
-                        'business_id' => $this->business_id,
-                        'email' => $this->email,
-                        'phone' => $this->phone_no,
-                        'country_code' => $modeCountry->phonecode
-                    ]);
-                }
-                if (!isset($firstLoad)) {
+                $modeCountry = StaticCountryModel::where('id', $this->country)
+                    ->select('phonecode')
+                    ->first();
+                if (!empty($firstLoad)) {
+                    LoginEmployee::where('emp_id', $this->emp_id)
+                        ->where('business_id', $this->business_id)
+                        ->update([
+                            'email' => $this->email,
+                            'phone' => $this->phone_no,
+                            'country_code' => $modeCountry->phonecode,
+                        ]);
+                } else {
                     LoginEmployee::insert([
                         'emp_id' => $this->emp_id,
                         'business_id' => $this->business_id,
                         'email' => $this->email,
                         'phone' => $this->phone_no,
-                        'country_code' => $modeCountry->phonecode
+                        'country_code' => $modeCountry->phonecode,
                     ]);
                 }
             }
@@ -522,11 +623,6 @@ class EmployeePage extends Component
         }
 
         return redirect()->to('/admin/employee');
-        // return  redirect()->back();
-
-        // dd($this->all());
-
-        //   return redirect()->route('registration.success', $data);
     }
 
     //previews photo delete
@@ -543,13 +639,13 @@ class EmployeePage extends Component
     public $newShiftStartTime;
     public $newShiftEndTime;
 
-
-        public $new_branch,
+    public $new_branch,
         $new_department,
         $new_designation,
         $new_attendance_method,
         $new_master_endgame_id,
         $new_report_manager,
+        $new_report_manager_names,
         $new_emp_shift_type,
         $new_select_rotation_type,
         $new_country,
@@ -655,21 +751,19 @@ class EmployeePage extends Component
                 // Define validations for other fields...
             ]);
         } elseif ($this->newCurrentStep == 3) {
-            $this->validate(
-                [
-                    'new_ifsc_code' => $this->getValidationAttributes('new_ifsc_code'),
-                    'new_bank_name' => $this->getValidationRules('new_bank_name'),
-                    'new_branch_name' => $this->getValidationAttributes('new_branch_name'),
-                    'new_branch_code' => $this->getValidationAttributes('new_branch_code'),
-                    'new_bank_accountno' => $this->getValidationAttributes('new_bank_accountno'),
-                    'new_micr_code' => $this->getValidationAttributes('new_micr_code'),
-                    'new_bank_address_line1' => $this->getValidationAttributes('new_bank_address_line1'),
-                    'new_grade' => $this->getValidationAttributes('new_grade'),
-                    'new_budget_code' => $this->getValidationAttributes('new_budget_code'),
-                    'new_account_code' => $this->getValidationAttributes('new_account_code'),
-                ]
-            );
-        };
+            $this->validate([
+                'new_ifsc_code' => $this->getValidationAttributes('new_ifsc_code'),
+                'new_bank_name' => $this->getValidationRules('new_bank_name'),
+                'new_branch_name' => $this->getValidationAttributes('new_branch_name'),
+                'new_branch_code' => $this->getValidationAttributes('new_branch_code'),
+                'new_bank_accountno' => $this->getValidationAttributes('new_bank_accountno'),
+                'new_micr_code' => $this->getValidationAttributes('new_micr_code'),
+                'new_bank_address_line1' => $this->getValidationAttributes('new_bank_address_line1'),
+                'new_grade' => $this->getValidationAttributes('new_grade'),
+                'new_budget_code' => $this->getValidationAttributes('new_budget_code'),
+                'new_account_code' => $this->getValidationAttributes('new_account_code'),
+            ]);
+        }
     }
     protected function getValidationRules($fieldName)
     {
@@ -686,10 +780,45 @@ class EmployeePage extends Component
                 $rules = ['required', 'string'];
                 break;
             case 'new_phone':
-                $rules = ['required', 'min:10', 'digits:10', 'numeric'];
+                $rules = [
+                    'required',
+                    'min:10',
+                    'digits:10',
+                    'numeric',
+                    function ($attribute, $value, $fail) {
+                        // Custom logic to check for uniqueness based on business rules
+                        $exists = LoginEmployee::Where('business_id', Session::get('business_id'))
+                            ->Where('phone', $value)
+                            ->exists();
+                        if ($exists) {
+                            $fail('The Phone no has already been taken.');
+                        }
+                    },
+
+                    // function ($attribute, $value, $fail) {
+                    //     // Custom logic to check for uniqueness based on business rules
+                    //     $existingEmployee = LoginEmployee::where('business_id', Session::get('business_id'))->where('phone', $value)->first();
+                    //     if ($existingEmployee) {
+                    //         $fail('The phone no has already been taken.');
+                    //     }
+                    // },
+                ];
                 break;
             case 'new_email':
-                $rules = ['required', 'email'];
+                $rules = [
+                    'required',
+                    'email',
+                    function ($attribute, $value, $fail) {
+                        // Custom logic to check for uniqueness based on business rules
+                        $exists = EmployeePersonalDetail::Where('business_id', Session::get('business_id'))
+                            ->Where('emp_email', '=', $value)
+                            ->exists();
+                        if ($exists) {
+                            $fail('The Email has already been taken.');
+                        }
+                    },
+
+                ];
                 break;
             case 'new_dob':
                 $rules = ['required', 'date', 'before:' . now()->subYears(18)->format('Y-m-d')];
@@ -763,7 +892,7 @@ class EmployeePage extends Component
                 $rules = [
                     'required',
                     'nullable',
-                    'numeric',
+                    // 'numeric',
                     Rule::unique('employee_personal_details', 'emp_id')
                         ->where(function ($query) {
                             return $query->where('emp_id', '!=', 'generate_emp_id');
@@ -778,7 +907,8 @@ class EmployeePage extends Component
                 $rules = ['required', 'nullable'];
                 break;
             case 'new_report_manager':
-                $rules = ['required', 'nullable', 'string'];
+                // 'required', 'nullable',
+                $rules = ['string'];
                 break;
             case 'new_emp_shift_type':
                 $rules = ['required', 'nullable'];
@@ -799,34 +929,38 @@ class EmployeePage extends Component
                 $rules = ['required', 'nullable', 'string'];
                 break;
             case 'new_ifsc_code':
-                $rules = ['required', 'nullable', 'string'];
+                // string|size:11
+                $rules = ['nullable', 'size:11'];
+                // $rules = ['required', 'nullable', 'string'];
                 break;
             case 'new_bank_name':
-                $rules = ['required', 'nullable', 'string'];
+                $rules = ['nullable', 'string'];
                 break;
             case 'new_branch_name':
-                $rules = ['required', 'nullable', 'string'];
+                $rules = ['nullable', 'string'];
                 break;
             case 'new_branch_code':
-                $rules = ['required', 'nullable', 'string'];
+                $rules = ['nullable', 'string'];
                 break;
             case 'new_bank_accountno':
-                $rules = ['required', 'nullable', 'string'];
+                $rules = ['nullable', 'string'];
                 break;
             case 'new_micr_code':
-                $rules = ['required', 'nullable', 'string'];
+                $rules = ['nullable', 'string'];
                 break;
             case 'new_bank_address_line1':
-                $rules = ['required', 'nullable', 'string'];
+                $rules = ['nullable', 'string'];
                 break;
             case 'new_grade':
-                $rules = ['required', 'nullable'];
+                $rules = ['nullable'];
                 break;
             case 'new_budget_code':
-                $rules = ['required', 'nullable', 'string'];
+                // 'required', 'nullable',
+                $rules = ['nullable', 'string'];
                 break;
             case 'new_account_code':
-                $rules = ['required', 'nullable', 'string'];
+                // 'required', 'nullable',
+                $rules = ['nullable', 'string'];
                 break;
                 // Add more cases for other fields...
         }
@@ -836,9 +970,7 @@ class EmployeePage extends Component
 
     public function getNewAssignSetup()
     {
-        $loaded = PolicyMasterEndgameMethod::where('business_id', Session::get('business_id'))
-            ->where('method_switch', 1)
-            ->get();
+        $loaded = PolicyMasterEndgameMethod::where('business_id', Session::get('business_id'))->where('method_switch', 1)->get();
         //checking method loaded on process
         // ->where('id', $this->master_endgame_id)
         return $loaded;
@@ -857,9 +989,7 @@ class EmployeePage extends Component
             $shiftSettingsIds = json_decode($loaded->shift_settings_ids_list);
 
             if ($shiftSettingsIds !== null) {
-                $modes = PolicyAttendanceShiftSetting::where('business_id', Session::get('business_id'))
-                    ->whereIn('id', $shiftSettingsIds)
-                    ->get();
+                $modes = PolicyAttendanceShiftSetting::where('business_id', Session::get('business_id'))->whereIn('id', $shiftSettingsIds)->get();
                 // // Assuming shift_type is a property of PolicyAttendanceShiftSetting
                 // $shiftTypes = $modes->pluck('shift_type')->unique()->toArray();
 
@@ -908,7 +1038,7 @@ class EmployeePage extends Component
     #[SubmitForm]
     public function createSubmit()
     {
-        $this->newEmployeeJoiningValidation();
+        // dd($this->employee_type, $this->new_emp_shift_type, $this->new_first_name);
         $BID = Session::get('business_id');
         // dd($this->employee_type, $this->employee_contractual_type);
         $imageUpload = '';
@@ -926,18 +1056,21 @@ class EmployeePage extends Component
             $publicUrl = Storage::url($filePath);
         }
 
-
         $CheckingShiftType2 = PolicyAttendanceShiftSetting::where('business_id', $BID)
             ->where('id', $this->new_emp_shift_type)
             ->first();
         if ($CheckingShiftType2->shift_type == 2) {
-            $ModeCheckR1 = PolicyAttendanceShiftTypeItem::where('business_id', $BID)->where('id', $this->new_select_rotation_type)->first();
+            $ModeCheckR1 = PolicyAttendanceShiftTypeItem::where('business_id', $BID)
+                ->where('id', $this->new_select_rotation_type)
+                ->first();
             // dd($ModeCheckR1,$BID, $CheckingShiftType2, $this->new_emp_shift_type, $this->new_rotational_shift_active, $this->new_select_rotation_type);
             $this->newShiftStartTime = $ModeCheckR1->shift_start;
             $this->newShiftEndTime = $ModeCheckR1->shift_end;
         }
         if ($CheckingShiftType2->shift_type != 2 && $CheckingShiftType2->shift_type != 0) {
-            $ModeCheckR2 = PolicyAttendanceShiftTypeItem::where('business_id', $BID)->where('attendance_shift_id', $this->new_emp_shift_type)->first();
+            $ModeCheckR2 = PolicyAttendanceShiftTypeItem::where('business_id', $BID)
+                ->where('attendance_shift_id', $this->new_emp_shift_type)
+                ->first();
             $this->newShiftStartTime = $ModeCheckR2->shift_start;
             $this->newShiftEndTime = $ModeCheckR2->shift_end;
             // dd($ModeCheckR2->shift_start, $ModeCheckR2->shift_end);
@@ -945,7 +1078,7 @@ class EmployeePage extends Component
         $this->new_rotational_shift_active = $CheckingShiftType2->shift_type;
 
         // dd($this->new_emp_shift_type, $this->newShiftStartTime, $this->new_rotational_shift_active);
-
+        $this->newEmployeeJoiningValidation();
         $student = new EmployeePersonalDetail();
         $student->profile_photo = $imageUpload != '' && $imageUpload != null ? $imageUpload : '';
         $student->business_id = $BID;
@@ -980,9 +1113,10 @@ class EmployeePage extends Component
         $student->designation_id = $this->new_designation;
         $student->emp_attendance_method = $this->new_attendance_method;
         $student->emp_reporting_manager = $this->new_report_manager;
+        $student->emp_reporting_manager_names = $this->getReportingManager($BID, $this->new_report_manager); // $this->new_report_manager_names;
         $student->master_endgame_id = $this->new_master_endgame_id;
         $student->employee_type = $this->employee_type;
-        $student->employee_contractual_type = ($this->employee_contractual_type != null && $this->employee_type != 1) ? $this->employee_contractual_type : 0;
+        $student->employee_contractual_type = $this->employee_contractual_type != null && $this->employee_type != 1 ? $this->employee_contractual_type : 0;
         $student->active_emp = $this->new_isEnabled != false ? 1 : 0;
         $student->bank_ifsc_code = $this->new_ifsc_code;
         $student->bank_name = $this->new_bank_name;
@@ -997,15 +1131,16 @@ class EmployeePage extends Component
         $student->account_code = $this->new_account_code;
         $student->save();
 
-        if (($this->new_isEnabled != false) && isset($student)) {
-
-            $modeCountry = StaticCountryModel::where('id', $this->new_country)->select('phonecode')->first();
+        if ($this->new_isEnabled != false && isset($student)) {
+            $modeCountry = StaticCountryModel::where('id', $this->new_country)
+                ->select('phonecode')
+                ->first();
             $sdf = LoginEmployee::create([
                 'emp_id' => $this->generate_emp_id,
-                'business_id' => Session::get('business_id'),
+                'business_id' => $BID,
                 'email' => $this->new_email,
                 'phone' => $this->new_phone,
-                'country_code' => $modeCountry->phonecode
+                'country_code' => $modeCountry->phonecode,
             ]);
             if (isset($sdf)) {
                 Alert::success('', 'Your Employee Detail has been added successfully');
@@ -1020,7 +1155,6 @@ class EmployeePage extends Component
     {
         $this->resetInput();
     }
-
 
     public function resetInput()
     {
@@ -1056,58 +1190,111 @@ class EmployeePage extends Component
     }
     public function getData()
     {
-        $page = $this->perPage != null ? $this->perPage : 10;
-        $this->tableShows = EmployeePersonalDetail::leftJoin('branch_list', 'branch_list.branch_id', '=', 'employee_personal_details.branch_id')
-            ->leftJoin('department_list', 'department_list.depart_id', '=', 'employee_personal_details.department_id')
-            ->leftJoin('designation_list', 'designation_list.desig_id', '=', 'employee_personal_details.designation_id')
-            ->leftJoin('static_employee_join_emp_type', 'static_employee_join_emp_type.type_id', '=', 'employee_personal_details.employee_type')
-            ->leftJoin('static_attendance_methods', 'static_attendance_methods.id', '=', 'employee_personal_details.emp_attendance_method')
-            ->leftJoin('static_attendance_shift_type', 'static_attendance_shift_type.id', '=', 'employee_personal_details.assign_shift_type') // Use leftJoin for inclusion of null values
-            ->where('employee_personal_details.business_id', Session::get('business_id'))
-            ->where('branch_list.business_id', Session::get('business_id'))
-            ->where('department_list.b_id', Session::get('business_id'))
-            ->where('designation_list.business_id', Session::get('business_id'))
-            ->when($this->branchFilter !== null && $this->branchFilter !== '', function ($query) {
-                $query->where('employee_personal_details.branch_id', $this->branchFilter);
-            })
-            ->when($this->departmentFilter !== null && $this->departmentFilter !== '', function ($query) {
-                $query->where('employee_personal_details.department_id', $this->departmentFilter);
-            })
-            ->when($this->designationFilter !== null && $this->designationFilter !== '', function ($query) {
-                $query->where('employee_personal_details.designation_id', $this->designationFilter);
-            })
-            ->when($this->activeFilter !== null && $this->activeFilter !== '', function ($query) {
-                $query->where('employee_personal_details.active_emp', $this->activeFilter);
-            })
-            ->when(
-                $this->sortBy !== null && $this->sortBy !== '' && in_array($this->sortBy, ['asc', 'desc']),
-                function ($query) {
+        $BusinessID = Session('business_id');
+        $loginEmpId = Session::get('login_emp_id');
+        $permissionCheck = PolicySettingRoleAssignPermission::where('business_id', $BusinessID)->where('emp_id', $loginEmpId)->first();
+        if ($permissionCheck !== null && !empty($permissionCheck) && Session::get('login_role') != 1 && $permissionCheck->permission_type != 1) {
+            $page = $this->perPage != null ? $this->perPage : 10;
+            $this->tableShows = EmployeePersonalDetail::leftJoin('branch_list', 'branch_list.branch_id', '=', 'employee_personal_details.branch_id')
+                ->leftJoin('department_list', 'department_list.depart_id', '=', 'employee_personal_details.department_id')
+                ->leftJoin('designation_list', 'designation_list.desig_id', '=', 'employee_personal_details.designation_id')
+                ->leftJoin('static_employee_join_emp_type', 'static_employee_join_emp_type.type_id', '=', 'employee_personal_details.employee_type')
+                ->leftJoin('static_attendance_methods', 'static_attendance_methods.id', '=', 'employee_personal_details.emp_attendance_method')
+                ->leftJoin('static_attendance_shift_type', 'static_attendance_shift_type.id', '=', 'employee_personal_details.assign_shift_type') // Use leftJoin for inclusion of null values
+                ->where('employee_personal_details.business_id', Session::get('business_id'))
+                ->where('branch_list.business_id', Session::get('business_id'))
+                ->where('department_list.b_id', Session::get('business_id'))
+                ->where('designation_list.business_id', Session::get('business_id'))
+                ->where('employee_personal_details.branch_id', $permissionCheck->permission_branch_id)
+                ->when($this->branchFilter !== null && $this->branchFilter !== '', function ($query) {
+                    $query->where('employee_personal_details.branch_id', $this->branchFilter);
+                })
+                ->when($this->departmentFilter !== null && $this->departmentFilter !== '', function ($query) {
+                    $query->where('employee_personal_details.department_id', $this->departmentFilter);
+                })
+                ->when($this->designationFilter !== null && $this->designationFilter !== '', function ($query) {
+                    $query->where('employee_personal_details.designation_id', $this->designationFilter);
+                })
+                ->when($this->activeFilter !== null && $this->activeFilter !== '', function ($query) {
+                    $query->where('employee_personal_details.active_emp', $this->activeFilter);
+                })
+                ->when($this->sortBy !== null && $this->sortBy !== '' && in_array($this->sortBy, ['asc', 'desc']), function ($query) {
                     $query->orderBy('employee_personal_details.emp_id', $this->sortBy);
-                }
-            )
-            ->when($this->searchFilter !== null && $this->searchFilter !== '', function ($query) {
-                $searchFind = "%{$this->searchFilter}%";
-                $query->where(function ($query) use ($searchFind) {
-                    $query
-                        ->where('employee_personal_details.emp_name', 'like', $searchFind)
-                        ->orWhere('employee_personal_details.emp_mname', 'like', $searchFind)
-                        ->orWhere('employee_personal_details.emp_lname', 'like', $searchFind)
-                        ->orWhere('employee_personal_details.emp_id', 'like', $searchFind)
-                        ->orWhere('employee_personal_details.emp_date_of_joining', 'like', date('d-M-Y', strtotime($searchFind)))
-                        ->orWhere('employee_personal_details.emp_mobile_number', 'like', $searchFind)
-                        ->orWhere('branch_list.branch_name', 'like', $searchFind)
-                        ->orWhere('department_list.depart_name', 'like', $searchFind)
-                        ->orWhere('designation_list.desig_name', 'like', $searchFind)
-                        ->orWhere('static_attendance_shift_type.name', 'like', $searchFind)
-                        ->orWhere('static_attendance_methods.method_name', 'like', $searchFind)
-                        ->orWhere('static_employee_join_emp_type.emp_type', 'like', $searchFind);
-                });
-            })
-            ->orderBy('employee_personal_details.emp_id')
-            ->select('employee_personal_details.*', 'static_attendance_methods.method_name as attendance_method', 'static_attendance_shift_type.name as assign_shift', 'branch_list.branch_name as branch_name', 'department_list.depart_name as depart_name', 'designation_list.desig_name as designation_name', 'static_employee_join_emp_type.emp_type as employee_type')
-            // ->get();
-            ->paginate($page)
-            ->withQueryString();
+                })
+                ->when($this->searchFilter !== null && $this->searchFilter !== '', function ($query) {
+                    $searchFind = "%{$this->searchFilter}%";
+                    $query->where(function ($query) use ($searchFind) {
+                        $query
+                            ->where('employee_personal_details.emp_name', 'like', $searchFind)
+                            ->orWhere('employee_personal_details.emp_mname', 'like', $searchFind)
+                            ->orWhere('employee_personal_details.emp_lname', 'like', $searchFind)
+                            ->orWhere('employee_personal_details.emp_id', 'like', $searchFind)
+                            ->orWhere('employee_personal_details.emp_date_of_joining', 'like', date('d-M-Y', strtotime($searchFind)))
+                            ->orWhere('employee_personal_details.emp_mobile_number', 'like', $searchFind)
+                            ->orWhere('branch_list.branch_name', 'like', $searchFind)
+                            ->orWhere('department_list.depart_name', 'like', $searchFind)
+                            ->orWhere('designation_list.desig_name', 'like', $searchFind)
+                            ->orWhere('static_attendance_shift_type.name', 'like', $searchFind)
+                            ->orWhere('static_attendance_methods.method_name', 'like', $searchFind)
+                            ->orWhere('static_employee_join_emp_type.emp_type', 'like', $searchFind);
+                    });
+                })
+                ->orderBy('employee_personal_details.emp_id')
+                ->select('employee_personal_details.*', 'static_attendance_methods.method_name as attendance_method', 'static_attendance_shift_type.name as assign_shift', 'branch_list.branch_name as branch_name', 'department_list.depart_name as depart_name', 'designation_list.desig_name as designation_name', 'static_employee_join_emp_type.emp_type as employee_type')
+                // ->get();
+                ->paginate($page)
+                ->withQueryString();
+        } else {
+            $page = $this->perPage != null ? $this->perPage : 10;
+            $this->tableShows = EmployeePersonalDetail::leftJoin('branch_list', 'branch_list.branch_id', '=', 'employee_personal_details.branch_id')
+                ->leftJoin('department_list', 'department_list.depart_id', '=', 'employee_personal_details.department_id')
+                ->leftJoin('designation_list', 'designation_list.desig_id', '=', 'employee_personal_details.designation_id')
+                ->leftJoin('static_employee_join_emp_type', 'static_employee_join_emp_type.type_id', '=', 'employee_personal_details.employee_type')
+                ->leftJoin('static_attendance_methods', 'static_attendance_methods.id', '=', 'employee_personal_details.emp_attendance_method')
+                ->leftJoin('static_attendance_shift_type', 'static_attendance_shift_type.id', '=', 'employee_personal_details.assign_shift_type') // Use leftJoin for inclusion of null values
+                ->where('employee_personal_details.business_id', Session::get('business_id'))
+                ->where('branch_list.business_id', Session::get('business_id'))
+                ->where('department_list.b_id', Session::get('business_id'))
+                ->where('designation_list.business_id', Session::get('business_id'))
+                ->when($this->branchFilter !== null && $this->branchFilter !== '', function ($query) {
+                    $query->where('employee_personal_details.branch_id', $this->branchFilter);
+                })
+                ->when($this->departmentFilter !== null && $this->departmentFilter !== '', function ($query) {
+                    $query->where('employee_personal_details.department_id', $this->departmentFilter);
+                })
+                ->when($this->designationFilter !== null && $this->designationFilter !== '', function ($query) {
+                    $query->where('employee_personal_details.designation_id', $this->designationFilter);
+                })
+                ->when($this->activeFilter !== null && $this->activeFilter !== '', function ($query) {
+                    $query->where('employee_personal_details.active_emp', $this->activeFilter);
+                })
+                ->when($this->sortBy !== null && $this->sortBy !== '' && in_array($this->sortBy, ['asc', 'desc']), function ($query) {
+                    $query->orderBy('employee_personal_details.emp_id', $this->sortBy);
+                })
+                ->when($this->searchFilter !== null && $this->searchFilter !== '', function ($query) {
+                    $searchFind = "%{$this->searchFilter}%";
+                    $query->where(function ($query) use ($searchFind) {
+                        $query
+                            ->where('employee_personal_details.emp_name', 'like', $searchFind)
+                            ->orWhere('employee_personal_details.emp_mname', 'like', $searchFind)
+                            ->orWhere('employee_personal_details.emp_lname', 'like', $searchFind)
+                            ->orWhere('employee_personal_details.emp_id', 'like', $searchFind)
+                            ->orWhere('employee_personal_details.emp_date_of_joining', 'like', date('d-M-Y', strtotime($searchFind)))
+                            ->orWhere('employee_personal_details.emp_mobile_number', 'like', $searchFind)
+                            ->orWhere('branch_list.branch_name', 'like', $searchFind)
+                            ->orWhere('department_list.depart_name', 'like', $searchFind)
+                            ->orWhere('designation_list.desig_name', 'like', $searchFind)
+                            ->orWhere('static_attendance_shift_type.name', 'like', $searchFind)
+                            ->orWhere('static_attendance_methods.method_name', 'like', $searchFind)
+                            ->orWhere('static_employee_join_emp_type.emp_type', 'like', $searchFind);
+                    });
+                })
+                ->orderBy('employee_personal_details.emp_id')
+                ->select('employee_personal_details.*', 'static_attendance_methods.method_name as attendance_method', 'static_attendance_shift_type.name as assign_shift', 'branch_list.branch_name as branch_name', 'department_list.depart_name as depart_name', 'designation_list.desig_name as designation_name', 'static_employee_join_emp_type.emp_type as employee_type')
+                // ->get();
+                ->paginate($page)
+                ->withQueryString();
+        }
         // dd($this->tableShows);
         // ->simplePaginate($page)
         // $this->tableShows = $this->tableShows->count();
@@ -1115,15 +1302,42 @@ class EmployeePage extends Component
         return $this->tableShows;
     }
 
+    public function getReportingList()
+    {
+        return  $this->getReportingList = EmployeePersonalDetail::leftJoin('branch_list', 'branch_list.branch_id', '=', 'employee_personal_details.branch_id')
+            ->leftJoin('department_list', 'department_list.depart_id', '=', 'employee_personal_details.department_id')
+            ->leftJoin('designation_list', 'designation_list.desig_id', '=', 'employee_personal_details.designation_id')
+            // ->when($this->fast !== null && $this->fast !== '', function ($query) {
+            //     $query->where('employee_personal_details.branch_id', $this->fast);
+            // })
+            // ->when($this->fast !== null && $this->fast !== '', function ($query) {
+            //     $query->where('employee_personal_details.department_id', $this->fast);
+            // })
+            // ->when($this->fast !== null && $this->fast !== '', function ($query) {
+            //     $query->where('employee_personal_details.designation_id', $this->fast);
+            // })
+            // ->when($this->fast !== null && $this->fast !== '', function ($query) {
+            //     $query->where('employee_personal_details.active_emp', $this->fast);
+            // })
+            ->where('employee_personal_details.business_id', Session::get('business_id'))
+            ->select(
+                'employee_personal_details.emp_id',
+                DB::raw('COALESCE(employee_personal_details.emp_name, "") AS first_name'),
+                DB::raw('COALESCE(employee_personal_details.emp_mname, "") AS middle_name'),
+                DB::raw('COALESCE(employee_personal_details.emp_lname, "") AS last_name'),
+                DB::raw('COALESCE(branch_list.branch_name, "") AS branch_name'),
+                DB::raw('COALESCE(department_list.depart_name, "") AS depart_name'),
+                DB::raw('COALESCE(designation_list.desig_name, "") AS desig_name'),
+            )->orderBy('employee_personal_details.emp_id')
+            ->get();
+    }
     public function download($type)
     {
         $file_name = 'EmployeePage-FixHr';
         $collection = $this->getExportCollection();
         $data = $collection[0];
         $businessID = Session::get('business_id');
-        $business = DB::table('business_details_list')
-            ->where('business_id', $businessID)
-            ->first();
+        $business = DB::table('business_details_list')->where('business_id', $businessID)->first();
         $EmployeeTotal = $collection[1];
         $Active = $collection[2];
         $InACtive = $collection[3];
@@ -1141,10 +1355,9 @@ class EmployeePage extends Component
         }
     }
 
-
-
     public function render()
     {
+        // dd("JKO");
         $call = new Central_unit();
         $Branch = $call->BranchList();
         $accessPermission = Central_unit::AccessPermission();
@@ -1152,17 +1365,9 @@ class EmployeePage extends Component
         $permissions = $accessPermission[1];
         // $contractual=Static
 
-        $shiftAttendance = DB::table('policy_attendance_shift_settings')
-            ->join('static_attendance_shift_type', 'policy_attendance_shift_settings.shift_type', '=', 'static_attendance_shift_type.id')
-            ->where('business_id', Session::get('business_id'))
-            ->select('policy_attendance_shift_settings.id as attendance_id', 'policy_attendance_shift_settings.shift_type_name')
-            ->get();
+        $shiftAttendance = DB::table('policy_attendance_shift_settings')->join('static_attendance_shift_type', 'policy_attendance_shift_settings.shift_type', '=', 'static_attendance_shift_type.id')->where('business_id', Session::get('business_id'))->select('policy_attendance_shift_settings.id as attendance_id', 'policy_attendance_shift_settings.shift_type_name')->get();
 
-        $setupAssociated = DB::table('policy_master_endgame_method')
-            ->where('business_id', Session::get('business_id'))
-            ->where('method_switch', '1')
-            ->select('id', 'method_name', 'method_switch')
-            ->get();
+        $setupAssociated = DB::table('policy_master_endgame_method')->where('business_id', Session::get('business_id'))->where('method_switch', '1')->select('id', 'method_name', 'method_switch')->get();
 
         $DATA = $this->getData();
 
@@ -1177,8 +1382,13 @@ class EmployeePage extends Component
         $getEmpType = DB::table('static_employee_join_emp_type')->get();
         $getContractualType = DB::table('static_employee_join_contractual_type')->get();
         $employeeActive = DB::table('static_employee_join_active_type')->get();
-        // 'DATA',
-        return view('livewire.admin.employee-page', compact('DATA', 'getEmpType', 'getContractualType', 'employeeActive', 'StaticReligon', 'setupAssociated', 'Branch', 'moduleName', 'permissions', 'shiftAttendance', 'attendanceMethod', 'staticGender', 'staticMarital', 'statciCategory', 'staticbloodGroup', 'staticGovId', 'getCountry', 'permissions'));
+        $fast = $this->fast;
+
+
+
+        $listMode = $this->getReportingList();
+
+        return view('livewire.admin.employee-page', compact('DATA', 'listMode', 'fast', 'getEmpType', 'getContractualType', 'employeeActive', 'StaticReligon', 'setupAssociated', 'Branch', 'moduleName', 'permissions', 'shiftAttendance', 'attendanceMethod', 'staticGender', 'staticMarital', 'statciCategory', 'staticbloodGroup', 'staticGovId', 'getCountry', 'permissions'));
     }
     public function getExportCollection()
     {
@@ -1208,12 +1418,10 @@ class EmployeePage extends Component
             ->when($this->designationFilter !== null && $this->designationFilter !== '', function ($query) {
                 $query->where('employee_personal_details.designation_id', $this->designationFilter);
             })
-            ->when(
-                $this->sortBy !== null && $this->sortBy !== '' && in_array($this->sortBy, ['asc', 'desc']),
-                function ($query) {
-                    $query->orderBy('employee_personal_details.emp_id', $this->sortBy);
-                }
-            )->when($this->searchFilter !== null && $this->searchFilter !== '', function ($query) {
+            ->when($this->sortBy !== null && $this->sortBy !== '' && in_array($this->sortBy, ['asc', 'desc']), function ($query) {
+                $query->orderBy('employee_personal_details.emp_id', $this->sortBy);
+            })
+            ->when($this->searchFilter !== null && $this->searchFilter !== '', function ($query) {
                 $searchFind = "%{$this->searchFilter}%";
                 $query->where(function ($query) use ($searchFind) {
                     $query
@@ -1261,7 +1469,7 @@ class EmployeePage extends Component
                 DB::raw('COALESCE(policy_master_endgame_method.method_name, "") AS emp_master_endgame_name'),
                 DB::raw('COALESCE(static_attendance_methods.method_name, "") AS emp_attendance_method'),
                 DB::raw('COALESCE(policy_attendance_shift_settings.shift_type_name, "") AS shift_type_name'),
-                DB::raw('COALESCE(employee_personal_details.emp_reporting_manager, "") AS emp_reporting_manager'),
+                DB::raw('COALESCE(employee_personal_details.emp_reporting_manager_names, "") AS emp_reporting_manager'),
                 DB::raw('(CASE WHEN employee_personal_details.active_emp = 1 THEN "Active" ELSE "In-Active" END) as active'),
             )
             ->get();

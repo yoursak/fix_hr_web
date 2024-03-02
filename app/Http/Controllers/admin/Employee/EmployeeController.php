@@ -31,18 +31,26 @@ use App\Exports\AddEmployeeDetails;
 use App\Exports\ExportEmployeeDetails;
 use App\Helpers\MasterRulesManagement\RulesManagement;
 use App\Imports\EmployeeImport;
+use App\Models\admin\BranchList;
+use App\Models\admin\DepartmentList;
+use App\Models\admin\Designation_list;
+use App\Models\StaticEmployeeEligible;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\ExportEmployeeContractualTemplates;
+use App\Models\GradeList;
+use App\Models\StaticCityModel;
+use App\Models\StaticCountryModel;
+use App\Models\StaticStatesModel;
+use App\Models\StaticStaticEmployeeEligible;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 use Maatwebsite\Excel\Validators\ValidationException;
-
+use PowerComponents\LivewirePowerGrid\Filters\Builders\Select;
 
 class EmployeeController extends Controller
 {
     public function index()
     {
-        // dd($data);
         return view('admin.employees.employee');
     }
 
@@ -279,34 +287,161 @@ class EmployeeController extends Controller
     // }
     public function empProfile(Request $request)
     {
-        // dd($id);
-        // DB::enableQueryLog();
-
         $session_id = Session::get('business_id');
         $DATA = EmployeePersonalDetail::Join('static_attendance_methods', 'employee_personal_details.emp_attendance_method', '=', 'static_attendance_methods.id')
-            ->Join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
-            ->Join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+            ->leftJoin('branch_list', 'employee_personal_details.branch_id','=','branch_list.branch_id')
+            ->leftJoin('department_list','employee_personal_details.department_id','=','department_list.depart_id')
             ->Join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
             ->Join('policy_attendance_shift_settings', 'employee_personal_details.emp_shift_type', '=', 'policy_attendance_shift_settings.id')
             ->Join('policy_master_endgame_method', 'employee_personal_details.master_endgame_id', '=', 'policy_master_endgame_method.id')
-            ->Join('static_countries', 'employee_personal_details.emp_country', '=', 'static_countries.id')
-            ->Join('static_cities', 'employee_personal_details.emp_city', '=', 'static_cities.id')
-            ->Join('static_states', 'employee_personal_details.emp_state', '=', 'static_states.id')
+            ->leftJoin('static_countries','employee_personal_details.emp_country','=','static_countries.id')
+            ->leftJoin('static_cities', 'employee_personal_details.emp_city','=','static_cities.id')
+            ->leftJoin('static_states', 'employee_personal_details.emp_state','=','static_states.id')
+            ->leftJoin('static_employee_eligible','employee_personal_details.pf_eligible','=','static_employee_eligible.eligible_id')
+            ->leftJoin('static_employee_eligible as employ_eligible_eps', 'employ_eligible_eps.eligible_id','=','employee_personal_details.eps_eligible')
+            ->leftJoin('static_employee_eligible as employ_eligible_lwf','employ_eligible_lwf.eligible_id','=', 'employee_personal_details.lwf_eligible')
             ->where('employee_personal_details.emp_id', $request->id)
             ->where('employee_personal_details.business_id', $session_id)
             ->where('policy_master_endgame_method.business_id', $session_id)
-            ->select('designation_list.desig_name', 'department_list.depart_name', 'branch_list.branch_name', 'employee_personal_details.*', 'policy_attendance_shift_settings.*', 'static_attendance_methods.*', 'policy_master_endgame_method.method_name as setup_name', 'static_countries.name as CountyName','static_cities.name as CityName','static_states.name as StateName')
+            ->select('employee_personal_details.*','employee_personal_details.id as employ_id',
+            'designation_list.desig_name',
+            'static_employee_eligible.eligible as pf_eligible_one',
+            'employ_eligible_eps.eligible as eps_eligible_one',
+            'employ_eligible_lwf.eligible as hps_eligible_three',
+            'designation_list.desig_id',
+            'department_list.depart_name',
+            'department_list.depart_id',
+            'branch_list.branch_name',
+            'branch_list.branch_id as branch_id',
+            'static_countries.name as CountyName',
+            'static_cities.name as CityName',
+            'static_states.name as StateName',
+            'policy_master_endgame_method.method_name as setup_name',
+            'policy_master_endgame_method.id as set_id',
+            'policy_attendance_shift_settings.shift_type_name',
+            'policy_attendance_shift_settings.id as shift_id',
+            'static_attendance_methods.method_name','static_attendance_methods.id as method_id' )
+            ->with('grade_list')
             ->first();
-
-        // dd($DATA);
-
+            // dd($DATA->updated_at_emp);
+            $grade_list  = GradeList::select('*')->get();
+            $country_list  = StaticCountryModel::select('*')->get();
+            $state_list  = StaticStatesModel::select('*')->get();
+            $city_list  = StaticCityModel::select('*')->where('state_id',$DATA->emp_state)->get();
+            $policy_master_list  = PolicyMasterEndgameMethod::select('*')->where('method_switch',1)->where('business_id',Session::get('business_id'))->get();
+            $branch_list  = BranchList::select('*')->where('business_id',Session::get('business_id'))->get();
+            // dd(' $branch_list', $branch_list);
+            $department_list  = DepartmentList::select('*')->get();
+            $designation_list  = Designation_list::select('*')->get();
+            $policy_list  = PolicyAttendanceShiftSetting::select('*')->get();
+            $attendance_list  = StaticAttendanceMethod::select('*')->get();
+            $staticGovId = StaticEmployeeJoinGovtDocType::select('*')->get();
+            $eligible_id = StaticEmployeeEligible::select('*')->get();
+            $gender_id = StaticEmployeeJoinGenderType::select('*')->get();
+            // dd($gender_id);
         if ($DATA) {
-            return view('admin.employees.emp_profile', compact('DATA'));
+            return view('admin.employees.emp_profile', compact('DATA','grade_list','country_list','state_list','city_list','policy_master_list','policy_list','branch_list','department_list','designation_list','policy_list', 'attendance_list', 'staticGovId', 'eligible_id','gender_id'));
             // return view('admin.dashboard.dashboard');
         } else {
             return back();
         }
     }
+    // Start update employee
+    public function UpdateContractualEmployee(Request $request)
+    {
+        $data_one = EmployeePersonalDetail::select('*')->where('id', $request->hidden_id)->first();
+        if ($request->data_update == 'Employee') {
+            $added = $data_one->update([
+                'emp_name' => $request->update_name,
+                'emp_mname' => $request->middle_name,
+                'emp_lname' => $request->last_name,
+                'emp_id' => $request->update_emp_id,
+                'emp_date_of_joining' => $request->update_doj,
+                'grade' => $request->update_grade,
+                'emp_mobile_number' => $request->update_mobile_number,
+                'emp_email' => $request->udpate_email,
+                'emp_date_of_birth' => $request->dob,
+                'emp_gender' => $request->update_gender,
+                'emp_address' => $request->update_address,
+                'updated_at_emp' => now(),
+            ]);
+            return redirect('admin/employee/profile/' . $data_one->emp_id);
+        } elseif ($request->data_update == 'Residential') {
+            // dd('aaya data 1');
+            // dd($request->all());
+            $added = $data_one->update([
+                'emp_country' => $request->country,
+                'emp_state' => $request->state,
+                'emp_city' => $request->city,
+                'emp_pin_code' => $request->pin_code,
+                'emp_address' => $request->update_address,
+                'updated_at_reside' => now(),
+            ]);
+            return redirect('admin/employee/profile/' . $data_one->emp_id);
+        } elseif ($request->data_update == 'Company') {
+            // dd('aaya data 2')
+            // dd($request->all());
+            $added = $data_one->update([
+                'master_endgame_id' => $request->master_endgame_id,
+                'branch_id' => $request->branch,
+                'department_id' => $request->department,
+                'designation_id' => $request->designation,
+                'emp_shift_type' => $request->emp_shift_type,
+                'emp_attendance_method' => $request->attendance_method,
+                'updated_at_comp' => now(),
+            ]);
+            return redirect('admin/employee/profile/' . $data_one->emp_id);
+        } elseif ($request->data_update == 'Bank') {
+            $added = $data_one->update([
+                'bank_account_no' => $request->update_bank_accountno,
+                'bank_branch_name' => $request->update_branch_name,
+                'bank_name' => $request->update_branch_name,
+                'account_code' => $request->update_account_code,
+                'bank_ifsc_code' => $request->update_ifsc_code,
+                'bank_branch_code' => $request->update_branch_code,
+                'bank_micr_code' => $request->update_micr_code,
+                'bank_address_line1' => $request->update_bank_address_line1,
+                'bank_address_line2' => $request->update_bank_address_line2,
+                'updated_at_bank' => now(),
+            ]);
+            return redirect('admin/employee/profile/' . $data_one->emp_id);
+        } elseif ($request->data_update == 'employee_bank') {
+            // dd($request->all());
+            $added = $data_one->update([
+                'emp_gov_select_id' => $request->emp_gov_select_id,
+                'emp_gov_select_id_number' => $request->emp_gov_select_id_number,
+                'pf_no' => $request->pf_no,
+                'eps_no' => $request->eps_no,
+                'pf_joining_no' => $request->pf_joining_no,
+                'pf_eligible' => $request->pf_eligible,
+                'lwf_eligible' => $request->lwf_eligible,
+                'eps_eligible' => $request->eps_eligible,
+                'eps_joining_no' => $request->eps_joining_no,
+                'eps_exit_data' => $request->eps_exit_data,
+                'hps_eligible' => $request->hps_eligible,
+                'updated_at_account' => now(),
+            ]);
+            return redirect('admin/employee/profile/' . $data_one->emp_id);
+        } elseif ($request->data_update == 'Family') {
+            $added = $data_one->update([
+                'family_name' => $request->family_name,
+                'relationship' => $request->relationship,
+                'relative_date_of_birth' => $request->relative_date_of_birth,
+                'relative_phone_no' => $request->relative_phone_no,
+                'updated_at_fanily' => now(),
+            ]);
+            return redirect('admin/employee/profile/' . $data_one->emp_id);
+        } elseif ($request->data_update == 'image') {
+            // $added = $data_one->update([
+                // 'profile_photo' => date('d-m-Y') . '_' . $request->update_image,
+            // ]);
+            // dd($added);
+            return redirect('admin/employee/profile/' . $data_one->emp_id);
+        }
+        return back();
+    }
+    // End update employee
+
     // add employee
 
     public function AddContractualEmployee(Request $request)

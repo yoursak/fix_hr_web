@@ -30,7 +30,7 @@ return [
     | to immediately expire on the browser closing, set that option.
     |
     */
-
+// 120
     'lifetime' => env('SESSION_LIFETIME', 120),
 
     'expire_on_close' => false,

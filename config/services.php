@@ -31,4 +31,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'phonepe' => [
+        'merchant_id' => env('PHONEPE_MERCHANT_ID'),
+        'api_key' => env('PHONEPE_API_KEY'),
+        'api_secret' => env('PHONEPE_API_SECRET'),
+        'redirect_url' => env('PHONEPE_REDIRECT_URL'),
+    ],
 ];

@@ -40,6 +40,7 @@ use App\Models\PolicySettingRoleAssignPermission;
 use App\Models\PolicyAttendanceShiftTypeItem;
 use App\Models\PolicyHolidayDetail;
 use App\Models\PolicyMasterEndgameMethod;
+use Session;
 
 class RolePermissionController extends Controller
 {
@@ -58,23 +59,62 @@ class RolePermissionController extends Controller
 
     public function AdminList(Request $request)
     {
-        $admins = LoginAdmin::where([
-            'business_id' => $request->session()->get('business_id'),
-        ])->get();
-        $roles = PolicySettingRoleCreate::where([
-            'business_id' => $request->session()->get('business_id'),
-        ])->get();
-        $pendings = PendingAdmin::where([
-            'business_id' => $request->session()->get('business_id'),
-        ])->get();
-        $permissions = Permission::where([
-            'business_id' => $request->session()->get('business_id'),
-        ])->get();
+        $businessId = Session::get('business_id');
+        $roleIdToCheck = Session::get('login_role');
+        $checkArrayPermission =
+            PolicySettingRoleAssignPermission::where('business_id', $businessId)
+            ->where('emp_id', Session::get('login_emp_id'))
+            ->first();
+        if ($checkArrayPermission !== null && !empty($checkArrayPermission) && $roleIdToCheck != 1 && ($checkArrayPermission->permission_type == 2)) {
+            $admins = LoginAdmin::where([
+                'business_id' => $businessId,
+            ])->get();
 
+            $roles = PolicySettingRoleCreate::where([
+                'business_id' => $businessId,
+            ])->get();
+            $pendings = PendingAdmin::where([
+                'business_id' => $businessId,
+            ])->get();
+            $permissions = Permission::where([
+                'business_id' => $businessId,
+            ])->get();
+
+            $AdminCount = Central_unit::CountersValue();
+            $Employee = Central_unit::EmployeeDetails();
+            $Owner = DB::table('business_details_list')->where('business_id', Session::get('business_id'))->get();
+        } else {
+            $admins = LoginAdmin::where([
+                'business_id' => $businessId,
+            ])->get();
+            $roles = PolicySettingRoleCreate::where([
+                'business_id' => $businessId,
+            ])->get();
+            $pendings = PendingAdmin::where([
+                'business_id' => $businessId,
+            ])->get();
+            $permissions = Permission::where([
+                'business_id' => $businessId,
+            ])->get();
+            $AdminCount = Central_unit::CountersValue();
+            $Employee = PolicySettingRoleAssignPermission::leftJoin('employee_personal_details', 'employee_personal_details.emp_id', '=', 'policy_setting_role_assign_permission.emp_id')
+                ->leftJoin('branch_list', 'branch_list.branch_id', '=', 'policy_setting_role_assign_permission.branch_id')
+                ->leftJoin('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+                ->leftJoin('static_permission_type', 'static_permission_type.id', 'policy_setting_role_assign_permission.permission_type')
+                ->leftJoin('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+                ->leftJoin('policy_setting_role_create', 'policy_setting_role_create.id', '=', 'policy_setting_role_assign_permission.role_id')
+                ->where('employee_personal_details.business_id',  $businessId)
+                ->where('employee_personal_details.active_emp', 1)
+                ->where('employee_personal_details.role_id', '!=', 0)
+                ->selectRaw(' policy_setting_role_assign_permission.*, policy_setting_role_create.id as role_id, policy_setting_role_create.roles_name, department_list.depart_name, branch_list.branch_name, designation_list.desig_name, employee_personal_details.emp_name, employee_personal_details.emp_mname, employee_personal_details.emp_lname, employee_personal_details.emp_mobile_number, employee_personal_details.profile_photo, employee_personal_details.emp_email, static_permission_type.permission_type_name')
+                ->get();
+         
+            $Owner = DB::table('business_details_list')->where('business_id', Session::get('business_id'))->get();
+        }
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permission = $accessPermission[1];
-        return view('admin.setting.permissions.AdminList', compact('moduleName', 'permission', 'admins', 'roles', 'pendings', 'permissions'));
+        return view('admin.setting.permissions.AdminList', compact('Employee',  'AdminCount', 'moduleName', 'permission', 'admins', 'roles', 'pendings', 'permissions', 'Owner'));
     }
 
     // assign send mail
@@ -133,7 +173,6 @@ class RolePermissionController extends Controller
                 return redirect('/');
             }
         }
-
     }
 
     public function assignPermissionToModel(Request $request)
@@ -209,7 +248,7 @@ class RolePermissionController extends Controller
                 ]);
 
                 if (isset($update_employee)) {
-                    Alert::success('Congratulations', 'Role Assigned Successfully');
+                    Alert::success('', 'Role Assigned Successfully');
                 }
             }
         } else {
@@ -230,7 +269,7 @@ class RolePermissionController extends Controller
                 ]);
 
                 if (isset($update_employee)) {
-                    Alert::success('Congratulations', 'Role Assigned Successfully');
+                    Alert::success('', 'Role Assigned Successfully');
                 }
             }
         }

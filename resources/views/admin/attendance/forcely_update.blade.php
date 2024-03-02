@@ -94,8 +94,8 @@
                                     <div class="mb-5">
                                         <span class="my-5"><span class="fw-bold fs-14">Shift Name : </span><span
                                                 id="shiftName">N/A</span></span><br>
-                                        <span class="my-5"><span class="fw-bold fs-14">Start : </span><span
-                                                id="ShiftStart">N/A</span><br><span class="fw-bold fs-14">End : </span><span
+                                        <span class="my-5"><span class="fw-bold fs-14">Shift Start : </span><span
+                                                id="ShiftStart">N/A</span><br><span class="fw-bold fs-14"> Shift End : </span><span
                                                 id="ShiftEnd"> N/A</span></span>
                                     </div>
                                 </div>
@@ -152,7 +152,7 @@
                                         <label class="form-label">Punch In</label>
                                         <div class="input-group">
                                             <input type="text" id="punchInTime" name="in_time"
-                                                class="form-control timepicker" value="9:30 AM">
+                                                class="form-control timepicker" value="---" required>
                                             <div class="input-group-text">
                                                 <i class="fa fa-clock-o"></i>
                                             </div>
@@ -164,7 +164,7 @@
                                         <label class="form-label">Punch Out</label>
                                         <div class="input-group">
                                             <input type="text" id="punchOutTime" name="out_time"
-                                                class="form-control timepicker" value="06:30 PM">
+                                                class="form-control timepicker" value="---" required>
                                             <div class="input-group-text">
                                                 <i class="fa fa-clock-o"></i>
                                             </div>

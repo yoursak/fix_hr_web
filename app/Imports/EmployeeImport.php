@@ -126,16 +126,16 @@ class EmployeeImport implements ToModel, WithHeadingRow, WithValidation //ToColl
                 'assign_attendance_method' => ['required', 'string', Rule::in(StaticAttendanceMethod::pluck('method_name')->toArray()),],
                 'assign_shift_type' => ['required',  Rule::in(PolicyAttendanceShiftSetting::where('business_id', $this->CurrentYourBusinesss)->pluck('shift_type_name')->toArray()),],
                 'activein_active' => ['required', 'string', Rule::in(StaticEmployeeJoinActiveType::pluck('name')->toArray()),],
-                'ifsc_code' => ['required', 'string'],
-                'bank_name' => ['required', 'string'],
-                'branch_name' => ['required', 'string'],
-                'bank_account_no' => ['required', 'string'],
-                'branch_code' => ['required', 'string'],
-                'micr_no' => ['required', 'string'],
-                'bank_adddress_line_1' => ['required', 'string'],
-                'grade' => ['required', 'string'],
-                'budget_code' => ['required', 'string'],
-                'account_code' => ['required', 'string'],
+                // 'ifsc_code' => ['required', 'string'],
+                // 'bank_name' => ['required', 'string'],
+                // 'branch_name' => ['required', 'string'],
+                // 'bank_account_no' => ['required', 'string'],
+                // 'branch_code' => ['required', 'string'],
+                // 'micr_no' => ['required', 'string'],
+                // 'bank_adddress_line_1' => ['required', 'string'],
+                // 'grade' => ['required', 'string'],
+                // 'budget_code' => ['required', 'string'],
+                // 'account_code' => ['required', 'string'],
             ];
         }
 
@@ -164,16 +164,16 @@ class EmployeeImport implements ToModel, WithHeadingRow, WithValidation //ToColl
                 'assign_attendance_method' => ['required', 'string', Rule::in(StaticAttendanceMethod::pluck('method_name')->toArray()),],
                 'assign_shift_type' => ['required',  Rule::in(PolicyAttendanceShiftSetting::where('business_id', $this->CurrentYourBusinesss)->pluck('shift_type_name')->toArray()),],
                 'activein_active' => ['required', 'string', Rule::in(StaticEmployeeJoinActiveType::pluck('name')->toArray()),],
-                'ifsc_code' => ['required', 'string'],
-                'bank_name' => ['required', 'string'],
-                'branch_name' => ['required', 'string'],
-                'bank_account_no' => ['required', 'string'],
-                'branch_code' => ['required', 'string'],
-                'micr_no' => ['required', 'string'],
-                'bank_adddress_line_1' => ['required', 'string'],
-                'grade' => ['required', 'string'],
-                'budget_code' => ['required', 'string'],
-                'account_code' => ['required', 'string'],
+                // 'ifsc_code' => ['required', 'string'],
+                // 'bank_name' => ['required', 'string'],
+                // 'branch_name' => ['required', 'string'],
+                // 'bank_account_no' => ['required', 'string'],
+                // 'branch_code' => ['required', 'string'],
+                // 'micr_no' => ['required', 'string'],
+                // 'bank_adddress_line_1' => ['required', 'string'],
+                // 'grade' => ['required', 'string'],
+                // 'budget_code' => ['required', 'string'],
+                // 'account_code' => ['required', 'string'],
 
             ];
         }
@@ -208,16 +208,16 @@ class EmployeeImport implements ToModel, WithHeadingRow, WithValidation //ToColl
                 'assign_attendance_method.required' => 'Assign Attendance Method is required.',
                 'assign_shift_type.required' => 'Employee Shift Type is required.',
                 'activein_active.required' => 'Employee Status is required.',
-                'ifsc_code' => 'IFSC code is required.',
-                'bank_name' => 'Bank Name is required.',
-                'branch_name' => 'Branch Name is required.',
-                'bank_account_no' => 'Bank Account Number is required.',
-                'branch_code' => 'Branch code is required.',
-                'micr_no' => 'MICR No. is required.',
-                'bank_adddress_line_1' => 'Bank Address is required.',
-                'grade' => 'Grade Code is required.',
-                'budget_code' => 'Budget  Code is required.',
-                'account_code' => 'Account Code is required.',
+                // 'ifsc_code' => 'IFSC code is required.',
+                // 'bank_name' => 'Bank Name is required.',
+                // 'branch_name' => 'Branch Name is required.',
+                // 'bank_account_no' => 'Bank Account Number is required.',
+                // 'branch_code' => 'Branch code is required.',
+                // 'micr_no' => 'MICR No. is required.',
+                // 'bank_adddress_line_1' => 'Bank Address is required.',
+                // 'grade' => 'Grade Code is required.',
+                // 'budget_code' => 'Budget  Code is required.',
+                // 'account_code' => 'Account Code is required.',
 
 
             ];
@@ -248,16 +248,16 @@ class EmployeeImport implements ToModel, WithHeadingRow, WithValidation //ToColl
                 'assign_attendance_method.required' => 'Assign Attendance Method is required.',
                 'assign_shift_type.required' => 'Employee Shift Type is required.',
                 'activein_active.required' => 'Employee Status is required.',
-                'ifsc_code' => 'IFSC code is required.',
-                'bank_name' => 'Bank Name is required.',
-                'branch_name' => 'Branch Name is required.',
-                'bank_account_no' => 'Bank Account Number is required.',
-                'branch_code' => 'Branch code is required.',
-                'micr_no' => 'MICR No. is required.',
-                'bank_adddress_line_1' => 'Bank Address is required.',
-                'grade' => 'Grade Code is required.',
-                'budget_code' => 'Budget  Code is required.',
-                'account_code' => 'Account Code is required.',
+                // 'ifsc_code' => 'IFSC code is required.',
+                // 'bank_name' => 'Bank Name is required.',
+                // 'branch_name' => 'Branch Name is required.',
+                // 'bank_account_no' => 'Bank Account Number is required.',
+                // 'branch_code' => 'Branch code is required.',
+                // 'micr_no' => 'MICR No. is required.',
+                // 'bank_adddress_line_1' => 'Bank Address is required.',
+                // 'grade' => 'Grade Code is required.',
+                // 'budget_code' => 'Budget  Code is required.',
+                // 'account_code' => 'Account Code is required.',
 
 
             ];
@@ -277,11 +277,10 @@ class EmployeeImport implements ToModel, WithHeadingRow, WithValidation //ToColl
     }
     public function model(array $row)
     {
-        // dd($row);
         if ($this->employeeType == 1) {
 
             $CallGetName = RulesManagement::getCheckingCountryStateCity(true, $row['country'], $row['state'], $row['city']);
-            $getAllStaticDataCheckAdjust = RulesManagement::getImportAllContent($this->CurrentYourBusinesss, $row['gender'], $row['marital_status'], $row['religion'], $row['caste_category'], $row['blood_group'], $row['govt_id_type'], $row['branch'], $row['department'], $row['designation'], $row['employee_type'], $row['assign_setup'], $row['assign_attendance_method'], $row['assign_shift_type'], $row['activein_active'], $row['country'], $row['employee_id'], $row['mobile_no'], $row['email_id']);
+            $getAllStaticDataCheckAdjust = RulesManagement::getImportAllContent($this->CurrentYourBusinesss, $row['gender'], $row['marital_status'], $row['religion'], $row['caste_category'], $row['blood_group'], $row['govt_id_type'], $row['branch'], $row['department'], $row['designation'], $row['employee_type'], $row['assign_setup'], $row['assign_attendance_method'], $row['assign_shift_type'], $row['activein_active'], $row['country'], $row['employee_id'], $row['mobile_no'], $row['email_id'], $row['reporting_manager']);
 
             return new EmployeePersonalDetail([
                 'emp_id' => $row['employee_id'],
@@ -314,7 +313,8 @@ class EmployeeImport implements ToModel, WithHeadingRow, WithValidation //ToColl
                 'emp_attendance_method' => $getAllStaticDataCheckAdjust[11],
                 'emp_shift_type' => $getAllStaticDataCheckAdjust[12],
                 'assign_shift_type' => $getAllStaticDataCheckAdjust[13],
-                'emp_reporting_manager' => $row['reporting_manager'],
+                'emp_reporting_manager' => $getAllStaticDataCheckAdjust[15],
+                'emp_reporting_manager_names' => $getAllStaticDataCheckAdjust[16],
                 'active_emp' => $getAllStaticDataCheckAdjust[14],
                 'bank_ifsc_code' => $row['ifsc_code'],
                 'bank_name' => $row['bank_name'],
@@ -331,7 +331,7 @@ class EmployeeImport implements ToModel, WithHeadingRow, WithValidation //ToColl
         }
         if ($this->employeeType == 2) {
             $CallGetName = RulesManagement::getCheckingCountryStateCity(true, $row['country'], $row['state'], $row['city']);
-            $getAllStaticDataCheckAdjust = RulesManagement::getImportAllContentP2($this->CurrentYourBusinesss, $row['gender'], $row['marital_status'], $row['religion'], $row['caste_category'], $row['blood_group'], $row['govt_id_type'], $row['branch'], $row['department'], $row['designation'], $row['employee_type'], $row['contractual_type'], $row['assign_setup'], $row['assign_attendance_method'], $row['assign_shift_type'], $row['activein_active'], $row['country'], $row['employee_id'], $row['mobile_no'], $row['email_id']);
+            $getAllStaticDataCheckAdjust = RulesManagement::getImportAllContentP2($this->CurrentYourBusinesss, $row['gender'], $row['marital_status'], $row['religion'], $row['caste_category'], $row['blood_group'], $row['govt_id_type'], $row['branch'], $row['department'], $row['designation'], $row['employee_type'], $row['contractual_type'], $row['assign_setup'], $row['assign_attendance_method'], $row['assign_shift_type'], $row['activein_active'], $row['country'], $row['employee_id'], $row['mobile_no'], $row['email_id'], $row['reporting_manager']);
 
             return new EmployeePersonalDetail([
                 'emp_id' => $row['employee_id'],
@@ -365,7 +365,8 @@ class EmployeeImport implements ToModel, WithHeadingRow, WithValidation //ToColl
                 'emp_attendance_method' => $getAllStaticDataCheckAdjust[12],
                 'emp_shift_type' => $getAllStaticDataCheckAdjust[13],
                 'assign_shift_type' => $getAllStaticDataCheckAdjust[14],
-                'emp_reporting_manager' => $row['reporting_manager'],
+                'emp_reporting_manager' => $getAllStaticDataCheckAdjust[16],
+                'emp_reporting_manager_names' => $getAllStaticDataCheckAdjust[17],
                 'active_emp' => $getAllStaticDataCheckAdjust[15],
                 'bank_ifsc_code' => $row['ifsc_code'],
                 'bank_name' => $row['bank_name'],

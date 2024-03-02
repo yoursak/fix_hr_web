@@ -35,27 +35,24 @@
                 <p>Please Provide Details as Asked Below for a Unique Account Creation</p>
                 <?php
                 $Helper = new App\Helpers\Central_unit();
-                $root = DB::table('business_details_list')
-                    ->where('business_email', Session::get('email'))
-                    ->first();
-                
-                $adminList = DB::table('employee_personal_details')
-                    ->where('emp_email', Session::get('email'))
-                    ->get();
-                
+                $RuleManagement = new App\Helpers\MasterRulesManagement\RulesManagement();
+                $root = DB::table('business_details_list')->where('business_email', Session::get('email'))->first();
+
+                $adminList = DB::table('employee_personal_details')->where('emp_email', Session::get('email'))->get();
+
                 // dd($root);
                 $index = 0;
                 $cardId = "card-{$index}";
-                
-                $cardType = 'owner'; // Generate a unique ID for each card
+
+                $cardType = 'Owner'; // Generate a unique ID for each card
                 ?>
                 <div class="col-md-12 col-sm-6 col-lg-12  owner-card p-0" id="{{ $cardId }}">
                     <form action="{{ route('admin.handleCard') }}" method="post">
                         @csrf
-                        <?php if($root!=null){ 
-                              $cardBusinessID = (string) $root->business_id;
-                              $cardBusinessName=(string) $root->business_name;
-                            ?>
+                        <?php if ($root != null) {
+                        $cardBusinessID = (string) $root->business_id;
+                        $cardBusinessName = (string) $root->business_name;
+                    ?>
                         <div class="offer offer-radius offer-primary">
                             <div class="shape">
 
@@ -71,27 +68,33 @@
                             </div>
                         </div>
                         <?php }
-                        ?>
+                    ?>
                     </form>
                 </div>
                 <?php
-                foreach ($adminList as $adminIndex => $adminItem) {
-                    if ($adminItem->business_id != null) {
-                        $adminCardType = 'admin';
-                        $adminBusinessID = (string) $adminItem->business_id;
-                        $adminBranchID = (string) $adminItem->branch_id;
-                        $adminBusinessName = $Helper->BusinessIdToName2($adminItem->business_id);
-                        $adminCardId = "card-admin-{$adminIndex}";
-                        ?>
+            foreach ($adminList as $adminIndex => $adminItem) {
+                if ($adminItem->business_id != null) {
+                    $adminCardType = 'admin';
+
+                    $adminRoleName=(string)$RuleManagement->roleIDToNameConvert($adminItem->role_id,$adminItem->business_id);
+
+                    $adminBusinessID = (string) $adminItem->business_id;
+                    $adminBranchID = (string) $adminItem->branch_id;
+                    $adminDesignationID = (string) $adminItem->designation_id;
+                    $adminBusinessName = $Helper->BusinessIdToName2($adminItem->business_id);
+                    $adminCardId = "card-admin-{$adminIndex}";
+            ?>
                 <div class="col-md-12 col-sm-6 col-lg-12 p-0 admin-card" data-index="{{ $adminIndex }}"
                     id="{{ $adminCardId }}">
                     <form action="{{ route('admin.handleCard') }}" method="post">
                         @csrf
                         <div class="offer offer-radius offer-primary">
                             <div class="shape">
-                                <div class="shape-text">{{ $adminCardType }}</div>
+                                <div class="shape-text">{{ $adminRoleName }}</div>
+                                <div class="shape-logintype" hidden>{{ $adminCardType }}</div>
                                 <div class="shape-id" hidden>{{ $adminBusinessID }}</div>
                                 <div class="shape-brandid" hidden>{{ $adminBranchID }}</div>
+                                <div class="shape-designationid" hidden>{{ $adminDesignationID }}</div>
                             </div>
                             <div class="offer-content">
                                 <h3 class="lead font-weight-semibold"><b>{{ $adminBusinessName }}</b></h3>
@@ -101,9 +104,9 @@
                     </form>
                 </div>
                 <?php
-                    }
                 }
-                ?>
+            }
+            ?>
             </div>
         </div>
 
@@ -128,8 +131,7 @@
                             console.log(response.root);
                             if (response.root == 'owner') {
                                 window.location.href = "{{ url('/dashboard') }}";
-                            } 
-                            else {
+                            } else {
                                 window.location.href = "{{ url('/login') }}";
 
                             }
@@ -146,10 +148,11 @@
             // Handle click on admin cards
             $('.admin-card').on('click', function(event) {
                 event.preventDefault();
-                var cardType1 = $(this).find('.shape-text').text().toLowerCase();
+                var cardType1 = $(this).find('.shape-logintype').text().toLowerCase();
                 var business_id1 = $(this).find('.shape-id').text();
                 var brandid1 = $(this).find('.shape-brandid').text();
-
+                var designationid1 = $(this).find('.shape-designationid').text();
+                var roleName = $(this).find('.shape-text').text();
                 // Check if business_id1 is not empty or null
                 if (business_id1) {
                     $.ajax({
@@ -157,15 +160,14 @@
                         method: 'POST',
                         dataType: 'json',
                         data: {
-                            card_type2: [cardType1, business_id1, brandid1],
+                            card_type2: [cardType1, business_id1, brandid1, designationid1,roleName],
                             "_token": "{{ csrf_token() }}"
                         },
                         success: function(response) {
                             console.log(response.root);
                             if (response.root == 'admin') {
                                 window.location.href = "{{ url('/dashboard') }}";
-                            }
-                             else {
+                            } else {
                                 window.location.href = "{{ url('/login') }}";
 
                             }

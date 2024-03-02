@@ -72,15 +72,15 @@ class EmployeeApiController extends Controller
         } else {
             if (
                 EmployeePersonalDetail::where('emp_email', $request->email)
-                ->get()
-                ->first()
+                    ->get()
+                    ->first()
             ) {
                 $data['msg'] = 'Email address already exists';
                 return response()->json(['result' => [$data], 'status' => false]);
             } elseif (
                 EmployeePersonalDetail::where('emp_mobile_number', $request->mobile_no)
-                ->get()
-                ->first()
+                    ->get()
+                    ->first()
             ) {
                 $data['msg'] = 'Mobile number already exists';
                 return response()->json(['result' => [$data], 'status' => false]);
@@ -139,7 +139,7 @@ class EmployeeApiController extends Controller
             ->where('employee_personal_details.business_id', $business_id)
             ->select('policy_attendance_shift_settings.shift_type')
             ->first(); // Use first() to retrieve a single row
-        $now = (int)$now->shift_type;
+        $now = (int) $now->shift_type;
         $item = DB::table('employee_personal_details')
             ->where('employee_personal_details.emp_id', $emp_id)
             ->where('employee_personal_details.business_id', $business_id)
@@ -232,7 +232,7 @@ class EmployeeApiController extends Controller
         if ($emp) {
             $emp->delete();
             $emplogin->delete();
-            return response()->json(['result' => true, 'status' => true, 'msg' => 'Delete Successfully!']);
+            return response()->json(['result' => true, 'status' => true, 'msg' => 'Delete Successfully']);
         }
         return response()->json(['result' => [], 'status' => false]);
     }
@@ -263,20 +263,26 @@ class EmployeeApiController extends Controller
     public function dashboardcount(Request $request)
     {
         $business_id = $request->business_id;
+        $branchID = $request->branch_id;
         $emp_id = $request->emp_id;
         $year = $request->year;
         $month = $request->month;
 
-        $daliyempdetail = AttendanceMonthlyCount::where('business_id', $business_id)
+        $daliyempdetail = AttendanceMonthlyCount::where('business_id', $business_id)->where('branch_id',$branchID)
             ->where('emp_id', $emp_id)
             ->where('year', $year)
             ->where('month', $month)
             ->first();
 
         if ($daliyempdetail) {
-            return response()->json(['result' => new UserDashboardCount($daliyempdetail), 'status' => true, 'case' => 1], 200);
+            return response()->json([
+                'result' => new UserDashboardCount($daliyempdetail),
+                'status' => true,
+                'case' => 1
+            ], 200);
         }
 
-        return response()->json(['result' => null, 'status' => false, 'case' => 1], 404);
+        return response()->json(['result' => null, 'status' => false, 'case' => 2], 404);
     }
+
 }

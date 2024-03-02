@@ -62,7 +62,7 @@
                                     style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif">Dashboard</b></i>
                         </div>
                     </div>
-                    <div class="page-rightheader ms-auto">
+                    <div class="page-rightheader ms-auto" wire:ignore>
                         <div class="d-flex align-items-end flex-wrap my-auto end-content breadcrumb-end">
                             <div class="d-flex ms-auto">
                                 <div class="header-datepicker me-3">
@@ -73,11 +73,20 @@
                                                 <i class="feather feather-calendar" style="color: #fff"></i>
                                             </div>
                                         </div>
+
                                         <input class="form-control bg-light fc-datepicker"
                                             data-currentdate="{{ date('d M Y') }}" type="text" id="dashboardTimePicker"
                                             onchange="dashboardCountAjax(this)" style="border: solid 1px #1877f2;">
                                     </div>
                                 </div>
+                                <script>
+                                    function dashboardTimeFormate() {
+                                        var element = document.getElementById('dashboardTimePicker');
+                                        element.value = element.getAttribute('data-currentdate');
+                                        console.log(element.value);
+                                    }
+                                    window.onload = dashboardTimeFormate;
+                                </script>
                                 <div class="header-datepicker me-3 d-none d-md-block">
                                     <div class="input-group">
                                         <div class="input-group-prepend">
@@ -197,8 +206,8 @@
                     <script>
                         function dashboardCountAjax(context) {
                             var date = context.value;
-                            const formattedDate = formatDate(date);
-                            context.value = formattedDate;
+                            // const formattedDate = formatDate(date);
+                            // context.value = formattedDate;
 
                             $.ajax({
                                 url: "{{ url('/admin/attendance/dashboard_attendance_count') }}",
@@ -330,7 +339,7 @@
                                                         <small>{{ $year }}th Birthday on
                                                             {{ date('d', strtotime($emp->emp_date_of_birth)) }}th of
                                                             {{ date('M', strtotime($emp->emp_date_of_birth)) }}</small>
-                                                        {{-- <small>{{$birth_m'-'$birth_d}}</small> --}}
+                                                        {{-- <small>{{$birth_m.'-'.$birth_d}}</small> --}}
                                                     </div>
                                                 @endif
                                             </div>
@@ -462,78 +471,80 @@
                                     </thead>
                                     <tbody>
 
-                                        @foreach ($Emp as $key => $emp)
-                                            @php
-                                                $monthlyCount = $root->getMonthlyCountFromDB($emp->emp_id, date('Y'), date('m'), Session::get('business_id'));
-                                            @endphp
-                                            @if ($monthlyCount['present']  != 0)
-                                                <tr>
-                                                    <td id="{{ $emp->emp_id }}['profile']">
-                                                        <div class="d-flex">
-                                                            <span class="avatar avatar-md brround me-3 rounded-circle"
-                                                                style="background-image: url('/employee_profile/{{ $emp->profile_photo }}')"></span>
-                                                            <div class="me-3 mt-0 mt-sm-1 d-block">
-                                                                <h6 class="mb-1 fs-14">
-                                                                    <a
-                                                                        href="{{ route('employeeProfile', [$emp->emp_id]) }}">
-                                                                        {{ $emp->emp_name }}&nbsp;{{ $emp->emp_mname }}&nbsp;{{ $emp->emp_lname }}
-                                                                    </a>
-                                                                </h6>
-                                                                <p class="text-muted mb-0 fs-12">
-                                                                    <?= $root->DesingationIdToName($emp->designation_id) ?>
-                                                                </p>
+                                            @foreach ($Emp as $key => $emp)
+                                                @php
+                                                    $root->MyCountForMonth($emp->emp_id, date('Y-m-d'), Session::get('business_id'), $emp->branch_id);
+                                                    $monthlyCount = $root->getMonthlyCountFromDB($emp->emp_id, date('Y'), date('m'), Session::get('business_id'), $emp->branch_id);
+                                                @endphp
+                                                @if ($monthlyCount['present'] != 0)
+                                                    <tr>
+                                                        <td id="{{ $emp->emp_id }}['profile']">
+                                                            <div class="d-flex">
+                                                                <span class="avatar avatar-md brround me-3 rounded-circle"
+                                                                    style="background-image: url('/employee_profile/{{ $emp->profile_photo }}')"></span>
+                                                                <div class="me-3 mt-0 mt-sm-1 d-block">
+                                                                    <h6 class="mb-1 fs-14">
+                                                                        <a
+                                                                            href="{{ route('employeeProfile', [$emp->emp_id]) }}">
+                                                                            {{ $emp->emp_name }}&nbsp;{{ $emp->emp_mname }}&nbsp;{{ $emp->emp_lname }}
+                                                                        </a>
+                                                                    </h6>
+                                                                    <p class="text-muted mb-0 fs-12">
+                                                                        <?= $root->DesingationIdToName($emp->designation_id) ?>
+                                                                    </p>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td id="{{ $emp->emp_id }}['empId']">{{ $emp->emp_id }}</td>
-                                                    <td class="text-center" id="{{ $emp->emp_id }}['present']">
-                                                        {{ $monthlyCount['present'] }}
-                                                    </td>
+                                                        </td>
+                                                        <td class="text-center" id="{{ $emp->emp_id }}['empId']">
+                                                            {{ $emp->emp_id }}</td>
+                                                        <td class="text-center" id="{{ $emp->emp_id }}['present']">
+                                                            {{ $monthlyCount['present'] }}
+                                                        </td>
 
-                                                    <td class="text-center" id="{{ $emp->emp_id }}['absent']">
-                                                        {{ $monthlyCount['absent'] }}
-                                                    </td>
-                                                    <td class="text-center" id="{{ $emp->emp_id }}['halfday']">
-                                                        {{ $monthlyCount['halfday'] }}
-                                                    </td>
-                                                    <td class="text-center" id="{{ $emp->emp_id }}['paidleave']">
-                                                        {{ $monthlyCount['leave'] }}
-                                                    </td>
-                                                    <td class="text-center" id="{{ $emp->emp_id }}['weekoff']">
-                                                        {{ $monthlyCount['weekoff'] }}
-                                                    </td>
-                                                    <td class="text-center" id="{{ $emp->emp_id }}['holiday']">
-                                                        {{ $monthlyCount['holiday'] }}
-                                                    </td>
-                                                    <td class="text-center" id="{{ $emp->emp_id }}['mispunch']">
-                                                        {{ $monthlyCount['mispunch'] }}
-                                                    </td>
-                                                    <td class="text-center" id="{{ $emp->emp_id }}['overtime']">
-                                                        {{ $monthlyCount['overtime'] }}
-                                                    </td>
-                                                    <td class="text-center" id="{{ $emp->emp_id }}['late']">
-                                                        {{ $monthlyCount['late'] }}
-                                                    </td>
-                                                    <td class="text-center" id="{{ $emp->emp_id }}['early']">
-                                                        {{ $monthlyCount['early'] }}
-                                                    </td>
-                                                    <td class="text-center" id="{{ $emp->emp_id }}['total']">
-                                                        {{ $monthlyCount['total'] }}
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <div class="btn btn-light btn-icon btn-sm" id="calenderbtn"
-                                                            data-bs-toggle="tooltip" data-original-title="View">
+                                                        <td class="text-center" id="{{ $emp->emp_id }}['absent']">
+                                                            {{ $monthlyCount['absent'] }}
+                                                        </td>
+                                                        <td class="text-center" id="{{ $emp->emp_id }}['halfday']">
+                                                            {{ $monthlyCount['halfday'] }}
+                                                        </td>
+                                                        <td class="text-center" id="{{ $emp->emp_id }}['paidleave']">
+                                                            {{ $monthlyCount['leave'] }}
+                                                        </td>
+                                                        <td class="text-center" id="{{ $emp->emp_id }}['weekoff']">
+                                                            {{ $monthlyCount['weekoff'] }}
+                                                        </td>
+                                                        <td class="text-center" id="{{ $emp->emp_id }}['holiday']">
+                                                            {{ $monthlyCount['holiday'] }}
+                                                        </td>
+                                                        <td class="text-center" id="{{ $emp->emp_id }}['mispunch']">
+                                                            {{ $monthlyCount['mispunch'] }}
+                                                        </td>
+                                                        <td class="text-center" id="{{ $emp->emp_id }}['overtime']">
+                                                            {{ $monthlyCount['overtime'] }}
+                                                        </td>
+                                                        <td class="text-center" id="{{ $emp->emp_id }}['late']">
+                                                            {{ $monthlyCount['late'] }}
+                                                        </td>
+                                                        <td class="text-center" id="{{ $emp->emp_id }}['early']">
+                                                            {{ $monthlyCount['early'] }}
+                                                        </td>
+                                                        <td class="text-center" id="{{ $emp->emp_id }}['total']">
+                                                            {{ $monthlyCount['total'] }}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="btn btn-light btn-icon btn-sm" id="calenderbtn"
+                                                                data-bs-toggle="tooltip" data-original-title="View">
 
-                                                            <a
-                                                                href="{{ route('attendance.byemployee', [$emp->emp_id]) }}">
-                                                                <i class="feather feather-eye"></i>
-                                                            </a>
+                                                                <a
+                                                                    href="{{ route('attendance.byemployee', [$emp->emp_id]) }}">
+                                                                    <i class="feather feather-eye"></i>
+                                                                </a>
 
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endif
-                                        @endforeach
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -549,10 +560,9 @@
     <script src="{{ asset('assets/plugins/vertical-scroll/vertical-scroll.js?v=0.1') }}"></script>
     <!-- INTERNAL PG-CALENDAR-MASTER JS -->
     <script src="{{ asset('assets/js/index2.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
     <script src="{{ asset('assets/plugins/pg-calendar-master/pignose.calendar.full.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/date-picker/jquery-ui.js') }}"></script>
+    <script src="{{ asset('assets/plugins/date-picker/jquery-ui.js?v=1.1') }}"></script>
 
     <script>
         $('#printBtn').on('click', function() {
@@ -562,14 +572,5 @@
             newWin.print();
             newWin.close();
         })
-    </script>
-
-    <script>
-        function dashboardTimeFormate() {
-            var element = document.getElementById('dashboardTimePicker');
-            element.value = element.getAttribute('data-currentdate');
-            console.log(element.value);
-        }
-        window.onload = dashboardTimeFormate;
     </script>
 @endsection

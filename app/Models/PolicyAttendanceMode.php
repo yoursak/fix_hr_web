@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class PolicyAttendanceMode
- * 
+ *
  * @property int $id
  * @property string|null $business_id
  * @property string $attendance_active_methods
@@ -33,22 +33,22 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PolicyAttendanceMode extends Model
 {
-	protected $table = 'policy_attendance_mode';
-	protected $primary_id = 'id';
-
-	protected $fillable = [
-		'business_id',
-		'attendance_active_methods',
-		'office_auto',
-		'office_manual',
-		'office_qr',
-		'office_face_id',
-		'office_selfie',
-		'outdoor_auto',
-		'outdoor_manual',
-		'outdoor_selfie',
-		'wfh_auto',
-		'wfh_manual',
-		'wfh_selfie'
-	];
+    protected $table = 'policy_attendance_mode';
+    protected $primary_id = 'id';
+    protected $business_id = 'business_id';
+    protected $fillable = [
+        'business_id',
+        'attendance_active_methods',
+        'office_auto',
+        'office_manual',
+        'office_qr',
+        'office_face_id',
+        'office_selfie',
+        'outdoor_auto',
+        'outdoor_manual',
+        'outdoor_selfie',
+        'wfh_auto',
+        'wfh_manual',
+        'wfh_selfie'
+    ];
 }

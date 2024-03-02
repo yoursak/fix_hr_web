@@ -59,11 +59,10 @@
                     <div class="card-header">
                         <h3 class="card-title">Roles List</h3>
                     </div>
-                    <div class="card-body p-2">
+                    <livewire:role-permission.role-and-permission-livewire>
+                    {{-- <div class="card-body p-2">
                         <div class="table-responsive">
                             <table class="table  table-vcenter text-nowrap  border-bottom " id="basic-datatable">
-                                {{-- <div class="table-responsive" <table id="file-datatable"
-                            class="table table-bordered text-nowrap key-buttons border-bottom"> --}}
                                 <thead>
                                     <tr>
                                         <th class="border-bottom-0">S.No.</th>
@@ -77,7 +76,9 @@
                                 <tbody>
                                     @php
                                         $count = 1;
+                                        // dd($RolesData);
                                     @endphp
+
                                     @foreach ($RolesData as $item)
                                         <tr>
                                             <td>
@@ -135,7 +136,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -149,22 +150,23 @@
                     <input type="text" id="role_id" name="role_set" hidden>
                     <input type="text" id="assocated_Users" name="assocated_Users" hidden>
                     <div class="modal-header">
-                        {{-- <input type="text" id="rolesname" disabled> --}}
                         <h5 class="modal-title" id="exampleModalLabel">Confirm Deletion</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+
                     </div>
                     <div class="modal-body">
                         <p>Role Name
-                        <h4 id="rolesname"></h4>
+                            <b>
+                                <span id="rolesname"></span>
+                            </b>
                         </p>
-
                         Are you sure you want to delete this item?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
                     </div>
-
                 </form>
             </div>
         </div>
@@ -178,15 +180,15 @@
                         data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
                 </div>
 
-                <div class="modal-body">
-                    <form action="{{ route('submitAssignPermission') }}" method="post" id="assignPermissionModal">
-                        @csrf
+                <form action="{{ route('submitAssignPermission') }}" method="post" id="assignPermissionModal">
+                    @csrf
+                    <div class="modal-body">
 
                         <div class="row p-3">
                             <div class="col-12 my-2">
                                 <p class="form-label">Role Name*</p>
                                 <select name='roleID' id="" class="form-control" required>
-                                    <option value="">Select Role Name</option>
+                                    <option value="" disabled selected>Select Role Name</option>
                                     @if (!empty($RolesData))
                                         @foreach ($RolesData as $dataa)
                                             <option value="<?= $dataa->id ?>">
@@ -202,8 +204,8 @@
                                 <div class="form-group">
                                     <p class="form-label">Branch*</p>
                                     <select name='branch_id' id="country-dd" class="form-control" required>
-                                        <option value="">Select Branch Name</option>
-                                        @foreach ($BranchList as $data)
+                                        <option value="" disabled selected>Select Branch Name</option>
+                                        @foreach ($Branch as $data)
                                             <option value="{{ $data->branch_id }}">
                                                 {{ $data->branch_name }}
                                             </option>
@@ -216,7 +218,7 @@
                                     <p class="form-label">Department*</p>
                                     <div class="form-group mb-3">
                                         <select id="state-dd" name="department_id" class="form-control" required>
-                                            <option value="">Select Department Name</option>
+                                            <option value="" disabled selected>Select Department Name</option>
                                         </select>
                                     </div>
                                 </div>
@@ -235,29 +237,29 @@
                                     <p class="form-label">Permission Type*</p>
                                     <select id="permissiontype-dd" name="permissiontype_id" class="form-control"
                                         required>
-                                        <option value="">Select Permission Type</option>
+                                        <option value="" disabled selected>Select Permission Type</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-12" id="branchNameDiv">
                                 <div class="form-group">
                                     <p class="form-label">Branch Name*</p>
-                                    <select class="form-control select2" id="branchname_id" name="branchname_id[]"
-                                        data-placeholder="Choose Shift Policy" multiple required>
-                                        <option>Select Branch Name</option>
+                                    <select class="form-control" id="branchname_id" name="branchname_id"
+                                        data-placeholder="Choose Shift Policy" required>
+                                        <option value="" disabled selected>Select Branch Name</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-                </div>
-
-
-                <div class="modal-footer  border-0">
-                    <div class="d-flex">
-                        <a type="reset" class="btn btn-danger btn-md mx-3" data-bs-dismiss="modal">Cancel</a>
-                        <button type="submit" class="btn btn-primary btn-md">Save </button>
                     </div>
-                </div>
+
+
+                    <div class="modal-footer  border-0">
+                        <div class="d-flex">
+                            <a type="reset" class="btn btn-danger btn-md mx-3" data-bs-dismiss="modal">Cancel</a>
+                            <button type="submit" class="btn btn-primary btn-md">Save </button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -395,11 +397,9 @@
 
     <script>
         function ItemDeleteModel(context) {
-            console.log(context);
             var id = $(context).data('id');
             var roleName = $(context).data('rolename');
             var assocatedUsers = $(context).data('associated_users');
-            console.log("associated_users ", assocatedUsers);
             $('#role_id').val(id);
             $('#assocated_Users').val(assocatedUsers);
             $('#rolesname').text(roleName);
@@ -412,7 +412,6 @@
             $('#role_name_edit_id').val(roles_name);
             $('#description_edit_id').val(description);
             $('#rolesId').val(id);
-            // console.log(id);
             $.ajax({
                 url: "{{ url('Role-permission/get_assign') }}",
                 type: "post",
@@ -422,7 +421,6 @@
                 },
                 dataType: 'json',
                 success: function(result) {
-                    console.log(result);
                     $('input[type="checkbox"][name^="permissions"]').prop('checked', false);
 
                     result.checking.forEach(function(element) {
@@ -457,7 +455,6 @@
                 dataType: 'json',
                 success: function(result) {
                     result.forEach(element => {
-                        console.log(element);
                         var elem = document.getElementById(element.permission_id).checked = true;
                     });
                 }
@@ -466,7 +463,6 @@
 
         function checkCreate(e) {
             var moduleID = $(e).data('check');
-            console.log(moduleID);
             var moduleIDCheck = $(e).data('checkall');
             var checkAllValue = 'All';
             if (moduleIDCheck == 'All') {
@@ -478,7 +474,6 @@
                         .trigger('change');
                 }
             } else {
-                console.log('chal F!');
                 var allIndividualCheckboxesChecked = $('.check_all_input[data-check="' + moduleID +
                     '"][data-checkall!="All"]:checked').length === $('.check_all_input[data-check="' + moduleID +
                     '"][data-checkall!="All"]').length;
@@ -508,7 +503,6 @@
                 }
             } else {
 
-                console.log('chal F!');
                 var allIndividualCheckboxesChecked = $('.check_all_input_edit[data-checkedit="' + moduleID +
                     '"][data-checkalledit!="All"]:checked').length === $('.check_all_input_edit[data-checkedit="' +
                     moduleID + '"][data-checkalledit!="All"]').length;
@@ -540,9 +534,7 @@
                         permission_id
                     },
                     dataType: 'json',
-                    success: function(result) {
-                        console.log(result);
-                    }
+                    success: function(result) {}
                 });
             } else {
                 $.ajax({
@@ -555,9 +547,7 @@
                         permission_id
                     },
                     dataType: 'json',
-                    success: function(result) {
-                        console.log(result);
-                    }
+                    success: function(result) {}
                 });
             }
         }
@@ -645,6 +635,9 @@
         $(document).ready(function() {
             $('#country-dd').on('change', function() {
                 var branch_id = this.value;
+                $('#branchNameDiv').hide();
+                $("#permissiontype-dd").html('');
+                $('#branchname_id').prop('required', false);
                 $("#state-dd").html('');
                 $.ajax({
                     url: "{{ url('admin/settings/business/alldepartment') }}",
@@ -655,10 +648,8 @@
                     },
                     dataType: 'json',
                     success: function(result) {
-
-                        console.log(result);
                         $('#state-dd').html(
-                            '<option value="" name="department">Select Department Name</option>'
+                            '<option value="" name="department" selected disabled>Select Department Name</option>'
                         );
                         $.each(result.department, function(key, value) {
                             $("#state-dd").append('<option name="department" value="' +
@@ -668,7 +659,11 @@
                         });
 
                         $('#desig-dd').html(
-                            '<option value="">Select Designation Name</option>');
+                            '<option value="" selected disabled>Select Designation Name</option>'
+                        );
+                        $('#permissiontype-dd').html(
+                            '<option value="" disabled selected>Select Permission Type</option>'
+                        );
                     }
                 });
             });
@@ -685,7 +680,6 @@
             //         },
             //         dataType: 'json',
             //         success: function(res) {
-            //             console.log(res);
             //             $('#desig-dd').html(
             //                 '<option value="">Select Designation Name</option>');
             //             $.each(res.designation, function(key, value) {
@@ -700,6 +694,11 @@
             // });
             // employee
             $('#state-dd').on('change', function() {
+                $('#country-dd').val();
+                $('#branchNameDiv').hide();
+                $('#branchname_id').prop('required', false);
+                $("#permissiontype-dd").html('');
+                var branch_id = $('#country-dd').val();
                 var depart_id = this.value;
                 $("#employee-dd").html('');
                 $.ajax({
@@ -707,13 +706,16 @@
                     type: "POST",
                     data: {
                         _token: '{{ csrf_token() }}',
+                        branch_id: branch_id,
                         depart_id: depart_id,
                     },
                     dataType: 'json',
                     success: function(res) {
-                        console.log(res);
                         $('#employee-dd').html(
                             '<option value="" disabled selected>Select Employee Name</option>'
+                        );
+                        $('#permissiontype-dd').html(
+                            '<option value="" disabled selected>Select Permission Type</option>'
                         );
                         $.each(res.employee, function(key, value) {
                             $("#employee-dd").append('<option value="' + value.emp_id +
@@ -728,13 +730,15 @@
             // permission
             $('#employee-dd').on('change', function() {
                 var depart_id = this.value;
+                $('#branchNameDiv').hide();
+
                 $("#permissiontype-dd").html('');
                 $.ajax({
                     url: "{{ url('admin/settings/business/allpermissiontype') }}",
                     type: "GET",
                     dataType: 'json',
+
                     success: function(res) {
-                        console.log(res);
                         $('#permissiontype-dd').html(
                             '<option value="" disabled selected>Select Permission Type</option>'
                         );
@@ -750,57 +754,41 @@
             // branch name
             $('#permissiontype-dd').change(function() {
                 var selectedPermissionType = $(this).val();
+                var branch_id = $('#country-dd').val()
+                var emp_id = $('#employee-dd').val()
+
                 $("#branchname_id").html('');
                 // Assuming you want to hide the branchname_id select box when permission type is 1
                 if (selectedPermissionType == '1') {
                     $('#branchNameDiv').hide();
-                    $.ajax({
-                        url: "{{ url('admin/settings/business/allbranch') }}",
-                        type: "GET",
-                        dataType: 'json',
-                        success: function(res) {
-                            console.log("branch ", res);
-
-                            // Clear existing options and add a default disabled option
-                            $('#branchname_id').html(
-                                '<option value="" disabled>Select Branch Name</option>');
-
-                            // Append new branch options
-                            $.each(res.branch, function(key, value) {
-                                $("#branchname_id").append('<option value="' + value
-                                    .branch_id + '" selected>' + (value
-                                        .branch_name ? value
-                                        .branch_name : '') + '</option>');
-                            });
-
-                            // Show the branchname_id select box
-                            $('#branchname_id').show();
-                        },
-                        error: function(err) {
-                            console.error("Error fetching branches:", err);
-                        }
-                    });
+                    $('#branchname_id').prop('required', false);
                 } else {
                     $('#branchNameDiv').show();
                     // For other permission types, show the select box and fetch branch options
                     $.ajax({
-                        url: "{{ url('admin/settings/business/allbranch') }}",
-                        type: "GET",
+                        url: "{{ url('admin/settings/business/selectbranch') }}",
+                        type: "POST",
                         dataType: 'json',
-                        success: function(res) {
-                            console.log("branch ", res);
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            branchId: branch_id,
+                            empId: emp_id,
+                        },
 
+                        success: function(res) {
                             // Clear existing options and add a default disabled option
                             $('#branchname_id').html(
-                                '<option value="" disabled>Select Branch Name</option>');
-
+                                '<option value="" disabled selected>Select Branch Name</option>'
+                            );
+                            console.log("RESTY ", res);
                             // Append new branch options
-                            $.each(res.branch, function(key, value) {
-                                $("#branchname_id").append('<option value="' + value
-                                    .branch_id + '" >' + (value.branch_name ? value
-                                        .branch_name : '') + '</option>');
-                            });
+                            $("#branchname_id").append('<option value="' + res.branch
+                                .branch_id + '" selected>' + (res.branch.branch_name ? res
+                                    .branch
+                                    .branch_name : '') + '</option>');
+                            // $.each(res.branch, function(key, value) {
 
+                            // });
                             // Show the branchname_id select box
                             $('#branchname_id').show();
                         },

@@ -14,7 +14,7 @@
                             <h5 class="">Timesheet: <span class="fs-14 mx-3 text-muted"
                                     id="punchDateTime">{{ $punchDate }}</span></h5>
                             <h6 class=""><span class="fs-14 text-dark"
-                                    id="attendanceShiftName">{{ $ShiftName }}</span><span
+                                    id="attendanceShiftName">{{ $ShiftName }}</span><span class="fs-14 text-dark">:</span><span
                                     class="fs-14 mx-3 text-muted"
                                     id="attendanceShiftStart">{{ $ShiftStart }}</span><span
                                     class="fs-14 text-muted">To</span><span class="fs-14 mx-3 text-muted"

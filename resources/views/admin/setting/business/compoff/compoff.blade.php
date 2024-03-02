@@ -80,7 +80,7 @@
                                             </div>
                                         </div>
                                         {{-- </div>
-                
+
                                         </div>
                                     </div> --}}
 
@@ -95,13 +95,31 @@
                                             <label class="form-label mx-1">Ovetime Comp-Off<br>
                                                 <span class="fs-12 fw-light  text-muted">An employee will be entitled to
                                                     take
-                                                    leave on a working day as compensation for working overtime for <input
-                                                        class="mx-1" value="{{ $getPolicy->overtime_hr ?? 0 }}"
+                                                    leave on a working day as compensation for working overtime for
+                                                    <input class="mx-1" value="{{ $getPolicy->overtime_hr ?? 0 }}"
                                                         id="compOffOvertime" type="number" placeholder="hr"
                                                         name="overtime_hr" style="width: 3rem; text-align:center;"
                                                         min="0"
                                                         {{ ($getPolicy->overtime_checked ?? 0) == 1 && $getPolicy->overtime_checked == 1 ? '' : 'disabled' }}>
-                                                    hrs.</span>
+                                                    hrs.
+                                                    &nbsp;
+                                                    &nbsp;
+                                                    &nbsp;
+
+                                                </span>
+
+                                            </label>
+
+                                        </div>
+                                        <div class="d-flex mt-3">
+                                            <label class="form-label mx-1">Comp-Off Leave Laps Period<br>
+                                                <span class="fs-12 fw-light  text-muted">Allotted Comp-Off will be Expiry
+                                                    after
+                                                    <input class="mx-1" value="{{ $getPolicy->expiry_point ?? 0 }}"
+                                                        type="number" placeholder="days" name="expiry_point"
+                                                        style="width: 3rem; text-align:center;" min="0"
+                                                        {{ ($getPolicy->overtime_checked ?? 0) == 1 && $getPolicy->overtime_checked == 1 ? '' : 'disabled' }}>
+                                                    Days.</span>
                                             </label>
                                         </div>
                                     </div>

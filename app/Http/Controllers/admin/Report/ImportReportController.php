@@ -6,6 +6,7 @@ use Excel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Imports\BioMetricImport;
+use App\Exports\BioMetricTemplatesExport;
 use Illuminate\Support\Facades\Validator;
 use Alert;
 
@@ -13,7 +14,7 @@ class ImportReportController extends Controller
 {
     public function ImportBioMetric(Request $request)
     {
-        // dd($request->all());
+
         $month = $request->month;
         $year = $request->year;
         $validator = Validator::make($request->all(), [
@@ -34,7 +35,7 @@ class ImportReportController extends Controller
             } else {
                 Alert::error('Failed');
             }
-            Alert::success('Successfully Inserted all Data');
+            Alert::success('Successfully Imported All Data');
             return back();
         } catch (\Exception $e) {
             Alert::error('Failed due to - '.$e);
@@ -44,8 +45,7 @@ class ImportReportController extends Controller
 
     public function downloadBiometricSample(Request $request)
     {
-        dd($request->all());
-        return Excel::download(new BioMetricImport('01', '2024'), 'BiometricUploadFixHR.xlsx');
+        return Excel::download(new BioMetricTemplatesExport($request->month, $request->year), 'BiometricUploadFixHR.xlsx');
     }
 
 }

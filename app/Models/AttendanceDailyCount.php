@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class AttendanceDailyCount
- * 
+ *
  * @property int $id
  * @property int $business_id
  * @property Carbon $date
@@ -34,24 +34,25 @@ class AttendanceDailyCount extends Model
 	protected $table = 'attendance_daily_count';
 	public $incrementing = false;
 
-	protected $casts = [
-		'id' => 'int',
-		'business_id' => 'int',
-		'date' => 'datetime',
-		'total_emp'=>'int',
-		'present' => 'int',
-		'absent' => 'int',
-		'late' => 'int',
-		'early' => 'int',
-		'mispunch' => 'int',
-		'halfday' => 'int',
-		'overtime' => 'int',
-		'leave' => 'int'
-	];
+	// protected $casts = [
+	// 	'id' => 'int',
+	// 	'business_id' => 'int',
+	// 	'date' => 'datetime',
+	// 	'total_emp'=>'int',
+	// 	'present' => 'int',
+	// 	'absent' => 'int',
+	// 	'late' => 'int',
+	// 	'early' => 'int',
+	// 	'mispunch' => 'int',
+	// 	'halfday' => 'int',
+	// 	'overtime' => 'int',
+	// 	'leave' => 'int'
+	// ];
 
 	protected $fillable = [
 		'id',
 		'business_id',
+		'branch_id',
 		'date',
 		'total_emp',
 		'present',

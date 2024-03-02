@@ -21,6 +21,7 @@ class RequestMispunchResource extends JsonResource
             'shift_type' => (string) $this->emp_shift_type ?? '',
             'emp_miss_date' => (string) $this->emp_miss_date ?? '',
             'emp_miss_time_type' => (string) $this->emp_miss_time_type ?? '',
+            'time_type_name' => (string) $this->time_type_name ?? '',
             'emp_miss_in_time' => $this->emp_miss_in_time ?? '',
             'emp_miss_out_time' => $this->emp_miss_out_time ?? '',
             'emp_working_hour' => (string) $this->emp_working_hour ?? '',

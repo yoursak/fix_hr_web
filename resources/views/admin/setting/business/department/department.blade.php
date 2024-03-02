@@ -57,17 +57,15 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
-
         </form>
 
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Department List</h3>
             </div>
-            <div class="card-body p-2">
+            <livewire:settings.department-list-livewire>
+            {{-- <div class="card-body p-2">
                 <div class="table-responsive">
                     <table class="table  table-vcenter text-nowrap  border-bottom " id="basic-datatable">
                         <thead>
@@ -113,7 +111,7 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
 

@@ -50,17 +50,17 @@ class EmployeeController extends BaseController
         if ($request->has('branch_id') && $request->branch_id !== null) {
             $query->where('employee_personal_details.branch_id', '=', $request->branch_id);
         }
-        
+
         if ($request->has('department_id') && $request->department_id !== null) {
             $query->where('employee_personal_details.department_id', '=', $request->department_id);
         }
-        
+
         if ($request->has('business_id') && $request->business_id !== null) {
             $query->where('employee_personal_details.business_id', '=', $request->business_id);
         }
 
         // Execute the query and get the results
-        $employees = $query->get();
+        $employees = $query->select('employee_personal_details.*','branch_list.branch_name','department_list.depart_name','designation_list.desig_name')->get();
 
         // Check if there are any results
         if ($employees->isEmpty()) {

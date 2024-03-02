@@ -48,8 +48,7 @@
                     <div class="modal-dialog modal-xl">
                         <div class="modal-content">
                             <div class="modal-header p-5">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Create Setup
-                                </h5>
+                                <h5 class="modal-title" id="exampleModalLongTitle">Create Setup</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true" data-bs-dismiss="modal">&times;</span>
                                 </button>
@@ -59,7 +58,7 @@
                                 <div class="modal-body">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h3 class="card-title">Create Active Mode</h3>
+                                            <h3 class="card-title">Create Setup to Active Attendance </h3>
                                         </div>
 
                                         <div class="card-body">
@@ -246,6 +245,7 @@
                                         <th class="border-bottom-0">Holiday Policy list</th>
                                         <th class="border-bottom-0">Weekly Policy List</th>
                                         <th class="border-bottom-0">Attendance Policy List</th>
+                                        <th class="border-bottom-0"></th>
                                         <!-- <th class="border-bottom-0">Track Policy List</th> -->
                                         <th class="border-bottom-0">Action</th>
                                     </tr>
@@ -363,38 +363,46 @@
 
                                             <td class="font-weight-semibold">
                                                 @empty(!$attendanceModePolicy)
-                                                    @foreach ($attendanceModePolicy as $item)
+                                                    @foreach ($attendanceModePolicy as $key => $item)
                                                         <?php
-                                                        if ($item->office_auto != null && $item->office_auto != 0) {
-                                                        ?>
-                                                        <span>Office&nbsp;|&nbsp;Auto</span>
-                                                        <?php
-                                                        }
-                                                        if (($item->office_qr != null && $item->office_qr != 0) || ($item->office_face_id != null && $item->office_face_id != 0) || ($item->office_selfie     != null && $item->office_selfie     != 0)) {
-                                                        ?>
-                                                        <span>Office&nbsp;|&nbsp;Manual</span>
-                                                        <?php  }
-                                                        if ($item->outdoor_auto != null && $item->outdoor_auto != 0) { ?>
-                                                        <span> Out Door&nbsp;|&nbsp;Auto</span>
-                                                        <?php }
-                                                        if ($item->outdoor_selfie != null && $item->outdoor_selfie != 0) {
-                                                        ?>
-                                                        <span>Out Door&nbsp;|&nbsp;Manual</span>
+                                                        $officeAuto = $item->office_auto != null && $item->office_auto != 0;
+                                                        $officeManual = ($item->office_qr != null && $item->office_qr != 0) || ($item->office_face_id != null && $item->office_face_id != 0) || ($item->office_selfie != null && $item->office_selfie != 0);
+                                                        $outdoorAuto = $item->outdoor_auto != null && $item->outdoor_auto != 0;
+                                                        $outdoorManual = $item->outdoor_selfie != null && $item->outdoor_selfie != 0;
+                                                        $wfhAuto = $item->wfh_auto != null && $item->wfh_auto != 0;
+                                                        $wfhManual = $item->wfh_manual != null && $item->wfh_selfie != 0;
 
-                                                        <?php }
-                                                        if ($item->wfh_auto != null && $item->wfh_auto != 0) {
-                                                        ?>
-                                                        <span> Remote&nbsp;|&nbsp;Auto</span>
-                                                        <?php
+                                                        $spans = [];
+                                                        if ($officeAuto) {
+                                                            $spans[] = 'Office | Auto';
                                                         }
-                                                        if ($item->wfh_selfie != null && $item->wfh_selfie != 0) {
+                                                        if ($officeManual) {
+                                                            $spans[] = 'Office | Manual';
+                                                        }
+                                                        if ($outdoorAuto) {
+                                                            $spans[] = 'Out Door | Auto';
+                                                        }
+                                                        if ($outdoorManual) {
+                                                            $spans[] = 'Out Door | Manual';
+                                                        }
+                                                        if ($wfhAuto) {
+                                                            $spans[] = 'WFH | Auto';
+                                                        }
+                                                        if ($wfhManual) {
+                                                            $spans[] = 'WFH | Manual';
+                                                        }
                                                         ?>
-                                                        <span> Remote&nbsp;|&nbsp;Manual</span>
 
-                                                        <?php } ?>
+                                                        @foreach ($spans as $index => $span)
+                                                            <span>{{ $span }}</span>
+                                                            @if ($index != count($spans) - 1)
+                                                                ,
+                                                            @endif
+                                                        @endforeach
                                                     @endforeach
                                                 @endempty
                                             </td>
+                                            <td><span class="fs-11 fw-bold">W.E.F. </span><span class="with-effect-from-badge">{{date('d-M-Y h:i A',strtotime($item->updated_at))}}</span></td>
                                             <td>
                                                 @if (in_array('Setup Activation.Update', $permissions) || in_array('Setup Activation.All', $permissions))
                                                     <a class="btn btn-primary btn-icon btn-sm" href="javascript:void(0);"
@@ -755,8 +763,6 @@
 
                         }).then(function() {
                             values(1, business_id, eid, holdiayPolicyID, weeklyPolicyID);
-
-
                         });
                     } else {
 
@@ -771,8 +777,6 @@
                             });
                             $('#modalForm').on('submit', function(e) {
                                 e.preventDefault(); // Prevent the default form submission
-                                console.log(loadcheck.type);
-                                console.log(holdiayPolicyID);
                                 Swal.fire({
                                     timer: 2000,
                                     timerProgressBar: true,
@@ -841,7 +845,7 @@
                     },
                     dataType: 'json',
                     success: function(result) {
-                        // console.log(result);
+                        console.log(result);
 
                         // loader UPDATED
                         // if (result[0] != null) {

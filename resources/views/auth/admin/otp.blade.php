@@ -83,7 +83,7 @@
         }
     </script>
 
-    <div class="text-center">
+    <!-- <div class="text-center">
         <div class="saprator my-2"><span>OR</span></div>
         <button class="btn text-white bg-facebook mb-2 mr-2  wid-40 px-0 hei-40 rounded-circle"><i
                 class="fab fa-facebook-f"></i></button>
@@ -91,5 +91,5 @@
                 class="fab fa-google-plus-g"></i></button>
         <button class="btn text-white bg-twitter mb-2  wid-40 px-0 hei-40 rounded-circle"><i
                 class="fab fa-twitter"></i></button>
-    </div>
+    </div> -->
 @endsection

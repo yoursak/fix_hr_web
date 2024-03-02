@@ -137,92 +137,7 @@
         <div class="card-header">
             <h3 class="card-title">Weekly Holiday List</h3>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-
-                <table class="table  table-vcenter text-nowrap  border-bottom " id="basic-datatable">
-                    <thead>
-                        <tr>
-                            <th class="border-bottom-0 w-10">S.No.</th>
-                            <th class="border-bottom-0">Policy Name</th>
-                            <th class="border-bottom-0">Week off Type</th>
-                            <th class="border-bottom-0">Weekly</th>
-                            <th class="border-bottom-0">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                            $j = 1;
-                        @endphp
-                        @foreach ($data as $item)
-                            <tr>
-                                <td class="font-weight-semibold">{{ $j++ }}.</td>
-                                <td class="font-weight-semibold">{{ $item->name }}</td>
-                                <td class="font-weight-semibold"> {{ $item->week_off_type_name }}</td>
-
-                                <td class="font-weight-semibold">
-
-                                    @php
-                                        $holidays = json_decode($item->days);
-
-                                    @endphp
-                                    @if (is_array($holidays) || is_object($holidays))
-                                        @foreach ($holidays as $holiday)
-                                            {{ $holiday }}
-                                            @if (!$loop->last)
-                                                |
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                </td>
-                                <td>
-                                    @php
-                                        $masterendgame = 0;
-                                    @endphp
-
-                                    @foreach ($checkMaEnAssOrNot as $checkmaster)
-                                        @if ($checkmaster->weekly_policy_ids_list == $item->id)
-                                            @php
-                                                $masterendgame = 1;
-                                                // dd($masterendgame );
-                                                break;
-                                            @endphp
-                                        @endif
-                                    @endforeach
-                                @if (in_array('WeeklyHoliday Settings.Update', $permissions))
-                                    <button class="btn action-btns  btn-primary btn-icon btn-sm" href="javascript:void(0);"
-                                        {{ ($masterendgame == 1) ? 'disabled' : '' }} onclick="openEditModel(this)"
-                                        data-id='<?= $item->id ?>' data-bs-toggle="modal"
-                                        data-bs-target="#editBranchName">
-                                        <i class="feather feather-edit" data-bs-toggle="tooltip"
-                                            data-original-title="View/Edit"></i>
-                                    </button>
-                                    @endif
-                                @if (in_array('WeeklyHoliday Settings.View', $permissions))
-
-                                    <button class="btn action-btns  btn-primary btn-icon btn-sm"
-                                        href="javascript:void(0);" onclick="openViewModel(this)"
-                                        data-id='<?= $item->id ?>' data-bs-toggle="modal"
-                                        data-bs-target="#editBranchName">
-                                        <i class="feather feather-eye   " data-bs-toggle="tooltip"
-                                            data-original-title="View/Edit"></i>
-                                    </button>
-                                @endif
-                                @if (in_array('WeeklyHoliday Settings.Delete', $permissions))
-
-                                    <a class="btn action-btns  btn-danger btn-icon btn-sm" href="javascript:void(0);"
-                                        onclick="ItemDeleteModel(this)" data-id='<?= $item->id ?>'
-                                        data-weekly_name='<?= $item->name ?>' data-bs-toggle="modal"
-                                        data-bs-target="#editDeleteModel"><i class="feather feather-trash"></i>
-                                    </a>
-                                @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <livewire:settings.week-off-list-livewire>
     </div>
 
 
@@ -344,7 +259,7 @@
                     </div>
                     <form action="{{ route('delete.DeleteWeeklyPolicy') }}" method="POST">
                         @csrf
-                        <div class="modal-body text-center">    
+                        <div class="modal-body text-center">
                             <h4 class="mt-5">Are you sure you want to delete this weekoff policy ?</h4><b>
                         </div>
                         <div class="modal-footer">

@@ -111,7 +111,7 @@ class LoginController extends BaseController
             $actualCardType = $cardType[0];
             $businessId = $cardType[1];
             $mainloodLoad1 = BusinessDetailsList::where('business_id', $businessId)->first();
-            // model_has_permission 
+            // model_has_permission
             $load = ModelHasPermission::where('business_id', $businessId)->first();
 
             if ($actualCardType === 'owner') {
@@ -123,6 +123,7 @@ class LoginController extends BaseController
                     Session::put('model_id', $load->model_id);
                     Session::put('login_role', 1); //$mainloodLoad1->call_back_id 1atteched by CallID role old 0 backup id //onwer on bid
                     Session::put('login_name', $mainloodLoad1->client_name);
+                    Session::put('login_role_name', 'Owner'); //after added in login employee set in header blade
                     Session::put('login_email', $mainloodLoad1->business_email);
                     Session::put('login_business_image', $mainloodLoad1->business_logo);
                 } else {
@@ -139,18 +140,27 @@ class LoginController extends BaseController
             $actualCardType1 = $cardType1[0];
             $businessId1 = $cardType1[1];
             $branchId1 = $cardType1[2];
-
+            $designation = $cardType1[3];
+            $roleName = $cardType1[4];
             if ($actualCardType1 === 'admin') {
+
                 $mainloodLoad2 = EmployeePersonalDetail::where('business_id', $businessId1)->where('emp_email', Session::get('email'))->first();
                 $infoBusinessDetails = BusinessDetailsList::where('business_id', $businessId1)->first();
+                $empName = ($mainloodLoad2->emp_name != null) ? $mainloodLoad2->emp_name : '';
+                $empMname = ($mainloodLoad2->emp_mname != null) ? $mainloodLoad2->emp_mname : '';
+                $empLname = ($mainloodLoad2->emp_lname != null) ? $mainloodLoad2->emp_lname : '';
+
+                $fullName = trim("$empName $empMname $empLname");
                 if ($mainloodLoad2) {
                     DB::table('login_admin')->where('business_id', $businessId1)->where('email', Session::get('email'))->update(['is_verified' => 1]);
                     Session::put('user_type', 'admin');
                     Session::put('business_id', $businessId1);
                     Session::put('branch_id', $branchId1);
+                    Session::put('desingation_id', $designation);
                     Session::put('login_emp_id', $mainloodLoad2->emp_id);
                     Session::put('login_role', $mainloodLoad2->role_id); //role table role id link model_has_role
-                    Session::put('login_name', $mainloodLoad2->emp_name);
+                    Session::put('login_role_name', $roleName); //after added in login employee set in header blade
+                    Session::put('login_name',  $fullName);
                     Session::put('login_email', $mainloodLoad2->emp_email);
                     Session::put('login_business_image', $infoBusinessDetails->business_logo);
                 } else {
@@ -269,7 +279,7 @@ class LoginController extends BaseController
     //         return view('auth.admin.logintype', compact('checking'));
 
     //         // return redirect('/');
-    //     } 
+    //     }
     //      if (isset($check_otp_for_first)) {
     //         $request->session()->put('business_id', $check_otp_for_first->business_id);
     //         $request->session()->put('login_role', 'admin');

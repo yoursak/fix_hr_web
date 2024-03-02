@@ -37,7 +37,7 @@
     <form action="{{ route('setAutomationRule') }}" method="post">
         @csrf
         <div class="row row-sm" id="AllContent">
-            <div class="col-xl-4">
+            <div class="col-xl-4" id="LateAllContet">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
@@ -49,18 +49,8 @@
                                     @php
                                         $checkPermissionAssignOrNot = 0;
 
-
                                         $lateEntryDataNotFound = false;
-                                        if(
-                                            ($lateEntryData->grace_time_hr ?? '00') == '00'
-                                            && ($lateEntryData->grace_time_min ?? '00') == '00'
-                                            && ($lateEntryData->occurance_min ?? '00') == '00'
-                                            &&($lateEntryData->occurance_hr ?? '00') == '00'
-                                            &&($lateEntryData->occurance_count ?? 0) == 0
-                                            &&($lateEntryData->mark_half_day_hr ?? '00') == '00'
-                                            &&($lateEntryData->mark_half_day_min ?? '00') == '00'
-                                            ){
-
+                                        if (($lateEntryData->grace_time_hr ?? '00') == '00' && ($lateEntryData->grace_time_min ?? '00') == '00' && ($lateEntryData->occurance_min ?? '00') == '00' && ($lateEntryData->occurance_hr ?? '00') == '00' && ($lateEntryData->occurance_count ?? 0) == 0 && ($lateEntryData->mark_half_day_hr ?? '00') == '00' && ($lateEntryData->mark_half_day_min ?? '00') == '00') {
                                             $lateEntryDataNotFound = true;
                                         }
                                     @endphp
@@ -288,6 +278,9 @@
                                             style="width: 5rem; height: 1.5rem">
                                     </div>
                                 </div>
+                                <div class="d-flex my-1">
+                                    <span class="fs-11 fw-bold px-3">W.E.F. </span><span class="with-effect-from-badge">{{date('d-M-Y h:i A',strtotime($lateEntryData->updated_at))}}</span>
+                                </div>
 
                                 <script>
                                     function lateEntryMarkHalfDayMinutesfunc() {
@@ -303,7 +296,6 @@
                                     }
                                 </script>
                             </div>
-
                             <script>
                                 function showLateEntryContent() {
                                     var lateEntryBtn = document.getElementById('lateEntryBtn');
@@ -330,21 +322,22 @@
                                     lateEntryDeductionPeriodContent();
                                     lateEntryOccurenceContent();
                                     lateEntryGraceTimefunc();
+                                    emptyAllInputAtOnce(1);
 
                                     var switchBtn = lateEntryBtn.checked;
-                                    $.ajax({
-                                        url: "{{ url('admin/settings/attendance/automation/set') }}",
-                                        type: "POST",
-                                        data: {
-                                            dataLateEntry: switchBtn,
-                                            _token: '{{ csrf_token() }}'
-                                        },
-                                        dataType: 'json',
-                                        success: function(result) {
-                                            console.log(result);
+                                    // $.ajax({
+                                    //     url: "{{ url('admin/settings/attendance/automation/set') }}",
+                                    //     type: "POST",
+                                    //     data: {
+                                    //         dataLateEntry: switchBtn,
+                                    //         _token: '{{ csrf_token() }}'
+                                    //     },
+                                    //     dataType: 'json',
+                                    //     success: function(result) {
+                                    //         console.log(result);
 
-                                        }
-                                    });
+                                    //     }
+                                    // });
 
                                 }
 
@@ -380,7 +373,7 @@
                 </div>
             </div>
 
-            <div class="col-xl-4">
+            <div class="col-xl-4" id="EarlyExitAllContet">
                 <div class="card">
                     {{-- Early exit rule  --}}
                     <div class="card-body border-top">
@@ -390,29 +383,20 @@
                                     <a class="font-weight-semibold fs-18 ms-3">Early Exit Rule</a>
                                 </div>
                                 @php
-                                // dd($earlyExitData);
+                                    // dd($earlyExitData);
                                     $EarlyExitDataNotFound = false;
-                                        if(
-                                            ($earlyExitData->grace_time_hr ?? '00') == '00'
-                                            && ($earlyExitData->grace_time_min ?? '00') == '00'
-                                            && ($earlyExitData->occurance_min ?? '00') == '00'
-                                            &&($earlyExitData->occurance_hr ?? '00') == '00'
-                                            &&($earlyExitData->occurance_count ?? 0) == 0
-                                            &&($earlyExitData->mark_half_day_hr ?? '00') == '00'
-                                            &&($earlyExitData->mark_half_day_min ?? '00') == '00'
-                                            ){
-
-                                            $EarlyExitDataNotFound = true;
-                                            // {{ $EarlyExitDataNotFound == false ? 'checked' : '' }}
-                                        }
+                                    if (($earlyExitData->grace_time_hr ?? '00') == '00' && ($earlyExitData->grace_time_min ?? '00') == '00' && ($earlyExitData->occurance_min ?? '00') == '00' && ($earlyExitData->occurance_hr ?? '00') == '00' && ($earlyExitData->occurance_count ?? 0) == 0 && ($earlyExitData->mark_half_day_hr ?? '00') == '00' && ($earlyExitData->mark_half_day_min ?? '00') == '00') {
+                                        $EarlyExitDataNotFound = true;
+                                        // {{ $EarlyExitDataNotFound == false ? 'checked' : '' }}
+                                    }
                                 @endphp
                                 <div class="d-flex">
                                     <label class="custom-switch ms-auto"
                                         {{ $checkPermissionAssignOrNot == 1 ? '' : 'hidden' }}>
 
                                         <input type="checkbox" onchange="earlyExitContent()" name="earlyExitBtn"
-                                            onchange="" id="earlyExitBtn"
-                                            class="custom-switch-input" {{ $EarlyExitDataNotFound == false ? 'checked' : '' }}>
+                                            onchange="" id="earlyExitBtn" class="custom-switch-input"
+                                            {{ $EarlyExitDataNotFound == false ? 'checked' : '' }}>
                                         <span class="custom-switch-indicator"></span>
                                     </label>
                                 </div>
@@ -627,6 +611,9 @@
                                         style="width: 5rem; height: 1.5rem">
                                     </div>
                                 </div>
+                                <div class="d-flex my-1">
+                                    <span class="fs-11 fw-bold px-3">W.E.F. </span><span class="with-effect-from-badge">{{date('d-M-Y h:i A',strtotime($earlyExitData->updated_at))}}</span>
+                                </div>
 
                                 <script>
                                     function earlyExitByBtnfunc() {
@@ -672,21 +659,22 @@
                             earlyExitDeductionPeriodContent();
                             earlyExitOccurenceContent();
                             graceTimefunc();
+                            emptyAllInputAtOnce(2);
 
                             var switchBtn = earlyExitBtn.checked;
-                            $.ajax({
-                                url: "{{ url('admin/settings/attendance/automation/set') }}",
-                                type: "POST",
-                                data: {
-                                    earlyExitSwitch: switchBtn,
-                                    _token: '{{ csrf_token() }}'
-                                },
-                                dataType: 'json',
-                                success: function(result) {
-                                    console.log(result);
+                            // $.ajax({
+                            //     url: "{{ url('admin/settings/attendance/automation/set') }}",
+                            //     type: "POST",
+                            //     data: {
+                            //         earlyExitSwitch: switchBtn,
+                            //         _token: '{{ csrf_token() }}'
+                            //     },
+                            //     dataType: 'json',
+                            //     success: function(result) {
+                            //         console.log(result);
 
-                                }
-                            });
+                            //     }
+                            // });
                         }
 
                         function earlyExitUnSelect(elements) {
@@ -718,7 +706,7 @@
                 </div>
             </div>
 
-            <div class="col-xl-4">
+            <div class="col-xl-4" id="OvertimeAllContet">
                 <div class="card">
                     {{-- Overtime Rule  --}}
                     <div class="card-body border-top">
@@ -729,21 +717,11 @@
                                 </div>
                                 @php
                                     // dd($overtimeData);
-                                    $EarlyExitDataNotFound = false;
-                                        if(
-                                            ($overtimeData->early_ot_hr ?? '00') == '00'
-                                            && ($overtimeData->early_ot_min ?? '00') == '00'
-                                            && ($overtimeData->late_ot_hr ?? '00') == '00'
-                                            &&($overtimeData->late_ot_min ?? '00') == '00'
-                                            &&($overtimeData->min_ot_hr ?? '00') == '00'
-                                            &&($overtimeData->min_ot_min ?? '00') == '00'
-                                            &&($overtimeData->max_ot_hr ?? '00') == '00'
-                                            &&($overtimeData->max_ot_min ?? '00') == '00'
-                                            ){
-
-                                            $overtimeDataNotFound = true;
-                                            // {{ $overtimeDataNotFound == false ? 'checked' : '' }}
-                                        }
+                                    $overtimeDataNotFound = false;
+                                    if (($overtimeData->early_ot_hr ?? '00') == '00' && ($overtimeData->early_ot_min ?? '00') == '00' && ($overtimeData->late_ot_hr ?? '00') == '00' && ($overtimeData->late_ot_min ?? '00') == '00' && ($overtimeData->min_ot_hr ?? '00') == '00' && ($overtimeData->min_ot_min ?? '00') == '00' && ($overtimeData->max_ot_hr ?? '00') == '00' && ($overtimeData->max_ot_min ?? '00') == '00') {
+                                        $overtimeDataNotFound = true;
+                                        // {{ $overtimeDataNotFound == false ? 'checked' : '' }}
+                                    }
                                 @endphp
 
                                 <div class="d-flex my-auto">
@@ -865,6 +843,10 @@
                                     </div>
                                 </div>
 
+                                <div class="d-flex my-1">
+                                    <span class="fs-11 fw-bold px-3">W.E.F. </span><span class="with-effect-from-badge">{{date('d-M-Y h:i A',strtotime($overtimeData->updated_at))}}</span>
+                                </div>
+
                                 <script>
                                     function minMaxOverTimeBtnContent() {
                                         var minMaxOverTimeBtn = document.getElementById('minMaxOverTimeBtn');
@@ -911,21 +893,22 @@
                             minMaxOverTimeBtnContent();
                             lateOverTimefunc();
                             earlyOverTimefunc();
+                            emptyAllInputAtOnce(3);
 
                             var switchBtn = overtimeBtn.checked;
-                            $.ajax({
-                                url: "{{ url('admin/settings/attendance/automation/set') }}",
-                                type: "POST",
-                                data: {
-                                    overtimeSwitch: switchBtn,
-                                    _token: '{{ csrf_token() }}'
-                                },
-                                dataType: 'json',
-                                success: function(result) {
-                                    console.log(result);
+                            // $.ajax({
+                            //     url: "{{ url('admin/settings/attendance/automation/set') }}",
+                            //     type: "POST",
+                            //     data: {
+                            //         overtimeSwitch: switchBtn,
+                            //         _token: '{{ csrf_token() }}'
+                            //     },
+                            //     dataType: 'json',
+                            //     success: function(result) {
+                            //         console.log(result);
 
-                                }
-                            });
+                            //     }
+                            // });
                         }
 
                         function overtimeUnSelect(elements) {
@@ -957,7 +940,7 @@
                 </div>
             </div>
 
-            <div class="col-xl-4">
+            <div class="col-xl-4" id="MispunchAllContet">
                 <div class="card">
                     {{-- Miss Punch Rule  --}}
                     <div class="card-body border-top">
@@ -969,16 +952,10 @@
                                 @php
                                     // dd($missPunchData);
                                     $missPunchDataNotFound = false;
-                                        if(
-                                            ($missPunchData->occurance_hr ?? '00') == '00'
-                                            && ($missPunchData->occurance_min ?? '00') == '00'
-                                            && ($missPunchData->request_day ?? '00') == '00'
-                                            &&($missPunchData->occurance_count ?? 0) == 0
-                                            ){
-
-                                            $missPunchDataNotFound = true;
-                                            // {{ $missPunchDataNotFound == false ? 'checked' : '' }}
-                                        }
+                                    if (($missPunchData->occurance_hr ?? '00') == '00' && ($missPunchData->occurance_min ?? '00') == '00' && ($missPunchData->request_day ?? '00') == '00' && ($missPunchData->occurance_count ?? 0) == 0) {
+                                        $missPunchDataNotFound = true;
+                                        // {{ $missPunchDataNotFound == false ? 'checked' : '' }}
+                                    }
                                 @endphp
                                 <div class="d-flex my-auto">
                                     @if (in_array('Automation-Rules.Create', $permissions) || in_array('Automation-Rules.Update', $permissions))
@@ -1141,6 +1118,9 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="d-flex my-1">
+                                    <span class="fs-11 fw-bold px-3">W.E.F. </span><span class="with-effect-from-badge">{{date('d-M-Y h:i A',strtotime($missPunchData->updated_at))}}</span>
+                                </div>
                                 <script>
                                     missPunchRequestFunc()
 
@@ -1189,21 +1169,22 @@
                             }
                             missPunchOccurenceContent();
                             missPunchDeductionPeriodContent();
+                            emptyAllInputAtOnce(4);
 
                             var switchBtn = missPunchBtn.checked;
-                            $.ajax({
-                                url: "{{ url('admin/settings/attendance/automation/set') }}",
-                                type: "POST",
-                                data: {
-                                    missPunchSwitch: switchBtn,
-                                    _token: '{{ csrf_token() }}'
-                                },
-                                dataType: 'json',
-                                success: function(result) {
-                                    console.log(result);
+                            // $.ajax({
+                            //     url: "{{ url('admin/settings/attendance/automation/set') }}",
+                            //     type: "POST",
+                            //     data: {
+                            //         missPunchSwitch: switchBtn,
+                            //         _token: '{{ csrf_token() }}'
+                            //     },
+                            //     dataType: 'json',
+                            //     success: function(result) {
+                            //         console.log(result);
 
-                                }
-                            });
+                            //     }
+                            // });
                         }
 
                         function missPunchUnSelect(elements) {
@@ -1236,7 +1217,7 @@
                 </div>
             </div>
 
-            <div class="col-xl-4">
+            <div class="col-xl-4" id="FGatePassAllContet">
                 <div class="card">
                     {{-- Gate PAss Rule  --}}
                     <div class="card-body border-top">
@@ -1247,16 +1228,12 @@
 
                                 </div>
                                 @php
-                                // dd($gatePassData);
+                                    // dd($gatePassData);
                                     $gatePassDataNotFound = false;
-                                        if(
-                                            ($gatePassData->occurance_min ?? '00') == '00'
-                                            &&($gatePassData->occurance_count ?? 0) == 0
-                                            ){
-
-                                            $gatePassDataNotFound = true;
-                                            // {{ $gatePassDataNotFound == false ? 'checked' : '' }}
-                                        }
+                                    if (($gatePassData->occurance_min ?? '00') == '00' && ($gatePassData->occurance_count ?? 0) == 0) {
+                                        $gatePassDataNotFound = true;
+                                        // {{ $gatePassDataNotFound == false ? 'checked' : '' }}
+                                    }
                                 @endphp
                                 <div class="d-flex my-auto">
                                     <label class="custom-switch ms-auto"
@@ -1339,6 +1316,9 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="d-flex my-1">
+                                    <span class="fs-11 fw-bold px-3">W.E.F. </span><span class="with-effect-from-badge">{{date('d-M-Y h:i A',strtotime($gatePassData->updated_at))}}</span>
+                                </div>
                                 <script>
                                     function gatePassOccurenceContent() {
                                         var gatePassOccurenceBtn = document.getElementById('gatePassOccurenceBtn');
@@ -1360,6 +1340,7 @@
                             </div>
                         </div>
                     </div>
+
                     <script>
                         function gatePassContent() {
                             var gatePassBtn = document.getElementById('gatePassBtn');
@@ -1382,22 +1363,23 @@
                             }
 
                             gatePassOccurenceContent();
+                            emptyAllInputAtOnce(5);
 
 
                             var switchBtn = gatePassBtn.checked;
-                            $.ajax({
-                                url: "{{ url('admin/settings/attendance/automation/set') }}",
-                                type: "POST",
-                                data: {
-                                    gatePassSwitch: switchBtn,
-                                    _token: '{{ csrf_token() }}'
-                                },
-                                dataType: 'json',
-                                success: function(result) {
-                                    console.log(result);
+                            // $.ajax({
+                            //     url: "{{ url('admin/settings/attendance/automation/set') }}",
+                            //     type: "POST",
+                            //     data: {
+                            //         gatePassSwitch: switchBtn,
+                            //         _token: '{{ csrf_token() }}'
+                            //     },
+                            //     dataType: 'json',
+                            //     success: function(result) {
+                            //         console.log(result);
 
-                                }
-                            });
+                            //     }
+                            // });
                         }
 
                         function gatePassUnSelect(elements) {
@@ -1535,15 +1517,17 @@
         @endif
     </form>
     <script>
-        var textInputs = document.querySelectorAll('input[type="text"]');
-        var SubmitBtn = document.getElementById('allRuleSubmitBtn');
-        textInputs.forEach(element => {
-            if (element.value == '' || element.value == '00:00') {
-                console.log('nhi mila');
-            } else {
-                console.log('mil gya');
-                SubmitBtn.removeAttribute('disabled');
-            }
-        });
+        function emptyAllInputAtOnce(e) {
+            // alert(e);
+
+            // if (e == 1) {
+            //     var Div = document.getElementById("LateAllContet");
+            // }
+
+            // var inputElements = Div.querySelectorAll("input");
+            // inputElements.forEach(function(input) {
+            //     input.value = 0;
+            // });
+        }
     </script>
 @endsection

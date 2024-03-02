@@ -124,7 +124,9 @@
     <script src="{{ asset('https://code.jquery.com/jquery-3.6.0.min.js') }}"></script>
     <div class="d-flex justify-content-between m-3">
         <div>
-            <a href="{{ url('setup/subscription') }}" class="btn btn-primary">Previous</a>
+        <a href="{{ url('/setup/set-all-mode') }}" class="btn btn-primary">Previous</a>
+
+            <!-- <a href="{{ url('setup/subscription') }}" class="btn btn-primary">Previous</a> -->
         </div>
         <div class="">
             <button id="saveButton" class="btn btn-primary" onclick="showSwal()">Finish</button>
@@ -137,7 +139,7 @@
     Swal.fire({
         icon: 'success',
         title: 'Success!',
-        text: 'Your business has been created successfully!',
+        text: 'Your business has been created successfully',
         timer: 2000,
         showConfirmButton: false,
         willClose: () => {

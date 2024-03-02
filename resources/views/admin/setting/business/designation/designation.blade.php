@@ -57,11 +57,8 @@
                 @php
                     $root = new App\Helpers\Central_unit();
                     $Designation = $root->DesignationList();
-                    $Branch = $root->BranchList();
 
                     $Department = $root->DepartmentList();
-                    $j = 1;
-
                     $designationCount = $root->CountersValue();
 
                 @endphp
@@ -87,51 +84,7 @@
             <div class="card-header">
                 <h3 class="card-title">Designation List</h3>
             </div>
-            <div class="card-body p-2">
-                <div class="table-responsive">
-
-                    <table class="table  table-vcenter text-nowrap  border-bottom " id="basic-datatable">
-                        <thead>
-                            <tr>
-                                <th class="border-bottom-0 w-10">S.No.</th>
-                                {{-- <th class="border-bottom-0">Branch Name</th>
-                            <th class="border-bottom-0">Department Name</th> --}}
-                                <th class="border-bottom-0">Designation Name</th>
-                                <th class="border-bottom-0">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $j = 1;
-                            @endphp
-                            @foreach ($Designation as $item)
-                                <tr>
-                                    <td class="font-weight-semibold">{{ $j++ }}.</td>
-                                    <td class="font-weight-semibold">{{ $item->desig_name }}</td>
-                                    <td>
-                                        @if (in_array('Designation Settings.Update', $permissions))
-                                            <a class="btn action-btns  btn-sm btn-primary" data-bs-target="#modaldemo1"
-                                                onclick="openEditDesignation(this)" data-branch_id='<?= $item->branch_id ?>'
-                                                data-id='<?= $item->desig_id ?>'
-                                                data-depart_id='<?= $item->department_id ?>'
-                                                data-desig_name='<?= $item->desig_name ?>' data-bs-toggle="modal"
-                                                href="#">
-                                                <i class='feather feather-edit'></i></a>
-                                        @endif
-                                        @if (in_array('Designation Settings.Delete', $permissions))
-                                            <a class="btn action-btns  btn-sm btn-danger" data-bs-toggle="modal"
-                                                data-bs-target="#departDeletebtn{{ $item->desig_id }}" id="BranchEditbtn"
-                                                title="Edit">
-                                                <i class="feather feather-trash"></i>
-                                        @endif
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <livewire:settings.designaton-list-livewire>
         </div>
 
         <div class="modal fade" id="createDesignationModal" data-bs-backdrop="static">

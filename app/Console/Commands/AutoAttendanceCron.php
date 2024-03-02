@@ -34,28 +34,28 @@ class AutoAttendanceCron extends Command
 
 
         \Log::info("Auto Attendance Cron Activated execution!");
-        // Create By JAY  ON PROJECT BACKGROUND Working 
+        // Create By JAY  ON PROJECT BACKGROUND Working
         //Monthly Stack upload data's at attendance list any typeof holidays details
         $currentDate = Carbon::now()->format('Y-m-d');
         $targetDate = $currentDate; // YYYY-MM-DD
         // '2023-12-25'; //daily Checking Day's
         $loaded = PolicyHolidayDetail::where('holiday_date', date('Y-m-d', strtotime($targetDate)))->get();
         if ($loaded->isNotEmpty()) {
-            foreach ($loaded as $item) {
-                // Assuming PolicyHolidayDetail model has a relationship named 'template'
-                $load = $item->template;
+            // foreach ($loaded as $item) {
+            //     // Assuming PolicyHolidayDetail model has a relationship named 'template'
+            //     $load = $item->template;
 
-                if ($load) {
-                    AttendanceHolidayList::create([
-                        'business_id' => $item->business_id,
-                        'name' => $item->holiday_name,
-                        'day' => $item->day,
-                        'holiday_date' => $item->holiday_date,
-                        'from_start' => $load->temp_from,
-                        'to_end' => $load->temp_to
-                    ]);
-                }
-            }
+            //     if ($load) {
+            //         AttendanceHolidayList::create([
+            //             'business_id' => $item->business_id,
+            //             'name' => $item->holiday_name,
+            //             'day' => $item->day,
+            //             'holiday_date' => $item->holiday_date,
+            //             'from_start' => $load->temp_from,
+            //             'to_end' => $load->temp_to
+            //         ]);
+            //     }
+            // }
         }
         print_r($loaded);
 

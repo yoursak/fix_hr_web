@@ -49,7 +49,7 @@ class NotificationAlert extends Command
             ->select('login_employee.notification_key', 'employee_personal_details.*')
             ->get();
         foreach ($Load as $user) {
-            $firebaseToken = $user->notification_key;
+            $firebaseToken = json_decode($user->notification_key);
             // Get the current time in 24-hour format
             $currentHour = now()->format('H:i');  // Assuming the current timezone is set correctly
 
@@ -72,7 +72,8 @@ class NotificationAlert extends Command
 
                     // Punch IN after 5 min
                     $messageSend = [
-                        "to" => $firebaseToken,
+                        'registration_ids' => $firebaseToken,
+                        // "to" => $firebaseToken,
                         "notification" => [
                             "title" => 'Fix HR Employee',
                             'body' => 'Shift Alert' . "\n" . 'Your shift time is going to start,please mark your Punch In on time.',
@@ -110,7 +111,7 @@ class NotificationAlert extends Command
 
                     // Punch IN after 5 min
                     $messageSend = [
-                        "to" => $firebaseToken,
+                        'registration_ids' => $firebaseToken,
                         "notification" => [
                             "title" => 'Fix HR Employee',
                             'body' => 'Your shift time has been started,please mark your Punch In as soon as posible.',
@@ -159,7 +160,7 @@ class NotificationAlert extends Command
 
                     // Punch IN after 5 min
                     $messageSend = [
-                        "to" => $firebaseToken,
+                        'registration_ids' => $firebaseToken,
                         "notification" => [
                             "title" => 'Fix HR Employee',
                             'body' => 'Shift Alert' . "\n" . 'Your shift time is going to end,please mark your Punch Out on time.',
@@ -196,7 +197,7 @@ class NotificationAlert extends Command
 
                     // Punch IN after 5 min
                     $messageSend = [
-                        "to" => $firebaseToken,
+                        'registration_ids' => $firebaseToken,
                         "notification" => [
                             "title" => 'Fix HR Employee',
                             'body' => 'Your shift time has been end,please mark your Punch Out as soon as posible.',

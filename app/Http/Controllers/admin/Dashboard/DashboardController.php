@@ -35,17 +35,12 @@ class DashboardController extends Controller
         // dd($accessPermission);
         $businessId = Session::get('business_id');
         $roleIdToCheck = Session::get('login_role');
-        $checkArray = json_decode(
-            PolicySettingRoleAssignPermission::where('business_id', $businessId)
-                ->where('emp_id', Session::get('login_emp_id'))
-                ->select('permission_branch_id')
-                ->pluck('permission_branch_id')
-                ->first(),
-            true,
-        );
-        if ($checkArray !== null && !empty($checkArray) && $roleIdToCheck != 1) {
+        $permissionBranchId = PolicySettingRoleAssignPermission::where('business_id', $businessId)
+        ->where('emp_id', Session::get('login_emp_id'))
+        ->first();
+        if ($permissionBranchId !== null && !empty($permissionBranchId) && $roleIdToCheck != 1 && ($permissionBranchId->permission_type == 2)) {
             $Emp = EmployeePersonalDetail::where('business_id', Session::get('business_id'))
-                ->whereIn('employee_personal_details.branch_id', $checkArray)
+                ->where('employee_personal_details.branch_id', $permissionBranchId->permission_branch_id)
                 ->where('active_emp', 1)
                 ->paginate(10);
         } else {

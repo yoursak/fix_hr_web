@@ -22,6 +22,7 @@ use App\Models\AttendanceList;
 use App\Models\StaticMisPunchTimeType;
 use App\Models\StaticLeaveShiftType;
 use App\Models\StaticRequestLeaveType;
+use App\Models\RequestOutdoorList;
 use App\Models\LoginEmployee;
 use App\Models\StaticGoingThroughType;
 use App\Models\RequestMispunchList;
@@ -38,14 +39,9 @@ class RequestController extends Controller
         $businessId = Session::get('business_id');
         $roleIdToCheck = Session::get('login_role');
         list($moduleName, $permissions) = Central_unit::AccessPermission();
-        $checkArray = json_decode(
-            PolicySettingRoleAssignPermission::where('business_id', $businessId)
-                ->where('emp_id', Session::get('login_emp_id'))
-                ->select('permission_branch_id')
-                ->pluck('permission_branch_id')
-                ->first(),
-            true
-        );
+        $checkBranchPermission = PolicySettingRoleAssignPermission::where('business_id', $businessId)
+            ->where('emp_id', Session::get('login_emp_id'))
+            ->first();
         $baseQuery = RequestGatepassList::join('employee_personal_details', 'request_gatepass_list.emp_id', '=', 'employee_personal_details.emp_id')
             ->where('request_gatepass_list.business_id', $businessId)
             ->where('employee_personal_details.active_emp', '1')
@@ -61,8 +57,8 @@ class RequestController extends Controller
                 'employee_personal_details.emp_mobile_number'
             )
             ->orderByDesc('request_gatepass_list.id');
-        if ($checkArray !== null && !empty($checkArray) && $roleIdToCheck != 1) {
-            $DATA = $baseQuery->whereIn('employee_personal_details.branch_id', $checkArray)->get();
+        if ($checkBranchPermission !== null && !empty($checkBranchPermission) && $roleIdToCheck != 1 && ($checkBranchPermission->permission_type == 2)) {
+            $DATA = $baseQuery->where('employee_personal_details.branch_id', $checkBranchPermission->permission_branch_id)->get();
         } else {
             $DATA = $baseQuery->get();
         }
@@ -117,7 +113,6 @@ class RequestController extends Controller
         $gatepassNotification = RequestGatepassList::where('id', $request->id)
             ->where('business_id', Session::get('business_id'))
             ->first();
-        // dd($gatepassNotification);
         // notification calling node model by jayant
         $array = [
             'redirect_id' => 4,
@@ -130,12 +125,37 @@ class RequestController extends Controller
             $inTimeFormatted = date('h:i A', strtotime($gatepassNotification->in_time));
             $outTimeFormatted = date('h:i A', strtotime($gatepassNotification->out_time));
 
-            RulesManagement::NotificationSendMode(
-                $SD->notification_key,
-                'Fix HR Employee',
-                "Apply Date : {$gatepassNotification->date} \nGatePass Status {$sdd} By " . Session::get('user_type') . "\nInTime : {$inTimeFormatted} OutTime : {$outTimeFormatted}",
-                $array
-            ); //send notification
+            // Convert the JSON string to an array
+            if ($SD->notification_key != null) {
+                // Convert the JSON string to an array
+                $notificationKeys = json_decode($SD->notification_key, true);
+
+                // // Iterate over each notification key and send the notification
+                if (is_array($notificationKeys)) {
+                    // $result = RulesManagement::NotificationSendMode($notificationKeys, 'Fix HR Employee', 'Attendance ' . $sdd . ' By : ' . Session::get('login_name') . ' (' . Session::get('user_type') . ')' . ' ', $array);
+                    RulesManagement::NotificationSendMode(
+                        $notificationKeys,
+                        'Fix HR Employee',
+                        "Apply Date : {$gatepassNotification->date} \nGatePass Status {$sdd} By " . Session::get('login_name') . ' ( ' . Session::get('login_role_name') . ' )' . "\nOutTime : {$outTimeFormatted} InTime : {$inTimeFormatted}",
+                        $array
+                    ); //send notification
+                }
+            }
+            // $notificationKeys = json_decode($SD->notification_key, true);
+            // if (is_array($notificationKeys)) {
+
+            //     // Iterate over each notification key and send the notification
+            //     foreach ($notificationKeys as $key) {
+            //         // $result = RulesManagement::NotificationSendMode($key, 'Fix HR Employee', 'Attendance ' . $sdd . ' By : ' . $UserType . ' ', $array);
+            //         // You may want to handle the result of sending notification here
+            //         RulesManagement::NotificationSendMode(
+            //             $key,
+            //             'Fix HR Employee',
+            //             "Apply Date : {$gatepassNotification->date} \nGatePass Status {$sdd} By " . Session::get('user_type') . "\nInTime : {$inTimeFormatted} OutTime : {$outTimeFormatted}",
+            //             $array
+            //         ); //send notification
+            //     }
+            // }
         }
         $ApprovalManagement = DB::table('approval_management_cycle')
             ->where('business_id', $BID)
@@ -267,16 +287,22 @@ class RequestController extends Controller
                         'status' => $status,
                     ]);
             }
-            Alert::success('', 'Status is updated');
+            if ($status == 1) {
+                Alert::success('', 'Your Gatepass Request has been Approved Successfully');
+            } else if ($status == 2) {
+                Alert::success('', 'Your Gatepass Request has been Declined!');
+            }
         }
         return redirect()->back();
     }
 
     public function leaves()
     {
+        $fromDate = Carbon::now()->firstOfMonth()->toDateString(); // Format as 'Y-m-d'
+        $toDate = Carbon::now()->lastOfMonth()->toDateString();    // Format as 'Y-m-d'
+
         // session data
         $businessId = Session::get('business_id');
-        $roleIdToCheck = Session::get('login_role');
         $roleIdToCheck = Session::get('login_role');
         // helper call data
         $Branch = Central_unit::BranchList();
@@ -291,26 +317,31 @@ class RequestController extends Controller
         $shiftType = StaticLeaveShiftType::all();
         $leaveType = StaticRequestLeaveType::all();
         // check branch and business level permission
-        $checkArray = json_decode(
-            PolicySettingRoleAssignPermission::where('business_id', $businessId)
-                ->where('emp_id', Session::get('login_emp_id'))
-                ->pluck('permission_branch_id')
-                ->first(),
-            true
-        );
+        $checkBranchPermission = PolicySettingRoleAssignPermission::where('business_id', $businessId)
+            ->where('emp_id', Session::get('login_emp_id'))
+            ->first();
         // main table data
         $leaveQuery = RequestLeaveList::join('employee_personal_details', 'request_leave_list.emp_id', '=', 'employee_personal_details.emp_id')
             ->join('static_leave_category', 'static_leave_category.id', '=', 'request_leave_list.leave_category')
             ->join('static_request_leave_type', 'static_request_leave_type.id', '=', 'request_leave_list.leave_type')
             ->where('request_leave_list.business_id', $businessId)
             ->where('employee_personal_details.active_emp', '1')
-            ->whereMonth('request_leave_list.created_at', now()->month)
-            ->whereYear('request_leave_list.created_at', now()->year)
+            ->where(function ($query) use ($fromDate, $toDate) {
+                $query->where(function ($subquery) {
+                    $subquery->whereMonth('request_leave_list.apply_date', now()->month)
+                        ->whereYear('request_leave_list.apply_date', now()->year);
+                })
+                    ->orWhere(function ($subquery) use ($fromDate, $toDate) {
+                        $subquery->whereDate('request_leave_list.from_date', '>=', $fromDate)
+                            ->whereDate('request_leave_list.to_date', '<=', $toDate);
+                    });
+            })
             ->orderByDesc('request_leave_list.id')
             ->select('request_leave_list.*', 'static_request_leave_type.leave_day', 'static_leave_category.name as category_name', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.designation_id', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname');
+
         // check the permission of branch
-        if ($checkArray !== null && !empty($checkArray) && $roleIdToCheck != 1) {
-            $DATALEAVE = $leaveQuery->whereIn('employee_personal_details.branch_id', $checkArray)->get();
+        if ($checkBranchPermission !== null && !empty($checkBranchPermission) && $roleIdToCheck != 1 && ($checkBranchPermission->permission_type == 2)) {
+            $DATALEAVE = $leaveQuery->where('employee_personal_details.branch_id', $checkBranchPermission->permission_branch_id)->get();
         } else {
             $DATALEAVE = $leaveQuery->get();
         }
@@ -349,15 +380,12 @@ class RequestController extends Controller
 
     public function ApproveLeave(Request $request)
     {
-        // dd($request->all());
-        // cyclic dynamic data storing
         $Days = '';
         $status = 0;
         $PID = $request->id;
         $BID = RulesManagement::PassBy()[1];
         $FindRoleID = RulesManagement::PassBy()[3];
         $EmpID = RulesManagement::PassBy()[2];
-        // dd($FindRoleID);
         if ($request->days != null) {
             $Days = $request->days;
         } else {
@@ -372,9 +400,6 @@ class RequestController extends Controller
             $status = 2;
         }
         $ApprovalTypeID = 2; //leave processType
-        // $gatepass = RequestLeaveList::where('id', $request->id)
-        // ->where('business_id', $BID)
-        // ->update(['from_date' => $request->from_date, 'to_date' => $request->to_date, 'days' => $Days]);
         $LeaveReqListMode = RequestLeaveList::where('id', $PID)
             ->where('business_id', $BID)
             ->first();
@@ -385,28 +410,29 @@ class RequestController extends Controller
             'punch_date' => $LeaveReqListMode->apply_date, //when apply model
         ];
         $SD = LoginEmployee::where('emp_id', $LeaveReqListMode->emp_id)->first();
-        $sdd = ($request->status !== 2) ? 'Approved' : 'Declined';
+        $sdd = ($status != 2) ? 'Approved' : 'Declined';
         if ($SD->notification_key != null) {
-            RulesManagement::NotificationSendMode(
-                $SD->notification_key,
-                'Fix HR Employee',
-                "Apply Date : {$LeaveReqListMode->apply_date} \nLeave Status {$sdd} By " . Session::get('user_type') . "\nFrom : {$LeaveReqListMode->from_date} To : {$LeaveReqListMode->to_date}",
-                $array
-            ); //send notification
+            // Convert the JSON string to an array
+            $notificationKeys = json_decode($SD->notification_key, true);
+
+
+            // // Iterate over each notification key and send the notification
+            if (is_array($notificationKeys)) {
+                // $result = RulesManagement::NotificationSendMode($notificationKeys, 'Fix HR Employee', 'Attendance ' . $sdd . ' By : ' . Session::get('login_name') . ' (' . Session::get('user_type') . ')' . ' ', $array);
+                RulesManagement::NotificationSendMode(
+                    $notificationKeys,
+                    'Fix HR Employee',
+                    "Apply Date : {$LeaveReqListMode->apply_date} \nLeave Status {$sdd} By " . Session::get('login_name') . ' ( ' . Session::get('login_role_name') . ' )' . "\nFrom : {$LeaveReqListMode->from_date} To : {$LeaveReqListMode->to_date}",
+                    $array
+                ); //send notification
+
+            }
         }
-
-        $ApprovalManagement = DB::table('approval_management_cycle')
-            ->where('business_id', $BID)
-            ->where('approval_type_id', $ApprovalTypeID)
-            ->first();
-        // dd($ApprovalManagement);
-        // dd($request->all());
-
-        // dd($request->all(), $status, $ApprovalManagement, $sd);
+        // dd(Session::all());
+        $ApprovalManagement = ApprovalManagementCycle::where('business_id', $BID)->where('approval_type_id', $ApprovalTypeID)->first();
         if ($ApprovalManagement->cycle_type == 1) {
             // next forward
-            $sd = DB::table('approval_management_cycle')
-                ->where('business_id', $BID)
+            $sd = ApprovalManagementCycle::where('business_id', $BID)
                 ->where('approval_type_id', $ApprovalTypeID)
                 ->whereJsonContains('role_id', (string) $FindRoleID)
                 ->select('role_id')
@@ -433,14 +459,11 @@ class RequestController extends Controller
                     $prevIndex = $currentIndex - 1;
 
                     // Check if the next index is within the bounds of the array
-                    // if (isset($roleIds[$nextIndex])) {
                     $nextRoleId = isset($roleIds[$nextIndex]) ? $roleIds[$nextIndex] : -1; //sensitive case if last next end then recall 0
                     $prevRoleId = isset($roleIds[$prevIndex]) ? $roleIds[$prevIndex] : 0; //prev 1st start recall 0
 
-                    // dd($request->all(),$FindRoleID,$nextRoleId);
                     // Update the database for the current index
-                    DB::table('request_leave_list')
-                        ->where('business_id', $BID)
+                    RequestLeaveList::where('business_id', $BID)
                         ->where('id', $PID)
                         ->update([
                             'forward_by_role_id' => $nextRoleId,
@@ -449,8 +472,7 @@ class RequestController extends Controller
 
                     // Update the approval status for the current index
                     //Sequential
-                    DB::table('approval_status_list')
-                        ->where('approval_type_id', $ApprovalTypeID)
+                    ApprovalStatusList::where('approval_type_id', $ApprovalTypeID)
                         ->where('role_id', $FindRoleID)
                         ->where('business_id', $BID)
                         ->where('all_request_id', $PID)
@@ -468,12 +490,16 @@ class RequestController extends Controller
                             'current_role_id' => $FindRoleID,
                             'next_role_id' => $nextRoleId,
                         ]);
-                    Alert::success('', 'Status is Updated');
+
+                    if ($status == 1) {
+                        Alert::success('', 'Your Leave Request has been Approved Successfully');
+                    } else if ($status == 2) {
+                        Alert::success('', 'Your Leave Request has been Declined Successfully');
+                    }
                 }
             }
             if ($value->forward_by_role_id == $value->final_level_role_id) {
-                DB::table('request_leave_list')
-                    ->where('business_id', $BID)
+                RequestLeaveList::where('business_id', $BID)
                     ->where('id', $PID)
                     ->update([
                         'process_complete' => 1,
@@ -484,16 +510,13 @@ class RequestController extends Controller
 
         // default case
         if ($ApprovalManagement->cycle_type == 2) {
-            // dd($request->all());
-            DB::table('request_leave_list')
-                ->where('business_id', $BID)
+            RequestLeaveList::where('business_id', $BID)
                 ->where('id', $PID)
                 ->update([
                     'process_complete' => 1,
                     'final_status' => $status,
                 ]);
-            $loadCheck = DB::table('approval_status_list')
-                ->where('approval_type_id', $ApprovalTypeID)
+            $loadCheck = ApprovalStatusList::where('approval_type_id', $ApprovalTypeID)
                 ->where('business_id', $BID)
                 ->where('all_request_id', $PID)
                 ->first();
@@ -515,8 +538,7 @@ class RequestController extends Controller
                 //     ]);
             } else {
                 //Parallel
-                DB::table('approval_status_list')
-                    ->where('business_id', $BID)
+                ApprovalStatusList::where('business_id', $BID)
                     ->where('approval_type_id', $ApprovalTypeID)
                     ->where('all_request_id', $PID)
                     ->insert([
@@ -531,7 +553,11 @@ class RequestController extends Controller
                         'status' => $status,
                     ]);
             }
-            Alert::success('', 'Status is updated');
+            if ($status == 1) {
+                Alert::success('', 'Your Leave Request has been Approved Successfully');
+            } else if ($status == 2) {
+                Alert::success('', 'Your Leave Request has been Declined!');
+            }
         }
         return redirect()->back();
     }
@@ -626,53 +652,38 @@ class RequestController extends Controller
 
     public function ApproveMispunch(Request $request)
     {
-        // dd($request->all());
 
-        $checkupdateAttendancetest = AttendanceList::where('emp_id', $request->emp_id)
-            ->where('punch_date', $request->date)
-            ->first();
-        // dd($checkupdateAttendancetest);
-        // if (!$checkupdateAttendancetest) {
-        //     Alert::error('', 'Your Mispunch Request Data Attendance List Not Found.');
-        //     return redirect('admin/requests/mispunch');
-        // }
-        // cyclic dynamic data storing
+        // Retrieve values from request
         $requestEmpId = $request->emp_id;
-        $requestMisspunchDate = $request->date;
+        $requestMispunchDate = $request->date;
         $requestPunchInTime = $request->in_time;
         $requestPunchOutTime = $request->out_time;
-        $attenApprovalTypeId = 1;
         $hiddenTimeType = $request->hidden_time_type;
-        $Days = '';
-        $status = 0;
+        $attenApprovalTypeId = 1; // attendance approval process type
         $PID = $request->id;
+        $Days = $request->days ?? $request->days1; // Use null coalescing operator
+        $status = 0;
+        $Remark = $request->remark;
+        $ApprovalTypeID = 3; //Mispunch processType
+        // helper value
         $BID = RulesManagement::PassBy()[1];
         $FindRoleID = RulesManagement::PassBy()[3];
         $EmpID = RulesManagement::PassBy()[2];
         $BusinessId = Session::get('business_id');
-        if ($request->days != null) {
-            $Days = $request->days;
-        } else {
-            $Days = $request->days1;
-        }
-        $Remark = $request->remark;
+
+        // Set status based on approve or decline
         if ($request->approve == '1') {
             $status = 1;
         }
         if ($request->decline == '2') {
             $status = 2;
         }
-        $ApprovalTypeID = 3; //Mispunch processType
-        $attendance = AttendanceList::where('emp_id', $request->emp_id)
-            ->where('punch_date', $request->date)
-            ->first();
-        $mispunch = RequestMispunchList::where('id', $request->id)
-            ->where('business_id', $BusinessId)
-            ->update(['emp_miss_in_time' => $request->in_time, 'emp_miss_out_time' => $request->out_time]);
-
-        $MisReqListMode = RequestMispunchList::where('id', $PID)
-            ->where('business_id', $BID)
-            ->first();
+        // find the data Attendance List
+        $attendance = AttendanceList::where('emp_id', $request->emp_id)->where('punch_date', $request->date)->first();
+        // Update Mispunch List
+        $mispunch = RequestMispunchList::where('id', $request->id)->where('business_id', $BusinessId)->update(['emp_miss_in_time' => $request->in_time, 'emp_miss_out_time' => $request->out_time]);
+        // For Notification
+        $MisReqListMode = RequestMispunchList::where('id', $PID)->where('business_id', $BID)->first(); //1
         // notification calling node model by jayant
         $array = [
             'redirect_id' => 3,
@@ -682,57 +693,64 @@ class RequestController extends Controller
         $SD = LoginEmployee::where('emp_id', $MisReqListMode->emp_id)->first();
         $sdd = ($request->status !== 2) ? 'Approved' : 'Declined';
         if ($SD->notification_key != null) {
-            RulesManagement::NotificationSendMode(
-                $SD->notification_key,
-                'Fix HR Employee',
-                "Apply Date : {$MisReqListMode->emp_miss_date} \nMisPunch Status {$sdd} By " . Session::get('user_type') . "\nIn Time : {$MisReqListMode->emp_miss_in_time} Out Time : {$MisReqListMode->emp_miss_out_time}",
-                $array
-            ); //send notification
-        }
+            // Convert the JSON string to an array
+            $notificationKeys = json_decode($SD->notification_key, true);
 
-        $ApprovalManagement = DB::table('approval_management_cycle')
-            ->where('business_id', $BID)
-            ->where('approval_type_id', $ApprovalTypeID)
-            ->first();
+
+            // // Iterate over each notification key and send the notification
+            if (is_array($notificationKeys)) {
+                // $result = RulesManagement::NotificationSendMode($notificationKeys, 'Fix HR Employee', 'Attendance ' . $sdd . ' By : ' . Session::get('login_name') . ' (' . Session::get('user_type') . ')' . ' ', $array);
+                // RulesManagement::NotificationSendMode(
+                //     $notificationKeys,
+                //     'Fix HR Employee',
+                //     "Apply Date : {$LeaveReqListMode->apply_date} \nLeave Status {$sdd} By " . Session::get('user_type') . "\nFrom : {$LeaveReqListMode->from_date} To : {$LeaveReqListMode->to_date}",
+                //     $array
+                // ); //send notification
+                RulesManagement::NotificationSendMode(
+                    $notificationKeys,
+                    'Fix HR Employee',
+                    "Apply Date : {$MisReqListMode->emp_miss_date} \nMisPunch Status {$sdd} By " . Session::get('login_name') . ' ( ' . Session::get('login_role_name') . ' )'  . "\nIn Time : {$MisReqListMode->emp_miss_in_time} Out Time : {$MisReqListMode->emp_miss_out_time}",
+                    $array
+                ); //send notification
+
+            }
+            // if (is_array($notificationKeys)) {
+            //     // Iterate over each notification key and send the notification
+            //     foreach ($notificationKeys as $key) {
+            //         // $result = RulesManagement::NotificationSendMode($key, 'Fix HR Employee', 'Attendance ' . $sdd . ' By : ' . $UserType . ' ', $array);
+            //         RulesManagement::NotificationSendMode(
+            //             $key,
+            //             'Fix HR Employee',
+            //             "Apply Date : {$MisReqListMode->emp_miss_date} \nMisPunch Status {$sdd} By " . Session::get('user_type') . "\nIn Time : {$MisReqListMode->emp_miss_in_time} Out Time : {$MisReqListMode->emp_miss_out_time}",
+            //             $array
+            //         ); //send notification
+            //     }
+            // }
+        }
+        // Approval management cycle check
+        $ApprovalManagement = ApprovalManagementCycle::where('business_id', $BID)->where('approval_type_id', $ApprovalTypeID)->first();
+        // Sequential Case
         if ($ApprovalManagement->cycle_type == 1) {
             // next forward
-            $sd = DB::table('approval_management_cycle')
-                ->where('business_id', $BID)
-                ->where('approval_type_id', $ApprovalTypeID)
-                ->whereJsonContains('role_id', (string) $FindRoleID)
-                ->select('role_id')
-                ->first();
-            $value = RequestMispunchList::where('business_id', $BID)
-                ->where('id', $PID)
-                ->first();
+            $sd = ApprovalManagementCycle::where('business_id', $BID)->where('approval_type_id', $ApprovalTypeID)->whereJsonContains('role_id', (string) $FindRoleID)->select('role_id')->first();
+            $value = RequestMispunchList::where('business_id', $BID)->where('id', $PID)->first(); // 2
             if ($sd) {
                 $roleIds = json_decode($sd->role_id, true); // Decode the JSON array
                 $currentIndex = array_search($FindRoleID, $roleIds); // Find the current index of forward_by_role_id
-
                 if ($currentIndex !== false) {
                     $nextIndex = $currentIndex + 1;
                     $prevIndex = $currentIndex - 1;
-
                     // Check if the next index is within the bounds of the array
                     $nextRoleId = isset($roleIds[$nextIndex]) ? $roleIds[$nextIndex] : -1; //sensitive case if last next end then recall 0
                     $prevRoleId = isset($roleIds[$prevIndex]) ? $roleIds[$prevIndex] : 0; //prev 1st start recall 0
 
                     // Update the database for the current index
-                    DB::table('request_mispunch_list')
-                        ->where('business_id', $BID)
-                        ->where('id', $PID)
-                        ->update([
-                            'forward_by_role_id' => $nextRoleId,
-                            'forward_by_status' => $status,
-                        ]);
+                    RequestMispunchList::where('business_id', $BID)->where('id', $PID)->update(['emp_miss_in_time' => $requestPunchInTime, 'emp_miss_out_time' => $requestPunchOutTime, 'forward_by_role_id' => $nextRoleId, 'forward_by_status' => $status,]); // 2
+                    // $mispunch = RequestMispunchList::where('id', $PID)->where('business_id', $BusinessId)->update(['emp_miss_in_time' => $request->in_time, 'emp_miss_out_time' => $request->out_time]);
 
                     // Update the approval status for the current index
                     //Sequential
-                    DB::table('approval_status_list')
-                        ->where('approval_type_id', $ApprovalTypeID)
-                        ->where('role_id', $FindRoleID)
-                        ->where('business_id', $BID)
-                        ->where('all_request_id', $PID)
+                    ApprovalStatusList::where('approval_type_id', $ApprovalTypeID)->where('role_id', $FindRoleID)->where('business_id', $BID)->where('all_request_id', $PID)
                         ->insert([
                             'applied_cycle_type' => 1,
                             'business_id' => $BID,
@@ -748,46 +766,22 @@ class RequestController extends Controller
                             'next_role_id' => $nextRoleId,
                         ]);
                     $attenApprovalTypeId = 1;
-
-                    $checkupdateAttendance = AttendanceList::where('emp_id', $request->emp_id)
-                        ->where('punch_date', $request->date)
-                        ->first();
-                    DB::table('approval_status_list')
-                        ->where('approval_type_id', $attenApprovalTypeId)
-                        ->where('role_id', $FindRoleID)
-                        ->where('business_id', $BID)
-                        ->where('all_request_id', $checkupdateAttendance->id)
-                        ->insert([
-                            'applied_cycle_type' => 1,
-                            'business_id' => $BID,
-                            'approval_type_id' => $attenApprovalTypeId,
-                            'all_request_id' => $checkupdateAttendance->id,
-                            'role_id' => $FindRoleID,
-                            'emp_id' => $EmpID,
-                            'remarks' => $Remark != null ? $Remark : '',
-                            'clicked' => 1,
-                            'status' => $status,
-                            'prev_role_id' => $prevRoleId,
-                            'current_role_id' => $FindRoleID,
-                            'next_role_id' => $nextRoleId,
-                        ]);
+                    // find the attendance list
+                    $checkupdateAttendance = AttendanceList::where('emp_id', $request->emp_id)->where('punch_date', $request->date)->first();
+                    if ($checkupdateAttendance) {
+                    }
                     Alert::success('', 'Status is Updated');
                 }
             }
-            $ruleMangementSequentialApprovalDeclinedCheck = RulesManagement::FinalRequestStatusSubmitFilterValue($PID, 3)[0];
             if ($value->forward_by_role_id == $value->final_level_role_id) {
-                DB::table('request_mispunch_list')
-                    ->where('business_id', $BID)
-                    ->where('id', $PID)
+                $ruleMangementSequentialApprovalDeclinedCheck = RulesManagement::FinalRequestStatusSubmitFilterValue($PID, 3)[0];
+                RequestMispunchList::where('business_id', $BID)->where('id', $PID)
                     ->update([
                         'process_complete' => 1,
                         'final_status' => $ruleMangementSequentialApprovalDeclinedCheck, //final status submit
                     ]);
 
-                $FinalMispunchApprovalDeclineCheck = DB::table('request_mispunch_list')
-                    ->where('business_id', $BID)
-                    ->where('id', $PID)
-                    ->first();
+                $FinalMispunchApprovalDeclineCheck = RequestMispunchList::where('business_id', $BID)->where('id', $PID)->first();
                 $punchInTimes = strtotime($request->in_time);
                 $punchOutTimes = strtotime($request->out_time);
                 $totalWorkingSeconds = $punchOutTimes - $punchInTimes;
@@ -795,9 +789,7 @@ class RequestController extends Controller
                 $totalWorkingTimestamp = strtotime('midnight') + $totalWorkingSeconds;
                 $totalWorking = date('H:i:s', $totalWorkingTimestamp);
                 if ($FinalMispunchApprovalDeclineCheck->process_complete == 1) {
-                    $checkupdateAttendance = AttendanceList::where('emp_id', $request->emp_id)
-                        ->where('punch_date', $request->date)
-                        ->first();
+                    $checkupdateAttendance = AttendanceList::where('emp_id', $request->emp_id)->where('punch_date', $request->date)->first();
                     if ($checkupdateAttendance) {
                         $AttenPrevStatus = $checkupdateAttendance->today_status;
                         $empMonthlyCount = DB::table('attendance_monthly_count')
@@ -824,19 +816,30 @@ class RequestController extends Controller
                                 'leave' => in_array($AttenPrevStatus, [10, 11]) ? $empMonthlyCount->leave - 1 : $empMonthlyCount->leave ?? 0,
                             ]);
                         if ($ruleMangementSequentialApprovalDeclinedCheck == 1) {
-                            $updaetattendance = AttendanceList::where('emp_id', $request->emp_id)
-                                ->where('punch_date', $request->date)
-                                ->update(['punch_in_time' => $request->in_time, 'punch_out_time' => $request->out_time, 'emp_today_current_status' => '2', 'total_working_hour' => $totalWorking, 'process_complete' => 1, 'final_status' => $ruleMangementSequentialApprovalDeclinedCheck]);
+                            $updaetattendance = AttendanceList::where('emp_id', $request->emp_id)->where('punch_date', $request->date)->update(['punch_in_time' => $request->in_time, 'punch_out_time' => $request->out_time, 'emp_today_current_status' => '2', 'total_working_hour' => $totalWorking, 'process_complete' => 1, 'final_status' => $ruleMangementSequentialApprovalDeclinedCheck]);
+                            $countUpdate = Central_unit::getEmpAttSummaryApi2(['punch_date' => $request->date, 'emp_id' => $request->emp_id, 'business_id' => Session::get('business_id'), 'branch_id' => $checkupdateAttendance->branch_id]);
                         } elseif ($ruleMangementSequentialApprovalDeclinedCheck == 2) {
-                            $updaetattendance = AttendanceList::where('emp_id', $request->emp_id)
-                                ->where('punch_date', $request->date)
-                                ->update(['today_status' => '2', 'punch_in_time' => '00:00:00', 'punch_out_time' => '00:00:00', 'emp_today_current_status' => '2', 'total_working_hour' => '00:00:00', 'process_complete' => 1, 'final_status' => $ruleMangementSequentialApprovalDeclinedCheck]);
+                            $updaetattendance = AttendanceList::where('emp_id', $request->emp_id)->where('punch_date', $request->date)->update(['today_status' => '2', 'punch_in_time' => NULL, 'punch_out_time' => NULL, 'emp_today_current_status' => '2', 'total_working_hour' => NULL, 'process_complete' => 1, 'final_status' => $ruleMangementSequentialApprovalDeclinedCheck]);
                         }
-                        $countUpdate = Central_unit::getEmpAttSummaryApi(['punch_date' => $request->date, 'emp_id' => $request->emp_id, 'business_id' => Session::get('business_id')]);
-
                         $attenApprovalTypeId = 1;
-                        AttendanceList::where('id', $checkupdateAttendance->id)->update(['today_status' => $countUpdate[0], 'late_by' => $countUpdate[12], 'early_exit' => $countUpdate[13], 'overtime' => $countUpdate[8]]);
-                    } elseif ((!$checkupdateAttendance) && ($hiddenTimeType == 2)) {
+                        AttendanceList::where('id', $checkupdateAttendance->id)->update(['today_status' => $countUpdate['Status'] ?? '2', 'late_by' => $countUpdate['LateBy'] ?? '0', 'early_exit' => $countUpdate['EarlyExitBy'] ?? '0', 'overtime' => $countUpdate['Overtime'] ?? '0']);
+                        ApprovalStatusList::where('approval_type_id', $attenApprovalTypeId)->where('role_id', $FindRoleID)->where('business_id', $BID)->where('all_request_id', $checkupdateAttendance->id)
+                            ->insert([
+                                'applied_cycle_type' => 1,
+                                'business_id' => $BID,
+                                'approval_type_id' => $attenApprovalTypeId,
+                                'all_request_id' => $checkupdateAttendance->id,
+                                'role_id' => $FindRoleID,
+                                'emp_id' => $EmpID,
+                                'remarks' => $Remark != null ? $Remark : '',
+                                'clicked' => 1,
+                                'status' => $status,
+                                'prev_role_id' => $prevRoleId,
+                                'current_role_id' => $FindRoleID,
+                                'next_role_id' => $nextRoleId,
+                            ]);
+                        // } elseif ((!$checkupdateAttendance) && ($hiddenTimeType == 2)) {
+                    } elseif ((!$checkupdateAttendance)) {
                         if ($status == 1) {
                             $approvalManagementCycle = ApprovalManagementCycle::where('business_id', $BusinessId)
                                 ->where('approval_type_id', 1)
@@ -851,12 +854,12 @@ class RequestController extends Controller
                                 $lastRoleId = end($roleIds); // Get the last value of the array
 
                             }
-                            $TodayStatus = Central_unit::getEmpAttSummaryApi(['emp_id' => $requestEmpId, 'punch_date' => $requestMisspunchDate, 'business_id' => $BusinessId]);
-                            $OverAllTodayStatus = $TodayStatus[0]; //only running PunchOut time By Aman Attendance
-                            $Overtime = $TodayStatus[8];
-                            $ShiftInterval = $TodayStatus[9];
-                            $EarlyExit = $TodayStatus[13];
-                            $LateBy = $TodayStatus[12];
+                            $TodayStatus2 = Central_unit::getEmpAttSummaryApi2(['emp_id' => $requestEmpId, 'punch_date' => $requestMispunchDate, 'business_id' => $BusinessId, 'branch_id' => Session::get('branch_id')]);
+                            $OverAllTodayStatus = $TodayStatus2['Status']; //only running PunchOut time By Aman Attendance
+                            $Overtime = $TodayStatus2['Overtime'];
+                            $ShiftInterval = $TodayStatus2['ShiftInterval'];
+                            $EarlyExit = $TodayStatus2['EarlyExitBy'];
+                            $LateBy = $TodayStatus2['LateBy'];
                             $information = EmployeePersonalDetail::where('business_id', $BusinessId)
                                 ->where('emp_id', $requestEmpId)
                                 ->first();
@@ -900,7 +903,7 @@ class RequestController extends Controller
                                         $query->where('policy_attendance_shift_type_items.id', $RotationalShift);
                                     }
                                 })
-                                ->select('policy_master_endgame_method.id as method_id', 'policy_master_endgame_method.method_name as method_name', 'policy_attendance_shift_type_items.id as shift_item_id', 'policy_attendance_shift_type_items.shift_name as shift_template_name', 'static_attendance_shift_type.id  as shift_type_id', 'static_attendance_shift_type.name as shift_type_name', 'policy_attendance_shift_type_items.shift_start as shift_start_time', 'policy_attendance_shift_type_items.shift_end as shift_end_time', 'policy_attendance_shift_type_items.shift_hr as shift_hour', 'policy_attendance_shift_type_items.shift_min as shift_min', 'policy_attendance_shift_type_items.work_hr as working_hour', 'policy_attendance_shift_type_items.work_min as working_min', 'policy_attendance_shift_type_items.break_min as break_min', 'policy_attendance_shift_type_items.is_paid as is_paid')
+                                ->select('employee_personal_details.branch_id', 'policy_master_endgame_method.id as method_id', 'policy_master_endgame_method.method_name as method_name', 'policy_attendance_shift_type_items.id as shift_item_id', 'policy_attendance_shift_type_items.shift_name as shift_template_name', 'static_attendance_shift_type.id  as shift_type_id', 'static_attendance_shift_type.name as shift_type_name', 'policy_attendance_shift_type_items.shift_start as shift_start_time', 'policy_attendance_shift_type_items.shift_end as shift_end_time', 'policy_attendance_shift_type_items.shift_hr as shift_hour', 'policy_attendance_shift_type_items.shift_min as shift_min', 'policy_attendance_shift_type_items.work_hr as working_hour', 'policy_attendance_shift_type_items.work_min as working_min', 'policy_attendance_shift_type_items.break_min as break_min', 'policy_attendance_shift_type_items.is_paid as is_paid')
                                 ->first();
                             $ShiftItemID = $DATA->shift_item_id;
                             $appliedShift_template_name = $DATA->shift_template_name;
@@ -910,7 +913,7 @@ class RequestController extends Controller
                             $appliedShift_break_time = $DATA->break_min;
                             $punchIn_shift_name = $DATA->shift_type_name;
                             $punchOut_shift_name = $DATA->shift_type_name;
-                            $AttendanceCompOff = RulesManagement::AttendaceCompOffSet($requestEmpId, $BusinessId, $requestMisspunchDate);
+                            $AttendanceCompOff = RulesManagement::AttendaceCompOffSet($requestEmpId, $BusinessId, $requestMispunchDate);
                             $insertAttendaneData = AttendanceList::insert([
                                 'today_status' => '4',
                                 'setup_method_id' => $setupActivateEmpID,
@@ -929,7 +932,7 @@ class RequestController extends Controller
                                 'active_selfie_mode' => '0',
                                 'active_biometric_mode' => '0',
                                 'attendance_shift' => $ShiftItemID,
-                                'punch_date' => $requestMisspunchDate, //anytime current upload DAY
+                                'punch_date' => $requestMispunchDate, //anytime current upload DAY
                                 'punch_in_time' => $requestPunchInTime,
                                 'marked_out_mode' => '0',
                                 'punch_in_latitude' => '0',
@@ -956,12 +959,12 @@ class RequestController extends Controller
                                 'total_working_hour' => $totalWorking,
                                 'punch_out_shift_name' => $punchOut_shift_name,
                             ]);
-                            $TodayStatus = Central_unit::getEmpAttSummaryApi(['emp_id' => $requestEmpId, 'punch_date' => $requestMisspunchDate, 'business_id' => $BusinessId]);
-                            $OverAllTodayStatus = $TodayStatus[0]; //only running PunchOut time By Aman Attendance
-                            $Overtime = $TodayStatus[8];
-                            $ShiftInterval = $TodayStatus[9];
-                            $EarlyExit = $TodayStatus[13];
-                            $LateBy = $TodayStatus[12];
+                            $TodayStatus2 = Central_unit::getEmpAttSummaryApi2(['emp_id' => $requestEmpId, 'punch_date' => $requestMispunchDate, 'business_id' => $BusinessId, 'branch_id' => $DATA->branch_id]);
+                            $OverAllTodayStatus = $TodayStatus2['Status']; //only running PunchOut time By Aman Attendance
+                            $Overtime = $TodayStatus2['Overtime'];
+                            $ShiftInterval = $TodayStatus2['ShiftInterval'];
+                            $EarlyExit = $TodayStatus2['EarlyExitBy'];
+                            $LateBy = $TodayStatus2['LateBy'];
                             $updateTodaysStatus = [
                                 'today_status' => $OverAllTodayStatus,
                                 'overtime' => $Overtime,
@@ -970,10 +973,25 @@ class RequestController extends Controller
                                 'late_by' => $LateBy,
                             ];
 
-                            $datameta = AttendanceList::where('punch_date', $requestMisspunchDate)
+                            $datameta = AttendanceList::where('punch_date', $requestMispunchDate)
                                 ->where('emp_id', $requestEmpId)
                                 ->update($updateTodaysStatus);
-                            $getemp = AttendanceList::where('punch_date', $requestMisspunchDate)->where('emp_id', $requestEmpId)->first();
+                            $getemp = AttendanceList::where('punch_date', $requestMispunchDate)->where('emp_id', $requestEmpId)->first();
+                            ApprovalStatusList::where('approval_type_id', $attenApprovalTypeId)->where('role_id', $FindRoleID)->where('business_id', $BID)->where('all_request_id', $getemp->id)
+                                ->insert([
+                                    'applied_cycle_type' => 1,
+                                    'business_id' => $BID,
+                                    'approval_type_id' => $attenApprovalTypeId,
+                                    'all_request_id' => $getemp->id,
+                                    'role_id' => $FindRoleID,
+                                    'emp_id' => $EmpID,
+                                    'remarks' => $Remark != null ? $Remark : '',
+                                    'clicked' => 1,
+                                    'status' => $status,
+                                    'prev_role_id' => $prevRoleId,
+                                    'current_role_id' => $FindRoleID,
+                                    'next_role_id' => $nextRoleId,
+                                ]);
                         } elseif ($status == 2) {
                         }
                     }
@@ -983,21 +1001,15 @@ class RequestController extends Controller
 
         // default case
         if ($ApprovalManagement->cycle_type == 2) {
-            // update kare ak requeestmispunchlist table ko
-            RequestMispunchList::where('business_id', $BID)
-                ->where('id', $PID)
-                ->update(['process_complete' => 1, 'final_status' => $status]);
-            // approvelstatuslist me check karta hai
-            $loadCheck = ApprovalStatusList::where('approval_type_id', $ApprovalTypeID)
-                ->where('business_id', $BID)
-                ->where('all_request_id', $PID)
-                ->first();
-
+            // Update request mispunch list
+            RequestMispunchList::where('business_id', $BID)->where('id', $PID)->update(['process_complete' => 1, 'final_status' => $status]);
+            // Check approval status list
+            $loadCheck = ApprovalStatusList::where('approval_type_id', $ApprovalTypeID)->where('business_id', $BID)->where('all_request_id', $PID)->first();
+            // dd($loadCheck);
             if ($loadCheck) {
             } else {
                 //Parallel in this case insert the data
-                DB::table('approval_status_list')
-                    ->where('business_id', $BID)
+                ApprovalStatusList::where('business_id', $BID)
                     ->where('approval_type_id', $ApprovalTypeID)
                     ->where('all_request_id', $PID)
                     ->insert([
@@ -1011,9 +1023,7 @@ class RequestController extends Controller
                         'remarks' => $Remark,
                         'status' => $status,
                     ]);
-                $FinalMispunchApprovalDeclineCheck = RequestMispunchList::where('business_id', $BID)
-                    ->where('id', $PID)
-                    ->first();
+                $FinalMispunchApprovalDeclineCheck = RequestMispunchList::where('business_id', $BID)->where('id', $PID)->first();
                 $punchInTimes = strtotime($request->in_time);
                 $punchOutTimes = strtotime($request->out_time);
                 $totalWorkingSeconds = $punchOutTimes - $punchInTimes;
@@ -1021,9 +1031,7 @@ class RequestController extends Controller
                 $totalWorking = date('H:i:s', $totalWorkingTimestamp);
                 if ($FinalMispunchApprovalDeclineCheck != null) {
                     if ($FinalMispunchApprovalDeclineCheck) {
-                        $checkupdateAttendance = AttendanceList::where('emp_id', $requestEmpId)
-                            ->where('punch_date', $requestMisspunchDate)
-                            ->first();
+                        $checkupdateAttendance = AttendanceList::where('emp_id', $requestEmpId)->where('punch_date', $requestMispunchDate)->first();
                         if ($checkupdateAttendance) {
                             $PreviousAttenStatus = $checkupdateAttendance->today_status;
                             $empMonthlyCount = DB::table('attendance_monthly_count')
@@ -1046,17 +1054,17 @@ class RequestController extends Controller
                                 $updaetattendance = AttendanceList::where('emp_id', $request->emp_id)
                                     ->where('punch_date', $request->date)
                                     ->update(['punch_in_time' => $request->in_time, 'punch_out_time' => $request->out_time, 'emp_today_current_status' => '2', 'total_working_hour' => $totalWorking, 'process_complete' => 1, 'final_status' => $status]);
+                                $TodayStatus2 = Central_unit::getEmpAttSummaryApi2(['emp_id' => $requestEmpId, 'punch_date' => $requestMispunchDate, 'business_id' => $BusinessId, 'branch_id' => $checkupdateAttendance->branch_id]);
                             } elseif ($status == 2) {
                                 // declined
                                 $updaetattendance = AttendanceList::where('emp_id', $request->emp_id)
                                     ->where('punch_date', $request->date)
-                                    ->update(['today_status' => '2', 'punch_in_time' => '', 'punch_out_time' => '', 'emp_today_current_status' => '2', 'total_working_hour' => '00:00:00', 'process_complete' => 1, 'final_status' => $status]);
+                                    ->update(['today_status' => '2', 'punch_in_time' => NULL, 'punch_out_time' => NULL, 'emp_today_current_status' => '2', 'total_working_hour' => NULL, 'process_complete' => 1, 'final_status' => $status]);
                             }
-                            $countUpdate = Central_unit::getEmpAttSummaryApi(['punch_date' => $request->date, 'emp_id' => $request->emp_id, 'business_id' => Session::get('business_id')]);
+                            // $countUpdate = Central_unit::getEmpAttSummaryApi2(['punch_date' => $request->date, 'emp_id' => $request->emp_id, 'business_id' => Session::get('business_id'), 'branch_id' => Session::get('branch_id')]);
                             $attenApprovalTypeId = 1;
-                            AttendanceList::where('id', $checkupdateAttendance->id)->update(['today_status' => $countUpdate[0], 'late_by' => $countUpdate[12], 'early_exit' => $countUpdate[13], 'overtime' => $countUpdate[8]]);
-                            DB::table('approval_status_list')
-                                ->where('business_id', $BID)
+                            AttendanceList::where('id', $checkupdateAttendance->id)->update(['today_status' => $TodayStatus2['Status'] ?? 2, 'late_by' => $TodayStatus2['LateBy'] ?? '0', 'early_exit' => $TodayStatus2['EarlyExitBy'] ?? '0', 'overtime' => $Overtime = $TodayStatus2['Overtime'] ?? '0']);
+                            ApprovalStatusList::where('business_id', $BID)
                                 ->where('approval_type_id', $attenApprovalTypeId)
                                 ->where('all_request_id', $checkupdateAttendance->id)
                                 ->insert([
@@ -1070,7 +1078,8 @@ class RequestController extends Controller
                                     'remarks' => $Remark,
                                     'status' => $status,
                                 ]);
-                        } elseif ((!$checkupdateAttendance) && ($hiddenTimeType == 2)) {
+                            // } elseif ((!$checkupdateAttendance) && ($hiddenTimeType == 2)) {
+                        } elseif ((!$checkupdateAttendance)) {
                             if ($status == 1) {
                                 $approvalManagementCycle = ApprovalManagementCycle::where('business_id', $BusinessId)
                                     ->where('approval_type_id', 1)
@@ -1085,12 +1094,12 @@ class RequestController extends Controller
                                     $lastRoleId = end($roleIds); // Get the last value of the array
 
                                 }
-                                $TodayStatus = Central_unit::getEmpAttSummaryApi(['emp_id' => $requestEmpId, 'punch_date' => $requestMisspunchDate, 'business_id' => $BusinessId]);
-                                $OverAllTodayStatus = $TodayStatus[0]; //only running PunchOut time By Aman Attendance
-                                $Overtime = $TodayStatus[8];
-                                $ShiftInterval = $TodayStatus[9];
-                                $EarlyExit = $TodayStatus[13];
-                                $LateBy = $TodayStatus[12];
+                                $TodayStatus2 = Central_unit::getEmpAttSummaryApi2(['emp_id' => $requestEmpId, 'punch_date' => $request->date, 'business_id' => $BusinessId, 'branch_id' => Session::get('branch_id')]);
+                                $OverAllTodayStatus = $TodayStatus2['Status']; //only running PunchOut time By Aman Attendance
+                                $Overtime = $TodayStatus2['Overtime'];
+                                $ShiftInterval = $TodayStatus2['ShiftInterval'];
+                                $EarlyExit = $TodayStatus2['EarlyExitBy'];
+                                $LateBy = $TodayStatus2['LateBy'];
                                 $information = EmployeePersonalDetail::where('business_id', $BusinessId)
                                     ->where('emp_id', $requestEmpId)
                                     ->first();
@@ -1135,7 +1144,7 @@ class RequestController extends Controller
                                             $query->where('policy_attendance_shift_type_items.id', $RotationalShift);
                                         }
                                     })
-                                    ->select('policy_master_endgame_method.id as method_id', 'policy_master_endgame_method.method_name as method_name', 'policy_attendance_shift_type_items.id as shift_item_id', 'policy_attendance_shift_type_items.shift_name as shift_template_name', 'static_attendance_shift_type.id  as shift_type_id', 'static_attendance_shift_type.name as shift_type_name', 'policy_attendance_shift_type_items.shift_start as shift_start_time', 'policy_attendance_shift_type_items.shift_end as shift_end_time', 'policy_attendance_shift_type_items.shift_hr as shift_hour', 'policy_attendance_shift_type_items.shift_min as shift_min', 'policy_attendance_shift_type_items.work_hr as working_hour', 'policy_attendance_shift_type_items.work_min as working_min', 'policy_attendance_shift_type_items.break_min as break_min', 'policy_attendance_shift_type_items.is_paid as is_paid')
+                                    ->select('employee_personal_details.branch_id', 'policy_master_endgame_method.id as method_id', 'policy_master_endgame_method.method_name as method_name', 'policy_attendance_shift_type_items.id as shift_item_id', 'policy_attendance_shift_type_items.shift_name as shift_template_name', 'static_attendance_shift_type.id  as shift_type_id', 'static_attendance_shift_type.name as shift_type_name', 'policy_attendance_shift_type_items.shift_start as shift_start_time', 'policy_attendance_shift_type_items.shift_end as shift_end_time', 'policy_attendance_shift_type_items.shift_hr as shift_hour', 'policy_attendance_shift_type_items.shift_min as shift_min', 'policy_attendance_shift_type_items.work_hr as working_hour', 'policy_attendance_shift_type_items.work_min as working_min', 'policy_attendance_shift_type_items.break_min as break_min', 'policy_attendance_shift_type_items.is_paid as is_paid')
                                     ->first();
                                 $ShiftItemID = $DATA->shift_item_id;
                                 $appliedShift_template_name = $DATA->shift_template_name;
@@ -1145,7 +1154,7 @@ class RequestController extends Controller
                                 $appliedShift_break_time = $DATA->break_min;
                                 $punchIn_shift_name = $DATA->shift_type_name;
                                 $punchOut_shift_name = $DATA->shift_type_name;
-                                $AttendanceCompOff = RulesManagement::AttendaceCompOffSet($requestEmpId, $BusinessId, $requestMisspunchDate);
+                                $AttendanceCompOff = RulesManagement::AttendaceCompOffSet($requestEmpId, $BusinessId, $requestMispunchDate);
                                 $insertAttendaneData = AttendanceList::insert([
                                     'today_status' => '4',
                                     'setup_method_id' => $setupActivateEmpID,
@@ -1164,7 +1173,7 @@ class RequestController extends Controller
                                     'active_selfie_mode' => '0',
                                     'active_biometric_mode' => '0',
                                     'attendance_shift' => $ShiftItemID,
-                                    'punch_date' => $requestMisspunchDate, //anytime current upload DAY
+                                    'punch_date' => $requestMispunchDate, //anytime current upload DAY
                                     'punch_in_time' => $requestPunchInTime,
                                     'marked_out_mode' => '0',
                                     'punch_in_latitude' => '0',
@@ -1191,12 +1200,12 @@ class RequestController extends Controller
                                     'total_working_hour' => $totalWorking,
                                     'punch_out_shift_name' => $punchOut_shift_name,
                                 ]);
-                                $TodayStatus = Central_unit::getEmpAttSummaryApi(['emp_id' => $requestEmpId, 'punch_date' => $requestMisspunchDate, 'business_id' => $BusinessId]);
-                                $OverAllTodayStatus = $TodayStatus[0]; //only running PunchOut time By Aman Attendance
-                                $Overtime = $TodayStatus[8];
-                                $ShiftInterval = $TodayStatus[9];
-                                $EarlyExit = $TodayStatus[13];
-                                $LateBy = $TodayStatus[12];
+                                $TodayStatus2 = Central_unit::getEmpAttSummaryApi2(['emp_id' => $requestEmpId, 'punch_date' => $requestMispunchDate, 'business_id' => $BID, 'branch_id' => $DATA->branch_id]);
+                                $OverAllTodayStatus = $TodayStatus2['Status']; //only running PunchOut time By Aman Attendance
+                                $Overtime = $TodayStatus2['Overtime'];
+                                $ShiftInterval = $TodayStatus2['ShiftInterval'];
+                                $EarlyExit = $TodayStatus2['EarlyExitBy'];
+                                $LateBy = $TodayStatus2['LateBy'];
                                 $updateTodaysStatus = [
                                     'today_status' => $OverAllTodayStatus,
                                     'overtime' => $Overtime,
@@ -1205,10 +1214,10 @@ class RequestController extends Controller
                                     'late_by' => $LateBy,
                                 ];
 
-                                $datameta = AttendanceList::where('punch_date', $requestMisspunchDate)
+                                $datameta = AttendanceList::where('punch_date', $requestMispunchDate)
                                     ->where('emp_id', $requestEmpId)
                                     ->update($updateTodaysStatus);
-                                $getemp = AttendanceList::where('punch_date', $requestMisspunchDate)->where('emp_id', $requestEmpId)->first();
+                                $getemp = AttendanceList::where('punch_date', $requestMispunchDate)->where('emp_id', $requestEmpId)->first();
                                 $attendanceappvovealsubmit = DB::table('approval_status_list')
                                     ->where('business_id', $BID)
                                     ->where('approval_type_id', $attenApprovalTypeId)
@@ -1221,7 +1230,7 @@ class RequestController extends Controller
                                         'role_id' => $FindRoleID,
                                         'emp_id' => $EmpID,
                                         'clicked' => 1,
-                                        'remarks' => $Remark,
+                                        'remarks' => $Remark != null ? $Remark : '',
                                         'status' => $status,
                                     ]);
                             } elseif ($status == 2) {
@@ -1233,7 +1242,11 @@ class RequestController extends Controller
                     }
                 }
             }
-            Alert::success('', 'Status has been updated successfully');
+            if ($status == 1) {
+                Alert::success('', 'Your Mispunch Request has been Approved Successfully');
+            } else if ($status == 2) {
+                Alert::success('', 'Your Mispunch Request has been Declined!');
+            }
         }
         return redirect()->back();
     }
@@ -1270,154 +1283,64 @@ class RequestController extends Controller
         return back();
     }
 
+    public function mispunch()
+    {
+        // sessio get data
+        $businessId = Session::get('business_id');
+        $roleIdToCheck = Session::get('login_role');
+        // checck permission branch and business
+        $checkBranchPermission = PolicySettingRoleAssignPermission::where('business_id', $businessId)
+            ->where('emp_id', Session::get('login_emp_id'))
+            ->first();
+        // main table data
+        $misPunchQuery = RequestMispunchList::join('employee_personal_details', 'request_mispunch_list.emp_id', '=', 'employee_personal_details.emp_id')
+            ->join('static_mispunch_timetype', 'request_mispunch_list.emp_miss_time_type', '=', 'static_mispunch_timetype.id')
+            ->where('request_mispunch_list.business_id', $businessId)
+            ->where('employee_personal_details.active_emp', '1')
+            ->whereMonth('request_mispunch_list.created_at', now()->month)
+            ->whereYear('request_mispunch_list.created_at', now()->year)
+            ->select('request_mispunch_list.*', 'static_mispunch_timetype.time_type', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.designation_id')
+            ->orderByDesc('request_mispunch_list.id');
 
-        // public function mispunch()
-        // {
-        //     $checkpermission = PolicySettingRoleAssignPermission::
-        //         where('business_id', Session::get('business_id'))
-        //         ->where('emp_id', Session::get('login_emp_id'))
-        //         ->select('permission_branch_id')
-        //         ->pluck('permission_branch_id')
-        //         ->first();
-
-        //     // Decode the JSON string into an array
-        //     $checkArray = json_decode($checkpermission, true);
-        //     if ($checkArray !== null && !empty($checkArray) && (Session::get('login_role')) !=1 ) {
-        //         $DATA = RequestMispunchList::
-        //             join('employee_personal_details', 'request_mispunch_list.emp_id', '=', 'employee_personal_details.emp_id')
-        //             ->join('static_mispunch_timetype', 'request_mispunch_list.emp_miss_time_type', '=', 'static_mispunch_timetype.id')
-        //             ->where('request_mispunch_list.business_id', Session::get('business_id'))
-        //             ->where('employee_personal_details.active_emp', '1')
-        //             ->whereIn('employee_personal_details.branch_id', $checkArray) // Use decoded array
-        //             ->whereMonth('request_mispunch_list.created_at', '=', Carbon::now()->month)
-        //             ->whereYear('request_mispunch_list.created_at', '=', Carbon::now()->year)
-        //             ->select('request_mispunch_list.*', 'static_mispunch_timetype.time_type', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.designation_id')
-        //             ->orderBy('request_mispunch_list.id', 'desc')
-        //             ->get();
-        //     } else{
-        //         $DATA = RequestMispunchList::
-        //             join('employee_personal_details', 'request_mispunch_list.emp_id', '=', 'employee_personal_details.emp_id')
-        //             ->join('static_mispunch_timetype', 'request_mispunch_list.emp_miss_time_type', '=', 'static_mispunch_timetype.id')
-        //             ->whereMonth('request_mispunch_list.created_at', '=', Carbon::now()->month)
-        //             ->whereYear('request_mispunch_list.created_at', '=', Carbon::now()->year)
-        //             ->where('request_mispunch_list.business_id', Session::get('business_id'))
-        //             ->where('employee_personal_details.active_emp', '1')
-        //             ->select('request_mispunch_list.*', 'static_mispunch_timetype.time_type', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.designation_id')
-        //             ->orderBy('request_mispunch_list.id', 'desc')
-        //             ->get();
-        //     }
-
-        //     $StaticMisspunchTimeType = DB::table('static_mispunch_timetype')->get();
-        //     $accessPermission = Central_unit::AccessPermission();
-        //     $moduleName = $accessPermission[0];
-        //     $permissions = $accessPermission[1];
-        //     // processCycle Seq. Parallel
-        //     $checkApprovalCycleType = RulesManagement::ApprovalGetDetails(3)[1];
-        //     // dd($checkApprovalCycleType);
-        //     $loginRoleID = RulesManagement::PassBy()[3];
-        //     $loginRoleBID = RulesManagement::PassBy()[1];
-        //     // dd($loginRoleBID);
-        //     $loginEmpID = RulesManagement::PassBy()[2];
-        //     $checkFistRoleId = DB::table('approval_management_cycle')
-        //         ->where('approval_type_id', 3)
-        //         ->where('business_id', Session::get('business_id'))
-        //         ->select('role_id')
-        //         ->first();
-        //     // Assuming $checkFistRoleId is the result you showed
-        //     $roleIdData = json_decode($checkFistRoleId->role_id ?? 0);
-
-        //     if (!empty($roleIdData) && is_array($roleIdData)) {
-        //         $checkmfirstRoleId = $roleIdData[0];
-        //         // Now $firstRoleId contains the first element of the array
-        //     } else {
-        //         $checkmfirstRoleId = 0;
-        //         // Handle the case where $roleIdData is not a valid array
-        //         // It might be empty or not a valid JSON string
-        //     }
-        //     $Branch = Central_unit::BranchList();
-
-        //     $roleIdToCheck = Session::get('login_role');
-        //     $parallerCaseApprovalListRoleIdCheck = ApprovalManagementCycle::where('business_id', Session::get('business_id'))
-        //         ->where('approval_type_id', 3)
-        //         ->where('cycle_type', 2)
-        //         ->where(function ($query) use ($roleIdToCheck) {
-        //             $query->whereJsonContains('role_id', (string) $roleIdToCheck)
-        //                 ->orWhereJsonContains('role_id', (string) $roleIdToCheck);
-        //         })
-        //         ->first();
-        //     $root = compact('checkmfirstRoleId', 'Branch', 'checkApprovalCycleType', 'loginRoleBID', 'loginRoleID', 'loginEmpID', 'moduleName', 'permissions', 'DATA', 'StaticMisspunchTimeType', 'parallerCaseApprovalListRoleIdCheck');
-        //     return view('admin.request.mispunch', $root);
-        // }
-
-        public function mispunch()
-        {
-            // sessio get data
-            $businessId = Session::get('business_id');
-            $roleIdToCheck = Session::get('login_role');
-            // checck permission branch and business
-            $checkArray = json_decode(
-                PolicySettingRoleAssignPermission::where('business_id', $businessId)
-                    ->where('emp_id', Session::get('login_emp_id'))
-                    ->pluck('permission_branch_id')
-                    ->first(),
-                true
-            );
-            // main table data
-            $misPunchQuery = RequestMispunchList::join('employee_personal_details', 'request_mispunch_list.emp_id', '=', 'employee_personal_details.emp_id')
-                ->join('static_mispunch_timetype', 'request_mispunch_list.emp_miss_time_type', '=', 'static_mispunch_timetype.id')
-                ->where('request_mispunch_list.business_id', $businessId)
-                ->where('employee_personal_details.active_emp', '1')
-                ->whereMonth('request_mispunch_list.created_at', now()->month)
-                ->whereYear('request_mispunch_list.created_at', now()->year)
-                ->select('request_mispunch_list.*', 'static_mispunch_timetype.time_type', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.designation_id')
-                ->orderByDesc('request_mispunch_list.id');
-
-            if ($checkArray !== null && !empty($checkArray) && $roleIdToCheck != 1) {
-                $DATA = $misPunchQuery->whereIn('employee_personal_details.branch_id', $checkArray)->get();
-            } else {
-                $DATA = $misPunchQuery->get();
-            }
-            // dropdown static data
-            $staticMisspunchTimeType = StaticMisPunchTimeType::all();
-
-            $accessPermission = Central_unit::AccessPermission();
-            list($moduleName, $permissions) = $accessPermission;
-            $checkApprovalCycleType = RulesManagement::ApprovalGetDetails(3)[1];
-            $loginRoleID = RulesManagement::PassBy()[3];
-            $loginRoleBID = RulesManagement::PassBy()[1];
-            $loginEmpID = RulesManagement::PassBy()[2];
-
-            $checkFirstRoleId = ApprovalManagementCycle::where('approval_type_id', 3)
-                ->where('business_id', $businessId)
-                ->pluck('role_id')
-                ->first();
-
-            $firstRoleIdData = json_decode($checkFirstRoleId ?? 0, true);
-            $checkmfirstRoleId = !empty($firstRoleIdData) && is_array($firstRoleIdData) ? $firstRoleIdData[0] : 0;
-            $roleIdData = json_decode($checkFistRoleId->role_id ?? 0);
-            // if (!empty($roleIdData) && is_array($roleIdData)) {
-            //     $checkmfirstRoleId = $roleIdData[0];
-            //     // Now $firstRoleId contains the first element of the array
-            // } else {
-            //     $checkmfirstRoleId = 0;
-            //     // Handle the case where $roleIdData is not a valid array
-            //     // It might be empty or not a valid JSON string
-            // }
-
-            $branchList = Central_unit::BranchList();
-
-            $parallerCaseApprovalListRoleIdCheck = ApprovalManagementCycle::where('business_id', $businessId)
-                ->where('approval_type_id', 3)
-                ->where('cycle_type', 2)
-                ->where(function ($query) use ($roleIdToCheck) {
-                    $query->whereJsonContains('role_id', (string) $roleIdToCheck)
-                        ->orWhereJsonContains('role_id', (string) $roleIdToCheck);
-                })
-                ->first();
-
-            $root = compact('checkmfirstRoleId','checkFirstRoleId', 'branchList', 'checkApprovalCycleType', 'loginRoleBID', 'loginRoleID', 'loginEmpID', 'moduleName', 'permissions', 'DATA', 'staticMisspunchTimeType', 'parallerCaseApprovalListRoleIdCheck');
-            return view('admin.request.mispunch', $root);
+        if ($checkBranchPermission !== null && !empty($checkBranchPermission) && $roleIdToCheck != 1 && ($checkBranchPermission->permission_type == 2)) {
+            $DATA = $misPunchQuery->where('employee_personal_details.branch_id', $checkBranchPermission->permission_branch_id)->get();
+        } else {
+            $DATA = $misPunchQuery->get();
         }
+        // dropdown static data
+        $staticMisspunchTimeType = StaticMisPunchTimeType::all();
+
+        $accessPermission = Central_unit::AccessPermission();
+        list($moduleName, $permissions) = $accessPermission;
+        $checkApprovalCycleType = RulesManagement::ApprovalGetDetails(3)[1];
+        $loginRoleID = RulesManagement::PassBy()[3];
+        $loginRoleBID = RulesManagement::PassBy()[1];
+        $loginEmpID = RulesManagement::PassBy()[2];
+
+        $checkFirstRoleId = ApprovalManagementCycle::where('approval_type_id', 3)
+            ->where('business_id', $businessId)
+            ->pluck('role_id')
+            ->first();
+
+        $firstRoleIdData = json_decode($checkFirstRoleId ?? 0, true);
+        $checkmfirstRoleId = !empty($firstRoleIdData) && is_array($firstRoleIdData) ? $firstRoleIdData[0] : 0;
+        $roleIdData = json_decode($checkFistRoleId->role_id ?? 0);
+
+
+        $branchList = Central_unit::BranchList();
+
+        $parallerCaseApprovalListRoleIdCheck = ApprovalManagementCycle::where('business_id', $businessId)
+            ->where('approval_type_id', 3)
+            ->where('cycle_type', 2)
+            ->where(function ($query) use ($roleIdToCheck) {
+                $query->whereJsonContains('role_id', (string) $roleIdToCheck)
+                    ->orWhereJsonContains('role_id', (string) $roleIdToCheck);
+            })
+            ->first();
+
+        $root = compact('checkmfirstRoleId', 'checkFirstRoleId', 'branchList', 'checkApprovalCycleType', 'loginRoleBID', 'loginRoleID', 'loginEmpID', 'moduleName', 'permissions', 'DATA', 'staticMisspunchTimeType', 'parallerCaseApprovalListRoleIdCheck');
+        return view('admin.request.mispunch', $root);
+    }
 
 
     /**
@@ -1437,6 +1360,8 @@ class RequestController extends Controller
     {
         $empStatus = [];
         $branchId = $request->branch_id;
+        $roleIdToCheck = Session::get('login_role');
+        $businessId = Session::get('business_id');
         $fromDate =
             $request->input('from_date') ??
             Carbon::now()->startOfMonth()->toDateString();
@@ -1451,31 +1376,63 @@ class RequestController extends Controller
         $loginRoleBID = RulesManagement::PassBy()[1];
         $loginEmpID = RulesManagement::PassBy()[2];
         $approval_type_id_static = 4;
+        $checkBranchPermission =
+            PolicySettingRoleAssignPermission::where('business_id', $businessId)
+            ->where('emp_id', Session::get('login_emp_id'))
+            ->first();
+        // check the permission of branch
+        if ($checkBranchPermission !== null && !empty($checkBranchPermission) && $roleIdToCheck != 1 && ($checkBranchPermission->permission_type == 2)) {
+            $filteredData = RequestGatepassList::join('employee_personal_details', 'request_gatepass_list.emp_id', '=', 'employee_personal_details.emp_id')
+                ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+                ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+                ->where('employee_personal_details.active_emp', '1')
+                ->where('employee_personal_details.branch_id', $checkBranchPermission->permission_branch_id)
+                ->when($branchId, function ($query) use ($branchId) {
+                    $query->where('employee_personal_details.branch_id', $branchId);
+                })
+                ->when($departmentId, function ($query) use ($departmentId) {
+                    $query->where('employee_personal_details.department_id', $departmentId);
+                })
+                ->when($designationId, function ($query) use ($designationId) {
+                    $query->where('employee_personal_details.designation_id', $designationId);
+                })
+                ->when($fromDate, function ($query, $fromDate) {
+                    $query->where('request_gatepass_list.date', '>=', $fromDate);
+                })
+                ->when($toDate, function ($query, $toDate) {
+                    $query->where('request_gatepass_list.date', '<=', $toDate);
+                })
+                ->select('request_gatepass_list.*', 'designation_list.desig_name', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.profile_photo')
+                ->orderBy('request_gatepass_list.id', 'desc')
+                ->get();
+        } else {
+            $filteredData = RequestGatepassList::join('employee_personal_details', 'request_gatepass_list.emp_id', '=', 'employee_personal_details.emp_id')
+                ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+                ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+                ->where('employee_personal_details.active_emp', '1')
+                ->when($branchId, function ($query) use ($branchId) {
+                    $query->where('employee_personal_details.branch_id', $branchId);
+                })
+                ->when($departmentId, function ($query) use ($departmentId) {
+                    $query->where('employee_personal_details.department_id', $departmentId);
+                })
+                ->when($designationId, function ($query) use ($designationId) {
+                    $query->where('employee_personal_details.designation_id', $designationId);
+                })
+                ->when($fromDate, function ($query, $fromDate) {
+                    $query->where('request_gatepass_list.date', '>=', $fromDate);
+                })
+                ->when($toDate, function ($query, $toDate) {
+                    $query->where('request_gatepass_list.date', '<=', $toDate);
+                })
+                ->select('request_gatepass_list.*', 'designation_list.desig_name', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.profile_photo')
+                ->orderBy('request_gatepass_list.id', 'desc')
+                ->get();
+        }
+
         $checkApprovalCycleType = RulesManagement::ApprovalGetDetails(4)[1];
         // Use the selected filter values to query your database and retrieve the filtered data
-        $filteredData = RequestGatepassList::join('employee_personal_details', 'request_gatepass_list.emp_id', '=', 'employee_personal_details.emp_id')
-            ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
-            ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
-            ->where('employee_personal_details.active_emp', '1')
 
-            ->when($branchId, function ($query) use ($branchId) {
-                $query->where('employee_personal_details.branch_id', $branchId);
-            })
-            ->when($departmentId, function ($query) use ($departmentId) {
-                $query->where('employee_personal_details.department_id', $departmentId);
-            })
-            ->when($designationId, function ($query) use ($designationId) {
-                $query->where('employee_personal_details.designation_id', $designationId);
-            })
-            ->when($fromDate, function ($query, $fromDate) {
-                $query->where('request_gatepass_list.date', '>=', $fromDate);
-            })
-            ->when($toDate, function ($query, $toDate) {
-                $query->where('request_gatepass_list.date', '<=', $toDate);
-            })
-            ->select('request_gatepass_list.*', 'designation_list.desig_name', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.profile_photo')
-            ->orderBy('request_gatepass_list.id', 'desc')
-            ->get();
 
         if (count($filteredData) != 0) {
             if ($checkApprovalCycleType == 1) {
@@ -1483,7 +1440,6 @@ class RequestController extends Controller
                     $EmpStatus = RulesManagement::RequestGatePassApprovalManage($checkApprovalCycleType, $data, $data->id, 4, $loginRoleID);
                     // $EmpStatus = RulesManagement::RequestGatePassApprovalManage($checkApprovalCycleType, $data, $data->id, 2, $loginRoleID);
                     $empStatus[$data->id] = $EmpStatus;
-
                     $current_status_particular_tb = DB::table('approval_status_list')
                         ->where('approval_type_id', $approval_type_id_static)
                         ->where('applied_cycle_type', 1)
@@ -1520,29 +1476,6 @@ class RequestController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    // public function show(string $id)
-    // {
-    //     //
-    // }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 
     public function GatepassTable($tableName, Request $request)
     {
@@ -1577,7 +1510,6 @@ class RequestController extends Controller
 
     public function MispunchTable($tableName, Request $request)
     {
-        // dd($tableName,$name);
         // Check if the table does not exist
         if (!Schema::hasTable($tableName)) {
             Schema::create($tableName, function (Blueprint $table) {
@@ -1659,6 +1591,7 @@ class RequestController extends Controller
     public function MispunchEmployeeFilter(Request $request)
     {
         $empStatus = [];
+        $businessId = Session::get('business_id');
         $branchId = $request->branch_id;
         $departmentId = $request->input('department_id');
         $designationId = $request->input('designation_id');
@@ -1677,37 +1610,98 @@ class RequestController extends Controller
         $loginEmpID = RulesManagement::PassBy()[2];
         $approval_type_id_static = 3;
         $checkApprovalCycleType = RulesManagement::ApprovalGetDetails(3)[1];
-        // return $checkApprovalCycleType;
-        // Use the selected filter values to query your database and retrieve the filtered data
-        $filteredData = DB::table('request_mispunch_list')
-            ->join('employee_personal_details', 'request_mispunch_list.emp_id', '=', 'employee_personal_details.emp_id')
-            ->join('static_mispunch_timetype', 'static_mispunch_timetype.id', '=', 'request_mispunch_list.emp_miss_time_type')
-            ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
-            ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
-            ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
-            // ->where('request_mispunch_list.emp_miss_date', $dateSelectValue)
-            ->where('employee_personal_details.active_emp', '1')
+        $roleIdToCheck = Session::get('login_role');
+        $checkBranchPermission =
+            PolicySettingRoleAssignPermission::where('business_id', $businessId)
+            ->where('emp_id', Session::get('login_emp_id'))
+            ->first();
+        if ($checkBranchPermission !== null && !empty($checkBranchPermission) && $roleIdToCheck != 1 && ($checkBranchPermission->permission_type == 2)) {
+            // Use the selected filter values to query your database and retrieve the filtered data
+            $filteredData = DB::table('request_mispunch_list')
+                ->join('employee_personal_details', 'request_mispunch_list.emp_id', '=', 'employee_personal_details.emp_id')
+                ->join('static_mispunch_timetype', 'static_mispunch_timetype.id', '=', 'request_mispunch_list.emp_miss_time_type')
+                ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+                ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+                ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+                // ->where('request_mispunch_list.emp_miss_date', $dateSelectValue)
+                ->where('employee_personal_details.branch_id', $checkBranchPermission->permission_branch_id)
+                ->where('employee_personal_details.active_emp', '1')
 
-            ->when($branchId, function ($query) use ($branchId) {
-                $query->where('employee_personal_details.branch_id', $branchId);
-            })
-            ->when($departmentId, function ($query) use ($departmentId) {
-                $query->where('employee_personal_details.department_id', $departmentId);
-            })
-            ->when($designationId, function ($query) use ($designationId) {
-                $query->where('employee_personal_details.designation_id', $designationId);
-            })
-            ->when($fromDate, function ($query, $fromDate) {
-                $query->where('request_mispunch_list.emp_miss_date', '>=', $fromDate);
-            })
-            ->when($toDate, function ($query, $toDate) {
-                $query->where('request_mispunch_list.emp_miss_date', '<=', $toDate);
-            })
-            ->where('request_mispunch_list.business_id', Session::get('business_id'))
-            ->select('request_mispunch_list.*', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.profile_photo', 'branch_list.branch_name', 'department_list.depart_name', 'designation_list.desig_name', 'static_mispunch_timetype.time_type')
-            ->orderBy('request_mispunch_list.id', 'desc')
-            ->get();
-        // return $filteredData;
+                ->when($branchId, function ($query) use ($branchId) {
+                    $query->where('employee_personal_details.branch_id', $branchId);
+                })
+                ->when($departmentId, function ($query) use ($departmentId) {
+                    $query->where('employee_personal_details.department_id', $departmentId);
+                })
+                ->when($designationId, function ($query) use ($designationId) {
+                    $query->where('employee_personal_details.designation_id', $designationId);
+                })
+                ->when($fromDate, function ($query, $fromDate) {
+                    $query->where('request_mispunch_list.emp_miss_date', '>=', $fromDate);
+                })
+                ->when($toDate, function ($query, $toDate) {
+                    $query->where('request_mispunch_list.emp_miss_date', '<=', $toDate);
+                })
+                ->where('request_mispunch_list.business_id', $businessId)
+                ->select(
+                    'request_mispunch_list.*',
+                    'employee_personal_details.emp_name',
+                    'employee_personal_details.emp_mname',
+                    'employee_personal_details.emp_lname',
+                    'employee_personal_details.profile_photo',
+                    'branch_list.branch_name',
+                    'department_list.depart_name',
+                    'designation_list.desig_name',
+                    'static_mispunch_timetype.time_type',
+                    DB::raw("DATE_FORMAT(request_mispunch_list.emp_miss_in_time, '%h:%i %p') as emp_miss_in_time_12hr"),
+                    DB::raw("DATE_FORMAT(request_mispunch_list.emp_miss_out_time, '%h:%i %p') as emp_miss_out_time_12hr")
+                )
+                ->orderBy('request_mispunch_list.id', 'desc')
+                ->get();
+        } else {
+
+            // Use the selected filter values to query your database and retrieve the filtered data
+            $filteredData = DB::table('request_mispunch_list')
+                ->join('employee_personal_details', 'request_mispunch_list.emp_id', '=', 'employee_personal_details.emp_id')
+                ->join('static_mispunch_timetype', 'static_mispunch_timetype.id', '=', 'request_mispunch_list.emp_miss_time_type')
+                ->join('branch_list', 'employee_personal_details.branch_id', '=', 'branch_list.branch_id')
+                ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+                ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+                // ->where('request_mispunch_list.emp_miss_date', $dateSelectValue)
+                ->where('employee_personal_details.active_emp', '1')
+
+                ->when($branchId, function ($query) use ($branchId) {
+                    $query->where('employee_personal_details.branch_id', $branchId);
+                })
+                ->when($departmentId, function ($query) use ($departmentId) {
+                    $query->where('employee_personal_details.department_id', $departmentId);
+                })
+                ->when($designationId, function ($query) use ($designationId) {
+                    $query->where('employee_personal_details.designation_id', $designationId);
+                })
+                ->when($fromDate, function ($query, $fromDate) {
+                    $query->where('request_mispunch_list.emp_miss_date', '>=', $fromDate);
+                })
+                ->when($toDate, function ($query, $toDate) {
+                    $query->where('request_mispunch_list.emp_miss_date', '<=', $toDate);
+                })
+                ->where('request_mispunch_list.business_id', $businessId)
+                ->select(
+                    'request_mispunch_list.*',
+                    'employee_personal_details.emp_name',
+                    'employee_personal_details.emp_mname',
+                    'employee_personal_details.emp_lname',
+                    'employee_personal_details.profile_photo',
+                    'branch_list.branch_name',
+                    'department_list.depart_name',
+                    'designation_list.desig_name',
+                    'static_mispunch_timetype.time_type',
+                    DB::raw("DATE_FORMAT(request_mispunch_list.emp_miss_in_time, '%h:%i %p') as emp_miss_in_time_12hr"),
+                    DB::raw("DATE_FORMAT(request_mispunch_list.emp_miss_out_time, '%h:%i %p') as emp_miss_out_time_12hr")
+                )
+                ->orderBy('request_mispunch_list.id', 'desc')
+                ->get();
+        }
         if (count($filteredData) != 0) {
             if ($checkApprovalCycleType == 1) {
                 foreach ($filteredData as $key => $data) {
@@ -1752,6 +1746,7 @@ class RequestController extends Controller
 
     public function LeaveEmployeeFilter(Request $request)
     {
+        $businessId = Session::get('business_id');
         $empStatus = [];
         $branchId = $request->branch_id;
         $departmentId = $request->input('department_id');
@@ -1771,88 +1766,181 @@ class RequestController extends Controller
         $loginEmpID = RulesManagement::PassBy()[2];
         $approval_type_id_static = 2;
         $checkApprovalCycleType = RulesManagement::ApprovalGetDetails(2)[1];
+        $roleIdToCheck = Session::get('login_role');
+        $checkBranchPermission = PolicySettingRoleAssignPermission::where('business_id', $businessId)
+            ->where('emp_id', Session::get('login_emp_id'))
+            ->first();
 
-        $PendingLeave = DB::table('request_leave_list')
-            ->join('employee_personal_details', 'employee_personal_details.emp_id', '=', 'request_leave_list.emp_id')
-            ->where('employee_personal_details.active_emp', '1')
-            ->where('request_leave_list.business_id', Session::get('business_id'))
-            ->where('request_leave_list.final_status', 0)
-            ->where('employee_personal_details.active_emp', '1')
-            ->when($branchId, function ($query, $branchId) {
-                $query->where('employee_personal_details.branch_id', $branchId);
-            })
-            ->when($departmentId, function ($query, $departmentId) {
-                $query->where('employee_personal_details.department_id', $departmentId);
-            })
-            ->when($designationId, function ($query, $designationId) {
-                $query->where('employee_personal_details.designation_id', $designationId);
-            })
-            ->whereDate('request_leave_list.from_date', '>=', $fromDate)
-            ->whereDate('request_leave_list.to_date', '<=', $toDate)
-            ->count();
-        $UnpaidLeave = DB::table('request_leave_list')
-            ->join('employee_personal_details', 'employee_personal_details.emp_id', '=', 'request_leave_list.emp_id')
-            ->where('employee_personal_details.active_emp', '1')
-            ->where('request_leave_list.business_id', Session::get('business_id'))
-            ->where('request_leave_list.leave_category', '9')
-            ->when($branchId, function ($query, $branchId) {
-                $query->where('employee_personal_details.branch_id', $branchId);
-            })
-            ->when($departmentId, function ($query, $departmentId) {
-                $query->where('employee_personal_details.department_id', $departmentId);
-            })
-            ->when($designationId, function ($query, $designationId) {
-                $query->where('employee_personal_details.designation_id', $designationId);
-            })
-            ->whereDate('request_leave_list.from_date', '>=', $fromDate)
-            ->whereDate('request_leave_list.to_date', '<=', $toDate)
-            ->count();
+        // check the permission of branch
+        if ($checkBranchPermission !== null && !empty($checkBranchPermission) && $roleIdToCheck != 1 && ($checkBranchPermission->permission_type == 2)) {
+            $PendingLeave = DB::table('request_leave_list')
+                ->join('employee_personal_details', 'employee_personal_details.emp_id', '=', 'request_leave_list.emp_id')
+                ->where('employee_personal_details.active_emp', '1')
+                ->where('request_leave_list.business_id', $businessId)
+                ->where('request_leave_list.final_status', 0)
+                ->where('employee_personal_details.active_emp', '1')
+                ->where('employee_personal_details.branch_id', $checkBranchPermission->permission_branch_id)
+                ->when($branchId, function ($query, $branchId) {
+                    $query->where('employee_personal_details.branch_id', $branchId);
+                })
+                ->when($departmentId, function ($query, $departmentId) {
+                    $query->where('employee_personal_details.department_id', $departmentId);
+                })
+                ->when($designationId, function ($query, $designationId) {
+                    $query->where('employee_personal_details.designation_id', $designationId);
+                })
+                ->whereDate('request_leave_list.from_date', '>=', $fromDate)
+                ->whereDate('request_leave_list.to_date', '<=', $toDate)
+                ->count();
 
-        $PaidLeave = DB::table('request_leave_list')
-            ->join('employee_personal_details', 'employee_personal_details.emp_id', '=', 'request_leave_list.emp_id')
-            ->where('employee_personal_details.active_emp', '1')
-            ->where('request_leave_list.business_id', Session::get('business_id'))
-            ->where('request_leave_list.leave_category', '!=', '9')
-            ->when($branchId, function ($query, $branchId) {
-                $query->where('employee_personal_details.branch_id', $branchId);
-            })
-            ->when($departmentId, function ($query, $departmentId) {
-                $query->where('employee_personal_details.department_id', $departmentId);
-            })
-            ->when($designationId, function ($query, $designationId) {
-                $query->where('employee_personal_details.designation_id', $designationId);
-            })
-            ->whereDate('request_leave_list.from_date', '>=', $fromDate)
-            ->whereDate('request_leave_list.to_date', '<=', $toDate)
-            ->count();
+            $UnpaidLeave = DB::table('request_leave_list')
+                ->join('employee_personal_details', 'employee_personal_details.emp_id', '=', 'request_leave_list.emp_id')
+                ->where('employee_personal_details.active_emp', '1')
+                ->where('request_leave_list.business_id', $businessId)
+                ->where('request_leave_list.leave_category', '9')
+                ->where('employee_personal_details.branch_id', $checkBranchPermission->permission_branch_id)
+                ->when($branchId, function ($query, $branchId) {
+                    $query->where('employee_personal_details.branch_id', $branchId);
+                })
+                ->when($departmentId, function ($query, $departmentId) {
+                    $query->where('employee_personal_details.department_id', $departmentId);
+                })
+                ->when($designationId, function ($query, $designationId) {
+                    $query->where('employee_personal_details.designation_id', $designationId);
+                })
+                ->whereDate('request_leave_list.from_date', '>=', $fromDate)
+                ->whereDate('request_leave_list.to_date', '<=', $toDate)
+                ->count();
 
-        // Use the selected filter values to query your database and retrieve the filtered data
-        $filteredData = DB::table('request_leave_list')
-            ->join('employee_personal_details', 'request_leave_list.emp_id', '=', 'employee_personal_details.emp_id')
-            ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
-            ->join('static_leave_category', 'static_leave_category.id', '=', 'request_leave_list.leave_category')
-            ->join('static_request_leave_type', 'static_request_leave_type.id', '=', 'request_leave_list.leave_type')
-            ->leftJoin('static_leave_shift_type', 'static_leave_shift_type.id', '=', 'request_leave_list.shift_type')
-            ->when($branchId, function ($query, $branchId) {
-                $query->where('employee_personal_details.branch_id', $branchId);
-            })
-            ->when($departmentId, function ($query, $departmentId) {
-                $query->where('employee_personal_details.department_id', $departmentId);
-            })
-            ->when($designationId, function ($query, $designationId) {
-                $query->where('employee_personal_details.designation_id', $designationId);
-            })
-            ->when($fromDate, function ($query, $fromDate) {
-                $query->where('request_leave_list.from_date', '>=', $fromDate);
-            })
-            ->when($toDate, function ($query, $toDate) {
-                $query->where('request_leave_list.to_date', '<=', $toDate);
-            })
-            ->where('request_leave_list.business_id', Session::get('business_id'))
-            ->where('employee_personal_details.active_emp', '1')
-            ->select('request_leave_list.*', 'static_request_leave_type.leave_day', 'static_leave_category.name as category_name', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.designation_id', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'designation_list.desig_name')
-            ->orderBy('request_leave_list.id', 'desc')
-            ->get();
+            $PaidLeave = DB::table('request_leave_list')
+                ->join('employee_personal_details', 'employee_personal_details.emp_id', '=', 'request_leave_list.emp_id')
+                ->where('employee_personal_details.active_emp', '1')
+                ->where('request_leave_list.business_id', $businessId)
+                ->where('employee_personal_details.branch_id', $checkBranchPermission->permission_branch_id)
+                ->where('request_leave_list.leave_category', '!=', '9')
+                ->when($branchId, function ($query, $branchId) {
+                    $query->where('employee_personal_details.branch_id', $branchId);
+                })
+                ->when($departmentId, function ($query, $departmentId) {
+                    $query->where('employee_personal_details.department_id', $departmentId);
+                })
+                ->when($designationId, function ($query, $designationId) {
+                    $query->where('employee_personal_details.designation_id', $designationId);
+                })
+                ->whereDate('request_leave_list.from_date', '>=', $fromDate)
+                ->whereDate('request_leave_list.to_date', '<=', $toDate)
+                ->count();
+
+            // Use the selected filter values to query your database and retrieve the filtered data
+            $filteredData = DB::table('request_leave_list')
+                ->join('employee_personal_details', 'request_leave_list.emp_id', '=', 'employee_personal_details.emp_id')
+                ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+                ->join('static_leave_category', 'static_leave_category.id', '=', 'request_leave_list.leave_category')
+                ->where('employee_personal_details.branch_id', $checkBranchPermission->permission_branch_id)
+                ->join('static_request_leave_type', 'static_request_leave_type.id', '=', 'request_leave_list.leave_type')
+                ->leftJoin('static_leave_shift_type', 'static_leave_shift_type.id', '=', 'request_leave_list.shift_type')
+                ->when($branchId, function ($query, $branchId) {
+                    $query->where('employee_personal_details.branch_id', $branchId);
+                })
+                ->when($departmentId, function ($query, $departmentId) {
+                    $query->where('employee_personal_details.department_id', $departmentId);
+                })
+                ->when($designationId, function ($query, $designationId) {
+                    $query->where('employee_personal_details.designation_id', $designationId);
+                })
+                ->when($fromDate, function ($query, $fromDate) {
+                    $query->where('request_leave_list.from_date', '>=', $fromDate);
+                })
+                ->when($toDate, function ($query, $toDate) {
+                    $query->where('request_leave_list.to_date', '<=', $toDate);
+                })
+                ->where('request_leave_list.business_id', $businessId)
+                ->where('employee_personal_details.active_emp', '1')
+                ->select('request_leave_list.*', 'static_request_leave_type.leave_day', 'static_leave_category.name as category_name', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.designation_id', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'designation_list.desig_name')
+                ->orderBy('request_leave_list.id', 'desc')
+                ->get();
+        } else {
+            $PendingLeave = DB::table('request_leave_list')
+                ->join('employee_personal_details', 'employee_personal_details.emp_id', '=', 'request_leave_list.emp_id')
+                ->where('employee_personal_details.active_emp', '1')
+                ->where('request_leave_list.business_id', $businessId)
+                ->where('request_leave_list.final_status', 0)
+                ->where('employee_personal_details.active_emp', '1')
+                ->when($branchId, function ($query, $branchId) {
+                    $query->where('employee_personal_details.branch_id', $branchId);
+                })
+                ->when($departmentId, function ($query, $departmentId) {
+                    $query->where('employee_personal_details.department_id', $departmentId);
+                })
+                ->when($designationId, function ($query, $designationId) {
+                    $query->where('employee_personal_details.designation_id', $designationId);
+                })
+                ->whereDate('request_leave_list.from_date', '>=', $fromDate)
+                ->whereDate('request_leave_list.to_date', '<=', $toDate)
+                ->count();
+
+            $UnpaidLeave = DB::table('request_leave_list')
+                ->join('employee_personal_details', 'employee_personal_details.emp_id', '=', 'request_leave_list.emp_id')
+                ->where('employee_personal_details.active_emp', '1')
+                ->where('request_leave_list.business_id', $businessId)
+                ->where('request_leave_list.leave_category', '9')
+                ->when($branchId, function ($query, $branchId) {
+                    $query->where('employee_personal_details.branch_id', $branchId);
+                })
+                ->when($departmentId, function ($query, $departmentId) {
+                    $query->where('employee_personal_details.department_id', $departmentId);
+                })
+                ->when($designationId, function ($query, $designationId) {
+                    $query->where('employee_personal_details.designation_id', $designationId);
+                })
+                ->whereDate('request_leave_list.from_date', '>=', $fromDate)
+                ->whereDate('request_leave_list.to_date', '<=', $toDate)
+                ->count();
+            $PaidLeave = DB::table('request_leave_list')
+                ->join('employee_personal_details', 'employee_personal_details.emp_id', '=', 'request_leave_list.emp_id')
+                ->where('employee_personal_details.active_emp', '1')
+                ->where('request_leave_list.business_id', $businessId)
+                ->where('request_leave_list.leave_category', '!=', '9')
+                ->when($branchId, function ($query, $branchId) {
+                    $query->where('employee_personal_details.branch_id', $branchId);
+                })
+                ->when($departmentId, function ($query, $departmentId) {
+                    $query->where('employee_personal_details.department_id', $departmentId);
+                })
+                ->when($designationId, function ($query, $designationId) {
+                    $query->where('employee_personal_details.designation_id', $designationId);
+                })
+                ->whereDate('request_leave_list.from_date', '>=', $fromDate)
+                ->whereDate('request_leave_list.to_date', '<=', $toDate)
+                ->count();
+            // Use the selected filter values to query your database and retrieve the filtered data
+            $filteredData = DB::table('request_leave_list')
+                ->join('employee_personal_details', 'request_leave_list.emp_id', '=', 'employee_personal_details.emp_id')
+                ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+                ->join('static_leave_category', 'static_leave_category.id', '=', 'request_leave_list.leave_category')
+                ->join('static_request_leave_type', 'static_request_leave_type.id', '=', 'request_leave_list.leave_type')
+                ->leftJoin('static_leave_shift_type', 'static_leave_shift_type.id', '=', 'request_leave_list.shift_type')
+                ->when($branchId, function ($query, $branchId) {
+                    $query->where('employee_personal_details.branch_id', $branchId);
+                })
+                ->when($departmentId, function ($query, $departmentId) {
+                    $query->where('employee_personal_details.department_id', $departmentId);
+                })
+                ->when($designationId, function ($query, $designationId) {
+                    $query->where('employee_personal_details.designation_id', $designationId);
+                })
+                ->when($fromDate, function ($query, $fromDate) {
+                    $query->where('request_leave_list.from_date', '>=', $fromDate);
+                })
+                ->when($toDate, function ($query, $toDate) {
+                    $query->where('request_leave_list.to_date', '<=', $toDate);
+                })
+                ->where('request_leave_list.business_id', $businessId)
+                ->where('employee_personal_details.active_emp', '1')
+                ->select('request_leave_list.*', 'static_request_leave_type.leave_day', 'static_leave_category.name as category_name', 'employee_personal_details.profile_photo', 'employee_personal_details.emp_name', 'employee_personal_details.designation_id', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'designation_list.desig_name')
+                ->orderBy('request_leave_list.id', 'desc')
+                ->get();
+        }
 
         if (count($filteredData) != 0) {
             if ($checkApprovalCycleType == 1) {
@@ -1884,21 +1972,6 @@ class RequestController extends Controller
                     $currentStatusParrticularDb[$data->id] = $current_status_particular_tb;
                 }
             }
-            //         $perPage = 10; // Adjust perPage as needed
-            //     $currentPage = $filteredData->currentPage();
-
-            //     $pagination = new LengthAwarePaginator(
-            //         $filteredData->items(),
-            //         $filteredData   ->total(),
-            //         $perPage,
-            //         $currentPage,
-            //         [
-            //             'path' => url()->current(),
-            //             'query' => request()->query(),
-            //         ]
-            //     );
-
-            // $paginationHtml = $pagination->links()->toHtml();
 
             // Return the filtered data as JSON response
             return response()->json(['get' => $filteredData, 'currentstatupartdb' => $currentStatusParrticularDb, 'status' => $empStatus, 'checkapprovaltype' => $checkApprovalCycleType, 'loginroleid' => $loginRoleID, 'PendingLeave' => $PendingLeave, 'UnpaidLeave' => $UnpaidLeave, 'PaidLeave' => $PaidLeave]);
@@ -1924,11 +1997,39 @@ class RequestController extends Controller
             ->get();
         return response()->json(['department' => $get]);
     }
+    public function allOutdoorFilterDepartment(Request $request)
+    {
+        $branch_ID = $request->brand_id;
+        $get = EmployeePersonalDetail
+            // join('request_gatepass_list', 'request_gatepass_list.emp_id', '=', 'employee_personal_details.emp_id')
+            ::join('department_list', 'department_list.depart_id', '=', 'employee_personal_details.department_id')
+            ->where('employee_personal_details.branch_id', $branch_ID)
+            ->where('employee_personal_details.business_id', Session::get('business_id'))
+            ->where('employee_personal_details.active_emp', '1')
+            ->select('employee_personal_details.department_id as depart_id', 'department_list.depart_name')
+            ->distinct()
+            ->get();
+        return response()->json(['department' => $get]);
+    }
 
     public function allGatepassFilterDesignation(Request $request)
     {
-        // return "chal";
-        // $branch_ID = $request->brand_id;
+        $branch_ID = $request->branch_id;
+        $get = EmployeePersonalDetail
+            // join('request_gatepass_list', 'request_gatepass_list.emp_id', '=', 'employee_personal_details.emp_id')
+            ::join('designation_list', 'designation_list.desig_id', '=', 'employee_personal_details.designation_id')
+            ->where('employee_personal_details.branch_id', $branch_ID)
+            ->where('employee_personal_details.department_id', $request->depart_id)
+            ->where('employee_personal_details.business_id', Session::get('business_id'))
+            ->where('employee_personal_details.active_emp', '1')
+            ->select('designation_list.desig_id', 'designation_list.desig_name')
+            ->distinct()
+            ->get();
+        return response()->json(['designation' => $get]);
+    }
+
+    public function allOutdoorsFilterDesignation(Request $request)
+    {
         $branch_ID = $request->branch_id;
         $get = EmployeePersonalDetail
             // join('request_gatepass_list', 'request_gatepass_list.emp_id', '=', 'employee_personal_details.emp_id')
@@ -2009,6 +2110,120 @@ class RequestController extends Controller
             ->distinct()
             ->get();
         return response()->json(['designation' => $get]);
+    }
+
+    public function outdoor()
+    {
+        $accessPermission = Central_unit::AccessPermission();
+        list($moduleName, $permissions) = Central_unit::AccessPermission();
+        $businessId = Session::get('business_id');
+        $checkBranchPermission = PolicySettingRoleAssignPermission::where('business_id', $businessId)
+            ->where('emp_id', Session::get('login_emp_id'))
+            ->first();
+        $Branch = Central_unit::BranchList();
+        $baseQuery = RequestOutdoorList::join('employee_personal_details', 'request_outdoor_list.emp_id', '=', 'employee_personal_details.emp_id')
+            ->join('branch_list', 'branch_list.branch_id', '=', 'employee_personal_details.branch_id')
+            ->join('department_list', 'department_list.depart_id', '=', 'employee_personal_details.department_id')
+            ->join('designation_list', 'designation_list.desig_id', '=', 'employee_personal_details.designation_id')
+            ->where('request_outdoor_list.business_id', $businessId)
+            ->where('employee_personal_details.active_emp', '1')
+            ->whereMonth('request_outdoor_list.apply_date', now()->month)
+            ->whereYear('request_outdoor_list.apply_date', now()->year)
+            ->selectRaw('request_outdoor_list.*, department_list.depart_name, branch_list.branch_name, designation_list.desig_name, employee_personal_details.emp_name, employee_personal_details.emp_mname, employee_personal_details.emp_lname, employee_personal_details.emp_mobile_number, employee_personal_details.profile_photo, DATE_FORMAT(request_outdoor_list.apply_date, "%d-%m-%Y") as formatted_apply_date, TIME_FORMAT(request_outdoor_list.out_time, "%h:%i %p") as formatted_out_time')
+            ->orderByDesc('request_outdoor_list.id');
+        if ($checkBranchPermission !== null && !empty($checkBranchPermission) && $roleIdToCheck != 1 && ($checkBranchPermission->permission_type == 2)) {
+            $DATA = $baseQuery->where('employee_personal_details.branch_id', $checkBranchPermission->permission_branch_id)->get();
+        } else {
+            $DATA = $baseQuery->get();
+        }
+        // dd($DATA);
+        $root = compact('moduleName', 'permissions', 'DATA', 'Branch');
+        return view('admin.request.outdoor', $root);
+    }
+
+
+    public function outdoorEmployeeFilter(Request $request)
+    {
+        $empStatus = [];
+        $branchId = $request->branch_id;
+        $roleIdToCheck = Session::get('login_role');
+        $businessId = Session::get('business_id');
+        $fromDate =
+            $request->input('from_date') ??
+            Carbon::now()->startOfMonth()->toDateString();
+        $toDate =
+            $request->input('to_date') ??
+            Carbon::now()
+            ->endOfMonth()
+            ->toDateString();
+        $departmentId = $request->input('department_id');
+        $designationId = $request->input('designation_id');
+        $loginRoleID = RulesManagement::PassBy()[3];
+        $loginRoleBID = RulesManagement::PassBy()[1];
+        $loginEmpID = RulesManagement::PassBy()[2];
+        $approval_type_id_static = 4;
+        $checkBranchPermission = PolicySettingRoleAssignPermission::where('business_id', $businessId)
+            ->where('emp_id', Session::get('login_emp_id'))
+            ->first();
+        // check the permission of branch
+        if ($checkBranchPermission !== null && !empty($checkBranchPermission) && $roleIdToCheck != 1 && ($checkBranchPermission->permission_type == 2)) {
+            $filteredData = RequestOutdoorList::join('employee_personal_details', 'request_outdoor_list.emp_id', '=', 'employee_personal_details.emp_id')
+                ->join('branch_list', 'branch_list.branch_id', '=', 'employee_personal_details.branch_id')
+                ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+                ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+                ->where('employee_personal_details.active_emp', '1')
+                ->where('employee_personal_details.branch_id', $checkBranchPermission->permission_branch_id)
+                ->when($branchId, function ($query) use ($branchId) {
+                    $query->where('employee_personal_details.branch_id', $branchId);
+                })
+                ->when($departmentId, function ($query) use ($departmentId) {
+                    $query->where('employee_personal_details.department_id', $departmentId);
+                })
+                ->when($designationId, function ($query) use ($designationId) {
+                    $query->where('employee_personal_details.designation_id', $designationId);
+                })
+                ->when($fromDate, function ($query, $fromDate) {
+                    $query->where('request_outdoor_list.apply_date', '>=', $fromDate);
+                })
+                ->when($toDate, function ($query, $toDate) {
+                    $query->where('request_outdoor_list.apply_date', '<=', $toDate);
+                })
+                ->selectRaw('request_outdoor_list.*, department_list.depart_name, branch_list.branch_name, designation_list.desig_name, employee_personal_details.emp_name, employee_personal_details.emp_mname, employee_personal_details.emp_lname, employee_personal_details.emp_mobile_number, employee_personal_details.profile_photo, DATE_FORMAT(request_outdoor_list.apply_date, "%d-%m-%Y") as formatted_apply_date, TIME_FORMAT(request_outdoor_list.out_time, "%h:%i %p") as formatted_out_time')
+                ->orderBy('request_outdoor_list.id', 'desc')
+                ->get();
+        } else {
+            $filteredData = RequestOutdoorList::join('employee_personal_details', 'request_outdoor_list.emp_id', '=', 'employee_personal_details.emp_id')
+                ->join('branch_list', 'branch_list.branch_id', '=', 'employee_personal_details.branch_id')
+                ->join('department_list', 'employee_personal_details.department_id', '=', 'department_list.depart_id')
+                ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
+                ->where('employee_personal_details.active_emp', '1')
+                ->when($branchId, function ($query) use ($branchId) {
+                    $query->where('employee_personal_details.branch_id', $branchId);
+                })
+                ->when($departmentId, function ($query) use ($departmentId) {
+                    $query->where('employee_personal_details.department_id', $departmentId);
+                })
+                ->when($designationId, function ($query) use ($designationId) {
+                    $query->where('employee_personal_details.designation_id', $designationId);
+                })
+                ->when($fromDate, function ($query, $fromDate) {
+                    $query->where('request_outdoor_list.apply_date', '>=', $fromDate);
+                })
+                ->when($toDate, function ($query, $toDate) {
+                    $query->where('request_outdoor_list.apply_date', '<=', $toDate);
+                })
+                ->selectRaw('request_outdoor_list.*, department_list.depart_name, branch_list.branch_name, designation_list.desig_name, employee_personal_details.emp_name, employee_personal_details.emp_mname, employee_personal_details.emp_lname, employee_personal_details.emp_mobile_number, employee_personal_details.profile_photo, DATE_FORMAT(request_outdoor_list.apply_date, "%d-%m-%Y") as formatted_apply_date, TIME_FORMAT(request_outdoor_list.out_time, "%h:%i %p") as formatted_out_time')
+                ->orderBy('request_outdoor_list.id', 'desc')
+                ->get();
+        }
+
+        // Return the filtered data as JSON response
+        return response()->json(['get' => $filteredData]);
+    }
+
+    public function leaveBalance()
+    {
+        return view('admin.request.leavebalance');
     }
 }
 

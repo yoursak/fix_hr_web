@@ -43,7 +43,7 @@ class AttendanceApproval extends Component
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
         $List = RulesManagement::ALLPolicyTemplates();
-// dd($permissions);    
+        // dd($permissions);
         $FinalEndGameRule = $List[0];
         $BusinessDetails = $List[1];
         $BranchList = $List[2];

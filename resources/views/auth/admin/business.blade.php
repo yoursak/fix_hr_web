@@ -1,20 +1,19 @@
 @extends('auth/admin/authlayout.master_simple')
 @section('title', 'Business Create')
 @section('css')
-<style>
-    /* Adjust the OK button size */
-/* .swal-button {
-    padding: 10px 20px;
-    font-size: 16px;
-} */
+    <style>
+        /* Adjust the OK button size */
+        /* .swal-button {
+                                                padding: 10px 20px;
+                                                font-size: 16px;
+                                            } */
 
-.swal2-actions .swal2-confirm {
-  border: none !important;
-  box-shadow: none !important;
-  font-size: 12px !important;
-}
-
-</style>
+        .swal2-actions .swal2-confirm {
+            border: none !important;
+            box-shadow: none !important;
+            font-size: 12px !important;
+        }
+    </style>
 @endsection
 @section('js')
 
@@ -28,7 +27,7 @@
     <div class="row d-flex justify-content-center">
         <div class="col-sm-12 col-md-8 col-sm-6">
             <div class="card p-0">
-                <img src="{{ url('assets/logo/FixHR.png') }}"   t="" class="img-fluid mb-4 mx-auto"
+                <img src="{{ url('assets/logo/FixHR.png') }}" t="" class="img-fluid mb-4 mx-auto"
                     style="display: block; width: 35%;">
 
                 <div class="card-header border-bottom-0">
@@ -37,14 +36,14 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('businessVerify') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('businessVerify') }}" method="POST" enctype="multipart/form-data"
+                        id="myForm">
                         @csrf
-
                         <div class="row">
                             <div class="col-sm-4 col-md-4">
                                 <div class="form-group">
                                     <label class="form-label"><b>Business Category</b></label>
-                                    <select style="" class="form-control text-muted " name="businessCategory"
+                                    <select class="form-control  " name="businessCategory" id="businessCategoryId"
                                         data-placeholder="Select Business Category" required>
                                         <option label="Select Business Category"></option>
                                         @foreach ($businessCat as $cat)
@@ -56,7 +55,7 @@
                             <div class="col-sm-4 col-md-4">
                                 <div class="form-group">
                                     <label class="form-label"><b>Business Type</b></label>
-                                    <select class="form-control text-muted" name="businessType"
+                                    <select class="form-control text-muted" name="businessType" id="businessTypeId"
                                         data-placeholder="Select Business Type" required>
                                         <option label="Select Business Type"></option>
                                         @foreach ($businessType as $type)
@@ -69,14 +68,14 @@
                                 <div class="form-group">
                                     <label class="form-label"><b>Name</b></label>
                                     <input autocapitalize="true" type="text" name="name" class="form-control"
-                                        placeholder="Enter Your Name" required>
+                                        id="nameId" placeholder="Enter Business Owner Name" required>
                                 </div>
                             </div>
                             <div class="col-sm-4 col-md-4">
                                 <div class="form-group">
                                     <label class="form-label"><b>Business Name</b></label>
                                     <input type="text" autocapitalize name="bname" class="form-control"
-                                        placeholder="Enter Business Name" required>
+                                        id="businessNameId" placeholder="Enter Business Name" required>
                                 </div>
                             </div>
                             <div class="col-sm-4 col-md-4">
@@ -89,14 +88,16 @@
                             <div class="col-sm-4 col-md-4">
                                 <div class="form-group">
                                     <label class="form-label"><b>Phone Number</b></label>
-                                    <input type="tel" name="phone" class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 10);" placeholder="Enter Mobile No."
-                                        required>
+                                    <input type="tel" name="phone" class="form-control" id="phoneNumberId"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 10);"
+                                        placeholder="Enter Mobile No." required>
                                 </div>
                             </div>
                             <div class="col-sm-4 col-md-4">
                                 <div class="form-group">
                                     <label class="form-label"><b>Country</b></label>
-                                    <select class="form-control" aria-label="Type" name="country"  onchange="getState(this.value)" required>
+                                    <select class="form-control" aria-label="Type" name="country" id="countryId"
+                                        onchange="getState(this.value)" required>
                                         <option value="" label="Select Country Name">Select Country Name</option>
                                         @foreach ($country as $item)
                                             <option value="{{ $item->id }}" label="{{ $item->name }}">
@@ -108,8 +109,8 @@
                             <div class="col-sm-4 col-md-4">
                                 <div class="form-group">
                                     <label class="form-label"><b>State</b></label>
-                                    <select id="getStateId"
-                                        name="state" class="form-control" onchange="getCity(this.value)"  required>
+                                    <select id="getStateId" name="state" class="form-control"
+                                        onchange="getCity(this.value)" required>
                                         <option value="">Select State Name</option>
                                     </select>
                                 </div>
@@ -117,7 +118,7 @@
                             <div class="col-sm-4 col-md-4">
                                 <div class="form-group">
                                     <label class="form-label"><b>City/District</b></label>
-                                    <select id="getCityId" name="city" class="form-control state1"  required>
+                                    <select id="getCityId" name="city" class="form-control state1" required>
                                         <option value="">Select City Name</option>
                                     </select>
                                 </div>
@@ -131,8 +132,11 @@
                                             <label class="form-label"><b>Zip Code</b></label>
                                             {{-- <input type="text" name="pin" class="form-control"
                                                 placeholder="Zip Code"> --}}
-                                                {{-- <input type="text" maxlength="6" name="pin" class="form-control" pattern="^[0-9]*$" inputmode="numeric" placeholder="Zip Code"> --}}
-                                                <input type="text" maxlength="6" name="pin" class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 6);" placeholder="Zip Code" required>
+                                            {{-- <input type="text" maxlength="6" name="pin" class="form-control" pattern="^[0-9]*$" inputmode="numeric" placeholder="Zip Code"> --}}
+                                            <input type="text" maxlength="6" name="pin" class="form-control"
+                                                id="zipCodeId"
+                                                oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 6);"
+                                                placeholder="Zip Code" required>
                                         </div>
                                     </div>
                                     <livewire:business-registration.gst-validation />
@@ -143,12 +147,13 @@
                                 <div class="row">
 
                                     <!-- <div class="col-sm-6 col-md-6">
-                                                            <input type="file" name="image" class="dropify" data-height="100" data-width="400" />
-                                                        </div> -->
+                                                                                                        <input type="file" name="image" class="dropify" data-height="100" data-width="400" />
+                                                                                                    </div> -->
                                     {{-- <div class="col-sm-6 col-md-6"> --}}
                                     <div class="form-group">
                                         <label class="form-label"><b>Address</b></label>
-                                        <textarea rows="6" name="address" class="form-control" placeholder="Enter Business Address" required></textarea>
+                                        <textarea rows="6" name="address" class="form-control" placeholder="Enter Business Address" id="addressId"
+                                            required></textarea>
                                     </div>
                                     {{--
                                 </div> --}}
@@ -160,13 +165,16 @@
                                             Logo</b></label>
 
                                     <input type="file" name="image" class="dropify dropifyset " data-height="100"
-                                        data-width="300" required />
+                                        id="uploadYBLId" data-width="300" required />
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer text-end">
                             <button type="submit" class="btn  btn-primary mt-3 mb-4 rounded"
-                                style="background-color:#1877F2;text-color:white;" type="submit">Save & Continue</button>
+                                style="background-color:#1877F2;text-color:white;"
+                                onclick="submitForm(event)"
+                                type="submit">Save &
+                                Continue</button>
                         </div>
                     </form>
                 </div>
@@ -197,8 +205,62 @@
     <script src="{{ asset('wavetemplate/js/pages/TweenMax.min.js') }}"></script>
     <script src="{{ asset('wavetemplate/js/pages/jquery.wavify.js') }}"></script>
     <script src="{{ asset('https://code.jquery.com/jquery-3.6.0.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <script>
+        function submitCheck(event) {
+            // Retrieve values from input fields
+            var businessCategory = document.getElementById('businessCategoryId').value;
+            var businessType = document.getElementById('businessTypeId').value;
+            var name = document.getElementById('nameId').value;
+            var businessName = document.getElementById('businessNameId').value;
+            var phoneNumber = document.getElementById('phoneNumberId').value;
+            var country = document.getElementById('countryId').value;
+            var state = document.getElementById('getStateId').value;
+            var city = document.getElementById('getCityId').value;
+            var zipCode = document.getElementById('zipCodeId').value;
+            var addressId = document.getElementById('addressId').value;
+            var gstNo = document.getElementById('gstNumberId').value;
+            var uploadYBL = document.getElementById('uploadYBLId').value;
+
+            // Check if any required field is empty
+            if (businessCategory === '' || businessType === '' || name === '' || businessName === '' || phoneNumber ===
+                '' || country === '' || state === '' || city === '' || zipCode === '' || addressId === '' || gstNo === '' ||
+                uploadYBL === '') {
+                // Show an error message if any required field is empty
+                // Swal.fire({
+                //     icon: 'error',
+                //     text: 'Please fill in all fields before save!'
+                // });
+                // event.preventDefault(); // Prevent form submission
+                return false;
+            }
+
+            // If all fields are filled, check GSTIN
+            var isValid = document.getElementById('isValidId').value; // Retrieve the value of isValidId
+            console.log(isValid);
+            if (isValid != 1) {
+                // Condition is false, show a SweetAlert alert
+                Swal.fire({
+                    icon: 'error',
+                    text: 'GSTIN no. is not valid!'
+                });
+                event.preventDefault(); // Prevent form submission
+                return false; // Return false to prevent form submission
+            }
+
+            // If all checks pass, allow form submission
+            return true;
+        }
+
+        function submitForm(event) {
+            var isValid = submitCheck(event); // Call submitCheck and pass the event parameter
+            if (isValid) {
+                document.getElementById("myForm").submit(); // Submit the form if validation passes
+            }
+        }
+
+
         function getState(countryValue) {
             console.log("countryValue ", countryValue);
             var $stateId = $('#getStateId'); // Assuming you have an element with id "getStateId"
@@ -247,7 +309,8 @@
                 success: function(result) {
                     console.log("city ", result);
                     var city = result.city;
-                    var defaultOptioncity = $('<option>').val('').text('Select City Name').attr('selected', true);
+                    var defaultOptioncity = $('<option>').val('').text('Select City Name').attr('selected',
+                        true);
                     $cityId.html('');
                     $cityId.append(defaultOptioncity);
 

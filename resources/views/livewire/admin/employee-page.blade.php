@@ -8,10 +8,9 @@
         $nss = new App\Helpers\Central_unit();
         $EmpID = $nss->EmpPlaceHolder();
         $ITEM = $LOADED->SectionEmployeeCounters();
+        //dd($ITEM);
         $Designation = $centralUnit->DesignationList();
     @endphp
-
-
         <div class=" p-0 pb-4">
             <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
                 <li><a href="{{ url('/admin') }}">Dashboard</a></li>
@@ -96,6 +95,7 @@
                 </div>
             </div>
         </div>
+
         <!-- END ROW -->
 
         {{-- call by live-wire --}}
@@ -133,12 +133,51 @@
         } */
         </style>
 
+
+
         @include('livewire.student-model')
+        {{-- <div class="" wire:ignore>
+
+            <select wire:model='selectedValues' wire:change="loadPower" placeholder="asdf s fd"
+                class="col-xl-12 form-control search_test" multiple="mutiple">
+                <option selected value="">Select Report Employee</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+
+                @if (!empty($listMode))
+                    @foreach ($listMode as $option)
+                        <option value="{{ $option->emp_id }}">
+                            {{ $option->first_name . ' ' . $option->middle_name . ' ' . $option->last_name }}
+                            | {{ $option->desig_name }}
+                        </option>
+                    @endforeach
+                @else
+                    <div class="list-item">No Result</div>
+                @endif
+            </select>
+
+            additional add because remove after click in livewire this library set case on time
+            <script src="{{ asset('assets/jayant-sumoselect/jquery.sumoselect.min.js') }}"></script>
+            <script src="{{ asset('assets/jayant-sumoselect/jquery.sumoselect.js') }}"></script>
+            <script>
+                $('.search_test').SumoSelect({
+                    search: true,
+                    searchText: 'Enter here.',
+                    // okCancelInMulti: true,
+                    triggerChangeCombined: true,
+                    forceCustomRendering: true
+                });
+            </script>
+
+        </div> --}}
 
         <!-- ROW -->
         <div class="row">
             <div class="col-xl-12 col-md-12 col-lg-12">
                 <div class="card">
+
                     <div class="card-header border-0">
                         <h4 class="card-title">Employee List
 
@@ -146,13 +185,14 @@
                         &nbsp;
                         &nbsp;
                         &nbsp;
-                        <div class="form-group pt-2" x-data="{ isOpen: false }" x-on:click.away="isOpen = false">
-                            {{-- <select wire:model.debounce.350ms="sortBy" id="" class="form-control ">
-                            <option value="aes">Asc</option>
-                            <option value="desc">Desc</option>
-                        </select> --}}
+                        <div class="form-group pt-2">
+                            <select wire:model.debounce.350ms="sortBy" id=""
+                                class="form-control form-select  ">
+                                <option value="aes">Asc &nbsp;&nbsp;&nbsp; </option>
+                                <option value="desc">Desc &nbsp;&nbsp;&nbsp;</option>
+                            </select>
                             {{-- <div> --}}
-                            <div class="input-group">
+                            {{-- <div class="input-group">
                                 <select wire:model.debounce.350ms="sortBy" class="form-control"
                                     x-on:focus="isOpen = true" x-on:blur="isOpen = false">
                                     <option value="aes">Asc</option>
@@ -164,7 +204,7 @@
                                         <i x-show="!isOpen" class="fa fa-caret-down"></i>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             {{-- </div> --}}
                         </div>
                         <div class="page-rightheader ms-auto">
@@ -187,28 +227,17 @@
 
 
                             <div class="col-md-2">
-                                <div class="form-group">
+                                <div class="form-group" wire:ignore>
                                     <p class="form-label">Branch</p>
-
-                                    <div class="form-group" x-data="{ isOpen: false }" x-on:click.away="isOpen = false">
-                                        <div class="input-group">
-                                            <select wire:model="branchFilter" class="form-control"
-                                                x-on:focus="isOpen = true" x-on:blur="isOpen = false">
-                                                <option value="">All Branch</option>
-                                                @foreach ($Branch as $data)
-                                                    <option value="{{ $data->branch_id }}">
-                                                        {{ $data->branch_name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            <div class="input-group-append">
-                                                <div class="input-group-text">
-                                                    <i x-show="isOpen" class="fa fa-caret-up"></i>
-                                                    <i x-show="!isOpen" class="fa fa-caret-down"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <select wire:model="branchFilter" class="form-select-md p-2 search_test"
+                                        name="" id="">
+                                        <option value="">All Branch</option>
+                                        @foreach ($Branch as $data)
+                                            <option value="{{ $data->branch_id }}">
+                                                {{ $data->branch_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
 
 
 
@@ -216,72 +245,25 @@
                             </div>
 
                             <div class="col-md-2">
-                                <div class="form-group">
+                                <div class="form-group" wire:ignore>
                                     <p class="form-label">Department</p>
-
-                                    <div class="form-group mb-3" x-data="{ isOpen: false }"
-                                        x-on:click.away="isOpen = false">
-                                        <div class="input-group">
-                                            <select wire:model="departmentFilter" name="department_id"
-                                                class="form-control" x-on:focus="isOpen = true"
-                                                x-on:blur="isOpen = false">
-                                                <option value="">All Department </option>
-                                                @foreach ($Department as $data)
-                                                    <option value="{{ $data->depart_id }}">
-                                                        {{ $data->depart_name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            <div class="input-group-append">
-                                                <div class="input-group-text">
-                                                    <i x-show="isOpen" class="fa fa-caret-up"></i>
-                                                    <i x-show="!isOpen" class="fa fa-caret-down"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {{-- <div class="form-group mb-3">
-                                    <select wire:model="departmentFilter" name="department_id" class="form-control ">
+                                    <select wire:model="departmentFilter" class=" form-select-md p-2 search_test"
+                                        name="department_id" id="">
                                         <option value="">All Department </option>
                                         @foreach ($Department as $data)
                                             <option value="{{ $data->depart_id }}">
                                                 {{ $data->depart_name }}
                                             </option>
                                         @endforeach
-
                                     </select>
 
-                                </div> --}}
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-2" wire:ignore>
                                 <div class="form-group">
                                     <p class="form-label">Designation</p>
-                                    <div class="form-group mb-3" x-data="{ isOpen: false }"
-                                        x-on:click.away="isOpen = false">
-                                        <div class="input-group">
-                                            <select wire:model="designationFilter" name="designation_id"
-                                                class="form-control" x-on:focus="isOpen = true"
-                                                x-on:blur="isOpen = false">
-                                                <option value="">All Designation</option>
-                                                @foreach ($Designation as $data)
-                                                    <option value="{{ $data->desig_id }}">
-                                                        {{ $data->desig_name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            <div class="input-group-append">
-                                                <div class="input-group-text">
-                                                    <i x-show="isOpen" class="fa fa-caret-up"></i>
-                                                    <i x-show="!isOpen" class="fa fa-caret-down"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{-- <div class="form-group mb-3">
-                                    <select wire:model="designationFilter" name="designation_id"
-                                        class="form-control ">
+                                    <select wire:model="designationFilter" class=" form-select-md p-2 search_test"
+                                        name="designation_id" id="">
                                         <option value="">All Designation</option>
                                         @foreach ($Designation as $data)
                                             <option value="{{ $data->desig_id }}">
@@ -290,44 +272,21 @@
                                         @endforeach
                                     </select>
 
-                                </div> --}}
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <div class="form-group">
+                                <div class="form-group" wire:ignore>
                                     <p class="form-label">Employee Status</p>
-                                    <div class="form-group mb-3" x-data="{ isOpen: false }"
-                                        x-on:click.away="isOpen = false">
-                                        <div class="input-group">
-                                            <select wire:model="activeFilter" class="form-control"
-                                                x-on:focus="isOpen = true" x-on:blur="isOpen = false">
-                                                <option value="">All </option>
-                                                @foreach ($employeeActive as $data)
-                                                    <option value="{{ $data->id }}">
-                                                        {{ $data->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            <div class="input-group-append">
-                                                <div class="input-group-text">
-                                                    <i x-show="isOpen" class="fa fa-caret-up"></i>
-                                                    <i x-show="!isOpen" class="fa fa-caret-down"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{-- <div class="form-group mb-3">
-                                    <select wire:model="activeFilter" name="" class="form-control ">
+                                    <select wire:model="activeFilter" class=" form-select-md p-2 search_test"
+                                        name="designation_id" id="">
                                         <option value="">All </option>
                                         @foreach ($employeeActive as $data)
                                             <option value="{{ $data->id }}">
                                                 {{ $data->name }}
                                             </option>
                                         @endforeach
-
                                     </select>
 
-                                </div> --}}
                                 </div>
                             </div>
                             <div class="col-md-2 nav-pills">
@@ -364,15 +323,6 @@
                             </div>
 
                         </div>
-
-                        {{-- @if ($errors->any())
-                        <h5 style="color:red">Following errors exists in your excel file</h5>
-                        <ol>
-                            @foreach ($errors->all() as $error)
-                                <li style="color:red">{{ $error }}</li>
-                            @endforeach
-                        </ol>
-                    @endif   --}}
                         <div class="table-responsive">
                             @php
                                 $count = 1;
@@ -395,15 +345,39 @@
                                     </tr>
                                 </thead>
                                 <tbody class="my_body">
-                                    @foreach ($DATA as $item)
+                                    @foreach ($DATA as $key => $item)
                                         @php
                                             $branch = $centralUnit->Branchget($item->branch_id);
                                             $depart = $centralUnit->Departmentget($item->department_id);
-                                            $attendanceMethod = $LOADED->StaticModelActive($item->emp_attendance_method, 0, $item->assign_shift_type);
+                                            $attendanceMethod = $LOADED->StaticModelActive(
+                                                $item->emp_attendance_method,
+                                                0,
+                                                $item->assign_shift_type,
+                                            );
                                         @endphp
                                         <tr>
+                                            {{-- <td>
+                                                <div>
+
+                                                    <small wire:key="{{ $item->id }}"
+                                                        id="popoverBtn{{ $item->id }}"
+                                                        class="btn btn-success popoverBtn"
+                                                        title="Popover left">click</small>
+                                                    <script>
+                                                        // Top popover is not working only
+                                                        $(document).ready(function() {
+                                                            $('#popoverBtn{{ $item->id }}').popover({
+                                                                placement: 'right',
+                                                                trigger: 'hover',
+                                                                content: '{{ $item->emp_name }}'
+                                                            });
+                                                        });
+                                                    </script>
+                                                </div>
+                                            </td> --}}
                                             {{-- <td>{{ $count++ }}</td> --}}
                                             <td>
+
                                                 <div class="d-flex">
                                                     <span class="avatar avatar-md brround me-3 rounded-circle"
                                                         style="background-image: url('/storage/livewire_employee_profile/{{ $item->profile_photo }}')"></span>
@@ -433,19 +407,13 @@
                                             <td>
                                                 @php
                                                     $status = $item->active_emp
-                                                        ? '<svg xmlns="http://www.w3.org/2000/svg" style="width:1.2em;height:1.2em;"
-                                            class="d-inline-block text-success" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>'
-                                                        : '<svg xmlns="http://www.w3.org/2000/svg" style="width:1.2em;height:1.2em;"
-                                            class="d-inline-block text-danger" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
-                                            </path>
-                                        </svg>';
+                                                        ? '<svg xmlns="http://www.w3.org/2000/svg" style="width:1.2em;height:1.2em;" class="d-inline-block text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>'
+                                                        : '<svg xmlns="http://www.w3.org/2000/svg" style="width:1.2em;height:1.2em;" class="d-inline-block text-danger" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
+                            </svg>';
                                                 @endphp
                                                 {!! $status !!}
                                             </td>
@@ -469,33 +437,15 @@
 
                             </table>
                             <div class="d-flex justify-content-between">
-                                <div>
-                                    <label for="perPage">Per Page:</label>
+                                <div class="">
+                                    <div class="mb-3">
+                                        <select wire:model.debounce.350ms="perPage" class="form-control form-select ">
+                                            <option value="10">10 &nbsp;&nbsp;&nbsp;&nbsp; </option>
+                                            <option value="20">20 &nbsp;&nbsp;&nbsp;&nbsp;</option>
+                                            <option value="50">50 &nbsp;&nbsp;&nbsp;&nbsp;</option>
+                                        </select>
 
-                                    <div class="form-group mb-3" x-data="{ isOpen: false }"
-                                        x-on:click.away="isOpen = false">
-                                        <div class="input-group">
-                                            <select wire:model.debounce.350ms="perPage" class="form-control"
-                                                x-on:focus="isOpen = true" x-on:blur="isOpen = false">
-                                                <option value="10">10</option>
-                                                <option value="20">20</option>
-                                                <option value="50">50</option>
-                                            </select>
-                                            <div class="input-group-append">
-                                                <div class="input-group-text">
-                                                    <i x-show="isOpen" class="fa fa-caret-up"></i>
-                                                    <i x-show="!isOpen" class="fa fa-caret-down"></i>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
-                                    {{-- <select wire:model.debounce.350ms="perPage" id=""
-                                    class="form-control   custom-select">
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="20">20</option>
-                                    <option value="50">50</option>
-                                </select> --}}
 
                                 </div>
 
@@ -634,25 +584,25 @@
             // });
 
             // Employee Type select
-            $('#contractualEmployeeAdd').addClass('d-none');
-            $('#regularEmployeeAdddd').addClass('d-none');
-            $('#openAddNewEmployeeMod').on('change', function() {
-                //  alert( this.value ); // or $(this).val()
-                // console.log(this.value);
-                if (this.value == 1) {
-                    // console.log("1jsr")
-                    $('#regularEmployeeAdddd').removeClass('d-none');
-                    $('#contractualEmployeeAdd').addClass('d-none');
-                    $('#ContractType').val('0');
-                } else if (this.value == 2) {
-                    // console.log("2jsr");
-                    $('#regularEmployeeAdddd').addClass('d-none');
-                    $('#contractualEmployeeAdd').removeClass('d-none');
-                } else {
-                    $('#regularEmployeeAdddd').addClass('d-none');
-                    $('#contractualEmployeeAdd').addClass('d-none');
-                }
-            });
+            // $('#contractualEmployeeAdd').addClass('d-none');
+            // $('#regularEmployeeAdddd').addClass('d-none');
+            // $('#openAddNewEmployeeMod').on('change', function() {
+            //     //  alert( this.value ); // or $(this).val()
+            //     // console.log(this.value);
+            //     if (this.value == 1) {
+            //         // console.log("1jsr")
+            //         $('#regularEmployeeAdddd').removeClass('d-none');
+            //         $('#contractualEmployeeAdd').addClass('d-none');
+            //         $('#ContractType').val('0');
+            //     } else if (this.value == 2) {
+            //         // console.log("2jsr");
+            //         $('#regularEmployeeAdddd').addClass('d-none');
+            //         $('#contractualEmployeeAdd').removeClass('d-none');
+            //     } else {
+            //         $('#regularEmployeeAdddd').addClass('d-none');
+            //         $('#contractualEmployeeAdd').addClass('d-none');
+            //     }
+            // });
 
             function ItemDeleteModel(context) {
                 var id = $(context).data('id');
@@ -1116,5 +1066,16 @@
                 });
             };
         </script>
+        <script src="{{ asset('assets/jayant-sumoselect/jquery.sumoselect.min.js') }}"></script>
+        <script src="{{ asset('assets/jayant-sumoselect/jquery.sumoselect.js') }}"></script>
+        <script>
+            $('.search_test').SumoSelect({
+                search: true,
+                searchText: 'Search'
+                // triggerChangeCombined: true,
+
+            });
+        </script>
+
     </div>
 @endif

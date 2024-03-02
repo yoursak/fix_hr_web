@@ -16,9 +16,9 @@ use Carbon\Carbon;
 class Kernel extends ConsoleKernel
 {
     protected $commands = [
-        \App\Console\Commands\AutoMonthlyLeaveBalance::class,
+        // \App\Console\Commands\AutoMonthlyLeaveBalance::class,
         \App\Console\Commands\NotificationAlert::class,
-        // \App\Console\Commands\AutoAttendanceCron::class,
+        \App\Console\Commands\AutoAttendanceCron::class,
         // \App\Console\Commands\CleanupOtps::class,
     ];
 
@@ -34,10 +34,10 @@ class Kernel extends ConsoleKernel
         //         ->update(['otp' => null]);
         // })->everyMinute();
 
-        $schedule->command('command:autoMonthlyLeaveBalanceCron')->daily();
+        // $schedule->command('command:autoMonthlyLeaveBalanceCron')->daily();
         // ->monthlyOn(Carbon::now()->endOfMonth()->format('d'), '23:59');
         // $schedule->command('command:notificationAlert')->everyMinute();
-        // $schedule->command('command:autoAttendanceCron')->daily();
+        $schedule->command('command:autoAttendanceCron')->daily();
         $schedule->command('command:notificationAlert')->everyMinute();
     }
 

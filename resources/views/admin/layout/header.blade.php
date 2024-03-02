@@ -1,14 +1,21 @@
-<?php use App\Helpers\Central_unit;
+<?php
+
+use App\Helpers\Central_unit;
+
 $Helper = new Central_unit();
 ?>
 <div class="app-header header sticky">
     <div class="container-fluid main-container">
         <div class="d-flex">
-            <a class="header-brand" href="{{url('/dashboard')}}" style="text-align: center">
-                <img src={{ asset('assets/logo/FixHR.png?v=0.1') }} class="header-brand-img desktop-lgo" alt="FixingDotslogo" style="height: 4rem;  margin: auto;"> 
-                <img src={{ asset('assets/logo/Fix_HR_Dark.png') }} class="header-brand-img dark-logo" alt="FixingDotslogo" style="height: 4rem;  margin: auto;">
-                <img src="{{ asset('assets/logo/FixHR.png?v=0.1') }}" class="header-brand-img mobile-logo" alt="FixingDotslogo">
-                <img src="{{ asset('assets/logo/Fix_HR_Dark.png') }}" class="header-brand-img darkmobile-logo" alt="FixingDotslogo">
+            <a class="header-brand" href="{{ url('/dashboard') }}" style="text-align: center">
+                <img src={{ asset('assets/logo/FixHR.png?v=0.1') }} class="header-brand-img desktop-lgo"
+                    alt="FixingDotslogo" style="height: 4rem;  margin: auto;">
+                <img src={{ asset('assets/logo/Fix_HR_Dark.png') }} class="header-brand-img dark-logo"
+                    alt="FixingDotslogo" style="height: 4rem;  margin: auto;">
+                <img src="{{ asset('assets/logo/FixHR.png?v=0.1') }}" class="header-brand-img mobile-logo"
+                    alt="FixingDotslogo">
+                <img src="{{ asset('assets/logo/Fix_HR_Dark.png') }}" class="header-brand-img darkmobile-logo"
+                    alt="FixingDotslogo">
             </a>
             <div class="app-sidebar__toggle" data-bs-toggle="sidebar">
                 <a class="open-toggle" href="javascript:void(0);">
@@ -32,7 +39,7 @@ $Helper = new Central_unit();
                 </button>
                 <div class="mb-0 navbar navbar-expand-lg navbar-nav-right responsive-navbar navbar-dark p-0">
                     <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
-                        <div class="d-flex ms-auto justify-content-end">
+                        <div class="d-flex ms-auto justify-content-start">
                             <div class="dropdown  d-flex">
                                 <a class="nav-link icon theme-layout nav-link-bg layout-setting">
                                     <span class="dark-layout"><i class="fe fe-moon"></i></span>
@@ -61,35 +68,35 @@ $Helper = new Central_unit();
                             <div class="d-flex" style="transform: translateX(20px);">
 
                                 <div class="dropdown header-notify my-auto ms-5">
-                                    <?php if(Session::has('business_id')){ ?>
+                                    <?php if (Session::has('business_id')) { ?>
                                     <div class="me-3 mt-0 mt-sm-1 d-block text-center">
-                                        <span
-                                            class="fs-14 mb-0"><b>{{ Session::get('login_name') }}</b></span><br>
+                                        <span class="fs-14 mb-0"><b>{{ Session::get('login_name') }}</b></span><br>
                                         <span class="text-muted mt-0">
-                                            <b> <?= $Helper->RoleIdToName() ?></b> 
+                                            <b> <?= $Helper->RoleIdToName() ?></b>
                                         </span>
                                     </div>
-                                    <?php }else{  ?>
+                                    <?php } else {  ?>
                                     <div class="mt-0 mt-sm-1 d-block text-center">
                                         <span class="fs-14 mb-0">Login User</span><br>
                                         <span class="text-muted mt-0">Designation</span>
                                     </div>
-                                  
+
                                     <?php } ?>
                                 </div>
 
-                       
+
 
                                 <div class="dropdown profile-dropdown">
                                     <a href="javascript:void(0);" class="nav-link  ps-0 leading-none"
                                         data-bs-toggle="dropdown">
                                         <span>
-                                            <img style="background-color:transparent;" src="{{ asset('business_logo/' . Session::get('login_business_image')) }}"
+                                            <img style="background-color:transparent;"
+                                                src="{{ asset('business_logo/' . Session::get('login_business_image')) }}"
                                                 alt="img" class="avatar avatar-md rounded-circle">
                                         </span>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated">
-                                        <a  class="dropdown-item d-flex" href="{{url('/admin/settings/account')}}">
+                                        <a class="dropdown-item d-flex" href="{{ url('/admin/settings/account') }}">
                                             <i class="feather feather-user me-3 fs-16 my-auto"></i>
                                             <div class="mt-1">Profile</div>
                                         </a>
@@ -98,8 +105,8 @@ $Helper = new Central_unit();
                                             <div class="mt-1">Upgrade</div>
                                         </a>
                                         {{-- <a class="dropdown-item d-flex" href="e{{url('/admin/settings/business')}}">
-                                            <i class="feather feather-settings me-3 fs-16 my-auto"></i>
-                                            <div class="mt-1">Settings</div>
+                                        <i class="feather feather-settings me-3 fs-16 my-auto"></i>
+                                        <div class="mt-1">Settings</div>
                                         </a> --}}
                                         </a>
                                         <a class="dropdown-item d-flex" href="{{ url('/logout') }}">

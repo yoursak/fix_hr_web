@@ -21,6 +21,7 @@ use App\Http\Controllers\ApiController\ApiAdminController\Setting\BusinessContro
 // User Side
 use App\Http\Controllers\ApiController\ApiUserController\Request\LeaveRequestApiController;
 use App\Http\Controllers\ApiController\ApiUserController\Request\MispunchApiController;
+use App\Http\Controllers\ApiController\ApiUserController\Request\OutdoorApiController;
 use App\Http\Controllers\ApiController\ApiUserController\Login\EmployeeLoginApiController;
 use App\Http\Controllers\ApiController\ApiUserController\Employee\EmployeeApiController;
 use App\Http\Controllers\ApiController\ApiUserController\Request\GatePassApiController;
@@ -44,7 +45,7 @@ Route::prefix('user')->group(function () {
     Route::prefix('/employee')->group(function () {
         Route::post('/login', [EmployeeLoginApiController::class, 'login']); //QA
         Route::any('/verify_otp', [EmployeeLoginApiController::class, 'VerifiedOtp']);
-
+        Route::post('/logout_employee', [EmployeeLoginApiController::class, 'employeeLogout']);
         Route::any('/master_rule', [EmployeeLoginApiController::class, 'MasterRule']);
         Route::any('/attendance_mode', [EmployeeLoginApiController::class, 'AttendanceMode']);
         Route::any('/shift_type_list', [EmployeeLoginApiController::class, 'ShiftTypeList']);
@@ -113,8 +114,16 @@ Route::prefix('user')->group(function () {
             Route::post('delete', [MispunchApiController::class, 'destroy']); //delete_mis_punch_route
             Route::delete('detail/{id}', [MispunchApiController::class, 'destroy']);
             Route::any('current_mispunch_status', [MispunchApiController::class, 'currentStatusMisspunchRequest']);
-
             Route::any('find_mispunch_status', [MispunchApiController::class, 'findOutMisPunchRequest']);
+            // add allow misspunch permission
+            Route::any('checking_current_mispunch_permission', [MispunchApiController::class, 'checkPermissionAllowMissPunch']);
+        });
+
+        // Outdoor Request
+        Route::prefix('outdoorrequest')->group(function () {
+            Route::post('outdoor_store', [OutdoorApiController::class, 'store']);
+            Route::post('outdoor_show_list', [OutdoorApiController::class, 'showList']);
+            Route::post('outdoor_detail_find', [OutdoorApiController::class, 'outdoorDetailFind']);
         });
 
         Route::prefix('settings')->group(function () {

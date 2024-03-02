@@ -33,7 +33,7 @@ class MispunchApiController extends Controller
         return ReturnHelpers::jsonApiReturn(MispunchStaticTimeTypeResources::collection($data)->all()); // case 1 when the gatepass date find
     }
 
-    // mispunch data list 
+    // mispunch data list
     public function mispunchDataList(Request $request)
     {
         $emp_id = $request->emp_id;
@@ -121,14 +121,43 @@ class MispunchApiController extends Controller
         // }
     }
 
+
+    public function checkPermissionAllowMissPunch(Request $request)
+    {
+        $requestDate = Carbon::createFromFormat('d-m-Y', $request->now_date)->format('Y-m-d');
+        // dd($requestDate);
+        $EMPID = $request->emp_id;
+        $BID = $request->business_id;
+        $checkAutomation = PolicyAttenRuleMisspunch::where('business_id', $BID)->where('switch_is', 1)->first();
+        $ModeAllow =  RequestMispunchList::where('emp_id', $EMPID)
+            ->where('business_id', $BID)
+            ->whereYear('emp_miss_date', Carbon::createFromFormat('Y-m-d', $requestDate)->year)
+            ->whereMonth('emp_miss_date', Carbon::createFromFormat('Y-m-d', $requestDate)->month)
+            ->select('id')
+            ->count();
+        // dd($ModeAllow);
+        if ($checkAutomation->switch_is == 1) {
+            //     if ($checkAutomation ? ($checkAutomation->request_day != '00' ? $requestDate->diffInDays($ModeAllow) <= $checkAutomation->request_day : 'true') : '') {
+            //         return response()->json(['mode' => $ModeAllow]);
+            //     }
+            if ($checkAutomation->occurance_count >= $ModeAllow) {
+                return response()->json(['now_date' => date('d-m-Y', strtotime($requestDate)), 'check_mode' => $checkAutomation->switch_is, 'automation_count' => (int) $checkAutomation->occurance_count, 'request_count' => $ModeAllow,'request_days_count' =>(int) $checkAutomation->request_day]);
+            }
+        } else {
+            return response()->json(['now_date' => date('d-m-Y', strtotime($requestDate)), 'check_mode' => 0, 'automation_count' => (int) 0, 'request_count' => 0]);
+        }
+    }
+
+
     // misspunch store data
     public function store(Request $request)
     {
         $requestDate = Carbon::createFromFormat('d-m-Y', $request->date);
-
         $currentDate = now();
         $business_id = $request->business_id;
         $emp_id = $request->emp_id;
+
+        $branchId = $request->branch_id;
         $requestDate = Carbon::createFromFormat('d-m-Y', $request->date);
         if ($business_id != null && $emp_id != null && $requestDate != null) {
             $approvalManagementCycle = ApprovalManagementCycle::where('business_id', $business_id)
@@ -143,71 +172,80 @@ class MispunchApiController extends Controller
 
                     // Get the last index value of role_id
                     $lastRoleId = end($roleIds); // Get the last value of the array
-
                     // $load = $approvalManagementCycle->cycle_type;
+                    // $checkAutomation = PolicyAttenRuleMisspunch::where('business_id', $business_id)->first();
+                    // if ($checkAutomation != null ? $checkAutomation->switch_is == 1 : false) {
 
-                    $checkAutomation = PolicyAttenRuleMisspunch::where('business_id', $business_id)->first();
-                    if ($checkAutomation != null ? $checkAutomation->switch_is == 1 : false) {
+                    //     $emp = EmployeePersonalDetail::where('business_id', $business_id)
+                    //         ->where('emp_id', $emp_id)
+                    //         ->where('branch_id', $request->branch_id)
+                    //         ->first();
+                    //     if (isset($emp)) {
 
-                        $emp = EmployeePersonalDetail::where('business_id', $business_id)
-                            ->where('emp_id', $emp_id)
-                            ->first();
-                        if (isset($emp)) {
+                    //         $checkOccurrence = RequestMispunchList::where('emp_id', $emp_id)
+                    //             ->where('business_id', $business_id)
+                    //             // ->where('branch_id', $branchId)
+                    //             ->whereYear('emp_miss_date', '=', $requestDate)
+                    //             ->whereMonth('emp_miss_date', '=', $requestDate)
+                    //             ->select('id')
+                    //             ->count();
 
-                            $checkOccurrence = RequestMispunchList::where('emp_id', $emp_id)
-                                ->where('business_id', $business_id)
-                                ->whereYear('emp_miss_date', '=', $requestDate)
-                                ->whereMonth('emp_miss_date', '=', $requestDate)
-                                ->select('id')
-                                ->count();
+                    //         if ($checkAutomation->occurance_count > $checkOccurrence) {
+                    //             if ($checkAutomation ? ($checkAutomation->request_day != '00' ? $requestDate->diffInDays($currentDate) <= $checkAutomation->request_day : 'true') : '') {
+                    //                 $requestDate = Carbon::createFromFormat('d-m-Y', $request->date);
+                    //                 $data = new RequestMispunchList();
+                    //                 $data->business_id = $emp->business_id;
+                    //                 $data->branch_id = $request->branch_id;
+                    //                 $data->emp_id = $request->emp_id;
+                    //                 $data->emp_miss_date = $requestDate->toDateString();
+                    //                 $data->emp_mobile_no = $emp->emp_mobile_number;
+                    //                 $data->emp_miss_time_type = $request->emp_miss_time_type;
+                    //                 $data->emp_miss_in_time = $request->emp_miss_in_time;
+                    //                 $data->emp_miss_out_time = $request->emp_miss_out_time;
+                    //                 $data->emp_working_hour = $request->emp_working_hour;
+                    //                 $data->reason = $request->reason;
+                    //                 $data->forward_by_role_id = $firstRoleId ?? 0;
+                    //                 $data->forward_by_status = 0;
+                    //                 $data->final_level_role_id = $lastRoleId ?? 0;
+                    //                 $data->final_status = 0;
+                    //                 $data->process_complete = 0;
+                    //                 $data->final_status = 0;
 
-                            if ($checkAutomation->occurance_count > $checkOccurrence) {
+                    //                 // $data->status = 0;
+                    //                 if ($data->save()) {
+                    //                     // return $data;
+                    //                     return response()->json([
+                    //                         'result' => MispunchRequestResources::collection([RequestMispunchList::find($data->id)])->all(),
+                    //                         'case' => 1,
+                    //                         'message' => 'Successfully Form Submitted',
+                    //                         'status' => true
+                    //                     ], 200);
+                    //                     // return response()->json(['result' => MispunchRequestResources::collection([RequestMispunchList::find($data->id)])->all(), 'case' => 1, 'message' => 'Successfully Form Submitted', 'status' => true], 200);
+                    //                 } else {
+                    //                     return response()->json(['result' => [], 'case' => 2, 'message' => 'Not Form Submitted', 'status' => true], 200); // case 2 when the gatepass record not store
+                    //                 }
+                    //             } else {
+                    //                 return response()->json(['result' => [], 'case' => 3, 'message' => 'before days expair', 'status' => true], 200); // jab mispunch date exced to automation rule
+                    //             }
+                    //         }
 
-                                if ($checkAutomation ? ($checkAutomation->request_day != '00' ? $requestDate->diffInDays($currentDate) <= $checkAutomation->request_day : 'true') : '') {
-                                    $requestDate = Carbon::createFromFormat('d-m-Y', $request->date);
-                                    $data = new RequestMispunchList();
-                                    $data->business_id = $emp->business_id;
-                                    $data->emp_id = $request->emp_id;
-                                    $data->emp_miss_date = $requestDate->toDateString();
-                                    $data->emp_mobile_no = $emp->emp_mobile_number;
-                                    $data->emp_miss_time_type = $request->emp_miss_time_type;
-                                    $data->emp_miss_in_time = $request->emp_miss_in_time;
-                                    $data->emp_miss_out_time = $request->emp_miss_out_time;
-                                    $data->emp_working_hour = $request->emp_working_hour;
-                                    $data->reason = $request->reason;
-                                    $data->forward_by_role_id = $firstRoleId ?? 0;
-                                    $data->forward_by_status = 0;
-                                    $data->final_level_role_id = $lastRoleId ?? 0;
-                                    $data->final_status = 0;
-                                    $data->process_complete = 0;
-                                    $data->final_status = 0;
-
-                                    // $data->status = 0;
-                                    if ($data->save()) {
-                                        // return $data;
-                                        return response()->json(['result' => MispunchRequestResources::collection([RequestMispunchList::find($data->id)])->all(), 'case' => 1, 'message' => 'Successfully Form Submitted', 'status' => true], 200);
-                                        // return ReturnHelpers::jsonApiReturnSecond(, 1); // case 1 when the gatepass date store
-                                    } else {
-                                        return response()->json(['result' => [], 'case' => 2, 'message' => 'Not Form Submitted', 'status' => true], 200); // case 2 when the gatepass record not store
-                                    }
-                                } else {
-                                    return response()->json(['result' => [], 'case' => 3, 'message' => 'before days expair', 'status' => true], 200); // jab mispunch date exced to automation rule
-                                }
-                            } else {
-                                // return 'case 3 this limit above exit';
-                                return response()->json(['result' => [], 'case' => 4, 'message' => 'Limit close to automation rule given automation rule', 'status' => true], 200); // case 3 this limit above exit
-                            }
-                        } else {
-                            // return 'case 4 employee not found';
-                            return response()->json(['result' => [], 'message' => 'empid not find', 'case' => 5, 'status' => true], 200); // case 4 when the employee not found
-                        }
-                    } else {
+                    //         // else {
+                    //         //     // return 'case 3 this limit above exit';
+                    //         //     return response()->json(['result' => [], 'case' => 4, 'message' => 'Limit close to automation rule given automation rule', 'status' => true], 200); // case 3 this limit above exit
+                    //         // }
+                    //     } else {
+                    //         // return 'case 4 employee not found';
+                    //         return response()->json(['result' => [], 'message' => 'empid not find', 'case' => 5, 'status' => true], 200); // case 4 when the employee not found
+                    //     }
+                    // } else {
+                    if (true) {
                         $emp = EmployeePersonalDetail::where('business_id', $business_id)
                             ->where('emp_id', $emp_id)
                             ->first();
                         $requestDate = Carbon::createFromFormat('d-m-Y', $request->date);
                         $data = new RequestMispunchList();
                         $data->business_id = $emp->business_id;
+                        $data->branch_id = $request->branch_id;
                         $data->emp_id = $request->emp_id;
                         $data->emp_miss_date = $requestDate->toDateString();
                         $data->emp_mobile_no = $emp->emp_mobile_number;
@@ -224,9 +262,7 @@ class MispunchApiController extends Controller
                         $data->final_status = 0;
                         // $data->status = 0;
                         if ($data->save()) {
-                            // return $data;
                             return response()->json(['result' => MispunchRequestResources::collection([RequestMispunchList::find($data->id)])->all(), 'case' => 1, 'message' => 'Successfully Form Submitted', 'status' => true], 200);
-
                             // return ReturnHelpers::jsonApiReturnSecond(MispunchRequestResources::collection([RequestMispunchList::find($data->id)])->all(), 1); // case 1 when the gatepass date store
                         } else {
                             return response()->json(['result' => [], 'case' => 2, 'message' => 'Not Form Submitted', 'status' => true]); // case 2 when the gatepass record not store
@@ -269,12 +305,14 @@ class MispunchApiController extends Controller
         $business_id = $request->business_id;
         $emp_id = $request->emp_id;
         $data = RequestMispunchList::where('business_id', $business_id)
+            ->where('branch_id', $request->branch_id)
             ->where('emp_id', $emp_id)
             ->where('id', $id)
             ->first();
         if ($data) {
             if ($data->forward_by_status == 0 && $data->final_status == 0 && $data->process_complete == 0) {
                 $data->id = $request->id ?? $data->id;
+                $data->branch_id = $request->branch_id ?? $data->branch_id;
                 $data->business_id = $request->business_id ?? $data->business_id;
                 $data->emp_id = $request->emp_id ?? $data->emp_id;
                 $data->emp_miss_date = $request->emp_miss_date ?? $data->emp_miss_date;
@@ -356,14 +394,12 @@ class MispunchApiController extends Controller
 
         if ($selectType == 3) {
             $selectDate = Carbon::createFromFormat('Y-m-d', $select)->toDateString();
-
             $punchInTimes = AttendanceList::where('business_id', $business_id)
                 ->where('emp_id', $emp)
                 ->whereDate('punch_date', $selectDate)
                 ->where('today_status', 4)
                 ->select('punch_in_time')
                 ->first();
-            // dd($punchInTimes);
             if (!empty($punchInTimes)) {
 
                 return response()->json([
@@ -373,7 +409,6 @@ class MispunchApiController extends Controller
                 ], 200);
             } else {
                 return response()->json(['result' => [], 'case' => 2, 'status' => false], 404); // case 3 when the employee not found
-
             }
         }
     }

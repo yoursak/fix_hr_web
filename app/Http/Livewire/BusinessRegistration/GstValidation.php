@@ -28,8 +28,7 @@ class GstValidation extends Component
             if ($response->status() != 200) {
                 throw new \Exception('Failed to fetch data');
             }
-
-            if (strpos($content, 'Trade Name') !== false && strpos($content, 'Legal Name') !== false && strpos($content, 'Constitution of business') !== false) {
+            if (strpos($content, 'Trade Name') !== false && strpos($content, 'Legal Name') !== false && strpos($content, 'Constitution of Business') !== false) {
                 // "Trade Name" found, consider it as valid
                 $this->isValid = '1';
                 $this->tradeName = true;

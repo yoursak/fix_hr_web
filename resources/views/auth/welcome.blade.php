@@ -1751,7 +1751,7 @@
             <div class="footer-copyright">
                 <div class="row">
                     <div class="col-lg-12 col-md-12 text-center">
-                        <p class="text-dark"><b>&copy; 2023 Fix HR | All right reserved | Designed by <a style="color: #1877f2; font-width:bold; font-size:16px" href="https://fixingdots.com/" target="blank">FixingDots</a>.</b></p>
+                        <p class="text-dark"><b>&copy; 2024 Fix HR | All right reserved | Designed by <a style="color: #1877f2; font-width:bold; font-size:16px" href="https://fixingdots.com/" target="blank">FixingDots</a>.</b></p>
                     </div>
                     {{-- <div class="col-lg-6 col-md-5">
                         <div class="footer-social text-right">

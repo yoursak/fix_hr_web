@@ -18,6 +18,7 @@
         $cityArray = $root->getCity();
         use Illuminate\Support\Str;
         $checkPermissionOrNot = 0;
+    
     @endphp
     @if (in_array('Account Settings.View', $permissions) || in_array('Account Settings.All', $permissions))
         @if (in_array('Account Settings.update', $permissions) || in_array('Account Settings.All', $permissions))
@@ -294,7 +295,7 @@
                                     <p>Please Add Your Phone Number To Continue</p>
                                     <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden>
                                     <label class="form-label mb-0 mt-2">Phone Number*</label>
-                                    <input class="form-control" id="phoneInput" placeholder="Enter Name" type="text"
+                                    <input class="form-control" id="phoneInput" placeholder="Enter Phone Number" type="text"
                                         name="phone" value="{{ $accDetail->mobile_no }}" maxlength="10" required
                                         {{ $checkPermissionOrNot == 1 ? '' : 'disabled' }}>
                                     <span id="error-message" style="color: red;"></span>
@@ -642,9 +643,8 @@
                             <p>Please Add Your Address To Continue</p>
                             <input type="text" id="loadupdateid" name="editBranchId" hidden>
                             <label class="form-label mb-0 mt-2">Country*</label>
-                            <select name="country" id="getCountryId" onchange="getState(this.value)"
-                                class=" form-control custom-select  w-100 border rounded" required
-                                {{ $checkPermissionOrNot == 1 ? '' : 'disabled' }}>
+
+                            <select name="country" id="getCountryId" onchange="getState(this.value)"class=" form-control custom-select  w-100 border rounded" required{{ $checkPermissionOrNot == 1 ? '' : 'disabled' }}>
                                 {{-- <option label="Select Employee" value="{{ $accDetail->country }}">
                                 {{ $countryArray->where('id', $accDetail->country)->first()->name }}</option> --}}
                                 <option value="">Select Country Name</option>

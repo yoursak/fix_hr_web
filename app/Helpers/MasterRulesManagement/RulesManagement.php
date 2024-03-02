@@ -205,7 +205,7 @@ class RulesManagement
         }
     }
     // Regular Only EXCEL IMPORT DATA
-    public static function getImportAllContent($BID, $GenderName, $MaritalType, $ReligionType, $CastCategoryType, $BloodGroupType, $GovtDocType, $BranchFind, $DepartmentFind, $DesignationFind, $EmployeeType, $MasterPolicyEndGameType, $AttendanceMethod, $PolicyShiftType, $ActiveEmployee, $countries, $empID, $mobileNo, $email)
+    public static function getImportAllContent($BID, $GenderName, $MaritalType, $ReligionType, $CastCategoryType, $BloodGroupType, $GovtDocType, $BranchFind, $DepartmentFind, $DesignationFind, $EmployeeType, $MasterPolicyEndGameType, $AttendanceMethod, $PolicyShiftType, $ActiveEmployee, $countries, $empID, $mobileNo, $email, $reportingName)
     {
         $genderType = StaticEmployeeJoinGenderType::where('gender_type', '=', $GenderName)
             ->select('id')
@@ -308,10 +308,33 @@ class RulesManagement
         $activeEmployeeId = $activeEmployee ? $activeEmployee->id : 0;
         $masterPolicyEndGameTypeId = $masterPolicyEndGameType ? $masterPolicyEndGameType->id : 0;
 
-        return [$genderId, $maritalId, $religionId, $castCategoryId, $bloodGroupId, $govtDocTypeId, $branchId, $departmentId, $designationId, $employeeTypeId, $masterPolicyEndGameTypeId, $attendanceMethodId, $policyShiftTypeId, $assignShiftType, $activeEmployeeId];
+
+        // Split the full name into an array of parts
+        $nameParts = explode(" ", $reportingName);
+
+        // Initialize variables for first, middle, and last names
+        $firstName = $nameParts[0]; // First name is the first element
+        $lastName = end($nameParts); // Last name is the last element
+        // Middle name is everything between first and last names
+        // Use array_slice to get elements between the first and last names, then implode them back into a string
+        $middleName = implode(" ", array_slice($nameParts, 1, -1));
+
+        $getDetails = EmployeePersonalDetail::where('business_id', $BID)
+            ->where(function ($query) use ($firstName, $lastName, $middleName) {
+                $query->where('emp_name', $firstName)
+                    ->orWhere('emp_mname', $middleName)
+                    ->orWhere('emp_lname', $lastName);
+            })
+            ->select('emp_id', 'emp_name', 'emp_mname', 'emp_lname')
+            ->first();
+        $ReportingfinalEmpId =  $getDetails ?  $getDetails->emp_id : '';
+        $ReportingfinalFullName =  $getDetails ?  $getDetails->emp_name . ' ' . $getDetails->emp_mname . ' ' . $getDetails->emp_lname  : '';
+
+
+        return [$genderId, $maritalId, $religionId, $castCategoryId, $bloodGroupId, $govtDocTypeId, $branchId, $departmentId, $designationId, $employeeTypeId, $masterPolicyEndGameTypeId, $attendanceMethodId, $policyShiftTypeId, $assignShiftType, $activeEmployeeId, $ReportingfinalEmpId, $ReportingfinalFullName];
     }
     // $contractualType Only
-    public static function getImportAllContentP2($BID, $GenderName, $MaritalType, $ReligionType, $CastCategoryType, $BloodGroupType, $GovtDocType, $BranchFind, $DepartmentFind, $DesignationFind, $EmployeeType, $contractualType, $MasterPolicyEndGameType, $AttendanceMethod, $PolicyShiftType, $ActiveEmployee, $countries, $empID, $mobileNo, $email)
+    public static function getImportAllContentP2($BID, $GenderName, $MaritalType, $ReligionType, $CastCategoryType, $BloodGroupType, $GovtDocType, $BranchFind, $DepartmentFind, $DesignationFind, $EmployeeType, $contractualType, $MasterPolicyEndGameType, $AttendanceMethod, $PolicyShiftType, $ActiveEmployee, $countries, $empID, $mobileNo, $email, $reportingName)
     {
         $genderType = StaticEmployeeJoinGenderType::where('gender_type', '=', $GenderName)
             ->select('id')
@@ -417,7 +440,29 @@ class RulesManagement
         $assignShiftType = $ShiftType ? $ShiftType->shift_type : 0;
         $activeEmployeeId = $activeEmployee ? $activeEmployee->id : 0;
         $masterPolicyEndGameTypeId = $masterPolicyEndGameType ? $masterPolicyEndGameType->id : 0;
-        return [$genderId, $maritalId, $religionId, $castCategoryId, $bloodGroupId, $govtDocTypeId, $branchId, $departmentId, $designationId, $employeeTypeId, $contractualTypeId, $masterPolicyEndGameTypeId, $attendanceMethodId, $policyShiftTypeId, $assignShiftType, $activeEmployeeId];
+
+        // Split the full name into an array of parts
+        $nameParts = explode(" ", $reportingName);
+
+        // Initialize variables for first, middle, and last names
+        $firstName = $nameParts[0]; // First name is the first element
+        $lastName = end($nameParts); // Last name is the last element
+        // Middle name is everything between first and last names
+        // Use array_slice to get elements between the first and last names, then implode them back into a string
+        $middleName = implode(" ", array_slice($nameParts, 1, -1));
+
+        $getDetails = EmployeePersonalDetail::where('business_id', $BID)
+            ->where(function ($query) use ($firstName, $lastName, $middleName) {
+                $query->where('emp_name', $firstName)
+                    ->orWhere('emp_mname', $middleName)
+                    ->orWhere('emp_lname', $lastName);
+            })
+            ->select('emp_id', 'emp_name', 'emp_mname', 'emp_lname')
+            ->first();
+        $ReportingfinalEmpId =  $getDetails ?  $getDetails->emp_id : '';
+        $ReportingfinalFullName =  $getDetails ?  $getDetails->emp_name . ' ' . $getDetails->emp_mname . ' ' . $getDetails->emp_lname  : '';
+
+        return [$genderId, $maritalId, $religionId, $castCategoryId, $bloodGroupId, $govtDocTypeId, $branchId, $departmentId, $designationId, $employeeTypeId, $contractualTypeId, $masterPolicyEndGameTypeId, $attendanceMethodId, $policyShiftTypeId, $assignShiftType, $activeEmployeeId, $ReportingfinalEmpId, $ReportingfinalFullName];
     }
 
     public static function getCheckingEmployeeType($empID)
@@ -672,7 +717,7 @@ class RulesManagement
                 return [$type, $dates];
             case 3:
                 $firstDayOfNextMonth2 = \Carbon\Carbon::parse($currentDate)
-                    ->addMonths(2)
+                    ->addMonths(3) //2
                     ->day($mytime->day);
                 $previousDay2 = $firstDayOfNextMonth2->copy()->subDay();
                 $dates = [
@@ -695,8 +740,11 @@ class RulesManagement
                 return [$type, $dates];
             case 12:
                 $firstDayOfNextMonth = \Carbon\Carbon::parse($currentDate)
-                    ->addMonths(12)
+                    ->addMonths(11)
                     ->day($mytime->day); // Gives 2016-07-25
+                // Calculate the first day of the next year
+                // $firstDayOfNextMonth = $mytime->copy()->addMonths(11)->startOfYear();
+
                 $previousDay4 = $firstDayOfNextMonth->copy()->subDay();
                 $dates = [
                     'start' => $mytime->toDateString(), // Start from the current date
@@ -863,8 +911,8 @@ class RulesManagement
         }
     }
 
-    // Attendance Comp-off Set
-    static function AttendaceCompOffSet($empID, $BID, $dates)
+    // Attendance Comp-off Set QA Activate
+    static function AttendaceCompOffSet($empID, $BID, $dates, $primaryID)
     {
         // strtotime('2023-10-31')
         // now()->toDateString()strtotime($date)
@@ -884,8 +932,9 @@ class RulesManagement
                     ->whereDate('holiday_date', '=', $date)
                     ->first();
                 $attendanceData = AttendanceList::where('business_id', $BID)
-                    ->where('emp_id', '=', $empID)
-                    ->whereDate('punch_date', '=', $date)
+                    ->where('id', $primaryID)
+                    ->where('emp_id', $empID)
+                    ->whereDate('punch_date', $date)
                     ->first();
                 if ($root != null && $attendanceData != null) {
                     //comp-off today checking and holiday checking
@@ -910,29 +959,800 @@ class RulesManagement
                     //     // 'emp_id' => $getData->emp_id,
                     //     'leave_type_category' => 8,
                     //     'comp_off_active' => 1,
-                    //     // 'comp_off_value_get' => self::LeaveManagementProviderValue($attendanceData->today_status)[0] // $attendancePow->comp_off_value_get,
+                    //     'comp_off_value_get' => 1, // self::LeaveManagementProviderValue($attendanceData->today_status)[0] // $attendancePow->comp_off_value_get,
                     // ];
-                    // AttendanceList::where('business_id', $BID)->where('punch_date', '=', $date)->where('emp_id', $attendanceData->emp_id)->update($CompOffBalanceData);
+                    // AttendanceList::where('id', $primaryID)->where('business_id', $BID)->where('punch_date', '=', $date)->where('emp_id', $attendanceData->emp_id)->update($CompOffBalanceData);
                     //     // print_r($CompOffBalanceData);
                     // }
                     // AttendanceList
                     // EmployeeLeaveBalance::insert($leaveBalanceData);
 
                     // AttendanceList::where('business_id', $BID)->where('punch_date', $date)->where('emp_id', '=', $attendanceData->emp_id)->update($CompOffBalanceData);
-                    return [8, 1];
+                    return [$leavel_type, 1, 1]; //true then allotted comp-off(8) 1 count['leave_type','activecheck','value_allotted']
                 } else {
-                    return [0, 0];
+                    return [0, 0, 0];
                 }
 
                 // dd($CompOffBalanceData);
-                return [0, 0];
+                return [0, 0, 0];
             }
         } else {
-            return [0, 0];
+            return [0, 0, 0];
         }
     }
 
-    //
+    // Automatic Comp-Off allotted as any Employee Comp-off-allotted Generate update in DB Directly with auto correct with punchdate
+    static function CompOffAllotted($EmpID, $BID)
+    {
+        $totalOvertimeMinutes = 0;
+        $compOffAllocated = 0;
+        $overtimeData = [];
+        $previousRemainingSum = 0; // Initialize previous remaining sum
+        $count = 0;
+        $attendanceList = AttendanceList::where('emp_id', $EmpID)->where('business_id', $BID)->select('id', 'overtime')->get();
+        $loaded = PolicyCompOffLwopLeave::where('business_id', $BID)
+            ->where('switch', 1)->first();
+        if ($loaded->switch != 0 && $loaded->overtime_hr != 0 && $loaded->overtime_checked != 0) {
+            foreach ($attendanceList as $item) {
+                if (!empty($item->overtime)) {
+                    $overtimeMinutes = $item->overtime;
+                    $overtimeAllotted = $loaded->overtime_hr * 60; //minutes
+
+                    $totalOvertimeMinutes = ($totalOvertimeMinutes >= $overtimeAllotted && $count == 1 ? 0 : $totalOvertimeMinutes)  + $overtimeMinutes + ($totalOvertimeMinutes >= $overtimeAllotted && $count == 0 ? 0 : $previousRemainingSum);
+
+                    $compOffAllocated = ($totalOvertimeMinutes >= $overtimeAllotted) ? 1 : 0;
+
+                    $remainingOvertime = ($totalOvertimeMinutes >= $overtimeAllotted) ? ($totalOvertimeMinutes % $overtimeAllotted) : 0;
+
+                    $COMPFFALLOTTED = ($totalOvertimeMinutes >= $overtimeAllotted && $count != 1) ? 1 : 0;
+                    $count = $COMPFFALLOTTED;
+
+                    $remainingSum = ($compOffAllocated == 0) ? $remainingOvertime : ($previousRemainingSum + $remainingOvertime);
+
+                    $overtimeData[] = [
+                        'id' => $item->id,
+                        'comp_off_overtime_sum' => $totalOvertimeMinutes,
+                        'comp_off_overtime_value_get' => $compOffAllocated,
+                        'comp_off_overtime_remaining' => $remainingSum,
+                    ];
+
+                    $previousRemainingSum = $remainingSum;
+                }
+            }
+
+            // Batch update the records
+            foreach ($overtimeData as $data) {
+                AttendanceList::where('business_id', $BID)->where('comp_off_active', '<>', 1)->where('emp_id', $EmpID)->where('id', $data['id'])->update([
+                    'comp_off_overtime_sum' => $data['comp_off_overtime_sum'],
+                    'comp_off_overtime_value_get' => $data['comp_off_overtime_value_get'],
+                    'comp_off_overtime_remaining' => $data['comp_off_overtime_remaining'],
+                    'comp_off_active' => ($data['comp_off_overtime_value_get'] != 0) ? 1 : 0,
+                ]);
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    //Clone-EmployeeLeaveDetails with central_uril
+    public static function getEmpLeaveDetails($empID, $Date, $BIDs)
+    {
+        $bID = $BIDs;
+        $leave = DB::table('request_leave_list')
+            ->join('static_leave_category', 'request_leave_list.leave_category', '=', 'static_leave_category.id')
+            ->where('request_leave_list.emp_id', $empID)->where('request_leave_list.from_date', '<=', $Date)
+            ->whereDate('request_leave_list.to_date', '>=', $Date)
+            ->where('request_leave_list.business_id', $BIDs)
+            ->first();
+        return $leave;
+    }
+
+    //Clone-EmployeeLeaveDetails with central_uril
+    static function getAttendanceSummaryDetaisl($Emp, $BIDs)
+    {
+
+        $bID = $BIDs;
+        $employee = DB::table('employee_personal_details')->join('policy_master_endgame_method', 'employee_personal_details.master_endgame_id', '=', 'policy_master_endgame_method.id')
+            ->where('employee_personal_details.business_id', $bID)
+            ->where('employee_personal_details.emp_id', $Emp['emp_id'])
+            ->select('emp_date_of_joining', 'master_endgame_id', 'emp_id', 'emp_name', 'employee_type', 'employee_contractual_type', 'emp_gender', 'holiday_policy_ids_list', 'weekly_policy_ids_list', 'shift_settings_ids_list', 'leave_policy_ids_list', 'method_name', 'method_switch', 'emp_shift_type', 'policy_master_endgame_method.created_at as AppliedFrom')
+            ->first();
+
+        $shift_policy = $employee->shift_settings_ids_list;
+        $leave_policy = $employee->leave_policy_ids_list;
+
+
+        $attendanceList = DB::table('attendance_list')->where('business_id', $bID)->where($Emp)->first();
+        $Status = $attendanceList->today_status ?? 2;
+
+
+        $shiftStart = $attendanceList->applied_shift_comp_start_time ?? false;
+        $shiftEnd = $attendanceList->applied_shift_comp_end_time ?? false;
+
+        if (!isset($attendanceList) && $employee->method_switch == 1) {
+            $leaveList = DB::table('request_leave_list')->where('business_id', $bID)->where('emp_id', $Emp['emp_id'])->whereDate('from_date', '<=', $Emp['punch_date'])
+                ->whereDate('to_date', '>=', $Emp['punch_date'])->where('final_status', 1)->first();
+            if (isset($leaveList)) {
+                $Status = 10;
+            } else {
+
+                // $isTodayHoliday = PolicyHolidayDetail::where(['business_id' => $bID, 'holiday_date' => $Emp['punch_date'], 'template_id' => $holiday_policy,])->first();
+                $holidays = DB::table('attendance_holiday_list')->where('business_id', $bID)->where('master_end_method_id', $employee->master_endgame_id)->where('holiday_date', $Emp['punch_date'])->first();
+
+
+                if ($holidays != null) {
+                    $holiday_type = $holidays->holiday_type_id;
+                    $holiday_name = $holidays->name;
+                    $holiday_day = $holidays->day;
+                    $holiday_date = $holidays->holiday_date;
+
+                    // dd($holiday_type, $holiday_name, $holiday_day, $holiday_date);
+
+                    if ($holiday_type == 1) {
+                        $Status = 6;
+                    } else if ($holiday_type == 2) {
+                        $Status = 7;
+                    } else {
+                        $Status = 2;
+                    }
+                } else {
+                    $Status = 2;
+                }
+            }
+        }
+        $timeDuration = $attendanceList->total_working_hour ?? 0;
+        $punchInObj = Carbon::parse($attendanceList->punch_in_time ?? 0);
+        $punchOutObj = Carbon::parse($attendanceList->punch_out_time ?? 0);
+        $totalWorkingMinutes = $punchOutObj->diff($punchInObj);
+        $twhMin = $totalWorkingMinutes->h * 60 + $totalWorkingMinutes->i;
+
+
+        if ($employee->emp_date_of_joining > $Emp['punch_date']) {
+            $Status = 5;
+        }
+        return [
+            ($Status ?? 2) == 4 ? (date('d-m-Y') == date('d-m-Y', strtotime($Emp['punch_date'])) ? 1 : 4) : ($Status ?? 2),
+            //day status present, absent etc.
+            $attendanceList->punch_in_time ?? 0,
+            // punch in time
+            $attendanceList->punch_out_time ?? 0,
+            // punch out time
+            $attendanceList->total_working_hour ?? 0,
+            // total working hour
+            $attendanceList->punch_in_address ?? '',
+            //punch in location
+            $attendanceList->punch_out_address ?? '',
+            // punch out location
+            $attendanceList->applied_shift_template_name ?? '',
+            // shift name
+            $attendanceList->brack_time ?? 0,
+            // break time
+            $attendanceList->overtime ?? 0,
+            // overtime
+            $attendanceList->shift_interval ?? 0,
+            //shift working hour
+            $twhMin ?? 0,
+            // total working hour minutes
+            480,
+            // maximum overtime for a single month
+            $attendanceList->late_by ?? 0,
+            //late by
+            $attendanceList->early_exit ?? 0,
+            // early exit by
+            [0, 0, 0, 0, 0, 0],
+            // occurances for late and early rule
+            10,
+            //shift start time with grace time
+            10,
+            //shift endd time with grace time
+            $attendanceList->punch_in_selfie ?? '',
+            // punch in selfie
+            $attendanceList->punch_out_selfie ?? '',
+            //punch out selfie
+            2,
+            //remaining leave
+            [0, 0, 0, 0, 0, 0],
+            $shiftStart,
+            $shiftEnd
+        ];
+    }
+
+    //Clone-EmployeeLeaveDetails with central_uril
+    static function calculateLeaveCountApi($EmpID, $LeaveCategory, $month, $year, $businessID)
+    {
+
+        $leaveData = [
+            'opening' => '0',
+            'alloted' => '0',
+            'used' => '0',
+            'remaining' => '0',
+        ];
+        $detailsList = self::checkingCurrentLeaveBalanceList($EmpID, $businessID);
+        // dd($Data);
+        $Data = $detailsList['leave_status_list'];
+        foreach ($Data as $key => $value1) {
+
+            if ($value1['policy_type_id'] == $LeaveCategory) {
+                $leaveData['opening'] = $value1['leave_opening'] == 0 ? '0' : $value1['leave_opening'];
+                $leaveData['alloted'] = $value1['leave_allotted'] == 0 ? '0' : $value1['leave_allotted'];
+                $leaveData['used'] = $value1['leave_taken'] == 0 ? '0' : $value1['leave_taken'];
+                $leaveData['remaining'] = $value1['leave_remaining'] == 0 ? '0' : $value1['leave_remaining'];
+            }
+        }
+
+
+        return $leaveData;
+    }
+    //Create or Implementation By JAYANT at underprocess
+    //Clone-EmployeeLeaveDetails with Central_uril
+    static function checkingCurrentLeaveBalanceList($empId, $BIDs)
+    {
+
+        $business = $BIDs; //Session::get('business_id');
+        $emp = EmployeePersonalDetail::where('emp_id', $empId)
+            ->where('business_id', $business)
+            ->first();
+        $data = [];
+        if ($emp != null) {
+            $getData = PolicySettingLeavePolicy::where('policy_setting_leave_policy.business_id', $business)
+                ->leftJoin('policy_master_endgame_method', 'policy_setting_leave_policy.id', '=', 'policy_master_endgame_method.leave_policy_ids_list')
+                ->where('policy_master_endgame_method.method_switch', 1)
+                ->where('policy_setting_leave_policy.business_id', $business)
+                ->select('policy_setting_leave_policy.*')
+                ->first();
+
+            if ($getData != null) {
+                $Item = PolicySettingLeaveCategory::where('business_id', $business)
+                    ->leftJoin('static_leave_category', 'policy_setting_leave_category.category_name', '=', 'static_leave_category.id')
+                    ->leftJoin('static_leave_category_applicable_to', 'policy_setting_leave_category.applicable_to', '=', 'static_leave_category_applicable_to.id')
+                    ->where('leave_policy_id', $getData->id)
+                    ->select('policy_setting_leave_category.*', 'static_leave_category.name as apply_category_name', 'static_leave_category_applicable_to.name as applicable_name')
+                    ->get();
+
+                $applyLeaveRequests = RequestLeaveList::where('business_id', $business)
+                    ->where('emp_id', $empId)
+                    ->get();
+
+
+                $currentMonth = Carbon::now()->month;
+                $currentYear = Carbon::now()->year;
+                $LoadPolicyCase = [];
+                $StoreModel = [];
+                // RequestLeaveList::where('leave_category', 7)->update([
+                //     'leave_allotted'=>15
+                // ]);
+
+                $DOJ = Carbon::parse($emp->emp_date_of_joining);
+
+
+                // CarbonPeriod
+                foreach ($Item as $key => $requests) {
+
+                    // Calculate the start and end dates for the previous year
+                    $previousYearStart = Carbon::now()
+                        ->subYear()
+                        ->startOfYear();
+                    $previousYearEnd = Carbon::now()
+                        ->subYear()
+                        ->endOfYear();
+
+                    // previous mode
+                    $previousLeaveRemaining = $applyLeaveRequests
+                        ->where('leave_category', $requests->category_name)
+                        ->where('final_status', '<>', 2) //equalNot
+                        ->filter(function ($request) use ($previousYearStart, $previousYearEnd) {
+                            $requestDate = Carbon::parse($request->from_date);
+                            return $requestDate->between($previousYearStart, $previousYearEnd);
+                        })
+                        ->sum('leave_remaining'); //days
+
+                    $checkingMonthlyWorkingLeaveSet = $requests->leave_cycle_monthly_yearly;
+                    $openingCaseHandling = $requests->category_name; //all leave policy type standar. str. add new
+
+
+                    $monthsCount = 0;
+                    $leaveAllotted = 0.00;
+                    $leaveTaken = 0.00;
+                    $leaveRemaining = 0.00;
+
+                    // sensitive
+                    $cycleLimitFrom = Carbon::parse($getData->leave_period_from); //$getData->leave_period_from
+                    $cycleLimitTo = Carbon::parse($getData->leave_period_to); //$getData->leave_period_to
+
+
+                    // Rendar cycle process
+                    for ($date = $cycleLimitFrom; $date->lessThanOrEqualTo($cycleLimitTo); $date->addMonth()) {
+                        $month = $date->month;
+                        $year = $date->year;
+
+                        if ($year < $currentYear || ($year === $currentYear && $month <= $currentMonth)) {
+                            $monthsCount++;
+
+                            // Current mode request list some time's pass Case Stable
+                            $leaveTaken = RequestLeaveList::where('business_id', $business)
+                                ->where('emp_id', $empId)
+                                ->where('leave_category', $requests->category_name)
+                                ->where('final_status', '<>', 2) // Filter out requests with final_status not equal to 2
+                                ->where(function ($query) use ($DOJ, $currentYear, $currentMonth) {
+                                    // Compare the from_date month and year with the DOJ month and year
+                                    $query->where(function ($subQuery) use ($DOJ) {
+                                        $subQuery->whereYear('from_date', '>', $DOJ->year)
+                                            ->orWhere(function ($q) use ($DOJ) {
+                                                $q->whereYear('from_date', $DOJ->year)
+                                                    ->whereMonth('from_date', '>=', $DOJ->month);
+                                            });
+                                    });
+                                    // ->where(function ($subQuery) use ($currentYear, $currentMonth) {
+                                    //     // Exclude requests from future months
+                                    //     $subQuery->whereYear('from_date', '<', $currentYear)
+                                    //         ->orWhere(function ($q) use ($currentYear, $currentMonth) {
+                                    //             $q->whereYear('from_date', $currentYear)
+                                    //                 ->whereMonth('from_date', '<=', $currentMonth);
+                                    //         })
+                                    // });
+                                })
+                                ->sum('leave_summary_debit_value');
+
+                            // Gender Restriction with category Show Hide
+                            if (($emp->emp_gender === 1 || $emp->emp_gender === 3) && $requests->category_name === 4) {
+                                //Restriction Paternity leave (PL)
+                                continue; // Skip if the employee is male and the category is not maternity
+                            }
+                            if ($emp->emp_gender === 2 && $requests->category_name === 5) {
+                                //Restriction Maternity leave (ML)
+                                continue; // Skip if the employee is female and the category is not paternity
+                            }
+
+
+                            //monthly working leave
+                            // monthly getloading ++ inc. but Year sum hold yearly not sum incre. inc.
+                            if ($checkingMonthlyWorkingLeaveSet == 1) { //specialization hendler case for monthly working leave
+
+                                switch ($openingCaseHandling) {
+                                    case 1: //CL
+                                        $ruleType = $requests->unused_leave_rule;
+
+                                        if ($ruleType === 2) { //Carry Forward
+                                            $leaveAllotted += $requests->days; //Monthly Checking Carry Forward or monthly on then running working
+                                            $openingBalance = $previousLeaveRemaining; //$leaveAllotted - $previousLeaveRemaining;
+                                            $leaveRemaining = $openingBalance != null && $openingBalance != 0 ? $openingBalance + ($leaveAllotted - $leaveTaken) : $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                            // Apply carry forward limit logic to the opening balance
+                                        }
+                                        if ($ruleType === 1) { //Lapse
+                                            $leaveAllotted = $requests->days;
+                                            // Lapse set logic (if needed)
+                                            $openingBalance = 0;
+                                            $leaveRemaining = $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                        }
+
+                                        break;
+                                        // dd($checkingMonthlyWorkingLeaveSet   );
+                                        // Unused Leave Rule Set Show Restriction
+                                    case 2: //SL
+                                        $ruleType = $requests->unused_leave_rule;
+
+                                        if ($ruleType === 2) { //Carry Forward
+                                            $leaveAllotted += $requests->days; //Monthly Checking Carry Forward or monthly on then running working
+
+                                            $openingBalance =  $previousLeaveRemaining;
+                                            $leaveRemaining = $openingBalance != null && $openingBalance != 0 ? $openingBalance + ($leaveAllotted - $leaveTaken) : $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                            // Apply carry forward limit logic to the opening balance
+                                        }
+                                        if ($ruleType === 1) {
+                                            $leaveAllotted = $requests->days;
+                                            //Lapse
+                                            // Lapse set logic (if needed)
+                                            $openingBalance = 0;
+                                            $leaveRemaining = $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                        }
+
+                                        break;
+                                    case 3: //EL
+
+                                        $ruleType = $requests->unused_leave_rule;
+
+                                        if ($ruleType === 2) { //Carry Forward
+                                            $leaveAllotted += $requests->days; //Monthly Checking Carry Forward or monthly on then running working
+
+                                            $openingBalance = $previousLeaveRemaining; //$leaveAllotted - $previousLeaveTaken;
+                                            $leaveRemaining = $openingBalance != null && $openingBalance != 0 ? $openingBalance + ($leaveAllotted - $leaveTaken) : $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                            // Apply carry forward limit logic to the opening balance
+                                        }
+                                        if ($ruleType === 1) {
+                                            $leaveAllotted = $requests->days;
+                                            //Lapse
+                                            // Lapse set logic (if needed)
+                                            $openingBalance = 0;
+                                            $leaveRemaining = $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                        }
+
+                                    case 4:
+                                        //Mater.L
+                                        $ruleType = $requests->unused_leave_rule;
+
+                                        if ($ruleType === 2) { //Carry Forward
+                                            $leaveAllotted += $requests->days; //Monthly Checking Carry Forward or monthly on then running working
+
+                                            $openingBalance = $previousLeaveRemaining; //$leaveAllotted - $previousLeaveTaken;
+                                            $leaveRemaining = $openingBalance != null && $openingBalance != 0 ? $openingBalance + ($leaveAllotted - $leaveTaken) : $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                            // Apply carry forward limit logic to the opening balance
+                                        }
+                                        if ($ruleType === 1) {
+                                            $leaveAllotted = $requests->days;
+                                            //Lapse
+                                            // Lapse set logic (if needed)
+                                            $openingBalance = 0;
+                                            $leaveRemaining = $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                        }
+                                        break;
+                                    case 5:
+                                        //PL
+                                        $ruleType = $requests->unused_leave_rule;
+
+                                        if ($ruleType === 2) { //Carry Forward
+                                            $leaveAllotted += $requests->days; //Monthly Checking Carry Forward or monthly on then running working
+                                            $openingBalance = $previousLeaveRemaining; //$leaveAllotted - $previousLeaveTaken;
+                                            $leaveRemaining = $openingBalance != null && $openingBalance != 0 ? $openingBalance + ($leaveAllotted - $leaveTaken) : $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                            // Apply carry forward limit logic to the opening balance
+                                        }
+                                        if ($ruleType === 1) {
+                                            $leaveAllotted = $requests->days;
+                                            //Lapse
+                                            // Lapse set logic (if needed)
+                                            $openingBalance = 0;
+                                            $leaveRemaining = $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                        }
+                                        break;
+                                    case 6:
+                                        //MarriageL
+                                        $ruleType = $requests->unused_leave_rule;
+
+                                        if ($ruleType === 2) { //Carry Forward
+                                            $leaveAllotted += $requests->days; //Monthly Checking Carry Forward or monthly on then running working
+
+                                            $openingBalance = $previousLeaveRemaining; //$leaveAllotted - $previousLeaveTaken;
+                                            $leaveRemaining = $openingBalance != null && $openingBalance != 0 ? $openingBalance + ($leaveAllotted - $leaveTaken) : $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                            // Apply carry forward limit logic to the opening balance
+                                        }
+                                        if ($ruleType === 1) {
+                                            $leaveAllotted = $requests->days;
+                                            //Lapse
+                                            // Lapse set logic (if needed)
+                                            $openingBalance = 0;
+                                            $leaveRemaining = $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                        }
+                                        break;
+                                    case 7:
+                                        //BL
+                                        $ruleType = $requests->unused_leave_rule;
+
+                                        if ($ruleType === 2) { //Carry Forward
+                                            $leaveAllotted += $requests->days; //Monthly Checking Carry Forward or monthly on then running working
+                                            $openingBalance = $previousLeaveRemaining; //$leaveAllotted - $previousLeaveTaken;
+                                            $leaveRemaining = $openingBalance != null && $openingBalance != 0 ? $openingBalance + ($leaveAllotted - $leaveTaken) : $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                            // Apply carry forward limit logic to the opening balance
+                                        }
+                                        if ($ruleType === 1) {
+                                            $leaveAllotted = $requests->days;
+                                            //Lapse
+                                            // Lapse set logic (if needed)
+                                            $openingBalance = 0;
+                                            $leaveRemaining = $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                        }
+                                        break;
+                                }
+                            }
+
+                            //yearly working leave
+                            if ($checkingMonthlyWorkingLeaveSet == 2) {
+                                $leaveAllotted = $requests->days;
+
+                                //specialization hendler case for yearly working leave
+                                switch ($openingCaseHandling) {
+                                    case 1: //CL
+                                        $ruleType = $requests->unused_leave_rule;
+
+                                        if ($ruleType === 2) { //Carry Forward
+
+                                            $openingBalance = $previousLeaveRemaining; //$leaveAllotted - $previousLeaveTaken;
+                                            $leaveRemaining = $openingBalance != null && $openingBalance != 0 ? $openingBalance + ($leaveAllotted - $leaveTaken) : $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                            // Apply carry forward limit logic to the opening balance
+                                        }
+                                        if ($ruleType === 1) {
+                                            $leaveAllotted = $requests->days;
+                                            //Lapse
+                                            // Lapse set logic (if needed)
+                                            $openingBalance = 0;
+                                            $leaveRemaining = $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                        }
+
+                                        break;
+                                    case 2: //SL
+                                        $ruleType = $requests->unused_leave_rule;
+
+                                        if ($ruleType === 2) { //Carry Forward
+                                            $openingBalance = $previousLeaveRemaining; //$leaveAllotted - $previousLeaveTaken;
+                                            $leaveRemaining = $openingBalance != null && $openingBalance != 0 ? $openingBalance + ($leaveAllotted - $leaveTaken) : $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                            // Apply carry forward limit logic to the opening balance
+                                        }
+                                        if ($ruleType === 1) {
+                                            $leaveAllotted = $requests->days;
+                                            //Lapse
+                                            // Lapse set logic (if needed)
+                                            $openingBalance = 0;
+                                            $leaveRemaining = $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                        }
+
+                                        break;
+                                    case 3: //EL
+                                        $ruleType = $requests->unused_leave_rule;
+
+                                        if ($ruleType === 2) { //Carry Forward
+                                            $openingBalance = $previousLeaveRemaining; //$leaveAllotted - $previousLeaveTaken;
+                                            $leaveRemaining = $openingBalance != null && $openingBalance != 0 ? $openingBalance + ($leaveAllotted - $leaveTaken) : $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                            // Apply carry forward limit logic to the opening balance
+                                        }
+                                        if ($ruleType === 1) {
+                                            $leaveAllotted = $requests->days;
+                                            //Lapse
+                                            // Lapse set logic (if needed)
+                                            $openingBalance = 0;
+                                            $leaveRemaining = $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                        }
+
+                                    case 4:
+                                        //ML
+                                        $ruleType = $requests->unused_leave_rule;
+
+                                        if ($ruleType === 2) { //Carry Forward
+                                            $openingBalance = $previousLeaveRemaining; //$leaveAllotted - $previousLeaveTaken;
+                                            $leaveRemaining = $openingBalance != null && $openingBalance != 0 ? $openingBalance + ($leaveAllotted - $leaveTaken) : $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                            // Apply carry forward limit logic to the opening balance
+                                        }
+                                        if ($ruleType === 1) {
+                                            $leaveAllotted = $requests->days;
+                                            //Lapse
+                                            // Lapse set logic (if needed)
+                                            $openingBalance = 0;
+                                            $leaveRemaining = $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                        }
+                                        break;
+                                    case 5:
+                                        //PL
+                                        $ruleType = $requests->unused_leave_rule;
+
+                                        if ($ruleType === 2) { //Carry Forward
+                                            $openingBalance = $previousLeaveRemaining; //$leaveAllotted - $previousLeaveTaken;
+                                            $leaveRemaining = $openingBalance != null && $openingBalance != 0 ? $openingBalance + ($leaveAllotted - $leaveTaken) : $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                            // Apply carry forward limit logic to the opening balance
+                                        }
+                                        if ($ruleType === 1) {
+                                            $leaveAllotted = $requests->days;
+                                            //Lapse
+                                            // Lapse set logic (if needed)
+                                            $openingBalance = 0;
+                                            $leaveRemaining = $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                        }
+                                        break;
+                                    case 6:
+                                        //MarriageL
+                                        $ruleType = $requests->unused_leave_rule;
+
+                                        if ($ruleType === 2) { //Carry Forward
+                                            $openingBalance = $previousLeaveRemaining; //$leaveAllotted - $previousLeaveTaken;
+                                            $leaveRemaining = $openingBalance != null && $openingBalance != 0 ? $openingBalance + ($leaveAllotted - $leaveTaken) : $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                            // Apply carry forward limit logic to the opening balance
+                                        }
+                                        if ($ruleType === 1) {
+                                            $leaveAllotted = $requests->days;
+                                            //Lapse
+                                            // Lapse set logic (if needed)
+                                            $openingBalance = 0;
+                                            $leaveRemaining = $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                        }
+                                        break;
+                                    case 7:
+                                        //BearmentL
+                                        $ruleType = $requests->unused_leave_rule;
+
+                                        if ($ruleType === 2) { //Carry Forward
+                                            $openingBalance = $previousLeaveRemaining; //$leaveAllotted - $previousLeaveTaken;
+                                            $leaveRemaining = $openingBalance != null && $openingBalance != 0 ? $openingBalance + ($leaveAllotted - $leaveTaken) : $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                            // Apply carry forward limit logic to the opening balance
+                                        }
+                                        if ($ruleType === 1) {
+                                            $leaveAllotted = $requests->days;
+                                            //Lapse
+                                            // Lapse set logic (if needed)
+                                            $openingBalance = 0;
+                                            $leaveRemaining = $leaveAllotted - $leaveTaken;
+                                            $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining, $checkingMonthlyWorkingLeaveSet];
+                                        }
+                                        break;
+                                }
+                            }
+
+                            // 'information' => $Item->where('category_name', $requests->category_name)->first(),
+                            $LoadPolicyCase[$key] = [
+                                'current_month' => $monthsCount,
+                                'checking_monthly_yearly' => $StoreModel[4],
+                                'leave_policy_id' => $requests->leave_policy_id,
+                                'business_id' => $requests->business_id,
+                                'policy_type_id' => $requests->category_name, //category_id
+                                'policy_category_name' => $requests->apply_category_name, //category_name
+                                'policy_monthly_cycle' => $requests->leave_cycle_monthly_yearly,
+                                'policy_days' => $requests->days,
+                                'policy_unused_leave_rule' => $requests->unused_leave_rule,
+                                'policy_carry_forward_limit' => $requests->carry_forward_limit,
+                                'policy_applicable_to_gender_id' => $requests->applicable_to, //gender ID
+                                'policy_applicable_to_gender_name' => $requests->applicable_name, //gender name
+                                'leave_opening' => $StoreModel[0],
+                                'leave_allotted' => $StoreModel[1],
+                                'leave_taken' => $StoreModel[2],
+                                'leave_remaining' => ($StoreModel[3] > 0) ? $StoreModel[3] : 0, //if negative value show as zero
+                            ];
+                            // Push the data for this leave type into $LoadPolicyCase
+                            // $LoadPolicyCase[] = $leaveTypeData;
+                        }
+                    }
+                }
+                // Policy Applied Comp-Off & LWP Policy at Rule IN switch ON/OFF
+                $checkingLWPCountAndSelectOnOff = PolicyCompOffLwopLeave::where('business_id', $business)->first();
+                $totalHourlyOvertimeAppliedCount = 0;
+
+                if (($checkingLWPCountAndSelectOnOff->switch != 0) && ($checkingLWPCountAndSelectOnOff->holiday_weekly_checked != 0) &&  ($checkingLWPCountAndSelectOnOff->lwop_leave_checked != 0) && ($checkingLWPCountAndSelectOnOff->expiry_point != 0)) //policyChecking IN switch ON/OFF
+                {
+                    $CompOffValue =  AttendanceList::where('business_id', $business)
+                        ->where('emp_id', $empId)
+                        ->where('leave_type_category', 8) //checked Comp-Off
+                        ->where('comp_off_active', 1) //active
+                        ->sum('comp_off_value_get');
+                    // ->select(DB::raw('CAST(SUM(comp_off_value_get) AS decimal(10,2)) as total_compoff_value'))
+                    $listItems = AttendanceList::where('emp_id', $empId)
+                        ->where('business_id', $business)
+                        ->where('comp_off_active', 1)
+                        ->where('comp_off_overtime_value_get', 1)
+                        ->get();
+
+                    $totalSumHourlyCompOff = AttendanceList::where('emp_id', $empId)
+                        ->where('business_id', $business)
+                        ->where('comp_off_active', 1)
+                        ->where('comp_off_overtime_value_get', 1)
+                        ->sum('comp_off_overtime_value_get');
+                    $totalSumCompOffBoth = $totalSumHourlyCompOff + $CompOffValue;
+                    foreach ($listItems as $item) {
+                        // Calculate the expiration date
+                        $expirationDate = Carbon::parse($item->punch_date)->addDays($checkingLWPCountAndSelectOnOff->expiry_point)->format('Y-m-d');
+                        // print_r('<br>' .  $item->punch_date . ' ' . $expirationDate . ' ' . $item->comp_off_overtime_value_get);
+
+                        // Create Carbon instances for the current date and the provided date
+                        $currentDate = Carbon::now(); //parse("2023-12-19");
+                        $providedDate = Carbon::createFromFormat('Y-m-d', $expirationDate);
+
+                        // Check if the provided date is before the current date
+                        if ($providedDate->isBefore($currentDate)) {
+                            $totalSumCompOffBoth -= 1;
+                            // echo $dateString . ' is before the current date.' .     $totalSumHourlyCompOff;
+                        }
+                    }
+
+                    // // Ensure the total overtime is not negative
+                    $totalHourlyOvertimeAppliedCount = max($totalSumHourlyCompOff, 0);
+
+                    // Current mode request list some time's pass Case Stable
+                    $CompOffleaveTakenDebitValue = RequestLeaveList::where('business_id', $business)
+                        ->where('emp_id', $empId)
+                        ->where('leave_category', 8)
+                        ->where('final_status', '<>', 2) // Filter out requests with final_status not equal to 2
+                        ->where(function ($query) use ($DOJ, $currentYear, $currentMonth) {
+                            // Compare the from_date month and year with the DOJ month and year
+                            $query->where(function ($subQuery) use ($DOJ) {
+                                $subQuery->whereYear('from_date', '>', $DOJ->year)
+                                    ->orWhere(function ($q) use ($DOJ) {
+                                        $q->whereYear('from_date', $DOJ->year)
+                                            ->whereMonth('from_date', '>=', $DOJ->month);
+                                    });
+                            });
+                        })
+                        ->sum('leave_summary_debit_value');
+
+                    $CompOffOpeningBalance = 0;
+                    $CompOffleaveTaken = $CompOffleaveTakenDebitValue;
+                    $CompOffleaveAllotted = $totalHourlyOvertimeAppliedCount; //weekl or holiday + overtime count hour or minute
+                    $leaveRemaining = $CompOffleaveAllotted - $CompOffleaveTaken;
+                    $StoreModel = [$CompOffOpeningBalance, $CompOffleaveAllotted, $CompOffleaveTaken, $leaveRemaining];
+
+                    // LWP Mode Sum Count
+                    // Filter out requests with final_status not equal to 2
+                    $sumOfUnpaidLeave = RequestLeaveList::where('business_id', $business)
+                        ->where('emp_id', $empId)
+                        ->where('final_status', '<>', 2)
+                        ->select(DB::raw('CAST(SUM(leave_summary_unpaid_value) AS decimal(10,2)) as total_unpaid_leave'))
+                        ->value('total_unpaid_leave');
+
+                    $LWPAdding = [
+                        'current_month' => 0,
+                        'checking_monthly_yearly' => 0,
+                        'leave_policy_id' => 0,
+                        'business_id' => $requests->business_id,
+                        'policy_type_id' => 9, //category_id
+                        'policy_category_name' => 'Leave Without Pay (LWP)', //category_name
+                        'policy_monthly_cycle' => 0,
+                        'policy_days' => 0,
+                        'policy_unused_leave_rule' => 0,
+                        'policy_carry_forward_limit' => 0,
+                        'policy_applicable_to_gender_id' => 0, //gender ID
+                        'policy_applicable_to_gender_name' => 0, //gender name
+                        'leave_opening' => 0,
+                        'leave_allotted' => 0,
+                        'leave_taken' => $sumOfUnpaidLeave,
+                        'leave_remaining' => 0,
+                    ];
+
+                    $CompOFFAdding = [
+                        'current_month' => 0,
+                        'checking_monthly_yearly' => 0,
+                        'leave_policy_id' => 0,
+                        'business_id' => $requests->business_id,
+                        'policy_type_id' => 8, //category_id
+                        'policy_category_name' => 'Comp-Off (CO)', //category_name
+                        'policy_monthly_cycle' => 0,
+                        'policy_days' => 0,
+                        'policy_unused_leave_rule' => 0,
+                        'policy_carry_forward_limit' => 0,
+                        'policy_applicable_to_gender_id' => 0, //gender ID
+                        'policy_applicable_to_gender_name' => 0, //gender name
+                        'leave_opening' => $StoreModel[0],
+                        'leave_allotted' => $StoreModel[1],
+                        'leave_taken' => $StoreModel[2],
+                        'leave_remaining' => ($StoreModel[3] > 0) ? $StoreModel[3] : 0, //if negative value show as zero
+                    ];
+                    // add external : LWP or Comp OFF  //LWP Mode Sum Count
+                    $externalData = [
+                        $LWPAdding, $CompOFFAdding
+                    ];
+
+                    $data = array_merge($LoadPolicyCase, $externalData);
+                } else {
+
+                    $data = array_merge($LoadPolicyCase);
+                }
+                return ['emp_id' => $empId, 'doj' => $emp->emp_date_of_joining, 'start_date' => $getData->leave_period_from, 'end_date' => $getData->leave_period_to, 'leave_status_list' => $data, 'status' => true, 'case' => 1];
+            } else {
+                // return [];
+                return  ['emp_id' => '', 'doj' => '', 'start_date' => '', 'end_date' => '', 'leave_status_list' => [], 'status' => false, 'case' => 2];
+            }
+        }
+    }
     static function UploadReport()
     {
         // balance report overall data; ab tak
@@ -1037,9 +1857,7 @@ class RulesManagement
         $load = DB::table('static_attendance_methods')->get();
         $attendanceData = [];
 
-        foreach (
-            $load
-            as $item //dynamic
+        foreach ($load as $item //dynamic
         ) {
             $methodId = $item->id ?? null; // Use the method_id if it exists, otherwise null
             $methodName = $item->method_name ?? null;
@@ -1128,30 +1946,66 @@ class RulesManagement
 
     static function SectionEmployeeCounters()
     {
-        $totalEmployee = DB::table('employee_personal_details')
-            ->where('business_id', self::allValueGet()[5])
-            ->where('active_emp', 1)
-            ->count();
-        $GenderMale = DB::table('employee_personal_details')
-            ->where('business_id', self::allValueGet()[5])
-            ->where('active_emp', 1)
-            ->where('emp_gender', 1)
-            ->count();
-        $GenderFemale = DB::table('employee_personal_details')
-            ->where('business_id', self::allValueGet()[5])
-            ->where('emp_gender', 2)
-            ->where('active_emp', 1)
-            ->count();
-        $GenderOther = DB::table('employee_personal_details')
-            ->where('business_id', self::allValueGet()[5])
-            ->where('active_emp', 1)
-            ->where('emp_gender', 3)
-            ->count();
-        $CurrentMonthCounterEmployeeAdd = DB::table('employee_personal_details')
-            ->where('business_id', self::allValueGet()[5])
-            ->where('active_emp', 1)
-            ->whereMonth('created_at', self::allValueGet()[2])
-            ->count();
+        $loginEmpId = Session::get('login_emp_id');
+        $permissionBranchId = PolicySettingRoleAssignPermission::where('business_id', self::allValueGet()[5])
+            ->where('emp_id', $loginEmpId)->first();
+        // dd($permissionBranchId);
+        if ($permissionBranchId !== null && !empty($permissionBranchId) && (Session::get('login_role')) != 1 && ($permissionBranchId->permission_type != 1)) {
+            $totalEmployee = DB::table('employee_personal_details')
+                ->where('business_id', self::allValueGet()[5])
+                ->where('active_emp', 1)
+                ->where('branch_id', $permissionBranchId->permission_branch_id)
+                ->count();
+            $GenderMale = DB::table('employee_personal_details')
+                ->where('business_id', self::allValueGet()[5])
+                ->where('active_emp', 1)
+                ->where('emp_gender', 1)
+                ->where('branch_id', $permissionBranchId->permission_branch_id)
+                ->count();
+            $GenderFemale = DB::table('employee_personal_details')
+                ->where('business_id', self::allValueGet()[5])
+                ->where('emp_gender', 2)
+                ->where('active_emp', 1)
+                ->where('branch_id', $permissionBranchId->permission_branch_id)
+                ->count();
+            $GenderOther = DB::table('employee_personal_details')
+                ->where('business_id', self::allValueGet()[5])
+                ->where('active_emp', 1)
+                ->where('emp_gender', 3)
+                ->where('branch_id', $permissionBranchId->permission_branch_id)
+                ->count();
+            $CurrentMonthCounterEmployeeAdd = DB::table('employee_personal_details')
+                ->where('business_id', self::allValueGet()[5])
+                ->where('active_emp', 1)
+                ->where('branch_id', $permissionBranchId->permission_branch_id)
+                ->whereMonth('created_at', self::allValueGet()[2])
+                ->count();
+        } else {
+            $totalEmployee = DB::table('employee_personal_details')
+                ->where('business_id', self::allValueGet()[5])
+                ->where('active_emp', 1)
+                ->count();
+            $GenderMale = DB::table('employee_personal_details')
+                ->where('business_id', self::allValueGet()[5])
+                ->where('active_emp', 1)
+                ->where('emp_gender', 1)
+                ->count();
+            $GenderFemale = DB::table('employee_personal_details')
+                ->where('business_id', self::allValueGet()[5])
+                ->where('emp_gender', 2)
+                ->where('active_emp', 1)
+                ->count();
+            $GenderOther = DB::table('employee_personal_details')
+                ->where('business_id', self::allValueGet()[5])
+                ->where('active_emp', 1)
+                ->where('emp_gender', 3)
+                ->count();
+            $CurrentMonthCounterEmployeeAdd = DB::table('employee_personal_details')
+                ->where('business_id', self::allValueGet()[5])
+                ->where('active_emp', 1)
+                ->whereMonth('created_at', self::allValueGet()[2])
+                ->count();
+        }
         if ($totalEmployee != null || $GenderMale != null || $GenderFemale != null || $GenderOther != null || $CurrentMonthCounterEmployeeAdd != null) {
             return [$totalEmployee, $GenderMale, $GenderFemale, $GenderOther, $CurrentMonthCounterEmployeeAdd];
         } else {
@@ -1300,7 +2154,8 @@ class RulesManagement
     {
         $SERVER_API_KEY = 'AAAAB9VqZPk:APA91bF8g1Uw0WUfMvjY2j3_pIWTZg6Mz56_coB5sFD8j5RwF8T35lSm98g3UUMC_txSErST1SotTOh0XfFsY2ZupP_8yTJPl5QocX-8Y420u8VbPVRgktd_moVqj9ejwzwGc1nXcUqX';
         $messageSend = [
-            'to' => $tokenFCM,
+            'registration_ids' => $tokenFCM,
+            // 'to' => $tokenFCM,
             'notification' => [
                 'title' => $title,
                 'body' => $body,
@@ -1375,6 +2230,7 @@ class RulesManagement
     public static function RoleName($ID)
     {
         $check = DB::table('policy_setting_role_create')
+            ->where('business_id', Session::get('business_id'))
             ->where('id', $ID)
             ->first();
 
@@ -1395,6 +2251,43 @@ class RulesManagement
             return [0];
         }
     }
+
+    public static  function roleIDToNameConvert($LoginType, $BID)
+    {
+        $load = DB::table('business_details_list')->where('login_type', $LoginType)->where('business_id', $BID)->first();
+        if (isset($load)) {
+            return 'Owner';
+        } else {
+
+            $result = PolicySettingRoleCreate::where('business_id', $BID)->where('id', $LoginType)
+                ->select('roles_name')
+                ->first();
+
+            // $result = DB::table('roles')->where('id', self::$LoginRole)->select('name')->first();
+            // // dd($result);
+            // // Check if a result was found
+            if ($result) {
+                return $result->roles_name; // Return the role_name property
+            } else if (!$result) {
+            } elseif (self::$LoginRole == 0) {
+                return 'Unknown Role';
+            }
+
+
+            //  else if (self::$LoginRole == 1) {
+            //    return "Admin";
+            // } else if (self::$LoginRole == 2) {
+            //    return "Super Admin";
+            // } else if (self::$LoginRole == 3) {
+            //    return "Employee";
+            // }
+            else {
+                return 'Unknown Role'; // You can change this default value as needed
+            }
+        }
+    }
+
+
 
     // Upcoming Approval-Management SettingUpdated
     // 0 index get All Details
@@ -1572,7 +2465,8 @@ class RulesManagement
                             }
                         }
                         $CheckingRole = self::RoleName($CheckCurrentStaticStatus->next_role_id)[0]; // check the next role id
-                        $ForwardName = $CheckingRole->roles_name ?? 0;
+                        $ForwardName = $CheckingRole->roles_name ?? "Role-Deleted";
+
                         if ($itemIteration->process_complete == 1) {
                             // if all final process completer
                             $SD = RequestGatepassList::join('static_status_request', 'request_gatepass_list.final_status', '=', 'static_status_request.id')
@@ -1580,21 +2474,20 @@ class RulesManagement
                                 ->where('request_gatepass_list.id', $itemID)
                                 ->select('request_gatepass_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
                                 ->first();
-                            // dd($checkingCover);
-                            $ForwardStaticName = self::RoleName($checkingCover->role_id)[0]->roles_name;
+                            $ForwardStaticName = self::RoleName($checkingCover->role_id)[0]->roles_name ?? "Role-Deleted";
                             $statusIcon = $SD->final_status == 1 ? '<i class="ion-checkmark-circled"></i> ' : '<i class="ion-close-circled"></i> ';
                             $statusColor = $SD->request_color;
                             $statusResponse = $SD->request_response;
                             if ($SD->final_status == 2 && $LatestStatusValue == 1) {
-                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
-                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $DeclinedName . ') <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-close-circled"></i> ' . nl2br($statusResponse) . '</small>';
+                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";
+                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . ' (' . $DeclinedName . ') <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-close-circled"></i> ' . nl2br($statusResponse) . '</small>';
                             } elseif ($SD->final_status == 1) {
                                 return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $statusResponse . '  By ' . $GatepassApprovalName . '(' . $ForwardStaticName . ')" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '" data-bs-original-title="Declined ' . $ForwardName . '">' . $statusIcon . ' ' . $statusResponse . '</small>';
                             } else {
-                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $ForwardStaticName . ') <b><br> Remark : ' . nl2br($LatestRemark) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-close-circled"></i> ' . nl2br($statusResponse) . '</small>';
+                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . ' (' . $ForwardStaticName . ') <b><br> Remark : ' . nl2br($LatestRemark) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-close-circled"></i> ' . nl2br($statusResponse) . '</small>';
                             }
                         } else {
-                            $ForwardStaticName = self::RoleName($itemIteration->forward_by_role_id)[0]->roles_name;
+                            $ForwardStaticName = self::RoleName($itemIteration->forward_by_role_id)[0]->roles_name ?? "Role-Deleted";
                             if ($LatestStatusValue == 1) {
                                 return '<small class="' . $LatestRequestColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '" data-bs-original-title="Forward To ' . $ForwardName . '">' . $LatestStatusName . '</small>';
                             }
@@ -1627,7 +2520,7 @@ class RulesManagement
                                 ->first();
 
                             $gotoPow = self::RoleName($CheckingLoad->role_id ?? 0)[0];
-                            $ApprovedName2 = $gotoPow->roles_name ?? 0;
+                            $ApprovedName2 = $gotoPow->roles_name ?? "Role-Deleted";
                             if ($ApprovedName2 != 0) {
                                 if (isset($CheckingLoad)) {
                                     if ($CheckingLoad->status == 1) {
@@ -1668,7 +2561,7 @@ class RulesManagement
                             $GatepassApprovalName = $empName . ' ' . $empMName . ' ' . $empLName;
                         }
                         $CheckingRole = self::RoleName($requestGet->current_role_id ?? 0)[0];
-                        $ForwardName = $CheckingRole->roles_name ?? 0;
+                        $ForwardName = $CheckingRole->roles_name ?? "Role-Deleted";
                         $HoverStatus = $requestGet->status == 1 ? 'Approved By ' : 'Declined By ';
                         if ($requestGet->status == 1 && $LastDeclineStatusRemark) {
                             if ($LastDeclineStatusRemark->role_id == 1) {
@@ -1685,7 +2578,7 @@ class RulesManagement
                                 $empLName = $LastDeclineName->emp_lname ?? '';
                                 $LastDeclineName = $empName . ' ' . $empMName . ' ' . $empLName;
                             }
-                            $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+                            $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";
                             return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardName . ')<br>Declined By ' . $LastDeclineName . '(' . $DeclinedName . ')<b><br>  Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
                         } elseif ($requestGet->status == 1) {
                             return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardName . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
@@ -1720,9 +2613,13 @@ class RulesManagement
 
                             $CheckingRole = self::RoleName($CheckCurrentStaticStatusSecond->role_id)[0];
                             $HoverStatus = $CheckCurrentStaticStatusSecond->status == 1 ? 'Approved By ' : 'Declined By ';
-                            $ForwardNameGET = $CheckingRole->roles_name ?? 0;
+                            $check = DB::table('business_details_list')
+                                ->where('business_id', $CheckCurrentStaticStatusSecond->business_id)
+                                ->where('call_back_id', $CheckCurrentStaticStatusSecond->role_id)
+                                ->first();
+                            $ForwardNameGET = (($CheckingRole !== null && $CheckingRole !== 0) ? $CheckingRole->roles_name : ($check !== null ? 'Owner' : "Role-Deleted"));
                             if ($CheckCurrentStaticStatusSecond->final_status == 1) {
-                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardNameGET . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . ' (' . $ForwardNameGET . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                             } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
                                 if ($LastDeclineStatusRemark->role_id == 1) {
                                     $GatepassApprovalName = BusinessDetailsList::where('business_id', Session::get('business_id'))
@@ -1738,19 +2635,19 @@ class RulesManagement
                                     $empLName = $GatepassApprovalName->emp_lname ?? '';
                                     $GatepassApprovalName = $empName . ' ' . $empMName . ' ' . $empLName;
                                 }
-                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
-                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $GatepassApprovalName . '(' . $DeclinedName . ')<b><br> Remark :' . $LastDeclineStatusRemark->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name  ?? "Role-Deleted";;
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $GatepassApprovalName . ' (' . $DeclinedName . ')<b><br> Remark :' . $LastDeclineStatusRemark->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                             } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
-                            
-                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . ' (' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                             } else {
                                 if ($CheckCurrentStaticStatusSecond->status == 1 && $LastDeclineStatusRemark) {
-                                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
-                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved By ' . $GatepassApprovalName . '(' . $ForwardNameGET . ') <b><br>' . $DeclinedName . ' Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Approved"><i class="ion-close-circled"></i> Pending</small>';
+                                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";;
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved By ' . $GatepassApprovalName . ' (' . $ForwardNameGET . ') <b><br>' . $DeclinedName . ' Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Approved"><i class="ion-close-circled"></i> Pending</small>';
                                 } elseif ($CheckCurrentStaticStatusSecond->status == 1) {
-                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardNameGET . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="ion-clock"></i> Pending</small>';
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . ' (' . $ForwardNameGET . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="ion-clock"></i> Pending</small>';
                                 } elseif ($CheckCurrentStaticStatusSecond->status == 2) {
-                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-clock"></i> Pending</small>';
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . ' (' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-clock"></i> Pending</small>';
                                 }
                             }
                         } else {
@@ -1795,16 +2692,15 @@ class RulesManagement
                     ->where('business_id', $CheckCurrentStaticStatusSecond->business_id)
                     ->where('call_back_id', $CheckCurrentStaticStatusSecond->role_id)
                     ->first();
-                $ForwardNameGET = $CheckingRole !== null && $CheckingRole !== 0 ? $CheckingRole->roles_name : ($check !== null ? 'Owner' : 0);
-              
+                $ForwardNameGET = (($CheckingRole !== null && $CheckingRole !== 0) ? $CheckingRole->roles_name : ($check !== null ? 'Owner' : "Role-Deleted"));
                 if ($CheckCurrentStaticStatusSecond->final_status == 1) {
-                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved by ' . $GatepassApprovalName . '(' . $ForwardNameGET . ')" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved by ' . $GatepassApprovalName . ' (' . $ForwardNameGET . ')" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                     // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body"  data-bs-placement="top" data-bs-content="Approved by ' . $ForwardNameGET . '" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                 } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
-                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";;
                     return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $DeclinedName . ' <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $ForwardNameGET . '"><i class="ion-clock"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
                 } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
-                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="feather feather-x-circle text-danger"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . ' (' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="feather feather-x-circle text-danger"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
                 } else {
                     return '<span class="badge badge-primary-light">Requested</span>';
                 }
@@ -1816,6 +2712,7 @@ class RulesManagement
 
     public static function RequestLeaveApprovalManage($checkApprovalCycleType, $itemIteration, $itemID, $approvalTypeIdStatic, $loginRoleID)
     {
+        // dd($checkApprovalCycleType, $itemIteration, $itemID, $approvalTypeIdStatic, $loginRoleID);
         $loginRoleBID = self::allValueGet()[5];
         $checkingCover = DB::table('approval_status_list')
             ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
@@ -1851,8 +2748,9 @@ class RulesManagement
                     ->where('all_request_id', $itemID)
                     ->orderBy('approval_status_list.created_at', 'desc')
                     ->first();
-                    
+
                 if ($checkingCoversLoad) {
+
                     $CheckCurrentStaticStatus = DB::table('approval_status_list')
                         ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
                         ->where('approval_status_list.business_id', $loginRoleBID)
@@ -1861,7 +2759,6 @@ class RulesManagement
                         ->orderBy('approval_status_list.created_at', 'desc')
                         ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
                         ->first();
-
                     if ($CheckCurrentStaticStatus != null) {
                         if ($LastDeclineStatusRemark) {
                             if ($LastDeclineStatusRemark->role_id == 1) {
@@ -1895,46 +2792,45 @@ class RulesManagement
                             }
                         }
                         $CheckingRole = self::RoleName($CheckCurrentStaticStatus->next_role_id)[0];
+
                         $ForwardName = $CheckingRole->roles_name ?? 0;
 
                         if ($itemIteration->process_complete == 1) {
                             // if all final process completer
+
                             $SD = DB::table('request_leave_list')
                                 ->join('static_status_request', 'request_leave_list.final_status', '=', 'static_status_request.id')
                                 ->where('request_leave_list.business_id', $loginRoleBID)
                                 ->where('request_leave_list.id', $itemID)
                                 ->select('request_leave_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
                                 ->first();
-                            $ForwardStaticName = self::RoleName($checkingCover->role_id)[0]->roles_name ?? 0;
+
+                            $ForwardStaticName = self::RoleName($checkingCover->role_id)[0]->roles_name ?? "Role-Deleted";
                             $statusIcon = $SD->final_status == 1 ? '<i class="ion-checkmark-circled"></i>' : '<i class="ion-close-circled"></i>';
                             $statusColor = $SD->request_color;
                             $statusResponse = $SD->request_response;
-                            // if ($SD->final_status == 2 && $LatestStatusValue == 1) {
-                            //     $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
-                            //     return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $DeclinedName . ' <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-clock"></i> ' . nl2br($statusResponse) . '</small>';
-                            // } elseif ($SD->final_status == 1) {
-                            //     return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $statusResponse . '  By ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '" data-bs-original-title="Declined ' . $ForwardName . '">' . $statusIcon . ' ' . $statusResponse . '</small>';
-                            // } else {
-                            //     // dd($SD->final_status);
-                            //     // return '';
-                            //     return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardStaticName . ' <b><br> Remark : ' . nl2br($LatestRemark) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-close-circled"></i> ' . nl2br($statusResponse) . '</small>';
-                            // }
+
                             if ($SD->final_status == 2 && $LatestStatusValue == 1) {
-                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
-                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $DeclinedName . ') <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-close-circled"></i> ' . nl2br($statusResponse) . '</small>';
+                                // dd($itemIteration->process_complete);
+                                // dd($LastDeclineStatusRemark->role_id);
+                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";;
+                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . ' (' . $DeclinedName . ') <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-close-circled"></i> ' . nl2br($statusResponse) . '</small>';
                             } elseif ($SD->final_status == 1) {
-                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $statusResponse . '  By ' . $GatepassApprovalName . '(' . $ForwardStaticName . ')" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '" data-bs-original-title="Declined ' . $ForwardName . '">' . $statusIcon . ' ' . $statusResponse . '</small>';
+                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $statusResponse . '  By ' . $GatepassApprovalName . ' (' . $ForwardStaticName . ')" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '" data-bs-original-title="Declined ' . $ForwardName . '">' . $statusIcon . ' ' . $statusResponse . '</small>';
                             } else {
-                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $ForwardStaticName . ') <b><br> Remark : ' . nl2br($LatestRemark) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-close-circled"></i> ' . nl2br($statusResponse) . '</small>';
+
+                                return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . ' (' . $ForwardStaticName . ') <b><br> Remark : ' . nl2br($LatestRemark) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-close-circled"></i> ' . nl2br($statusResponse) . '</small>';
                             }
                         } else {
                             // $forwared = true;
-                            $ForwardStaticName = self::RoleName($itemIteration->forward_by_role_id)[0]->roles_name ?? 0;
+
+                            $ForwardStaticName = self::RoleName($itemIteration->forward_by_role_id)[0]->roles_name ?? "Role-Deleted";
 
                             if ($LatestStatusValue == 1) {
                                 return '<small class="' . $LatestRequestColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '" data-bs-original-title="Forward To ' . $ForwardName . '">' . $LatestStatusName . '</small>';
                             }
                             if ($LatestStatusValue == 2) {
+
                                 return '<small class="' . $LatestRequestColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . ' <b><br> Remark : ' . nl2br($LatestRemark) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="feather feather-x-circle text-danger"></i> ' . nl2br($LatestStatusName) . '</small>';
                             }
 
@@ -1963,7 +2859,7 @@ class RulesManagement
                                 ->first();
 
                             $gotopow = self::RoleName($CheckingLoad->role_id ?? 0)[0];
-                            $ApprovedName2 = $gotopow->roles_name ?? 0;
+                            $ApprovedName2 = $gotopow->roles_name ?? "Role-Deleted";
 
                             if ($ApprovedName2 != 0) {
                                 if (isset($CheckingLoad)) {
@@ -1979,6 +2875,7 @@ class RulesManagement
                         }
                     }
                 } else {
+
                     $requestGet = DB::table('approval_status_list')
                         ->join('static_status_request', 'approval_status_list.status', '=', 'static_status_request.id')
                         ->where('approval_status_list.all_request_id', $itemID)
@@ -1987,7 +2884,7 @@ class RulesManagement
                         ->where('approval_status_list.approval_type_id', '=', $approvalTypeIdStatic)
                         ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
                         ->first();
-                    // dd($requestGet);
+
                     if ($requestGet ?? false) {
                         if ($requestGet->role_id == 1) {
                             $GatepassApprovalName = BusinessDetailsList::where('business_id', Session::get('business_id'))
@@ -2004,7 +2901,7 @@ class RulesManagement
                             $GatepassApprovalName = $empName . ' ' . $empMName . ' ' . $empLName;
                         }
                         $CheckingRole = self::RoleName($requestGet->current_role_id ?? 0)[0];
-                        $ForwardName = $CheckingRole->roles_name ?? 0;
+                        $ForwardName = $CheckingRole->roles_name ?? "Role-Deleted";
                         $HoverStatus = $requestGet->status == 1 ? 'Approved By ' : 'Declined By ';
                         if ($requestGet->status == 1 && $LastDeclineStatusRemark) {
                             if ($LastDeclineStatusRemark->role_id == 1) {
@@ -2021,27 +2918,16 @@ class RulesManagement
                                 $empLName = $LastDeclineName->emp_lname ?? '';
                                 $LastDeclineName = $empName . ' ' . $empMName . ' ' . $empLName;
                             }
-                            $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
-
-                            //     // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
-                            //     return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<br>Declined By ' . $DeclinedName . '<b><br>  Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
-                            // } elseif ($requestGet->status == 1) {
-                            //     // dd($requestGet);
-                            //     return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
-                            //     // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b><br> Remark : ' . nl2br($requestGet->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
-                            // } else {
-                            //     // dd($requestGet);
-
-                            //     return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b><br> Remark : ' . nl2br($requestGet->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
-                            // }
-                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardName . ')<br>Declined By ' . $LastDeclineName . '(' . $DeclinedName . ')<b><br>  Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                            $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";
+                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . ' (' . $ForwardName . ')<br>Declined By ' . $LastDeclineName . ' (' . $DeclinedName . ')<b><br>  Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
                         } elseif ($requestGet->status == 1) {
-                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardName . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . ' (' . $ForwardName . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
                         } else {
-                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardName . ')<b><br> Remark : ' . nl2br($requestGet->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . ' (' . $ForwardName . ')<b><br> Remark : ' . nl2br($requestGet->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
                         }
                     } else {
                         // return '';
+
                         $CheckCurrentStaticStatusSecond = DB::table('request_leave_list')
                             ->join('approval_status_list', 'approval_status_list.all_request_id', '=', 'request_leave_list.id')
                             ->join('static_status_request', 'request_leave_list.final_status', '=', 'static_status_request.id')
@@ -2051,10 +2937,6 @@ class RulesManagement
                             ->select('request_leave_list.*', 'approval_status_list.id as approval_id', 'approval_status_list.applied_cycle_type', 'approval_status_list.business_id', 'approval_status_list.approval_type_id', 'approval_status_list.all_request_id', 'approval_status_list.role_id', 'approval_status_list.emp_id as approval_emp_id', 'approval_status_list.remarks', 'approval_status_list.status', 'approval_status_list.applied_cycle_type', 'approval_status_list.prev_role_id', 'approval_status_list.current_role_id', 'approval_status_list.next_role_id', 'approval_status_list.clicked', 'static_status_request.id as status_request_id', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
                             ->orderBy('approval_status_list.created_at', 'desc')
                             ->first();
-                        // dd($CheckCurrentStaticStatusSecond);
-                        // $CheckingRole = self::RoleName($CheckCurrentStaticStatusSecond->role_id)[0];
-                        // $HoverStatus = $CheckCurrentStaticStatusSecond->status == 1 ? 'Approved By ' : 'Declined By ';
-                        // $ForwardNameGET = $CheckingRole->roles_name ?? 0;
                         if ($CheckCurrentStaticStatusSecond) {
                             if ($CheckCurrentStaticStatusSecond->role_id == 1) {
                                 $GatepassApprovalName = BusinessDetailsList::where('business_id', Session::get('business_id'))
@@ -2071,12 +2953,15 @@ class RulesManagement
                                 $GatepassApprovalName = $empName . ' ' . $empMName . ' ' . $empLName;
                             }
                             $CheckingRole = self::RoleName($CheckCurrentStaticStatusSecond->role_id)[0];
-                            // dd($CheckCurrentStaticStatusSecond->status);
+                            $check = DB::table('business_details_list')
+                                ->where('business_id', $CheckCurrentStaticStatusSecond->business_id)
+                                ->where('call_back_id', $CheckCurrentStaticStatusSecond->role_id)
+                                ->first();
                             $HoverStatus = $CheckCurrentStaticStatusSecond->status == 1 ? 'Approved By ' : 'Declined By ';
-                            $ForwardNameGET = $CheckingRole->roles_name ?? 0;
+                            $ForwardNameGET = (($CheckingRole !== null && $CheckingRole !== 0) ? $CheckingRole->roles_name : ($check !== null ? 'Owner' : "Role-Deleted"));
+
                             if ($CheckCurrentStaticStatusSecond->final_status == 1) {
-                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardNameGET . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
-                                // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardNameGET . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . ' (' . $ForwardNameGET . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                             } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
                                 if ($LastDeclineStatusRemark->role_id == 1) {
                                     $GatepassApprovalName = BusinessDetailsList::where('business_id', Session::get('business_id'))
@@ -2092,20 +2977,19 @@ class RulesManagement
                                     $empLName = $GatepassApprovalName->emp_lname ?? '';
                                     $GatepassApprovalName = $empName . ' ' . $empMName . ' ' . $empLName;
                                 }
-                                 $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";;
                                 return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $GatepassApprovalName . '(' . $DeclinedName . ')<b><br> Remark :' . $LastDeclineStatusRemark->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
 
                                 // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $DeclinedName . '<b><br> Remark :' . $LastDeclineStatusRemark->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-close-clock"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                             } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
                                 return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
 
-                            //    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                                //    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                             } else {
-                                if ($CheckCurrentStaticStatusSecond->status == 1 && $LastDeclineStatusRemark) {                             
-                                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+                                if ($CheckCurrentStaticStatusSecond->status == 1 && $LastDeclineStatusRemark) {
+                                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";;
                                     // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved By ' . $ForwardNameGET . ' <b><br>' . $DeclinedName . ' Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Approved"><i class="ion-close-circled"></i> Pending</small>';
                                     return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved By ' . $GatepassApprovalName . '(' . $ForwardNameGET . ') <b><br>' . $DeclinedName . ' Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Approved"><i class="ion-close-circled"></i> Pending</small>';
-
                                 } elseif ($CheckCurrentStaticStatusSecond->status == 1) {
                                     return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardNameGET . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="ion-clock"></i> Pending</small>';
 
@@ -2145,7 +3029,6 @@ class RulesManagement
                         ->where('business_id', Session::get('business_id'))
                         ->pluck('client_name')
                         ->first();
-                    // dd($GatepassApprovalName);
                 } else {
                     $GatepassApprovalName = EmployeePersonalDetail::where('business_id', Session::get('business_id'))
                         ->where('emp_id', $CheckCurrentStaticStatusSecond->emp_id)
@@ -2161,14 +3044,14 @@ class RulesManagement
                     ->where('business_id', $CheckCurrentStaticStatusSecond->business_id)
                     ->where('call_back_id', $CheckCurrentStaticStatusSecond->role_id)
                     ->first();
-                $ForwardNameGET = $CheckingRole !== null && $CheckingRole !== 0 ? $CheckingRole->roles_name : ($check !== null ? 'Owner' : 0);
+                $ForwardNameGET = (($CheckingRole !== null && $CheckingRole !== 0) ? $CheckingRole->roles_name : ($check !== null ? 'Owner' : "Role-Deleted"));
                 if ($CheckCurrentStaticStatusSecond->final_status == 1) {
-                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved by ' . $GatepassApprovalName . '(' . $ForwardNameGET . ')" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved by ' . $GatepassApprovalName . ' (' . $ForwardNameGET . ')" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                 } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
-                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";;
                     return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $DeclinedName . ' <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $ForwardNameGET . '"><i class="ion-clock"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
                 } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
-                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-close-circled"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . ' (' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-close-circled"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
                 } else {
                     return '<span class="badge badge-primary-light">Requested</span>';
                 }
@@ -2230,7 +3113,7 @@ class RulesManagement
                         ->orderBy('approval_status_list.created_at', 'desc')
                         ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
                         ->first();
-                        
+
 
                     if ($CheckCurrentStaticStatus != null) {
                         if ($LastDeclineStatusRemark) {
@@ -2265,8 +3148,7 @@ class RulesManagement
                             }
                         }
                         $CheckingRole = self::RoleName($CheckCurrentStaticStatus->next_role_id)[0];
-                        $ForwardName = $CheckingRole->roles_name ?? 0;
-
+                        $ForwardName = $CheckingRole->roles_name ?? "Role-Deleted";;
                         if ($itemIteration->process_complete == 1) {
                             $SD = DB::table('request_mispunch_list')
                                 ->join('static_status_request', 'request_mispunch_list.final_status', '=', 'static_status_request.id')
@@ -2275,12 +3157,12 @@ class RulesManagement
                                 ->select('request_mispunch_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
                                 ->first();
 
-                            $ForwardStaticName = self::RoleName($checkingCover->role_id)[0]->roles_name;
+                            $ForwardStaticName = self::RoleName($checkingCover->role_id)[0]->roles_name ?? "Role-Deleted";;
                             $statusIcon = $SD->final_status == 1 ? '<i class="ion-checkmark-circled"></i> ' : '<i class="ion-close-circled"></i> ';
                             $statusColor = $SD->request_color;
                             $statusResponse = $SD->request_response;
                             if ($SD->final_status == 2 && $LatestStatusValue == 1) {
-                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";;
                                 return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $DeclinedName . ') <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-close-circled"></i> ' . nl2br($statusResponse) . '</small>';
                             } elseif ($SD->final_status == 1) {
                                 return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $statusResponse . '  By ' . $GatepassApprovalName . '(' . $ForwardStaticName . ')" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '" data-bs-original-title="Declined ' . $ForwardName . '">' . $statusIcon . ' ' . $statusResponse . '</small>';
@@ -2288,7 +3170,8 @@ class RulesManagement
                                 return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $ForwardStaticName . ') <b><br> Remark : ' . nl2br($LatestRemark) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-close-circled"></i> ' . nl2br($statusResponse) . '</small>';
                             }
                         } else {
-                            $ForwardStaticName = self::RoleName($itemIteration->forward_by_role_id)[0]->roles_name;
+                            $ForwardStaticName = self::RoleName($itemIteration->forward_by_role_id)[0]->roles_name ?? "Role-Deleted";
+
                             if ($LatestStatusValue == 1) {
                                 // return ;
                                 return '<small class="' . $LatestRequestColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '" data-bs-original-title="Forward To ' . $ForwardName . '">' . $LatestStatusName . '</small>';
@@ -2322,7 +3205,7 @@ class RulesManagement
                                 ->first();
 
                             $gotopow = self::RoleName($CheckingLoad->role_id ?? 0)[0];
-                            $ApprovedName2 = $gotopow->roles_name ?? 0;
+                            $ApprovedName2 = $gotopow->roles_name ?? "Role-Deleted";
 
                             if ($ApprovedName2 != 0) {
                                 // dd($CheckingLoad);
@@ -2347,7 +3230,7 @@ class RulesManagement
                         ->where('approval_status_list.approval_type_id', '=', $approvalTypeIdStatic)
                         ->select('approval_status_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
                         ->first();
-                    if ($requestGet ?? false) { 
+                    if ($requestGet ?? false) {
                         if ($requestGet->role_id == 1) {
                             $GatepassApprovalName = BusinessDetailsList::where('business_id', Session::get('business_id'))
                                 ->pluck('client_name')
@@ -2363,7 +3246,7 @@ class RulesManagement
                             $GatepassApprovalName = $empName . ' ' . $empMName . ' ' . $empLName;
                         }
                         $CheckingRole = self::RoleName($requestGet->current_role_id ?? 0)[0];
-                        $ForwardName = $CheckingRole->roles_name ?? 0;
+                        $ForwardName = $CheckingRole->roles_name ?? "Role-Deleted";
                         $HoverStatus = $requestGet->status == 1 ? 'Approved By ' : 'Declined By ';
                         if ($requestGet->status == 1 && $LastDeclineStatusRemark) {
                             if ($LastDeclineStatusRemark->role_id == 1) {
@@ -2380,15 +3263,12 @@ class RulesManagement
                                 $empLName = $LastDeclineName->emp_lname ?? '';
                                 $LastDeclineName = $empName . ' ' . $empMName . ' ' . $empLName;
                             }
-                            $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+                            $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";
                             return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardName . ')<br>Declined By ' . $LastDeclineName . '(' . $DeclinedName . ')<b><br>  Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
-
                         } elseif ($requestGet->status == 1) {
                             return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardName . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
-
                         } else {
                             return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardName . ')<b><br> Remark : ' . nl2br($requestGet->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
-
                         }
                     } else {
                         $CheckCurrentStaticStatusSecond = DB::table('request_mispunch_list')
@@ -2418,9 +3298,14 @@ class RulesManagement
                             }
                             $CheckingRole = self::RoleName($CheckCurrentStaticStatusSecond->role_id)[0];
                             $HoverStatus = $CheckCurrentStaticStatusSecond->status == 1 ? 'Approved By ' : 'Declined By ';
-                            $ForwardNameGET = $CheckingRole->roles_name ?? 0;
+                            $check = DB::table('business_details_list')
+                                ->where('business_id', $CheckCurrentStaticStatusSecond->business_id)
+                                ->where('call_back_id', $CheckCurrentStaticStatusSecond->role_id)
+                                ->first();
+                            $ForwardNameGET = (($CheckingRole !== null && $CheckingRole !== 0) ? $CheckingRole->roles_name : ($check !== null ? 'Owner' : "Role-Deleted"));
+
                             if ($CheckCurrentStaticStatusSecond->final_status == 1) {
-                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardNameGET . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . ' (' . $ForwardNameGET . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                             } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
                                 if ($LastDeclineStatusRemark->role_id == 1) {
                                     $GatepassApprovalName = BusinessDetailsList::where('business_id', Session::get('business_id'))
@@ -2436,18 +3321,18 @@ class RulesManagement
                                     $empLName = $GatepassApprovalName->emp_lname ?? '';
                                     $GatepassApprovalName = $empName . ' ' . $empMName . ' ' . $empLName;
                                 }
-                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";
                                 return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $GatepassApprovalName . '(' . $DeclinedName . ')<b><br> Remark :' . $LastDeclineStatusRemark->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                             } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
-                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . ' (' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                             } else {
                                 if ($CheckCurrentStaticStatusSecond->status == 1 && $LastDeclineStatusRemark) {
-                                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
-                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved By ' . $GatepassApprovalName . '(' . $ForwardNameGET . ') <b><br>' . $DeclinedName . ' Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Approved"><i class="ion-close-circled"></i> Pending</small>';
+                                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved By ' . $GatepassApprovalName . ' (' . $ForwardNameGET . ') <b><br>' . $DeclinedName . ' Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Approved"><i class="ion-close-circled"></i> Pending</small>';
                                 } elseif ($CheckCurrentStaticStatusSecond->status == 1) {
-                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardNameGET . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="ion-clock"></i> Pending</small>';
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . ' (' . $ForwardNameGET . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="ion-clock"></i> Pending</small>';
                                 } elseif ($CheckCurrentStaticStatusSecond->status == 2) {
-                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-clock"></i> Pending</small>';
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . ' (' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-clock"></i> Pending</small>';
                                 }
                             }
                         } else {
@@ -2493,26 +3378,16 @@ class RulesManagement
                     ->where('business_id', $CheckCurrentStaticStatusSecond->business_id)
                     ->where('call_back_id', $CheckCurrentStaticStatusSecond->role_id)
                     ->first();
-                $ForwardNameGET = $CheckingRole !== null && $CheckingRole !== 0 ? $CheckingRole->roles_name : ($check !== null ? 'Owner' : 0);
+                $ForwardNameGET = (($CheckingRole !== null && $CheckingRole !== 0) ? $CheckingRole->roles_name : ($check !== null ? 'Owner' : "Role-Deleted"));
 
-                // if ($CheckCurrentStaticStatusSecond->final_status == 1) {
-                //     return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved by ' . $ForwardNameGET . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
-                // } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
-                //     $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? 0;
-                //     return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $DeclinedName . ' <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $ForwardNameGET . '"><i class="ion-clock"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
-                // } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
-                //     return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="feather feather-x-circle text-danger"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
-                // } else {
-                //     return '<span class="badge badge-primary-light">Requested</span>';
-                // }
                 if ($CheckCurrentStaticStatusSecond->final_status == 1) {
-                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved by ' . $GatepassApprovalName . '(' . $ForwardNameGET . ')" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
-                    // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body"  data-bs-placement="top" data-bs-content="Approved by ' . $ForwardNameGET . '" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                    //dd($CheckCurrentStaticStatusSecond->role_id);
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved by ' . $GatepassApprovalName . ' (' . $ForwardNameGET . ')" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                 } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
-                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";
                     return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $DeclinedName . ' <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $ForwardNameGET . '"><i class="ion-clock"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
                 } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
-                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="feather feather-x-circle text-danger"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . ' (' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="feather feather-x-circle text-danger"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
                 } else {
                     return '<span class="badge badge-primary-light">Requested</span>';
                 }
@@ -2527,6 +3402,7 @@ class RulesManagement
         $attendanceListAutoCheck = AttendanceList::where('business_id', Session::get('business_id'))
             ->where('id', $itemID)
             ->where('emp_today_current_status', '2')
+            ->where('attendance_list_edit_check', '0')
             ->where('method_auto', '1')
             ->first();
         if ($attendanceListAutoCheck) {
@@ -2566,7 +3442,6 @@ class RulesManagement
 
         if ($checkApprovalCycleType == 1) {
             // sequentinal type check
-
             if ($checkingCover != null) {
                 $checkingCoversLoad = DB::table('approval_status_list')
                     ->where('business_id', $loginRoleBID)
@@ -2620,7 +3495,7 @@ class RulesManagement
                             }
                         }
                         $CheckingRole = self::RoleName($CheckCurrentStaticStatus->next_role_id)[0]; // check the next role id
-                        $ForwardName = $CheckingRole->roles_name ?? 0;
+                        $ForwardName = $CheckingRole->roles_name ?? "Role-Deleted";
                         // dd($item->process_complete);
                         if ($itemIteration->process_complete == 1) {
                             // if all final process completer
@@ -2630,29 +3505,13 @@ class RulesManagement
                                 ->where('attendance_list.id', $itemID)
                                 ->select('attendance_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
                                 ->first();
-                            $ForwardStaticName = self::RoleName($checkingCover->role_id)[0]->roles_name;
+                            $ForwardStaticName = self::RoleName($checkingCover->role_id)[0]->roles_name ?? "Role-Deleted";
                             $statusIcon = $SD->final_status == 1 ? '<i class="ion-checkmark-circled"></i> ' : '<i class="ion-close-circled"></i> ';
                             $statusColor = $SD->request_color;
                             $statusResponse = $SD->request_response;
-                            // if ($SD->final_status == 2 && $LatestStatusValue == 1) {
-                            //     // dd("kya chal raha");
-                            //     // dd($LastDeclineStatusRemark);
-                            //     $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
 
-                            //     return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $DeclinedName . ' <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-clock"></i> ' . nl2br($statusResponse) . '</small>';
-
-                            //     // return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $statusResponse . '  By ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '" data-bs-original-title="Declined ' . $ForwardName . '">' . $statusIcon . ' ' . $statusResponse . '</small>';
-                            //     // dd($LatestStatusValue);
-                            // } elseif ($SD->final_status == 1) {
-                            //     // dd($item->final_status);
-
-                            //     return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $statusResponse . '  By ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '" data-bs-original-title="Declined ' . $ForwardName . '">' . $statusIcon . ' ' . $statusResponse . '</small>';
-                            // } else {
-                            //     // dd($SD->final_status);
-                            //     return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardStaticName . ' <b><br> Remark : ' . nl2br($LatestRemark) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-clock"></i> ' . nl2br($statusResponse) . '</small>';
-                            // }
                             if ($SD->final_status == 2 && $LatestStatusValue == 1) {
-                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";
                                 return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $DeclinedName . ') <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '"><i class="ion-close-circled"></i> ' . nl2br($statusResponse) . '</small>';
                             } elseif ($SD->final_status == 1) {
                                 return '<small class="' . $statusColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $statusResponse . '  By ' . $GatepassApprovalName . '(' . $ForwardStaticName . ')" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $statusResponse . '" data-bs-original-title="Declined ' . $ForwardName . '">' . $statusIcon . ' ' . $statusResponse . '</small>';
@@ -2661,16 +3520,12 @@ class RulesManagement
                             }
                             // return '<small><span class="' . $statusColor . '">' . $statusIcon . ' ' . $statusResponse . '</span></small>';
                         } else {
-                            $ForwardStaticName = self::RoleName($itemIteration->forward_by_role_id)[0]->roles_name ?? 0;
+                            $ForwardStaticName = self::RoleName($itemIteration->forward_by_role_id)[0]->roles_name ?? "Role-Deleted";
 
                             if ($LatestStatusValue == 1) {
                                 return '<small class="' . $LatestRequestColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '" data-bs-original-title="Forward To ' . $ForwardName . '">' . $LatestStatusName . '</small>';
                             }
                             if ($LatestStatusValue == 2) {
-                                // dd($CheckCurrentStaticStatus);
-
-                                // return '<small class="' . $CheckCurrentStaticStatus->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardName . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatus->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatus->request_response . '"><i class="ion-clock"></i>' . nl2br($CheckCurrentStaticStatus->request_response) . '</small>';
-                                // return '<small class="' . $CheckCurrentStaticStatus->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatus->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatus->request_response . '"><i class="ion-clock"></i>' . nl2br($CheckCurrentStaticStatus->request_response) . '</small>';
                                 return '<small class="' . $LatestRequestColor . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Forward To ' . $ForwardStaticName . ' <b><br> Remark : ' . nl2br($LatestRemark) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="ion-clock"></i> ' . nl2br($LatestStatusName) . '</small>';
                             }
 
@@ -2699,7 +3554,7 @@ class RulesManagement
                                 ->first();
 
                             $gotopow = self::RoleName($CheckingLoad->role_id ?? 0)[0];
-                            $ApprovedName2 = $gotopow->roles_name ?? 0;
+                            $ApprovedName2 = $gotopow->roles_name ?? "Role-Deleted";
                             if ($ApprovedName2 != 0) {
                                 // dd($CheckingLoad);
                                 if (isset($CheckingLoad)) {
@@ -2741,7 +3596,7 @@ class RulesManagement
                             $GatepassApprovalName = $empName . ' ' . $empMName . ' ' . $empLName;
                         }
                         $CheckingRole = self::RoleName($requestGet->current_role_id ?? 0)[0];
-                        $ForwardName = $CheckingRole->roles_name ?? 0;
+                        $ForwardName = $CheckingRole->roles_name ?? "Role-Deleted";
                         $HoverStatus = $requestGet->status == 1 ? 'Approved By ' : 'Declined By ';
                         if ($requestGet->status == 1 && $LastDeclineStatusRemark) {
                             if ($LastDeclineStatusRemark->role_id == 1) {
@@ -2758,20 +3613,20 @@ class RulesManagement
                                 $empLName = $LastDeclineName->emp_lname ?? '';
                                 $LastDeclineName = $empName . ' ' . $empMName . ' ' . $empLName;
                             }
-                            $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+                            $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";
 
                             // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
-                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b><br>' . $DeclinedName . '  Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
-                        // } elseif ($requestGet->status == 1) {
-                        //     // dd($requestGet);
-                        //     return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
-                        //     // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b><br> Remark : ' . nl2br($requestGet->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
-                        // } else {
-                        //     // dd($requestGet);
+                            // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b><br>' . $DeclinedName . '  Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                            // } elseif ($requestGet->status == 1) {
+                            //     // dd($requestGet);
+                            //     return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                            //     // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b><br> Remark : ' . nl2br($requestGet->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                            // } else {
+                            //     // dd($requestGet);
 
-                        //     return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b><br> Remark : ' . nl2br($requestGet->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
-                        // }
-                        return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardName . ')<br>Declined By ' . $LastDeclineName . '(' . $DeclinedName . ')<b><br>  Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                            //     return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardName . '<b><br> Remark : ' . nl2br($requestGet->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
+                            // }
+                            return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardName . ')<br>Declined By ' . $LastDeclineName . '(' . $DeclinedName . ')<b><br>  Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
                         } elseif ($requestGet->status == 1) {
                             return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardName . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $requestGet->request_response . '"><i class="ion-clock"></i> Pending</small>';
                         } else {
@@ -2805,13 +3660,15 @@ class RulesManagement
                                 $GatepassApprovalName = $empName . ' ' . $empMName . ' ' . $empLName;
                             }
                             $CheckingRole = self::RoleName($CheckCurrentStaticStatusSecond->role_id)[0];
-                            // dd($CheckCurrentStaticStatusSecond->status);
                             $HoverStatus = $CheckCurrentStaticStatusSecond->status == 1 ? 'Approved By ' : 'Declined By ';
-                            $ForwardNameGET = $CheckingRole->roles_name ?? 0;
-                            if ($CheckCurrentStaticStatusSecond->final_status == 1) {
-                                // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardNameGET . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
-                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardNameGET . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                            $check = DB::table('business_details_list')
+                                ->where('business_id', $CheckCurrentStaticStatusSecond->business_id)
+                                ->where('call_back_id', $CheckCurrentStaticStatusSecond->role_id)
+                                ->first();
+                            $ForwardNameGET = (($CheckingRole !== null && $CheckingRole !== 0) ? $CheckingRole->roles_name : ($check !== null ? 'Owner' : "Role-Deleted"));
 
+                            if ($CheckCurrentStaticStatusSecond->final_status == 1) {
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . ' (' . $ForwardNameGET . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                             } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
                                 if ($LastDeclineStatusRemark->role_id == 1) {
                                     $GatepassApprovalName = BusinessDetailsList::where('business_id', Session::get('business_id'))
@@ -2827,36 +3684,20 @@ class RulesManagement
                                     $empLName = $GatepassApprovalName->emp_lname ?? '';
                                     $GatepassApprovalName = $empName . ' ' . $empMName . ' ' . $empLName;
                                 }
-                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id ?? 0)[0]->roles_name ?? 0;
+                                $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id ?? 0)[0]->roles_name ?? "Role-Deleted";
                                 // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $DeclinedName . '<b><br> Remark :' . $LastDeclineStatusRemark->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                                 return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $DeclinedName . '<b><br> Remark :' . $LastDeclineStatusRemark->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
-
                             } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
                                 // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
-                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
-
+                                return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . ' (' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                             } else {
-                                // if ($CheckCurrentStaticStatusSecond->status == 1 && $LastDeclineStatusRemark) {
-                                //     $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
-
-                                //     return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved By ' . $ForwardNameGET . ' <b><br>' . $DeclinedName . ' Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Approved"><i class="ion-close-circled"></i> Pending</small>';
-                                // } elseif ($CheckCurrentStaticStatusSecond->status == 1) {
-                                //     // dd($CheckCurrentStaticStatusSecond);
-
-                                //     return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $ForwardNameGET . '<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="ion-clock"></i> Pending</small>';
-                                // } elseif ($CheckCurrentStaticStatusSecond->status == 2) {
-                                //     return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-close-circled"></i> Pending</small>';
-
-                                //     // return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> Pending</small>';
-                                // }
-                                // return '<span class="badge badge-warning-light"><i class="ion-wand"></i> Pending</span>';
                                 if ($CheckCurrentStaticStatusSecond->status == 1 && $LastDeclineStatusRemark) {
-                                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
-                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved By ' . $GatepassApprovalName . '(' . $ForwardNameGET . ') <b><br>' . $DeclinedName . ' Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Approved"><i class="ion-close-circled"></i> Pending</small>';
+                                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved By ' . $GatepassApprovalName . ' (' . $ForwardNameGET . ') <b><br>' . $DeclinedName . ' Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Approved"><i class="ion-close-circled"></i> Pending</small>';
                                 } elseif ($CheckCurrentStaticStatusSecond->status == 1) {
-                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . '(' . $ForwardNameGET . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="ion-clock"></i> Pending</small>';
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="' . $HoverStatus . $GatepassApprovalName . ' (' . $ForwardNameGET . ')<b>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $LatestStatusName . '"><i class="ion-clock"></i> Pending</small>';
                                 } elseif ($CheckCurrentStaticStatusSecond->status == 2) {
-                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-clock"></i> Pending</small>';
+                                    return '<small class="badge badge-warning-light" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . ' (' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="Declined"><i class="ion-clock"></i> Pending</small>';
                                 }
                             }
                         } else {
@@ -2905,35 +3746,15 @@ class RulesManagement
                     ->where('business_id', $CheckCurrentStaticStatusSecond->business_id)
                     ->where('call_back_id', $CheckCurrentStaticStatusSecond->role_id)
                     ->first();
-                // dd($CheckCurrentStaticStatusSecond);
-                $ForwardNameGET = $CheckingRole !== null && $CheckingRole !== 0 ? $CheckingRole->roles_name : ($check !== null ? 'Owner' : 0);
-                // if ($CheckCurrentStaticStatusSecond->final_status == 1) {
-                //     return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved by ' . $ForwardNameGET . '" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
-
-                //     // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body"  data-bs-placement="top" data-bs-content="Approved by ' . $ForwardNameGET . '" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
-                // } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
-                //     $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
-
-                //     // dd("datga");
-                //     return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $DeclinedName . ' <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $ForwardNameGET . '"><i class="ion-clock"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
-                // } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
-                //     // dd($CheckCurrentStaticStatusSecond);
-                //     return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $ForwardNameGET . ' <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-clock"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
-
-                //     // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By  ' . $ForwardNameGET . ' <b><br> Remark :' . $CheckCurrentStaticStatusSecond->remarks . ' </br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-close-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
-                // } else {
-                //     return '<span class="badge badge-primary-light">Requested</span>';
-
-                //     // return '<span class="badge badge-warning-light"><i class="ion-wand"></i> Pending</span>';
-                // }
+                $ForwardNameGET = (($CheckingRole !== null && $CheckingRole !== 0) ? $CheckingRole->roles_name : ($check !== null ? 'Owner' : "Role-Deleted"));
                 if ($CheckCurrentStaticStatusSecond->final_status == 1) {
-                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved by ' . $GatepassApprovalName . '(' . $ForwardNameGET . ')" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Approved by ' . $GatepassApprovalName . ' (' . $ForwardNameGET . ')" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                     // return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body"  data-bs-placement="top" data-bs-content="Approved by ' . $ForwardNameGET . '" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title=""><i class="ion-checkmark-circled"></i> ' . $CheckCurrentStaticStatusSecond->request_response . '</small>';
                 } elseif ($CheckCurrentStaticStatusSecond->final_status == 2 && $LatestStatusValue == 1) {
-                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name;
+                    $DeclinedName = self::RoleName($LastDeclineStatusRemark->role_id)[0]->roles_name ?? "Role-Deleted";
                     return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $DeclinedName . ' <b><br> Remark : ' . nl2br($LastDeclineStatusRemark->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '" data-bs-original-title="Declined ' . $ForwardNameGET . '"><i class="ion-clock"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
                 } elseif ($CheckCurrentStaticStatusSecond->final_status == 2) {
-                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . '(' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="feather feather-x-circle text-danger"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
+                    return '<small class="' . $CheckCurrentStaticStatusSecond->request_color . '" data-bs-trigger="hover" data-bs-container="body" data-bs-content="Declined By ' . $GatepassApprovalName . ' (' . $ForwardNameGET . ') <b><br> Remark : ' . nl2br($CheckCurrentStaticStatusSecond->remarks) . '</br>" data-bs-placement="top" data-bs-popover-color="primary" data-bs-toggle="popover" data-bs-html=true title="' . $CheckCurrentStaticStatusSecond->request_response . '"><i class="feather feather-x-circle text-danger"></i> ' . nl2br($CheckCurrentStaticStatusSecond->request_response) . '</small>';
                 } else {
                     return '<span class="badge badge-primary-light">Requested</span>';
                 }

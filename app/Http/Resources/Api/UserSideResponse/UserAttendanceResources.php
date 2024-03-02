@@ -57,6 +57,10 @@ class UserAttendanceResources extends JsonResource
             'shift_name' => $this->shift_name ?? '',
             'shift_start' => is_string($this->shift_start) ? Carbon::createFromFormat('H:i:s', $this->shift_start)->format('H:i:s') : '00:00:00',
             'shift_end' => is_string($this->shift_end) ? Carbon::createFromFormat('H:i:s', $this->shift_end)->format('H:i:s') : '00:00:00',
+            'overtime' => ($this->overtime > 0) ? (intval($this->overtime / 60) ? intval($this->overtime / 60) . 'Hr ' : '') . (intval($this->overtime % 60) ? intval($this->overtime % 60) . 'Min' : '') : '', //Carbon::createFromTimestamp()->format('h:i A') ?? '',
+            'lateby_time' => ($this->late_by  > 0) ? (intval($this->late_by  / 60) ? intval($this->late_by  / 60) . 'Hr ' : '') . (intval($this->late_by  % 60) ? intval($this->late_by  % 60) . 'Min' : '') : '', //Carbon::createFromTimestamp()->format('h:i A') ?? '',
+            'earlyby_time' => ($this->early_exit  > 0) ? (intval($this->early_exit  / 60) ? intval($this->early_exit  / 60) . 'Hr ' : '') . (intval($this->early_exit  % 60) ? intval($this->early_exit  % 60) . 'Min' : '') : '',
+            // $this->early_exit ?? ''
             // 'created_at' => $this->created_at ?? '',
             // 'updated_at' => $this->updated_at ?? '',
         ];

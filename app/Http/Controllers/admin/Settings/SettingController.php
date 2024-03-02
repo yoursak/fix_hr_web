@@ -54,6 +54,7 @@ use Ixudra\Curl\Facades\Curl;
 use Illuminate\Http\Request;
 use Dipesh79\LaravelPhonePe\LaravelPhonePe;
 use Illuminate\Support\Facades\Route;
+use App\Models\GradeList;
 
 class SettingController extends Controller
 {
@@ -105,9 +106,9 @@ class SettingController extends Controller
             ]);
 
             if ($accessRequest) {
-                Alert::success('', 'Your Camera permissiong has been successfully created')->persistent(true);
+                Alert::success('', 'Your Camera permission has been successfully created')->persistent(true);
             } else {
-                Alert::error('', 'Your Camera permissiong has not been created')->persistent(true);
+                Alert::error('', 'Your Camera permission has not been created')->persistent(true);
             }
 
             return redirect()->back();
@@ -136,9 +137,9 @@ class SettingController extends Controller
             ]);
 
         if (isset($updateAccessRequest)) {
-            Alert::success('', 'Your Camera access persmission has been updated successfully');
+            Alert::success('', 'Your Camera access permission has been updated successfully');
         } else {
-            Alert::error('', 'Your Camera access persmission has not been updated');
+            Alert::error('', 'Your Camera access permission has not been updated');
         }
         return redirect()->back();
     }
@@ -207,7 +208,7 @@ class SettingController extends Controller
             ]);
 
             if ($setMode) {
-                Alert::success('', 'Your Attendance mode has been activated successfully', '')->persistent(true);
+                Alert::success('', 'Your Attendance mode has been activated successfully')->persistent(true);
             } else {
                 Alert::error('Failed', '')->persistent(true);
             }
@@ -351,9 +352,9 @@ class SettingController extends Controller
             ->update(['business_type' => $request->select]);
         // return $branch;
         if (isset($data)) {
-            Alert::success('', 'Your Business type has been updated successfully')->persistent(true);
+            Alert::success('', 'Your Business Type has been updated successfully')->persistent(true);
         } else {
-            Alert::info('', 'Your Business type has not been updated')->persistent(true);
+            Alert::info('', 'Your Business Type has not been updated')->persistent(true);
         }
         return redirect()->back();
     }
@@ -410,11 +411,7 @@ class SettingController extends Controller
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
-        $subscriptionTable = Subscription::leftJoin('static_subscription_plan', 'subscription.plan_id', '=', 'static_subscription_plan.id')->where('business_id', Session::get('business_id'))->where('user_type', 1)->select('static_subscription_plan.plan_name as planName', 'subscription.*')->get();
-
-        // dd($accessPermission);
-        $accDetail = BusinessDetailsList::where('business_id', Session::get('business_id'))->first();
-        return view('admin.subscription.subscription', compact('accDetail', 'permissions', 'moduleName', 'subscriptionTable'));
+        return view('admin.subscription.subscription', compact('permissions', 'moduleName'));
     }
 
     function callExternalData()
@@ -489,8 +486,8 @@ class SettingController extends Controller
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
-
-        return view('admin.setting.business.branches.branches', compact('permissions', 'moduleName'));
+        $branch = BranchList::where('business_id', Session::get('business_id'))->select('*')->get();
+        return view('admin.setting.business.branches.branches', compact('permissions', 'moduleName', 'branch'));
     }
     public function department()
     {
@@ -513,10 +510,6 @@ class SettingController extends Controller
         $permissions = $accessPermission[1];
 
         $item = DesignationList::where('desig_id', $request->id)->first();
-
-        // if($getvalue){
-        //     return response()->json(["editDesignationResult"=>$getvalue]);
-        // }
 
         return view('admin.setting.business.designation.designation', compact('item', 'permissions', 'moduleName'));
     }
@@ -548,12 +541,11 @@ class SettingController extends Controller
 
     public function allFilterDesignation(Request $request)
     {
-        // return "chal";
-        // $branch_ID = $request->brand_id;
         $branch_ID = $request->branch_id;
         $get = EmployeePersonalDetail::join('designation_list', 'designation_list.desig_id', '=', 'employee_personal_details.designation_id')
             ->where('employee_personal_details.branch_id', $branch_ID)
             ->where('employee_personal_details.department_id', $request->depart_id)
+            ->where('employee_personal_details.active_emp', 1)
             ->where('employee_personal_details.business_id', Session::get('business_id'))
             ->select('designation_list.desig_id', 'designation_list.desig_name')
             ->distinct()
@@ -564,15 +556,19 @@ class SettingController extends Controller
     // designationDetails ajax list shows
     public function allDepartment(Request $request)
     {
-        // ::where('branch_id', $branch_ID)
-        $branch_ID = $request->brand_id;
-        $get = DepartmentList::where('b_id', Session::get('business_id'))->get();
+        // dd($request->all());
+        $branchID = $request->brand_id;
+        $get = EmployeePersonalDetail::join('department_list', 'department_list.depart_id', '=', 'employee_personal_details.department_id')
+            ->where('employee_personal_details.business_id', Session::get('business_id'))
+            ->where('employee_personal_details.active_emp', 1)
+            ->where('employee_personal_details.branch_id', $branchID)
+            ->select('department_list.depart_id', 'department_list.depart_name')
+            ->distinct()
+            ->get();
         return response()->json(['department' => $get]);
     }
     public function allDesignation(Request $request)
     {
-        //
-        // ->where('department_id', $request->depart_id)
         $get = DB::table('designation_list')
             ->where('business_id', Session::get('business_id'))
             ->get();
@@ -611,21 +607,16 @@ class SettingController extends Controller
             // return response()->json($request->check_value);
         }
     }
-    public function allEmployeeFilter()
+    public function allEmployeeFilter(Request $request)
     {
-        $get = DB::table('employee_personal_details')
-            ->where('business_id', Session::get('business_id'))
-            ->where('employee_personal_details.active_emp', '1')
-            ->when(request('branch_id'), function ($query, $branchId) {
-                return $query->where('branch_id', $branchId);
-            })
-            ->when(request('depart_id'), function ($query, $departId) {
-                return $query->where('department_id', $departId);
-            })
-            ->when(request('department_id'), function ($query, $designation) {
-                return $query->where('department_id', $designation);
-            })
+        $branchId = $request->branch_id;
+        $departId = $request->depart_id;
+        $get = EmployeePersonalDetail::where('business_id', Session::get('business_id'))
+            ->where('active_emp', 1)
+            ->where('branch_id', $branchId)
+            ->where('department_id', $departId)
             ->get();
+
         return response()->json(['employee' => $get]);
     }
     public function allPermissionType()
@@ -635,7 +626,17 @@ class SettingController extends Controller
     }
     public function allBranch()
     {
-        $get = DB::table('branch_list')->where('business_id', Session::get('business_id'))->get();
+        $businessId = Session::get('business_id');
+        $roleIdToCheck = Session::get('login_role');
+        $checkBranchPermission = PolicySettingRoleAssignPermission::where('business_id', $businessId)
+            ->where('emp_id', Session::get('login_emp_id'))
+            ->select('permission_branch_id')
+            ->first();
+        if ($checkBranchPermission !== null && !empty($checkBranchPermission) && $roleIdToCheck != 1 && ($checkBranchPermission->permission_branch_id == 2)) {
+            $get = DB::table('branch_list')->where('business_id', $businessId)->where('branch_list.branch_id', $checkBranchPermission->permission_branch_id)->get();
+        } else {
+            $get = DB::table('branch_list')->where('business_id', $businessId)->get();
+        }
         return response()->json(['branch' => $get]);
     }
     public function designationDetails(Request $request)
@@ -658,9 +659,16 @@ class SettingController extends Controller
         $addBranch = DB::table('branch_list')->insert($data);
 
         if ($addBranch) {
-            Alert::success('', 'Your Branhc has been created successfully')->persistent(true);
+            Alert::success('', 'Your Branch has been created successfully')->persistent(true);
         }
         return redirect()->back();
+    }
+
+    public function selectBranch(Request $request)
+    {
+        // $get = EmployeePersonalDetail::where('business_id', Session::get('business_id'))->where('emp_id', $request->empId)->where('branch_id', $request->branchId)->select('branch_id')->first();
+        $get = BranchList::where('business_id', Session::get('business_id'))->where('branch_id', $request->branchId)->first();
+        return response()->json(['branch' => $get]);
     }
 
     public function AddDepartment(Request $request)
@@ -903,8 +911,6 @@ class SettingController extends Controller
             Alert::info('Not Added', 'Your Leave policy has not been pdated')->persistent(true);
         }
         return back();
-
-
     }
 
 
@@ -1299,28 +1305,39 @@ class SettingController extends Controller
         $weeklyPolicyID = $request->weekly_policy_id;
 
         // $mode = AttendanceHolidayList::where('business_id', $BusinessID)->delete();
+        // dd(AttendanceHolidayList::where('business_id', $BusinessID)->get());
         $loaded = PolicyMasterEndgameMethod::where('business_id', $BusinessID)
             ->where('id', $masterId)
             ->update(['method_switch' => $activeCheck]);
 
+        if ($activeCheck == 1) {
+            // Delete upcoming holiday dates associated with the master_end_method_id
+            AttendanceHolidayList::where('master_end_method_id', $masterId)
+                ->where('business_id', $BusinessID)
+                ->where('process_check', 0)
+                ->delete();
+                // ->whereMonth('holiday_date', '>=', date('m')) // Consider only upcoming dates
 
-        if ($activeCheck != 0) {
             // Return the filtered "Monday" entries
             $policyHoliday = PolicyHolidayTemplate::where('business_id', $BusinessID)
                 ->where('temp_id', $holidayPolicyID)
                 ->where('holiday_type_id', 1)
                 ->first();
+
             $sd = AttendanceHolidayList::where('business_id', $BusinessID)
                 ->where('master_end_method_id', $masterId)
                 ->where('holiday_package_id', $holidayPolicyID)
                 ->where('holiday_type_id', 1)
+                ->where('process_check', 0)
+                // ->whereMonth('holiday_date', '>=', date('m')) // Consider only upcoming dates
                 ->first();
             if (!isset($sd)) {
                 $policyHolidayItems = PolicyHolidayDetail::where('business_id', $BusinessID)
                     ->where('template_id', $policyHoliday->temp_id)
                     ->get();
-                $dataToInsert = $policyHolidayItems
+                $dataToInsert1 = $policyHolidayItems
                     ->map(function ($item) use ($policyHoliday, $holidayPolicyID, $masterId) {
+                        // Ensure the holiday date is upcoming Remaining
                         return [
                             'process_check' => 0,
                             'master_end_method_id' => $masterId,
@@ -1335,17 +1352,14 @@ class SettingController extends Controller
                         ];
                     })
                     ->toArray();
-                AttendanceHolidayList::where('attendance_holiday_list', '<>', 1)->where('business_id', Session::get('business_id'))->insert($dataToInsert);
-
-                $delete = AttendanceHolidayList::where('attendance_holiday_list', 0)->where('business_id', Session::get('business_id'))->get();
-                if ($delete) {
-                    $delete->delete();
-                }
+                AttendanceHolidayList::insert($dataToInsert1);
             }
             $sd2 = AttendanceHolidayList::where('business_id', $BusinessID)
                 ->where('master_end_method_id', $masterId)
                 ->where('holiday_package_id', $weeklyPolicyID)
                 ->where('holiday_type_id', 2)
+                ->where('process_check', 0)
+                // ->whereMonth('holiday_date', '>=', date('m')) // Consider only upcoming dates
                 ->first();
             if (!isset($sd2)) {
                 $getweeklyID = PolicyWeeklyHolidayList::where('business_id', $BusinessID)
@@ -1375,6 +1389,8 @@ class SettingController extends Controller
                     }
                 }
 
+                // dd($mondaysInYear);
+
                 $collectionArray = json_decode($getweeklyID->days); //['Sunday','studart']
                 $methodApply = $getweeklyID->weekend_policy;
 
@@ -1401,6 +1417,8 @@ class SettingController extends Controller
                 });
 
                 foreach ($filteredDays as $filteredDay) {
+                    // Ensure the holiday date is upcoming Remaining
+
                     $dataToInsert[] = [
                         'process_check' => 0,
                         'master_end_method_id' => $masterId,
@@ -1413,14 +1431,11 @@ class SettingController extends Controller
                         'day' => $filteredDay['day'],
                         'holiday_date' => Carbon::createFromFormat('d-m-Y', $filteredDay['date'])->toDateString(), // Convert date format if needed
                     ];
+
                     // Insert the prepared data into the AttendanceHolidayList table
                 }
-                AttendanceHolidayList::where('attendance_holiday_list', '<>', 1)->where('business_id', Session::get('business_id'))->insert($dataToInsert);
-
-                $delete = AttendanceHolidayList::where('attendance_holiday_list', 0)->where('business_id', Session::get('business_id'))->get();
-                if ($delete) {
-                    $delete->delete();
-                }
+                // dd($dataToInsert);
+                AttendanceHolidayList::insert($dataToInsert);
             }
         }
 
@@ -1450,7 +1465,6 @@ class SettingController extends Controller
         }
 
         return redirect()->back();
-
     }
 
     // automation rule
@@ -1484,102 +1498,102 @@ class SettingController extends Controller
 
     public function setAutomationRule(Request $request)
     {
+        // dd($request->all());
+        // if ($request->dataLateEntry) {
+        //     if ($request->dataLateEntry == 'true') {
+        //         DB::table('policy_atten_rule_late_entry')
+        //             ->where('business_id', Session::get('business_id'))
+        //             ->update(['switch_is' => 1]);
+        //         return response()->json(['Updated true']);
+        //     } elseif ($request->dataLateEntry == 'false') {
+        //         DB::table('policy_atten_rule_late_entry')
+        //             ->where('business_id', Session::get('business_id'))
+        //             ->update(['switch_is' => 0]);
+        //         return response()->json(['Updated false']);
+        //     } else {
+        //         return response()->json($request->dataLateEntry);
+        //     }
+        // }
 
-        if ($request->dataLateEntry) {
-            if ($request->dataLateEntry == 'true') {
-                DB::table('policy_atten_rule_late_entry')
-                    ->where('business_id', Session::get('business_id'))
-                    ->update(['switch_is' => 1]);
-                return response()->json(['Updated true']);
-            } elseif ($request->dataLateEntry == 'false') {
-                DB::table('policy_atten_rule_late_entry')
-                    ->where('business_id', Session::get('business_id'))
-                    ->update(['switch_is' => 0]);
-                return response()->json(['Updated false']);
-            } else {
-                return response()->json($request->dataLateEntry);
-            }
-        }
+        // if ($request->breakSwitch) {
+        //     if ($request->breakSwitch == 'true') {
+        //         DB::table('policy_atten_rule_break')
+        //             ->where('business_id', Session::get('business_id'))
+        //             ->update(['switch_is' => 1]);
+        //         return response()->json('Updated True');
+        //     } elseif ($request->breakSwitch == 'false') {
+        //         DB::table('policy_atten_rule_break')
+        //             ->where('business_id', Session::get('business_id'))
+        //             ->update(['switch_is' => 0]);
+        //         return response()->json('Updated False');
+        //     } else {
+        //         return response()->json($request->breakSwitch);
+        //     }
+        // }
 
-        if ($request->breakSwitch) {
-            if ($request->breakSwitch == 'true') {
-                DB::table('policy_atten_rule_break')
-                    ->where('business_id', Session::get('business_id'))
-                    ->update(['switch_is' => 1]);
-                return response()->json('Updated True');
-            } elseif ($request->breakSwitch == 'false') {
-                DB::table('policy_atten_rule_break')
-                    ->where('business_id', Session::get('business_id'))
-                    ->update(['switch_is' => 0]);
-                return response()->json('Updated False');
-            } else {
-                return response()->json($request->breakSwitch);
-            }
-        }
+        // if ($request->earlyExitSwitch) {
+        //     if ($request->earlyExitSwitch == 'true') {
+        //         DB::table('policy_atten_rule_early_exit')
+        //             ->where('business_id', Session::get('business_id'))
+        //             ->update(['switch_is' => 1]);
+        //         return response()->json('Updated True');
+        //     } elseif ($request->earlyExitSwitch == 'false') {
+        //         DB::table('policy_atten_rule_early_exit')
+        //             ->where('business_id', Session::get('business_id'))
+        //             ->update(['switch_is' => 0]);
+        //         return response()->json('Updated False');
+        //     } else {
+        //         return response()->json($request->earlyExitSwitch);
+        //     }
+        // }
 
-        if ($request->earlyExitSwitch) {
-            if ($request->earlyExitSwitch == 'true') {
-                DB::table('policy_atten_rule_early_exit')
-                    ->where('business_id', Session::get('business_id'))
-                    ->update(['switch_is' => 1]);
-                return response()->json('Updated True');
-            } elseif ($request->earlyExitSwitch == 'false') {
-                DB::table('policy_atten_rule_early_exit')
-                    ->where('business_id', Session::get('business_id'))
-                    ->update(['switch_is' => 0]);
-                return response()->json('Updated False');
-            } else {
-                return response()->json($request->earlyExitSwitch);
-            }
-        }
+        // if ($request->overtimeSwitch) {
+        //     if ($request->overtimeSwitch == 'true') {
+        //         DB::table('policy_atten_rule_overtime')
+        //             ->where('business_id', Session::get('business_id'))
+        //             ->update(['switch_is' => 1]);
+        //         return response()->json('Updated True');
+        //     } elseif ($request->overtimeSwitch == 'false') {
+        //         DB::table('policy_atten_rule_overtime')
+        //             ->where('business_id', Session::get('business_id'))
+        //             ->update(['switch_is' => 0]);
+        //         return response()->json('Updated False');
+        //     } else {
+        //         return response()->json($request->overtimeSwitch);
+        //     }
+        // }
 
-        if ($request->overtimeSwitch) {
-            if ($request->overtimeSwitch == 'true') {
-                DB::table('policy_atten_rule_overtime')
-                    ->where('business_id', Session::get('business_id'))
-                    ->update(['switch_is' => 1]);
-                return response()->json('Updated True');
-            } elseif ($request->overtimeSwitch == 'false') {
-                DB::table('policy_atten_rule_overtime')
-                    ->where('business_id', Session::get('business_id'))
-                    ->update(['switch_is' => 0]);
-                return response()->json('Updated False');
-            } else {
-                return response()->json($request->overtimeSwitch);
-            }
-        }
+        // if ($request->missPunchSwitch) {
+        //     if ($request->missPunchSwitch == 'true') {
+        //         DB::table('policy_atten_rule_misspunch')
+        //             ->where('business_id', Session::get('business_id'))
+        //             ->update(['switch_is' => 1]);
+        //         return response()->json('Updated True');
+        //     } elseif ($request->missPunchSwitch == 'false') {
+        //         DB::table('policy_atten_rule_misspunch')
+        //             ->where('business_id', Session::get('business_id'))
+        //             ->update(['switch_is' => 0]);
+        //         return response()->json('Updated False');
+        //     } else {
+        //         return response()->json($request->missPunchSwitch);
+        //     }
+        // }
 
-        if ($request->missPunchSwitch) {
-            if ($request->missPunchSwitch == 'true') {
-                DB::table('policy_atten_rule_misspunch')
-                    ->where('business_id', Session::get('business_id'))
-                    ->update(['switch_is' => 1]);
-                return response()->json('Updated True');
-            } elseif ($request->missPunchSwitch == 'false') {
-                DB::table('policy_atten_rule_misspunch')
-                    ->where('business_id', Session::get('business_id'))
-                    ->update(['switch_is' => 0]);
-                return response()->json('Updated False');
-            } else {
-                return response()->json($request->missPunchSwitch);
-            }
-        }
-
-        if ($request->gatePassSwitch) {
-            if ($request->gatePassSwitch == 'true') {
-                DB::table('policy_atten_rule_gatepass')
-                    ->where('business_id', Session::get('business_id'))
-                    ->update(['switch_is' => 1]);
-                return response()->json('Updated True');
-            } elseif ($request->gatePassSwitch == 'false') {
-                DB::table('policy_atten_rule_gatepass')
-                    ->where('business_id', Session::get('business_id'))
-                    ->update(['switch_is' => 0]);
-                return response()->json('Updated False');
-            } else {
-                return response()->json($request->gatePassSwitch);
-            }
-        }
+        // if ($request->gatePassSwitch) {
+        //     if ($request->gatePassSwitch == 'true') {
+        //         DB::table('policy_atten_rule_gatepass')
+        //             ->where('business_id', Session::get('business_id'))
+        //             ->update(['switch_is' => 1]);
+        //         return response()->json('Updated True');
+        //     } elseif ($request->gatePassSwitch == 'false') {
+        //         DB::table('policy_atten_rule_gatepass')
+        //             ->where('business_id', Session::get('business_id'))
+        //             ->update(['switch_is' => 0]);
+        //         return response()->json('Updated False');
+        //     } else {
+        //         return response()->json($request->gatePassSwitch);
+        //     }
+        // }
 
         $splitedLateEntryGraceTime = explode(':', $request->lateEntryGraceTime);
         $splitedLateEntryOccurenceHour = explode(':', $request->lateEntryOccurenceHour);
@@ -1599,13 +1613,33 @@ class SettingController extends Controller
 
 
 
-        if ($request->lateEntry == 'on') {
-            $lateEntryData = DB::table('policy_atten_rule_late_entry')
+        // if ($request->lateEntry == 'on') {
+        $lateEntryData = DB::table('policy_atten_rule_late_entry')
+            ->where('business_id', Session::get('business_id'))
+            ->first();
+        if (!isset($lateEntryData)) {
+            $insertLateEntryData = DB::table('policy_atten_rule_late_entry')->insert([
+                'switch_is' => 1,
+                'grace_time_hr' => isset($request->lateEntryGraceTime) ? $splitedLateEntryGraceTime[0] : 0,
+                'grace_time_min' => isset($request->lateEntryGraceTime) ? $splitedLateEntryGraceTime[1] : 0,
+                'occurance_is' => $request->lateEntrySelectOccurance,
+                'occurance_count' => $request->lateEntryOccurenceCount,
+                'occurance_hr' => isset($request->lateEntryOccurenceHour) ? $splitedLateEntryOccurenceHour[0] : 0,
+                'occurance_min' => isset($request->lateEntryOccurenceHour) ? $splitedLateEntryOccurenceHour[1] : 0,
+                'absent_is' => $request->lateEntrySelectAbsent,
+                'mark_half_day_hr' => isset($request->lateEntryMarkHalfDayMinutes) ? $splitedLateEntryMarkHalfDayMinutes[0] : 0,
+                'mark_half_day_min' => isset($request->lateEntryMarkHalfDayMinutes) ? $splitedLateEntryMarkHalfDayMinutes[1] : 0,
+                'business_id' => Session::get('business_id'),
+            ]);
+
+            if ($insertLateEntryData) {
+                Alert::success('Successfully Created');
+            }
+        } else {
+            $updateLateEntryData = DB::table('policy_atten_rule_late_entry')
                 ->where('business_id', Session::get('business_id'))
-                ->first();
-            if (!isset($lateEntryData)) {
-                $insertLateEntryData = DB::table('policy_atten_rule_late_entry')->insert([
-                    'switch_is' => 1,
+                ->update([
+                    'switch_is' => $request->lateEntry == 'on' ? 1 : 0,
                     'grace_time_hr' => isset($request->lateEntryGraceTime) ? $splitedLateEntryGraceTime[0] : 0,
                     'grace_time_min' => isset($request->lateEntryGraceTime) ? $splitedLateEntryGraceTime[1] : 0,
                     'occurance_is' => $request->lateEntrySelectOccurance,
@@ -1615,41 +1649,41 @@ class SettingController extends Controller
                     'absent_is' => $request->lateEntrySelectAbsent,
                     'mark_half_day_hr' => isset($request->lateEntryMarkHalfDayMinutes) ? $splitedLateEntryMarkHalfDayMinutes[0] : 0,
                     'mark_half_day_min' => isset($request->lateEntryMarkHalfDayMinutes) ? $splitedLateEntryMarkHalfDayMinutes[1] : 0,
-                    'business_id' => Session::get('business_id'),
                 ]);
 
-                if ($insertLateEntryData) {
-                    Alert::success('Successfully Created');
-                }
-            } else {
-                $updateLateEntryData = DB::table('policy_atten_rule_late_entry')
-                    ->where('business_id', Session::get('business_id'))
-                    ->update([
-                        'grace_time_hr' => isset($request->lateEntryGraceTime) ? $splitedLateEntryGraceTime[0] : 0,
-                        'grace_time_min' => isset($request->lateEntryGraceTime) ? $splitedLateEntryGraceTime[1] : 0,
-                        'occurance_is' => $request->lateEntrySelectOccurance,
-                        'occurance_count' => $request->lateEntryOccurenceCount,
-                        'occurance_hr' => isset($request->lateEntryOccurenceHour) ? $splitedLateEntryOccurenceHour[0] : 0,
-                        'occurance_min' => isset($request->lateEntryOccurenceHour) ? $splitedLateEntryOccurenceHour[1] : 0,
-                        'absent_is' => $request->lateEntrySelectAbsent,
-                        'mark_half_day_hr' => isset($request->lateEntryMarkHalfDayMinutes) ? $splitedLateEntryMarkHalfDayMinutes[0] : 0,
-                        'mark_half_day_min' => isset($request->lateEntryMarkHalfDayMinutes) ? $splitedLateEntryMarkHalfDayMinutes[1] : 0,
-                    ]);
-
-                if ($updateLateEntryData) {
-                    Alert::success('Successfully Updated')->persistent(true);
-                }
+            if ($updateLateEntryData) {
+                Alert::success('Successfully Updated')->persistent(true);
             }
         }
+        // }
 
-        if ($request->earlyExitBtn == 'on') {
-            $earlyExitData = DB::table('policy_atten_rule_early_exit')
+        // if ($request->earlyExitBtn == 'on') {
+        $earlyExitData = DB::table('policy_atten_rule_early_exit')
+            ->where('business_id', Session::get('business_id'))
+            ->first();
+
+        if (!isset($earlyExitData)) {
+            $insertEarlyExitData = DB::table('policy_atten_rule_early_exit')->insert([
+                'switch_is' => 1,
+                'grace_time_hr' => isset($request->graceTime) ? $splitedGraceTime[0] : 0,
+                'grace_time_min' => isset($request->graceTime) ? $splitedGraceTime[1] : 0,
+                'occurance_is' => $request->earlyExitSelectOccurence,
+                'occurance_count' => $request->earlyExitOccurenceCount,
+                'occurance_hr' => isset($request->earlyExitOccurenceHour) ? $splitedEarlyExitOccurenceHour[0] : 0,
+                'occurance_min' => isset($request->earlyExitOccurenceHour) ? $splitedEarlyExitOccurenceHour[1] : 0,
+                'absent_is' => $request->earlyExitSelectAbsent,
+                'mark_half_day_hr' => isset($request->earlyExitBy) ? $splitedEarlyExitBy[0] : 0,
+                'mark_half_day_min' => isset($request->earlyExitBy) ? $splitedEarlyExitBy[1] : 0,
+                'business_id' => Session::get('business_id'),
+            ]);
+            if ($insertEarlyExitData) {
+                Alert::success('Successfully Created')->persistent(true);
+            }
+        } else {
+            $updateEarlyExitData = DB::table('policy_atten_rule_early_exit')
                 ->where('business_id', Session::get('business_id'))
-                ->first();
-
-            if (!isset($earlyExitData)) {
-                $insertEarlyExitData = DB::table('policy_atten_rule_early_exit')->insert([
-                    'switch_is' => 1,
+                ->update([
+                    'switch_is' => $request->earlyExitBtn == 'on' ? 1 : 0,
                     'grace_time_hr' => isset($request->graceTime) ? $splitedGraceTime[0] : 0,
                     'grace_time_min' => isset($request->graceTime) ? $splitedGraceTime[1] : 0,
                     'occurance_is' => $request->earlyExitSelectOccurence,
@@ -1659,38 +1693,39 @@ class SettingController extends Controller
                     'absent_is' => $request->earlyExitSelectAbsent,
                     'mark_half_day_hr' => isset($request->earlyExitBy) ? $splitedEarlyExitBy[0] : 0,
                     'mark_half_day_min' => isset($request->earlyExitBy) ? $splitedEarlyExitBy[1] : 0,
-                    'business_id' => Session::get('business_id'),
                 ]);
-                if ($insertEarlyExitData) {
-                    Alert::success('Successfully Created')->persistent(true);
-                }
-            } else {
-                $updateEarlyExitData = DB::table('policy_atten_rule_early_exit')
-                    ->where('business_id', Session::get('business_id'))
-                    ->update([
-                        'grace_time_hr' => isset($request->graceTime) ? $splitedGraceTime[0] : 0,
-                        'grace_time_min' => isset($request->graceTime) ? $splitedGraceTime[1] : 0,
-                        'occurance_is' => $request->earlyExitSelectOccurence,
-                        'occurance_count' => $request->earlyExitOccurenceCount,
-                        'occurance_hr' => isset($request->earlyExitOccurenceHour) ? $splitedEarlyExitOccurenceHour[0] : 0,
-                        'occurance_min' => isset($request->earlyExitOccurenceHour) ? $splitedEarlyExitOccurenceHour[1] : 0,
-                        'absent_is' => $request->earlyExitSelectAbsent,
-                        'mark_half_day_hr' => isset($request->earlyExitBy) ? $splitedEarlyExitBy[0] : 0,
-                        'mark_half_day_min' => isset($request->earlyExitBy) ? $splitedEarlyExitBy[1] : 0,
-                    ]);
-                if ($updateEarlyExitData) {
-                    Alert::success('Successfully Updated')->persistent(true);
-                }
+            if ($updateEarlyExitData) {
+                Alert::success('Successfully Updated')->persistent(true);
             }
         }
+        // }
 
-        if ($request->overtime == 'on') {
-            $overtimeData = DB::table('policy_atten_rule_overtime')
+        // if ($request->overtime == 'on') {
+        $overtimeData = DB::table('policy_atten_rule_overtime')
+            ->where('business_id', Session::get('business_id'))
+            ->first();
+        if (!isset($overtimeData)) {
+            $insertOvertimeData = DB::table('policy_atten_rule_overtime')->insert([
+                'switch_is' => 1,
+                'early_ot_hr' => isset($request->earlyOverTime) ? $splitedEarlyOverTime[0] : 0,
+                'early_ot_min' => isset($request->earlyOverTime) ? $splitedEarlyOverTime[1] : 0,
+                'late_ot_hr' => isset($request->lateOverTime) ? $splitedLateOverTime[0] : 0,
+                'late_ot_min' => isset($request->lateOverTime) ? $splitedLateOverTime[1] : 0,
+                'min_ot_hr' => isset($request->minOverTime) ? $splitedMinOverTime[0] : 0,
+                'min_ot_min' => isset($request->minOverTime) ? $splitedMinOverTime[1] : 0,
+                'max_ot_hr' => isset($request->maxOverTime) ? $splitedMaxOverTime[0] : 0,
+                'max_ot_min' => isset($request->maxOverTime) ? $splitedMaxOverTime[1] : 0,
+                'business_id' => Session::get('business_id'),
+            ]);
+
+            if ($insertOvertimeData) {
+                Alert::success('Successfully Created')->persistent(true);
+            }
+        } else {
+            $updateOvertimeData = DB::table('policy_atten_rule_overtime')
                 ->where('business_id', Session::get('business_id'))
-                ->first();
-            if (!isset($overtimeData)) {
-                $insertOvertimeData = DB::table('policy_atten_rule_overtime')->insert([
-                    'switch_is' => 1,
+                ->update([
+                    'switch_is' => $request->overtime == 'on' ? 1 : 0,
                     'early_ot_hr' => isset($request->earlyOverTime) ? $splitedEarlyOverTime[0] : 0,
                     'early_ot_min' => isset($request->earlyOverTime) ? $splitedEarlyOverTime[1] : 0,
                     'late_ot_hr' => isset($request->lateOverTime) ? $splitedLateOverTime[0] : 0,
@@ -1699,30 +1734,12 @@ class SettingController extends Controller
                     'min_ot_min' => isset($request->minOverTime) ? $splitedMinOverTime[1] : 0,
                     'max_ot_hr' => isset($request->maxOverTime) ? $splitedMaxOverTime[0] : 0,
                     'max_ot_min' => isset($request->maxOverTime) ? $splitedMaxOverTime[1] : 0,
-                    'business_id' => Session::get('business_id'),
                 ]);
-
-                if ($insertOvertimeData) {
-                    Alert::success('Successfully Created')->persistent(true);
-                }
-            } else {
-                $updateOvertimeData = DB::table('policy_atten_rule_overtime')
-                    ->where('business_id', Session::get('business_id'))
-                    ->update([
-                        'early_ot_hr' => isset($request->earlyOverTime) ? $splitedEarlyOverTime[0] : 0,
-                        'early_ot_min' => isset($request->earlyOverTime) ? $splitedEarlyOverTime[1] : 0,
-                        'late_ot_hr' => isset($request->lateOverTime) ? $splitedLateOverTime[0] : 0,
-                        'late_ot_min' => isset($request->lateOverTime) ? $splitedLateOverTime[1] : 0,
-                        'min_ot_hr' => isset($request->minOverTime) ? $splitedMinOverTime[0] : 0,
-                        'min_ot_min' => isset($request->minOverTime) ? $splitedMinOverTime[1] : 0,
-                        'max_ot_hr' => isset($request->maxOverTime) ? $splitedMaxOverTime[0] : 0,
-                        'max_ot_min' => isset($request->maxOverTime) ? $splitedMaxOverTime[1] : 0,
-                    ]);
-                if ($updateOvertimeData) {
-                    Alert::success('Successfully Updated')->persistent(true);
-                }
+            if ($updateOvertimeData) {
+                Alert::success('Successfully Updated')->persistent(true);
             }
         }
+        // }
 
         if ($request->breakBtn == 'on') {
             $breakData = DB::table('policy_atten_rule_break')
@@ -1763,14 +1780,32 @@ class SettingController extends Controller
             }
         }
 
-        if ($request->missPunch == 'on') {
-            $missPunchData = DB::table('policy_atten_rule_misspunch')
-                ->where('business_id', Session::get('business_id'))
-                ->first();
+        // if ($request->missPunch == 'on') {
+        $missPunchData = DB::table('policy_atten_rule_misspunch')
+            ->where('business_id', Session::get('business_id'))
+            ->first();
 
-            if (!isset($missPunchData)) {
-                $insertMissPunchData = DB::table('policy_atten_rule_misspunch')->insert([
-                    'switch_is' => 1,
+        if (!isset($missPunchData)) {
+            $insertMissPunchData = DB::table('policy_atten_rule_misspunch')->insert([
+                'switch_is' => 1,
+                'occurance_is' => $request->missPunchSelectOccurence,
+                'occurance_count' => $request->missPunchOccurenceCount,
+                'occurance_hr' => isset($request->missPunchOccurenceHour) ? $splitedMissPunchOccurenceHour[0] : 0,
+                'occurance_min' => isset($request->missPunchOccurenceHour) ? $splitedMissPunchOccurenceHour[1] : 0,
+                'absent_is' => $request->missPunchSelectAbsent,
+                'request_day' => $request->missPunchRequestDay ?? 0,
+                'request_day_absent_is' => $request->missPunchDaySelectAbsent ?? 0,
+                'business_id' => Session::get('business_id'),
+            ]);
+
+            if ($insertMissPunchData) {
+                Alert::success('Successfully Created')->persistent(true);
+            }
+        } else {
+            $updateMissPunchData = DB::table('policy_atten_rule_misspunch')
+                ->where('business_id', Session::get('business_id'))
+                ->update([
+                    'switch_is' => $request->missPunch == 'on' ? 1 : 0,
                     'occurance_is' => $request->missPunchSelectOccurence,
                     'occurance_count' => $request->missPunchOccurenceCount,
                     'occurance_hr' => isset($request->missPunchOccurenceHour) ? $splitedMissPunchOccurenceHour[0] : 0,
@@ -1778,66 +1813,50 @@ class SettingController extends Controller
                     'absent_is' => $request->missPunchSelectAbsent,
                     'request_day' => $request->missPunchRequestDay ?? 0,
                     'request_day_absent_is' => $request->missPunchDaySelectAbsent ?? 0,
-                    'business_id' => Session::get('business_id'),
                 ]);
 
-                if ($insertMissPunchData) {
-                    Alert::success('Successfully Created')->persistent(true);
-                }
-            } else {
-                $updateMissPunchData = DB::table('policy_atten_rule_misspunch')
-                    ->where('business_id', Session::get('business_id'))
-                    ->update([
-                        'occurance_is' => $request->missPunchSelectOccurence,
-                        'occurance_count' => $request->missPunchOccurenceCount,
-                        'occurance_hr' => isset($request->missPunchOccurenceHour) ? $splitedMissPunchOccurenceHour[0] : 0,
-                        'occurance_min' => isset($request->missPunchOccurenceHour) ? $splitedMissPunchOccurenceHour[1] : 0,
-                        'absent_is' => $request->missPunchSelectAbsent,
-                        'request_day' => $request->missPunchRequestDay ?? 0,
-                        'request_day_absent_is' => $request->missPunchDaySelectAbsent ?? 0,
-                    ]);
-
-                if ($updateMissPunchData) {
-                    Alert::success('Successfully Created')->persistent(true);
-                }
+            if ($updateMissPunchData) {
+                Alert::success('Successfully Created')->persistent(true);
             }
         }
+        // }
 
-        if ($request->gatePass == 'on') {
-            $gatePassData = DB::table('policy_atten_rule_gatepass')
+        // if ($request->gatePass == 'on') {
+        $gatePassData = DB::table('policy_atten_rule_gatepass')
+            ->where('business_id', Session::get('business_id'))
+            ->first();
+
+        if (!isset($gatePassData)) {
+            $insertGatePassData = DB::table('policy_atten_rule_gatepass')->insert([
+                'switch_is' => 1,
+                'occurance_is' => $request->gatePassSelectOccurence ?? 0,
+                'occurance_count' => $request->gatePassOccurenceCount,
+                'occurance_hr' => isset($request->gatePassOccurenceHour) ? $splitedGatePassOccurenceHour[0] : 0,
+                'occurance_min' => isset($request->gatePassOccurenceHour) ? $splitedGatePassOccurenceHour[1] : 0,
+                'absent_is' => $request->gatePasSelectAbsent,
+                'business_id' => Session::get('business_id'),
+            ]);
+
+            if ($insertGatePassData) {
+                Alert::success('Successfully Created');
+            }
+        } else {
+            $updateGatePassData = DB::table('policy_atten_rule_gatepass')
                 ->where('business_id', Session::get('business_id'))
-                ->first();
-
-            if (!isset($gatePassData)) {
-                $insertGatePassData = DB::table('policy_atten_rule_gatepass')->insert([
-                    'switch_is' => 1,
-                    'occurance_is' => $request->gatePassSelectOccurence ?? 0,
+                ->update([
+                    'switch_is' => $request->gatePass == 'on' ? 1 : 0,
+                    'occurance_is' => $request->gatePassSelectOccurence,
                     'occurance_count' => $request->gatePassOccurenceCount,
                     'occurance_hr' => isset($request->gatePassOccurenceHour) ? $splitedGatePassOccurenceHour[0] : 0,
                     'occurance_min' => isset($request->gatePassOccurenceHour) ? $splitedGatePassOccurenceHour[1] : 0,
                     'absent_is' => $request->gatePasSelectAbsent,
-                    'business_id' => Session::get('business_id'),
                 ]);
 
-                if ($insertGatePassData) {
-                    Alert::success('Successfully Created');
-                }
-            } else {
-                $updateGatePassData = DB::table('policy_atten_rule_gatepass')
-                    ->where('business_id', Session::get('business_id'))
-                    ->update([
-                        'occurance_is' => $request->gatePassSelectOccurence,
-                        'occurance_count' => $request->gatePassOccurenceCount,
-                        'occurance_hr' => isset($request->gatePassOccurenceHour) ? $splitedGatePassOccurenceHour[0] : 0,
-                        'occurance_min' => isset($request->gatePassOccurenceHour) ? $splitedGatePassOccurenceHour[1] : 0,
-                        'absent_is' => $request->gatePasSelectAbsent,
-                    ]);
-
-                if ($updateGatePassData) {
-                    Alert::success('Successfully Updated')->persistent(true);
-                }
+            if ($updateGatePassData) {
+                Alert::success('Successfully Updated')->persistent(true);
             }
         }
+        // }
 
         if (($updateGatePassData ?? false) || ($updateMissPunchData ?? false) || ($updateBreakData ?? false) || ($updateOvertimeData ?? false) || ($updateEarlyExitData ?? false) || ($updateLateEntryData ?? false)) {
             Alert::success('', 'Your Automation rule has been created successfully');
@@ -1969,6 +1988,56 @@ class SettingController extends Controller
             }
         } else {
             Alert::error('This data is already deleted')->persistent(true);
+        }
+        return redirect()->back();
+    }
+    public function grade()
+    {
+        $accessPermission = Central_unit::AccessPermission();
+        $moduleName = $accessPermission[0];
+        $permissions = $accessPermission[1];
+        $data = GradeList::where('business_id', Session::get('business_id'))->get();
+        // dd(($item));
+        return view('admin.setting.business.grade.grade', compact('data', 'permissions', 'moduleName'));
+    }
+
+    public function AddGrade(Request $request)
+    {
+        $GradeData = new GradeList();
+        $GradeData->business_id = Session::get('business_id');
+        $GradeData->branch_id = Session::get('branch_id');
+        $GradeData->grade_name = $request->Grade;
+        if ($GradeData->save()) {
+            Alert::success('', 'Your Grade has been created successfully')->persistent(true);
+        } else {
+            Alert::error('', 'Your Grade has been not created')->persistent(true);
+        }
+        return redirect()->back();
+    }
+
+    public function UpdateGrade(Request $request)
+    {
+        $GradeData = GradeList::where('id', $request->editid)->where('business_id', Session::get('business_id'))->update(['grade_name' => $request->editGrade]);
+        if ($GradeData) {
+            Alert::success('', 'Your Grade has been updated successfully')->persistent(true);
+        } else {
+            Alert::error('', 'Your Grade has been not updated')->persistent(true);
+        }
+        return redirect()->back();
+    }
+
+    public function DeleteGrade(Request $request)
+    {
+        $GradeAssignCheck = EmployeePersonalDetail::where('business_id', Session::get('business_id'))->where('grade', $request->deleteId)->first();
+        if ($GradeAssignCheck) {
+            Alert::error('', 'Your Grade has not been deleted, if employee associated with it')->persistent(true);
+        } else {
+            $GradeData = GradeList::where('id', $request->deleteId)->where('business_id', Session::get('business_id'))->delete();
+            if ($GradeData) {
+                Alert::success('', 'Your Grade has been deleted successfully')->persistent(true);
+            } else {
+                Alert::error('', 'Your Grade has not been deleted')->persistent(true);
+            }
         }
         return redirect()->back();
     }

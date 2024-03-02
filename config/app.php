@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool) env('APP_DEBUG', true), //false
 
     /*
     |--------------------------------------------------------------------------
@@ -53,8 +53,10 @@ return [
     | your application so that it is used when running Artisan tasks.
     |
     */
-
-    'url' => env('APP_URL', 'http://localhost'),
+    'cdn' => env('SWEETALERT_CDN'),
+    // 'cdn' => env('SWEETALERT_CDN', 'https://cdn.jsdelivr.net/npm/sweetalert2@9'),
+    //https://phplaravel-1083191-3790162.cloudwaysapps.com
+    'url' => env('APP_URL', 'https://fixhr.app'),
 
     'asset_url' => env('ASSET_URL'),
 
@@ -69,7 +71,8 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Kolkata',
+    //'UTC',
 
     /*
     |--------------------------------------------------------------------------
@@ -156,9 +159,9 @@ return [
 
     'providers' => [
 
-        /*
-         * Laravel Framework Service Providers...
-         */
+            /*
+             * Laravel Framework Service Providers...
+             */
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
@@ -181,19 +184,25 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+            /*
+             * Package Service Providers...
+             */
 
-        /*
-         * Package Service Providers...
-         */
-
-        /*
-         * Application Service Providers...
-         */
+            /*
+             * Application Service Providers...
+             */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+            // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Spatie\Permission\PermissionServiceProvider::class,
+        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
+        Ixudra\Curl\CurlServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
+        // Softon\Indipay\IndipayServiceProvider::class
 
     ],
 
@@ -209,6 +218,13 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
+        'Form' => Collective\Html\FormFacde::class,
+        'Html' => Collective\Html\HtmlFacde::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Curl' => Ixudra\Curl\Facades\Curl::class,
+        // 'Indipay' => Softon\Indipay\Facades\Indipay::class
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 

@@ -29,7 +29,7 @@
         <div class="modal-dialog modal-dialog-centered " role="document">
             <div class="modal-content modal-content-demo">
                 <div class="modal-header">
-                    <h5 style="color: #fff!important">Add Employee</h5>
+                    <h5 style="color: #fff!important">Add New Employee</h5>
                     <a aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
                             aria-hidden="true">&times;</span>
                     </a>
@@ -95,7 +95,7 @@
                         <h3 class="text-center"><b style="color: rgb(22, 109, 83)">Contractual Employee</b></h3>
                         <div class="text-center">
                             <a class="btn btn-outline-primary my-2 border-0" data-bs-toggle="modal"
-                                data-bs-target="#addempmodal"><b>Add Employee</b></a>
+                                data-bs-target="#addempmodal"><b>Add New Employee</b></a>
                             <a class="btn btn-outline-primary my-2 border-0" data-bs-toggle="modal"
                                 data-bs-target="#"><b><i class="fa fa-file-excel-o me-1"></i>Upload Bulk</b>
                             </a>
@@ -130,7 +130,7 @@
                             <ul class="d-none">
                                 <li><a href="#step-10">Personal Details</a></li>
                                 <li><a href="#step-11">Communcation Details</a></li>
-                                <li><a href="#step-12">Comapany Details</a></li>
+                                <li><a href="#step-12">Company Details</a></li>
 
                             </ul>
                             <div>
@@ -352,7 +352,7 @@
 
                                 </div>
                                 <div id="step-12" class="" style="height: 448px">
-                                    <h4 class="mb-2 font-weight-bold">Comapany Details</h4>
+                                    <h4 class="mb-2 font-weight-bold">Company Details</h4>
                                     <div class="form-group mb-0 justify-content-end">
                                         <div class="row pt-5">
                                             <div class="col-md-4">

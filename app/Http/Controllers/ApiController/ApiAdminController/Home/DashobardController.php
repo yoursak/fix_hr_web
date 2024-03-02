@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ApiController\ApiAdminController\Home;
 
+use App\Exports\ApiUserExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -41,7 +42,9 @@ class DashobardController extends Controller
 
         $businessID = $request->business_id;
         $findDate = $request->date;
-        $getInfomation = Central_unit::getDailyCountForDashboardAndDailyList($businessID, $findDate);
+        $loginRole = $request->login_role;
+        $loginEmpID = $request->login_emp_id;
+        $getInfomation = Central_unit::getDailyCountForDashboardAndDailyList($businessID, $findDate, $loginRole, $loginEmpID);
         if (!empty($getInfomation)) {
             return response()->json(['result' => [$getInfomation], 'case' => 1, 'message' => 'success'], 200);
         } else {
@@ -68,32 +71,34 @@ class DashobardController extends Controller
     }
     public function getTodayAttendanceReport(Request $request)
     {
-        // $BID = $request->business_id;
-        // $Date = $request->date;
-        // $Emp = DB::table('employee_personal_details')
-        //     ->where('active_emp', 1)
-        //     ->where('business_id', $request->input('business_id', $BID))
-        //     ->orderBy('emp_id')
-        //     ->get();
-        // $branch = DB::table('branch_list')->where('business_id', $BID)->first();
-        // $length = $Emp->count();
-        // $month = date('m', strtotime($Date));
-        // $year = date('Y', strtotime($Date));
-        // $day = date('d', strtotime($Date));
+        $BID = $request->business_id;
+        $Date = $request->date;
+        $Emp = DB::table('employee_personal_details')
+            ->where('active_emp', 1)
+            ->where('business_id', $request->input('business_id', $BID))
+            ->orderBy('emp_id')
+            ->get();
+        $branch = DB::table('branch_list')->where('business_id', $BID)->first();
+        $length = $Emp->count();
+        $month = date('m', strtotime($Date));
+        $year = date('Y', strtotime($Date));
+        $day = date('d', strtotime($Date));
 
-        // if ($Emp->isEmpty()) {
-        //     if ($request->expectsJson()) {
-        //         return response()->json(['error' => 'No records to export.'], 404);
-        //     } else {
-        //         return redirect()->back()->with('error', 'No records to export.');
-        //     }
-        // }
+        if ($Emp->isEmpty()) {
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'No records to export.'], 404);
+            } else {
+                return redirect()->back()->with('error', 'No records to export.');
+            }
+        }
+        // else
 
-
-        // return Excel::download(
-        //     new UsersExport($Emp, $length, 7, $month, $year, $day, $branch->branch_name ?? 'All Branch'),
-        //     'EmployeeDailyAttendanceReport.xlsx',
-        //     \Maatwebsite\Excel\Excel::XLSX
-        // );
+        // return Excel::download(new ApiUserExport($Emp, $length, 7, $month, $year, $day, $branch->branch_name ?? 'All Branch', $BID), 'EmployeeDailyAttendanceReport.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        return Excel::download(
+            new ApiUserExport($Emp, $length, 7, $month, $year, $day, $branch->branch_name ?? 'All Branch', $BID),
+            'EmployeeDailyAttendanceReport.xlsx',
+            \Maatwebsite\Excel\Excel::XLSX
+        ); //->withHeaders(['Content-Type' => 'application/vnd.ms-excel'])
+        // return Excel::download(new ApiUserExport($Emp, $length, 7, $month, $year, $day, $branch->branch_name ?? 'All Branch', $BID), 'api_user_export.xlsx')->header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     }
 }

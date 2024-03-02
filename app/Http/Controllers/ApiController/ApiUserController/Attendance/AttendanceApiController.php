@@ -192,7 +192,7 @@ class AttendanceApiController extends Controller
     //CREATED CODE BY JAYANT (Attendance Handling theory)
     public function storeAttendance(Request $request)
     {
-        //remaining on faceID and location-tabs
+        //remaining on faceID only
         // initialize
         $currentMethodAuto = 0;
         $currentMethodManual = 0;
@@ -248,7 +248,7 @@ class AttendanceApiController extends Controller
         }
         //checking QR auto - manual  Automatic Set values BY AttendanceMode
         $checkingModes = PolicyAttendanceMode::where('business_id', $business)
-            ->where(function ($query)  use ($methodAccept) {
+            ->where(function ($query) use ($methodAccept) {
 
                 if ($methodAccept == 1) { //office
 
@@ -282,17 +282,19 @@ class AttendanceApiController extends Controller
                 $currentMethodManual = $checkingModes->wfh_manual;
             }
         }
-        // dd($checkingModes);
         // Rules
         $getDay = RulesManagement::TodayStatus()[0]; //current Day;
-        $formattedDate = date('Y-m-d', strtotime($getDay));
+        $formattedDate = date('Y-m-d', strtotime($getDay)); //punch-Date Custom Added
         $punchDate = $formattedDate;
         $count = 0;
 
         $information = EmployeePersonalDetail::where('business_id', $business)
             ->where('emp_id', $emp)
             ->first(); //findOut Employee Details
-
+        $branchId = $information->branch_id;
+        $roleIdToCheck = $information->static_role;
+        $loginEmpId = $information->role_id;
+        // dd($branchId);
         // Find SetupActive By EmpID backdown invalied data stop PunchIn or PunchOut
         $setupActivateEmpID = $information->master_endgame_id;
         $setupActivateNameByAssignEmpID = DB::table('policy_master_endgame_method')
@@ -336,28 +338,8 @@ class AttendanceApiController extends Controller
             })
             ->select('policy_master_endgame_method.id as method_id', 'policy_master_endgame_method.method_name as method_name', 'policy_attendance_shift_type_items.id as shift_item_id', 'policy_attendance_shift_type_items.shift_name as shift_template_name', 'static_attendance_shift_type.id  as shift_type_id', 'static_attendance_shift_type.name as shift_type_name', 'policy_attendance_shift_type_items.shift_start as shift_start_time', 'policy_attendance_shift_type_items.shift_end as shift_end_time', 'policy_attendance_shift_type_items.shift_hr as shift_hour', 'policy_attendance_shift_type_items.shift_min as shift_min', 'policy_attendance_shift_type_items.work_hr as working_hour', 'policy_attendance_shift_type_items.work_min as working_min', 'policy_attendance_shift_type_items.break_min as break_min', 'policy_attendance_shift_type_items.is_paid as is_paid')
             ->first();
-        // Checking CompOff
-        $AttendanceCompOff = RulesManagement::AttendaceCompOffSet($emp, $business, $punchDate);
 
-        // ->where('policy_attendance_shift_type_items.is_active', 1) //scheduler task shift is active check automatic  disabled
-        // dd($DATA);
         if (isset($DATA)) {
-            // Get Pass Credentials model
-            // $startTime = strtotime($DATA->shift_start_time);
-            // $endTime = strtotime($DATA->shift_end_time);
-            // $checkInTime = strtotime($punchInTime);
-            // $checkOutTime = strtotime($punchOutTime);
-            // $before15min = 10 * 60; // Convert 15 minutes to seconds
-            // Define the extended start and end times by adding/subtracting 15 minutes
-            // $extendedStartTime = $startTime - $before15min;
-            // $extendedEndTime = $endTime + $before15min;
-            // dd($punchInTime, $GetAutomaticRuleApplyByAutomation);
-            // //&&
-            // if (
-            //     $checkInTime >= $extendedStartTime ||
-            //     $checkOutTime <= $extendedEndTime //checkin overall shift active and which shift checking , get details or shift get id in shift item
-            // ) {
-            //     $minutes = date('i', $checkInTime);
 
             $startTime = strtotime($DATA->shift_start_time);
             $endTime = strtotime($DATA->shift_end_time);
@@ -365,6 +347,7 @@ class AttendanceApiController extends Controller
             $checkOutTime = strtotime($punchOutTime);
 
             $checkingFinalShiftTimeMin = 0;
+
             // Attendance Shift Overtime checking PolicyAttenRuleOvertime
             $GetAutomaticRuleApplyByAutomation = PolicyAttenRuleOvertime::where('business_id', $business)
                 ->where('switch_is', 1)
@@ -392,7 +375,6 @@ class AttendanceApiController extends Controller
             // print_r("\n minutes before or after. Default In: " . date('h:i a', $startTime) . "Out: " .  date('h:i a', $endTime));
 
             // Parallel process Segement needed addedd
-            //new data shiftType of name
             $appliedShift_type_name = $DATA->shift_type_name;
             $appliedShift_template_name = $DATA->shift_template_name;
             $appliedShift_comp_start_time = $DATA->shift_start_time;
@@ -421,7 +403,7 @@ class AttendanceApiController extends Controller
             // print_r("\n Times are within the specified range or within 10 minutes before or after. Default In: " . date('h:i a', $startTime) . "Out: " .  date('h:i a', $endTime));
             // print_r("\n Times are within the specified range or within 10 minutes before or after. PUNCH In: " . date('h:i a', $checkInTime) . "Out: " . date('h:i a', $checkOutTime));
 
-            // Office Method
+            // Check Method
             if (isset($information)) {
                 // QR-Mode by Method hold on method case of remote other working
                 if ($emp != null && $business != null && $qrCode == 1 && $markedInOutMode == 1) {
@@ -430,21 +412,12 @@ class AttendanceApiController extends Controller
                         ->where('emp_today_current_status', 1)
                         ->first();
                     if (isset($check)) {
-                        if ($methodAccept != null && $punchOutTime != null  && $punchOutQRCode != null  && $punchOutAddress != null && $punchOutLongitude != null && $punchOutLatitude != null) {
+                        if ($methodAccept != null && $punchOutTime != null && $punchOutQRCode != null && $punchOutAddress != null && $punchOutLongitude != null && $punchOutLatitude != null) {
                             $punchInTimes = strtotime($check->punch_in_time);
                             $punchOutTimes = strtotime($punchOutTime);
                             $totalWorkingSeconds = $punchOutTimes - $punchInTimes;
-
                             $totalWorkingTimestamp = strtotime('midnight') + $totalWorkingSeconds;
-
                             $totalWorking = date('H:i:s', $totalWorkingTimestamp);
-
-                            $TodayStatus = Central_unit::getEmpAttSummaryApi(['emp_id' => $emp, 'punch_date' => $punchDate, 'business_id' => $business]);
-                            $OverAllTodayStatus = $TodayStatus[0]; //only running PunchOut time By Aman Attendance
-                            $Overtime = $TodayStatus[8];
-                            $ShiftInterval = $TodayStatus[9];
-                            $EarlyExit = $TodayStatus[13];
-                            $LateBy = $TodayStatus[12];
 
 
                             //punch-out-confirm
@@ -468,28 +441,53 @@ class AttendanceApiController extends Controller
                                 'punch_out_location_tag' => ($methodAccept == 2) ? 2 : 0,
                                 'final_status' => ($currentMethodAuto != 0) ? 1 : 0,
                                 'process_complete' => ($currentMethodAuto != 0) ? 1 : 0,
-                                'today_status' => $OverAllTodayStatus,
-                                'overtime' => $Overtime,
-                                'shift_interval' => $ShiftInterval,
-                                'early_exit' => $EarlyExit,
-                                'late_by' => $LateBy,
+
                             ];
 
                             $punchOutDateTodaysQR = AttendanceList::where('punch_date', $formattedDate)
                                 ->where('emp_id', $emp)
                                 ->where('emp_today_current_status', 1)
                                 ->update($updateDATA);
-                            Central_unit::MyCountForMonth($emp, date('Y-m-d', strtotime($punchDate)), $business);
-                            Central_unit::MyCountForDaily(date('Y-m-d', strtotime($punchDate)), $business); //error line
-                            // if (isset($loaded)) {
-                            //     //BUG LOop
-                            //     // $updateTodaysStatus = [];
-                            //     // dd($TodayStatus);
-                            //     // AttendanceList::where('punch_date', $formattedDate)
-                            //     //     ->where('emp_id', $emp)
-                            //     //     ->update($updateTodaysStatus);
 
-                            // }
+                            if (!empty($punchOutDateTodaysQR)) {
+
+                                $nodePrimaryID = AttendanceList::where('punch_date', $formattedDate)
+                                    ->where('emp_id', $emp)
+                                    ->where('emp_today_current_status', 2)->first();
+
+                                // Checking CompOff Status Countable
+                                $AttendanceCompOff = RulesManagement::AttendaceCompOffSet($emp, $business, $punchDate, $nodePrimaryID->id);
+
+                                $TodayStatus2 = Central_unit::getEmpAttSummaryApi2(['emp_id' => $emp, 'punch_date' => $punchDate, 'business_id' => $business, 'branch_id' => $branchId]);
+                                $OverAllTodayStatus = $TodayStatus2['Status']; //only running PunchOut time By Aman Attendance
+                                $Overtime = $TodayStatus2['Overtime'];
+                                $ShiftInterval = $TodayStatus2['ShiftInterval'];
+                                $EarlyExit = $TodayStatus2['EarlyExitBy'];
+                                $LateBy = $TodayStatus2['LateBy'];
+
+
+                                $StatusModified = [
+                                    'today_status' => $OverAllTodayStatus,
+                                    'overtime' => $Overtime,
+                                    'shift_interval' => $ShiftInterval,
+                                    'early_exit' => $EarlyExit,
+                                    'late_by' => $LateBy,
+                                    'leave_type_category' => $AttendanceCompOff[0],
+                                    'comp_off_active' => $AttendanceCompOff[1], //external Added Compoff active
+                                    'comp_off_value_get' => $AttendanceCompOff[2] //external Leave allotted compoff
+                                ];
+                                AttendanceList::where('punch_date', $formattedDate)
+                                    ->where('emp_id', $emp)
+                                    ->where('emp_today_current_status', 2)
+                                    ->update($StatusModified);
+
+                                // Comp-Off Automation sometime remaining case heandler open todays current status
+                                RulesManagement::CompOffAllotted($emp, $business); //Allotted Comp-Off Genearated Automatically Inserted DataIn
+
+                            }
+                            Central_unit::MyCountForMonth($emp, date('Y-m-d', strtotime($punchDate)), $business, $branchId);
+                            Central_unit::MyCountForDaily(date('Y-m-d', strtotime($punchDate)), $business, $branchId, $roleIdToCheck, $emp); //error line
+
                             if (isset($punchOutDateTodaysQR)) { //BUG Loop
 
                                 return response()->json(['result' => ['Dafault InTime' => date('h:i a', $startTime), 'Dafault OutTime' => date('h:i a', $endTime), 'PunchInTime' => date('h:i a', strtotime($punchInTime)), 'PunchOutTime' => date('h:i a', strtotime($punchOutTime)), 'message' => 'QR-Code Marked PunchOut Successfully Attendance', 'case' => 2], 'status' => true], 200);
@@ -498,8 +496,9 @@ class AttendanceApiController extends Controller
                             return response()->json(['result' => ['Dafault InTime' => date('h:i a', $startTime), 'Dafault OutTime' => date('h:i a', $endTime), 'PunchInTime' => date('h:i a', strtotime($punchInTime)), 'PunchOutTime' => date('h:i a', strtotime($punchOutTime)), 'message' => 'QR-Code Marked Already PunchIn Successfully', 'case' => 3], 'status' => true], 200);
                         }
                     } else {
+                        // dd("K");
                         if ($methodAccept != null && $punchInTime != null && $punchInTime != null && $punchInQRCode != null && $punchInAddress != null && $punchInLatitude != null && $punchInLongitude != null) {
-                            $insertChecking = AttendanceList::where('punch_date', $formattedDate)
+                            $insertChecking = AttendanceList::where('punch_date', $formattedDate)->where('branch_id', $branchId)
                                 ->where('emp_id', $emp)
                                 ->where('emp_today_current_status', 2)
                                 ->first();
@@ -541,14 +540,12 @@ class AttendanceApiController extends Controller
                                     $collection->final_level_role_id = $lastRoleId ?? 0;
                                     $collection->final_status = 0;
                                     $collection->process_complete = 0;
-                                    $collection->leave_type_category = $AttendanceCompOff[0];
-                                    $collection->comp_off_active = $AttendanceCompOff[1];
                                     $collection->save();
                                     // Comp-Off Checking Upload Today checking new method
-                                    RulesManagement::AttendaceCompOffSet($emp, $business, $punchDate);
+                                    // RulesManagement::AttendaceCompOffSet($emp, $business, $punchDate);
 
-                                    Central_unit::MyCountForMonth($emp, date('Y-m-d', strtotime($punchDate)), $business);
-                                    Central_unit::MyCountForDaily(date('Y-m-d', strtotime($punchDate)), $business);
+                                    Central_unit::MyCountForMonth($emp, date('Y-m-d', strtotime($punchDate)), $business, $branchId);
+                                    Central_unit::MyCountForDaily(date('Y-m-d', strtotime($punchDate)), $business, $branchId, $roleIdToCheck, $emp);
                                     return response()->json(['result' => ['Dafault InTime' => date('h:i a', $startTime), 'Dafault OutTime' => date('h:i a', $endTime), 'PunchInTime' => date('h:i a', strtotime($punchInTime)), 'PunchOutTime' => date('h:i a', strtotime($punchOutTime)), 'message' => 'QR-Code Marked PunchIn Successfully Attendance', 'case' => 1], 'status' => true], 200);
                                 } else {
                                     // print_r("\n Times are Not within the specified range or within 10 minutes before or after. Default In: " . date('h:i a', $startTime) . "Out: " .  date('h:i a', $endTime));
@@ -591,12 +588,6 @@ class AttendanceApiController extends Controller
                             $totalWorking = date('H:i:s', $totalWorkingTimestamp);
 
 
-                            $TodayStatus = Central_unit::getEmpAttSummaryApi(['emp_id' => $emp, 'punch_date' => $punchDate, 'business_id' => $business]);
-                            $OverAllTodayStatus = $TodayStatus[0]; //only running PunchOut time By Aman Attendance
-                            $Overtime = $TodayStatus[8];
-                            $ShiftInterval = $TodayStatus[9];
-                            $EarlyExit = $TodayStatus[13];
-                            $LateBy = $TodayStatus[12];
 
                             //punch-out-confirm
                             //static_attendance_mode_response use by table
@@ -619,25 +610,51 @@ class AttendanceApiController extends Controller
                                 'punch_out_shift_name' => $punchOut_shift_name,
                                 'final_status' => ($currentMethodAuto != 0) ? 1 : 0,
                                 'process_complete' => ($currentMethodAuto != 0) ? 1 : 0,
-                                'punch_out_location_tag' => ($methodAccept == 2) ? 2 : 0,
-                                'today_status' => $OverAllTodayStatus,
-                                'overtime' => $Overtime,
-                                'shift_interval' => $ShiftInterval,
-                                'early_exit' => $EarlyExit,
-                                'late_by' => $LateBy
+                                'punch_out_location_tag' => ($methodAccept == 2) ? 2 : 0
                             ];
-                            $punchOutDateTodays =  AttendanceList::where('punch_date', $formattedDate)
+                            $punchOutDateTodays = AttendanceList::where('punch_date', $formattedDate)
                                 ->where('emp_id', $emp)
                                 ->where('emp_today_current_status', 1)
                                 ->update($updateDATA);
-                            Central_unit::MyCountForMonth($emp, date('Y-m-d', strtotime($punchDate)), $business);
-                            Central_unit::MyCountForDaily(date('Y-m-d', strtotime($punchDate)), $business);
+
+                            if (!empty($punchOutDateTodays)) {
+                                $nodePrimaryID = AttendanceList::where('punch_date', $formattedDate)
+                                    ->where('emp_id', $emp)
+                                    ->where('emp_today_current_status', 2)->first();
+
+
+                                // Checking CompOff Status Countable
+                                $AttendanceCompOff = RulesManagement::AttendaceCompOffSet($emp, $business, $punchDate, $nodePrimaryID->id);
+
+                                $TodayStatus2 = Central_unit::getEmpAttSummaryApi2(['emp_id' => $emp, 'punch_date' => $punchDate, 'business_id' => $business, 'branch_id' => $branchId]);
+                                $OverAllTodayStatus = $TodayStatus2['Status']; //only running PunchOut time By Aman Attendance
+                                $Overtime = $TodayStatus2['Overtime'];
+                                $ShiftInterval = $TodayStatus2['ShiftInterval'];
+                                $EarlyExit = $TodayStatus2['EarlyExitBy'];
+                                $LateBy = $TodayStatus2['LateBy'];
+                                $StatusModified = [
+                                    'today_status' => $OverAllTodayStatus,
+                                    'overtime' => $Overtime,
+                                    'shift_interval' => $ShiftInterval,
+                                    'early_exit' => $EarlyExit,
+                                    'late_by' => $LateBy,
+                                    'leave_type_category' => $AttendanceCompOff[0],
+                                    'comp_off_active' => $AttendanceCompOff[1], //external Added Compoff active
+                                    'comp_off_value_get' => $AttendanceCompOff[2] //external Leave allotted compoff
+                                ];
+                                AttendanceList::where('punch_date', $formattedDate)
+                                    ->where('emp_id', $emp)
+                                    ->where('emp_today_current_status', 2)
+                                    ->update($StatusModified);
+
+                                // Comp-Off Automation sometime remaining case heandler open todays current status
+                                RulesManagement::CompOffAllotted($emp, $business); //Allotted Comp-Off Genearated Automatically Inserted DataIn
+
+                            }
+                            Central_unit::MyCountForMonth($emp, date('Y-m-d', strtotime($punchDate)), $business, $branchId);
+                            Central_unit::MyCountForDaily(date('Y-m-d', strtotime($punchDate)), $business, $branchId, $roleIdToCheck, $emp);
                             if (isset($punchOutDateTodays)) { //BUG Loop
 
-                                // $updateTodaysStatus = [];
-                                // AttendanceList::where('punch_date', $formattedDate)
-                                //     ->where('emp_id', $emp)
-                                //     ->update($updateTodaysStatus);
                                 return response()->json(['result' => ['Dafault InTime' => date('h:i a', $startTime), 'Dafault OutTime' => date('h:i a', $endTime), 'PunchInTime' => date('h:i a', strtotime($punchInTime)), 'PunchOutTime' => date('h:i a', strtotime($punchOutTime)), 'message' => 'Selfie Marked PunchOut Successfully Attendance', 'case' => 2], 'status' => true], 200);
                             } else {
 
@@ -689,12 +706,10 @@ class AttendanceApiController extends Controller
                                     $collection->final_level_role_id = $lastRoleId ?? 0;
                                     $collection->final_status = 0;
                                     $collection->process_complete = 0;
-                                    $collection->leave_type_category = $AttendanceCompOff[0];
-                                    $collection->comp_off_active = $AttendanceCompOff[1];
                                     $collection->save();
                                     // Comp-Off Checking Upload Today checking new method
-                                    Central_unit::MyCountForMonth($emp, date('Y-m-d', strtotime($punchDate)), $business);
-                                    Central_unit::MyCountForDaily(date('Y-m-d', strtotime($punchDate)), $business);
+                                    Central_unit::MyCountForMonth($emp, date('Y-m-d', strtotime($punchDate)), $business, $branchId);
+                                    Central_unit::MyCountForDaily(date('Y-m-d', strtotime($punchDate)), $business, $branchId, $roleIdToCheck, $emp);
                                     return response()->json(['result' => ['Dafault InTime' => date('h:i a', $startTime), 'Dafault OutTime' => date('h:i a', $endTime), 'PunchInTime' => date('h:i a', strtotime($punchInTime)), 'PunchOutTime' => date('h:i a', strtotime($punchOutTime)), 'message' => 'Selfie Marked PunchIn Successfully Attendance', 'case' => 1], 'status' => true], 200);
                                 }
                             } else {
@@ -705,7 +720,6 @@ class AttendanceApiController extends Controller
                             }
                             // return response()->json(['result' => ['Dafault InTime' => date('h:i a', $startTime), 'Dafault OutTime' => date('h:i a', $endTime), 'PunchInTime' => date('h:i a', strtotime($punchInTime)), 'PunchOutTime' => date('h:i a', strtotime($punchOutTime)), 'message' => 'Today Selfie Marked Completed', 'case' => 4], 'status' => true], 200);
                         } else {
-                            // return response()->json(['result' => ['value' => 'Selfie Marked Already PunchIn Successfully', 'case' => 3], 'status' => true], 200);
                             return response()->json(['result' => ['Dafault InTime' => date('h:i a', $startTime), 'Dafault OutTime' => date('h:i a', $endTime), 'PunchInTime' => date('h:i a', strtotime($punchInTime)), 'PunchOutTime' => date('h:i a', strtotime($punchOutTime)), 'message' => 'Selfie Marked Already PunchIn Successfully', 'case' => 3], 'status' => true], 200);
                         }
                     }
@@ -739,13 +753,10 @@ class AttendanceApiController extends Controller
                     return response()->json(['result' => ['Dafault InTime' => date('h:i a', $startTime), 'Dafault OutTime' => date('h:i a', $endTime), 'PunchInTime' => date('h:i a', strtotime($punchInTime)), 'PunchOutTime' => date('h:i a', strtotime($punchOutTime)), 'message' => 'Incorrect PunchIn', 'case' => 5], 'status' => true], 404);
                 }
             }
-            // return response()->json(['result' => ['value' => 'Your Shift 10 min is PunchIn', 'case' => 8], 'status' => true], 200);
 
             return response()->json(['result' => ['Dafault InTime' => date('h:i a', $startTime), 'Dafault OutTime' => date('h:i a', $endTime), 'PunchInTime' => date('h:i a', strtotime($punchInTime)), 'PunchOutTime' => date('h:i a', strtotime($punchOutTime)), 'message' => 'Your Shift is Activated', 'case' => 7], 'status' => true], 200);
         } else {
             return response()->json(['result' => ['Dafault InTime' => '', 'Dafault OutTime' => '', 'PunchInTime' => date('h:i a', strtotime($punchInTime)), 'PunchOutTime' => date('h:i a', strtotime($punchOutTime)), 'message' => 'Your Shift is Not Activated', 'case' => 6], 'status' => true], 404);
-
-            // return response()->json(['result' => ['message' => 'Your Shift is Not Activated', 'case' => 6], 'status' => true], 404);
         }
     }
 
@@ -808,6 +819,7 @@ class AttendanceApiController extends Controller
                     ->select('process_check', 'holiday_type_id', 'holiday_package_id', 'business_id', 'name as holiday_name', 'day as holiday_days', 'holiday_date', 'from_start', 'to_end')
                     ->get();
                 $prow = UserHolidayListResource::collection($holiday_list)->all();
+                // dd($load_only_attendance);
                 // Fetch leave data
                 // $leave_list = RequestLeaveList::where('business_id', $business_id)
                 //     ->where('emp_id', $emp_id)
@@ -980,17 +992,17 @@ class AttendanceApiController extends Controller
 
         if ($attend) {
             $attend->delete();
-            return response()->json(['result' => true, 'status' => true, 'msg' => 'Delete Successfully!']);
+            return response()->json(['result' => true, 'status' => true, 'msg' => 'Delete Successfully']);
         }
         return response()->json(['result' => [], 'status' => false]);
     }
     public function attendanceAcceptOnBusiness(Request $request)
     {
-        $policy = PolicyAttendanceMode::where('business_id', $request->business_id)->get();
+        $policy = PolicyAttendanceMode::where('business_id', $request->business_id)->first();
         if (!empty($policy)) {
-            return response()->json(['result' =>  AttendanceAllowModeBusiness::collection($policy), 'case' => 1, 'status' => true], 200);
+            return response()->json(['result' => AttendanceAllowModeBusiness::collection([$policy])->all(), 'case' => 1, 'status' => true], 200);
         } else {
-            return response()->json(['result' =>  [], 'case' => 2, 'status' => false], 404);
+            return response()->json(['result' => [], 'case' => 2, 'status' => false], 404);
         }
     }
 }

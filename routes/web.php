@@ -1,9 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\CronJobManagement\AutoAttendanceJobSchedular; //CronJob Setup
-
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CreateBusinessController;
@@ -29,11 +27,14 @@ use App\Http\Controllers\admin\setupController\setupController;
 use App\Http\Controllers\admin\Settings\RolePermission\NewPermission;
 use App\Http\Controllers\ApiController\CalendarController;
 use App\Http\Controllers\admin\Report\ImportReportController;
-
+use App\Http\Controllers\admin\Settigs\NotificationController;
+use App\Http\Controllers\admin\Tadasetting\TadaController;
+use App\Http\Controllers\MigrationController;
 // payment-Gateways Load
 use App\Http\Controllers\paymentGateway\PhonepeController;
 use App\Http\Controllers\paymentGateway\CcAvenueController;
-
+use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\ta_and_da;
 //used as Live-wire add by jay
 use App\Http\Livewire\EmployeeJoiningForm;
 use App\Http\Livewire\BusinessRegistration\GstValidation; //live-wire
@@ -41,10 +42,13 @@ use App\Http\Livewire\BusinessRegistration\GstValidation; //live-wire
 use App\Http\Livewire\ImageUploadComponent;
 // Living Employee Page
 use App\Http\Livewire\Admin\EmployeePage; //Replace by EmployeeController or employee-blade
+use App\Http\Livewire\Admin\Subscription as SubscriptionLivewire;
 
+// Salary In livewire
+use App\Http\Livewire\PayrollManagement\CreateSalaryTemplate;
 // Table-View
 use App\Http\Livewire\EmployeePageTableView;
-
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,7 +60,7 @@ use App\Http\Livewire\EmployeePageTableView;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-// Route::get('/map',function(){
+// Route::get('/map',function(){nce
 
 //     return view('admin/setting/business/branches/demomap');
 // });
@@ -64,8 +68,9 @@ use App\Http\Livewire\EmployeePageTableView;
 // Route::any('phonepe', [PhonePeController::class, 'phonePe'])->name('phonepemode');
 // Route::any('phonepe-response', [PhonePeController::class, 'responseSubmit'])->name('response');
 // Route::any('phonepe',[PhonePeController::class,'phonePe'])->name('phonepemode');
-Route::any('phonepe-active',[PhonePeController::class,'nodeMode'])->name('phonepemode');
-Route::any('phonepe-response',[PhonePeController::class,'responseS'])->name('response');
+
+Route::any('phonepe-active', [PhonePeController::class, 'nodeMode'])->name('phonepemode');
+Route::any('phonepe-response', [PhonePeController::class, 'responseS'])->name('response');
 
 Route::get('/thankyou', [LoginController::class, 'thankyou'])->name('login.thankyou');
 Route::get('/companies', [SettingController::class, 'companyDetails']);
@@ -78,6 +83,7 @@ Route::prefix('export')->group(function () {
         Route::post('daily-attendance-report', [ReportController::class, 'DailyAttendanceReport'])->name('export.DailyAttendanceReport');
         Route::post('employee-muster-roll', [ReportController::class, 'employeeMusterRoll'])->name('export.AttendanceMusterRoll');
         Route::post('employee-monthly-attendance-report', [ReportController::class, 'employeeMonthlyAttendanceReport'])->name('export.EmpAttendanceMusterRoll');
+        Route::post('employee-monthly-attendance-report-with-geo-location', [ReportController::class, 'employeeMonthlyAttendanceReportWithGeoLocation'])->name('export.EmpAttendanceMusterRollWithGeoLocation');
         Route::post('employee-monthly-ar-report', [ReportController::class, 'employeeARReport'])->name('export.EmployeeARReport');
     });
 
@@ -93,7 +99,7 @@ Route::prefix('export')->group(function () {
 
 Route::prefix('import')->group(function () {
     Route::post('import-bio-metric-excel-file', [ImportReportController::class, 'ImportBioMetric'])->name('importBiometricExcel');
-    // Route::post('import-bio-metric-excel-file', [ImportReportController::class, 'DownloadBiometricSample'])->name('downloadBioMetricSample');
+    Route::post('download-biometric-template', [ImportReportController::class, 'downloadBiometricSample'])->name('BiometricExcelTemplate');
 });
 
 // Route::any('/handlecardclick',[LoginController::class,'handleCardClick'])->name('admin.handleCard');
@@ -133,6 +139,15 @@ Route::middleware(['web', 'email_verified'])->group(function () {
 
     Route::get('subscription', [SettingController::class, 'subscription'])->name('subscription');
     // Route::any('phonepemode', [PhonepeController::class, 'phonePe'])->name('phonepemode');
+    // Route::post('razorpay-payment', [RazorpayController::class, 'callPaymentMethod'])->name('razorpay.payment.store');
+
+    // Payment methodly
+    Route::prefix('/payment')->group(function () {
+        Route::prefix('/rozarpay')->group(function () {
+            Route::post('submit-request', [SubscriptionLivewire::class, 'RozaryPay'])->name('rozarpaymode');
+            Route::get('thankyou/{id}', [SubscriptionLivewire::class, 'thankyou'])->name('thankyou');
+        });
+    });
 
     //exportFileexportFile
     // ExployeePage
@@ -157,6 +172,7 @@ Route::middleware(['web', 'email_verified'])->group(function () {
         Route::prefix('/business-settings')->group(function () {
             Route::get('/', [setupController::class, 'businessSetup']);
             Route::get('/branches', [setupController::class, 'branchesSetup']);
+            Route::get('/grade', [setupController::class, 'gradeSetup']);
             Route::get('/department', [setupController::class, 'departmentSetup']);
             Route::get('/designation', [setupController::class, 'designationSetup']);
             Route::get('/holiday', [setupController::class, 'holidayPolicySetup']);
@@ -220,10 +236,6 @@ Route::middleware(['web', 'email_verified'])->group(function () {
     });
 
     Route::prefix('/admin')->group(function () {
-        // Route::any('/', [DashboardController::class, 'index']);
-        //admin/attendance/get-Employee-Shift-Details
-
-
         Route::prefix('/attendance')->group(function () {
             Route::get('/', [AttendanceController::class, 'index']);
             Route::get('/force-update-attendance', [AttendanceSubmitController::class, 'updateAttendancePage']);
@@ -237,17 +249,12 @@ Route::middleware(['web', 'email_verified'])->group(function () {
             Route::post('/get-submit-attendance-changes', [AttendanceSubmitController::class, 'onStatusChangeFunction'])->name('onStatusChangeCalculate');
             Route::post('/final-submit-attendance', [AttendanceSubmitController::class, 'finalAttendanceSubmit'])->name('finallySubmitAttendance');
             Route::post('/correct-punch-time', [AttendanceSubmitController::class, 'correctAttendanceTiming'])->name('correctPunchTime');
-            Route::post('/get-emp-holiday', [AttendanceController::class, 'getHolidayForEmployee'])->name('employeeHoliday');
             Route::get('/pending_attendance_approve', [AttendanceController::class, 'pendingAttendanceApprove']);
             Route::get('/month-summary', [AttendanceController::class, 'attendanceSummary']);
             Route::any('/attendance_mark', [AttendanceController::class, 'attendanceMark'])->name('attendanceMark.checkboxUpdate');
             Route::any('/attendace_update', [AttendanceController::class, 'attendanceUpdate'])->name('attendance.update'); // modal attendace update route
-            Route::any('/attendance_list_filter', [AttendanceController::class, 'attendanceListFilter']);
             Route::any('/attendance-count-restore', [AttendanceController::class, 'restoreAllAttendanceCount']);
-            Route::post('/attendance_by_calculation', [AttendanceController::class, 'AttendanceByAjaxFilter']);
-            Route::post('/attendance_calculation', [AttendanceController::class, 'allAttendanceCalculationAjax']);
             Route::post('/dashboard_attendance_count', [AttendanceController::class, 'dashboardAttendanceCountFilter']);
-            Route::post('/monthly_attendance_calculation', [AttendanceController::class, 'monthlyAtendanceAjax'])->name('dashboardCount');
             Route::get('/details', [AttendanceController::class, 'details'])->name('attendance.detail');
             Route::get('/byemployee/{id}', [AttendanceController::class, 'byemployee'])->name('attendance.byemployee');
 
@@ -266,14 +273,14 @@ Route::middleware(['web', 'email_verified'])->group(function () {
             Route::any('/', [EmployeeController::class, 'index']);
             // Route::any('/editStudent/{id}',[EmployeePage::class,'editStudent'])->name('editStudent');
             Route::get('/export_file/{id}', [EmployeeController::class, 'ExportFileEmpDetails']);
-            Route::any('/import_file', [EmployeeController::class, 'ImportAddEmployeeDetails'])->name('import');
-            ;
+            Route::any('/import_file', [EmployeeController::class, 'ImportAddEmployeeDetails'])->name('import');;
             Route::get('/add', [EmployeeController::class, 'add']);
             Route::any('/employeefilter', [EmployeeController::class, 'filterEmployees'])->name('filter.employees');
             Route::any('/all_employee', [EmployeeController::class, 'allEmployee']);
             Route::any('/emp_id', [EmployeeController::class, 'empId']);
             Route::any('/emp_id_check', [EmployeeController::class, 'empIdCheck']);
             Route::get('/profile/{id}', [EmployeeController::class, 'empProfile'])->name('employeeProfile');
+            Route::post('/update/profile', [EmployeeController::class, 'UpdateContractualEmployee']);
             Route::post('/shift_check', [EmployeeController::class, 'shiftCheck']);
             Route::post('/country-state', [EmployeeController::class, 'getCountryStateCity']);
             Route::post('/country-city', [EmployeeController::class, 'getStateToCity']);
@@ -293,12 +300,16 @@ Route::middleware(['web', 'email_verified'])->group(function () {
         });
 
         Route::prefix('/requests')->group(function () {
+            Route::get('/outdoor', [RequestController::class, 'outdoor']);
             Route::get('/leaves', [RequestController::class, 'leaves']);
             Route::get('/gatepass', [RequestController::class, 'gatepass']);
             Route::any('/gatepass/detail', [RequestController::class, 'EditGatepassDataGet']);
             Route::any('/gatepassemployeefilter', [RequestController::class, 'gatepassEmployeeFilter']);
+            Route::any('/outdooremployeefilter', [RequestController::class, 'outdoorEmployeeFilter']);
             Route::any('/gatepassdepartmentfilter', [RequestController::class, 'allGatepassFilterDepartment']);
+            Route::any('/outdoordepartmentfilter', [RequestController::class, 'allOutdoorFilterDepartment']);
             Route::any('/gatepassdesignationfilter', [RequestController::class, 'allGatepassFilterDesignation']);
+            Route::any('/outdoordesignationfilter', [RequestController::class, 'allOutdoorsFilterDesignation']);
             Route::any('/leavedepartmentfilter', [RequestController::class, 'allLeaveFilterDepartment']);
             Route::any('/leavedesignationfilter', [RequestController::class, 'allLeaveFilterDesignation']);
             Route::any('/mispunchdepartmentfilter', [RequestController::class, 'allMispunchFilterDepartment']);
@@ -314,23 +325,19 @@ Route::middleware(['web', 'email_verified'])->group(function () {
             Route::post('/gatepassapprove', [RequestController::class, 'ApproveGatepass'])->name('admin.gatepassapprove');
             Route::post('/mispunchapprove', [RequestController::class, 'Approvemispunch'])->name('admin.mispunchapprove');
             Route::post('/leaveupdate', [RequestController::class, 'ApproveLeave'])->name('admin.leaveapprove');
-
             Route::get('/mispunch', [RequestController::class, 'mispunch']);
+            Route::get('/leaves/balance', [RequestController::class, 'leaveBalance']);
         });
 
         Route::prefix('/settings')->group(function () {
             Route::get('/', [SettingController::class, 'index']);
-
             Route::get('/roles-and-permissions', [PermissionController::class, 'index'])->name('settings.permission');
-
             Route::prefix('/localization')->group(function () {
                 Route::get('/', [LocalizationController::class, 'index']);
             });
-
             Route::prefix('/notification')->group(function () {
                 Route::get('/', [NotificationController::class, 'index']);
             });
-
             Route::prefix('/account')->group(function () {
                 Route::get('/', [SettingController::class, 'account'])->name('account.settings');
                 Route::any('/businessdetail', [SettingController::class, 'BusinessDetail']);
@@ -354,17 +361,19 @@ Route::middleware(['web', 'email_verified'])->group(function () {
                 Route::get('/branches', [SettingController::class, 'branches'])->name('admin.branch');
                 Route::get('/department', [SettingController::class, 'department'])->name('admin.department');
                 Route::any('/designation/{id?}', [SettingController::class, 'designation'])->name('admin.designation');
+                Route::any('/grade', [SettingController::class, 'grade'])->name('admin.grade');
                 Route::post('/leave_policy_submit', [SettingController::class, 'leavePolicySubmit'])->name('admin.leavepolicySubmit');
                 // ajax dropdown  verify usefull
                 Route::post('/allrotationalshift', [SettingController::class, 'allRotationalShift']); //save
                 Route::post('/allfilterdepartment', [SettingController::class, 'allFilterDepartment']); //save
                 Route::post('/allfilterdesignation', [SettingController::class, 'allFilterDesignation']); //save
-                Route::post('/alldepartment', [SettingController::class, 'allDepartment']); //save
+                Route::any('/alldepartment', [SettingController::class, 'allDepartment']); //save
                 Route::post('/alldesignation', [SettingController::class, 'allDesignation']);
                 Route::post('/check', [SettingController::class, 'check']);
                 Route::post('/allemployeefilter', [SettingController::class, 'allEmployeeFilter']);
                 Route::get('/allpermissiontype', [SettingController::class, 'allPermissionType']);
                 Route::get('/allbranch', [SettingController::class, 'allBranch']);
+                Route::any('/selectbranch', [SettingController::class, 'selectBranch']);
                 Route::get('/all_designation_details/{id}', [SettingController::class, 'designationDetails'])->name('admin.editSetValueDesignation');
                 Route::any('/all_weekly_holiday', [SettingController::class, 'allWeeklyHoliday']);
                 Route::any('/all_leave_policy', [SettingController::class, 'allLeavePolicy']);
@@ -373,6 +382,7 @@ Route::middleware(['web', 'email_verified'])->group(function () {
                 //update
                 Route::post('/updatebranch', [SettingController::class, 'UpdateBranch'])->name('admin.branchupdate');
                 Route::post('/updatedepartment', [SettingController::class, 'UpdateDepartment'])->name('admin.updatedepartment');
+                Route::post('/updategrade', [SettingController::class, 'UpdateGrade'])->name('admin.updateGrade');
                 Route::post('/updatedesignation', [SettingController::class, 'UpdateDesignation'])->name('admin.designationupdate');
                 Route::post('/update_leave_policy', [SettingController::class, 'updateLeavePolicy'])->name('update.leavepolicy');
                 Route::post('/delete_leave_policy', [SettingController::class, 'DeleteLeavePolicy'])->name('delete.leavePolicy');
@@ -405,6 +415,22 @@ Route::middleware(['web', 'email_verified'])->group(function () {
             Route::prefix('/businessinfo')->group(function () {
                 Route::get('/', [SettingController::class, 'businessinfo']);
             });
+            Route::prefix('/tadasettings')->group(function () {
+                Route::get('/testing', [TadaController::class, 'testing']);
+                Route::get('/', [TadaController::class, 'index']);
+                Route::get('/traveltype', [TadaController::class, 'travelType'])->name('admin.travetypey');
+                Route::get('/travelmode', [TadaController::class, 'travelModeCategory'])->name('admin.travemodecategory');
+                Route::get('/travelgrade', [TadaController::class, 'travelGrade'])->name('admin.travlegrade');
+                Route::get('/lodging', [TadaController::class, 'lodging'])->name('admin.lodging');
+                Route::get('/da', [TadaController::class, 'daily_allowance'])->name('admin.daily_allowance');
+                Route::post('/trave_allowance_submit', [TadaController::class, 'traveAllowanceSubmit'])->name('admin.traveallowancetada');
+                Route::post('/travelmode_submit', [TadaController::class, 'traveModeSubmit'])->name('admin.travelmode');
+                Route::any('/countrytocityfilter', [TadaController::class, 'countryToCityFilter'])->name('admin.countrytocityfilter');
+                Route::post('/travel_grade_category', [TadaController::class, 'travelGradeCategory'])->name('admin.travelgradecategory');
+                Route::get('/travel_types', [TadaController::class, 'travelTypes']);
+
+            });
+
 
             Route::prefix('/attendance')->group(function () {
                 Route::get('/', [SettingController::class, 'attendance']);
@@ -432,6 +458,59 @@ Route::middleware(['web', 'email_verified'])->group(function () {
                 Route::get('/att_onHoliday', [SettingController::class, 'attOnHoliday']);
                 Route::any('/mode', [SettingController::class, 'setAttendaceMode'])->name('attendanceMode');
             });
+            Route::prefix('/tada')->group(function () {
+                Route::get('/', [ta_and_da::class, 'index']);
+                Route::get('ta', [ta_and_da::class, 'travel']);
+                Route::get('daily', [ta_and_da::class, 'daily']);
+                Route::get('lodging', [ta_and_da::class, 'lodging']);
+                Route::get('toll', [ta_and_da::class, 'toll']);
+
+                Route::get('other ', [ta_and_da::class, 'other']);
+                Route::post('other_amount ', [ta_and_da::class, 'other_amount']);
+                Route::post('edit/other_amount ', [ta_and_da::class, 'edit_other_amount']);
+                Route::post('delete/other_amount ', [ta_and_da::class, 'deleteotheramount']);
+                Route::get('travel_mode', [ta_and_da::class, 'travel_mode_view']);
+                Route::get('travel_country', [ta_and_da::class, 'travel_country']);
+                Route::post('travel_country/save', [ta_and_da::class, 'travel_country_save']);
+                Route::any('/getCity', [ta_and_da::class, 'getCity']);
+                // for modes of travel
+                Route::post('/differentmodes', [ta_and_da::class, 'select_modes']);
+                // for lodging'
+                Route::post('/lodging/person', [ta_and_da::class, 'lodgingExp']);
+                // for lodging edit
+                Route::post('lodgingedit', [ta_and_da::class, 'lodgingedit']);
+                Route::get('/city', [ta_and_da::class, 'city']);
+
+
+                // for save form data of toll
+                Route::post('tollcharge', [ta_and_da::class, 'tollexpense']);
+                //   for update toll values
+                Route::post('update_tollvalues', [ta_and_da::class, 'updateTollList']);
+                // delete toll amount
+                Route::post('delete/tollamount', [ta_and_da::class, 'deletetollamount']);
+            });
+            // for payrollsetup
+            Route::prefix('/payroll')->group(function () {
+                Route::get('/', [PayrollController::class, 'index']);
+                Route::get('salaryset', [PayrollController::class, 'salarysetting']);
+                Route::get('earnings', [PayrollController::class, 'Earnsetting']);
+                Route::get('deductions', [PayrollController::class, 'Deductionsetting']);
+                Route::get('indirect/allowance', [PayrollController::class, 'indirect_allowance']);
+                Route::post('add/earning', [PayrollController::class, 'addEarning'])->name('add.earning');
+                // Route::post('/deductamount', [PayrollController::class, 'add_deduction'])->name('add.deduction');
+
+                Route::post('update/earning', [PayrollController::class, 'updateEarning'])->name('update.earning');
+                Route::post('delete/earning', [PayrollController::class, 'deleteEarn']);
+                // Route::post('/deductamount', [PayrollController::class, 'adddeduction'])->name('add.deduction');
+                Route::post('/salarysetvalues', [PayrollController::class, 'salarysettingvalues']);                // for salarysetvalues
+                Route::prefix('/salary_template')->group(function () {
+                    Route::get('/', [PayrollController::class, 'salaryTemplateIndex'])->name('salary-template');
+                    Route::get('/create_salary_template', [PayrollController::class, 'salaryTemplateCreate'])->name('salary-template-create');
+                });
+
+                Route::post('add/indirect_allowance',[PayrollController::class,'indirectAllowanceAdd'])->name('add.indirect_allowance');
+            });
+
 
             Route::prefix('/salary')->group(function () {
                 Route::get('/', [SettingController::class, 'index']);
@@ -452,6 +531,7 @@ Route::middleware(['web', 'email_verified'])->group(function () {
     Route::prefix('/delete')->group(function () {
         Route::post('/branch', [SettingController::class, 'DeleteBranch'])->name('delete.branch');
         Route::post('/department/{id}', [SettingController::class, 'DeleteDepartment'])->name('delete.department');
+        Route::post('/grade', [SettingController::class, 'DeleteGrade'])->name('delete.grade');
         Route::post('/designation/{id}', [SettingController::class, 'DeleteDesignation'])->name('delete.designation');
         Route::post('/employee', [EmployeeController::class, 'DeleteEmployee'])->name('delete.employee');
         Route::post('/holiday', [BusinessController::class, 'DeleteHoliday'])->name('delete.holiday');
@@ -466,6 +546,7 @@ Route::middleware(['web', 'email_verified'])->group(function () {
         Route::post('/branch', [SettingController::class, 'AddBranch'])->name('add.branch');
         Route::post('/department', [SettingController::class, 'AddDepartment'])->name('add.department');
         Route::post('/designation', [SettingController::class, 'AddDesignation'])->name('add.designation');
+        Route::post('/grade', [SettingController::class, 'AddGrade'])->name('add.grade');
         // Route::post('/employee', [EmployeeController::class, 'AddEmployee'])->name('add.employee');
         Route::post('/employee', [EmployeeJoiningForm::class, 'AddEmployee'])->name('add.employee'); //call by live-wire
 

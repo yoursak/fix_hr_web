@@ -10,6 +10,8 @@ use Alert;
 use App\Helpers\MasterRulesManagement\RulesManagement;
 use App\Helpers\Central_unit;
 
+use App\Models\StaticEmployeeJoinReligion;
+use App\Models\PolicyCompOffLwopLeave;
 class CompOffController extends Controller
 {
     public function CompOffAndWOPPolicyView(Request $request)
@@ -26,23 +28,23 @@ class CompOffController extends Controller
     public function CompOffAndWOPPolicyCreate(Request $request)
     {
         $business_id = Session::get('business_id');
-        $getPolicy = DB::table('policy_comp_off_lwop_leave')
-            ->where('business_id', $business_id)
+        $getPolicy = PolicyCompOffLwopLeave::where('business_id', $business_id)
             ->first();
         $CompOffSwitch = ($request->CompOffSwitch ?? 'off') == 'on' ? 1 : 0;
         $HolidaySwitch = $request->HolidaySwitch ?? 0;
         $OvertimeSwitch = $request->OvertimeSwitch ?? 0;
         $overtime_hr = $request->overtime_hr ?? 0;
         $LWPLeaveSwitch =  $request->LWPLeaveSwitch ?? 0;
-
+        $ExpiryPoint =  $request->expiry_point ?? 0;
         if (!isset($getPolicy)) {
-            $policyCreated = DB::table('policy_comp_off_lwop_leave')->insert([
+            $policyCreated = PolicyCompOffLwopLeave::insert([
                 'business_id' => $business_id,
                 'switch' => $CompOffSwitch,
                 'holiday_weekly_checked' => $HolidaySwitch,
                 'overtime_checked' => $OvertimeSwitch,
                 'overtime_hr' => $overtime_hr,
                 'lwop_leave_checked' => $LWPLeaveSwitch,
+                'expiry_point' => $ExpiryPoint,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -64,6 +66,7 @@ class CompOffController extends Controller
                     'overtime_checked' => $OvertimeSwitch,
                     'overtime_hr' => $overtime_hr,
                     'lwop_leave_checked' => $LWPLeaveSwitch,
+                    'expiry_point' => $ExpiryPoint,
                     'updated_at' => now(),
                 ]);
             if (isset($updatePolicy)) {

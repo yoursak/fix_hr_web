@@ -14,7 +14,8 @@
 
     <div class="iniitial-header my-5">
         <h2 class="m-0"><b>Welcome to FixHR</b></h2>
-        <p class="fs-16 text-muted">Kindly complete step by step process to register your business with us, do not skip setup
+        <p class="fs-16 text-muted">Kindly complete step by step process to register your business with us, do not skip
+            setup
             process other wise it will not function</p>
         <span class="fs-16">
             <span class=""><i class="fa fa-check-circle mx-2 text-primary"></i>Account Settings<i
@@ -27,7 +28,7 @@
                     class="fa fa-angle-right my-auto mx-2"></i></span>
             <span class="text-muted"><i class="fa fa-circle mx-2"></i>Subscription<i
                     class="fa fa-angle-right my-auto mx-2"></i></span>
-            <span class="text-muted"><i class="fa fa-circle mx-2"></i>Add Employee<i
+            <span class="text-muted"><i class="fa fa-circle mx-2"></i>Add New Employee<i
                     class="fa fa-angle-right my-auto mx-2"></i></span>
             <span class="text-muted"><i class="fa fa-circle mx-2"></i>Finish<i
                     class="fa fa-angle-right my-auto mx-2"></i></span>
@@ -75,7 +76,8 @@
                                 <div class="my-auto"><a href="#">
                                         <h5 class="my-auto text-dark">Departments</h5>
                                     </a>
-                                    <p class="my-auto"><?= $deparmtnetCount[1] ?>&nbsp;Departments Created
+                                    <p class="my-auto">
+                                        <?= $deparmtnetCount[1] ?>&nbsp;Departments Created
 
                                     </p>
                                 </div>
@@ -101,9 +103,10 @@
                                 <div class="my-auto"><a href="#">
                                         <h5 class="my-auto text-dark">Designations</h5>
                                     </a>
-                                    <p class="my-auto"><?= $designationCount[2] ?>&nbsp;Designations Created
+                                    <p class="my-auto">
+                                        <?= $designationCount[2] ?>&nbsp;Designations Created
                                         {{-- | assign to 25/50
-                                            employees --}}
+                                employees --}}
                                     </p>
                                 </div>
                                 <div class="my-auto"> <a href="{{ url('/setup/business-settings/designation') }}"><i
@@ -116,8 +119,32 @@
                 </div>
             </div>
         @endif
+        <div class="col-xl-6">
+            <div class="card custom-card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-2 my-auto">
+                            <span class="settings-icon bg-primary-transparent text-primary border-primary"><i
+                                    class="nav-icon fe fe-users"></i></span>
+                        </div>
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="my-auto"><a href="#">
+                                    <h5 class="my-auto text-dark">Grade</h5>
+                                </a>
+                                <p class="my-auto">
+                                    <?= $designationCount[7] ?>&nbsp;Grade Created
 
+                                </p>
+                            </div>
+                            <div class="my-auto"> <a href="{{ url('/setup/business-settings/grade') }}"><i
+                                        class="fa fa-angle-double-right fs-20 my-auto"></i></a>
+                            </div>
 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         @if (in_array('Holiday Settings.View', $permissions))
             <div class="col-xl-6">
                 <div class="card custom-card">
@@ -131,7 +158,9 @@
                                 <div class="my-auto"><a href="#">
                                         <h5 class="my-auto text-dark">Holiday Policy</h5>
                                     </a>
-                                    <p class="my-auto"><?= $holidayCount[4] ?>&nbsp;Holiday Policy Created</p>
+                                    <p class="my-auto">
+                                        <?= $holidayCount[4] ?>&nbsp;Holiday Policy Created
+                                    </p>
                                 </div>
                                 <div class="my-auto"><a href="{{ url('/setup/business-settings/holiday') }}"><i
                                             class="fa fa-angle-double-right fs-20 my-auto"></i></a></div>
@@ -155,7 +184,9 @@
                                 <div class="my-auto"> <a href="#">
                                         <h5 class="my-auto text-dark">Leave Policy</h5>
                                     </a>
-                                    <p class="my-auto"><?= $leaveCount[5] ?>&nbsp;Leave Policy Created</p>
+                                    <p class="my-auto">
+                                        <?= $leaveCount[5] ?>&nbsp;Leave Policy Created
+                                    </p>
                                 </div>
                                 <div class="my-auto"> <a href="{{ url('/setup/business-settings/leave') }}"><i
                                             class="fa fa-angle-double-right fs-20 my-auto"></i></a>
@@ -180,7 +211,9 @@
                                 <div class="my-auto"><a href="#">
                                         <h5 class="my-auto text-dark">Weekly Holiday</h5>
                                     </a>
-                                    <p class="my-auto"><?= $weeklyholidayCount[6] ?>&nbsp;Weekly Holiday Created</p>
+                                    <p class="my-auto">
+                                        <?= $weeklyholidayCount[6] ?>&nbsp;Weekly Holiday Created
+                                    </p>
                                 </div>
                                 <div class="my-auto"> <a href="{{ url('/setup/business-settings/weekly-holiday') }}"><i
                                             class="fa fa-angle-double-right fs-20 my-auto"></i></a>
@@ -256,6 +289,7 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <script>
             var branchcv = '<?= $branchCountValue ?>';
+            // var gradecv = '<?= $gradeCountValue ?>';
             var departmentcv = '<?= $departmentCountValue ?>';
             var designationcv = '<?= $designationCountValue ?>';
             var holidaycv = '<?= $holidayPolicyCountValue ?>';
@@ -278,7 +312,7 @@
                 }
                 if ((branchcv == 0) || (departmentcv == 0) || (designationcv == 0) || (holidaycv == 0) || (
                         leavepolicycv == 0) || (weekholidaycv == 0) || (noticeboardcv == 0) || (
-                        policycompoffCoutnValue == 0)) {
+                        policycompoffCoutnValue == 0) ) {
                     // Condition is false, show a SweetAlert alert
                     event.preventDefault(); // Prevent the default action (following the link)
 

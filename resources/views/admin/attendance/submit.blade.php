@@ -25,9 +25,6 @@
         @php
             $EmployeeDate;
             $NofDay;
-       
-            // dd($MonthName,$year);
-
             $root = new App\Helpers\Central_unit();
             $Department = $root->DepartmentList();
             $Branch = $root->BranchList();
@@ -48,15 +45,15 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">
-                            Submit Attendance Preview {{$MonthName.' - '.$year}}
+                            Submit Attendance Preview {{ $MonthName . ' - ' . $year }}
                         </div>
                         <div class="page-rightheader ms-auto">
                             <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
                                 <div class="row">
                                     <div class="col-6 d-flex" id="addSubmitBtn">
                                         <button id="addAttendanceBtn" class="btn btn-md btn-primary"
-                                            data-effect="effect-scale" data-bs-toggle="modal"
-                                            href="#finalSubmitAttendance">Submit Attendance</button>
+                                            data-effect="effect-scale" data-bs-toggle="modal" href="#finalSubmitAttendance"
+                                            {{ empty($EmployeeDate) ? 'disabled' : '' }}>Submit Attendance</button>
                                     </div>
                                 </div>
                             </div>
@@ -87,8 +84,8 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="table-responsive">
-                                                <table class="table text-nowrap border-bottum">
-                                                    <thead>
+                                                <table class="table table-vcenter text-nowrap border-bottom">
+                                                    <thead> 
                                                         <tr role="row">
                                                             <th class="border-bottom-0 reorder sorting sorting_asc"
                                                                 tabindex="0" aria-controls="hr-attendance" rowspan="1"
@@ -116,208 +113,162 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody id="resBody" class="my_body">
-                                                        @foreach ($EmployeeDate as $key => $emp)
-                                                            <tr class="odd border border-bottum">
-                                                                <td class="reorder sorting_01">
-                                                                    <div class="d-flex">
-                                                                        <span
-                                                                            class="avatar avatar-md brround me-3 rounded-circle"
-                                                                            style="background-image: url('/employee_profile/{{ $emp['imgURL'] }}')"></span>
-                                                                        <div class="me-3 mt-0 mt-sm-2 d-block">
-                                                                            <h6 class="mb-1 fs-14">
-                                                                                <a
-                                                                                    href="{{ route('employeeProfile', [$emp['empId']]) }}">
-                                                                                    {{ $emp['name'] }}{{ '(' . $emp['empId'] . ')' }}
-                                                                                </a>
-                                                                            </h6>
-                                                                            <p class="text-muted mb-0 fs-12">
-                                                                                {{ $emp['designation'] }}
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                @php
-                                                                    $present = 0;
-                                                                    $absent = 0;
-                                                                    $halfday = 0;
-                                                                    $mispunch = 0;
-                                                                    $weekoff = 0;
-                                                                    $holiday = 0;
-                                                                    $overtime = 0;
-                                                                    $leave = 0;
-                                                                @endphp
-                                                                @foreach ($emp['status'] as $key => $status)
-                                                                    @php
-                                                                        $root->MyCountForMonth($emp['empId'], date('Y-m-d', strtotime($emp['year'] . '-' . $emp['month'] . '-' . $key)), Session::get('business_id'));
-                                                                        $root->MyCountForDaily(date('Y-m-d', strtotime($emp['year'] . '-' . $emp['month'] . '-' . $key)), Session::get('business_id'));
-                                                                    @endphp
-                                                                    <td>
-                                                                        <span>
-                                                                            <small class="badge badge-info-light"
-                                                                                data-bs-trigger="hover"
-                                                                                style="background-color:transparent;"
-                                                                                data-bs-container="body"
-                                                                                data-bs-content="{{ date('d-m-Y', strtotime($key . '-' . $emp['month'] . '-' . $emp['year'])) }}"
-                                                                                data-bs-placement="right"
-                                                                                data-bs-popover-color="primary"
-                                                                                data-bs-toggle="popover" data-bs-html="true"
-                                                                                title="{{ $status == 1 || $status == 3 || $status == 9 || $status == 12 ? 'Present' : ($status == 4 ? 'Mispunch' : ($status == 6 ? 'Holiday' : ($status == 7 ? 'WeekOff' : ($status == 8 ? 'Halfday' : ($status == 10 ? 'Leave' : 'Absent'))))) }}"
-                                                                                data-bs-original-title="Data">
-                                                                                <span
-                                                                                    class="fs-14 text-dark btn">{{ $status == 1 || $status == 3 || $status == 9 || $status == 12 ? 'P' : ($status == 4 ? 'MSP' : ($status == 6 ? 'HO' : ($status == 7 ? 'WO' : ($status == 8 ? 'HD' : ($status == 10 ? 'L' : 'A'))))) }}</span>
-                                                                            </small>
-                                                                        </span>
-
-                                                                        {{-- <select onchange="statusChange(this)"
-                                                                        class="text-muted"
-                                                                        name="{{ $emp['empId'] . $key }}" id=""
-                                                                        data-emp="{{ $emp['empId'] }}"
-                                                                        data-status="{{ $status }}" disabled
-                                                                        style="border: solid black 1px; width:4vw; text-align:center; border-radius:5px">
-                                                                        <option value="1"
-                                                                            {{ $status == 1 || $status == 3 || $status == 9 || $status == 12 ? 'selected' : '' }}>
-                                                                            P</option>
-                                                                        <option value="2"
-                                                                            {{ $status == 2 ? 'selected' : '' }}>A</option>
-                                                                        <option value="4"
-                                                                            {{ $status == 4 ? 'selected' : 'hidden' }}>MSP
-                                                                        </option>
-                                                                        <option value="8"
-                                                                            {{ $status == 8 ? 'selected' : '' }}>HD
-                                                                        </option>
-                                                                        <option value="7"
-                                                                            {{ $status == 7 ? 'selected' : 'hidden' }}>WO
-                                                                        </option>
-                                                                        <option value="6"
-                                                                            {{ $status == 6 ? 'selected' : 'hidden' }}>HO
-                                                                        </option>
-                                                                        <option value="10"
-                                                                            {{ $status == 10 || $status == 10 ? 'selected' : 'hidden' }}>
-                                                                            L</option>
-                                                                    </select> --}}
-
-                                                                        {{-- @if ($status == 1 || $status == 3 || $status == 9 || $status == 12)
-                                                                            <?php //$present++;
-                                                                            ?>
-                                                                        @elseif ($status == 2)
-                                                                            <?php //$absent++;
-                                                                            ?>
-                                                                        @elseif ($status == 6)
-                                                                            <?php //$holiday++;
-                                                                            ?>
-                                                                        @elseif ($status == 4)
-                                                                            <?php //$mispunch++;
-                                                                            ?>
-                                                                        @elseif ($status == 7)
-                                                                            <?php //$weekoff++;
-                                                                            ?>
-                                                                        @elseif ($status == 10 || $status == 11)
-                                                                            <?php //$leave++;
-                                                                            ?>
-                                                                        @elseif ($status == 8)
-                                                                            <?php //$halfday++;
-                                                                            ?>
-                                                                        @elseif($status == 9)
-                                                                            <?php //$overtime++;
-                                                                            ?>
-                                                                        @endif --}}
-
-                                                                    </td>
-                                                                @endforeach
-
-                                                                {{-- @dd($emp['count']); --}}
-
-                                                                <td class="text-center"
-                                                                    id="{{ $emp['empId'] }}['present']">
-                                                                    <input type="text" id="{{ $emp['empId'] }}P"
-                                                                        name="{{ $emp['empId'] }}[present]"
-                                                                        value="{{ $emp['count']['present'] }}"
-                                                                        style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
-                                                                        readonly>
-                                                                </td>
-
-                                                                <td class="text-center" id="{{ $emp['empId'] }}['absent']">
-                                                                    <input type="text" id="{{ $emp['empId'] }}A"
-                                                                        name="{{ $emp['empId'] }}[absent]"
-                                                                        value="{{ $emp['count']['absent'] }}"
-                                                                        style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
-                                                                        readonly>
-                                                                </td>
-                                                                <td class="text-center" id="{{ $emp['empId'] }}['late']">
-                                                                    <input type="text" id="{{ $emp['empId'] }}A"
-                                                                        name="{{ $emp['empId'] }}[late]"
-                                                                        value="{{ $emp['count']['late'] }}"
-                                                                        style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
-                                                                        readonly>
-                                                                </td>
-                                                                <td class="text-center"
-                                                                    id="{{ $emp['empId'] }}['early']">
-                                                                    <input type="text" id="{{ $emp['empId'] }}A"
-                                                                        name="{{ $emp['empId'] }}[early]"
-                                                                        value="{{ $emp['count']['early'] }}"
-                                                                        style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
-                                                                        readonly>
-                                                                </td>
-
-                                                                <td class="text-center"
-                                                                    id="{{ $emp['empId'] }}['mispunch']">
-                                                                    <input type="text" id="{{ $emp['empId'] }}MSP"
-                                                                        name="{{ $emp['empId'] }}[mispunch]"
-                                                                        value="{{ $emp['count']['mispunch'] }}"
-                                                                        style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
-                                                                        readonly>
-                                                                </td>
-                                                                <td class="text-center"
-                                                                    id="{{ $emp['empId'] }}['holiday']">
-                                                                    <input type="text" id="{{ $emp['empId'] }}HO"
-                                                                        name="{{ $emp['empId'] }}[holiday]"
-                                                                        value="{{ $emp['count']['holiday'] }}"
-                                                                        style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
-                                                                        readonly>
-                                                                </td>
-
-                                                                <td class="text-center"
-                                                                    id="{{ $emp['empId'] }}['weekoff']">
-                                                                    <input type="text" id="{{ $emp['empId'] }}WO"
-                                                                        name="{{ $emp['empId'] }}[weekoff]"
-                                                                        value="{{ $emp['count']['weekoff'] }}"
-                                                                        style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
-                                                                        readonly>
-                                                                </td>
-                                                                <td class="text-center"
-                                                                    id="{{ $emp['empId'] }}['halfday']">
-                                                                    <input type="text" id="{{ $emp['empId'] }}HD"
-                                                                        name="{{ $emp['empId'] }}[halfday]"
-                                                                        value="{{ $emp['count']['halfday'] }}"
-                                                                        style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
-                                                                        readonly>
-                                                                </td>
-                                                                <td class="text-center"
-                                                                    id="{{ $emp['empId'] }}['overtime']">
-                                                                    <input type="text" id="{{ $emp['empId'] }}OT"
-                                                                        name="{{ $emp['empId'] }}[overtime]"
-                                                                        value="{{ $emp['count']['overtime'] }}"
-                                                                        style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
-                                                                        readonly>
-                                                                </td>
-                                                                <td class="text-center"
-                                                                    id="{{ $emp['empId'] }}['leave']">
-                                                                    <input type="text" id="{{ $emp['empId'] }}L"
-                                                                        name="{{ $emp['empId'] }}[leave]"
-                                                                        value="{{ $emp['count']['leave'] }}"
-                                                                        style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
-                                                                        readonly>
-                                                                </td>
-                                                                <td class="text-center"
-                                                                    id="{{ $emp['empId'] }}['total']">
-                                                                    <input type="text" id="{{ $emp['empId'] }}T"
-                                                                        name="{{ $emp['empId'] }}[total]"
-                                                                        value="{{ $emp['count']['total'] }}"
-                                                                        style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
-                                                                        readonly>
-                                                                </td>
+                                                        @if (empty($EmployeeDate))
+                                                            <tr class="text-center">
+                                                                <td colspan="30" class="text-center">No data available in
+                                                                    table</td>
                                                             </tr>
-                                                        @endforeach
+                                                        @else
+                                                            @foreach ($EmployeeDate as $key => $emp)
+                                                                <tr class="odd border border-bottum">
+                                                                    <td class="reorder sorting_01">
+                                                                        <div class="d-flex">
+                                                                            <span
+                                                                                class="avatar avatar-md brround me-3 rounded-circle"
+                                                                                style="background-image: url('/employee_profile/{{ $emp['imgURL'] }}')"></span>
+                                                                            <div class="me-3 mt-0 mt-sm-2 d-block">
+                                                                                <h6 class="mb-1 fs-14">
+                                                                                    <a
+                                                                                        href="{{ route('employeeProfile', [$emp['empId']]) }}">
+                                                                                        {{ $emp['name'] }}{{ '(' . $emp['empId'] . ')' }}
+                                                                                    </a>
+                                                                                </h6>
+                                                                                <p class="text-muted mb-0 fs-12">
+                                                                                    {{ $emp['designation'] }}
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    @php
+                                                                        $present = 0;
+                                                                        $absent = 0;
+                                                                        $halfday = 0;
+                                                                        $mispunch = 0;
+                                                                        $weekoff = 0;
+                                                                        $holiday = 0;
+                                                                        $overtime = 0;
+                                                                        $leave = 0;
+                                                                    @endphp
+                                                                    @foreach ($emp['status'] as $key => $status)
+                                                                        @php
+                                                                            // $root->MyCountForMonth($emp['empId'], date('Y-m-d', strtotime($emp['year'] . '-' . $emp['month'] . '-' . $key)), Session::get('business_id'),$emp['branch_id']);
+                                                                            // $root->MyCountForDaily(date('Y-m-d', strtotime($emp['year'] . '-' . $emp['month'] . '-' . $key)), Session::get('business_id'),$emp['branch_id'], Session::get('login_role'), Session::get('login_emp_id'));
+                                                                        @endphp
+                                                                        <td>
+                                                                            <span>
+                                                                                <small class="badge badge-info-light"
+                                                                                    data-bs-trigger="hover"
+                                                                                    style="background-color:transparent;"
+                                                                                    data-bs-container="body"
+                                                                                    data-bs-content="{{ date('d-m-Y', strtotime($key . '-' . $emp['month'] . '-' . $emp['year'])) }}"
+                                                                                    data-bs-placement="right"
+                                                                                    data-bs-popover-color="primary"
+                                                                                    data-bs-toggle="popover"
+                                                                                    data-bs-html="true"
+                                                                                    title="{{ $status == 1 || $status == 3 || $status == 9 || $status == 12 ? 'Present' : ($status == 4 ? 'Mispunch' : ($status == 6 ? 'Holiday' : ($status == 7 ? 'WeekOff' : ($status == 8 ? 'Halfday' : ($status == 10 ? 'Leave' : 'Absent'))))) }}"
+                                                                                    data-bs-original-title="Data">
+                                                                                    <span
+                                                                                        class="fs-14 text-dark btn">{{ $status == 1 || $status == 3 || $status == 9 || $status == 12 ? 'P' : ($status == 4 ? 'MSP' : ($status == 6 ? 'HO' : ($status == 7 ? 'WO' : ($status == 8 ? 'HD' : ($status == 10 ? 'L' : 'A'))))) }}</span>
+                                                                                </small>
+                                                                            </span>
+
+                                                                        </td>
+                                                                    @endforeach
+
+                                                                    <td class="text-center"
+                                                                        id="{{ $emp['empId'] }}['present']">
+                                                                        <input type="text" id="{{ $emp['empId'] }}P"
+                                                                            name="{{ $emp['empId'] }}[present]"
+                                                                            value="{{ $emp['count']['present'] }}"
+                                                                            style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
+                                                                            readonly>
+                                                                    </td>
+
+                                                                    <td class="text-center"
+                                                                        id="{{ $emp['empId'] }}['absent']">
+                                                                        <input type="text" id="{{ $emp['empId'] }}A"
+                                                                            name="{{ $emp['empId'] }}[absent]"
+                                                                            value="{{ $emp['count']['absent'] }}"
+                                                                            style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
+                                                                            readonly>
+                                                                    </td>
+                                                                    <td class="text-center"
+                                                                        id="{{ $emp['empId'] }}['late']">
+                                                                        <input type="text" id="{{ $emp['empId'] }}A"
+                                                                            name="{{ $emp['empId'] }}[late]"
+                                                                            value="{{ $emp['count']['late'] }}"
+                                                                            style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
+                                                                            readonly>
+                                                                    </td>
+                                                                    <td class="text-center"
+                                                                        id="{{ $emp['empId'] }}['early']">
+                                                                        <input type="text" id="{{ $emp['empId'] }}A"
+                                                                            name="{{ $emp['empId'] }}[early]"
+                                                                            value="{{ $emp['count']['early'] }}"
+                                                                            style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
+                                                                            readonly>
+                                                                    </td>
+
+                                                                    <td class="text-center"
+                                                                        id="{{ $emp['empId'] }}['mispunch']">
+                                                                        <input type="text" id="{{ $emp['empId'] }}MSP"
+                                                                            name="{{ $emp['empId'] }}[mispunch]"
+                                                                            value="{{ $emp['count']['mispunch'] }}"
+                                                                            style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
+                                                                            readonly>
+                                                                    </td>
+                                                                    <td class="text-center"
+                                                                        id="{{ $emp['empId'] }}['holiday']">
+                                                                        <input type="text" id="{{ $emp['empId'] }}HO"
+                                                                            name="{{ $emp['empId'] }}[holiday]"
+                                                                            value="{{ $emp['count']['holiday'] }}"
+                                                                            style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
+                                                                            readonly>
+                                                                    </td>
+
+                                                                    <td class="text-center"
+                                                                        id="{{ $emp['empId'] }}['weekoff']">
+                                                                        <input type="text" id="{{ $emp['empId'] }}WO"
+                                                                            name="{{ $emp['empId'] }}[weekoff]"
+                                                                            value="{{ $emp['count']['weekoff'] }}"
+                                                                            style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
+                                                                            readonly>
+                                                                    </td>
+                                                                    <td class="text-center"
+                                                                        id="{{ $emp['empId'] }}['halfday']">
+                                                                        <input type="text" id="{{ $emp['empId'] }}HD"
+                                                                            name="{{ $emp['empId'] }}[halfday]"
+                                                                            value="{{ $emp['count']['halfday'] }}"
+                                                                            style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
+                                                                            readonly>
+                                                                    </td>
+                                                                    <td class="text-center"
+                                                                        id="{{ $emp['empId'] }}['overtime']">
+                                                                        <input type="text" id="{{ $emp['empId'] }}OT"
+                                                                            name="{{ $emp['empId'] }}[overtime]"
+                                                                            value="{{ $emp['count']['overtime'] }}"
+                                                                            style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
+                                                                            readonly>
+                                                                    </td>
+                                                                    <td class="text-center"
+                                                                        id="{{ $emp['empId'] }}['leave']">
+                                                                        <input type="text" id="{{ $emp['empId'] }}L"
+                                                                            name="{{ $emp['empId'] }}[leave]"
+                                                                            value="{{ $emp['count']['leave'] }}"
+                                                                            style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
+                                                                            readonly>
+                                                                    </td>
+                                                                    <td class="text-center"
+                                                                        id="{{ $emp['empId'] }}['total']">
+                                                                        <input type="text" id="{{ $emp['empId'] }}T"
+                                                                            name="{{ $emp['empId'] }}[total]"
+                                                                            value="{{ $emp['count']['total'] }}"
+                                                                            style="border: solid black 1px; width:2vw; text-align:center;border-radius:5px"
+                                                                            readonly>
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        @endif
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -337,9 +288,9 @@
                                         <div class="modal-body">
                                             <h6>Are you sure want to Submit Attendance Permanently</h6>
                                         </div>
-                                        <input type="text" id="yearInputHidden" value="{{ $emp['year'] }}"
+                                        <input type="text" id="yearInputHidden" value="{{ $emp['year'] ?? 'N/A' }}"
                                             name="year" hidden>
-                                        <input type="text" id="monthInputHidden" value="{{ $emp['month'] }}"
+                                        <input type="text" id="monthInputHidden" value="{{ $emp['month'] ?? 'N/A' }}"
                                             name="month" hidden>
                                         {{-- <input type="text" id="businessInputHidden" name="businessId" hidden> --}}
                                         <div class="modal-footer">

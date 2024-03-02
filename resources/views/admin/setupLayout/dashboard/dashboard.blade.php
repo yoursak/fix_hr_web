@@ -10,9 +10,6 @@
                 <h3>Welcome to Fix HR</h3>
 
             </div>
-            {{-- @php
-            dd(session()->all());
-            @endphp --}}
 
             <div class="card-body">
                 <h4>Fix HR offers the following features to help you set up your business.</h4>

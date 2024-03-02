@@ -28,6 +28,7 @@ use Ixudra\Curl\Facades\Curl;
 use App\Models\PolicyHolidayTemplate;
 use App\Models\AdminNotice;
 use App\Models\PolicyMasterEndgameMethod;
+use App\Models\GradeList;
 use App\Models\PolicySettingLeaveCategory;
 use App\Models\StaticEmployeeJoinActiveType;
 use App\Models\StaticEmployeeJoinBloodGroup;
@@ -48,11 +49,22 @@ use App\Models\EmployeePersonalDetail;
 
 class setupController extends Controller
 {
+    public function gradeSetup()
+    {
+
+        $accessPermission = Central_unit::AccessPermission();
+        $moduleName = $accessPermission[0];
+        $permissions = $accessPermission[1];
+        $data = GradeList::where('business_id', Session::get('business_id'))->get();
+        // dd(($item));
+        return view('admin.setupLayout.setting.business.grade.grade', compact('data', 'permissions', 'moduleName'));
+
+    }
     public function index(Request $request)
     {
         $empcountvalue = EmployeePersonalDetail::where('business_id', Session::get('business_id'))->count();
         $getContractualType = DB::table('static_employee_join_contractual_type')->get();
-        return view('admin.setupLayout.employee.Employee', compact('empcountvalue','getContractualType'));
+        return view('admin.setupLayout.employee.Employee', compact('empcountvalue', 'getContractualType'));
         // return view('admin.setupLayout.employee.Employee', compact('staticbloodGroup', 'staticGender', 'staticMarital', 'statciCategory', 'staticGovId', 'getCountry', 'EmpID', 'Branch', 'Department', 'Designation', 'attendanceMethod', 'setupAssociated', 'newCurrentStep','image'));
     }
 
@@ -110,6 +122,7 @@ class setupController extends Controller
 
     public function businessSetup(Request $request)
     {
+        $gradeCountValue = GradeList::where('business_id', Session::get('business_id'))->count();
         $branchCountValue = BranchList::where('business_id', Session::get('business_id'))->count();
         $departmentCountValue = DepartmentList::where('b_id', Session::get('business_id'))->count();
         $designationCountValue = DesignationList::where('business_id', Session::get('business_id'))->count();
@@ -123,7 +136,7 @@ class setupController extends Controller
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
-        return view('admin.setupLayout.setting.business.business', compact('permissions', 'moduleName', 'branchCountValue', 'departmentCountValue', 'designationCountValue', 'holidayPolicyCountValue', 'leavePolicyCountValue', 'weeklyHolidayPolicyCountValue', 'policycompoffCoutnValue', 'noticBoardCountValue'));
+        return view('admin.setupLayout.setting.business.business', compact('permissions', 'moduleName', 'branchCountValue', 'departmentCountValue', 'designationCountValue', 'holidayPolicyCountValue', 'leavePolicyCountValue', 'weeklyHolidayPolicyCountValue', 'policycompoffCoutnValue', 'noticBoardCountValue', 'gradeCountValue'));
     }
 
     public function branchesSetup()
@@ -408,7 +421,7 @@ class setupController extends Controller
             ->orderBy('camera_permission.id', 'DESC')
             ->select('camera_permission.*', 'static_attendance_methods.id as attmethodid', 'static_attendance_methods.method_name')
             ->get();
-        $Type = DB::table('static_attendance_mode')->whereIn('id',[1,2])->get();
+        $Type = DB::table('static_attendance_mode')->whereIn('id', [1, 2])->get();
 
         return view('admin.setupLayout.setting.attendance.cameraAccess', compact(['bName', 'cameraAccess', 'modes', 'Type', 'permissions']));
         // return view("admin.setupLayout.setting.attendance.cameraAccess", compact(['bName', 'cameraAccess', 'modes']));

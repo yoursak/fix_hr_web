@@ -12,7 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 /**
  * Class LoginAdmin
- * 
+ *
  * @property int $id
  * @property string|null $business_id
  * @property string|null $name
@@ -30,28 +30,28 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class LoginAdmin extends Model
 {
-	use HasApiTokens;
-	protected $table = 'login_admin';
-	protected $primary_key = 'id';
+    use HasApiTokens;
+    protected $table = 'login_admin';
+    protected $primary_key = 'id';
+    protected $business_id = 'business_id';
+    protected $casts = [
+        'business_id' => 'string',
+        'static_role' => 'int',
+        'otp_created_at' => 'datetime',
+        'is_verified' => 'bool',
+        'api_token' => 'string'
+    ];
 
-	protected $casts = [
-		'business_id' => 'string',
-		'static_role' => 'int',
-		'otp_created_at' => 'datetime',
-		'is_verified' => 'bool',
-		'api_token' => 'string'
-	];
-
-	protected $fillable = [
-		'business_id',
-		'static_role',
-		'name',
-		'email',
-		'country_code',
-		'phone',
-		'otp',
-		'otp_created_at',
-		'is_verified',
-		'api_token'
-	];
+    protected $fillable = [
+        'business_id',
+        'static_role',
+        'name',
+        'email',
+        'country_code',
+        'phone',
+        'otp',
+        'otp_created_at',
+        'is_verified',
+        'api_token'
+    ];
 }

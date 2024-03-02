@@ -66,14 +66,12 @@ class GatePassApiController extends Controller
 
                             // Get the last index value of role_id
                             $lastRoleId = end($roleIds); // Get the last value of the array
-
-                            // $load = $approvalManagementCycle->cycle_type;
-                            // dd($firstRoleId, $lastRoleId);
                         }
 
                         $requestDate = Carbon::createFromFormat('d-m-Y', $request->date);
                         $data = new RequestGatepassList();
                         $data->business_id = $emp->business_id;
+                        $data->branch_id = $request->branch_id;
                         $data->emp_id = $request->emp_id;
                         $data->source = $request->source;
                         $data->date = $requestDate->toDateString();
@@ -219,8 +217,10 @@ class GatePassApiController extends Controller
     {
         $id = $request->id;
         $business_id = $request->business_id;
+        $branchId = $request->branch_id;
         $emp_id = $request->emp_id;
-        $data = RequestGatepassList::where('business_id', $business_id)->where('emp_id', $emp_id)->where('id', $id)->first();
+
+        $data = RequestGatepassList::where('business_id', $business_id)->where('emp_id', $emp_id)->where('id', $id)->where('branch_id', $branchId)->first();
         if ($data) {
             if ($data->forward_by_status == 0 && $data->final_status == 0 && $data->process_complete == 0) {
                 $data->id = $request->id ?? $data->id;

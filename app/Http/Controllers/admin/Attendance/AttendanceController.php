@@ -28,7 +28,7 @@ use App\Models\DesignationList;
 use App\Models\PolicyAttendanceShiftSetting;
 use App\Models\PolicyAttendanceTrackInOut;
 use App\Models\PolicyAttendanceShiftTypeItem;
-
+use App\Models\PolicySettingRoleAssignPermission;
 use App\Models\LoginEmployee;
 use App\Models\PolicyMasterEndgameMethod;
 // use Alert;
@@ -38,164 +38,15 @@ class AttendanceController extends Controller
 {
     public function index()
     {
-        //loginRoleid check
-        $FindRoleID = RulesManagement::PassBy()[3];
-        $nonPunchedEmployee = [];
-        $now = date('Y-m-d');
-        $lateEntry = PolicyAttenRuleLateEntry::where('business_id', Session::get('business_id'))
-            ->where('switch_is', 1)
-            ->first();
-        $earlyExit = PolicyAttenRuleEarlyExit::where('business_id', Session::get('business_id'))
-            ->where('switch_is', 1)
-            ->first();
-        $earlyTime = ($earlyExit->mark_half_day_hr ?? 0) * 60 + ($earlyExit->mark_half_day_min ?? 0);
-        $hours1 = floor($earlyTime / 60);
-        $minutes1 = $earlyTime % 60;
-        $earlyExitTime = gmdate('H:i', $hours1 * 3600 + $minutes1 * 60);
-        $lateTime = ($lateEntry->mark_half_day_hr ?? 0) * 60 + ($lateEntry->mark_half_day_min ?? 0);
-        // Calculate hours and minutes
-        $hours = floor($lateTime / 60);
-        $minutes = $lateTime % 60;
-        // Format as hh:mm
-        $formattedTime = gmdate('H:i', $hours * 3600 + $minutes * 60);
-        $fullLate = $lateTime * 60;
-        // dd($formattedTime);
-        $halfDayThreshold = 240; // Threshold for a half-day in minutes (4 hours)
-
-        $currentDate = Carbon::now();
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
-        $loginRoleID = RulesManagement::PassBy()[3];
-        // pendingApprovalCount
-        $currentYear = Carbon::now()->year;
-        $currentMonth = Carbon::now()->month;
-        $currentDay = Carbon::now()->day;
 
-        $distinctPunchDates = AttendanceList::join('employee_personal_details', 'employee_personal_details.emp_id', '=', 'attendance_list.emp_id')
-            ->where('employee_personal_details.active_emp', '1')
-            ->where('attendance_list.final_status', '0')
-            ->where('attendance_list.business_id', Session::get('business_id'))
-            ->whereYear('attendance_list.punch_date', $currentYear)
-            ->whereMonth('attendance_list.punch_date', $currentMonth)
-            ->whereDate('attendance_list.punch_date', '<>', Carbon::today()) // Exclude today's data
-            ->select('attendance_list.punch_date', 'final_status')
-            ->distinct()
-            ->get();
-        // dd($distinctPunchDates);
-        $approvalPendingCount = count($distinctPunchDates);
-        $checkApprovalPermission = DB::table('approval_management_cycle')
-            ->where('business_id', Session::get('business_id'))
-            ->where('approval_type_id', 1)
-            ->whereJsonContains('role_id', (string) $loginRoleID)
-            ->first();
-        $checkApprovalforwardId = AttendanceList::where('business_id', Session::get('business_id'))->where('forward_by_role_id', $loginRoleID)->where('final_status', '0')->first();
-
-        // dd($checkApprovalforwardId);
-        $EmployeeDetails = EmployeePersonalDetail::where('business_id', Session::get('business_id'))->get();
-        $DATA = AttendanceList::join('employee_personal_details', 'attendance_list.emp_id', '=', 'employee_personal_details.emp_id')
-            ->join('static_attendance_methods', 'attendance_list.working_from_method', '=', 'static_attendance_methods.id')
-            ->where('employee_personal_details.active_emp', '1')
-            ->where('attendance_list.punch_date', date('Y-m-d'))
-            ->where('employee_personal_details.business_id', Session::get('business_id'))
-            ->select(
-                'attendance_list.*',
-                DB::raw("IFNULL(DATE_FORMAT(attendance_list.punch_in_time, '%h:%i %p'), NULL) AS punch_in_time"),
-                DB::raw("IFNULL(DATE_FORMAT(attendance_list.punch_out_time, '%h:%i %p'), NULL) AS punch_out_time"),
-                'employee_personal_details.emp_name',
-                'employee_personal_details.emp_mname',
-                'static_attendance_methods.method_name',
-                'employee_personal_details.profile_photo',
-                'employee_personal_details.designation_id',
-                'employee_personal_details.emp_lname',
-                'employee_personal_details.department_id'
-            )
-            ->orderBy('attendance_list.id', 'desc')
-            ->get();
-
-        $filteredEmpIds = $DATA->pluck('emp_id')->toArray();
-        // dd($filteredEmpIds);
-
-        // Retrieve data from EmployeePersonalDetail excluding the records with emp_ids from $filteredData
-        $employeeData = EmployeePersonalDetail::where('business_id', Session::get('business_id'))
-            // ->leftJoin('static_attendance_methods', 'employee_personal_details.emp_attendance_method', '=', 'static_attendance_methods.id')
-            ->whereNotIn('emp_id', $filteredEmpIds)
-            // ->select('employee_personal_details.*', 'static_attendance_methods.method_name', 'designation_list.desig_name')
-            ->get();
-
-
-        $combinedData = $DATA->merge($employeeData);
-        // dd($combinedData);
-        // $DATA = EmployeePersonalDetail::where('business_id', Session::get('business_id'))
-        //     ->join('static_attendance_methods', 'employee_personal_details.emp_attendance_method', '=', 'static_attendance_methods.id')
-        //     ->select('employee_personal_details.*', 'static_attendance_methods.method_name')
-        //     ->get();
-        $data = [
-            'labels' => ['Work', 'Break', 'Meetings'],
-            'data' => [40, 20, 10],
-            // Example data in hours
-        ];
-        // ForApproval setup
-        $owner_call_back_id = DB::table('business_details_list')
-            ->where('business_id', Session::get('business_id'))
-            ->first();
-        // dd($owner_call_back_id);
-        $roleIdToCheck = Session::get('login_role');
-        $parallerCaseApprovalListRoleIdCheck = ApprovalManagementCycle::where('business_id', Session::get('business_id'))
-            ->where('approval_type_id', 1)
-            ->where('cycle_type', 2)
-            ->where(function ($query) use ($roleIdToCheck) {
-                $query->whereJsonContains('role_id', (string) $roleIdToCheck)
-                    ->orWhereJsonContains('role_id', (string) $roleIdToCheck);
-            })
-            ->first();
-        // dd($parallerCaseApprovalListRoleIdCheck);
-        $checkApprovalCycleType = RulesManagement::ApprovalGetDetails(1)[1];
+        $loginRoleID = Session::get('login_role');
         $loginRoleID = RulesManagement::PassBy()[3];
         $loginRoleBID = RulesManagement::PassBy()[1];
-        $root = compact('parallerCaseApprovalListRoleIdCheck', 'moduleName', 'loginRoleBID', 'owner_call_back_id', 'checkApprovalCycleType', 'loginRoleID', 'permissions', 'DATA', 'data', 'approvalPendingCount', 'checkApprovalPermission', 'checkApprovalforwardId');
-        return view('admin.attendance.attendance', $root);
-    }
-
-
-
-    // ********************************** Start of Attendance Ajax Response By Aman ******************************
-
-    public function getHolidayForEmployee(Request $request)
-    {
-        $Date = $request->date;
-        $EmpID = $request->emp_id;
-
-        $holiday = Central_unit::getHolidayFromDB($EmpID, $Date);
-        $leave = DB::table('request_leave_list')->where('emp_id', $EmpID)
-            ->leftJoin('static_leave_category', 'request_leave_list.leave_category', '=', 'static_leave_category.id')
-            ->whereDate('request_leave_list.from_date', '<=', $Date)
-            ->whereDate('request_leave_list.to_date', '>=', $Date)
-            ->first();
-
-        $attendanceList = DB::table('attendance_list')->where('business_id', Session::get('business_id'))->where(['punch_date' => $Date, 'emp_id' => $EmpID])->first();
-        $taps = DB::table('attendance_tab_location_list')->where('attendance_id', $attendanceList->id ?? 0)->get();
-        return response()->json([$holiday, $leave, $taps]);
-    }
-    public function AttendanceByAjaxFilter(Request $request)
-    {
-        $month = $request->month;
-        $year = $request->year;
-        $empId = $request->emp_id;
-
-        $employeeAttendanceData = Central_unit::employeeAttendanceFiterForMonth(['month' => $month, 'year' => $year, 'emp_id' => $empId]);
-        $byAttendanceCalculation = Central_unit::attendanceByEmpDetails($empId, $year, $month);
-        $monthlyCount = Central_unit::getMonthlyCountFromDB($empId, $year, $month, Session::get('business_id'));
-
-
-        $timeLog = AttendanceTimeLog::where('business_id', Session::get('business_id'))
-            ->where('emp_id', $empId)
-            ->whereMonth('punch_date', $month)
-            ->whereYear('punch_date', $year)
-            ->get();
-
-
-        return response()->json([$byAttendanceCalculation, $employeeAttendanceData, $timeLog, $monthlyCount]);
+        $checkApprovalCycleType = RulesManagement::ApprovalGetDetails(1)[1];
+        return view('admin.attendance.attendance', compact('permissions', 'moduleName', 'loginRoleID', 'checkApprovalCycleType'));
     }
 
     public function dashboardAttendanceCountFilter(Request $request)
@@ -208,323 +59,84 @@ class AttendanceController extends Controller
         $engDate = str_replace(array_keys($monthAbbreviations), array_values($monthAbbreviations), $resDate);
 
         $date = date('Y-m-d', strtotime($engDate));
-        $responseData = Central_unit::getDailyCountForDashboardAndDailyList(Session::get('business_id'), $date);
+        $responseData = Central_unit::getDailyCountForDashboardAndDailyList(Session::get('business_id'), $date, Session::get('login_role'), Session::get('login_emp_id'));
 
         return response()->json($responseData);
     }
-    public function allAttendanceCalculationAjax(Request $request)
-    {
-        $month = $request->month;
-        $year = $request->year;
-        $branchId = $request->branch_id;
-        $departmentId = $request->department_id;
-        $designationId = $request->designation_id;
-        $data = [];
-
-        $Emp = EmployeePersonalDetail::when($branchId, function ($query) use ($branchId) {
-            $query->where('employee_personal_details.branch_id', $branchId);
-        })
-            ->when($departmentId, function ($query) use ($departmentId) {
-                $query->where('employee_personal_details.department_id', $departmentId);
-            })
-            ->when($designationId, function ($query) use ($designationId) {
-                $query->where('employee_personal_details.designation_id', $designationId);
-            })
-            ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
-            ->whereDate('employee_personal_details.emp_date_of_joining', '<=', date('Y-m-d', strtotime($year . '-' . $month . '-01')))
-            ->where('employee_personal_details.active_emp', 1)
-            ->where('employee_personal_details.business_id', Session()->get('business_id'))
-            ->get();
-
-        foreach ($Emp as $key => $emp) {
-            // $resCode = Central_unit::attendanceCount($emp->emp_id, $year, $month);
-            $resCode = Central_unit::getMonthlyCountFromDB($emp->emp_id, $year, $month, Session::get('business_id'));
-            $data[$emp->emp_id] = $resCode;
-        }
-        return response()->json([$Emp, $data]);
-    }
-
-    public function monthlyAtendanceAjax(Request $request)
-    {
-        $branchId = $request->branch_id;
-        $departmentId = $request->department_id;
-        $designationId = $request->designation_id;
-        $year = $request->year ?? date('Y');
-        $month = $request->month ?? date('m');
-        $Emp = EmployeePersonalDetail::when($branchId, function ($query) use ($branchId) {
-            $query->where('employee_personal_details.branch_id', $branchId);
-        })
-            ->when($departmentId, function ($query) use ($departmentId) {
-                $query->where('employee_personal_details.department_id', $departmentId);
-            })
-            ->when($designationId, function ($query) use ($designationId) {
-                $query->where('employee_personal_details.designation_id', $designationId);
-            })
-            ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
-            ->whereDate('employee_personal_details.emp_date_of_joining', '<=', date('Y-m-d', strtotime($year . '-' . $month . '-01')))
-            ->where('employee_personal_details.business_id', Session()->get('business_id'))
-            ->where('employee_personal_details.active_emp', 1)
-            ->get();
-        $status = [];
-
-        foreach ($Emp as $key => $emp) {
-            $day = 0;
-            $EmpID = $emp->emp_id;
-            // Create an array to store the status for this employee
-            $status[$EmpID] = [];
-
-            while ($day++ < date('t')) {
-                $res = Central_unit::getEmpAttSumm(['emp_id' => $EmpID, 'punch_date' => date($year . '-' . $month . '-' . $day)]);
-                // Store the status for this day in the employee's array
-                $status[$EmpID][] = $res[0];
-            }
-        }
-
-        return response()->json([$Emp, $status]);
-    }
-
-    // ********************************** End of Attendance Ajax Response By Aman ******************************
 
     public function attendanceSummary()
     {
+        $businessId = Session::get('business_id');
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
-        // dd($permissions);
-        $Emp = EmployeePersonalDetail::where('business_id', Session::get('business_id'))->where('active_emp', 1)->get();
-        return view('admin.attendance.summary', compact('Emp', 'permissions', 'moduleName'));
-    }
-
-    public function attendanceListFilter(Request $request)
-    {
-
-        // $dateSelectValue = $request->input('date_select_value') ? $request->input('date_select_value') : date('Y-m-d');
-
-        // $Employees = EmployeePersonalDetail::leftJoin('attendance_list', 'employee_personal_details.emp_id', '=', 'attendance_list.emp_id')
-        //     ->leftJoin('policy_master_endgame_method', 'employee_personal_details.master_endgame_id', '=', 'policy_master_endgame_method.id')
-        //     ->leftJoin('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
-        //     ->where('employee_personal_details.business_id', Session::get('business_id'))
-        //     ->when($dateSelectValue, function ($query) use ($dateSelectValue) {
-        //         $query->where('attendance_list.punch_date', $dateSelectValue);
-        //     })
-        //     ->get();
-
-        // return $Employees;
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        $branchId = $request->branch_id;
-        $departmentId = $request->input('department_id');
-        $designationId = $request->input('designation_id');
-        $dateSelectValue = $request->input('date_select_value') ? $request->input('date_select_value') : date('Y-m-d');
-        $empResData = [];
-        $allStatusCount = [];
-        $currentDate = Carbon::now();
-        $loginRoleID = Session::get('login_role');
-        $loginRoleBID = RulesManagement::PassBy()[1];
-        $loginEmpID = RulesManagement::PassBy()[2];
-        $approval_type_id_static = 1;
-        $checkApprovalCycleType = RulesManagement::ApprovalGetDetails(1)[1];
-        $dailyCount = Central_unit::MyCountForDaily($dateSelectValue, Session::get('business_id'));
-
-
-        $filteredData = AttendanceList::join('employee_personal_details', 'attendance_list.emp_id', '=', 'employee_personal_details.emp_id')
-            ->join('policy_master_endgame_method', 'employee_personal_details.master_endgame_id', '=', 'policy_master_endgame_method.id')
-            ->join('static_attendance_methods', 'attendance_list.working_from_method', '=', 'static_attendance_methods.id')
-            ->join('designation_list', 'employee_personal_details.designation_id', '=', 'designation_list.desig_id')
-            ->join('policy_attendance_shift_settings as attendanceShift', 'employee_personal_details.emp_shift_type', '=', 'attendanceShift.id')
-            ->join('static_attendance_shift_type', 'attendanceShift.shift_type', '=', 'static_attendance_shift_type.id')
-            ->join('policy_attendance_shift_type_items', 'attendanceShift.id', '=', 'policy_attendance_shift_type_items.attendance_shift_id')
-            ->where('employee_personal_details.active_emp', '1')
-            ->where('attendance_list.punch_date', isset($dateSelectValue) ? $dateSelectValue : date('Y-m-d'))
-            ->where('employee_personal_details.business_id', Session::get('business_id'))
-            ->when($branchId, function ($query) use ($branchId) {
-                $query->where('attendance_list.branch_id', $branchId);
-            })
-            ->when($departmentId, function ($query) use ($departmentId) {
-                $query->where('employee_personal_details.department_id', $departmentId);
-            })
-            ->when($designationId, function ($query) use ($designationId) {
-                $query->where('employee_personal_details.designation_id', $designationId);
-            })
-            ->when($dateSelectValue, function ($query) use ($dateSelectValue) {
-                $query->where('attendance_list.punch_date', $dateSelectValue);
-            })
-            ->select(
-                'attendance_list.*',
-                DB::raw("IFNULL(DATE_FORMAT(policy_attendance_shift_type_items.shift_start, '%h:%i %p'), NULL) AS shift_start"),
-                DB::raw("IFNULL(DATE_FORMAT(policy_attendance_shift_type_items.shift_end, '%h:%i %p'), NULL) AS shift_end"),
-                DB::raw("IFNULL(DATE_FORMAT(attendance_list.punch_in_time, '%h:%i %p'), NULL) AS punch_in_time"),
-                DB::raw("IFNULL(DATE_FORMAT(attendance_list.punch_out_time, '%h:%i %p'), NULL) AS punch_out_time"),
-                'employee_personal_details.emp_name',
-                'employee_personal_details.emp_mname',
-                'designation_list.desig_name',
-                'static_attendance_methods.method_name',
-                'employee_personal_details.profile_photo',
-                'employee_personal_details.designation_id',
-                'employee_personal_details.emp_lname',
-                'employee_personal_details.department_id'
-            )
-            ->orderBy('attendance_list.id', 'desc')
-            ->get();
-
-        $filteredEmpIds = $filteredData->pluck('emp_id')->toArray();
-
-        // Retrieve data from EmployeePersonalDetail excluding the records with emp_ids from $filteredData
-        $employeeData = EmployeePersonalDetail::where('business_id', Session::get('business_id'))
-            // ->leftJoin('static_attendance_methods', 'employee_personal_details.emp_attendance_method', '=', 'static_attendance_methods.id')
-            ->when($branchId, function ($query) use ($branchId) {
-                $query->where('branch_id', $branchId);
-            })
-            ->when($departmentId, function ($query) use ($departmentId) {
-                $query->where('department_id', $departmentId);
-            })
-            ->when($designationId, function ($query) use ($designationId) {
-                $query->where('designation_id', $designationId);
-            })
-            ->whereNotIn('emp_id', $filteredEmpIds)
-            // ->select('employee_personal_details.*', 'static_attendance_methods.method_name', 'designation_list.desig_name')
-            ->get();
-
-
-        $combinedData = $filteredData->merge($employeeData);
-
-        foreach ($combinedData as $key => $data) {
-            $resCode = Central_unit::getEmpAttSumm(['emp_id' => $data->emp_id, 'punch_date' => $dateSelectValue]);
-            $empResData[$data->emp_id] = $resCode;
-        }
-
-        $allStatusCount = Central_unit::getDailyCountForDashboardAndDailyList(Session::get('business_id'), $dateSelectValue);
-        if (count($filteredData) != 0) {
-            if ($checkApprovalCycleType == 1) {
-                foreach ($filteredData as $key => $data) {
-                    $EmpStatus = RulesManagement::AttendanceApprovalManage($checkApprovalCycleType, $data, $data->id, 1, $loginRoleID);
-                    // $EmpStatus = RulesManagement::AttendanceApprovalManage($checkApprovalCycleType, $data, $data->id, 2, $loginRoleID);
-                    $empStatus[$data->id] = $EmpStatus;
-
-                    $current_status_particular_tb = DB::table('approval_status_list')
-                        ->where('approval_type_id', $approval_type_id_static)
-                        ->where('applied_cycle_type', 1)
-                        ->where('emp_id', $loginEmpID)
-                        ->where('role_id', $loginRoleID)
-                        ->where('all_request_id', $data->id)
-                        ->select('approval_status_list.id')
-                        ->first();
-                    $currentStatusParrticularDb[$data->id] = $current_status_particular_tb;
-                }
-            }
-
-            if ($checkApprovalCycleType == 2) {
-                foreach ($filteredData as $key => $data) {
-                    $EmpStatus = RulesManagement::AttendanceApprovalManage($checkApprovalCycleType, $data, $data->id, 1, $loginRoleID);
-                    $empStatus[$data->id] = $EmpStatus;
-                    $current_status_particular_tb = DB::table('approval_status_list')
-                        ->where('approval_type_id', $approval_type_id_static)
-                        ->where('applied_cycle_type', 2)
-                        ->where('all_request_id', $data->id)
-                        ->first();
-                    $currentStatusParrticularDb[$data->id] = $current_status_particular_tb;
-                }
-            }
+        $EmpQuery = EmployeePersonalDetail::where('business_id', $businessId)->where('active_emp', 1);
+        $roleIdToCheck = Session::get('login_role');
+        $checkBranchPermission = PolicySettingRoleAssignPermission::where('business_id', $businessId)->where('emp_id', Session::get('login_emp_id'))->select('permission_branch_id')->first();
+        if ($checkBranchPermission !== null && !empty($checkBranchPermission) && $roleIdToCheck != 1 && $checkBranchPermission->permission_type) {
+            $Emp = $EmpQuery->where('employee_personal_details.branch_id', $checkBranchPermission->permission_branch_id)->get();
         } else {
-            $combinedData = [];
-            $currentStatusParrticularDb = [];
-            $empStatus = [];
+            $Emp = $EmpQuery->get();
         }
 
-        $TimeLog = DB::table('attendance_time_log')->where('business_id', Session::get('business_id'))->where('punch_date', $dateSelectValue)
-            ->select(
-                'attendance_time_log.emp_id',
-                'attendance_time_log.change_date',
-                'attendance_time_log.punch_date',
-                DB::raw('TIME_FORMAT(attendance_time_log.changed_in_time, "%h:%i %p") AS changed_in_time'),
-                DB::raw('TIME_FORMAT(attendance_time_log.changed_out_time, "%h:%i %p") AS changed_out_time'),
-                'attendance_time_log.prev_total_work',
-                'attendance_time_log.changed_total_work',
-                'attendance_time_log.reason',
-                'attendance_time_log.changed_by',
-                'attendance_time_log.changer_role',
-                'attendance_time_log.changer_emp_id',
-                'attendance_time_log.changer_name',
-                DB::raw('COALESCE(TIME_FORMAT(attendance_time_log.prev_in_time, "%h:%i %p"), "---") AS prev_in_time'),
-                DB::raw('COALESCE(TIME_FORMAT(attendance_time_log.prev_out_time, "%h:%i %p"), "---") AS prev_out_time'),
-
-            )
-            ->get();
-
-        return response()->json(['get' => $filteredData, 'resData' => $empResData, 'allStatusCount' => $allStatusCount, 'currentstatupartdb' => $currentStatusParrticularDb, 'status' => $empStatus, 'checkapprovaltype' => $checkApprovalCycleType, 'loginroleid' => $loginRoleID, 'timeLog' => [$TimeLog], 'dailyCount' => $dailyCount]);
+        return view('admin.attendance.summary', compact('Emp', 'permissions', 'moduleName'));
     }
 
     public function attendanceMark(Request $request)
     {
-
         $Days = '';
         $status = 1;
         $PID = $request->Updateid;
+        $UserType = RulesManagement::PassBy()[0]; //Session::get('user_type');
         $BID = RulesManagement::PassBy()[1];
-        $FindRoleID = RulesManagement::PassBy()[3];
         $EmpID = RulesManagement::PassBy()[2];
+        $FindRoleID = RulesManagement::PassBy()[3];
         $load = RulesManagement::RoleDetailsGet();
-        $call = RulesManagement::PassBy();
         $AdminRoleId = $load[0];
-
-        // dd($AdminRoleId);
-        $EmpId = $call[2];
         $ApprovalTypeID = 1; //Gatepass processType
-        if ($request->has('status')) {
-            // notification calling node model by jayant
 
-            // modal approval btn
-            $attendance = DB::table('attendance_list')
-                ->where('id', $PID)
-                ->where('business_id', Session::get('business_id'))
-                ->where('emp_today_current_status', 2)
-                ->first();
+        if ($request->has('status')) {
+            $attendanced = DB::table('attendance_list')->where('id', $PID)->where('business_id', $BID)->where('emp_today_current_status', 2)->first();
 
             $array = [
                 'redirect_id' => 1,
                 'primary_id' => $PID,
-                'punch_date' => $attendance->punch_date,
+                'punch_date' => $attendanced->punch_date,
             ];
-            $SD = LoginEmployee::where('emp_id', $attendance->emp_id)->first();
-            $sdd = ($request->status != 2) ? 'Approved' : 'Declined';
+            $SD = LoginEmployee::where('emp_id', $attendanced->emp_id)->first();
+
+            $sdd = $request->status != 2 ? 'Approved' : 'Declined';
+
             if ($SD->notification_key != null) {
+                // Convert the JSON string to an array
+                $notificationKeys = json_decode($SD->notification_key, true);
 
-                $reult = RulesManagement::NotificationSendMode($SD->notification_key, 'Fix HR Employee', 'Attendance ' . $sdd . ' By : ' . Session::get('user_type') . ' ', $array);
+                // // Iterate over each notification key and send the notification
+                if (is_array($notificationKeys)) {
+                    $result = RulesManagement::NotificationSendMode($notificationKeys, 'Fix HR Employee', 'Attendance ' . $sdd . ' By : ' . Session::get('login_name') . ' (' . Session::get('login_role_name') . ')' . ' ', $array);
+                }
             }
+            // dd(Session::all());
 
-            if ($attendance) {
-                $ApprovalManagement = DB::table('approval_management_cycle')
-                    ->where('business_id', $BID)
-                    ->where('approval_type_id', $ApprovalTypeID)
-                    ->first();
+            if ($attendanced) {
+                $ApprovalManagement = DB::table('approval_management_cycle')->where('business_id', $BID)->where('approval_type_id', $ApprovalTypeID)->first();
                 if ($ApprovalManagement->cycle_type == 1) {
                     //sequential
                     // next forward
                     $status = $request->status;
-                    $sd = DB::table('approval_management_cycle')
-                        ->where('business_id', $BID)
-                        ->where('approval_type_id', $ApprovalTypeID)
-                        ->whereJsonContains('role_id', (string) $FindRoleID)
-                        ->select('role_id')
-                        ->first();
+                    $sd = DB::table('approval_management_cycle')->where('business_id', $BID)->where('approval_type_id', $ApprovalTypeID)->whereJsonContains('role_id', (string) $FindRoleID)->select('role_id')->first();
                     // dd($sd);
-                    $value = DB::table('attendance_list')
-                        ->where('business_id', $BID)
-                        ->where('id', $PID)
-                        ->first();
+                    $value = DB::table('attendance_list')->where('business_id', $BID)->where('id', $PID)->first();
                     if ($sd) {
                         $roleIds = json_decode($sd->role_id, true); // Decode the JSON array
                         $currentIndex = array_search($FindRoleID, $roleIds); // Find the current index of forward_by_role_id
                         if ($currentIndex !== false) {
                             $nextIndex = $currentIndex + 1;
                             $prevIndex = $currentIndex - 1;
-                            // Check if the next index is within the bounds of the array
-                            // if (isset($roleIds[$nextIndex])) {
+
                             $nextRoleId = isset($roleIds[$nextIndex]) ? $roleIds[$nextIndex] : -1; //sensitive case if last next end then recall 0
                             $prevRoleId = isset($roleIds[$prevIndex]) ? $roleIds[$prevIndex] : 0; //prev 1st start recall 0
-                            // dd($request->all(),$FindRoleID,$nextRoleId);
-                            // Update the database for the current index
+
                             DB::table('attendance_list')
                                 ->where('business_id', $BID)
                                 ->where('id', $PID)
@@ -532,8 +144,7 @@ class AttendanceController extends Controller
                                     'forward_by_role_id' => $nextRoleId,
                                     'forward_by_status' => $status,
                                 ]);
-                            // Update the approval status for the current index
-                            //Sequential
+
                             DB::table('approval_status_list')
                                 ->where('approval_type_id', $ApprovalTypeID)
                                 ->where('role_id', $FindRoleID)
@@ -546,7 +157,6 @@ class AttendanceController extends Controller
                                     'all_request_id' => $PID,
                                     'role_id' => $FindRoleID,
                                     'emp_id' => $EmpID,
-                                    // 'remarks' => $Remark != null ? $Remark : '',
                                     'clicked' => 1,
                                     'status' => $status,
                                     'prev_role_id' => $prevRoleId,
@@ -566,7 +176,6 @@ class AttendanceController extends Controller
                             ]);
                     }
                 }
-                // dd($request->all());
 
                 // default case
                 if ($ApprovalManagement->cycle_type == 2) {
@@ -582,27 +191,9 @@ class AttendanceController extends Controller
                             'final_status' => $status,
                         ]);
                     if ($parallerModalApprovalBtn) {
-                        $loadCheck = DB::table('approval_status_list')
-                            ->where('approval_type_id', $ApprovalTypeID)
-                            ->where('business_id', $BID)
-                            ->where('all_request_id', $PID)
-                            ->first();
+                        $loadCheck = DB::table('approval_status_list')->where('approval_type_id', $ApprovalTypeID)->where('business_id', $BID)->where('all_request_id', $PID)->first();
 
                         if ($loadCheck) {
-                            // DB::table('approval_status_list')
-                            //     ->where('business_id', $BID)
-                            //     ->where('approval_type_id', $ApprovalTypeID)
-                            //     ->where('all_request_id', $PID)
-                            //     ->update([
-                            //         'business_id' => $BID,
-                            // 'applied_cycle_type' => 2,
-                            //         'approval_type_id' => $ApprovalTypeID,
-                            //         'all_request_id' => $PID,
-                            //         'role_id' => $FindRoleID,
-                            //         'emp_id' => $EmpID,
-                            //         'remarks' => $Remark,
-                            //         'status' => $status,
-                            //     ]);
                         } else {
                             //Parallel
                             DB::table('approval_status_list')
@@ -629,51 +220,53 @@ class AttendanceController extends Controller
             } else {
                 Alert::info('', 'Attendance is not approved,"\n" punch-out is required for approval.');
             }
-            // }elseif ($request->has('approveAll') && ($AdminRoleId != null && $EmpId != null)) {  // modal apprvoa all btn
         } elseif ($request->has('approveAll')) {
-            // modal apprvoa all btn
+
             if ($request->checkbox != '') {
                 foreach ($request->checkbox as $key => $value) {
                     $PID = $request->checkbox[$key];
-                    $checkPunchInPunchOut = DB::table('attendance_list')
-                        ->where('business_id', Session::get('business_id'))
-                        ->where('id', $PID)
-                        ->where('emp_today_current_status', 2)
-                        ->first();
-                    // dd($checkPunchInPunchOut);
-                    $EmpID = RulesManagement::PassBy()[2];
+
+                    $checkPunchInPunchOut = DB::table('attendance_list')->where('business_id', $BID)->where('id', $PID)->where('emp_today_current_status', 2)->first();
+
+
                     if (isset($checkPunchInPunchOut)) {
-                        $roatationalShift = AttendanceList::where('business_id', Session::get('business_id'))
+                        // modal approval btn
+                        $attendanced = DB::table('attendance_list')->where('id', $PID)->where('business_id', $BID)->where('emp_today_current_status', 2)->first();
+                        $array = [
+                            'redirect_id' => 1,
+                            'primary_id' => $PID,
+                            'punch_date' => $attendanced->punch_date,
+                        ];
+                        $SD = LoginEmployee::where('emp_id', $attendanced->emp_id)->first();
+
+                        $sdd = $request->status != 2 ? 'Approved' : 'Declined';
+
+                        if ($SD->notification_key != null) {
+                            // Convert the JSON string to an array
+                            $notificationKeys = json_decode($SD->notification_key, true);
+
+                            // // Iterate over each notification key and send the notification
+                            if (is_array($notificationKeys)) {
+                                $result = RulesManagement::NotificationSendMode($notificationKeys, 'Fix HR Employee', 'Attendance ' . $sdd . ' By : ' . Session::get('login_name') . ' (' . Session::get('login_role_name') . ')' . ' ', $array);
+                            }
+                        }
+
+                        // dd("SDf");
+                        $roatationalShift = AttendanceList::where('business_id', $BID)
                             ->where('id', $PID)
                             ->where('final_status', 0)
                             ->where('emp_today_current_status', 2)
                             ->update([
                                 'approved_by_role_id' => $AdminRoleId,
-                                'approved_by_emp_id' => $EmpId,
-                                // 'final_status' => 1,
-                                // 'process_complete' => 1,
-                                // 'final_status' => 1,
+                                'approved_by_emp_id' => $EmpID,
                             ]);
-                        // dd($roatationalShift);
-                        $ApprovalManagement = DB::table('approval_management_cycle')
-                            ->where('business_id', $BID)
-                            ->where('approval_type_id', $ApprovalTypeID)
-                            ->first();
-                        // dd($ApprovalManagement);
+                        $ApprovalManagement = DB::table('approval_management_cycle')->where('business_id', $BID)->where('approval_type_id', $ApprovalTypeID)->first();
                         if ($ApprovalManagement->cycle_type == 1) {
                             //sequential
                             // next forward
                             $status = $request->status;
-                            $sd = DB::table('approval_management_cycle')
-                                ->where('business_id', $BID)
-                                ->where('approval_type_id', $ApprovalTypeID)
-                                ->whereJsonContains('role_id', (string) $FindRoleID)
-                                ->select('role_id')
-                                ->first();
-                            $value = DB::table('attendance_list')
-                                ->where('business_id', $BID)
-                                ->where('id', $PID)
-                                ->first();
+                            $sd = DB::table('approval_management_cycle')->where('business_id', $BID)->where('approval_type_id', $ApprovalTypeID)->whereJsonContains('role_id', (string) $FindRoleID)->select('role_id')->first();
+                            $value = DB::table('attendance_list')->where('business_id', $BID)->where('id', $PID)->first();
                             if ($sd) {
                                 $roleIds = json_decode($sd->role_id, true); // Decode the JSON array
                                 $currentIndex = array_search($FindRoleID, $roleIds); // Find the current index of forward_by_role_id
@@ -681,13 +274,9 @@ class AttendanceController extends Controller
                                 if ($currentIndex !== false) {
                                     $nextIndex = $currentIndex + 1;
                                     $prevIndex = $currentIndex - 1;
-
                                     // Check if the next index is within the bounds of the array
-                                    // if (isset($roleIds[$nextIndex])) {
                                     $nextRoleId = isset($roleIds[$nextIndex]) ? $roleIds[$nextIndex] : -1; //sensitive case if last next end then recall 0
                                     $prevRoleId = isset($roleIds[$prevIndex]) ? $roleIds[$prevIndex] : 0; //prev 1st start recall 0
-
-                                    // dd($request->all(),$FindRoleID,$nextRoleId);
                                     // Update the database for the current index
                                     DB::table('attendance_list')
                                         ->where('business_id', $BID)
@@ -696,8 +285,6 @@ class AttendanceController extends Controller
                                             'forward_by_role_id' => $nextRoleId,
                                             'forward_by_status' => 1,
                                         ]);
-                                    // dd($sd);
-
                                     // Update the approval status for the current index
                                     //Sequential
                                     DB::table('approval_status_list')
@@ -712,7 +299,6 @@ class AttendanceController extends Controller
                                             'all_request_id' => $PID,
                                             'role_id' => $FindRoleID,
                                             'emp_id' => $EmpID,
-                                            // 'remarks' => $Remark != null ? $Remark : '',
                                             'clicked' => 1,
                                             'status' => 1,
                                             'prev_role_id' => $prevRoleId,
@@ -744,27 +330,9 @@ class AttendanceController extends Controller
                                 ]);
 
                             if ($parallerModalApprovalBtn) {
-                                $loadCheck = DB::table('approval_status_list')
-                                    ->where('approval_type_id', $ApprovalTypeID)
-                                    ->where('business_id', $BID)
-                                    ->where('all_request_id', $PID)
-                                    ->first();
+                                $loadCheck = DB::table('approval_status_list')->where('approval_type_id', $ApprovalTypeID)->where('business_id', $BID)->where('all_request_id', $PID)->first();
 
                                 if ($loadCheck) {
-                                    // DB::table('approval_status_list')
-                                    //     ->where('business_id', $BID)
-                                    //     ->where('approval_type_id', $ApprovalTypeID)
-                                    //     ->where('all_request_id', $PID)
-                                    //     ->update([
-                                    //         'business_id' => $BID,
-                                    // 'applied_cycle_type' => 2,
-                                    //         'approval_type_id' => $ApprovalTypeID,
-                                    //         'all_request_id' => $PID,
-                                    //         'role_id' => $FindRoleID,
-                                    //         'emp_id' => $EmpID,
-                                    //         'remarks' => $Remark,
-                                    //         'status' => $status,
-                                    //     ]);
                                 } else {
                                     //Parallel
                                     DB::table('approval_status_list')
@@ -779,7 +347,6 @@ class AttendanceController extends Controller
                                             'role_id' => $FindRoleID,
                                             'emp_id' => $EmpID,
                                             'clicked' => 1,
-                                            // 'remarks' => $Remark,
                                             'status' => $status,
                                         ]);
                                 }
@@ -790,95 +357,80 @@ class AttendanceController extends Controller
                         }
                     }
                 }
-                Alert::success('', 'Items updated successfully');
+                Alert::success('', 'Attendance Approval Updated Successfully');
             }
         } elseif ($request->has('pendingAll')) {
-            $leavePendingRequestCheck = DB::table('request_leave_list')->join('employee_personal_details', 'employee_personal_details.emp_id', 'request_leave_list.emp_id')
-                ->where('employee_personal_details.active_emp', '1')->where('request_leave_list.business_id', Session::get('business_id'))->where('request_leave_list.final_status', 0)->first();
-            $mispunchPendingRequestCheck = DB::table('request_mispunch_list')->join('employee_personal_details', 'employee_personal_details.emp_id', 'request_mispunch_list.emp_id')
-                ->where('employee_personal_details.active_emp', '1')->where('request_mispunch_list.business_id', Session::get('business_id'))->where('request_mispunch_list.final_status', 0)->first();
-            $attendanceOutTimeMis = DB::table('attendance_list')->join('employee_personal_details', 'employee_personal_details.emp_id', 'attendance_list.emp_id')
-                ->where('employee_personal_details.active_emp', '1')
-                ->where('attendance_list.emp_today_current_status', '!=', '2')
-                ->whereDate('attendance_list.punch_date', '!=', now()->toDateString())
-                ->first();
+            $leavePendingRequestCheck = DB::table('request_leave_list')->join('employee_personal_details', 'employee_personal_details.emp_id', 'request_leave_list.emp_id')->where('employee_personal_details.active_emp', '1')->where('request_leave_list.business_id', $BID)->where('request_leave_list.final_status', 0)->first();
+            $mispunchPendingRequestCheck = DB::table('request_mispunch_list')->join('employee_personal_details', 'employee_personal_details.emp_id', 'request_mispunch_list.emp_id')->where('employee_personal_details.active_emp', '1')->where('request_mispunch_list.business_id', $BID)->where('request_mispunch_list.final_status', 0)->first();
+            $attendanceOutTimeMis = DB::table('attendance_list')->join('employee_personal_details', 'employee_personal_details.emp_id', 'attendance_list.emp_id')->where('employee_personal_details.active_emp', '1')->where('attendance_list.emp_today_current_status', '!=', '2')->whereDate('attendance_list.punch_date', '!=', now()->toDateString())->first();
             if ($leavePendingRequestCheck != null && $mispunchPendingRequestCheck != null && $attendanceOutTimeMis != null) {
                 Alert::info('', 'Attendance approval not allowed, Kindly clear your attendance, leave and mispunch first');
                 return redirect('/admin/attendance');
-            } else if ($leavePendingRequestCheck != null && $mispunchPendingRequestCheck != null) {
+            } elseif ($leavePendingRequestCheck != null && $mispunchPendingRequestCheck != null) {
                 Alert::info('', 'Attendance approval not allowed, Kindly clear your all your leave and mispunch first');
                 return redirect('/admin/attendance');
-            } else if ($leavePendingRequestCheck != null && $attendanceOutTimeMis != null) {
+            } elseif ($leavePendingRequestCheck != null && $attendanceOutTimeMis != null) {
                 Alert::info('', 'Attendance approval not allowed, Kindly clear all your attendance and leave first');
                 return redirect('/admin/attendance');
-            } else if ($mispunchPendingRequestCheck != null && $attendanceOutTimeMis != null) {
+            } elseif ($mispunchPendingRequestCheck != null && $attendanceOutTimeMis != null) {
                 Alert::info('', 'Attendance approval not allowed, Kindly clear all your attendance and mispunch first');
                 return redirect('/admin/attendance');
-            } else if ($leavePendingRequestCheck != null) {
+            } elseif ($leavePendingRequestCheck != null) {
                 Alert::info('', 'Attendance approval not allowed, Kindly clear all your leave first');
                 return redirect('/admin/attendance');
-            } else if ($mispunchPendingRequestCheck != null) {
+            } elseif ($mispunchPendingRequestCheck != null) {
                 Alert::info('', 'Attendance approval not allowed, Kindly clear all your mispunch first');
                 return redirect('/admin/attendance');
-            } else if ($attendanceOutTimeMis != null) {
+            } elseif ($attendanceOutTimeMis != null) {
                 Alert::info('', 'Attendance approval not allowed, Kindly mark your punch out time first');
                 return redirect('/admin/attendance');
             }
 
-            // dd($attendanceOutTimeMis);
-            $PendingApproval = DB::table('attendance_list')
-                ->where('final_status', 0)
-                ->where('process_complete', 0)
-                ->where('business_id', Session::get('business_id'))
-                ->where('emp_today_current_status', 2)
-                ->get();
+            $permissionBranchId = PolicySettingRoleAssignPermission::where('business_id', $BID)->where('emp_id', $EmpID)->first();
+            if ($permissionBranchId !== null && !empty($permissionBranchId) && $FindRoleID != 1 && $permissionBranchId->permission_type == 2) {
+                $PendingApproval = DB::table('attendance_list')
+                    ->where('final_status', 0)
+                    ->where('branch_id', $permissionBranchId->permission_branch_id)
+                    ->where('process_complete', 0)
+                    ->where('business_id', $BID)
+                    ->where('emp_today_current_status', 2)
+                    ->get();
+            } else {
+                $PendingApproval = DB::table('attendance_list')->where('final_status', 0)->where('process_complete', 0)->where('business_id', $BID)->where('emp_today_current_status', 2)->get();
+            }
             if ($PendingApproval->count() == 0) {
-                // Alert::warning('', '');
                 return back();
             }
-            // dd($PendingApproval->count());
 
             foreach ($PendingApproval as $key => $value) {
                 $PID = $value->id;
-                // $checkPunchInPunchOut = DB::table('attendance_list')
-                //     ->where('business_id', Session::get('business_id'))
-                //     ->where('id', $PID)
-                //     ->where('emp_today_current_status', 2)
-                //     ->first();
+                // modal approval btn
+                $attendanced = DB::table('attendance_list')->where('id', $PID)->where('business_id', $BID)->where('emp_today_current_status', 2)->first();
+                $array = [
+                    'redirect_id' => 1,
+                    'primary_id' => $PID,
+                    'punch_date' => $attendanced->punch_date,
+                ];
+                $SD = LoginEmployee::where('emp_id', $attendanced->emp_id)->first();
 
+                $sdd = $request->status != 2 ? 'Approved' : 'Declined';
+
+                if ($SD->notification_key != null) {
+                    // Convert the JSON string to an array
+                    $notificationKeys = json_decode($SD->notification_key, true);
+
+                    // // Iterate over each notification key and send the notification
+                    if (is_array($notificationKeys)) {
+                        $result = RulesManagement::NotificationSendMode($notificationKeys, 'Fix HR Employee', 'Attendance ' . $sdd . ' By : ' . Session::get('login_name') . ' (' . Session::get('login_role_name') . ')' . ' ', $array);
+                    }
+                }
+                // dd("SDf");
                 if (isset($PendingApproval)) {
-                    $EmpID = RulesManagement::PassBy()[2];
-                    // dd($EmpId);
-                    // $roatationalShift = AttendanceList::where('business_id', Session::get('business_id'))
-                    //     ->where('id', $PID)
-                    //     ->where('final_status', 0)
-                    //     ->where('emp_today_current_status', 2)
-                    //     ->update([
-                    //         'approved_by_role_id' => $AdminRoleId,
-                    //         'approved_by_emp_id' => $EmpId,
-                    //         // 'final_status' => 1,
-                    //         // 'process_complete' => 1,
-                    //         // 'final_status' => 1,
-                    //     ]);
-
-                    $ApprovalManagement = DB::table('approval_management_cycle')
-                        ->where('business_id', $BID)
-                        ->where('approval_type_id', $ApprovalTypeID)
-                        ->first();
+                    $ApprovalManagement = DB::table('approval_management_cycle')->where('business_id', $BID)->where('approval_type_id', $ApprovalTypeID)->first();
                     if ($ApprovalManagement->cycle_type == 1) {
                         $status = $request->status;
-                        $sd = DB::table('approval_management_cycle')
-                            ->where('business_id', $BID)
-                            ->where('approval_type_id', $ApprovalTypeID)
-                            ->whereJsonContains('role_id', (string) $FindRoleID)
-                            ->select('role_id')
-                            ->first();
-                        // dd($sd);
-                        $value = DB::table('attendance_list')
-                            ->where('business_id', $BID)
-                            ->where('id', $PID)
-                            ->first();
-                        // dd($sd);
+                        $sd = DB::table('approval_management_cycle')->where('business_id', $BID)->where('approval_type_id', $ApprovalTypeID)->whereJsonContains('role_id', (string) $FindRoleID)->select('role_id')->first();
+                        $value = DB::table('attendance_list')->where('business_id', $BID)->where('id', $PID)->first();
                         if ($sd) {
                             $roleIds = json_decode($sd->role_id, true); // Decode the JSON array
                             $currentIndex = array_search($FindRoleID, $roleIds); // Find the current index of forward_by_role_id
@@ -888,11 +440,9 @@ class AttendanceController extends Controller
                                 $prevIndex = $currentIndex - 1;
 
                                 // Check if the next index is within the bounds of the array
-                                // if (isset($roleIds[$nextIndex])) {
                                 $nextRoleId = isset($roleIds[$nextIndex]) ? $roleIds[$nextIndex] : -1; //sensitive case if last next end then recall 0
                                 $prevRoleId = isset($roleIds[$prevIndex]) ? $roleIds[$prevIndex] : 0; //prev 1st start recall 0
 
-                                // dd($request->all(),$FindRoleID,$nextRoleId);
                                 // Update the database for the current index
                                 $attendanccelist = DB::table('attendance_list')
                                     ->where('business_id', $BID)
@@ -901,11 +451,7 @@ class AttendanceController extends Controller
                                         'forward_by_role_id' => $nextRoleId,
                                         'forward_by_status' => 1,
                                     ]);
-                                // dd($sd);
 
-                                // Update the approval status for the current index
-                                //Sequential
-                                // dd($PID);
                                 $approvalstatuslist = DB::table('approval_status_list')
                                     ->where('approval_type_id', $ApprovalTypeID)
                                     ->where('role_id', $FindRoleID)
@@ -918,23 +464,14 @@ class AttendanceController extends Controller
                                         'all_request_id' => $PID,
                                         'role_id' => $FindRoleID,
                                         'emp_id' => $EmpID,
-                                        // 'remarks' => $Remark != null ? $Remark : '',
                                         'clicked' => 1,
                                         'status' => 1,
                                         'prev_role_id' => $prevRoleId,
                                         'current_role_id' => $FindRoleID,
                                         'next_role_id' => $nextRoleId,
                                     ]);
-                                // dd($dd);
-                                // if($attendanccelist && $approvalstatuslist ){
-
-                                //     Alert::success('', 'Status is Updated');
-                                // }else {
-                                //     Alert::info('', 'Status is not Updated');
-                                // }
                             }
                         }
-                        // dd($value->forward_by_role_id);
                         if ($value->forward_by_role_id == $value->final_level_role_id) {
                             DB::table('attendance_list')
                                 ->where('business_id', $BID)
@@ -945,7 +482,6 @@ class AttendanceController extends Controller
                                 ]);
                         }
                     }
-                    // dd($request->all());
 
                     if ($ApprovalManagement->cycle_type == 2) {
                         $parallerModalApprovalBtn = DB::table('attendance_list')
@@ -957,27 +493,9 @@ class AttendanceController extends Controller
                                 'final_status' => $status,
                             ]);
                         if ($parallerModalApprovalBtn) {
-                            $loadCheck = DB::table('approval_status_list')
-                                ->where('approval_type_id', $ApprovalTypeID)
-                                ->where('business_id', $BID)
-                                ->where('all_request_id', $PID)
-                                ->first();
+                            $loadCheck = DB::table('approval_status_list')->where('approval_type_id', $ApprovalTypeID)->where('business_id', $BID)->where('all_request_id', $PID)->first();
 
                             if ($loadCheck) {
-                                // DB::table('approval_status_list')
-                                //     ->where('business_id', $BID)
-                                //     ->where('approval_type_id', $ApprovalTypeID)
-                                //     ->where('all_request_id', $PID)
-                                //     ->update([
-                                //         'business_id' => $BID,
-                                // 'applied_cycle_type' => 2,
-                                //         'approval_type_id' => $ApprovalTypeID,
-                                //         'all_request_id' => $PID,
-                                //         'role_id' => $FindRoleID,
-                                //         'emp_id' => $EmpID,
-                                //         'remarks' => $Remark,
-                                //         'status' => $status,
-                                //     ]);
                             } else {
                                 //Parallel
                                 DB::table('approval_status_list')
@@ -1003,65 +521,10 @@ class AttendanceController extends Controller
                     }
                 }
             }
-            Alert::success('', 'Items updated successfully');
-            // dd($PendingApproval[]->id);
-            $rooted = AttendanceList::where('business_id', Session::get('business_id'))
-                ->where('final_status', 0)
-                ->update([
-                    // 'approved_by_role_id' => $AdminRoleId,
-                    // 'approved_by_emp_id' => $EmpId,
-                    // 'final_status' => 1,
-                ]);
-            Alert::success('', 'Items updated successfully');
+            Alert::success('', 'Attendance Approval Updated Successfully');
         } else {
-            Alert::warning('', 'Not updated successfully');
+            Alert::warning('', 'Attendance Approval Not Updated');
         }
-        // dd($rooted);
-
-        return back();
-
-        ///////////////////////////////////////////////////////////////
-
-        // $load = RulesManagement::RoleDetailsGet();
-        // $call = RulesManagement::PassBy();
-        // $AdminRoleId = $load[0];
-        // // dd($AdminRoleId);
-        // $EmpId = $call[2];
-        // if($request->has('approveAll') && ($AdminRoleId != null && $EmpId != null)) {
-
-        //     foreach($request->checkbox as $key => $value) {
-        //         $roatationalShift = AttendanceList::where('business_id', Session::get('business_id'))
-        //             ->where('id', $request->checkbox[$key])
-        //             ->where('final_status', 0)
-        //             ->update([
-        //                 'approved_by_role_id' => $AdminRoleId,
-        //                 'approved_by_emp_id' => $EmpId,
-        //                 'final_status' => 1
-        //             ]);
-        //     }
-        //     Alert::success('Items updated successfully');
-        // } else if($request->has('pendingAll') && ($AdminRoleId != null && $EmpId != null)) {
-        //     $rooted = AttendanceList::where('business_id', Session::get('business_id'))
-        //         ->where('final_status', 0)
-        //         ->update([
-        //             'approved_by_role_id' => $AdminRoleId,
-        //             'approved_by_emp_id' => $EmpId,
-        //             'final_status' => 1
-        //         ]);
-        //     Alert::success('Items updated successfully');
-        // } else {
-        //     Alert::warning('Not updated successfully');
-        // }
-        // dd($request->all());
-        //     print_r($request->checkbox[$key]);
-        //     // print_r($request->id[$key]);
-        //     // ->where('emp_id', $request->emp_id[$key])
-
-        // //     //     echo $request->id[$key] . ' ' . "<br>";
-        // //     //     echo $request->emp_id[$key] . ' ' . "<br>";
-        // //     //     echo $request->myAttendanceCheck[$key] . ' ' . "<br>";
-
-        // }
 
         return back();
     }
@@ -1078,10 +541,7 @@ class AttendanceController extends Controller
 
         // dd($totalWorkingTimestamp);
         $totalWorking = date('H:i:s', $totalWorkingTimestamp);
-        // dd($totalWorkingTimestamp);
-        // dd($totalWorking);
-        // $punchInTime = $request->editPunchInTime;
-        // $punchOutTime = $request->editPunchOutTime;
+
         $atteUpdate = AttendanceList::where('id', $request->Updateid)
             ->where('business_id', Session::get('business_id'))
             ->update(['punch_in_time' => $request->editPunchInTime, 'punch_out_time' => $request->editPunchOutTime, 'total_working_hour' => $totalWorking, 'final_status' => 1]);
@@ -1096,8 +556,8 @@ class AttendanceController extends Controller
     public function empIdToData(Request $request)
     {
         $SHOW = AttendanceList::where('id', $request->id)->first();
-            // join('employee_personal_details', 'employee_personal_details.emp_id', '=', 'attendance_list.emp_id')
-            // // ->
+        // join('employee_personal_details', 'employee_personal_details.emp_id', '=', 'attendance_list.emp_id')
+        // // ->
         return response()->json(['get' => $SHOW]);
     }
 
@@ -1107,47 +567,40 @@ class AttendanceController extends Controller
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
         // dd($permissions);
-        $emp = EmployeePersonalDetail::where('business_id', Session::get('business_id'))
-            ->where('emp_id', $id)
-            ->first();
-        // dd($emp);
-        // $Holiday = DB::table("holiday_details")->where('business_id',Session::get('business_id'))->get();
-        // $Notice = DB::table("admin_notices")->where('business_id',Session::get('business_id'))->get();
+        $emp = EmployeePersonalDetail::where('business_id', Session::get('business_id'))->where('emp_id', $id)->first();
 
-        // $DATA = DB::table('attendance_list')
-        //     ->join('employee_personal_details', 'attendance_list.emp_id', '=', 'employee_personal_details.emp_id')
-        //     ->join('attendance_shift_type', 'attendance_list.working_from_method', '=', 'attendance_shift_type.id')
-        //     ->where('employee_personal_details.business_id', Session::get('business_id'))
-        //     ->orderBy('attendance_list.id', 'DESC')
-        //     ->select('attendance_list.*', 'employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.profile_photo', 'employee_personal_details.designation_id', 'employee_personal_details.emp_lname', 'employee_personal_details.department_id', 'attendance_shift_type.name')
-        //     ->get();
-        // $root= compact('moduleName', 'permissions','Emp','Holiday','Notice', 'DATA');
-        // return view('admin.dashboard.dashboard',$root);
         return view('admin.attendance.attendancevby_employee', compact('emp', 'permissions'));
     }
 
     public function details(Request $request)
     {
         // dd($request->emp_id);
+        $businessId = Session::get('business_id');
+        $roleIdToCheck = Session::get('login_role');
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
-        // dd($accessPermission);
-        $Emp = EmployeePersonalDetail::where('business_id', Session::get('business_id'))->where('active_emp', 1)->get();
-        $designation = DesignationList::where('business_id', Session::get('business_id'))->first();
+        $permissionBranchId = PolicySettingRoleAssignPermission::where('business_id', $businessId)->where('emp_id', Session::get('login_emp_id'))->first();
+        // dd($permissionBranchId);
+        if ($permissionBranchId !== null && !empty($permissionBranchId) && $roleIdToCheck != 1 && $permissionBranchId->permission_type == 2) {
+            $Emp = EmployeePersonalDetail::where('business_id', $businessId)
+                ->where('employee_personal_details.branch_id', $permissionBranchId->permission_branch_id)
+                ->where('active_emp', 1)
+                ->get();
+        } else {
+            $Emp = EmployeePersonalDetail::where('business_id', $businessId)->where('active_emp', 1)->get();
+        }
+        $designation = DesignationList::where('business_id', $businessId)->first();
 
         return view('admin.attendance.emp_attendace', compact('Emp', 'designation', 'permissions'));
     }
 
     public function createShift()
     {
-        $attendaceShift = DB::table('policy_attendance_shift_settings')
-            ->where('business_id', Session::get('business_id'))
-            ->get();
+        $attendaceShift = DB::table('policy_attendance_shift_settings')->where('business_id', Session::get('business_id'))->get();
         $accessPermission = Central_unit::AccessPermission();
         $moduleName = $accessPermission[0];
         $permissions = $accessPermission[1];
-
         return view('admin.setting.attendance.createshift', compact('permissions', 'moduleName', 'attendaceShift'));
     }
     public function submitTrackInTrackOut(Request $request)
@@ -1179,7 +632,6 @@ class AttendanceController extends Controller
         }
 
         return redirect()->to('admin/settings/attendance');
-        //    dd($request->all());
     }
 
     public function getAttendaceShiftList(Request $request)
@@ -1190,14 +642,10 @@ class AttendanceController extends Controller
 
     public function addShift(Request $request)
     {
-        // PASSLOAD
 
-        // dd($request->all());
 
         if ($request->shiftType == 1) {
-            // : (($request->rotationalName!=null)?$request->rotationalName: $request->openShiftName);
 
-            // dd($request->all());
 
             $load_first = PolicyAttendanceShiftSetting::insert([
                 'business_id' => Session::get('business_id'),
@@ -1255,9 +703,9 @@ class AttendanceController extends Controller
                 }
 
                 if ($roatationalShift) {
-                    Alert::success('', 'Your rotational shift has been created successfully', '')->persistent(true);
+                    Alert::success('', 'Your Rotational shift has been created successfully', '')->persistent(true);
                 } else {
-                    Alert::error('', 'Your rotational shift has not been created')->persistent(true);
+                    Alert::error('', 'Your Rotational shift has not been created')->persistent(true);
                 }
             }
         } elseif ($request->shiftType == 3) {
@@ -1291,89 +739,6 @@ class AttendanceController extends Controller
             }
         }
         return redirect()->back();
-
-        // if($request->shiftType == 'fixed'){
-        //     $fixShift = DB::table('shift_fixed')->insert([
-        //         'shift_name'=> $request->fixedshiftName,
-        //         'shift_start'=> $request->fixShiftStart,
-        //         'shift_end'=> $request->fixShiftEnd,
-        //         'break_min'=> $request->fixShiftBreak,
-        //         'is_paid'=> $request->fixpaid,
-        //         'work_hr'=> $request->f_WorkHour,
-        //         'work_min'=> $request->f_WorkMin,
-        //         'business_id'=> $request->session()->get('business_id'),
-        //         'branch_id'=> $request->session()->get('branch_id'),
-        //         'updated_at'=> now(),
-        //     ]);
-
-        //     if($fixShift ){
-        //         Alert::success('Shift Created Successfully','');
-
-        //     }else{
-        //         Alert::error('Failed','');
-
-        //     }
-
-        // }
-
-        // if($request->shiftType == 'rotational'){
-        //     $shift = DB::table('shift_set')->insert([
-        //         'set_name'=> $request->rotationalName,
-        //         'branch_id'=> $request->session()->get('branch_id'),
-        //         'business_id'=> $request->session()->get('business_id'),
-        //     ]);
-
-        //     $getShift = DB::table('shift_set')->where([
-        //         'set_name'=> $request->rotationalName,
-        //         'business_id'=> $request->session()->get('business_id'),
-        //     ])->first('set_id');
-
-        //     // dd($getShift->set_id);
-
-        //     foreach ($request->rotationalShiftName as $key => $rotationalShiftName) {
-        //         $roatationalShift = DB::table('shift_rotational')->insert([
-        //             'set_id'=> $getShift->set_id,
-        //             'shift_name'=> $request->rotationalShiftName[$key],
-        //             'shift_start'=> $request->rotationalShiftStart[$key],
-        //             'shift_end'=> $request->rotationalShiftEnd[$key],
-        //             'break_min'=> $request->rotationalShiftBreak[$key],
-        //             'is_paid'=> $request->rotationalpaid[$key],
-        //             'work_hr'=> $request->r_WorkHour[$key],
-        //             'work_min'=> $request->r_WorkMin[$key],
-        //             'branch_id'=> $request->session()->get('branch_id'),
-        //             'business_id'=> $request->session()->get('business_id'),
-        //             'updated_at'=> now(),
-        //         ]);
-        //     }
-
-        //     if($roatationalShift){
-        //         Alert::success('Rotationa Shift Created Successfully','');
-
-        //     }else{
-        //         Alert::error('Failed','');
-
-        //     }
-        // }
-
-        // if($request->shiftType == 'open'){
-        //     $openShift = DB::table('shift_open')->insert([
-        //         'shift_name'=> $request->openShiftName,
-        //         'shift_hr'=> $request->openHour,
-        //         'shift_min'=> $request->openMin,
-        //         'break_min'=> $request->openBreak,
-        //         'is_paid'=> $request->openPaid,
-        //         'branch_id'=> $request->session()->get('branch_id'),
-        //         'business_id'=> $request->session()->get('business_id'),
-        //         'updated_at'=> now(),
-        //     ]);
-
-        //     if($openShift){
-        //         Alert::success('Shift Created Successfully','');
-
-        //     }else{
-        //         Alert::error('Failed','');
-        //     }
-        // }
     }
 
     public function updateAttendaceShift(Request $request)
@@ -1384,14 +749,15 @@ class AttendanceController extends Controller
 
         if (isset($request->setId)) {
             if (isset($request->shiftType) == 2) {
-                if (($request->rotationName) && ($request->updateItmeIdName) && ($request->editshiftname) && ($request->editstartshift) && ($request->editshiftTimeend) && isset($request->ru_WorkHour) && isset($request->ru_WorkMin) && isset($request->isPaid))
-                    $shiftData = []; // Create an array to store the cleaned data
+                if ($request->rotationName && $request->updateItmeIdName && $request->editshiftname && $request->editstartshift && $request->editshiftTimeend && isset($request->ru_WorkHour) && isset($request->ru_WorkMin) && isset($request->isPaid)) {
+                    $shiftData = [];
+                } // Create an array to store the cleaned data
                 $load = PolicyAttendanceShiftSetting::where('id', (int) $request->setId)
                     ->where('shift_type', $request->shiftType)
                     ->where('business_id', Session::get('business_id'))
                     ->first();
 
-                if ((isset($load))) {
+                if (isset($load)) {
                     PolicyAttendanceShiftSetting::where('id', $load->id)->update(['shift_type_name' => $request->rotationName]);
                     $editshiftname = $request->editshiftname;
                     $editstartshift = $request->editstartshift;
@@ -1407,9 +773,10 @@ class AttendanceController extends Controller
                     $updateItems = $request->updateItmeIdName;
                     $nonExistentIds = array_diff($loadItemsCheck, $updateItems);
                     if (isset($nonExistentIds)) {
-
                         $delete = PolicyAttendanceShiftTypeItem::where('attendance_shift_id', $load->id)
-                            ->where('business_id', Session::get('business_id'))->whereIn('id', $nonExistentIds)->delete();
+                            ->where('business_id', Session::get('business_id'))
+                            ->whereIn('id', $nonExistentIds)
+                            ->delete();
                     }
 
                     foreach ($request->updateItmeIdName as $key => $item) {
@@ -1419,9 +786,9 @@ class AttendanceController extends Controller
                             ->where('business_id', Session::get('business_id'))
                             ->first();
 
-
                         if (isset($loadItems)) {
-                            $loadItems = PolicyAttendanceShiftTypeItem::where('attendance_shift_id', $load->id)->where('id', (int) $item)
+                            $loadItems = PolicyAttendanceShiftTypeItem::where('attendance_shift_id', $load->id)
+                                ->where('id', (int) $item)
                                 ->where('business_id', Session::get('business_id'))
                                 ->update([
                                     'shift_name' => $editshiftname[$item],
@@ -1430,7 +797,7 @@ class AttendanceController extends Controller
                                     'work_hr' => $ru_WorkHour[$item],
                                     'work_min' => $ru_WorkMin[$item],
                                     'break_min' => $updatedRotationalShiftBreak[$item],
-                                    'is_paid' => $isPaid[$item]
+                                    'is_paid' => $isPaid[$item],
                                 ]);
                         } else {
                             PolicyAttendanceShiftTypeItem::insert([
@@ -1449,67 +816,10 @@ class AttendanceController extends Controller
                     }
                 }
                 $updatedAttendanceShift = true;
-                Alert::success('', 'Your rotational shift has been updated successfully')->persistent(true);
+                Alert::success('', 'Your Rotational shift has been updated successfully')->persistent(true);
             }
         }
-        // if ($request->ajax()) {
-        //     if ($request->shift_type == 2) {
-        //         $shiftData = []; // Create an array to store the cleaned data
 
-        //         foreach ($request->updated_items as $key => $item) {
-        //             // Check if all required properties exist in the item
-        //             if (isset($item['shift_name']) && isset($item['start_time']) && isset($item['end_time']) && isset($item['break_min']) && isset($item['is_paid']) && isset($item['work_hr']) && isset($item['work_min'])) {
-        //                 // Access individual properties of each item
-        //                 $defaultID = (int) $request->id;
-        //                 $shiftName = $item['shift_name'];
-        //                 $startTime = $item['start_time'];
-        //                 $endTime = $item['end_time'];
-        //                 $breakMin = $item['break_min'];
-        //                 $isPaid = $item['is_paid'];
-        //                 $workHour = $item['work_hr'];
-        //                 $workMin = $item['work_min'];
-        //                 // $isActive=($key==0)?1:0;
-        //                 // Add the data to the $shiftData array or perform other operations
-        //                 $shiftData[] = [
-        //                     'attendance_shift_id' => $defaultID,
-        //                     'business_id' => Session::get('business_id'),
-        //                     'branch_id' => Session::get('branch_id'),
-        //                     'shift_name' => $shiftName,
-        //                     'shift_start' => $startTime,
-        //                     'shift_end' => $endTime,
-        //                     'break_min' => $breakMin,
-        //                     'is_paid' => $isPaid,
-        //                     'work_hr' => $workHour,
-        //                     'work_min' => $workMin,
-        //                 ];
-        //             }
-        //         }
-
-        //         $load = PolicyAttendanceShiftSetting::where('id', (int) $request->id)
-        //             ->where('shift_type', $request->shift_type)
-        //             ->where('business_id', Session::get('business_id'))
-        //             ->first();
-        //         if (isset($load)) {
-        //             PolicyAttendanceShiftSetting::where('id', $load->id)->update(['shift_type_name' => $request->shift_rotation_name]);
-        //             $loadItems = PolicyAttendanceShiftTypeItem::where('attendance_shift_id', $load->id)
-        //                 ->where('business_id', Session::get('business_id'))
-        //                 ->delete();
-        //             if (isset($loadItems)) {
-        //                 $loadedChecked = PolicyAttendanceShiftTypeItem::insert($shiftData);
-        //                 // if (isset($loadedChecked)) {
-
-        //                 $updatedAttendanceShift = true;
-        //                 // }
-        //             }
-        //         } else {
-        //             $updatedAttendanceShift = false;
-        //         }
-        //         // dd($load);
-        //         // PolicyAttendanceShiftTypeItem::where('business_id',Session::get('business_id'))->get();
-        //         // Now $shiftData contains the cleaned data with all required properties
-        //     }
-        //     return response()->json(['root' => $z]);
-        // }
         if ($request->EditShiftFixedShiftSubmit === 'FixedSubmit') {
             $load_first = PolicyAttendanceShiftSetting::where(['business_id' => Session::get('business_id'), 'id' => $request->fixedshiftId])->update([
                 'business_id' => Session::get('business_id'),
@@ -1562,137 +872,17 @@ class AttendanceController extends Controller
             return redirect()->back();
         }
 
-        // else {
-        //     Alert::error('Failed', '');
-        //     return redirect()->to('admin/settings/attendance/create_shift');
-
-        // }
-        // if ($request->has('fixedId')) {
-        //     $fixUpdate = DB::table('shift_fixed')->where(['business_id' => $request->session()->get('business_id'), 'fixed_id' => $request->fixedId])->update([
-        //         'shift_name' => $request->UpdatedFixedshiftName,
-        //         'shift_start' => $request->UpdatedFixShiftStart,
-        //         'shift_end' => $request->UpdatedFixShiftEnd,
-        //         'break_min' => $request->UpdatedFixShiftBreak,
-        //         'is_paid' => $request->UpdatedFixpaid,
-        //         'work_hr' => $request->fu_WorkHour,
-        //         'work_min' => $request->fu_WorkMin,
-        //         'updated_at' => now(),
-        //     ]);
-
-        //     if ($fixUpdate) {
-        //         Alert::success('Shift Updated Successfully', '');
-        //     } else {
-        //         Alert::error('Failed', '');
-        //     }
-        // }
-
-        // if ($request->has('openId')) {
-        //     $updateOpen = DB::table('shift_open')->where(['business_id' => $request->session()->get('business_id'), 'open_id' => $request->openId])->update([
-        //         'shift_name' => $request->updatedOpenShiftName,
-        //         'shift_hr' => $request->updatedOpenHour,
-        //         'shift_min' => $request->updatedOpenMin,
-        //         'break_min' => $request->updatedOpenBreak,
-        //         'is_paid' => $request->updatedOpenPaid,
-        //         'updated_at' => now(),
-        //     ]);
-
-        //     if ($updateOpen) {
-        //         Alert::success('Shift Updated Successfully', '');
-        //     } else {
-        //         Alert::error('Failed', '');
-        //     }
-        // }
-
-        // if ($request->has('setId')) {
-        //     // dd($request->all());
-
-        //     $shift = DB::table('shift_set')->where(['business_id' => $request->session()->get('business_id'), 'set_id' => $request->setId])->update([
-        //         'set_name' => $request->updatedRotationalName,
-        //         'updated_at' => now(),
-        //     ]);
-
-        //     $roatationalRemove = DB::table('shift_rotational')->where(['business_id' => $request->session()->get('business_id'), 'set_id' => $request->setId])->delete();
-
-        //     foreach ($request->updatedRotationalShiftName as $key => $rotationalShiftName) {
-        //         $roatationalShift = DB::table('shift_rotational')->insert([
-        //             'set_id' => $request->setId,
-        //             'shift_name' => $request->updatedRotationalShiftName[$key],
-        //             'shift_start' => $request->updatedRotationalShiftStart[$key],
-        //             'shift_end' => $request->updatedRotationalShiftEnd[$key],
-        //             'break_min' => $request->updatedRotationalShiftBreak[$key],
-        //             'is_paid' => $request->updatedRotationalpaid[$key],
-        //             'work_hr' => $request->ru_WorkHour[$key],
-        //             'work_min' => $request->ru_WorkMin[$key],
-        //             'branch_id' => $request->session()->get('branch_id'),
-        //             'business_id' => $request->session()->get('business_id'),
-        //             'updated_at' => now(),
-        //         ]);
-        //     }
-
-        //     if ($roatationalShift) {
-        //         Alert::success('Rotational Shift Created Successfully', '');
-        //     } else {
-        //         Alert::error('Failed', '');
-        //     }
-        // }
-
-        // return redirect()->to('admin/settings/attendance/create_shift');
         return redirect()->back();
     }
 
     public function restoreAllAttendanceCount()
     {
-        // if ($request->has('openId')) {
-        //     $updateOpen = DB::table('shift_open')->where(['business_id' => $request->session()->get('business_id'), 'open_id' => $request->openId])->update([
-        //         'shift_name' => $request->updatedOpenShiftName,
-        //         'shift_hr' => $request->updatedOpenHour,
-        //         'shift_min' => $request->updatedOpenMin,
-        //         'break_min' => $request->updatedOpenBreak,
-        //         'is_paid' => $request->updatedOpenPaid,
-        //         'updated_at' => now(),
-        //     ]);
-
-        //     if ($updateOpen) {
-        //         Alert::success('Shift Updated Successfully', '');
-        //     } else {
-        //         Alert::error('Failed', '');
-        //     }
-        // }
-
-        // if ($request->has('setId')) {
-        //     // dd($request->all());
-
-        //     $shift = DB::table('shift_set')->where(['business_id' => $request->session()->get('business_id'), 'set_id' => $request->setId])->update([
-        //         'set_name' => $request->updatedRotationalName,
-        //         'updated_at' => now(),
-        //     ]);
-
-        //     $roatationalRemove = DB::table('shift_rotational')->where(['business_id' => $request->session()->get('business_id'), 'set_id' => $request->setId])->delete();
-
-        //     foreach ($request->updatedRotationalShiftName as $key => $rotationalShiftName) {
-        //         $roatationalShift = DB::table('shift_rotational')->insert([
-        //             'set_id' => $request->setId,
-        //             'shift_name' => $request->updatedRotationalShiftName[$key],
-        //             'shift_start' => $request->updatedRotationalShiftStart[$key],
-        //             'shift_end' => $request->updatedRotationalShiftEnd[$key],
-        //             'break_min' => $request->updatedRotationalShiftBreak[$key],
-        //             'is_paid' => $request->updatedRotationalpaid[$key],
-        //             'work_hr' => $request->ru_WorkHour[$key],
-        //             'work_min' => $request->ru_WorkMin[$key],
-        //             'branch_id' => $request->session()->get('branch_id'),
-        //             'business_id' => $request->session()->get('business_id'),
-        //             'updated_at' => now(),
-        //         ]);
-        //     }
-
-        //     if ($roatationalShift) {
-        //         Alert::success('Rotational Shift Created Successfully', '');
-        //     } else {
-        //         Alert::error('Failed', '');
-        //     }
-        // }
-        Central_unit::setCountAtOnceForDailyAndMonthly();
-        dd('Reset Successfully');
+        $attendanceList = DB::table('attendance_list')->get();
+        foreach ($attendanceList as $list) {
+            Central_unit::MyCountForMonth($list->emp_id, $list->punch_date, $list->business_id, $list->branch_id);
+            Central_unit::MyCountForDaily($list->punch_date, $list->business_id, $list->branch_id, 1, '');
+        }
+        dd('Completed');
     }
 
     public function deleteShift(Request $request)
@@ -1712,36 +902,5 @@ class AttendanceController extends Controller
         }
 
         return back();
-
-        // return redirect()->to('admin/settings/attendance/create_shift');
-
-        // if ($request->has('fixed')) {
-        //     $fixDelete = DB::table('shift_fixed')->where(['business_id' => $request->session()->get('business_id'), 'fixed_id' => $id])->delete();
-        //     if ($fixDelete) {
-        //         Alert::success('Fixed Shift Delete Successfully', '');
-        //     } else {
-        //         Alert::error('Failed', '');
-        //     }
-        // }
-
-        // if ($request->has('open')) {
-        //     $openDelete = DB::table('shift_open')->where(['business_id' => $request->session()->get('business_id'), 'open_id' => $id])->delete();
-        //     if ($openDelete) {
-        //         Alert::success('Open Shift Delete Successfully', '');
-        //     } else {
-        //         Alert::error('Failed', '');
-        //     }
-        // }
-
-        // if ($request->has('set')) {
-        //     $roatationalDelete = DB::table('shift_rotational')->where(['business_id' => $request->session()->get('business_id'), 'set_id' => $id])->delete();
-        //     $setDelete = DB::table('shift_set')->where(['business_id' => $request->session()->get('business_id'), 'set_id' => $id])->delete();
-        //     if ($setDelete) {
-        //         Alert::success('Rotational Shift Delete Successfully', '');
-        //     } else {
-        //         Alert::error('Failed', '');
-        //     }
-        // }
-        // return back();
     }
 }

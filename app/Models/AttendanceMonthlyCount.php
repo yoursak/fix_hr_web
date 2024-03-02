@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class AttendanceMonthlyCount
- * 
+ *
  * @property int $id
  * @property string $business_id
  * @property string $emp_id
@@ -35,9 +35,10 @@ use Illuminate\Database\Eloquent\Model;
 class AttendanceMonthlyCount extends Model
 {
 	protected $table = 'attendance_monthly_count';
-
+	protected $primary_key = 'id';
 	protected $fillable = [
 		'business_id',
+		'branch_id',
 		'emp_id',
 		'month',
 		'year',
@@ -53,5 +54,5 @@ class AttendanceMonthlyCount extends Model
 		'leave'
 	];
 
-	
+
 }

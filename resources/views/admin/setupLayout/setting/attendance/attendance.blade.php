@@ -393,7 +393,7 @@
         </div>
     </div>
     @endif
-    @if (in_array('Automation-Rules.View', $permissions) || in_array('Automation-Rules.All', $permissions))
+    {{-- @if (in_array('Automation-Rules.View', $permissions) || in_array('Automation-Rules.All', $permissions))
     <div class="col-xl-6">
         <div class="card custom-card">
             <div class="card-body">
@@ -415,7 +415,7 @@
             </div>
         </div>
     </div>
-    @endif
+    @endif --}}
 
     {{-- @if (in_array('Attendance TrackIn-OutTime.View', $permissions)) --}}
     <!-- <div class="col-xl-6">

@@ -13,24 +13,29 @@ class Subscription extends Model
     protected $business_id = "business_id";
 
     protected $fillable = [
-        'user_type',
-        'model_id',
+        'order_id',
+        'payment_id',
         'name',
+        'amount',
         'email',
         'phone_no',
+        'order_status',
+        'role_id',
+        'business_id',
+        'user_type',
         'plan_id',
         'base_plan',
+        'per_employee_value',
         'additional_count',
         'additional_employee',
-        'payment_code',
-        'payment_merchant_id',
-        'payment_merchant_transaction',
-        'payment_transaction_id',
-        'payment_amount',
-        'payment_state',
-        'payment_instrument_type',
-        'payment_response_code',
         'payment_date',
+        'cycle_starting',
+        'cycle_expairy',
+        'cycle_remaining',
+        'payment_code',
+        'payment_state',
+        'payment_response_code',
         'active_status'
+
     ];
 }

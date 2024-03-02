@@ -56,53 +56,58 @@ use App\Models\BranchList;
  */
 class EmployeePersonalDetail extends Model
 {
-	protected $table = 'employee_personal_details';
-	protected $primary_key = 'id';
-	protected $business_id = 'business_id';
-	public function branch()
-	{
-		return $this->belongsTo(BranchList::class, 'branch_id');
-	}
+    protected $table = 'employee_personal_details';
+    protected $primary_key = 'id';
+    protected $business_id = 'business_id';
+    public function branch()
+    {
+        return $this->belongsTo(BranchList::class, 'branch_id');
+    }
+    public function grade_list()
+    {
+        return $this->belongsTo(GradeList::class, 'grade');
+    }
 
-	protected $fillable = [
-		'emp_id',
-		'business_id',
-		'emp_name',
-		'emp_mname',
-		'emp_lname',
-		'emp_mobile_number',
-		'emp_email',
-		'emp_date_of_birth',
-		'emp_gender',
-		'emp_marital_status',
-		'emp_date_of_joining',
-		'emp_nationality',
-		'emp_religion',
-		'emp_category',
-		'emp_blood_group',
-		'emp_gov_select_id',
-		'emp_gov_select_id_number',
-		'branch_id',
-		'department_id',
-		'designation_id',
-		'employee_type',
-		'emp_country',
-		'emp_state',
-		'emp_city',
-		'emp_pin_code',
-		'emp_address',
-		'master_endgame_id',
-		'emp_attendance_method',
-		'emp_shift_type',
-		'assign_shift_type',
-		'emp_reporting_manager',
-		'active_emp',
-		'employee_contractual_type',
-		'emp_rotational_shift_type_item',
-		'assign_shift_start_time',
-		'assign_shift_end_time',
-		'static_role',
-		'role_id',
+    protected $fillable = [
+        'emp_id',
+        'business_id',
+        'branch_id',
+        'emp_name',
+        'emp_mname',
+        'emp_lname',
+        'emp_mobile_number',
+        'emp_email',
+        'emp_date_of_birth',
+        'emp_gender',
+        'emp_marital_status',
+        'emp_date_of_joining',
+        'emp_nationality',
+        'emp_religion',
+        'emp_category',
+        'emp_blood_group',
+        'emp_gov_select_id',
+        'emp_gov_select_id_number',
+        'department_id',
+        'designation_id',
+        'employee_type',
+        'emp_country',
+        'emp_state',
+        'emp_city',
+        'emp_pin_code',
+        'emp_address',
+        'master_endgame_id',
+        'emp_attendance_method',
+        'emp_shift_type',
+        'assign_shift_type',
+        'emp_reporting_manager',
+        'emp_reporting_manager_names',
+        'active_emp',
+        'employee_contractual_type',
+        'emp_rotational_shift_type_item',
+        'assign_shift_start_time',
+        'assign_shift_end_time',
+        'static_role',
+        'role_id',
         'grade',
         'budget_code',
         'account_code',
@@ -112,7 +117,28 @@ class EmployeePersonalDetail extends Model
         'bank_account_no',
         'bank_branch_code',
         'bank_micr_code',
+        'profile_photo',
         'bank_address_line1',
-        'bank_address_line2'
-	];
+        'bank_address_line2',
+        'pf_no',
+        'pf_joining_no',
+        'pf_eligible',
+        'lwf_eligible',
+        // 'lwf_no',
+        'eps_eligible',
+        'eps_joining_no',
+        'eps_no',
+        // 'eps_exit_data',
+        // 'hps_eligible',
+        'family_name',
+        'relationship',
+        'relative_date_of_birth',
+        'updated_at_emp',
+        'updated_at_reside',
+        'updated_at_comp',
+        'updated_at_bank',
+        'updated_at_account',
+        'updated_at_fanily',
+        'relative_phone_no'
+    ];
 }

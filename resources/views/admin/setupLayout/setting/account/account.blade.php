@@ -295,7 +295,7 @@
                                     <p>Please Add Your Phone Number To Continue</p>
                                     <input type="text" name="editBranchId" value="{{ $accDetail->id }}" hidden>
                                     <label class="form-label mb-0 mt-2">Phone Number*</label>
-                                    <input class="form-control" id="phoneInput" placeholder="Enter Name" type="text"
+                                    <input class="form-control" id="phoneInput" placeholder="Enter Phone Number" type="text"
                                         name="phone" value="{{ $accDetail->mobile_no }}" maxlength="10" required
                                         {{ $checkPermissionOrNot == 1 ? '' : 'disabled' }}>
                                     <span id="error-message" style="color: red;"></span>
@@ -471,7 +471,7 @@
                                 <div class="my-auto"><a href="#">
                                         <h5 class="my-auto text-dark">GSTIN</h5>
                                     </a>
-                                    <p class="my-auto">22AAAAA0000A1Z5</p>
+                                    <p class="my-auto">{{$accDetail->gstnumber}}</p>
                                 </div>
                                 <div class="my-auto"> <a href="#" data-bs-target="#gstNumber"
                                         data-bs-toggle="modal"><i class="fa fa-percentage fs-20 my-auto"></i></a></div>
@@ -602,7 +602,7 @@
                         </select>
                         <label class="form-label mb-0 mt-2">Zip Code*</label>
                         <input class="form-control" placeholder="Zip Code" id="updatePinCode" name="pincode"
-                            maxlength="6" type="text" value="" required  oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 6);" 
+                            maxlength="6" type="text" value="" required  oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 6);"
                             {{ $checkPermissionOrNot == 1 ? '' : 'disabled' }}>
 
                         <label class="form-label mb-0 mt-2">Address Line* &nbsp; <i style="color:1877f2;"

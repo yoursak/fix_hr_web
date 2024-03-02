@@ -12,13 +12,13 @@
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <title>FixHR - @yield('title')</title>
 
-    @laravelViewsStyles
+    {{-- @laravelViewsStyles --}}
     @livewireStyles
     <!--sweet alert-->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap4.min.css">
 
-    <!-- FAVICON -->
-    <link rel="icon" href={{ asset('assets/logo/f_fav.png?v=0.2') }} type="image/x-icon" />
+    <!-- FAVICON  QA Changes-->
+    <link rel="icon" href="{{ asset('assets/logo/f_fav.ico') }}" type="image/x-icon" />
     <!-- BOOTSTRAP CSS -->
     <link href="{{ asset('assets/plugins/bootstrap/css/bootstrap.css') }}" rel="stylesheet" />
     <!-- STYLE CSS -->
@@ -26,15 +26,21 @@
     <!-- Custome Models Load -->
     <link href="{{ asset('assets/css/customeModel.css?v=3.1') }}" rel="stylesheet" />
 
-    <link href="{{ asset('assets/css/plugins.css') }}" rel="stylesheet" />
+    {{-- issues changes --}}
+    <link href="{{ asset('assets/css/plugins.css?v=1.5') }}" rel="stylesheet" />
+
     <!-- ANIMATE CSS -->
     <link href="{{ asset('assets/css/animated.css') }}" rel="stylesheet" />
     <!---ICONS CSS -->
     <link href="{{ asset('assets/plugins/icons/icons.css') }}" rel="stylesheet" />
 
+
     <!-- INTERNAL SWITCHER CSS -->
     <link href="{{ asset('assets/switcher/css/switcher.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/switcher/demo.css') }}" rel="stylesheet" />
+
+    <!-- Add external css -->
+    <link href="{{ asset('assets/plugins/jQuerytransfer/icon_font/icon_font.css') }}" rel="stylesheet" />
 
     <!----hatasactahy -->
     @yield('css')
@@ -423,7 +429,7 @@
         </div>
 
         @livewireScripts
-        @laravelViewsScripts
+        {{-- @laravelViewsScripts --}}
         <!-- FOOTER -->
         @include('admin.layout.footer')
         <!-- END FOOTER -->
@@ -432,25 +438,24 @@
     <!-- BACK TO TOP -->
     <a href="#top" id="back-to-top"><span class="feather feather-chevrons-up"></span></a>
     <!-- BACK TO TOP -->
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> ignor --}}
-    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap4.min.js"></script>
     <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
-    <!-- INTERNAl BOOTATRAP-TIMEPICKER JS -->
-    <script src="{{ asset('assets/plugins/bootstrap-timepicker/bootstrap-timepicker.js') }}"></script>
-    <!-- INTERNAL INDEX JS -->
-    <script src="{{ asset('assets/js/hr/hr-attlist.js') }}"></script>
 
-    @yield('js')
-
-    {{-- external link used by js script use at sweet alert --}}
+    {{-- external link --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- JQUERY JS -->
+
 
     <!-- BOOTSTRAP JS -->
     <script src="{{ asset('assets/plugins/bootstrap/js/popper.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+
+
+    <!-- INTERNAL MULTIPLE SELECT JS -->
+    <script src="{{ asset('assets/plugins/multipleselect/multiple-select.js') }}" wire:ignore></script>
+    <script src="{{ asset('assets/plugins/multipleselect/multi-select.js') }}" wire:ignore></script>
 
     <!-- MOMENT JS -->
     <script src="{{ asset('assets/plugins/moment/moment.js') }}"></script>
@@ -484,21 +489,21 @@
     <script src="{{ asset('assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('assets/js/datatables.js?v=0.7') }}"></script>
+    <script src="{{ asset('assets/js/datatables.js') }}"></script>
     <script src="{{ asset('assets/js/select2.js') }}"></script>
     <!-- STICKY JS -->
     <script src="{{ asset('assets/js/sticky.js') }}"></script>
-    <script src="{{ asset('assets/js/tooltip.js?0.2') }}"></script>
-    {{-- <script src="assets/js/tooltip.js"></script> --}}
 
     <!-- COLOR THEME JS  -->
     <script src="{{ asset('assets/js/themeColors.js') }}"></script>
 
     <!-- CUSTOM JS -->
-    <script src="{{ asset('assets/js/custom.js?v=0.6') }}"></script>
+    <script src="{{ asset('assets/js/custom.js?v=0.6') }}" wire:ignore></script>
 
     <!-- SWITCHER JS -->
     <script src="{{ asset('assets/switcher/js/switcher.js') }}"></script>
+
+    @yield('js')
 
 </body>
 

@@ -21,7 +21,7 @@
                                                 <input type="file" class="form-control" wire:model="image" style="padding: 3px 5px;" />
                                             </div>
                                         </div>
-    
+
                                         @error('image')
                                             <span class="text-danger" style="font-size: 11.5px;">{{ $message }}</span>
                                         @enderror

@@ -13,19 +13,24 @@ use App\Models\StaticRequestLeaveType;
 use App\Models\PolicySettingLeavePolicy;
 use App\Helpers\ReturnHelpers;
 use App\Http\Resources\Api\UserSideResponse\LeaveRequestResources;
-use DB;
 use App\Http\Resources\Api\UserSideResponse\StaticLeaveShiftTypeResources;
 use App\Http\Resources\Api\UserSideResponse\LeaveCategoryResources;
 use App\Http\Resources\Api\UserSideResponse\StaticRequestLeaveTypeResources;
 use App\Http\Resources\Api\UserSideResponse\UserLeaveIdToDataResources;
 use App\Http\Resources\Api\UserSideResponse\CurrentLeaveRequestStatus;
-use App\Http\Resources\Api\UserSideResponse\LeaveBalanceListReport;
+use App\Http\Resources\Api\UserSideResponse\LeaveBalanceListResource;
 use App\Models\PolicyAttendanceShiftTypeItem;
 use App\Models\PolicyMasterEndgameMethod;
 use Carbon\Carbon;
 use App\Models\AttendanceList;
 use App\Models\ApprovalManagementCycle;
+use App\Models\LeaveRequestList;
 use App\Models\PolicySettingLeaveCategory;
+use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\Switch_;
+use Carbon\CarbonPeriod;
+use App\Models\PolicyCompOffLwopLeave;
+
 
 class LeaveRequestApiController extends Controller
 {
@@ -101,7 +106,6 @@ class LeaveRequestApiController extends Controller
     {
         $emp = EmployeePersonalDetail::where('emp_id', $request->emp_id)->first();
         $load = 0;
-
         if (isset($emp)) {
             // why type = 2 leave for  using approval system checking actived
             $approvalManagementCycle = ApprovalManagementCycle::where('business_id', $emp->business_id)
@@ -111,9 +115,9 @@ class LeaveRequestApiController extends Controller
                 $roleIds = json_decode($approvalManagementCycle->role_id, true);
                 $firstRoleId = $roleIds[0] ?? null;
                 $lastRoleId = end($roleIds);
-
                 $leave = new RequestLeaveList();
                 $leave->business_id = $emp->business_id;
+                $leave->branch_id = $request->branch_id;
                 $leave->emp_id = $emp->emp_id;
                 $leave->leave_type = $request->leave_type;
                 $leave->leave_category = $request->leave_category != null ? $request->leave_category : '0';
@@ -169,7 +173,6 @@ class LeaveRequestApiController extends Controller
                 ->where('method_switch', 1)
                 ->first();
 
-
             if (isset($emp) && isset($checkingEndgameMethod)) {
                 $leave = RequestLeaveList::leftJoin('static_leave_category', 'static_leave_category.id', '=', 'request_leave_list.leave_category')
                     ->leftJoin('static_request_leave_type', 'static_request_leave_type.id', '=', 'request_leave_list.leave_type')
@@ -183,7 +186,7 @@ class LeaveRequestApiController extends Controller
                     })
                     ->where('request_leave_list.business_id', $business_id)
                     ->where('request_leave_list.emp_id', $EmpID)
-                    ->orderBy('request_leave_list.id','desc')
+                    ->orderBy('request_leave_list.id', 'desc')
                     ->select('request_leave_list.*', 'static_leave_category.name as leave_category', 'static_request_leave_type.leave_day as leave_day', 'static_leave_shift_type.leave_shift_type as leave_shift_type')
                     ->get();
 
@@ -229,181 +232,27 @@ class LeaveRequestApiController extends Controller
             return response()->json(['result' => [], 'case' => 3, 'status' => false], 404); // case 3 when the employee not found
         }
     }
+
     public function leaveBalanceList(Request $request)
     {
         $empId = $request->emp_id;
         $business = $request->business_id;
-        $emp = EmployeePersonalDetail::where('emp_id', $empId)
-            ->where('business_id', $business)
-            ->first();
+        $detailsList =  RulesManagement::checkingCurrentLeaveBalanceList($empId, $business);
 
-        if ($emp != null) {
-            $getData = PolicySettingLeavePolicy::where('policy_setting_leave_policy.business_id', $business)
-                ->leftJoin('policy_master_endgame_method', 'policy_setting_leave_policy.id', '=', 'policy_master_endgame_method.leave_policy_ids_list')
-                ->where('policy_master_endgame_method.method_switch', 1)
-                ->where('policy_setting_leave_policy.business_id', $business)
-                ->select('policy_setting_leave_policy.*')
-                ->first();
-
-            if ($getData != null) {
-                $Item = PolicySettingLeaveCategory::where('business_id', $business)
-                    ->leftJoin('static_leave_category', 'policy_setting_leave_category.category_name', '=', 'static_leave_category.id')
-                    ->leftJoin('static_leave_category_applicable_to', 'policy_setting_leave_category.applicable_to', '=', 'static_leave_category_applicable_to.id')
-                    ->where('leave_policy_id', $getData->id)
-                    ->select('policy_setting_leave_category.*', 'static_leave_category.name as apply_category_name', 'static_leave_category_applicable_to.name as applicable_name')
-                    ->get();
-
-                $applyLeaveRequests = RequestLeaveList::where('business_id', $business)
-                    ->where('emp_id', $empId)
-                    ->get();
-
-                $currentMonth = Carbon::now()->month;
-                $currentYear = Carbon::now()->year;
-                $LoadPolicyCase = [];
-                $StoreModel = [];
-                foreach ($Item as $key => $requests) {
-                    $DOJ = Carbon::parse($emp->emp_date_of_joining);
-
-                    // Calculate the start and end dates for the previous year
-                    $previousYearStart = Carbon::now()
-                        ->subYear()
-                        ->startOfYear();
-                    $previousYearEnd = Carbon::now()
-                        ->subYear()
-                        ->endOfYear();
-
-                    // previous mode
-                    $previousLeaveTaken = $applyLeaveRequests
-                        ->where('leave_category', $requests->category_name)
-                        ->filter(function ($request) use ($previousYearStart, $previousYearEnd) {
-                            $requestDate = Carbon::parse($request->from_date);
-                            return $requestDate->between($previousYearStart, $previousYearEnd);
-                        })
-                        ->sum('days');
-
-                    // sensitive
-                    $cycleLimitFrom = Carbon::parse($getData->temp_from);
-                    $cycleLimitTo = Carbon::parse($getData->temp_to);
-
-                    $monthsCount = 0;
-                    $leaveAllotted = 0;
-                    $leaveTaken = 0;
-                    $leaveRemaining = 0;
-                    $lwpDays = 0;
-
-                    for ($date = $cycleLimitFrom; $date->lessThanOrEqualTo($cycleLimitTo); $date->addMonth()) {
-                        $month = $date->month;
-                        $year = $date->year;
-
-                        if ($year < $currentYear || ($year === $currentYear && $month <= $currentMonth)) {
-                            $monthsCount++;
-                            // current mode request list
-                            $leaveTaken = $applyLeaveRequests
-                                ->where('leave_category', $requests->category_name)
-                                ->filter(function ($request) use ($currentMonth, $DOJ) {
-                                    $requestDate = Carbon::parse($request->from_date);
-                                    // start doj year only and accept in status only request and accept status
-                                    return $requestDate->month === $currentMonth && $requestDate->year >= $DOJ->year && ($request->final_status === 0 || $request->final_status === 1);
-                                })
-                                ->sum('days');
-
-                            $leaveAllotted += $requests->days;
-
-                            // Unused Leave Rule Set Show Restriction
-                            $ruleType = $requests->unused_leave_rule;
-                            if ($ruleType === 2) {
-                                $openingBalance = $leaveAllotted - $previousLeaveTaken;
-                                $leaveRemaining = $openingBalance != null && $openingBalance != 0 ? $openingBalance + ($leaveAllotted - $leaveTaken) : $leaveAllotted - $leaveTaken;
-                                $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining];
-                                // Apply carry forward limit logic to the opening balance
-                            }
-                            if ($ruleType === 1) {
-                                // Lapse set logic (if needed)
-                                $openingBalance = 0;
-                                $leaveRemaining = $leaveAllotted - $leaveTaken;
-                                $StoreModel = [$openingBalance, $leaveAllotted, $leaveTaken, $leaveRemaining];
-                            }
-                            // Gender Restriction with category Show Hide
-                            if (($emp->emp_gender === 1 || $emp->emp_gender === 3) && $requests->category_name === 4) {
-                                //Restriction Paternity leave (PL)
-                                continue; // Skip if the employee is male and the category is not maternity
-                            }
-                            if ($emp->emp_gender === 2 && $requests->category_name === 5) {
-                                //Restriction Maternity leave (ML)
-                                continue; // Skip if the employee is female and the category is not paternity
-                            }
-
-                            // 'information' => $Item->where('category_name', $requests->category_name)->first(),
-                            $LoadPolicyCase[$key] = [
-                                'current_month' => $monthsCount,
-                                'leave_policy_id' => $requests->leave_policy_id,
-                                'business_id' => $requests->business_id,
-                                'policy_type_id' => $requests->category_name, //category_id
-                                'policy_category_name' => $requests->apply_category_name, //category_name
-                                'policy_monthly_cycle' => $requests->leave_cycle_monthly_yearly,
-                                'policy_days' => $requests->days,
-                                'policy_unused_leave_rule' => $requests->unused_leave_rule,
-                                'policy_carry_forward_limit' => $requests->carry_forward_limit,
-                                'policy_applicable_to_gender_id' => $requests->applicable_to, //gender ID
-                                'policy_applicable_to_gender_name' => $requests->applicable_name, //gender name
-                                'leave_opening' => $StoreModel[0],
-                                'leave_allotted' => $StoreModel[1],
-                                'leave_taken' => $StoreModel[2],
-                                'leave_remaining' => $StoreModel[3],
-                            ];
-                            // Push the data for this leave type into $LoadPolicyCase
-                            // $LoadPolicyCase[] = $leaveTypeData;
-                        }
-                    }
-                }
-
-                // add external Like : LWP or Comp OFF
-                $externalData = [
-                    [
-                        'current_month' => 0,
-                        'leave_policy_id' => 0,
-                        'business_id' => $requests->business_id,
-                        'policy_type_id' => 9, //category_id
-                        'policy_category_name' => 'Leave Without Pay (LWP)', //category_name
-                        'policy_monthly_cycle' => 0,
-                        'policy_days' => 0,
-                        'policy_unused_leave_rule' => 0,
-                        'policy_carry_forward_limit' => 0,
-                        'policy_applicable_to_gender_id' => 0, //gender ID
-                        'policy_applicable_to_gender_name' => 0, //gender name
-                        'leave_opening' => 0,
-                        'leave_allotted' => 0,
-                        'leave_taken' => $lwpDays,
-                        'leave_remaining' => 0,
-                    ],
-                    [
-                        'current_month' => 0,
-                        'leave_policy_id' => 0,
-                        'business_id' => $requests->business_id,
-                        'policy_type_id' => 8, //category_id
-                        'policy_category_name' => 'Comp-Off (CO)', //category_name
-                        'policy_monthly_cycle' => 0,
-                        'policy_days' => 0,
-                        'policy_unused_leave_rule' => 0,
-                        'policy_carry_forward_limit' => 0,
-                        'policy_applicable_to_gender_id' => 0, //gender ID
-                        'policy_applicable_to_gender_name' => 0, //gender name
-                        'leave_opening' => 0,
-                        'leave_allotted' => 0,
-                        'leave_taken' => 0,
-                        'leave_remaining' => 0,
-                    ],
-                    // Add more external data as needed
-                ];
-                $data = array_merge($LoadPolicyCase, $externalData);
-                return response()->json(['result' => $data, 'status' => true, 'case' => 1], 200);
-            } else {
-                return response()->json(['result' => [], 'status' => false, 'case' => 2], 201);
-            }
+        $EmpID = $detailsList['emp_id'];
+        $EmpDOJ = $detailsList['doj'];
+        $EmpStartDate = $detailsList['start_date'];
+        $EmpEndDate = $detailsList['end_date'];
+        $EmpData = $detailsList['leave_status_list'];
+        if ($EmpData != null) {
+            return response()->json(['emp_id' => $EmpID, 'doj' => $EmpDOJ, 'start_date' => $EmpStartDate, 'end_date' => $EmpEndDate, 'result' => LeaveBalanceListResource::collection($EmpData)->all(), 'status' => true, 'case' => 1], 200);
+        } else {
+            return response()->json(['result' => [], 'status' => false, 'case' => 2], 201);
         }
     }
 
-    // public function leaveBalanceList(Request $request)
+
+
     // {
     //     $empId = $request->emp_id;
     //     $business = $request->business_id;
@@ -553,10 +402,12 @@ class LeaveRequestApiController extends Controller
         $id = $request->id;
         $businessId = $request->business_id;
         $EmpID = $request->emp_id;
+        $branchId = $request->branch_id;
         $leave = RequestLeaveList::join('policy_setting_leave_category', 'policy_setting_leave_category.id', '=', 'request_leave_list.leave_category')
             ->join('static_request_leave_type', 'static_request_leave_type.id', '=', 'request_leave_list.leave_type')
             ->where('request_leave_list.id', $id)
             ->where('request_leave_list.business_id', $businessId)
+            ->where('request_leave_list.branch_id', $branchId)
             ->where('request_leave_list.emp_id', $EmpID)
             ->select('request_leave_list.*', 'policy_setting_leave_category.category_name', 'static_request_leave_type.leave_day')
             ->first();

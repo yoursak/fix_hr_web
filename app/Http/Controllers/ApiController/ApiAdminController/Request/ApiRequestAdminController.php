@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Api\AdminSideResponse\Request\RequestResource;
 use App\Http\Resources\Api\AdminSideResponse\Request\RequestMispunchResource;
 
+use App\Models\RequestLeaveList;
 
 // use Session;
 class ApiRequestAdminController extends BaseController
@@ -39,23 +40,44 @@ class ApiRequestAdminController extends BaseController
         $EmpID = $request->emp_id;
         // calculate present, absent, halfday, holiday, weekoff;
 
-        $preview = DB::table('request_leave_list')
-            ->join('employee_personal_details', 'request_leave_list.emp_id', '=', 'employee_personal_details.emp_id')
-            ->where('request_leave_list.business_id', $businessID)
-            ->where(function ($query) use ($date, $FindMonthYear, $EmpID) {
-
+        $preview = RequestLeaveList::leftJoin('static_leave_category', 'static_leave_category.id', '=', 'request_leave_list.leave_category')
+            ->leftJoin('static_request_leave_type', 'static_request_leave_type.id', '=', 'request_leave_list.leave_type')
+            ->leftJoin('static_leave_shift_type', 'static_leave_shift_type.id', 'request_leave_list.shift_type')
+            ->leftJoin('employee_personal_details', 'request_leave_list.emp_id', '=', 'employee_personal_details.emp_id')
+            ->where(function ($query) use ($FindMonthYear, $EmpID, $date) {
+                if (!empty($FindMonthYear)) {
+                    $year = substr($FindMonthYear, 0, 4); // Extract the year (e.g., '2023')
+                    $month = substr($FindMonthYear, 5, 2); // Extract the month (e.g., '11')
+                    $query->whereYear('request_leave_list.from_date', $year)->whereMonth('request_leave_list.from_date', $month);
+                }
                 if (!empty($date)) {
                     $query->whereDate('request_leave_list.from_date', $date); // Use whereDate to compare the full date
                 }
-                if ((!empty($FindMonthYear)) && (!empty($EmpID))) {
-                    $year = substr($FindMonthYear, 0, 4); // Extract the year (e.g., '2023')
-                    $month = substr($FindMonthYear, 5, 2); // Extract the month (e.g., '11')
-                    $query->where('request_leave_list.emp_id', $EmpID)->whereYear('request_leave_list.from_date', $year)->whereMonth('request_leave_list.from_date', $month);
+                if (!empty($EmpID)) {
+                    $query->where('request_leave_list.emp_id', $EmpID);
                 }
             })
-            ->select('employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.emp_shift_type', 'employee_personal_details.emp_attendance_method', 'employee_personal_details.profile_photo', 'request_leave_list.*')
-            ->orderby('request_leave_list.id', 'desc')
+            ->where('request_leave_list.business_id', $businessID)
+            ->orderBy('request_leave_list.id', 'desc')
+            ->select('employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.emp_shift_type', 'employee_personal_details.emp_attendance_method', 'employee_personal_details.profile_photo','request_leave_list.*', 'static_leave_category.name as leave_category', 'static_request_leave_type.leave_day as leave_day', 'static_leave_shift_type.leave_shift_type as leave_shift_type')
             ->get();
+        // DB::table('request_leave_list')
+        //     ->join('employee_personal_details', 'request_leave_list.emp_id', '=', 'employee_personal_details.emp_id')
+        //     ->where('request_leave_list.business_id', $businessID)
+        //     ->where(function ($query) use ($date, $FindMonthYear, $EmpID) {
+
+        //         if (!empty($date)) {
+        //             $query->whereDate('request_leave_list.from_date', $date); // Use whereDate to compare the full date
+        //         }
+        //         if ((!empty($FindMonthYear)) && (!empty($EmpID))) {
+        //             $year = substr($FindMonthYear, 0, 4); // Extract the year (e.g., '2023')
+        //             $month = substr($FindMonthYear, 5, 2); // Extract the month (e.g., '11')
+        //             $query->where('request_leave_list.emp_id', $EmpID)->whereYear('request_leave_list.from_date', $year)->whereMonth('request_leave_list.from_date', $month);
+        //         }
+        //     })
+        //     ->select('employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.emp_shift_type', 'employee_personal_details.emp_attendance_method', 'employee_personal_details.profile_photo', 'request_leave_list.*')
+        //     ->orderby('request_leave_list.id', 'desc')
+        //     ->get();
 
         // return $preview;
         $formattedData = RequestResource::collection($preview);
@@ -74,6 +96,7 @@ class ApiRequestAdminController extends BaseController
 
         $preview = DB::table('request_mispunch_list')
             ->join('employee_personal_details', 'request_mispunch_list.emp_id', '=', 'employee_personal_details.emp_id')
+            ->join('static_mispunch_timetype', 'request_mispunch_list.emp_miss_time_type', '=', 'static_mispunch_timetype.id')
             ->where('request_mispunch_list.business_id', $businessID)
             ->where(function ($query) use ($date, $FindMonthYear, $EmpID) {
 
@@ -86,7 +109,7 @@ class ApiRequestAdminController extends BaseController
                     $query->where('request_mispunch_list.emp_id', $EmpID)->whereYear('request_mispunch_list.emp_miss_date', $year)->whereMonth('request_mispunch_list.emp_miss_date', $month);
                 }
             })
-            ->select('employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.emp_shift_type', 'employee_personal_details.emp_attendance_method', 'employee_personal_details.profile_photo', 'request_mispunch_list.*')
+            ->select('employee_personal_details.emp_name', 'employee_personal_details.emp_mname', 'employee_personal_details.emp_lname', 'employee_personal_details.emp_shift_type', 'employee_personal_details.emp_attendance_method', 'employee_personal_details.profile_photo', 'request_mispunch_list.*','static_mispunch_timetype.time_type as time_type_name')
             ->orderby('request_mispunch_list.id', 'desc')
             ->get();
 
@@ -135,6 +158,6 @@ class ApiRequestAdminController extends BaseController
     // }
 
 
-    // 
+    //
 
 }

@@ -8,7 +8,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\admin\Business_categories_list;
 use App\Models\admin\Business_type;
-use App\Models\admin\AttendanceList;
+use App\Models\AttendanceList;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
@@ -33,9 +33,8 @@ class AttendanceController extends BaseController
     public function getTodayAttendanceList(Request $request)
     {
         $businessID = $request->business_id;
-        $date = $request->date; // Assuming $request->date is a valid date in 'Y-m-d' format
-        $preview = DB::table('attendance_list')
-            ->join('employee_personal_details', 'attendance_list.emp_id', '=', 'employee_personal_details.emp_id')
+        $date = $request->date;
+        $preview = AttendanceList::leftJoin('employee_personal_details', 'attendance_list.emp_id', '=', 'employee_personal_details.emp_id')
             ->where('attendance_list.business_id', $businessID)
             ->where(function ($query) use ($date) {
                 if (!empty($date)) {
@@ -50,7 +49,7 @@ class AttendanceController extends BaseController
 
         if ($formattedData) {
 
-            return response()->json(['result' => $formattedData, 'status' => true],200);
+            return response()->json(['result' => $formattedData, 'status' => true], 200);
         } else {
             return response()->json(['result' => [], 'status' => false], 404);
         }
@@ -65,8 +64,8 @@ class AttendanceController extends BaseController
         $EmpID = $request->emp_id;
         // calculate present, absent, halfday, holiday, weekoff;
 
-        $preview = DB::table('attendance_list')
-            ->join('employee_personal_details', 'attendance_list.emp_id', '=', 'employee_personal_details.emp_id')
+        // dd($businessID);
+        $preview = AttendanceList::leftJoin('employee_personal_details', 'attendance_list.emp_id', '=', 'employee_personal_details.emp_id')
             ->where('attendance_list.business_id', $businessID)
             ->where(function ($query) use ($date, $FindMonthYear, $EmpID) {
 
@@ -83,11 +82,12 @@ class AttendanceController extends BaseController
             ->orderby('attendance_list.id', 'desc')
             ->get();
 
+
         $formattedData = AttendanceListResource::collection($preview);
 
         if ($formattedData) {
 
-            return response()->json(['result' => $formattedData, 'status' => true],200);
+            return response()->json(['result' => $formattedData, 'status' => true], 200);
         }
         return response()->json(['result' => [], 'status' => false], 404);
     }

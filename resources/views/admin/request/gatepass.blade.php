@@ -3,240 +3,31 @@
 
 @section('content')
     @if (in_array('Gate Pass.All', $permissions) || in_array('Gate Pass.View', $permissions))
-
         <style>
             .custom-tooltip .tooltip-inner {
                 color: #000;
                 /* Set your desired text color for the tooltip title */
             }
         </style>
-        <?php
-        // dd($DATA);
-        $centralUnit = new App\Helpers\Central_unit();
-        $RuleManagement = new App\Helpers\MasterRulesManagement\RulesManagement(); // Create an instance of the Central_unit class
-        $Department = $centralUnit->DepartmentList();
-        $Branch = $centralUnit->BranchList();
-        $Designation = $centralUnit->DesignationList();
-        $i = 0;
-        $j = 1;
-        $Employee = $centralUnit->EmployeeDetails();
-        $nss = new App\Helpers\Central_unit();
-        $EmpID = $nss->EmpPlaceHolder();
-        
-        // $root = new App\Helpers\Central_unit();
-        $Count = $centralUnit->LeaveSectionCount();
-        // $empCount = GetEmpCount();
-        ?>
         <div class=" p-0 py-2">
             <ol class="breadcrumb breadcrumb-arrow m-0 p-0" style="background: none;">
                 <li><a href="{{ url('/admin') }}">Dashboard</a></li>
-                <li><a href="{{ url('/admin/requests/leaves') }}">Request</a></li>
+                <li><a href="{{ url('/admin/requests/leaves') }}">Requests</a></li>
                 <li class="active"><span><b>Gatepass</b></span></li>
             </ol>
         </div>
-        <!-- Row -->
 
-        <!-- END ROW -->
         <div class="row row-sm">
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Gatepass Summary</h3>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <p class="form-label">Branch</p>
-                                    <select name="country-dd" id="filter-branch" class="form-control" required>
-                                        <option value="">All Branch</option>
-                                        @foreach ($Branch as $data)
-                                            <option value="{{ $data->branch_id }}">
-                                                {{ $data->branch_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <p class="form-label">Department</p>
-                                    <div class="form-group mb-3">
-                                        <select id="filter-department" name="department_id" class="form-control" required>
-                                            <option value="">All Department</option>
-                                            {{-- @foreach ($Department as $data)
-                                            <option value="{{ $data->depart_id }}">
-                                                {{ $data->depart_name }}
-                                            </option>
-                                        @endforeach --}}
-                                        </select>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <p class="form-label">Designation</p>
-                                    <div class="form-group mb-3">
-                                        <select id="filter-designation" name="designation_id" class="form-control" required>
-                                            <option value="">All Designation</option>
-                                            {{-- @foreach ($Designation as $data)
-                                                <option value="{{ $data->desig_id }}">
-                                                    {{ $data->desig_name }}
-                                                </option>
-                                            @endforeach --}}
-                                        </select>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-2">
-                                <div class="form-group">
-                                    <label class="form-label">From Date</label>
-                                    <input type="date" id="from_date_dd" class="form-control custom-select">
-                                </div>
-                            </div>
-                            <div class="col-lg-2">
-                                <div class="form-group">
-                                    <label class="form-label">To Date</label>
-                                    <input type="date" id="to_date_dd" class="form-control custom-select">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ROW -->
-
-                    <!-- END ROW -->
-                    <div class="card-body pt-2  px-2">
-                        <div class="table-responsive">
-                            <table class="table  table-vcenter text-nowrap  border-bottom " id="basic-datatable">
-                                <thead>
-                                    <tr>
-                                        <th class="border-bottom-0" hidden>S.No.</th>
-                                        <th class="border-bottom-0">Employee Name</th>
-                                        <th class="border-bottom-0">Employee Id</th>
-                                        <th class="border-bottom-0">Date</th>
-                                        <th class="border-bottom-0">Out Time</th>
-                                        <th class="border-bottom-0">In Time</th>
-                                        <th class="border-bottom-0">Status</th>
-                                        {{-- <th class="border-bottom-0">PID</th> --}}
-                                        <th class="border-bottom-0">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="my_body ">
-                                    @php
-                                        $count = 1;
-                                        $ruleMange = new App\Helpers\MasterRulesManagement\RulesManagement();
-                                    @endphp
-                                    @foreach ($DATA as $key => $item)
-                                        <?php
-                                        $approval_type_id_static = 4;
-                                        if ($checkApprovalCycleType == 1) {
-                                            $current_status_particular_tb = DB::table('approval_status_list')
-                                                ->where('approval_type_id', $approval_type_id_static)
-                                                ->where('applied_cycle_type', 1)
-                                                ->where('emp_id', $loginEmpID)
-                                                ->where('role_id', $loginRoleID)
-                                                ->where('all_request_id', $item->id)
-                                                ->first();
-                                        }
-                                        if ($checkApprovalCycleType == 2) {
-                                            $current_status_particular_tb = DB::table('approval_status_list')
-                                                ->where('approval_type_id', $approval_type_id_static)
-                                                ->where('applied_cycle_type', 2)
-                                                ->where('all_request_id', $item->id)
-                                                ->first();
-                                        }
-                                        $prevRoleID = $RuleManagement::RoleName($item->forward_by_role_id ?? 0)[0];
-                                        $runtimeStatus = $prevRoleID->roles_name ?? 0;
-                                        ?>
-                                        <tr>
-                                            <td hidden>{{ ++$key }}</td>
-                                            <td>
-                                                <div class="d-flex">
-                                                    <span class="avatar avatar-md brround me-3"
-                                                        style="background-image: url('/storage/livewire_employee_profile/{{ $item->profile_photo }}')"></span>
-                                                    <div class="me-3 mt-0 mt-sm-1 d-block">
-                                                        <h6 class="mb-1 fs-14">
-                                                            <a href="{{ route('employeeProfile', [$item->emp_id]) }}">
-                                                                {{ $item->emp_name }}&nbsp;{{ $item->emp_mname }}&nbsp;{{ $item->emp_lname }}
-                                                            </a>
-                                                        </h6>
-                                                        <p class="text-muted mb-0 fs-12">
-                                                            <?= $nss->DesingationIdToName($item->designation_id) ?>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>{{ $item->emp_id }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
-                                            {{-- <td>{{  }}</td> --}}
-                                            <td><?= $ruleMange->Convert24To12($item->out_time) ?></td>
-                                            <td><?= $ruleMange->Convert24To12($item->in_time) ?></td>
-                                            <td>
-
-                                                <?php
-                                                $loadgoo = $item->id;
-                                                ?>
-                                                <?= $ruleMange->RequestGatePassApprovalManage($checkApprovalCycleType, $item, $loadgoo, 4, $loginRoleID) ?>     
-                                            </td>
-                                            <td>
-                                                <?php
-                                                
-                                                $RoleRedCode = DB::table('request_gatepass_list')
-                                                    ->join('static_status_request', 'request_gatepass_list.final_status', '=', 'static_status_request.id')
-                                                    ->where('request_gatepass_list.business_id', $loginRoleBID)
-                                                    ->where('request_gatepass_list.id', $loadgoo)
-                                                    ->select('request_gatepass_list.*', 'static_status_request.request_response', 'static_status_request.request_color', 'static_status_request.btn_color', 'static_status_request.tooltip_color')
-                                                    ->first();
-                                                ?>
-                                                @if (in_array('Gate Pass.Update', $permissions))
-                                                    <?php  if(($RoleRedCode->final_status==1) ||  ($RoleRedCode->final_status==2)){ ?>
-                                                    <a class="btn btn-primary btn-icon btn-sm " href="javascript:void(0);"
-                                                        id="view_btn_modal" onclick="openEditModel(this)"
-                                                        data-id='<?= $item->id ?>'
-                                                        data-processcomplete='<?= $item->process_complete ?>'
-                                                        data-viewbtn='<?= $item->final_status ?>'
-                                                        data-forwardbystatus="<?= $item->forward_by_status ?>"
-                                                        data-currentstatusparticulartb='<?= $current_status_particular_tb->status ?? 0 ?>'
-                                                        data-forwardroleid='<?= $item->forward_by_role_id ?>'
-                                                        data-leavetype='<?= $item->leave_type ?>' data-bs-toggle="modal"
-                                                        data data-bs-target="#opendEditModelId">
-                                                        <i class="feather feather-eye" data-bs-toggle="tooltip"
-                                                            data-original-title="View"></i>
-                                                    </a>
-                                                    <?php }?>
-                                                @endif
-
-                                                @if (in_array('Gate Pass.Update', $permissions))
-                                                    <?php  if($RoleRedCode->final_status==0){ ?>
-                                                    <a class="btn btn-primary btn-icon btn-sm " href="javascript:void(0);"
-                                                        id="edit_btn_modal" onclick="openEditModel(this)"
-                                                        data-id='<?= $item->id ?>'
-                                                        data-processcomplete='<?= $item->process_complete ?>'
-                                                        data-forwardbystatus="<?= $item->forward_by_status ?>"
-                                                        data-currentstatusparticulartb='<?= $current_status_particular_tb->status ?? 0 ?>'
-                                                        data-forwardroleid='<?= $item->forward_by_role_id ?>'
-                                                        data-leavetype='<?= $item->leave_type ?>' data-bs-toggle="modal"
-                                                        data data-bs-target="#opendEditModelId">
-                                                        <i class="feather feather-edit" data-bs-toggle="tooltip"
-                                                            data-original-title="View"></i>
-                                                    </a>
-                                                    <?php }?>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    {{-- @endempty --}}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <livewire:request.gatepass-request-list-livewire>
                 </div>
             </div>
         </div>
-        <!-- END ROW -->
+
 
         {{-- Edit Modal --}}
         <div class="modal fade" id="opendEditModelId" data-bs-backdrop="static">
@@ -351,15 +142,15 @@
                                             works. </summary>
                                         <p style="color:black; text-align: justify;text-justify: inter-word; ">1) In the
                                             case
-                                            of approval, all statuses will be changed to
+                                            of approval, all status will be changed to
                                             approved,
                                             and the name of the final action performer will be displayed after the
                                             evaluation.
                                             <br>
-                                            2) In the case of a decline, all statuses will be changed to declined, and the
+                                            2) In the case of a decline, all status will be changed to declined, and the
                                             name
                                             of
-                                            the most recent action performer will be displayed with end remark after the
+                                            the last action performer will be displayed with end remark after the
                                             evaluation.
                                             (Whether the action is accepted or
                                             rejected, the result will be declined)
@@ -423,228 +214,6 @@
                 var day = ('0' + date.getDate()).slice(-2);
                 return year + '-' + month + '-' + day;
             }
-        </script>
-        <script>
-            $(document).ready(function() {
-                $('#filter-branch').on('change', function() {
-                    var branch_id = this.value;
-                    $("#filter-department").html('');
-                    $("#filter-designation").html('');
-
-                    $.ajax({
-                        url: "{{ url('admin/requests/gatepassdepartmentfilter') }}",
-                        type: "POST",
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            brand_id: branch_id
-                        },
-                        dataType: 'json',
-                        success: function(result) {
-
-                            // console.log(result);
-                            $('#filter-department').html(
-                                '<option value="" name="department">All Department</option>'
-                            );
-                            console.log(result.department);
-                            $.each(result.department, function(key, value) {
-                                $("#filter-department").append(
-                                    '<option name="department" value="' +
-                                    value
-                                    .depart_id + '">' + value.depart_name +
-                                    '</option>');
-                            });
-
-                            $('#filter-designation').html(
-                                '<option value="">All Designation</option>');
-                        }
-                    });
-                });
-                $('#filter-department').on('change', function() {
-                    var depart_id = this.value;
-                    var branch_id = $('#filter-branch').val();
-                    console.log("aaaaaa ", branch_id);
-                    console.log("depart_id " + depart_id);
-                    $("#filter-designation").html('');
-                    $.ajax({
-                        url: "{{ url('admin/requests/gatepassdesignationfilter') }}",
-                        type: "POST",
-                        data: {
-                            branch_id: branch_id,
-                            depart_id: depart_id,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        dataType: 'json',
-                        success: function(res) {
-                            console.log("res ", res);
-                            $('#filter-designation').html(
-                                '<option value="">All Designation</option>');
-                            $.each(res.designation, function(key, value) {
-                                $("#filter-designation").append('<option value="' + value
-                                    .desig_id + '">' + value.desig_name + '</option>');
-                            });
-                            $('#employee-dd').html(
-                                '<option value="">All Employee</option>')
-                        }
-                    });
-                });
-                // // employee
-                // $('#filter-department').on('change', function() {
-                //     var depart_id = this.value;
-                //     $("#employee-dd").html('');
-                //     $.ajax({
-                //         url: "{{ url('admin/settings/business/allemployeefilter') }}",
-                //         type: "POST",
-                //         data: {
-                //             _token: '{{ csrf_token() }}',
-                //             depart_id: depart_id,
-                //         },
-                //         dataType: 'json',
-                //         success: function(res) {
-                //             console.log(res);
-                //             $('#employee-dd').html('<option value="">Select Employee</option>');
-                //             $.each(res.employee, function(key, value) {
-                //                 $("#employee-dd").append('<option value="' + value.emp_id +
-                //                     '">' + value.emp_name + '</option>');
-                //             });
-                //         }
-                //     });
-                // });
-            });
-        </script>
-        <script>
-            $(document).ready(function() {
-                // Add event listeners to the dropdowns
-                $('#filter-branch, #filter-department, #filter-designation, #from_date_dd, #to_date_dd').change(
-                    function() {
-                        // Get selected values
-                        var branchId = $('#filter-branch').val();
-                        var departmentId = $('#filter-department').val();
-                        var designationId = $('#filter-designation').val();
-                        var fromDate = $('#from_date_dd').val();
-                        var toDate = $('#to_date_dd').val();
-                        // Make an AJAX request to filter employees
-                        $.ajax({
-                            type: "POST",
-                            url: "{{ url('admin/requests/gatepassemployeefilter') }}",
-
-                            // gatepassdepartmentfilter
-                            // gatepassdesignationfilter
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                                branch_id: branchId,
-                                department_id: departmentId,
-                                designation_id: designationId,
-                                from_date: fromDate,
-                                to_date: toDate
-                            },
-                            success: function(data) {
-                                // Update the table body with the filtered data
-                                var tbody = $('.my_body');
-                                tbody.empty();
-                                var currentstatus = data['currentstatupartdb'];
-                                var status = data['status'];
-                                let i = 1;
-
-                                $.each(data.get, function(index, employee) {
-                                    var out_time = convertTo12HourFormat(employee.out_time);
-                                    var sd = employee.emp_id;
-                                    var newRow = '<tr>' +
-                                        '<td>' + `<div class="d-flex">
-                                            <span class="avatar avatar-md brround me-3 rounded-circle"
-                                                style="background-image: url('/storage/livewire_employee_profile/` +
-                                        employee
-                                        .profile_photo +
-                                        `')"></span>
-                                            <div class="me-3 mt-0 mt-sm-1 d-block">
-                                                <h6 class="mb-1 fs-14"><a href="<?= url('admin/employee/profile/${sd}') ?>">` +
-                                        employee.emp_name + ' ' + ((employee
-                                                .emp_mname != null) ? employee.emp_mname :
-                                            '') + ' ' + employee.emp_lname + `</a></h6>
-                                                <p class="text-muted mb-0 fs-12">
-                                                    ` + employee.desig_name + `</p>
-                                            </div>
-                                        </div>` + '</td>' +
-                                        '<td>' + employee.emp_id + '</td>' +
-                                        '<td>' + formatDate(employee.date) + '</td>' +
-                                        '<td>' + out_time + '</td>' +
-                                        '<td>' + convertTo12HourFormat(employee.in_time) +
-                                        '</td>' +
-                                        '<td>' +
-                                        status[employee.id] +
-                                        '</td>' +
-                                        // '<td>' + employee.id + '</td>' +
-                                        '<td>'
-
-                                    '<?php if(in_array('Gate Pass.Update', $permissions)){ ?>'
-
-                                    if (employee.final_status == 1 || employee.final_status ==
-                                        2) {
-                                        newRow += `<a class="btn btn-primary m-1 btn-icon btn-sm" href="javascript:void(0);"
-                                                onclick="openEditModel(this)" 
-                                                data-id="${employee.id}" 
-                                                data-processcomplete="${employee.process_complete}" 
-                                                data-viewbtn="${employee.final_status}" 
-                                                data-forwardbystatus="${employee.forward_by_status}" 
-                                                data-currentstatusparticulartb="${currentstatus[employee.id] ?? 0}" 
-                                                data-forwardroleid=' ${employee.forward_by_role_id}'
-                                                data-bs-toggle="modal" data-bs-target="#updateempmodal">
-                                                <i class="feather feather-eye" data-bs-toggle="tooltip"
-                                                    data-original-title="View"></i>
-                                            </a>`;
-                                    } else if (employee.final_status == 0) {
-                                        newRow += `<a class="btn btn-primary m-1 btn-icon btn-sm" href="javascript:void(0);"
-                                                onclick="openEditModel(this)" 
-                                                data-id="${employee.id}" 
-                                                data-processcomplete="${employee.process_complete}" 
-                                                data-viewbtn="${employee.final_status}" 
-                                                data-forwardbystatus="${employee.forward_by_status}" 
-                                                data-currentstatusparticulartb="${currentstatus[employee.id] ?? 0}" 
-                                                data-forwardroleid=' ${employee.forward_by_role_id}'
-                                                data-bs-toggle="modal" data-bs-target="#updateempmodal">
-                                                <i class="feather feather-edit" data-bs-toggle="tooltip"
-                                                    data-original-title="View"></i>
-                                            </a>`;
-                                    }
-                                    '<?php  } ?>'
-
-
-                                    newRow += '</td></tr>';
-                                    i++;
-                                    tbody.append(newRow);
-                                    // });
-                                });
-                                $('[data-bs-toggle="popover"]').popover({
-                                    trigger: 'hover'
-                                });
-
-
-                            }
-                        });
-                    });
-
-                function convertTo12HourFormat(time24) {
-                    var timeTokens = time24.split(':');
-                    var hours = parseInt(timeTokens[0]);
-                    var minutes = parseInt(timeTokens[1]);
-
-                    var ampm = hours >= 12 ? 'PM' : 'AM';
-                    hours = hours % 12;
-                    hours = hours ? hours : 12; // Handle midnight (00:00) as 12 AM
-
-                    // Pad single-digit hours with a leading zero
-                    hours = hours < 10 ? '0' + hours : hours;
-
-                    return hours + ':' + (minutes < 10 ? '0' : '') + minutes + ' ' + ampm;
-                }
-
-                function formatDate(inputDate) {
-                    var dateTokens = inputDate.split('-');
-                    var formattedDate = dateTokens[2] + '-' + dateTokens[1] + '-' + dateTokens[0];
-                    return formattedDate;
-                }
-
-
-            });
         </script>
 
 
@@ -771,7 +340,6 @@
 
                 }
                 if (parseInt(checkApprovalCycleType) == 2) {
-                    console.log("Cycle 2 aagayahy", parseInt(loginRoleID));
                     if (parseInt(current_status_particulartb) != 0) {
                         $('#editModalFooter').hide();
                     }
@@ -786,43 +354,7 @@
                         }
                     }
                 }
-                // if(parseInt(forwardRoleid)==parseInt(loginRoleID) ){
 
-                //     $('#editModalFooter').show();
-                // //      console.log("2 id match ");
-
-                // }else{
-                //     $('#editModalFooter').hide();
-
-                // }
-                // else{
-                //        $('#editModalFooter').addClass('d-none');
-
-                //     console.log("3 aagya nih asdf");
-
-                // }
-                // leavetype
-                // if (status == 1) {
-                //     $('#editModalFooter').addClass('d-none');
-                //     $('#remarks').addClass('d-none');
-                //     $('#RemarkTextarea').attr('readonly', true);
-                //     $('#editFrom').attr('readonly', true);
-                //     $('#editTo').attr('readonly', true);
-                // } else if (status == 2) {
-                //     $('#remarks').removeClass('d-none');
-                //     $('#editModalFooter').addClass('d-none');
-                //     $('#RemarkTextarea').attr('readonly', true);
-                //     // $('#editInTime').attr('readonly', true);
-                //     $('#editFrom').attr('readonly', true);
-                //     $('#editTo').attr('readonly', true);
-                // } else {
-                //     $('#editModalFooter').removeClass('d-none');
-                //     $('#remarks').addClass('d-none');
-                //     $('#RemarkTextarea').attr('readonly', false);
-                //     $('#editFrom').attr('readonly', false);
-                //     $('#editTo').attr('readonly', false);
-                //     // $('#editInTime').attr('readonly', false);
-                // }
                 $.ajax({
                     url: "{{ url('/admin/requests/gatepass/detail') }}",
                     type: "POST",

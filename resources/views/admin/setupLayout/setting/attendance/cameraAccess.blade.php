@@ -152,7 +152,7 @@
                                         <div class="">
                                             <select class="form-control " name="type"
                                                 data-placeholder="Choose One" required>
-                                                <option  value="">Select Login Type</option>
+                                                <option  value="" >Select Login Type</option>
                                                 @foreach ($Type as $type)
                                                     <option  value="{{ $type->id }}">
                                                         {{ $type->mode_name }}</option>
@@ -170,9 +170,9 @@
                                     <div class="form-group mb-0">
                                         <label class="form-label">Select Branch</label>
                                         <div class="">
-                                            <select class="form-control select2" onchange="setBranchEmail(this) "
+                                            <select class="form-control" onchange="setBranchEmail(this) "
                                                 id="branchSelect" name="branch" data-placeholder="Choose One" required>
-                                                <option  value="">Select Branch Name</option>
+                                                <option  value="" >Select Branch Name</option>
                                                 @foreach ($Branch as $branch)
                                                     <option data-email='{{ $branch->branch_email }}'
                                                         value="{{ $branch->branch_id }}">{{ $branch->branch_name }}
@@ -261,9 +261,8 @@
                                     <div class="form-group mb-0">
                                         <label class="form-label">Attendance Mode</label>
                                         <div class="">
-                                            <select class="form-control select2" name="updatemode" id="update_mode_Id"
+                                            <select class="form-control " name="updatemode" id="update_mode_Id"
                                                 data-placeholder="Choose One" required>
-                                                <option ></option>
                                                 @foreach ($modes as $mode)
                                                 @if ($mode->id == 1)
                                                     <option value="{{ $mode->id }}">{{ $mode->method_name }}</option>
@@ -283,7 +282,7 @@
                                         <div class="">
                                             <select class="form-control " name="type"
                                                 data-placeholder="Choose One" id="attendanceTypeUpdate" required>
-                                                <option  value="">Select Login Type</option>
+                                                <option  value="" >Select Login Type</option>
                                                 @foreach ($Type as $type)
                                                     <option  value="{{ $type->id }}">
                                                         {{ $type->mode_name }}
@@ -300,10 +299,10 @@
                                     <div class="form-group mb-0">
                                         <label class="form-label">Select Branch</label>
                                         <div class="">
-                                            <select class="form-control select2" onchange="updateBranchEmail(this) "
+                                            <select class="form-control " onchange="updateBranchEmail(this) "
                                                 id="branchSelectUpdate" name="branch" data-placeholder="Choose One"
                                                 required>
-                                                <option  value="">Select Branch Name</option>
+                                                <option  value="" >Select Branch Name</option>
                                                 @foreach ($Branch as $branch)
                                                     <option data-uemail='{{ $branch->branch_email }}'
                                                         value="{{ $branch->branch_id }}">{{ $branch->branch_name }}

@@ -539,7 +539,7 @@
                 <div class="modal-body text-center p-5">
                     <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
                             aria-hidden="true">&times;</span></button>
-                    <h4 class="text-success m-5">Payment Address Added Successfully!</h4>
+                    <h4 class="text-success m-5">Payment Address Added Successfully</h4>
                     <p class="mb-4 mx-4">There are many variations of passages of Lorem Ipsum available, but the majority
                         have suffered alteration.</p>
                     <button class="btn btn-danger pd-x-25" data-bs-dismiss="modal">No Thanks</button>

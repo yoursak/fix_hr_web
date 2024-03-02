@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class PolicyAttendanceMode
- * 
+ *
  * @property int $id
  * @property string|null $business_id
  * @property string $attendance_active_methods
@@ -40,6 +40,7 @@ class PolicyCompOffLwopLeave extends Model
         'overtime_checked',
         'overtime_hr',
         'lwop_leave_checked',
+        'expiry_point'
 
     ];
 }

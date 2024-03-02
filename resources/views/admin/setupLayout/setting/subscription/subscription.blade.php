@@ -44,7 +44,7 @@
                         class="fa fa-angle-right my-auto mx-2"></i></span>
                 <span class=""><i class="fa fa-circle mx-2 text-primary"></i>Subscription<i
                         class="fa fa-angle-right my-auto mx-2"></i></span>
-                <span class="text-muted"><i class="fa fa-circle mx-2"></i>Add Employee<i
+                <span class="text-muted"><i class="fa fa-circle mx-2"></i>Add New Employee<i
                         class="fa fa-angle-right my-auto mx-2"></i></span>
                 <span class="text-muted"><i class="fa fa-circle mx-2"></i>Finish<i
                         class="fa fa-angle-right my-auto mx-2"></i></span>

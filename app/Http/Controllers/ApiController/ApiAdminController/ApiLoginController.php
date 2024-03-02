@@ -23,6 +23,7 @@ use App\Http\Resources\Api\AdminSideResponse\CameraPermission;
 use App\Models\EmployeePersonalDetail;
 use App\Models\BusinessDetailsList;
 use App\Http\Resources\Api\AdminSideResponse\Auth\LoginAdminResources;
+use App\Http\Resources\Api\AdminSideResponse\Auth\LoginAdminVerify;
 use App\Http\Resources\Api\AdminSideResponse\Auth\LoginSuperAdminResources;
 use App\Http\Resources\Api\EmployeeResource;
 use Illuminate\Support\Facades\Validator;
@@ -137,7 +138,7 @@ class ApiLoginController extends BaseController
                         $count_account_created = LoginAdmin::where('email', $email)->count();
                         $case = ($count_account_created > 1) ? 2 : 1;
                         $account = ($count_account_created > 1) ? 'multiple' : 'single';
-                        return response()->json(['result' => $list_of_handling, 'account' => $account, 'case' => $case]); //single account
+                        return response()->json(['result' =>  LoginAdminVerify::collection($list_of_handling)->all(), 'account' => $account, 'case' => $case]); //single account
                     }
 
                     // return $admin;
@@ -180,19 +181,19 @@ class ApiLoginController extends BaseController
     // }
     public function resendOtp(Request $request)
     {
-        $user = User::where('email', $request->email)->first();
-        $otpData = EmailVerification::where('email', $request->email)->first();
+        // $user = User::where('email', $request->email)->first();
+        // $otpData = EmailVerification::where('email', $request->email)->first();
 
-        $currentTime = time();
-        $time = $otpData->created_at;
+        // $currentTime = time();
+        // $time = $otpData->created_at;
 
-        if ($currentTime >= $time && $time >= $currentTime - (90 + 5)) {
-            //90 seconds
-            return response()->json(['success' => false, 'msg' => 'Please try after some time']);
-        } else {
-            $this->sendOtp($user); //OTP SEND
-            return response()->json(['success' => true, 'msg' => 'OTP has been sent']);
-        }
+        // if ($currentTime >= $time && $time >= $currentTime - (90 + 5)) {
+        //     //90 seconds
+        //     return response()->json(['success' => false, 'msg' => 'Please try after some time']);
+        // } else {
+        //     $this->sendOtp($user); //OTP SEND
+        //     return response()->json(['success' => true, 'msg' => 'OTP has been sent']);
+        // }
     }
 
     public function index()

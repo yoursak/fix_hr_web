@@ -25,8 +25,8 @@ class LeaveRequestResources extends JsonResource
             'final_status' => (string)$this->final_status ?? '',
             'process_complete' => (int)$this->process_complete ?? '',
             'leave_remaining' => floatval($this->leave_remaining),
-            'leave_summary_debit_value' => floatval($this->leave_summary_debit_value),
-            'leave_summary_unpaid_value' => floatval($this->leave_summary_unpaid_value),
+            'leave_taken' => floatval($this->leave_summary_debit_value),
+            'leave_lwp' => floatval($this->leave_summary_unpaid_value),
             'created_at' => $this->created_at ?? '',
             'updated_at' => $this->updated_at ?? '',
         ];
